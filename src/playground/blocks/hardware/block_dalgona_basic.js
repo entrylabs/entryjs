@@ -1,13 +1,13 @@
 'use strict';
 
-Entry.Dalgona = {
-    id: '54.1',
-    name: 'Dalgona',
+Entry.Dalgona_basic = {
+    id: '54.2',
+    name: 'Dalgona_basic',
     url: 'https://dalgonaedu.co.kr/',
     imageName: 'dalgona.png',
     title: {
-        ko: '달고나.에듀 Plus',
-        en: 'Dalgona.Edu Plus',
+        ko: '달고나.에듀 Basic',
+        en: 'Dalgona.Edu Basic',
     },
     Static: {
         BUTTON_PRESS_VALUE: 0,
@@ -23,11 +23,11 @@ Entry.Dalgona = {
         } else {
             var keySet = Object.keys(Entry.hw.sendQueue.SET);
             keySet.forEach((key) => {
-                if (Entry.hw.sendQueue.SET[key].type == Entry.Dalgona.sensorTypes.SERVO) {
+                if (Entry.hw.sendQueue.SET[key].type == Entry.Dalgona_basic.sensorTypes.SERVO) {
                     Entry.hw.sendQueue.SET[key].data = 200;
                     Entry.hw.sendQueue.SET[key].time = new Date().getTime();
                 } 
-                else if (Entry.hw.sendQueue.SET[key].type == Entry.Dalgona.sensorTypes.SERVO2) {
+                else if (Entry.hw.sendQueue.SET[key].type == Entry.Dalgona_basic.sensorTypes.SERVO2) {
                     Entry.hw.sendQueue.SET[key].data.value1 = 200;
                     Entry.hw.sendQueue.SET[key].time = new Date().getTime();
                 } 
@@ -116,19 +116,20 @@ Entry.Dalgona = {
         AS: 11,
         B: 12,
     },
+          // 1옥  2옥  3옥  4옥  5옥  6옥   7옥   8옥
     toneMap: {
-        '1': [33, 65, 131, 262, 523, 1046, 2093, 4186],
-        '2': [35, 69, 139, 277, 554, 1109, 2217, 4435],
-        '3': [37, 73, 147, 294, 587, 1175, 2349, 4699],
-        '4': [39, 78, 156, 311, 622, 1245, 2849, 4978],
-        '5': [41, 82, 165, 330, 659, 1319, 2637, 5274],
-        '6': [44, 87, 175, 349, 698, 1397, 2794, 5588],
-        '7': [46, 92, 185, 370, 740, 1480, 2960, 5920],
-        '8': [49, 98, 196, 392, 784, 1568, 3136, 6272],
-        '9': [52, 104, 208, 415, 831, 1661, 3322, 6645],
-        '10': [55, 110, 220, 440, 880, 1760, 3520, 7040],
-        '11': [58, 117, 233, 466, 932, 1865, 3729, 7459],
-        '12': [62, 123, 247, 494, 988, 1976, 3951, 7902],
+        '1': [33, 65, 131, 262, 523, 1046, 2093, 4186],   // 도
+        '2': [35, 69, 139, 277, 554, 1109, 2217, 4435],   // 도#
+        '3': [37, 73, 147, 294, 587, 1175, 2349, 4699],   // 레
+        '4': [39, 78, 156, 311, 622, 1245, 2849, 4978],   // 미b
+        '5': [41, 82, 165, 330, 659, 1319, 2637, 5274],   // 미
+        '6': [44, 87, 175, 349, 698, 1397, 2794, 5588],   // 파
+        '7': [46, 92, 185, 370, 740, 1480, 2960, 5920],   // 파#
+        '8': [49, 98, 196, 392, 784, 1568, 3136, 6272],   // 솔
+        '9': [52, 104, 208, 415, 831, 1661, 3322, 6645],  // 솔#
+        '10': [55, 110, 220, 440, 880, 1760, 3520, 7040], // 라
+        '11': [58, 117, 233, 466, 932, 1865, 3729, 7459], // 시b
+        '12': [62, 123, 247, 494, 988, 1976, 3951, 7902], // 시
     },
     direction: {
         CENTER: 0,
@@ -170,101 +171,101 @@ Entry.Dalgona.setLanguage = function() {
 
 
 
-                dalgona_digital_title:'달고나 디지털 블럭',
-                dalgona_analog_title:'달고나 아날로그 블럭',
-                dalgona_pwm_title:'달고나 PWM 블럭',
-                dalgona_library_title:'달고나 라이브러리 블럭',
-                dalgona_neopixel_title:'달고나 네오픽셀 블럭',
-                dalgona_ultrasonic_title: '달고나 초음파센서 블럭',
-                dalgona_buzzer_title: '달고나 피에조 부저 블럭',
-                dalgona_dotmatrix_title:'달고나 8X8 도트매트릭스 블럭',
-                dalgona_rfid_title:'달고나 RFID 블럭',
-                dalgona_motor_title:'달고나 모터 블럭',
-                dalgona_stepmotor_title:'달고나 스텝모터 블럭',
-                dalgona_joystick_title:'달고나 조이스틱 블럭',
-                dalgona_LCD_title:'달고나 LCD 블럭',
-                dalgona_mp3_title:'달고나 mp3 블럭',
-                dalgona_HX711_title:'달고나 HX711 로드셀 블럭',
-                dalgona_sensor_title:'달고나 센서 블럭',
-                dalgona_toggle_on: '켜기',
-                dalgona_toggle_off: '끄기',
-                dalgona_lcd_first_line: '첫 번째',
-                dalgona_lcd_seconds_line: '두 번째',
-                dalgona_get_analog_value: '아날로그 %1 핀 읽기',
-                dalgona_get_light_value: '조도센서(AO %1)값',
-                dalgona_get_moisture_value: '토양수분센서(AO %1)값',
-                dalgona_get_sound_value: '사운드센서(AO %1)값',
-                dalgona_get_infrared_value: '적외선센서(AO %1)값',
-                dalgona_get_pullup: '풀업 저항 사용 버튼 %1 핀 눌림 상태',
-                dalgona_get_button: '버튼 %1 핀 눌림 상태',
-                dalgona_get_analog_mapping: '아날로그 %1 번 핀 센서 값의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼 값',
-                dalgona_mapping1: '%1 값을 %2 ~ %3 사이로 제한한 값',
-                dalgona_mapping2: '%1 값을 %2 ~ %3 범위에서 %4 ~ %5 범위로 변환',
-                dalgona_get_digital_ultrasonic: '초음파 Trig %1 핀 Echo %2 핀 센서 값',
-                dalgona_get_digital: '디지털 %1 핀 읽기',
-                dalgona_get_digital_toggle: '디지털 %1 핀 센서 값',
-                dalgona_get_digital_pir: 'PIR %1 핀 센서 값',
-                dalgona_set_digital_toggle: '디지털 %1 핀 %2 %3',
-                dalgona_set_led_toggle: 'LED %1 핀 %2 %3',
-                dalgona_set_digital_pwm: 'LED (PWM %1 핀)밝기 %2 출력 (0 ~ 255)%3',
-                dalgona_set_digital_rgbled: 'RGB LED (R %1 핀, G %2 핀, B %3 핀) 색 (R: %4, G: %5, B: %6) 출력 %7',
-                dalgona_set_digital_servo: '서보 모터 %1 핀 %2 각도로 회전 %3',
-                dalgona_set_digital_servo2: "서보 모터 %1 핀 %2 ~ %3 각도로 %4 초 동안 회전 %5",
-                dalgona_set_digital_buzzer_toggle: '피에조부저 %1 핀 %2 %3',
-                dalgona_set_digital_buzzer_volume: '피에조부저 (PWM %1 핀) 음량 %2 출력 (0 ~ 255) %3',
-                dalgona_set_digital_buzzer: '피에조부저 %1 핀 %2 %3 음 %4 박자 연주 %5',
-                dalgona_set_digital_dcmotor: 'DC모터 %1핀 %2 %3',
-                dalgona_set_analog_dcmotor: 'DC모터(PWM %1 핀) 세기 %2 출력 (0 ~ 255) %3',
-                dalgona_set_neopixel_init: '네오픽셀 LED 시작하기 설정 ( %1 핀에 %2 개의 LED 연결) %3',
-                dalgona_set_neopixel_bright: '네오픽셀 LED ( %1 핀) 밝기 %2 으로 설정 (0 ~ 255) %3',
-                dalgona_set_neopixel: '네오픽셀 LED ( %1 핀) %2 번째 LED 색 %3 출력 %4',
-                dalgona_set_neopixel_all: '네오픽셀 LED ( %1 핀) 모든 LED 색 %2 출력 %3',
-                dalgona_set_neopixel_clear: '네오픽셀 LED ( %1 핀) 모든 LED 끄기 %2',
-                dalgona_set_dotmatrix_init: '8x8 도트매트릭스 시작하기 설정 (DIN %1, CLK %2, CS %3) %4',
-                dalgona_set_dotmatrix_bright: '도트매트릭스 밝기 %1 으로 설정 (0 ~ 8) %2',
-                dalgona_set_dotmatrix: '도트매트릭스 LED %1 그리기 %2',
-                dalgona_set_dotmatrix_emoji: '도트매트릭스 LED %1 그리기 %2',
-                dalgona_set_dotmatrix_clear: '도트매트릭스 LED 지우기 %1',
-                dalgona_lcd_init: 'I2C LCD 시작하기 설정 (주소 %1 ,열 %2, 행 %3) %4',
-                dalgona_get_lcd_row: '%1',
-                dalgona_get_lcd_col: '%1',
-                dalgona_module_digital_lcd: 'LCD화면 %1 열 %2 행 부터 %3 출력 %4',
-                dalgona_lcd_clear: 'LCD 화면 지우기 %1',
-                dalgona_get_dht: 'DHT11 온습도센서(out %1)의 %2값',
-                //dalgona_get_dht_temp_value: 'DHT11 온습도센서(out %1)의 온도(°C)값',
-                //dalgona_get_dht_humi_value: 'DHT11 온습도센서(out %1)의 습도(%)값',
+                dalgona_basic_digital_title:'달고나 디지털 블럭',
+                dalgona_basic_analog_title:'달고나 아날로그 블럭',
+                dalgona_basic_pwm_title:'달고나 PWM 블럭',
+                dalgona_basic_library_title:'달고나 라이브러리 블럭',
+                dalgona_basic_neopixel_title:'달고나 네오픽셀 블럭',
+                dalgona_basic_ultrasonic_title: '달고나 초음파센서 블럭',
+                dalgona_basic_buzzer_title: '달고나 피에조 부저 블럭',
+                dalgona_basic_dotmatrix_title:'달고나 8X8 도트매트릭스 블럭',
+                dalgona_basic_rfid_title:'달고나 RFID 블럭',
+                dalgona_basic_motor_title:'달고나 모터 블럭',
+                dalgona_basic_stepmotor_title:'달고나 스텝모터 블럭',
+                dalgona_basic_joystick_title:'달고나 조이스틱 블럭',
+                dalgona_basic_LCD_title:'달고나 LCD 블럭',
+                dalgona_basic_mp3_title:'달고나 mp3 블럭',
+                dalgona_basic_HX711_title:'달고나 HX711 로드셀 블럭',
+                dalgona_basic_sensor_title:'달고나 센서 블럭',
+                dalgona_basic_toggle_on: '켜기',
+                dalgona_basic_toggle_off: '끄기',
+                dalgona_basic_lcd_first_line: '첫 번째',
+                dalgona_basic_lcd_seconds_line: '두 번째',
+                dalgona_basic_get_analog_value: '아날로그 %1 핀 읽기',
+                dalgona_basic_get_light_value: '조도센서(AO %1)값',
+                dalgona_basic_get_moisture_value: '토양수분센서(AO %1)값',
+                dalgona_basic_get_sound_value: '사운드센서(AO %1)값',
+                dalgona_basic_get_infrared_value: '적외선센서(AO %1)값',
+                dalgona_basic_get_pullup: '풀업 저항 사용 버튼 %1 핀 눌림 상태',
+                dalgona_basic_get_button: '버튼 %1 핀 눌림 상태',
+                dalgona_basic_get_analog_mapping: '아날로그 %1 번 핀 센서 값의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼 값',
+                dalgona_basic_mapping1: '%1 값을 %2 ~ %3 사이로 제한한 값',
+                dalgona_basic_mapping2: '%1 값을 %2 ~ %3 범위에서 %4 ~ %5 범위로 변환',
+                dalgona_basic_get_digital_ultrasonic: '초음파 Trig %1 핀 Echo %2 핀 센서 값',
+                dalgona_basic_get_digital: '디지털 %1 핀 읽기',
+                dalgona_basic_get_digital_toggle: '디지털 %1 핀 센서 값',
+                dalgona_basic_get_digital_pir: 'PIR %1 핀 센서 값',
+                dalgona_basic_set_digital_toggle: '디지털 %1 핀 %2 %3',
+                dalgona_basic_set_led_toggle: 'LED %1 핀 %2 %3',
+                dalgona_basic_set_digital_pwm: 'LED (PWM %1 핀)밝기 %2 출력 (0 ~ 255)%3',
+                dalgona_basic_set_digital_rgbled: 'RGB LED (R %1 핀, G %2 핀, B %3 핀) 색 (R: %4, G: %5, B: %6) 출력 %7',
+                dalgona_basic_set_digital_servo: '서보 모터 %1 핀 %2 각도로 회전 %3',
+                dalgona_basic_set_digital_servo2: "서보 모터 %1 핀 %2 ~ %3 각도로 %4 초 동안 회전 %5",
+                dalgona_basic_set_digital_buzzer_toggle: '피에조부저 %1 핀 %2 %3',
+                dalgona_basic_set_digital_buzzer_volume: '피에조부저 (PWM %1 핀) 음량 %2 출력 (0 ~ 255) %3',
+                dalgona_basic_set_digital_buzzer: '피에조부저 %1 핀 %2 %3 음 %4 박자 연주 %5',
+                dalgona_basic_set_digital_dcmotor: 'DC모터 %1핀 %2 %3',
+                dalgona_basic_set_analog_dcmotor: 'DC모터(PWM %1 핀) 세기 %2 출력 (0 ~ 255) %3',
+                dalgona_basic_set_neopixel_init: '네오픽셀 LED 시작하기 설정 ( %1 핀에 %2 개의 LED 연결) %3',
+                dalgona_basic_set_neopixel_bright: '네오픽셀 LED ( %1 핀) 밝기 %2 으로 설정 (0 ~ 255) %3',
+                dalgona_basic_set_neopixel: '네오픽셀 LED ( %1 핀) %2 번째 LED 색 %3 출력 %4',
+                dalgona_basic_set_neopixel_all: '네오픽셀 LED ( %1 핀) 모든 LED 색 %2 출력 %3',
+                dalgona_basic_set_neopixel_clear: '네오픽셀 LED ( %1 핀) 모든 LED 끄기 %2',
+                dalgona_basic_set_dotmatrix_init: '8x8 도트매트릭스 시작하기 설정 (DIN %1, CLK %2, CS %3) %4',
+                dalgona_basic_set_dotmatrix_bright: '도트매트릭스 밝기 %1 으로 설정 (0 ~ 8) %2',
+                dalgona_basic_set_dotmatrix: '도트매트릭스 LED %1 그리기 %2',
+                dalgona_basic_set_dotmatrix_emoji: '도트매트릭스 LED %1 그리기 %2',
+                dalgona_basic_set_dotmatrix_clear: '도트매트릭스 LED 지우기 %1',
+                dalgona_basic_lcd_init: 'I2C LCD 시작하기 설정 (주소 %1 ,열 %2, 행 %3) %4',
+                dalgona_basic_get_lcd_row: '%1',
+                dalgona_basic_get_lcd_col: '%1',
+                dalgona_basic_module_digital_lcd: 'LCD화면 %1 열 %2 행 부터 %3 출력 %4',
+                dalgona_basic_lcd_clear: 'LCD 화면 지우기 %1',
+                dalgona_basic_get_dht: 'DHT11 온습도센서(out %1)의 %2값',
+                //dalgona_basic_get_dht_temp_value: 'DHT11 온습도센서(out %1)의 온도(°C)값',
+                //dalgona_basic_get_dht_humi_value: 'DHT11 온습도센서(out %1)의 습도(%)값',
 
-                dalgona_set_mp3_init: 'mp3 초기화 ( tx: %1, rx: %2 ) %3',
-                dalgona_set_mp3_play: 'mp3 %1 번 파일 재생 %2',
-                dalgona_set_mp3_play2: 'mp3 %1 번 파일 %2 초 동안 재생 %3',
-                dalgona_set_mp3_vol: 'mp3 볼륨 %1 으로 설정 (0 ~ 30) %2',
-                dalgona_get_analog_temp_value: 'DHT11 포트 %1의 %2 센서 값',
+                dalgona_basic_set_mp3_init: 'mp3 초기화 ( tx: %1, rx: %2 ) %3',
+                dalgona_basic_set_mp3_play: 'mp3 %1 번 파일 재생 %2',
+                dalgona_basic_set_mp3_play2: 'mp3 %1 번 파일 %2 초 동안 재생 %3',
+                dalgona_basic_set_mp3_vol: 'mp3 볼륨 %1 으로 설정 (0 ~ 30) %2',
+                dalgona_basic_get_analog_temp_value: 'DHT11 포트 %1의 %2 센서 값',
 
-                dalgona_load_init: 'HX711 로드셀 시작하기 설정 (DOUT %1, SCK %2) %3',
-                dalgona_load_scale: 'HX711 로드셀 보정하기 %1 %2',
-                dalgona_load_value: 'HX711 로드셀 값',
+                dalgona_basic_load_init: 'HX711 로드셀 시작하기 설정 (DOUT %1, SCK %2) %3',
+                dalgona_basic_load_scale: 'HX711 로드셀 보정하기 %1 %2',
+                dalgona_basic_load_value: 'HX711 로드셀 값',
 
-                dalgona_get_dust: '미세먼지센서 (LED %1, AO %2) 값',
+                dalgona_basic_get_dust: '미세먼지센서 (LED %1, AO %2) 값',
 
-                dalgona_rfid_init: 'RFID 시작하기 설정 (SS %1, RST %2) %3',
-                dalgona_is_rfid_tapped: 'RFID 카드가 인식되었는가?',
-                dalgona_get_rfid_value: 'RFID 카드 값',
-                dalgona_joy_init: '%1 조이스틱 시작하기 설정 (X AO %2, Y AO %3, Z %4) %5',
-                dalgona_get_joy_x: '%1 조이스틱 X값',
-                dalgona_get_joy_y: '%1 조이스틱 y값',
-                dalgona_get_joy_z: '%1 조이스틱 버튼 눌림 상태',
-                dalgona_get_joy_move: '%1 조이스틱이 %2 방향으로 움직였을 때',
+                dalgona_basic_rfid_init: 'RFID 시작하기 설정 (SS %1, RST %2) %3',
+                dalgona_basic_is_rfid_tapped: 'RFID 카드가 인식되었는가?',
+                dalgona_basic_get_rfid_value: 'RFID 카드 값',
+                dalgona_basic_joy_init: '%1 조이스틱 시작하기 설정 (X AO %2, Y AO %3, Z %4) %5',
+                dalgona_basic_get_joy_x: '%1 조이스틱 X값',
+                dalgona_basic_get_joy_y: '%1 조이스틱 y값',
+                dalgona_basic_get_joy_z: '%1 조이스틱 버튼 눌림 상태',
+                dalgona_basic_get_joy_move: '%1 조이스틱이 %2 방향으로 움직였을 때',
 
-                dalgona_get_mlx: 'mlx90614 비접촉 온도센서 %1값',
+                dalgona_basic_get_mlx: 'mlx90614 비접촉 온도센서 %1값',
 
-                dalgona_step_init: '%1 스텝모터 시작하기 설정 (IN1 %2, IN2 %3, IN3 %4, IN4 %5) %6',
-                dalgona_step_speed: '%1 스텝모터 속도를 %2 로 설정하기 (0 ~ 20) %3',
-                dalgona_step_rotate: '%1 스텝모터 %2 으로 %3 바퀴 회전하기 %4',
-                dalgona_step_rotate2: '%1 스텝모터 %2 으로 %3 도 회전하기 %4',
-                dalgona_step_rotate3: '%1 스텝모터 %2 으로 %3 초 동안 회전하기 %4',
+                dalgona_basic_step_init: '%1 스텝모터 시작하기 설정 (IN1 %2, IN2 %3, IN3 %4, IN4 %5) %6',
+                dalgona_basic_step_speed: '%1 스텝모터 속도를 %2 로 설정하기 (0 ~ 20) %3',
+                dalgona_basic_step_rotate: '%1 스텝모터 %2 으로 %3 바퀴 회전하기 %4',
+                dalgona_basic_step_rotate2: '%1 스텝모터 %2 으로 %3 도 회전하기 %4',
+                dalgona_basic_step_rotate3: '%1 스텝모터 %2 으로 %3 초 동안 회전하기 %4',
 
-                // dalgona_get_digital_bluetooth: '블루투스 RX 2 핀 데이터 값',
-                // dalgona_module_digital_bluetooth: '블루투스 TX 3 핀에 %1 데이터 보내기 %2',
+                // dalgona_basic_get_digital_bluetooth: '블루투스 RX 2 핀 데이터 값',
+                // dalgona_basic_module_digital_bluetooth: '블루투스 TX 3 핀에 %1 데이터 보내기 %2',
 
             },
         },
@@ -282,200 +283,200 @@ Entry.Dalgona.setLanguage = function() {
                 set_neopixelinit: '디지털 %1 번 핀에 연결된 %2 개의 네오픽셀 LED 사용하기 %3',
 				set_neopixel: '디지털 %1 번 핀에 연결된 %2 번째 네오픽셀 LED를 R: %3 , G: %4 , B: %5 색으로 켜기 %6',
 				
-                dalgona_digital_title:'달고나 디지털 블럭',
-                dalgona_analog_title:'달고나 아날로그 블럭',
-                dalgona_pwm_title:'달고나 PWM 블럭',
-                dalgona_library_title:'달고나 라이브러리 블럭',
-                dalgona_neopixel_title:'달고나 네오픽셀 블럭',
-                dalgona_ultrasonic_title: '달고나 초음파센서 블럭',
-                dalgona_buzzer_title: '달고나 피에조 부저 블럭',
-                dalgona_dotmatrix_title:'달고나 8X8 도트매트릭스 블럭',
-                dalgona_rfid_title:'달고나 RFID 블럭',
-                dalgona_motor_title:'달고나 모터 블럭',
-                dalgona_stepmotor_title:'달고나 스텝모터 블럭',
-                dalgona_joystick_title:'달고나 조이스틱 블럭',
-                dalgona_LCD_title:'달고나 LCD 블럭',
-                dalgona_mp3_title:'달고나 mp3 블럭',
-                dalgona_HX711_title:'달고나 HX711 로드셀 블럭',
-                dalgona_sensor_title:'달고나 센서 블럭',
+                dalgona_basic_digital_title:'달고나 디지털 블럭',
+                dalgona_basic_analog_title:'달고나 아날로그 블럭',
+                dalgona_basic_pwm_title:'달고나 PWM 블럭',
+                dalgona_basic_library_title:'달고나 라이브러리 블럭',
+                dalgona_basic_neopixel_title:'달고나 네오픽셀 블럭',
+                dalgona_basic_ultrasonic_title: '달고나 초음파센서 블럭',
+                dalgona_basic_buzzer_title: '달고나 피에조 부저 블럭',
+                dalgona_basic_dotmatrix_title:'달고나 8X8 도트매트릭스 블럭',
+                dalgona_basic_rfid_title:'달고나 RFID 블럭',
+                dalgona_basic_motor_title:'달고나 모터 블럭',
+                dalgona_basic_stepmotor_title:'달고나 스텝모터 블럭',
+                dalgona_basic_joystick_title:'달고나 조이스틱 블럭',
+                dalgona_basic_LCD_title:'달고나 LCD 블럭',
+                dalgona_basic_mp3_title:'달고나 mp3 블럭',
+                dalgona_basic_HX711_title:'달고나 HX711 로드셀 블럭',
+                dalgona_basic_sensor_title:'달고나 센서 블럭',
 
-                dalgona_toggle_on: 'on',
-                dalgona_toggle_off: 'off',
-                dalgona_lcd_first_line: 'first',
-                dalgona_lcd_seconds_line: 'seconds',
-                dalgona_get_analog_value: 'Read analog %1 pin sensor value',
-                dalgona_get_analog_mapping: 'Map analog %1 pin sensor value from %2 ~ %3 to %4 ~ %5',
-                dalgona_mapping1: '%1 값을 %2 ~ %3 사이로 제한한 값',
-                dalgona_mapping2: '%1 값을 %2 ~ %3 범위에서 %4 ~ %5 범위로 변환',
-                dalgona_get_digital_bluetooth: 'Bluetooth RX 2 value',
-                dalgona_get_digital_ultrasonic: 'Read ultrasonic Trig %1 Echo %2 sensor value',
-                dalgona_get_digital: 'Digital %1 pin sensor value',
-                dalgona_get_digital_toggle: 'Digital %1 pin sensor value',
-                dalgona_set_digital_toggle: 'Digital %1 pin %2 %3',
-                dalgona_set_digital_pwm: 'Digital pwm %1 Pin %2 %3',
-                dalgona_set_digital_rgbled: 'Digital %1 pin RGB LED Red %2 Green %3 Blue %4 %5',
-                dalgona_set_digital_servo: '서보 모터 %1 핀 %2 각도로 회전 %3',
-                dalgona_set_digital_buzzer_toggle: '피에조부저 %1 핀 %2 %3',
-                dalgona_set_digital_buzzer_volume: '피에조부저 (PWM %1 핀) 음량 %2 출력 (0 ~ 255) %3',
-                dalgona_set_digital_buzzer:'피에조부저 %1 번 핀의 버저를 %2 %3 음으로 %4 박자 연주 %5',
-                dalgona_set_digital_dcmotor: 'DC Motor %1 pin direction %2 %3 pin speed %4 %5',
-                dalgona_set_neopixel_init:'네오픽셀 LED 시작하기 설정 ( %1 핀에 %2 개의 LED 연결) %3',
-                dalgona_set_neopixel_bright: '네오픽셀 LED ( %1 핀) 밝기 %2 으로 설정 (0 ~ 255) %3',
-                dalgona_set_neopixel: '네오픽셀 LED ( %1 핀) %2 번째 LED 색 %3 출력 %4',
-                dalgona_set_neopixel_all: '네오픽셀 LED ( %1 핀) 모든 LED 색 %2 출력 %3',
-                dalgona_set_neopixel_clear: '네오픽셀 LED ( %1 핀) 모든 LED 끄기 %2',
-                dalgona_set_dotmatrix_init: '8x8 도트매트릭스 시작하기 설정 (DIN %1, CLK %2, CS %3) %4',
-                dalgona_set_dotmatrix_bright: '도트매트릭스 밝기 %1 으로 설정 (0 ~ 8) %2',
-                dalgona_set_dotmatrix: '도트매트릭스 LED 그리기 %1 %2',
-                dalgona_set_dotmatrix_emoji: '도트매트릭스 LED %1 그리기 %2',
-                dalgona_module_digital_lcd: 'LCD %1 열 %2 행 부터 %3 출력',
-                dalgona_lcd_init: 'I2C LCD 시작하기 설정 (주소 %1 ,열 %2, 행 %3) %4',
+                dalgona_basic_toggle_on: 'on',
+                dalgona_basic_toggle_off: 'off',
+                dalgona_basic_lcd_first_line: 'first',
+                dalgona_basic_lcd_seconds_line: 'seconds',
+                dalgona_basic_get_analog_value: 'Read analog %1 pin sensor value',
+                dalgona_basic_get_analog_mapping: 'Map analog %1 pin sensor value from %2 ~ %3 to %4 ~ %5',
+                dalgona_basic_mapping1: '%1 값을 %2 ~ %3 사이로 제한한 값',
+                dalgona_basic_mapping2: '%1 값을 %2 ~ %3 범위에서 %4 ~ %5 범위로 변환',
+                dalgona_basic_get_digital_bluetooth: 'Bluetooth RX 2 value',
+                dalgona_basic_get_digital_ultrasonic: 'Read ultrasonic Trig %1 Echo %2 sensor value',
+                dalgona_basic_get_digital: 'Digital %1 pin sensor value',
+                dalgona_basic_get_digital_toggle: 'Digital %1 pin sensor value',
+                dalgona_basic_set_digital_toggle: 'Digital %1 pin %2 %3',
+                dalgona_basic_set_digital_pwm: 'Digital pwm %1 Pin %2 %3',
+                dalgona_basic_set_digital_rgbled: 'Digital %1 pin RGB LED Red %2 Green %3 Blue %4 %5',
+                dalgona_basic_set_digital_servo: '서보 모터 %1 핀 %2 각도로 회전 %3',
+                dalgona_basic_set_digital_buzzer_toggle: '피에조부저 %1 핀 %2 %3',
+                dalgona_basic_set_digital_buzzer_volume: '피에조부저 (PWM %1 핀) 음량 %2 출력 (0 ~ 255) %3',
+                dalgona_basic_set_digital_buzzer:'피에조부저 %1 번 핀의 버저를 %2 %3 음으로 %4 박자 연주 %5',
+                dalgona_basic_set_digital_dcmotor: 'DC Motor %1 pin direction %2 %3 pin speed %4 %5',
+                dalgona_basic_set_neopixel_init:'네오픽셀 LED 시작하기 설정 ( %1 핀에 %2 개의 LED 연결) %3',
+                dalgona_basic_set_neopixel_bright: '네오픽셀 LED ( %1 핀) 밝기 %2 으로 설정 (0 ~ 255) %3',
+                dalgona_basic_set_neopixel: '네오픽셀 LED ( %1 핀) %2 번째 LED 색 %3 출력 %4',
+                dalgona_basic_set_neopixel_all: '네오픽셀 LED ( %1 핀) 모든 LED 색 %2 출력 %3',
+                dalgona_basic_set_neopixel_clear: '네오픽셀 LED ( %1 핀) 모든 LED 끄기 %2',
+                dalgona_basic_set_dotmatrix_init: '8x8 도트매트릭스 시작하기 설정 (DIN %1, CLK %2, CS %3) %4',
+                dalgona_basic_set_dotmatrix_bright: '도트매트릭스 밝기 %1 으로 설정 (0 ~ 8) %2',
+                dalgona_basic_set_dotmatrix: '도트매트릭스 LED 그리기 %1 %2',
+                dalgona_basic_set_dotmatrix_emoji: '도트매트릭스 LED %1 그리기 %2',
+                dalgona_basic_module_digital_lcd: 'LCD %1 열 %2 행 부터 %3 출력',
+                dalgona_basic_lcd_init: 'I2C LCD 시작하기 설정 (주소 %1 ,열 %2, 행 %3) %4',
 
-                dalgona_module_digital_bluetooth: 'Bluetooth TX 3 Pin %1 data send %2',
-                dalgona_module_digital_oled: 'OLED X codinate %1 Y coodinate %2 appear %3 %4',
-                dalgona_get_dht_temp_value: '온습도센서의 온도값',
-                dalgona_get_dht_humi_value: '온습도센서의 습도값',
+                dalgona_basic_module_digital_bluetooth: 'Bluetooth TX 3 Pin %1 data send %2',
+                dalgona_basic_module_digital_oled: 'OLED X codinate %1 Y coodinate %2 appear %3 %4',
+                dalgona_basic_get_dht_temp_value: '온습도센서의 온도값',
+                dalgona_basic_get_dht_humi_value: '온습도센서의 습도값',
 
-                dalgona_set_mp3_init: 'mp3 초기화 ( tx: %1, rx: %2 ) %3',
-                dalgona_set_mp3_play: 'mp3 %1 번 파일 재생 %2',
-                dalgona_set_mp3_play2: 'mp3 %1 번 파일 %2 초 동안 재생 %3',
-                dalgona_set_mp3_vol: 'mp3 볼륨 %1 으로 설정 (0 ~ 30) %2',
+                dalgona_basic_set_mp3_init: 'mp3 초기화 ( tx: %1, rx: %2 ) %3',
+                dalgona_basic_set_mp3_play: 'mp3 %1 번 파일 재생 %2',
+                dalgona_basic_set_mp3_play2: 'mp3 %1 번 파일 %2 초 동안 재생 %3',
+                dalgona_basic_set_mp3_vol: 'mp3 볼륨 %1 으로 설정 (0 ~ 30) %2',
 
-                dalgona_load_init: 'HX711 로드셀 시작하기 설정 (DOUT %1, SCK %2) %3',
-                dalgona_load_scale: 'HX711 로드셀 보정하기 %1 %2',
-                dalgona_load_value: 'HX711 로드셀 값',
+                dalgona_basic_load_init: 'HX711 로드셀 시작하기 설정 (DOUT %1, SCK %2) %3',
+                dalgona_basic_load_scale: 'HX711 로드셀 보정하기 %1 %2',
+                dalgona_basic_load_value: 'HX711 로드셀 값',
 
-                dalgona_get_dust: '미세먼지센서(LED %1, AO %2) 값(μg/m³)',
+                dalgona_basic_get_dust: '미세먼지센서(LED %1, AO %2) 값(μg/m³)',
 
-                dalgona_rfid_init: 'RFID 시작하기 설정 (RST %1, SS %2) %3',
-                dalgona_is_rfid_tapped: 'RFID 카드가 인식되었는가?',
-                dalgona_get_rfid_value: 'RFID 카드 값',
+                dalgona_basic_rfid_init: 'RFID 시작하기 설정 (RST %1, SS %2) %3',
+                dalgona_basic_is_rfid_tapped: 'RFID 카드가 인식되었는가?',
+                dalgona_basic_get_rfid_value: 'RFID 카드 값',
 
-                dalgona_joy_init: '%1 조이스틱 시작하기 설정 (X AO %2, Y AO %3, Z %4) %5',
-                dalgona_get_joy_x: '%1 조이스틱 X값',
-                dalgona_get_joy_y: '%1 조이스틱 y값',
-                dalgona_get_joy_z: '%1 조이스틱 버튼 눌림 상태',
-                dalgona_get_joy_move: '%1 조이스틱이 %2 방향으로 움직였을 때',
+                dalgona_basic_joy_init: '%1 조이스틱 시작하기 설정 (X AO %2, Y AO %3, Z %4) %5',
+                dalgona_basic_get_joy_x: '%1 조이스틱 X값',
+                dalgona_basic_get_joy_y: '%1 조이스틱 y값',
+                dalgona_basic_get_joy_z: '%1 조이스틱 버튼 눌림 상태',
+                dalgona_basic_get_joy_move: '%1 조이스틱이 %2 방향으로 움직였을 때',
 
-                dalgona_step_init: '%1 스텝모터 시작하기 설정 (IN1 %2, IN2 %3, IN3 %4, IN4 %5) %6',
-                dalgona_step_speed: '%1 스텝모터 속도를 %2 로 설정하기 (0 ~ 20) %3',
-                dalgona_step_rotate: '%1 스텝모터 %2 으로 %3 바퀴 회전하기 %4',
-                dalgona_step_rotate2: '%1 스텝모터 %2 으로 %3 도 회전하기 %4',
-                dalgona_step_rotate3: '%1 스텝모터 %2 으로 %3 초 동안 회전하기 %4',
+                dalgona_basic_step_init: '%1 스텝모터 시작하기 설정 (IN1 %2, IN2 %3, IN3 %4, IN4 %5) %6',
+                dalgona_basic_step_speed: '%1 스텝모터 속도를 %2 로 설정하기 (0 ~ 20) %3',
+                dalgona_basic_step_rotate: '%1 스텝모터 %2 으로 %3 바퀴 회전하기 %4',
+                dalgona_basic_step_rotate2: '%1 스텝모터 %2 으로 %3 도 회전하기 %4',
+                dalgona_basic_step_rotate3: '%1 스텝모터 %2 으로 %3 초 동안 회전하기 %4',
 
-                dalgona_mlx: 'mlx90614 값',
+                dalgona_basic_mlx: 'mlx90614 값',
             },
         },
     };
 };
-Entry.Dalgona.blockMenuBlocks = [
+Entry.Dalgona_basic.blockMenuBlocks = [
 
     // 'FND_event',
     // 'FND_Control_diplay_brightness',
     // 'FND_Control_display_onoff',
     // 'FND_Control_diplay_char',
 
-    'dalgona_digital_title',
-    'dalgona_set_digital_toggle',
-    'dalgona_get_digital',
-    'dalgona_set_led_toggle',
+    'dalgona_basic_digital_title',
+    'dalgona_basic_set_digital_toggle',
+    'dalgona_basic_get_digital',
+    'dalgona_basic_set_led_toggle',
 
-    'dalgona_analog_title',
-    'dalgona_get_analog_value',
-    'dalgona_get_analog_mapping',
-    'dalgona_mapping1',
-    'dalgona_mapping2',
+    'dalgona_basic_analog_title',
+    'dalgona_basic_get_analog_value',
+    'dalgona_basic_get_analog_mapping',
+    'dalgona_basic_mapping1',
+    'dalgona_basic_mapping2',
     
-    'dalgona_pwm_title',
-    'dalgona_set_digital_pwm',
-    'dalgona_set_digital_rgbled',
+    'dalgona_basic_pwm_title',
+    'dalgona_basic_set_digital_pwm',
+    'dalgona_basic_set_digital_rgbled',
 
-    'dalgona_library_title',
+    'dalgona_basic_library_title',
 
-    'dalgona_neopixel_title',
-    'dalgona_set_neopixel_init',
-    'dalgona_set_neopixel_bright',
-    'dalgona_set_neopixel',
-    'dalgona_set_neopixel_all',
-    'dalgona_set_neopixel_clear',
+    'dalgona_basic_neopixel_title',
+    'dalgona_basic_set_neopixel_init',
+    'dalgona_basic_set_neopixel_bright',
+    'dalgona_basic_set_neopixel',
+    'dalgona_basic_set_neopixel_all',
+    'dalgona_basic_set_neopixel_clear',
 
-    'dalgona_ultrasonic_title',
-    'dalgona_get_digital_ultrasonic',
+    'dalgona_basic_ultrasonic_title',
+    'dalgona_basic_get_digital_ultrasonic',
 
-    'dalgona_buzzer_title',
-    'dalgona_set_digital_buzzer_toggle',
-    'dalgona_set_digital_buzzer_volume',
-    'dalgona_set_digital_buzzer',
+    'dalgona_basic_buzzer_title',
+    'dalgona_basic_set_digital_buzzer_toggle',
+    'dalgona_basic_set_digital_buzzer_volume',
+    'dalgona_basic_set_digital_buzzer',
 
-    'dalgona_dotmatrix_title',
-    'dalgona_set_dotmatrix_init',
-    'dalgona_set_dotmatrix_bright',
-    'dalgona_set_dotmatrix',
-    'dalgona_set_dotmatrix_emoji',
-    'dalgona_set_dotmatrix_clear',
+    // 'dalgona_basic_dotmatrix_title',
+    // 'dalgona_basic_set_dotmatrix_init',
+    // 'dalgona_basic_set_dotmatrix_bright',
+    // 'dalgona_basic_set_dotmatrix',
+    // 'dalgona_basic_set_dotmatrix_emoji',
+    // 'dalgona_basic_set_dotmatrix_clear',
 
-    'dalgona_rfid_title',
-    'dalgona_rfid_init',
-    'dalgona_is_rfid_tapped',
-    'dalgona_get_rfid_value',
+    // 'dalgona_basic_rfid_title',
+    // 'dalgona_basic_rfid_init',
+    // 'dalgona_basic_is_rfid_tapped',
+    // 'dalgona_basic_get_rfid_value',
 
-    'dalgona_motor_title',
-    'dalgona_set_digital_dcmotor',
-    'dalgona_set_analog_dcmotor',
-    'dalgona_set_digital_servo',
-    'dalgona_set_digital_servo2',
+    // 'dalgona_basic_motor_title',
+    // 'dalgona_basic_set_digital_dcmotor',
+    // 'dalgona_basic_set_analog_dcmotor',
+    // 'dalgona_basic_set_digital_servo',
+    // 'dalgona_basic_set_digital_servo2',
 
-    'dalgona_stepmotor_title',
-    'dalgona_step_init',
-    'dalgona_step_speed',
-    'dalgona_step_rotate',
-    'dalgona_step_rotate2',
-    'dalgona_step_rotate3',
+    // 'dalgona_basic_stepmotor_title',
+    // 'dalgona_basic_step_init',
+    // 'dalgona_basic_step_speed',
+    // 'dalgona_basic_step_rotate',
+    // 'dalgona_basic_step_rotate2',
+    // 'dalgona_basic_step_rotate3',
 
-    'dalgona_joystick_title',
-    'dalgona_joy_init',
-    'dalgona_get_joy_x',
-    'dalgona_get_joy_y',
-    'dalgona_get_joy_z',
-    'dalgona_get_joy_move',
+    // 'dalgona_basic_joystick_title',
+    // 'dalgona_basic_joy_init',
+    // 'dalgona_basic_get_joy_x',
+    // 'dalgona_basic_get_joy_y',
+    // 'dalgona_basic_get_joy_z',
+    // 'dalgona_basic_get_joy_move',
 
-    'dalgona_LCD_title',
-    'dalgona_lcd_init',
-    'dalgona_module_digital_lcd',
-    'dalgona_get_lcd_row',
-    'dalgona_get_lcd_col',
-    'dalgona_lcd_clear',
+    // 'dalgona_basic_LCD_title',
+    // 'dalgona_basic_lcd_init',
+    // 'dalgona_basic_module_digital_lcd',
+    // 'dalgona_basic_get_lcd_row',
+    // 'dalgona_basic_get_lcd_col',
+    // 'dalgona_basic_lcd_clear',
 
-    'dalgona_mp3_title',
-    'dalgona_set_mp3_init',
-    'dalgona_set_mp3_vol',
-    'dalgona_set_mp3_play',
-    'dalgona_set_mp3_play2',
+    // 'dalgona_basic_mp3_title',
+    // 'dalgona_basic_set_mp3_init',
+    // 'dalgona_basic_set_mp3_vol',
+    // 'dalgona_basic_set_mp3_play',
+    // 'dalgona_basic_set_mp3_play2',
 
-    'dalgona_HX711_title',
-    'dalgona_load_init',
-    'dalgona_load_scale',
-    'dalgona_load_value',
+    // 'dalgona_basic_HX711_title',
+    // 'dalgona_basic_load_init',
+    // 'dalgona_basic_load_scale',
+    // 'dalgona_basic_load_value',
 
-    'dalgona_sensor_title',
+    'dalgona_basic_sensor_title',
 
-    'dalgona_get_dust',
-    'dalgona_get_digital_toggle',
-    'dalgona_get_digital_pir',
-    'dalgona_get_light_value',
-    'dalgona_get_moisture_value',
-    'dalgona_get_sound_value',
-    'dalgona_get_infrared_value',
-    'dalgona_get_dht',
-    //'dalgona_get_dht_temp_value',
-    //'dalgona_get_dht_humi_value',
-    'dalgona_get_pullup',
-    'dalgona_get_button',
-    'dalgona_get_mlx',
-    // 'dalgona_get_digital_bluetooth',
-    // 'dalgona_module_digital_bluetooth',
+    // 'dalgona_basic_get_dust',
+    'dalgona_basic_get_digital_toggle',
+    'dalgona_basic_get_digital_pir',
+    'dalgona_basic_get_light_value',
+    // 'dalgona_basic_get_moisture_value',
+    'dalgona_basic_get_sound_value',
+    'dalgona_basic_get_infrared_value',
+    // 'dalgona_basic_get_dht',
+    //'dalgona_basic_get_dht_temp_value',
+    //'dalgona_basic_get_dht_humi_value',
+    'dalgona_basic_get_pullup',
+    'dalgona_basic_get_button',
+    // 'dalgona_basic_get_mlx',
+    // 'dalgona_basic_get_digital_bluetooth',
+    // 'dalgona_basic_module_digital_bluetooth',
 ];
-Entry.Dalgona.getBlocks = function() {
+Entry.Dalgona_basic.getBlocks = function() {
     var tx;
     var din;
     // var clk;
@@ -816,11 +817,11 @@ Entry.Dalgona.getBlocks = function() {
         //     },
         //     syntax: { js: [], py: ['RichShield_FND_Control_diplay_char(%1, %2, %3, %4)'] },
         // },
-        dalgona_digital_title: {
+        dalgona_basic_digital_title: {
             skeleton: 'basic_text',
             skeletonOptions: {
                 box: {
-                    offsetX: this.getOffsetX(Lang.template.dalgona_digital_title),
+                    offsetX: this.getOffsetX(Lang.template.dalgona_basic_digital_title),
                     offsetY: 3,
                 },
             },
@@ -829,23 +830,23 @@ Entry.Dalgona.getBlocks = function() {
             params: [
                 {
                     type: 'Text',
-                    text: Lang.template.dalgona_digital_title,
+                    text: Lang.template.dalgona_basic_digital_title,
                     color: '#d1702a',
                     align: 'left',
                 },
             ],
             def: {
-                type: 'dalgona_digital_title',
+                type: 'dalgona_basic_digital_title',
             },
             class: 'digital',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             events: {},
         },
-        dalgona_analog_title: {
+        dalgona_basic_analog_title: {
             skeleton: 'basic_text',
             skeletonOptions: {
                 box: {
-                    offsetX: this.getOffsetX(Lang.template.dalgona_analog_title),
+                    offsetX: this.getOffsetX(Lang.template.dalgona_basic_analog_title),
                     offsetY: 3,
                 },
             },
@@ -854,23 +855,23 @@ Entry.Dalgona.getBlocks = function() {
             params: [
                 {
                     type: 'Text',
-                    text: Lang.template.dalgona_analog_title,
+                    text: Lang.template.dalgona_basic_analog_title,
                     color: '#d1702a',
                     align: 'left',
                 },
             ],
             def: {
-                type: 'dalgona_analog_title',
+                type: 'dalgona_basic_analog_title',
             },
             class: 'analog',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             events: {},
         },
-        dalgona_pwm_title: {
+        dalgona_basic_pwm_title: {
             skeleton: 'basic_text',
             skeletonOptions: {
                 box: {
-                    offsetX: this.getOffsetX(Lang.template.dalgona_pwm_title),
+                    offsetX: this.getOffsetX(Lang.template.dalgona_basic_pwm_title),
                     offsetY: 3,
                 },
             },
@@ -879,23 +880,23 @@ Entry.Dalgona.getBlocks = function() {
             params: [
                 {
                     type: 'Text',
-                    text: Lang.template.dalgona_pwm_title,
+                    text: Lang.template.dalgona_basic_pwm_title,
                     color: '#d1702a',
                     align: 'left',
                 },
             ],
             def: {
-                type: 'dalgona_pwm_title',
+                type: 'dalgona_basic_pwm_title',
             },
             class: 'pwm',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             events: {},
         },
-        dalgona_library_title: {
+        dalgona_basic_library_title: {
             skeleton: 'basic_text',
             skeletonOptions: {
                 box: {
-                    offsetX: this.getOffsetX(Lang.template.dalgona_library_title),
+                    offsetX: this.getOffsetX(Lang.template.dalgona_basic_library_title),
                     offsetY: 3,
                 },
             },
@@ -904,23 +905,23 @@ Entry.Dalgona.getBlocks = function() {
             params: [
                 {
                     type: 'Text',
-                    text: Lang.template.dalgona_library_title,
+                    text: Lang.template.dalgona_basic_library_title,
                     color: '#d1702a',
                     align: 'left',
                 },
             ],
             def: {
-                type: 'dalgona_library_title',
+                type: 'dalgona_basic_library_title',
             },
             class: 'library',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             events: {},
         },
-        dalgona_neopixel_title: {
+        dalgona_basic_neopixel_title: {
             skeleton: 'basic_text',
             skeletonOptions: {
                 box: {
-                    offsetX: this.getOffsetX(Lang.template.dalgona_neopixel_title),
+                    offsetX: this.getOffsetX(Lang.template.dalgona_basic_neopixel_title),
                     offsetY: 3,
                 },
             },
@@ -929,23 +930,23 @@ Entry.Dalgona.getBlocks = function() {
             params: [
                 {
                     type: 'Text',
-                    text: Lang.template.dalgona_neopixel_title,
+                    text: Lang.template.dalgona_basic_neopixel_title,
                     color: '#d1702a',
                     align: 'left',
                 },
             ],
             def: {
-                type: 'dalgona_neopixel_title',
+                type: 'dalgona_basic_neopixel_title',
             },
             class: 'neopixel',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             events: {},
         },
-        dalgona_ultrasonic_title: {
+        dalgona_basic_ultrasonic_title: {
             skeleton: 'basic_text',
             skeletonOptions: {
                 box: {
-                    offsetX: this.getOffsetX(Lang.template.dalgona_ultrasonic_title),
+                    offsetX: this.getOffsetX(Lang.template.dalgona_basic_ultrasonic_title),
                     offsetY: 7,
                 },
             },
@@ -954,23 +955,23 @@ Entry.Dalgona.getBlocks = function() {
             params: [
                 {
                     type: 'Text',
-                    text: Lang.template.dalgona_ultrasonic_title,
+                    text: Lang.template.dalgona_basic_ultrasonic_title,
                     color: '#d1702a',
                     align: 'left',
                 },
             ],
             def: {
-                type: 'dalgona_ultrasonic_title',
+                type: 'dalgona_basic_ultrasonic_title',
             },
             class: 'ultrasonic',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             events: {},
         },
-        dalgona_buzzer_title: {
+        dalgona_basic_buzzer_title: {
             skeleton: 'basic_text',
             skeletonOptions: {
                 box: {
-                    offsetX: this.getOffsetX(Lang.template.dalgona_buzzer_title),
+                    offsetX: this.getOffsetX(Lang.template.dalgona_basic_buzzer_title),
                     offsetY: 3,
                 },
             },
@@ -979,23 +980,23 @@ Entry.Dalgona.getBlocks = function() {
             params: [
                 {
                     type: 'Text',
-                    text: Lang.template.dalgona_buzzer_title,
+                    text: Lang.template.dalgona_basic_buzzer_title,
                     color: '#d1702a',
                     align: 'left',
                 },
             ],
             def: {
-                type: 'dalgona_buzzer_title',
+                type: 'dalgona_basic_buzzer_title',
             },
             class: 'buzzer',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             events: {},
         },
-        dalgona_dotmatrix_title: {
+        dalgona_basic_dotmatrix_title: {
             skeleton: 'basic_text',
             skeletonOptions: {
                 box: {
-                    offsetX: this.getOffsetX(Lang.template.dalgona_dotmatrix_title),
+                    offsetX: this.getOffsetX(Lang.template.dalgona_basic_dotmatrix_title),
                     offsetY: 3,
                 },
             },
@@ -1004,23 +1005,23 @@ Entry.Dalgona.getBlocks = function() {
             params: [
                 {
                     type: 'Text',
-                    text: Lang.template.dalgona_dotmatrix_title,
+                    text: Lang.template.dalgona_basic_dotmatrix_title,
                     color: '#d1702a',
                     align: 'left',
                 },
             ],
             def: {
-                type: 'dalgona_dotmatrix_title',
+                type: 'dalgona_basic_dotmatrix_title',
             },
             class: 'dotmatrix',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             events: {},
         },
-        dalgona_rfid_title: {
+        dalgona_basic_rfid_title: {
             skeleton: 'basic_text',
             skeletonOptions: {
                 box: {
-                    offsetX: this.getOffsetX(Lang.template.dalgona_rfid_title),
+                    offsetX: this.getOffsetX(Lang.template.dalgona_basic_rfid_title),
                     offsetY: 3,
                 },
             },
@@ -1029,23 +1030,23 @@ Entry.Dalgona.getBlocks = function() {
             params: [
                 {
                     type: 'Text',
-                    text: Lang.template.dalgona_rfid_title,
+                    text: Lang.template.dalgona_basic_rfid_title,
                     color: '#d1702a',
                     align: 'left',
                 },
             ],
             def: {
-                type: 'dalgona_rfid_title',
+                type: 'dalgona_basic_rfid_title',
             },
             class: 'RFID',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             events: {},
         },
-        dalgona_motor_title: {
+        dalgona_basic_motor_title: {
             skeleton: 'basic_text',
             skeletonOptions: {
                 box: {
-                    offsetX: this.getOffsetX(Lang.template.dalgona_motor_title),
+                    offsetX: this.getOffsetX(Lang.template.dalgona_basic_motor_title),
                     offsetY: 3,
                 },
             },
@@ -1054,23 +1055,23 @@ Entry.Dalgona.getBlocks = function() {
             params: [
                 {
                     type: 'Text',
-                    text: Lang.template.dalgona_motor_title,
+                    text: Lang.template.dalgona_basic_motor_title,
                     color: '#d1702a',
                     align: 'left',
                 },
             ],
             def: {
-                type: 'dalgona_motor_title',
+                type: 'dalgona_basic_motor_title',
             },
             class: 'motor',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             events: {},
         },
-        dalgona_stepmotor_title: {
+        dalgona_basic_stepmotor_title: {
             skeleton: 'basic_text',
             skeletonOptions: {
                 box: {
-                    offsetX: this.getOffsetX(Lang.template.dalgona_stepmotor_title),
+                    offsetX: this.getOffsetX(Lang.template.dalgona_basic_stepmotor_title),
                     offsetY: 3,
                 },
             },
@@ -1079,23 +1080,23 @@ Entry.Dalgona.getBlocks = function() {
             params: [
                 {
                     type: 'Text',
-                    text: Lang.template.dalgona_stepmotor_title,
+                    text: Lang.template.dalgona_basic_stepmotor_title,
                     color: '#d1702a',
                     align: 'left',
                 },
             ],
             def: {
-                type: 'dalgona_stepmotor_title',
+                type: 'dalgona_basic_stepmotor_title',
             },
             class: 'step',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             events: {},
         },
-        dalgona_joystick_title: {
+        dalgona_basic_joystick_title: {
             skeleton: 'basic_text',
             skeletonOptions: {
                 box: {
-                    offsetX: this.getOffsetX(Lang.template.dalgona_joystick_title),
+                    offsetX: this.getOffsetX(Lang.template.dalgona_basic_joystick_title),
                     offsetY: 3,
                 },
             },
@@ -1104,23 +1105,23 @@ Entry.Dalgona.getBlocks = function() {
             params: [
                 {
                     type: 'Text',
-                    text: Lang.template.dalgona_joystick_title,
+                    text: Lang.template.dalgona_basic_joystick_title,
                     color: '#d1702a',
                     align: 'left',
                 },
             ],
             def: {
-                type: 'dalgona_joystick_title',
+                type: 'dalgona_basic_joystick_title',
             },
             class: 'joystick',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             events: {},
         },
-        dalgona_LCD_title: {
+        dalgona_basic_LCD_title: {
             skeleton: 'basic_text',
             skeletonOptions: {
                 box: {
-                    offsetX: this.getOffsetX(Lang.template.dalgona_LCD_title),
+                    offsetX: this.getOffsetX(Lang.template.dalgona_basic_LCD_title),
                     offsetY: 3,
                 },
             },
@@ -1129,23 +1130,23 @@ Entry.Dalgona.getBlocks = function() {
             params: [
                 {
                     type: 'Text',
-                    text: Lang.template.dalgona_LCD_title,
+                    text: Lang.template.dalgona_basic_LCD_title,
                     color: '#d1702a',
                     align: 'left',
                 },
             ],
             def: {
-                type: 'dalgona_LCD_title',
+                type: 'dalgona_basic_LCD_title',
             },
             class: 'LCD',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             events: {},
         },
-        dalgona_mp3_title: {
+        dalgona_basic_mp3_title: {
             skeleton: 'basic_text',
             skeletonOptions: {
                 box: {
-                    offsetX: this.getOffsetX(Lang.template.dalgona_mp3_title),
+                    offsetX: this.getOffsetX(Lang.template.dalgona_basic_mp3_title),
                     offsetY: 3,
                 },
             },
@@ -1154,23 +1155,23 @@ Entry.Dalgona.getBlocks = function() {
             params: [
                 {
                     type: 'Text',
-                    text: Lang.template.dalgona_mp3_title,
+                    text: Lang.template.dalgona_basic_mp3_title,
                     color: '#d1702a',
                     align: 'left',
                 },
             ],
             def: {
-                type: 'dalgona_mp3_title',
+                type: 'dalgona_basic_mp3_title',
             },
             class: 'mp3',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             events: {},
         },
-        dalgona_HX711_title: {
+        dalgona_basic_HX711_title: {
             skeleton: 'basic_text',
             skeletonOptions: {
                 box: {
-                    offsetX: this.getOffsetX(Lang.template.dalgona_HX711_title),
+                    offsetX: this.getOffsetX(Lang.template.dalgona_basic_HX711_title),
                     offsetY: 3,
                 },
             },
@@ -1179,23 +1180,23 @@ Entry.Dalgona.getBlocks = function() {
             params: [
                 {
                     type: 'Text',
-                    text: Lang.template.dalgona_HX711_title,
+                    text: Lang.template.dalgona_basic_HX711_title,
                     color: '#d1702a',
                     align: 'left',
                 },
             ],
             def: {
-                type: 'dalgona_HX711_title',
+                type: 'dalgona_basic_HX711_title',
             },
             class: 'HX711',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             events: {},
         },
-        dalgona_sensor_title: {
+        dalgona_basic_sensor_title: {
             skeleton: 'basic_text',
             skeletonOptions: {
                 box: {
-                    offsetX: this.getOffsetX(Lang.template.dalgona_sensor_title),
+                    offsetX: this.getOffsetX(Lang.template.dalgona_basic_sensor_title),
                     offsetY: 3,
                 },
             },
@@ -1204,23 +1205,23 @@ Entry.Dalgona.getBlocks = function() {
             params: [
                 {
                     type: 'Text',
-                    text: Lang.template.dalgona_sensor_title,
+                    text: Lang.template.dalgona_basic_sensor_title,
                     color: '#d1702a',
                     align: 'left',
                 },
             ],
             def: {
-                type: 'dalgona_sensor_title',
+                type: 'dalgona_basic_sensor_title',
             },
             class: 'sensor',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             events: {},
         },
 
 
 
 
-        dalgona_list_analog_basic: {
+        dalgona_basic_list_analog_basic: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -1254,7 +1255,7 @@ Entry.Dalgona.getBlocks = function() {
                 return script.getField('PORT');
             },
         },
-        dalgona_list_digital_basic: {
+        dalgona_basic_list_digital_basic: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -1296,7 +1297,7 @@ Entry.Dalgona.getBlocks = function() {
                 return script.getStringField('PORT');
             },
         },
-        dalgona_list_digital_octave: {
+        dalgona_basic_list_digital_octave: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -1332,7 +1333,7 @@ Entry.Dalgona.getBlocks = function() {
                 return script.getField('OCTAVE');
             },
         },
-        dalgona_list_digital_pwm: {
+        dalgona_basic_list_digital_pwm: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -1366,7 +1367,7 @@ Entry.Dalgona.getBlocks = function() {
                 return script.getStringField('PORT');
             },
         },
-        dalgona_list_digital_toggle: {
+        dalgona_basic_list_digital_toggle: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -1376,8 +1377,8 @@ Entry.Dalgona.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.template.dalgona_toggle_on, 'on'],
-                        [Lang.template.dalgona_toggle_off, 'off'],
+                        [Lang.template.dalgona_basic_toggle_on, 'on'],
+                        [Lang.template.dalgona_basic_toggle_off, 'off'],
                     ],
                     value: 'on',
                     fontSize: 11,
@@ -1396,7 +1397,7 @@ Entry.Dalgona.getBlocks = function() {
                 return script.getStringField('OPERATOR');
             },
         },
-        dalgona_list_digital_toggle_en: {
+        dalgona_basic_list_digital_toggle_en: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -1426,7 +1427,7 @@ Entry.Dalgona.getBlocks = function() {
                 return script.getStringField('OPERATOR');
             },
         },
-        dalgona_list_digital_tone: {
+        dalgona_basic_list_digital_tone: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -1467,7 +1468,7 @@ Entry.Dalgona.getBlocks = function() {
                 return script.getField('NOTE');
             },
         },
-        dalgona_set_neopixel_init: {
+        dalgona_basic_set_neopixel_init: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1502,14 +1503,14 @@ Entry.Dalgona.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'dalgona_set_neopixel_init',
+                type: 'dalgona_basic_set_neopixel_init',
             },
             paramsKeyMap: {
                 PORT: 0,
                 NUM: 1,
             },
             class: 'neopixel',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
                 var value = script.getNumberValue('NUM');
@@ -1523,7 +1524,7 @@ Entry.Dalgona.getBlocks = function() {
                     var timeValue = (60 / fps) * 50;
 
                     Entry.hw.sendQueue['SET'][port] = {
-                        type: Entry.Dalgona.sensorTypes.NEOPIXELINIT,
+                        type: Entry.Dalgona_basic.sensorTypes.NEOPIXELINIT,
                         data: value,
                         time: new Date().getTime(),
                     };
@@ -1545,7 +1546,7 @@ Entry.Dalgona.getBlocks = function() {
                 py: [{}],
             },
         },
-        dalgona_set_neopixel_bright: {
+        dalgona_basic_set_neopixel_bright: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1580,14 +1581,14 @@ Entry.Dalgona.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'dalgona_set_neopixel_bright',
+                type: 'dalgona_basic_set_neopixel_bright',
             },
             paramsKeyMap: {
                 PORT: 0,
                 NUM: 1,
             },
             class: 'neopixel',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
                 var value = script.getNumberValue('NUM');
@@ -1606,7 +1607,7 @@ Entry.Dalgona.getBlocks = function() {
                     var timeValue = (60 / fps) * 50;
 
                     Entry.hw.sendQueue['SET'][port] = {
-                        type: Entry.Dalgona.sensorTypes.NEOPIXELBRIGHT,
+                        type: Entry.Dalgona_basic.sensorTypes.NEOPIXELBRIGHT,
                         data: value,
                         time: new Date().getTime(),
                     };
@@ -1629,7 +1630,7 @@ Entry.Dalgona.getBlocks = function() {
                 py: [{}],
             },
         },
-        dalgona_set_neopixel: {
+        dalgona_basic_set_neopixel: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1668,7 +1669,7 @@ Entry.Dalgona.getBlocks = function() {
                     null,
                     null,
                 ],
-                type: 'dalgona_set_neopixel',
+                type: 'dalgona_basic_set_neopixel',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -1676,7 +1677,7 @@ Entry.Dalgona.getBlocks = function() {
                 COLOR: 2,
             },
             class: 'neopixel',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 //var sq = Entry.hw.sendQueue;
                 var port = script.getNumberValue('PORT', script);
@@ -1709,7 +1710,7 @@ Entry.Dalgona.getBlocks = function() {
                         Entry.hw.sendQueue['SET'] = {};
                     }
                     Entry.hw.sendQueue['SET'][port] = {
-                        type: Entry.Dalgona.sensorTypes.NEOPIXEL,
+                        type: Entry.Dalgona_basic.sensorTypes.NEOPIXEL,
                         data: {
                             num: num,
                             r: r,
@@ -1736,7 +1737,7 @@ Entry.Dalgona.getBlocks = function() {
                 py: [{}],
             },
         },
-        dalgona_set_neopixel_all: {
+        dalgona_basic_set_neopixel_all: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1766,14 +1767,14 @@ Entry.Dalgona.getBlocks = function() {
                     null,
                     null,
                 ],
-                type: 'dalgona_set_neopixel_all',
+                type: 'dalgona_basic_set_neopixel_all',
             },
             paramsKeyMap: {
                 PORT: 0,
                 COLOR: 1,
             },
             class: 'neopixel',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT', script);
                 var value = script.getStringField('COLOR', script);
@@ -1803,7 +1804,7 @@ Entry.Dalgona.getBlocks = function() {
                         Entry.hw.sendQueue['SET'] = {};
                     }
                     Entry.hw.sendQueue['SET'][port] = {
-                        type: Entry.Dalgona.sensorTypes.NEOPIXELALL,
+                        type: Entry.Dalgona_basic.sensorTypes.NEOPIXELALL,
                         data: {
                             r: r,
                             g: g,
@@ -1829,7 +1830,7 @@ Entry.Dalgona.getBlocks = function() {
                 py: [{}],
             },
         },
-        dalgona_set_neopixel_clear: {
+        dalgona_basic_set_neopixel_clear: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1855,13 +1856,13 @@ Entry.Dalgona.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'dalgona_set_neopixel_clear',
+                type: 'dalgona_basic_set_neopixel_clear',
             },
             paramsKeyMap: {
                 PORT: 0,
             },
             class: 'neopixel',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
                 if (!script.isStart) {
@@ -1874,7 +1875,7 @@ Entry.Dalgona.getBlocks = function() {
                     var timeValue = (60 / fps) * 50;
 
                     Entry.hw.sendQueue['SET'][port] = {
-                        type: Entry.Dalgona.sensorTypes.NEOPIXELCLEAR,
+                        type: Entry.Dalgona_basic.sensorTypes.NEOPIXELCLEAR,
                         time: new Date().getTime(),
                     };
 
@@ -1896,7 +1897,7 @@ Entry.Dalgona.getBlocks = function() {
                 py: [{}],
             },
         },
-        dalgona_lcd_list_init: {
+        dalgona_basic_lcd_list_init: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -1926,7 +1927,7 @@ Entry.Dalgona.getBlocks = function() {
                 return script.getField('LINE');
             },
         },
-        dalgona_set_dotmatrix_init: {
+        dalgona_basic_set_dotmatrix_init: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1970,7 +1971,7 @@ Entry.Dalgona.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'dalgona_set_dotmatrix_init',
+                type: 'dalgona_basic_set_dotmatrix_init',
             },
             paramsKeyMap: {
                 PORT1: 0,
@@ -1978,7 +1979,7 @@ Entry.Dalgona.getBlocks = function() {
                 PORT3: 2,
             },
             class: 'dotmatrix',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var port1 = script.getNumberValue('PORT1', script);
                 var port2 = script.getNumberValue('PORT2', script);
@@ -1998,7 +1999,7 @@ Entry.Dalgona.getBlocks = function() {
                     var timeValue = (60 / fps) * 50;
 
                     Entry.hw.sendQueue['SET'][port1] = {
-                        type: Entry.Dalgona.sensorTypes.DOTMATRIXINIT,
+                        type: Entry.Dalgona_basic.sensorTypes.DOTMATRIXINIT,
                         data: {
                             port1: port1,
                             port2: port2,
@@ -2025,7 +2026,7 @@ Entry.Dalgona.getBlocks = function() {
                 py: [{}],
             },
         },
-        dalgona_set_dotmatrix_bright: {
+        dalgona_basic_set_dotmatrix_bright: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -2051,13 +2052,13 @@ Entry.Dalgona.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'dalgona_set_dotmatrix_bright',
+                type: 'dalgona_basic_set_dotmatrix_bright',
             },
             paramsKeyMap: {
                 NUM: 0,
             },
             class: 'dotmatrix',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var num = script.getNumberValue('NUM', script);
 
@@ -2075,7 +2076,7 @@ Entry.Dalgona.getBlocks = function() {
                     var timeValue = (60 / fps) * 50;
 
                     Entry.hw.sendQueue['SET'][din] = {
-                        type: Entry.Dalgona.sensorTypes.DOTMATRIXBRIGHT,
+                        type: Entry.Dalgona_basic.sensorTypes.DOTMATRIXBRIGHT,
                         data: num,
                         time: new Date().getTime(),
                     };
@@ -2098,7 +2099,7 @@ Entry.Dalgona.getBlocks = function() {
                 py: [{}],
             },
         },
-        dalgona_set_dotmatrix_clear: {
+        dalgona_basic_set_dotmatrix_clear: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -2113,10 +2114,10 @@ Entry.Dalgona.getBlocks = function() {
             events: {},
             def: {
                 params: [],
-                type: 'dalgona_set_dotmatrix_clear',
+                type: 'dalgona_basic_set_dotmatrix_clear',
             },
             class: 'dotmatrix',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func(sprite, script) {
                 if (!script.isStart) {
                     if (!Entry.hw.sendQueue['SET']) {
@@ -2129,7 +2130,7 @@ Entry.Dalgona.getBlocks = function() {
                     timeValue = (60 / fps) * timeValue * 100;
 
                     Entry.hw.sendQueue['SET'][din] = {
-                        type: Entry.Dalgona.sensorTypes.DOTMATRIXCLEAR,
+                        type: Entry.Dalgona_basic.sensorTypes.DOTMATRIXCLEAR,
                         data: 0,
                         time: new Date().getTime(),
                     };
@@ -2152,7 +2153,7 @@ Entry.Dalgona.getBlocks = function() {
                 py: [{}],
             },
         },
-        dalgona_set_dotmatrix: {
+        dalgona_basic_set_dotmatrix: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -2176,13 +2177,13 @@ Entry.Dalgona.getBlocks = function() {
                         params: ['003c420024242400'],
                     },
                 ],
-                type: 'dalgona_set_dotmatrix',
+                type: 'dalgona_basic_set_dotmatrix',
             },
             paramsKeyMap: {
                 STRING: 0,
             },
             class: 'dotmatrix',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var text = script.getValue('STRING');
                 if (!script.isStart) {
@@ -2196,7 +2197,7 @@ Entry.Dalgona.getBlocks = function() {
                     var timeValue = (60 / fps) * 50;
 
                     Entry.hw.sendQueue['SET'][din] = {
-                        type: Entry.Dalgona.sensorTypes.DOTMATRIX,
+                        type: Entry.Dalgona_basic.sensorTypes.DOTMATRIX,
                         data: {
                             text: text,
                         },
@@ -2221,7 +2222,7 @@ Entry.Dalgona.getBlocks = function() {
                 py: [{}],
             },
         },
-        dalgona_dotmatrix_emoji_list: {
+        dalgona_basic_dotmatrix_emoji_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -2259,7 +2260,7 @@ Entry.Dalgona.getBlocks = function() {
                 return script.getField('LINE');
             },
         },
-        dalgona_set_dotmatrix_emoji: {
+        dalgona_basic_set_dotmatrix_emoji: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -2279,18 +2280,18 @@ Entry.Dalgona.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'dalgona_dotmatrix_emoji_list',
+                        type: 'dalgona_basic_dotmatrix_emoji_list',
                         params: ['1'],
                     },
                     null,
                 ],
-                type: 'dalgona_set_dotmatrix_emoji',
+                type: 'dalgona_basic_set_dotmatrix_emoji',
             },
             paramsKeyMap: {
                 LIST: 0,
             },
             class: 'dotmatrix',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var value = script.getNumberValue('LIST');
                 if (!script.isStart) {
@@ -2304,7 +2305,7 @@ Entry.Dalgona.getBlocks = function() {
                     var timeValue = (60 / fps) * 50;
 
                     Entry.hw.sendQueue['SET'][din] = {
-                        type: Entry.Dalgona.sensorTypes.DOTMATRIXEMOJI,
+                        type: Entry.Dalgona_basic.sensorTypes.DOTMATRIXEMOJI,
                         data: value,
                         time: new Date().getTime(),
                     };
@@ -2327,7 +2328,7 @@ Entry.Dalgona.getBlocks = function() {
                 py: [{}],
             },
         },
-        dalgona_list_digital_lcd: {
+        dalgona_basic_list_digital_lcd: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -2337,8 +2338,8 @@ Entry.Dalgona.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.template.dalgona_lcd_first_line, '0'],
-                        [Lang.template.dalgona_lcd_seconds_line, '1'],
+                        [Lang.template.dalgona_basic_lcd_first_line, '0'],
+                        [Lang.template.dalgona_basic_lcd_seconds_line, '1'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -2357,7 +2358,7 @@ Entry.Dalgona.getBlocks = function() {
                 return script.getField('LINE');
             },
         },
-        dalgona_get_lcd_row: {
+        dalgona_basic_get_lcd_row: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -2403,13 +2404,13 @@ Entry.Dalgona.getBlocks = function() {
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                             },
                         ],
-                        keyOption: 'dalgona_get_lcd_row',
+                        keyOption: 'dalgona_basic_get_lcd_row',
                     },
                 ],
             },
         },
 
-        dalgona_get_lcd_col: {
+        dalgona_basic_get_lcd_col: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -2483,17 +2484,17 @@ Entry.Dalgona.getBlocks = function() {
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                             },
                         ],
-                        keyOption: 'dalgona_get_lcd_col',
+                        keyOption: 'dalgona_basic_get_lcd_col',
                     },
                 ],
             },
         },
-        dalgona_get_analog_value: {
+        dalgona_basic_get_analog_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
-            template: Lang.template.dalgona_get_analog_value,
+            template: Lang.template.dalgona_basic_get_analog_value,
             statements: [],
             params: [
                 {
@@ -2505,16 +2506,16 @@ Entry.Dalgona.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'dalgona_list_analog_basic',
+                        type: 'dalgona_basic_list_analog_basic',
                     },
                 ],
-                type: 'dalgona_get_analog_value',
+                type: 'dalgona_basic_get_analog_value',
             },
             paramsKeyMap: {
                 PORT: 0,
             },
             class: 'analog',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var port = script.getValue('PORT', script);
                 var ANALOG = Entry.hw.portData.ANALOG;
@@ -2523,9 +2524,9 @@ Entry.Dalgona.getBlocks = function() {
 
                 return ANALOG ? ANALOG[port] || 0 : 0;
             },
-            syntax: { js: [], py: ['Dalgona.get_analog_value(%1)'] },
+            syntax: {},
         },
-        dalgona_get_light_value: {
+        dalgona_basic_get_light_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -2541,16 +2542,16 @@ Entry.Dalgona.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'dalgona_list_analog_basic',
+                        type: 'dalgona_basic_list_analog_basic',
                     },
                 ],
-                type: 'dalgona_get_light_value',
+                type: 'dalgona_basic_get_light_value',
             },
             paramsKeyMap: {
                 PORT: 0,
             },
             class: 'sensor',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var port = script.getValue('PORT', script);
                 var ANALOG = Entry.hw.portData.ANALOG;
@@ -2559,14 +2560,14 @@ Entry.Dalgona.getBlocks = function() {
 
                 return ANALOG ? ANALOG[port] || 0 : 0;
             },
-            syntax: { js: [], py: ['dalgona.get_analog_value(%1)'] },
+            syntax: { },
         },
-        dalgona_get_moisture_value: {
+        dalgona_basic_get_moisture_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
-            //template: Lang.template.dalgona_get_analog_value,
+            //template: Lang.template.dalgona_basic_get_analog_value,
             statements: [],
             params: [
                 {
@@ -2578,17 +2579,17 @@ Entry.Dalgona.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'dalgona_list_analog_basic',
+                        type: 'dalgona_basic_list_analog_basic',
                         params: ['1'],
                     },
                 ],
-                type: 'dalgona_get_moisture_value',
+                type: 'dalgona_basic_get_moisture_value',
             },
             paramsKeyMap: {
                 PORT: 0,
             },
             class: 'sensor',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var port = script.getValue('PORT', script);
                 var ANALOG = Entry.hw.portData.ANALOG;
@@ -2597,16 +2598,16 @@ Entry.Dalgona.getBlocks = function() {
 
                 return ANALOG ? ANALOG[port] || 0 : 0;
             },
-            syntax: { js: [], py: ['dalgona.get_analog_value(%1)'] },
+            syntax: {},
         },
 
-        dalgona_set_digital_dcmotor: {
+        dalgona_basic_set_digital_dcmotor: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
-            template: Lang.template.dalgona_set_digital_dcmotor,
+            template: Lang.template.dalgona_basic_set_digital_dcmotor,
             params: [
                 {
                     type: 'Block',
@@ -2626,21 +2627,21 @@ Entry.Dalgona.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'dalgona_list_digital_basic',
+                        type: 'dalgona_basic_list_digital_basic',
                     },
                     {
-                        type: 'dalgona_list_digital_toggle',
+                        type: 'dalgona_basic_list_digital_toggle',
                     },
                     null,
                 ],
-                type: 'dalgona_set_digital_dcmotor',
+                type: 'dalgona_basic_set_digital_dcmotor',
             },
             paramsKeyMap: {
                 PORT: 0,
                 VALUE: 1,
             },
             class: 'motor',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
                 var value = script.getValue('VALUE');
@@ -2648,9 +2649,9 @@ Entry.Dalgona.getBlocks = function() {
                 if (typeof value === 'string') {
                     value = value.toLowerCase();
                 }
-                if (Entry.Dalgona.highList.indexOf(value) > -1) {
+                if (Entry.Dalgona_basic.highList.indexOf(value) > -1) {
                     value = 255;
-                } else if (Entry.Dalgona.lowList.indexOf(value) > -1) {
+                } else if (Entry.Dalgona_basic.lowList.indexOf(value) > -1) {
                     value = 0;
                 } else {
                     throw new Error();
@@ -2660,22 +2661,22 @@ Entry.Dalgona.getBlocks = function() {
                     Entry.hw.sendQueue['SET'] = {};
                 }
                 Entry.hw.sendQueue['SET'][port] = {
-                    type: Entry.Dalgona.sensorTypes.DIGITAL,
+                    type: Entry.Dalgona_basic.sensorTypes.DIGITAL,
                     data: value,
                     time: new Date().getTime(),
                 };
 
                 return script.callReturn();
             },
-            syntax: { js: [], py: ['dalgona.set_digital_dcmotor(%1, %2, %3, %4)'] },
+            syntax: {},
         },
-        dalgona_set_analog_dcmotor: {
+        dalgona_basic_set_analog_dcmotor: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
-            template: Lang.template.dalgona_set_analog_dcmotor,
+            template: Lang.template.dalgona_basic_set_analog_dcmotor,
             params: [
                 {
                     type: 'Block',
@@ -2695,7 +2696,7 @@ Entry.Dalgona.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'dalgona_list_digital_pwm',
+                        type: 'dalgona_basic_list_digital_pwm',
                     },
                     {
                         type: 'text',
@@ -2703,14 +2704,14 @@ Entry.Dalgona.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'dalgona_set_analog_dcmotor',
+                type: 'dalgona_basic_set_analog_dcmotor',
             },
             paramsKeyMap: {
                 PORT: 0,
                 VALUE: 1,
             },
             class: 'motor',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
                 var value = script.getNumberValue('VALUE');
@@ -2722,16 +2723,16 @@ Entry.Dalgona.getBlocks = function() {
                     Entry.hw.sendQueue['SET'] = {};
                 }
                 Entry.hw.sendQueue['SET'][port] = {
-                    type: Entry.Dalgona.sensorTypes.PWM,
+                    type: Entry.Dalgona_basic.sensorTypes.PWM,
                     data: value,
                     time: new Date().getTime(),
                 };
 
                 return script.callReturn();
             },
-            syntax: { js: [], py: ['dalgona.set_digital_dcmotor(%1, %2, %3, %4)'] },
+            syntax: {},
         },
-        dalgona_get_sound_value: {
+        dalgona_basic_get_sound_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -2747,16 +2748,16 @@ Entry.Dalgona.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'dalgona_list_analog_basic',
+                        type: 'dalgona_basic_list_analog_basic',
                     },
                 ],
-                type: 'dalgona_get_sound_value',
+                type: 'dalgona_basic_get_sound_value',
             },
             paramsKeyMap: {
                 PORT: 0,
             },
             class: 'sensor',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var port = script.getValue('PORT', script);
                 var ANALOG = Entry.hw.portData.ANALOG;
@@ -2765,9 +2766,9 @@ Entry.Dalgona.getBlocks = function() {
 
                 return ANALOG ? ANALOG[port] || 0 : 0;
             },
-            syntax: { js: [], py: ['dalgona.get_analog_value(%1)'] },
+            syntax: {},
         },
-        dalgona_get_infrared_value: {
+        dalgona_basic_get_infrared_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -2783,16 +2784,16 @@ Entry.Dalgona.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'dalgona_list_analog_basic',
+                        type: 'dalgona_basic_list_analog_basic',
                     },
                 ],
-                type: 'dalgona_get_infrared_value',
+                type: 'dalgona_basic_get_infrared_value',
             },
             paramsKeyMap: {
                 PORT: 0,
             },
             class: 'sensor',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var port = script.getValue('PORT', script);
                 var ANALOG = Entry.hw.portData.ANALOG;
@@ -2801,9 +2802,9 @@ Entry.Dalgona.getBlocks = function() {
 
                 return ANALOG ? ANALOG[port] || 0 : 0;
             },
-            syntax: { js: [], py: ['dalgona.get_analog_value(%1)'] },
+            syntax: {},
         },
-        dalgona_get_pullup: {
+        dalgona_basic_get_pullup: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -2819,16 +2820,16 @@ Entry.Dalgona.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'dalgona_list_digital_basic',
+                        type: 'dalgona_basic_list_digital_basic',
                     },
                 ],
-                type: 'dalgona_get_pullup',
+                type: 'dalgona_basic_get_pullup',
             },
             paramsKeyMap: {
                 PORT: 0,
             },
             class: 'sensor',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
                 // var pu = Entry.hw.portData.PULLUP;
@@ -2847,7 +2848,7 @@ Entry.Dalgona.getBlocks = function() {
                 if (Entry.hw.sendQueue.SET[port]) {
                     return Entry.hw.sendQueue.SET[port].data;
                 } else {
-                    Entry.hw.sendQueue['GET'][Entry.Dalgona.sensorTypes.DIGITAL] = {
+                    Entry.hw.sendQueue['GET'][Entry.Dalgona_basic.sensorTypes.DIGITAL] = {
                         port: port,
                         time: new Date().getTime(),
                     };
@@ -2861,7 +2862,7 @@ Entry.Dalgona.getBlocks = function() {
             
             syntax: { js: [], py: [] },
         },
-        dalgona_get_button: {
+        dalgona_basic_get_button: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -2877,16 +2878,16 @@ Entry.Dalgona.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'dalgona_list_digital_basic',
+                        type: 'dalgona_basic_list_digital_basic',
                     },
                 ],
-                type: 'dalgona_get_button',
+                type: 'dalgona_basic_get_button',
             },
             paramsKeyMap: {
                 PORT: 0,
             },
             class: 'sensor',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT', script);
                 var DIGITAL = Entry.hw.portData.DIGITAL;
@@ -2895,7 +2896,7 @@ Entry.Dalgona.getBlocks = function() {
                     Entry.hw.sendQueue['GET'] = {};
                 }
 
-                Entry.hw.sendQueue['GET'][Entry.Dalgona.sensorTypes.DIGITAL] = {
+                Entry.hw.sendQueue['GET'][Entry.Dalgona_basic.sensorTypes.DIGITAL] = {
                     port: port,
                     data: 2,
                     time: new Date().getTime(),
@@ -2906,12 +2907,12 @@ Entry.Dalgona.getBlocks = function() {
             },
             syntax: { js: [], py: [] },
         },
-        dalgona_get_analog_mapping: {
+        dalgona_basic_get_analog_mapping: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
-            template: Lang.template.dalgona_get_analog_mapping,
+            template: Lang.template.dalgona_basic_get_analog_mapping,
             statements: [],
             params: [
                 {
@@ -2939,7 +2940,7 @@ Entry.Dalgona.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'dalgona_list_analog_basic',
+                        type: 'dalgona_basic_list_analog_basic',
                     },
                     {
                         type: 'number',
@@ -2958,7 +2959,7 @@ Entry.Dalgona.getBlocks = function() {
                         params: ['100'],
                     },
                 ],
-                type: 'dalgona_get_analog_mapping',
+                type: 'dalgona_basic_get_analog_mapping',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -2968,7 +2969,7 @@ Entry.Dalgona.getBlocks = function() {
                 VALUE5: 4,
             },
             class: 'analog',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var port = script.getValue('PORT', script);
                 var result = 0;
@@ -3002,10 +3003,10 @@ Entry.Dalgona.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: ['dalgona.get_analog_mapping(%1, %2, %3, %4, %5)'],
+                py: [],
             },
         },
-        dalgona_mapping1: {
+        dalgona_basic_mapping1: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -3041,7 +3042,7 @@ Entry.Dalgona.getBlocks = function() {
                         params: ['255'],
                     },
                 ],
-                type: 'dalgona_mapping1',
+                type: 'dalgona_basic_mapping1',
             },
             paramsKeyMap: {
                 NUM: 0,
@@ -3049,7 +3050,7 @@ Entry.Dalgona.getBlocks = function() {
                 VALUE3: 2,
             },
             class: 'analog',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var num = script.getNumberValue('NUM', script);
 
@@ -3072,7 +3073,7 @@ Entry.Dalgona.getBlocks = function() {
                 py: [],
             },
         },
-        dalgona_mapping2: {
+        dalgona_basic_mapping2: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -3124,7 +3125,7 @@ Entry.Dalgona.getBlocks = function() {
                         params: ['100'],
                     },
                 ],
-                type: 'dalgona_mapping2',
+                type: 'dalgona_basic_mapping2',
             },
             paramsKeyMap: {
                 NUM: 0,
@@ -3134,7 +3135,7 @@ Entry.Dalgona.getBlocks = function() {
                 VALUE5: 4,
             },
             class: 'analog',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var num = script.getNumberValue('NUM', script);
                 var flag = 0;
@@ -3180,12 +3181,12 @@ Entry.Dalgona.getBlocks = function() {
                 py: [],
             },
         },
-        dalgona_get_digital_ultrasonic: {
+        dalgona_basic_get_digital_ultrasonic: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
-            template: Lang.template.dalgona_get_digital_ultrasonic,
+            template: Lang.template.dalgona_basic_get_digital_ultrasonic,
             statements: [],
             params: [
                 {
@@ -3201,22 +3202,22 @@ Entry.Dalgona.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'dalgona_list_digital_basic',
+                        type: 'dalgona_basic_list_digital_basic',
                         params: ['13'],
                     },
                     {
-                        type: 'dalgona_list_digital_basic',
+                        type: 'dalgona_basic_list_digital_basic',
                         params: ['12'],
                     },
                 ],
-                type: 'dalgona_get_digital_ultrasonic',
+                type: 'dalgona_basic_get_digital_ultrasonic',
             },
             paramsKeyMap: {
                 PORT1: 0,
                 PORT2: 1,
             },
             class: 'ultrasonic',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var port1 = script.getNumberValue('PORT1');
                 var port2 = script.getNumberValue('PORT2');
@@ -3232,7 +3233,7 @@ Entry.Dalgona.getBlocks = function() {
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
-                Entry.hw.sendQueue['GET'][Entry.Dalgona.sensorTypes.ULTRASONIC] = {
+                Entry.hw.sendQueue['GET'][Entry.Dalgona_basic.sensorTypes.ULTRASONIC] = {
                     port: [port1, port2],
                     time: new Date().getTime(),
                 };
@@ -3241,10 +3242,10 @@ Entry.Dalgona.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: ['dalgona.get_digital_ultrasonic(%1, %2)'],
+                py: [],
             },
         },
-        dalgona_get_dust: {
+        dalgona_basic_get_dust: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -3264,22 +3265,22 @@ Entry.Dalgona.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'dalgona_list_digital_basic',
+                        type: 'dalgona_basic_list_digital_basic',
                         params: ['7'],
                     },
                     {
-                        type: 'dalgona_list_analog_basic',
+                        type: 'dalgona_basic_list_analog_basic',
                         params: ['0'],
                     },
                 ],
-                type: 'dalgona_get_dust',
+                type: 'dalgona_basic_get_dust',
             },
             paramsKeyMap: {
                 PORT1: 0,
                 PORT2: 1,
             },
             class: 'sensor',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var port1 = script.getNumberValue('PORT1');
                 var port2 = script.getNumberValue('PORT2');
@@ -3292,7 +3293,7 @@ Entry.Dalgona.getBlocks = function() {
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
-                Entry.hw.sendQueue['GET'][Entry.Dalgona.sensorTypes.DUST] = {
+                Entry.hw.sendQueue['GET'][Entry.Dalgona_basic.sensorTypes.DUST] = {
                     port: [port1, port2],
                     time: new Date().getTime(),
                 };
@@ -3301,16 +3302,16 @@ Entry.Dalgona.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: ['dalgona.get_digital_ultrasonic(%1, %2)'],
+                py: [],
             },
         },
-        dalgona_get_digital: {
+        dalgona_basic_get_digital: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
-            template: Lang.template.dalgona_get_digital,
+            template: Lang.template.dalgona_basic_get_digital,
             params: [
                 {
                     type: 'Block',
@@ -3322,16 +3323,16 @@ Entry.Dalgona.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'dalgona_list_digital_basic',
+                        type: 'dalgona_basic_list_digital_basic',
                     },
                 ],
-                type: 'dalgona_get_digital',
+                type: 'dalgona_basic_get_digital',
             },
             paramsKeyMap: {
                 PORT: 0,
             },
             class: 'digital',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
                 var DIGITAL = Entry.hw.portData.DIGITAL;
@@ -3342,7 +3343,7 @@ Entry.Dalgona.getBlocks = function() {
                 if (Entry.hw.sendQueue.SET[port]) {
                     return Entry.hw.sendQueue.SET[port].data;
                 } else {
-                    Entry.hw.sendQueue['GET'][Entry.Dalgona.sensorTypes.DIGITAL] = {
+                    Entry.hw.sendQueue['GET'][Entry.Dalgona_basic.sensorTypes.DIGITAL] = {
                         port: port,
                         time: new Date().getTime(),
                     };
@@ -3350,15 +3351,15 @@ Entry.Dalgona.getBlocks = function() {
 
                 return DIGITAL ? DIGITAL[port] || 0 : 0;
             },
-            syntax: { js: [], py: ['dalgona.get_digital(%1)'] },
+            syntax: { js: [], py: [] },
         },
-        dalgona_get_digital_toggle: {
+        dalgona_basic_get_digital_toggle: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
-            template: Lang.template.dalgona_get_digital_toggle,
+            template: Lang.template.dalgona_basic_get_digital_toggle,
             params: [
                 {
                     type: 'Block',
@@ -3369,16 +3370,16 @@ Entry.Dalgona.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'dalgona_list_digital_basic',
+                        type: 'dalgona_basic_list_digital_basic',
                     },
                 ],
-                type: 'dalgona_get_digital_toggle',
+                type: 'dalgona_basic_get_digital_toggle',
             },
             paramsKeyMap: {
                 PORT: 0,
             },
             class: 'sensor',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
                 var DIGITAL = Entry.hw.portData.DIGITAL;
@@ -3386,22 +3387,22 @@ Entry.Dalgona.getBlocks = function() {
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
-                Entry.hw.sendQueue['GET'][Entry.Dalgona.sensorTypes.DIGITAL] = {
+                Entry.hw.sendQueue['GET'][Entry.Dalgona_basic.sensorTypes.DIGITAL] = {
                     port: port,
                     time: new Date().getTime(),
                 };
 
                 return DIGITAL ? DIGITAL[port] || 0 : 0;
             },
-            syntax: { js: [], py: ['dalgona.get_digital_toggle(%1)'] },
+            syntax: { js: [], py: [] },
         },
-        dalgona_get_digital_pir: {
+        dalgona_basic_get_digital_pir: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
-            template: Lang.template.dalgona_get_digital_pir,
+            template: Lang.template.dalgona_basic_get_digital_pir,
             params: [
                 {
                     type: 'Block',
@@ -3412,16 +3413,16 @@ Entry.Dalgona.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'dalgona_list_digital_basic',
+                        type: 'dalgona_basic_list_digital_basic',
                     },
                 ],
-                type: 'dalgona_get_digital_pir',
+                type: 'dalgona_basic_get_digital_pir',
             },
             paramsKeyMap: {
                 PORT: 0,
             },
             class: 'sensor',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
                 var DIGITAL = Entry.hw.portData.DIGITAL;
@@ -3429,23 +3430,23 @@ Entry.Dalgona.getBlocks = function() {
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
-                Entry.hw.sendQueue['GET'][Entry.Dalgona.sensorTypes.PIR] = {
+                Entry.hw.sendQueue['GET'][Entry.Dalgona_basic.sensorTypes.PIR] = {
                     port: port,
                     time: new Date().getTime(),
                 };
 
                 return DIGITAL ? DIGITAL[port] || 0 : 0;
             },
-            syntax: { js: [], py: ['dalgona.get_digital_pir(%1)'] },
+            syntax: { js: [], py: ['dalgona_basic.get_digital_pir(%1)'] },
         },
 
-        dalgona_set_digital_toggle: {
+        dalgona_basic_set_digital_toggle: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
-            template: Lang.template.dalgona_set_digital_toggle,
+            template: Lang.template.dalgona_basic_set_digital_toggle,
             params: [
                 {
                     type: 'Block',
@@ -3465,21 +3466,21 @@ Entry.Dalgona.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'dalgona_list_digital_basic',
+                        type: 'dalgona_basic_list_digital_basic',
                     },
                     {
-                        type: 'dalgona_list_digital_toggle_en',
+                        type: 'dalgona_basic_list_digital_toggle_en',
                     },
                     null,
                 ],
-                type: 'dalgona_set_digital_toggle',
+                type: 'dalgona_basic_set_digital_toggle',
             },
             paramsKeyMap: {
                 PORT: 0,
                 VALUE: 1,
             },
             class: 'digital',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
                 var value = script.getValue('VALUE');
@@ -3487,9 +3488,9 @@ Entry.Dalgona.getBlocks = function() {
                 if (typeof value === 'string') {
                     value = value.toLowerCase();
                 }
-                if (Entry.Dalgona.highList.indexOf(value) > -1) {
+                if (Entry.Dalgona_basic.highList.indexOf(value) > -1) {
                     value = 255;
-                } else if (Entry.Dalgona.lowList.indexOf(value) > -1) {
+                } else if (Entry.Dalgona_basic.lowList.indexOf(value) > -1) {
                     value = 0;
                 } else {
                     throw new Error();
@@ -3498,16 +3499,16 @@ Entry.Dalgona.getBlocks = function() {
                     Entry.hw.sendQueue['SET'] = {};
                 }
                 Entry.hw.sendQueue['SET'][port] = {
-                    type: Entry.Dalgona.sensorTypes.DIGITAL,
+                    type: Entry.Dalgona_basic.sensorTypes.DIGITAL,
                     data: value,
                     time: new Date().getTime(),
                 };
 
                 return script.callReturn();
             },
-            syntax: { js: [], py: ['dalgona.set_digital_toggle(%1, %2)'] },
+            syntax: { js: [], py: [] },
         },
-        dalgona_set_led_toggle: {
+        dalgona_basic_set_led_toggle: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -3532,22 +3533,22 @@ Entry.Dalgona.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'dalgona_list_digital_basic',
+                        type: 'dalgona_basic_list_digital_basic',
                         params: ['13'],
                     },
                     {
-                        type: 'dalgona_list_digital_toggle',
+                        type: 'dalgona_basic_list_digital_toggle',
                     },
                     null,
                 ],
-                type: 'dalgona_set_led_toggle',
+                type: 'dalgona_basic_set_led_toggle',
             },
             paramsKeyMap: {
                 PORT: 0,
                 VALUE: 1,
             },
             class: 'digital',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
                 var value = script.getValue('VALUE');
@@ -3555,9 +3556,9 @@ Entry.Dalgona.getBlocks = function() {
                 if (typeof value === 'string') {
                     value = value.toLowerCase();
                 }
-                if (Entry.Dalgona.highList.indexOf(value) > -1) {
+                if (Entry.Dalgona_basic.highList.indexOf(value) > -1) {
                     value = 255;
-                } else if (Entry.Dalgona.lowList.indexOf(value) > -1) {
+                } else if (Entry.Dalgona_basic.lowList.indexOf(value) > -1) {
                     value = 0;
                 } else {
                     throw new Error();
@@ -3566,22 +3567,22 @@ Entry.Dalgona.getBlocks = function() {
                     Entry.hw.sendQueue['SET'] = {};
                 }
                 Entry.hw.sendQueue['SET'][port] = {
-                    type: Entry.Dalgona.sensorTypes.DIGITAL,
+                    type: Entry.Dalgona_basic.sensorTypes.DIGITAL,
                     data: value,
                     time: new Date().getTime(),
                 };
 
                 return script.callReturn();
             },
-            syntax: { js: [], py: ['dalgona.set_digital_toggle(%1, %2)'] },
+            syntax: { js: [], py: [] },
         },
-        dalgona_set_digital_pwm: {
+        dalgona_basic_set_digital_pwm: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
-            template: Lang.template.dalgona_set_digital_pwm,
+            template: Lang.template.dalgona_basic_set_digital_pwm,
             params: [
                 {
                     type: 'Block',
@@ -3601,7 +3602,7 @@ Entry.Dalgona.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'dalgona_list_digital_pwm',
+                        type: 'dalgona_basic_list_digital_pwm',
                         params: ['5'],
                     },
                     {
@@ -3610,14 +3611,14 @@ Entry.Dalgona.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'dalgona_set_digital_pwm',
+                type: 'dalgona_basic_set_digital_pwm',
             },
             paramsKeyMap: {
                 PORT: 0,
                 VALUE: 1,
             },
             class: 'pwm',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
                 var value = script.getNumberValue('VALUE');
@@ -3629,22 +3630,22 @@ Entry.Dalgona.getBlocks = function() {
                     Entry.hw.sendQueue['SET'] = {};
                 }
                 Entry.hw.sendQueue['SET'][port] = {
-                    type: Entry.Dalgona.sensorTypes.PWM,
+                    type: Entry.Dalgona_basic.sensorTypes.PWM,
                     data: value,
                     time: new Date().getTime(),
                 };
 
                 return script.callReturn();
             },
-            syntax: { js: [], py: ['dalgona.set_digital_pwm(%1, %2)'] },
+            syntax: { js: [], py: [] },
         },
-        dalgona_set_digital_rgbled: {
+        dalgona_basic_set_digital_rgbled: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
-            template: Lang.template.dalgona_set_digital_rgbled,
+            template: Lang.template.dalgona_basic_set_digital_rgbled,
             params: [
                 {
                     type: 'Block',
@@ -3680,15 +3681,15 @@ Entry.Dalgona.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'dalgona_list_digital_pwm',
+                        type: 'dalgona_basic_list_digital_pwm',
                         params: ['9'],
                     },
                     {
-                        type: 'dalgona_list_digital_pwm',
+                        type: 'dalgona_basic_list_digital_pwm',
                         params: ['10'],
                     },
                     {
-                        type: 'dalgona_list_digital_pwm',
+                        type: 'dalgona_basic_list_digital_pwm',
                         params: ['11'],
                     },
                     {
@@ -3705,7 +3706,7 @@ Entry.Dalgona.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'dalgona_set_digital_rgbled',
+                type: 'dalgona_basic_set_digital_rgbled',
             },
             paramsKeyMap: {
                 PORT1: 0,
@@ -3716,7 +3717,7 @@ Entry.Dalgona.getBlocks = function() {
                 VALUE3: 5,
             },
             class: 'pwm',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var port1 = script.getNumberValue('PORT1', script);
                 var port2 = script.getNumberValue('PORT2', script);
@@ -3793,17 +3794,17 @@ Entry.Dalgona.getBlocks = function() {
                     Entry.hw.sendQueue['SET'] = {};
                 }
                 Entry.hw.sendQueue['SET'][port1] = {
-                    type: Entry.Dalgona.sensorTypes.PWM,
+                    type: Entry.Dalgona_basic.sensorTypes.PWM,
                     data: value1,
                     time: new Date().getTime(),
                 };
                 Entry.hw.sendQueue['SET'][port2] = {
-                    type: Entry.Dalgona.sensorTypes.PWM,
+                    type: Entry.Dalgona_basic.sensorTypes.PWM,
                     data: value2,
                     time: new Date().getTime(),
                 };
                 Entry.hw.sendQueue['SET'][port3] = {
-                    type: Entry.Dalgona.sensorTypes.PWM,
+                    type: Entry.Dalgona_basic.sensorTypes.PWM,
                     data: value3,
                     time: new Date().getTime(),
                 };
@@ -3811,13 +3812,13 @@ Entry.Dalgona.getBlocks = function() {
             },
             syntax: { js: [], py: [{}] },
         },
-        dalgona_set_digital_servo: {
+        dalgona_basic_set_digital_servo: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
-            template: Lang.template.dalgona_set_digital_servo,
+            template: Lang.template.dalgona_basic_set_digital_servo,
             params: [
                 {
                     type: 'Block',
@@ -3837,7 +3838,7 @@ Entry.Dalgona.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'dalgona_list_digital_basic',
+                        type: 'dalgona_basic_list_digital_basic',
                         params: ['8'],
                     },
                     {
@@ -3846,14 +3847,14 @@ Entry.Dalgona.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'dalgona_set_digital_servo',
+                type: 'dalgona_basic_set_digital_servo',
             },
             paramsKeyMap: {
                 PORT: 0,
                 VALUE: 1,
             },
             class: 'motor',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
                 var value = script.getNumberValue('VALUE');
@@ -3864,22 +3865,22 @@ Entry.Dalgona.getBlocks = function() {
                     Entry.hw.sendQueue['SET'] = {};
                 }
                 Entry.hw.sendQueue['SET'][port] = {
-                    type: Entry.Dalgona.sensorTypes.SERVO,
+                    type: Entry.Dalgona_basic.sensorTypes.SERVO,
                     data: value,
                     time: new Date().getTime(),
                 };
 
                 return script.callReturn();
             },
-            syntax: { js: [], py: ['dalgona.set_digital_servo(%1, %2)'] },
+            syntax: { js: [], py: [] },
         },
-        dalgona_set_digital_servo2: {
+        dalgona_basic_set_digital_servo2: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
-            template: Lang.template.dalgona_set_digital_servo2,
+            template: Lang.template.dalgona_basic_set_digital_servo2,
             params: [
                 {
                     type: 'Block',
@@ -3907,7 +3908,7 @@ Entry.Dalgona.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'dalgona_list_digital_basic',
+                        type: 'dalgona_basic_list_digital_basic',
                         params: ['8'],
                     },
                     {
@@ -3924,7 +3925,7 @@ Entry.Dalgona.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'dalgona_set_digital_servo2',
+                type: 'dalgona_basic_set_digital_servo2',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -3933,7 +3934,7 @@ Entry.Dalgona.getBlocks = function() {
                 STIME: 3,
             },
             class: 'motor',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             // func: function(sprite, script) {
             //     var port = script.getNumberValue('PORT');
             //     var value1 = script.getNumber    Value('VALUE1', script);
@@ -3981,7 +3982,7 @@ Entry.Dalgona.getBlocks = function() {
                         Entry.hw.sendQueue['SET'] = {};
                     }
                     Entry.hw.sendQueue['SET'][port] = {
-                        type: Entry.Dalgona.sensorTypes.SERVO2,
+                        type: Entry.Dalgona_basic.sensorTypes.SERVO2,
                         data: {
                             value1: value1,
                             value2: value2,
@@ -4004,7 +4005,7 @@ Entry.Dalgona.getBlocks = function() {
             },
             syntax: { js: [], py: [{}] },
         },
-        dalgona_set_digital_buzzer_toggle: {
+        dalgona_basic_set_digital_buzzer_toggle: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -4029,23 +4030,23 @@ Entry.Dalgona.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'dalgona_list_digital_basic',
+                        type: 'dalgona_basic_list_digital_basic',
                         params: ['6'],
                     },
                     {
-                        type: 'dalgona_list_digital_toggle',
+                        type: 'dalgona_basic_list_digital_toggle',
                     },
 
                     null,
                 ],
-                type: 'dalgona_set_digital_buzzer_toggle',
+                type: 'dalgona_basic_set_digital_buzzer_toggle',
             },
             paramsKeyMap: {
                 PORT: 0,
                 VALUE: 1,
             },
             class: 'buzzer',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
                 var value = script.getValue('VALUE');
@@ -4053,9 +4054,9 @@ Entry.Dalgona.getBlocks = function() {
                 if (typeof value === 'string') {
                     value = value.toLowerCase();
                 }
-                if (Entry.Dalgona.highList.indexOf(value) > -1) {
+                if (Entry.Dalgona_basic.highList.indexOf(value) > -1) {
                     value = 255;
-                } else if (Entry.Dalgona.lowList.indexOf(value) > -1) {
+                } else if (Entry.Dalgona_basic.lowList.indexOf(value) > -1) {
                     value = 0;
                 } else {
                     throw new Error();
@@ -4065,7 +4066,7 @@ Entry.Dalgona.getBlocks = function() {
                 }
 
                 Entry.hw.sendQueue['SET'][port] = {
-                    type: Entry.Dalgona.sensorTypes.TONETOGGLE,
+                    type: Entry.Dalgona_basic.sensorTypes.TONETOGGLE,
                     data: value,
                     time: new Date().getTime(),
                 };
@@ -4077,7 +4078,7 @@ Entry.Dalgona.getBlocks = function() {
                 py: [],
             },
         },
-        dalgona_set_digital_buzzer_volume: {
+        dalgona_basic_set_digital_buzzer_volume: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -4102,7 +4103,7 @@ Entry.Dalgona.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'dalgona_list_digital_pwm',
+                        type: 'dalgona_basic_list_digital_pwm',
                         params: ['6'],
                     },
                     {
@@ -4111,14 +4112,14 @@ Entry.Dalgona.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'dalgona_set_digital_buzzer_volume',
+                type: 'dalgona_basic_set_digital_buzzer_volume',
             },
             paramsKeyMap: {
                 PORT: 0,
                 VALUE: 1,
             },
             class: 'buzzer',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
                 var value = script.getNumberValue('VALUE');
@@ -4130,7 +4131,7 @@ Entry.Dalgona.getBlocks = function() {
                     Entry.hw.sendQueue['SET'] = {};
                 }
                 Entry.hw.sendQueue['SET'][port] = {
-                    type: Entry.Dalgona.sensorTypes.PWM,
+                    type: Entry.Dalgona_basic.sensorTypes.PWM,
                     data: value,
                     time: new Date().getTime(),
                 };
@@ -4139,16 +4140,16 @@ Entry.Dalgona.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: ['dalgona.set_digital_toggle(%1, %2, %3, %4)'],
+                py: [],
             },
         },
-        dalgona_set_digital_buzzer: {
+        dalgona_basic_set_digital_buzzer: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
-            template: Lang.template.dalgona_set_digital_buzzer,
+            template: Lang.template.dalgona_basic_set_digital_buzzer,
             params: [
                 {
                     type: 'Block',
@@ -4176,14 +4177,14 @@ Entry.Dalgona.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'dalgona_list_digital_basic',
+                        type: 'dalgona_basic_list_digital_basic',
                         params: ['6'],
                     },
                     {
-                        type: 'dalgona_list_digital_tone',
+                        type: 'dalgona_basic_list_digital_tone',
                     },
                     {
-                        type: 'dalgona_list_digital_octave',
+                        type: 'dalgona_basic_list_digital_octave',
                     },
                     {
                         type: 'text',
@@ -4191,7 +4192,7 @@ Entry.Dalgona.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'dalgona_set_digital_buzzer',
+                type: 'dalgona_basic_set_digital_buzzer',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -4200,7 +4201,7 @@ Entry.Dalgona.getBlocks = function() {
                 DURATION: 3,
             },
             class: 'buzzer',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
                 var duration = script.getNumberValue('DURATION');
@@ -4210,7 +4211,7 @@ Entry.Dalgona.getBlocks = function() {
                 if (!script.isStart) {
                     var note = script.getValue('NOTE');
                     if (!Entry.Utils.isNumber(note)) {
-                        note = Entry.Dalgona.toneTable[note];
+                        note = Entry.Dalgona_basic.toneTable[note];
                     }
                     if (note < 0) {
                         note = 0;
@@ -4225,7 +4226,7 @@ Entry.Dalgona.getBlocks = function() {
                     }
                     if (duration === 0) {
                         Entry.hw.sendQueue['SET'][port] = {
-                            type: Entry.Dalgona.sensorTypes.TONE,
+                            type: Entry.Dalgona_basic.sensorTypes.TONE,
                             data: 0,
                             time: new Date().getTime(),
                         };
@@ -4237,14 +4238,14 @@ Entry.Dalgona.getBlocks = function() {
                         octave = 8;
                     }
                     if (note != 0) {
-                        value = Entry.Dalgona.toneMap[note][octave];
+                        value = Entry.Dalgona_basic.toneMap[note][octave];
                     }
 
                     duration = duration * 1000;
                     script.isStart = true;
                     script.timeFlag = 1;
                     Entry.hw.sendQueue['SET'][port] = {
-                        type: Entry.Dalgona.sensorTypes.TONE,
+                        type: Entry.Dalgona_basic.sensorTypes.TONE,
                         data: {
                             value: value,
                             duration: duration,
@@ -4262,7 +4263,7 @@ Entry.Dalgona.getBlocks = function() {
                     delete script.timeFlag;
                     delete script.isStart;
                     Entry.hw.sendQueue['SET'][port] = {
-                        type: Entry.Dalgona.sensorTypes.TONE,
+                        type: Entry.Dalgona_basic.sensorTypes.TONE,
                         data: 0,
                         time: new Date().getTime(),
                     };
@@ -4272,10 +4273,10 @@ Entry.Dalgona.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: ['dalgona.set_digital_toggle(%1, %2, %3, %4)'],
+                py: [],
             },
         },
-        dalgona_lcd_init: {
+        dalgona_basic_lcd_init: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -4304,7 +4305,7 @@ Entry.Dalgona.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'dalgona_lcd_list_init',
+                        type: 'dalgona_basic_lcd_list_init',
                         params: ['0'],
                     },
                     {
@@ -4317,7 +4318,7 @@ Entry.Dalgona.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'dalgona_lcd_init',
+                type: 'dalgona_basic_lcd_init',
             },
             paramsKeyMap: {
                 LIST: 0,
@@ -4325,7 +4326,7 @@ Entry.Dalgona.getBlocks = function() {
                 LINE: 2,
             },
             class: 'LCD',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var list = script.getNumberValue('LIST');
                 var col = script.getNumberValue('COL');
@@ -4342,7 +4343,7 @@ Entry.Dalgona.getBlocks = function() {
                     var timeValue = (60 / fps) * 0.1 * 1000;
 
                     Entry.hw.sendQueue['SET'][1] = {
-                        type: Entry.Dalgona.sensorTypes.LCDINIT,
+                        type: Entry.Dalgona_basic.sensorTypes.LCDINIT,
                         data: {
                             list: list,
                             col: col,
@@ -4364,9 +4365,9 @@ Entry.Dalgona.getBlocks = function() {
                     return script.callReturn();
                 }
             },
-            syntax: { js: [], py: ['dalgona.module_digital_lcd(%1, %2)'] },
+            syntax: { js: [], py: [] },
         },
-        dalgona_module_digital_lcd: {
+        dalgona_basic_module_digital_lcd: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -4397,20 +4398,20 @@ Entry.Dalgona.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'dalgona_get_lcd_col',
+                        type: 'dalgona_basic_get_lcd_col',
                         params: ['0'],
                     },
                     {
-                        type: 'dalgona_get_lcd_row',
+                        type: 'dalgona_basic_get_lcd_row',
                         params: ['0'],
                     },
                     {
                         type: 'text',
-                        params: ['Hello, dalgona'],
+                        params: ['Hello, dalgona_basic'],
                     },
                     null,
                 ],
-                type: 'dalgona_module_digital_lcd',
+                type: 'dalgona_basic_module_digital_lcd',
             },
             paramsKeyMap: {
                 COL: 0,
@@ -4418,7 +4419,7 @@ Entry.Dalgona.getBlocks = function() {
                 STRING: 2,
             },
             class: 'LCD',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var row = script.getNumberValue('ROW');
                 var col = script.getNumberValue('COL');
@@ -4436,7 +4437,7 @@ Entry.Dalgona.getBlocks = function() {
                     var timeValue = (60 / fps) * 100;
 
                     Entry.hw.sendQueue['SET'][1] = {
-                        type: Entry.Dalgona.sensorTypes.LCD,
+                        type: Entry.Dalgona_basic.sensorTypes.LCD,
                         data: {
                             line: row,
                             column: col,
@@ -4458,9 +4459,9 @@ Entry.Dalgona.getBlocks = function() {
                     return script.callReturn();
                 }
             },
-            syntax: { js: [], py: ['dalgona.module_digital_lcd(%1, %2)'] },
+            syntax: { js: [], py: [] },
         },
-        dalgona_lcd_clear: {
+        dalgona_basic_lcd_clear: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -4475,10 +4476,10 @@ Entry.Dalgona.getBlocks = function() {
             events: {},
             def: {
                 params: [],
-                type: 'dalgona_lcd_clear',
+                type: 'dalgona_basic_lcd_clear',
             },
             class: 'LCD',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func(sprite, script) {
                 if (!script.isStart) {
                     if (!Entry.hw.sendQueue['SET']) {
@@ -4491,7 +4492,7 @@ Entry.Dalgona.getBlocks = function() {
                     var timeValue = (60 / fps) * 50;
 
                     Entry.hw.sendQueue['SET'][1] = {
-                        type: Entry.Dalgona.sensorTypes.LCDCLEAR,
+                        type: Entry.Dalgona_basic.sensorTypes.LCDCLEAR,
                         data: 0,
                         time: new Date().getTime(),
                     };
@@ -4515,7 +4516,7 @@ Entry.Dalgona.getBlocks = function() {
             },
         },
 
-        dalgona_get_dht: {
+        dalgona_basic_get_dht: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -4547,14 +4548,14 @@ Entry.Dalgona.getBlocks = function() {
                     },
 
                 ],
-                type: 'dalgona_get_dht',
+                type: 'dalgona_basic_get_dht',
             },
             paramsKeyMap: {
                 PORT: 0,
                 DHT_SELECT: 1,
             },
             class: 'sensor',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
                 var type = script.getNumberValue('DHT_SELECT');
@@ -4569,13 +4570,13 @@ Entry.Dalgona.getBlocks = function() {
                 }
 
                 if (type == 0) {
-                    Entry.hw.sendQueue['GET'][Entry.Dalgona.sensorTypes.DHTTEMP] = {
+                    Entry.hw.sendQueue['GET'][Entry.Dalgona_basic.sensorTypes.DHTTEMP] = {
                         port: port,
                         time: new Date().getTime(),
                     };
                     return Entry.hw.portData.DHTTEMP || 0;
                 } else if (type == 1) {
-                    Entry.hw.sendQueue['GET'][Entry.Dalgona.sensorTypes.DHTHUMI] = {
+                    Entry.hw.sendQueue['GET'][Entry.Dalgona_basic.sensorTypes.DHTHUMI] = {
                         port: port,
                         time: new Date().getTime(),
                     };
@@ -4588,7 +4589,7 @@ Entry.Dalgona.getBlocks = function() {
             },
         },
 
-        dalgona_set_mp3_init: {
+        dalgona_basic_set_mp3_init: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -4623,14 +4624,14 @@ Entry.Dalgona.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'dalgona_set_mp3_init',
+                type: 'dalgona_basic_set_mp3_init',
             },
             paramsKeyMap: {
                 PORT1: 0,
                 PORT2: 1,
             },
             class: 'mp3',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 tx = script.getNumberValue('PORT1');
                 var rx = script.getNumberValue('PORT2');
@@ -4645,7 +4646,7 @@ Entry.Dalgona.getBlocks = function() {
                     var timeValue = (60 / fps) * 50;
 
                     Entry.hw.sendQueue['SET'][tx] = {
-                        type: Entry.Dalgona.sensorTypes.MP3INIT,
+                        type: Entry.Dalgona_basic.sensorTypes.MP3INIT,
                         data: {
                             tx: tx,
                             rx: rx,
@@ -4672,7 +4673,7 @@ Entry.Dalgona.getBlocks = function() {
             },
         },
 
-        dalgona_set_mp3_play: {
+        dalgona_basic_set_mp3_play: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -4698,13 +4699,13 @@ Entry.Dalgona.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'dalgona_set_mp3_play',
+                type: 'dalgona_basic_set_mp3_play',
             },
             paramsKeyMap: {
                 NUM: 0,
             },
             class: 'mp3',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var num = script.getNumberValue('NUM');
 
@@ -4717,7 +4718,7 @@ Entry.Dalgona.getBlocks = function() {
                 var timeValue = (60 / fps) * 50;
 
                 Entry.hw.sendQueue['SET'][tx] = {
-                    type: Entry.Dalgona.sensorTypes.MP3PLAY1,
+                    type: Entry.Dalgona_basic.sensorTypes.MP3PLAY1,
                     data: {
                         tx: tx,
                         num: num,
@@ -4733,7 +4734,7 @@ Entry.Dalgona.getBlocks = function() {
             },
         },
 
-        dalgona_set_mp3_play2: {
+        dalgona_basic_set_mp3_play2: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -4768,14 +4769,14 @@ Entry.Dalgona.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'dalgona_set_mp3_play2',
+                type: 'dalgona_basic_set_mp3_play2',
             },
             paramsKeyMap: {
                 NUM: 0,
                 TIME: 1,
             },
             class: 'mp3',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var num = script.getNumberValue('NUM');
                 var time_value = script.getNumberValue('TIME');
@@ -4790,7 +4791,7 @@ Entry.Dalgona.getBlocks = function() {
                     time_value = (60 / fps) * time_value * 1000;
 
                     Entry.hw.sendQueue['SET'][tx] = {
-                        type: Entry.Dalgona.sensorTypes.MP3PLAY1,
+                        type: Entry.Dalgona_basic.sensorTypes.MP3PLAY1,
                         data: {
                             tx: tx,
                             num: num,
@@ -4810,7 +4811,7 @@ Entry.Dalgona.getBlocks = function() {
                     delete script.isStart;
 
                     Entry.hw.sendQueue['SET'][tx] = {
-                        type: Entry.Dalgona.sensorTypes.MP3PLAY1,
+                        type: Entry.Dalgona_basic.sensorTypes.MP3PLAY1,
                         data: 0,
                         time: new Date().getTime(),
                     };
@@ -4825,7 +4826,7 @@ Entry.Dalgona.getBlocks = function() {
             },
         },
 
-        dalgona_set_mp3_vol: {
+        dalgona_basic_set_mp3_vol: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -4851,13 +4852,13 @@ Entry.Dalgona.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'dalgona_set_mp3_vol',
+                type: 'dalgona_basic_set_mp3_vol',
             },
             paramsKeyMap: {
                 VOL: 0,
             },
             class: 'mp3',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var vol = script.getNumberValue('VOL');
 
@@ -4875,7 +4876,7 @@ Entry.Dalgona.getBlocks = function() {
                     var timeValue = (60 / fps) * 50;
 
                     Entry.hw.sendQueue['SET'][tx] = {
-                        type: Entry.Dalgona.sensorTypes.MP3VOL,
+                        type: Entry.Dalgona_basic.sensorTypes.MP3VOL,
                         data: {
                             tx: tx,
                             vol: vol,
@@ -4902,7 +4903,7 @@ Entry.Dalgona.getBlocks = function() {
             },
         },
 
-        dalgona_load_init: {
+        dalgona_basic_load_init: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -4937,14 +4938,14 @@ Entry.Dalgona.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'dalgona_load_init',
+                type: 'dalgona_basic_load_init',
             },
             paramsKeyMap: {
                 PORT1: 0,
                 PORT2: 1,
             },
             class: 'HX711',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var port1 = script.getNumberValue('PORT1', script);
                 var port2 = script.getNumberValue('PORT2', script);
@@ -4962,7 +4963,7 @@ Entry.Dalgona.getBlocks = function() {
                     var timeValue = (60 / fps) * 50;
 
                     Entry.hw.sendQueue['SET'][sck] = {
-                        type: Entry.Dalgona.sensorTypes.LOADINIT,
+                        type: Entry.Dalgona_basic.sensorTypes.LOADINIT,
                         data: {
                             port1: port1,
                             port2: port2,
@@ -4989,7 +4990,7 @@ Entry.Dalgona.getBlocks = function() {
             },
         },
 
-        dalgona_load_scale: {
+        dalgona_basic_load_scale: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -5015,13 +5016,13 @@ Entry.Dalgona.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'dalgona_load_scale',
+                type: 'dalgona_basic_load_scale',
             },
             paramsKeyMap: {
                 NUM: 0,
             },
             class: 'HX711',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var num = script.getNumberValue('NUM', script);
 
@@ -5035,7 +5036,7 @@ Entry.Dalgona.getBlocks = function() {
                     var timeValue = (60 / fps) * 50;
 
                     Entry.hw.sendQueue['SET'][sck] = {
-                        type: Entry.Dalgona.sensorTypes.LOADSCALE,
+                        type: Entry.Dalgona_basic.sensorTypes.LOADSCALE,
                         data: {
                             num: num,
                         },
@@ -5061,7 +5062,7 @@ Entry.Dalgona.getBlocks = function() {
             },
         },
 
-        dalgona_load_value: {
+        dalgona_basic_load_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -5070,11 +5071,11 @@ Entry.Dalgona.getBlocks = function() {
             params: [],
             events: {},
             def: {
-                type: 'dalgona_load_value',
+                type: 'dalgona_basic_load_value',
             },
             paramsKeyMap: {},
             class: 'HX711',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 if (!Entry.hw.sendQueue['SET']) {
                     Entry.hw.sendQueue['SET'] = {};
@@ -5084,7 +5085,7 @@ Entry.Dalgona.getBlocks = function() {
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
-                Entry.hw.sendQueue['GET'][Entry.Dalgona.sensorTypes.LOADVALUE] = {
+                Entry.hw.sendQueue['GET'][Entry.Dalgona_basic.sensorTypes.LOADVALUE] = {
                     port: sck,
                     time: new Date().getTime(),
                 };
@@ -5096,7 +5097,7 @@ Entry.Dalgona.getBlocks = function() {
                 py: [{}],
             },
         },
-        dalgona_list_joy: {
+        dalgona_basic_list_joy: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -5126,7 +5127,7 @@ Entry.Dalgona.getBlocks = function() {
                 return script.getField('NUM');
             },
         },
-        dalgona_joy_init: {
+        dalgona_basic_joy_init: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -5162,15 +5163,15 @@ Entry.Dalgona.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'dalgona_list_joy',
+                        type: 'dalgona_basic_list_joy',
                         params: ['1'],
                     },
                     {
-                        type: 'dalgona_list_analog_basic',
+                        type: 'dalgona_basic_list_analog_basic',
                         params: ['0'],
                     },
                     {
-                        type: 'dalgona_list_analog_basic',
+                        type: 'dalgona_basic_list_analog_basic',
                         params: ['1'],
                     },
                     {
@@ -5179,7 +5180,7 @@ Entry.Dalgona.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'dalgona_joy_init',
+                type: 'dalgona_basic_joy_init',
             },
             paramsKeyMap: {
                 NUM: 0,
@@ -5188,7 +5189,7 @@ Entry.Dalgona.getBlocks = function() {
                 PORT3: 3,
             },
             class: 'joystick',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var num = script.getNumberValue('NUM', script);
                 var port1 = script.getNumberValue('PORT1', script);
@@ -5216,7 +5217,7 @@ Entry.Dalgona.getBlocks = function() {
 
                     if (num == 1) {
                         Entry.hw.sendQueue['SET'][joyx] = {
-                            type: Entry.Dalgona.sensorTypes.JOYINIT,
+                            type: Entry.Dalgona_basic.sensorTypes.JOYINIT,
                             data: {
                                 num: num,
                                 port1: port1,
@@ -5227,7 +5228,7 @@ Entry.Dalgona.getBlocks = function() {
                         };
                     } else if (num == 2) {
                         Entry.hw.sendQueue['SET'][joyx2] = {
-                            type: Entry.Dalgona.sensorTypes.JOYINIT,
+                            type: Entry.Dalgona_basic.sensorTypes.JOYINIT,
                             data: {
                                 num: num,
                                 port1: port1,
@@ -5256,7 +5257,7 @@ Entry.Dalgona.getBlocks = function() {
             },
         },
 
-        dalgona_get_joy_x: {
+        dalgona_basic_get_joy_x: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -5273,17 +5274,17 @@ Entry.Dalgona.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'dalgona_list_joy',
+                        type: 'dalgona_basic_list_joy',
                         params: ['1'],
                     },
                 ],
-                type: 'dalgona_get_joy_x',
+                type: 'dalgona_basic_get_joy_x',
             },
             paramsKeyMap: {
                 NUM: 0,
             },
             class: 'joystick',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var ANALOG = Entry.hw.portData.ANALOG;
                 var num = script.getNumberValue('NUM', script);
@@ -5299,7 +5300,7 @@ Entry.Dalgona.getBlocks = function() {
             },
         },
 
-        dalgona_get_joy_y: {
+        dalgona_basic_get_joy_y: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -5316,17 +5317,17 @@ Entry.Dalgona.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'dalgona_list_joy',
+                        type: 'dalgona_basic_list_joy',
                         params: ['1'],
                     },
                 ],
-                type: 'dalgona_get_joy_y',
+                type: 'dalgona_basic_get_joy_y',
             },
             paramsKeyMap: {
                 NUM: 0,
             },
             class: 'joystick',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var ANALOG = Entry.hw.portData.ANALOG;
                 var num = script.getNumberValue('NUM', script);
@@ -5342,7 +5343,7 @@ Entry.Dalgona.getBlocks = function() {
             },
         },
 
-        dalgona_get_joy_z: {
+        dalgona_basic_get_joy_z: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -5359,17 +5360,17 @@ Entry.Dalgona.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'dalgona_list_joy',
+                        type: 'dalgona_basic_list_joy',
                         params: ['1'],
                     },
                 ],
-                type: 'dalgona_get_joy_z',
+                type: 'dalgona_basic_get_joy_z',
             },
             paramsKeyMap: {
                 NUM: 0,
             },
             class: 'joystick',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var DIGITAL = Entry.hw.portData.DIGITAL;
                 var num = script.getNumberValue('NUM', script);
@@ -5379,7 +5380,7 @@ Entry.Dalgona.getBlocks = function() {
                 }
 
                 if (num == 1) {
-                    Entry.hw.sendQueue['GET'][Entry.Dalgona.sensorTypes.DIGITAL] = {
+                    Entry.hw.sendQueue['GET'][Entry.Dalgona_basic.sensorTypes.DIGITAL] = {
                         port: joyz,
                         data: 2,
                         time: new Date().getTime(),
@@ -5388,7 +5389,7 @@ Entry.Dalgona.getBlocks = function() {
                     var value = DIGITAL ? DIGITAL[joyz] || 0 : 0;
                     return !value;
                 } else if (num == 2) {
-                    Entry.hw.sendQueue['GET'][Entry.Dalgona.sensorTypes.DIGITAL] = {
+                    Entry.hw.sendQueue['GET'][Entry.Dalgona_basic.sensorTypes.DIGITAL] = {
                         port: joyz2,
                         data: 2,
                         time: new Date().getTime(),
@@ -5400,7 +5401,7 @@ Entry.Dalgona.getBlocks = function() {
             },
             syntax: { js: [], py: [] },
         },
-        dalgona_list_joy_direction: {
+        dalgona_basic_list_joy_direction: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -5437,7 +5438,7 @@ Entry.Dalgona.getBlocks = function() {
                 return script.getField('DIR');
             },
         },
-        dalgona_get_joy_move: {
+        dalgona_basic_get_joy_move: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -5457,22 +5458,22 @@ Entry.Dalgona.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'dalgona_list_joy',
+                        type: 'dalgona_basic_list_joy',
                         params: ['1'],
                     },
                     {
-                        type: 'dalgona_list_joy_direction',
+                        type: 'dalgona_basic_list_joy_direction',
                         params: ['0'],
                     },
                 ],
-                type: 'dalgona_get_joy_move',
+                type: 'dalgona_basic_get_joy_move',
             },
             paramsKeyMap: {
                 NUM: 0,
                 DIR: 1,
             },
             class: 'joystick',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func(sprite, script) {
                 var direction = script.getNumberValue('DIR');
                 const ANALOG = Entry.hw.portData.ANALOG;
@@ -5492,55 +5493,55 @@ Entry.Dalgona.getBlocks = function() {
                     ypin = joyy2;
                 }
                 if (
-                    direction == Entry.Dalgona.direction.CENTER &&
+                    direction == Entry.Dalgona_basic.direction.CENTER &&
                     getValue(xpin) == 1 &&
                     getValue(ypin) == 1
                 ) {
                     return 1;
                 } else if (
-                    direction == Entry.Dalgona.direction.DOWN &&
+                    direction == Entry.Dalgona_basic.direction.DOWN &&
                     getValue(xpin) == 1 &&
                     getValue(ypin) == 2
                 ) {
                     return 1;
                 } else if (
-                    direction == Entry.Dalgona.direction.LEFT &&
+                    direction == Entry.Dalgona_basic.direction.LEFT &&
                     getValue(xpin) == 0 &&
                     getValue(ypin) == 1
                 ) {
                     return 1;
                 } else if (
-                    direction == Entry.Dalgona.direction.LEFT_DOWN &&
+                    direction == Entry.Dalgona_basic.direction.LEFT_DOWN &&
                     getValue(xpin) == 0 &&
                     getValue(ypin) == 2
                 ) {
                     return 1;
                 } else if (
-                    direction == Entry.Dalgona.direction.LEFT_UP &&
+                    direction == Entry.Dalgona_basic.direction.LEFT_UP &&
                     getValue(xpin) == 0 &&
                     getValue(ypin) == 0
                 ) {
                     return 1;
                 } else if (
-                    direction == Entry.Dalgona.direction.RIGHT &&
+                    direction == Entry.Dalgona_basic.direction.RIGHT &&
                     getValue(xpin) == 2 &&
                     getValue(ypin) == 1
                 ) {
                     return 1;
                 } else if (
-                    direction == Entry.Dalgona.direction.RIGHT_DOWN &&
+                    direction == Entry.Dalgona_basic.direction.RIGHT_DOWN &&
                     getValue(xpin) == 2 &&
                     getValue(ypin) == 2
                 ) {
                     return 1;
                 } else if (
-                    direction == Entry.Dalgona.direction.RIGHT_UP &&
+                    direction == Entry.Dalgona_basic.direction.RIGHT_UP &&
                     getValue(xpin) == 2 &&
                     getValue(ypin) == 0
                 ) {
                     return 1;
                 } else if (
-                    direction == Entry.Dalgona.direction.UP &&
+                    direction == Entry.Dalgona_basic.direction.UP &&
                     getValue(xpin) == 1 &&
                     getValue(ypin) == 0
                 ) {
@@ -5554,7 +5555,7 @@ Entry.Dalgona.getBlocks = function() {
                 py: [{}],
             },
         },
-        dalgona_list_step: {
+        dalgona_basic_list_step: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -5585,7 +5586,7 @@ Entry.Dalgona.getBlocks = function() {
                 return script.getField('NUM');
             },
         },
-        dalgona_step_init: {
+        dalgona_basic_step_init: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -5626,7 +5627,7 @@ Entry.Dalgona.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'dalgona_list_step',
+                        type: 'dalgona_basic_list_step',
                         params: ['1'],
                     },
                     {
@@ -5647,7 +5648,7 @@ Entry.Dalgona.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'dalgona_step_init',
+                type: 'dalgona_basic_step_init',
             },
             paramsKeyMap: {
                 NUM: 0,
@@ -5657,7 +5658,7 @@ Entry.Dalgona.getBlocks = function() {
                 PORT4: 4,
             },
             class: 'step',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var num = script.getNumberValue('NUM', script);
                 var port1 = script.getNumberValue('PORT1', script);
@@ -5691,7 +5692,7 @@ Entry.Dalgona.getBlocks = function() {
                         console.log(port4);
 
                         Entry.hw.sendQueue['SET'][portpin1] = {
-                            type: Entry.Dalgona.sensorTypes.STEPINIT,
+                            type: Entry.Dalgona_basic.sensorTypes.STEPINIT,
                             data: {
                                 num: num,
                                 port1: port1,
@@ -5709,7 +5710,7 @@ Entry.Dalgona.getBlocks = function() {
                         console.log(port3);
                         console.log(port4);
                         Entry.hw.sendQueue['SET'][portpin2] = {
-                            type: Entry.Dalgona.sensorTypes.STEPINIT,
+                            type: Entry.Dalgona_basic.sensorTypes.STEPINIT,
                             data: {
                                 num: num,
                                 port1: port1,
@@ -5727,7 +5728,7 @@ Entry.Dalgona.getBlocks = function() {
                         console.log(port3);
                         console.log(port4);
                         Entry.hw.sendQueue['SET'][portpin3] = {
-                            type: Entry.Dalgona.sensorTypes.STEPINIT,
+                            type: Entry.Dalgona_basic.sensorTypes.STEPINIT,
                             data: {
                                 num: num,
                                 port1: port1,
@@ -5757,7 +5758,7 @@ Entry.Dalgona.getBlocks = function() {
                 py: [{}],
             },
         },
-        dalgona_step_speed: {
+        dalgona_basic_step_speed: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -5783,7 +5784,7 @@ Entry.Dalgona.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'dalgona_list_step',
+                        type: 'dalgona_basic_list_step',
                         params: ['1'],
                     },
                     {
@@ -5792,14 +5793,14 @@ Entry.Dalgona.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'dalgona_step_speed',
+                type: 'dalgona_basic_step_speed',
             },
             paramsKeyMap: {
                 NUM: 0,
                 SPEED: 1,
             },
             class: 'step',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var num = script.getNumberValue('NUM', script);
                 var sp = script.getNumberValue('SPEED', script);
@@ -5827,7 +5828,7 @@ Entry.Dalgona.getBlocks = function() {
 
                     if (num == 1) {
                         Entry.hw.sendQueue['SET'][portpin1] = {
-                            type: Entry.Dalgona.sensorTypes.STEPSPEED,
+                            type: Entry.Dalgona_basic.sensorTypes.STEPSPEED,
                             data: {
                                 num: num,
                                 speed: speed1,
@@ -5836,7 +5837,7 @@ Entry.Dalgona.getBlocks = function() {
                         };
                     } else if (num == 2) {
                         Entry.hw.sendQueue['SET'][portpin2] = {
-                            type: Entry.Dalgona.sensorTypes.STEPSPEED,
+                            type: Entry.Dalgona_basic.sensorTypes.STEPSPEED,
                             data: {
                                 num: num,
                                 speed: speed2,
@@ -5845,7 +5846,7 @@ Entry.Dalgona.getBlocks = function() {
                         };
                     } else if (num == 3) {
                         Entry.hw.sendQueue['SET'][portpin3] = {
-                            type: Entry.Dalgona.sensorTypes.STEPSPEED,
+                            type: Entry.Dalgona_basic.sensorTypes.STEPSPEED,
                             data: {
                                 num: num,
                                 speed: speed3,
@@ -5872,7 +5873,7 @@ Entry.Dalgona.getBlocks = function() {
                 py: [{}],
             },
         },
-        dalgona_list_step_direction: {
+        dalgona_basic_list_step_direction: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -5902,7 +5903,7 @@ Entry.Dalgona.getBlocks = function() {
                 return script.getField('DIR');
             },
         },
-        dalgona_step_rotate: {
+        dalgona_basic_step_rotate: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -5933,11 +5934,11 @@ Entry.Dalgona.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'dalgona_list_step',
+                        type: 'dalgona_basic_list_step',
                         params: ['1'],
                     },
                     {
-                        type: 'dalgona_list_step_direction',
+                        type: 'dalgona_basic_list_step_direction',
                         params: ['1'],
                     },
                     {
@@ -5946,7 +5947,7 @@ Entry.Dalgona.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'dalgona_step_rotate',
+                type: 'dalgona_basic_step_rotate',
             },
             paramsKeyMap: {
                 NUM: 0,
@@ -5954,7 +5955,7 @@ Entry.Dalgona.getBlocks = function() {
                 VALUE: 2,
             },
             class: 'step',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var dir = script.getNumberValue('DIR', script);
                 num = script.getNumberValue('NUM', script);
@@ -5972,7 +5973,7 @@ Entry.Dalgona.getBlocks = function() {
                         timeValue = (60 / speed1) * val * 1000 + 32;
                         console.log(timeValue);
                         Entry.hw.sendQueue['SET'][portpin1] = {
-                            type: Entry.Dalgona.sensorTypes.STEPROTATE,
+                            type: Entry.Dalgona_basic.sensorTypes.STEPROTATE,
                             data: {
                                 num: num,
                                 dir: dir,
@@ -5983,7 +5984,7 @@ Entry.Dalgona.getBlocks = function() {
                     } else if (num == 2) {
                         timeValue = (60 / speed2) * val * 1000 + 32;
                         Entry.hw.sendQueue['SET'][portpin2] = {
-                            type: Entry.Dalgona.sensorTypes.STEPROTATE,
+                            type: Entry.Dalgona_basic.sensorTypes.STEPROTATE,
                             data: {
                                 num: num,
                                 dir: dir,
@@ -5994,7 +5995,7 @@ Entry.Dalgona.getBlocks = function() {
                     } else if (num == 3) {
                         timeValue = (60 / speed3) * val * 1000 + 32;
                         Entry.hw.sendQueue['SET'][portpin3] = {
-                            type: Entry.Dalgona.sensorTypes.STEPROTATE,
+                            type: Entry.Dalgona_basic.sensorTypes.STEPROTATE,
                             data: {
                                 num: num,
                                 dir: dir,
@@ -6015,19 +6016,19 @@ Entry.Dalgona.getBlocks = function() {
                     delete script.isStart;
                     if (num == 1) {
                         Entry.hw.sendQueue['SET'][portpin1] = {
-                            type: Entry.Dalgona.sensorTypes.STEPROTATE,
+                            type: Entry.Dalgona_basic.sensorTypes.STEPROTATE,
                             data: 0,
                             time: new Date().getTime(),
                         };
                     } else if (num == 2) {
                         Entry.hw.sendQueue['SET'][portpin2] = {
-                            type: Entry.Dalgona.sensorTypes.STEPROTATE,
+                            type: Entry.Dalgona_basic.sensorTypes_basic.STEPROTATE,
                             data: 0,
                             time: new Date().getTime(),
-                        };
+                        };_basic
                     } else if (num == 3) {
                         Entry.hw.sendQueue['SET'][portpin3] = {
-                            type: Entry.Dalgona.sensorTypes.STEPROTATE,
+                            type: Entry.Dalgona_basic.sensorTypes.STEPROTATE,
                             data: 0,
                             time: new Date().getTime(),
                         };
@@ -6041,7 +6042,7 @@ Entry.Dalgona.getBlocks = function() {
                 py: [{}],
             },
         },
-        dalgona_step_rotate2: {
+        dalgona_basic_step_rotate2: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -6072,11 +6073,11 @@ Entry.Dalgona.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'dalgona_list_step',
+                        type: 'dalgona_basic_list_step',
                         params: ['1'],
                     },
                     {
-                        type: 'dalgona_list_step_direction',
+                        type: 'dalgona_basic_list_step_direction',
                         params: ['1'],
                     },
                     {
@@ -6085,7 +6086,7 @@ Entry.Dalgona.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'dalgona_step_rotate2',
+                type: 'dalgona_basic_step_rotate2',
             },
             paramsKeyMap: {
                 NUM: 0,
@@ -6093,7 +6094,7 @@ Entry.Dalgona.getBlocks = function() {
                 VALUE: 2,
             },
             class: 'step',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var dir = script.getNumberValue('DIR', script);
                 num = script.getNumberValue('NUM', script);
@@ -6112,7 +6113,7 @@ Entry.Dalgona.getBlocks = function() {
                         timeValue = (60 / (speed1 * 360)) * val * 1000 + 32;
                         console.log(timeValue);
                         Entry.hw.sendQueue['SET'][portpin1] = {
-                            type: Entry.Dalgona.sensorTypes.STEPROTATE2,
+                            type: Entry.Dalgona_basic.sensorTypes.STEPROTATE2,
                             data: {
                                 num: num,
                                 dir: dir,
@@ -6123,7 +6124,7 @@ Entry.Dalgona.getBlocks = function() {
                     } else if (num == 2) {
                         timeValue = (60 / (speed2 * 360)) * val * 1000 + 32;
                         Entry.hw.sendQueue['SET'][portpin2] = {
-                            type: Entry.Dalgona.sensorTypes.STEPROTATE2,
+                            type: Entry.Dalgona_basic.sensorTypes.STEPROTATE2,
                             data: {
                                 num: num,
                                 dir: dir,
@@ -6134,7 +6135,7 @@ Entry.Dalgona.getBlocks = function() {
                     } else if (num == 3) {
                         timeValue = (60 / (speed3 * 360)) * val * 1000 + 32;
                         Entry.hw.sendQueue['SET'][portpin3] = {
-                            type: Entry.Dalgona.sensorTypes.STEPROTATE2,
+                            type: Entry.Dalgona_basic.sensorTypes.STEPROTATE2,
                             data: {
                                 num: num,
                                 dir: dir,
@@ -6155,19 +6156,19 @@ Entry.Dalgona.getBlocks = function() {
                     delete script.isStart;
                     if (num == 1) {
                         Entry.hw.sendQueue['SET'][portpin1] = {
-                            type: Entry.Dalgona.sensorTypes.STEPROTATE2,
+                            type: Entry.Dalgona_basic.sensorTypes.STEPROTATE2,
                             data: 0,
                             time: new Date().getTime(),
                         };
                     } else if (num == 2) {
                         Entry.hw.sendQueue['SET'][portpin2] = {
-                            type: Entry.Dalgona.sensorTypes.STEPROTATE2,
+                            type: Entry.Dalgona_basic.sensorTypes.STEPROTATE2,
                             data: 0,
                             time: new Date().getTime(),
                         };
                     } else if (num == 3) {
                         Entry.hw.sendQueue['SET'][portpin3] = {
-                            type: Entry.Dalgona.sensorTypes.STEPROTATE2,
+                            type: Entry.Dalgona_basic.sensorTypes.STEPROTATE2,
                             data: 0,
                             time: new Date().getTime(),
                         };
@@ -6212,11 +6213,11 @@ Entry.Dalgona.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'dalgona_list_step',
+                        type: 'dalgona_basic_list_step',
                         params: ['1'],
                     },
                     {
-                        type: 'dalgona_list_step_direction',
+                        type: 'dalgona_basic_list_step_direction',
                         params: ['1'],
                     },
                     {
@@ -6225,7 +6226,7 @@ Entry.Dalgona.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'dalgona_step_rotate3',
+                type: 'dalgona_basic _step_rotate3',
             },
             paramsKeyMap: {
                 NUM: 0,
@@ -6233,7 +6234,7 @@ Entry.Dalgona.getBlocks = function() {
                 SEC: 2,
             },
             class: 'step',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 num = script.getNumberValue('NUM');
                 var dir = script.getNumberValue('DIR');
@@ -6248,7 +6249,7 @@ Entry.Dalgona.getBlocks = function() {
 
                     if (num == 1) {
                         Entry.hw.sendQueue['SET'][portpin1] = {
-                            type: Entry.Dalgona.sensorTypes.STEPROTATE3,
+                            type: Entry.Dalgona_basic.sensorTypes.STEPROTATE3,
                             data: {
                                 num: num,
                                 dir: dir,
@@ -6258,7 +6259,7 @@ Entry.Dalgona.getBlocks = function() {
                         };
                     } else if (num == 2) {
                         Entry.hw.sendQueue['SET'][portpin2] = {
-                            type: Entry.Dalgona.sensorTypes.STEPROTATE3,
+                            type: Entry.Dalgona_basic.sensorTypes.STEPROTATE3,
                             data: {
                                 num: num,
                                 dir: dir,
@@ -6268,7 +6269,7 @@ Entry.Dalgona.getBlocks = function() {
                         };
                     } else if (num == 3) {
                         Entry.hw.sendQueue['SET'][portpin3] = {
-                            type: Entry.Dalgona.sensorTypes.STEPROTATE3,
+                            type: Entry.Dalgona_basic.sensorTypes.STEPROTATE3,
                             data: {
                                 num: num,
                                 dir: dir,
@@ -6289,19 +6290,19 @@ Entry.Dalgona.getBlocks = function() {
                     delete script.isStart;
                     if (num == 1) {
                         Entry.hw.sendQueue['SET'][portpin1] = {
-                            type: Entry.Dalgona.sensorTypes.STEPROTATE3,
+                            type: Entry.Dalgona_basic.sensorTypes.STEPROTATE3,
                             data: 0,
                             time: new Date().getTime(),
                         };
                     } else if (num == 2) {
                         Entry.hw.sendQueue['SET'][portpin2] = {
-                            type: Entry.Dalgona.sensorTypes.STEPROTATE3,
+                            type: Entry.Dalgona_basic.sensorTypes.STEPROTATE3,
                             data: 0,
                             time: new Date().getTime(),
                         };
                     } else if (num == 3) {
                         Entry.hw.sendQueue['SET'][portpin3] = {
-                            type: Entry.Dalgona.sensorTypes.STEPROTATE3,
+                            type: Entry.Dalgona_basic.sensorTypes.STEPROTATE3,
                             data: 0,
                             time: new Date().getTime(),
                         };
@@ -6315,13 +6316,13 @@ Entry.Dalgona.getBlocks = function() {
                 py: [{}],
             },
         },
-        dalgona_module_digital_oled: {
+        dalgona_basic_module_digital_oled: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
-            template: Lang.template.dalgona_module_digital_oled,
+            template: Lang.template.dalgona_basic_module_digital_oled,
             params: [
                 {
                     type: 'Block',
@@ -6358,7 +6359,7 @@ Entry.Dalgona.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'dalgona_module_digital_oled',
+                type: 'dalgona_basic_module_digital_oled',
             },
             paramsKeyMap: {
                 VALUE0: 0,
@@ -6366,7 +6367,7 @@ Entry.Dalgona.getBlocks = function() {
                 STRING: 2,
             },
             class: 'sensor',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var port = 0;
                 var coodinate_x = script.getNumberValue('VALUE0');
@@ -6400,7 +6401,7 @@ Entry.Dalgona.getBlocks = function() {
                     coodinate_y = Math.max(coodinate_y, 0);
 
                     Entry.hw.sendQueue['SET'][port] = {
-                        type: Entry.Dalgona.sensorTypes.OLED,
+                        type: Entry.Dalgona_basic.sensorTypes.OLED,
                         data: {
                             value0: coodinate_x,
                             value1: coodinate_y,
@@ -6437,10 +6438,10 @@ Entry.Dalgona.getBlocks = function() {
                     return script.callReturn();
                 }
             },
-            syntax: { js: [], py: ['dalgona.Module_digital_oled(%1, %2, %3)'] },
+            syntax: { js: [], py: [] },
         },
 
-        dalgona_rfid_init: {
+        dalgona_basic_rfid_init: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -6475,14 +6476,14 @@ Entry.Dalgona.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'dalgona_rfid_init',
+                type: 'dalgona_basic_rfid_init',
             },
             paramsKeyMap: {
                 PORT1: 0,
                 PORT2: 1,
             },
             class: 'RFID',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 var port1 = script.getNumberValue('PORT1', script);
                 var port2 = script.getNumberValue('PORT2', script);
@@ -6499,7 +6500,7 @@ Entry.Dalgona.getBlocks = function() {
                     var timeValue = (60 / fps) * 50;
 
                     Entry.hw.sendQueue['SET'][ss] = {
-                        type: Entry.Dalgona.sensorTypes.RFIDINIT,
+                        type: Entry.Dalgona_basic.sensorTypes.RFIDINIT,
                         data: {
                             port1: port1,
                             port2: port2,
@@ -6525,7 +6526,7 @@ Entry.Dalgona.getBlocks = function() {
                 py: [{}],
             },
         },
-        dalgona_is_rfid_tapped: {
+        dalgona_basic_is_rfid_tapped: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -6535,17 +6536,17 @@ Entry.Dalgona.getBlocks = function() {
             events: {},
             def: {
                 params: [],
-                type: 'dalgona_is_rfid_tapped',
+                type: 'dalgona_basic_is_rfid_tapped',
             },
             paramsKeyMap: {},
             class: 'RFID',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
 
-                Entry.hw.sendQueue['GET'][Entry.Dalgona.sensorTypes.RFIDTAP] = {
+                Entry.hw.sendQueue['GET'][Entry.Dalgona_basic.sensorTypes.RFIDTAP] = {
                     port: ss,
                     time: new Date().getTime(),
                 };
@@ -6555,7 +6556,7 @@ Entry.Dalgona.getBlocks = function() {
             },
             syntax: { js: [], py: [] },
         },
-        dalgona_get_rfid_value: {
+        dalgona_basic_get_rfid_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -6564,11 +6565,11 @@ Entry.Dalgona.getBlocks = function() {
             params: [],
             events: {},
             def: {
-                type: 'dalgona_get_rfid_value',
+                type: 'dalgona_basic_get_rfid_value',
             },
             paramsKeyMap: {},
             class: 'RFID',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             func: function(sprite, script) {
                 if (!Entry.hw.sendQueue['SET']) {
                     Entry.hw.sendQueue['SET'] = {};
@@ -6578,7 +6579,7 @@ Entry.Dalgona.getBlocks = function() {
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
-                Entry.hw.sendQueue['GET'][Entry.Dalgona.sensorTypes.RFIDVALUE] = {
+                Entry.hw.sendQueue['GET'][Entry.Dalgona_basic.sensorTypes.RFIDVALUE] = {
                     port: ss,
                     time: new Date().getTime(),
                 };
@@ -6590,7 +6591,7 @@ Entry.Dalgona.getBlocks = function() {
                 py: [{}],
             },
         },
-        dalgona_get_mlx: {
+        dalgona_basic_get_mlx: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -6612,13 +6613,13 @@ Entry.Dalgona.getBlocks = function() {
             events: {},
             def: {
                 params: [],
-                type: 'dalgona_get_mlx',
+                type: 'dalgona_basic_get_mlx',
             },
             paramsKeyMap: {
                 MLX_SELECT: 0,
             },
             class: 'sensor',
-            isNotFor: ['Dalgona'],
+            isNotFor: ['Dalgona_basic'],
             
             func: function(sprite, script) {
                 var type = script.getNumberValue('MLX_SELECT')
@@ -6629,13 +6630,13 @@ Entry.Dalgona.getBlocks = function() {
                 }
 
                 if (type == 0) {
-                    Entry.hw.sendQueue['GET'][Entry.Dalgona.sensorTypes.MLXOBJ] = {
+                    Entry.hw.sendQueue['GET'][Entry.Dalgona_basic.sensorTypes.MLXOBJ] = {
                         port: 0,
                         time: new Date().getTime(),
                     };
                     return Entry.hw.portData.MLXOBJ || 0;
                 } else if (type == 1) {
-                    Entry.hw.sendQueue['GET'][Entry.Dalgona.sensorTypes.MLXAMB] = {
+                    Entry.hw.sendQueue['GET'][Entry.Dalgona_basic.sensorTypes.MLXAMB] = {
                         port: 0,
                         time: new Date().getTime(),
                     };
@@ -6650,4 +6651,4 @@ Entry.Dalgona.getBlocks = function() {
     };
 };
 
-module.exports = Entry.Dalgona;
+module.exports = Entry.Dalgona_basic;
