@@ -753,6 +753,7 @@ Entry.Engine = class Engine {
         createjs.Sound.setVolume(1);
         createjs.Sound.stop();
         Entry.soundInstances.clear();
+        Entry.playbackRateValue = 1;
         Entry.targetChecker && Entry.targetChecker.clearListener();
 
         this.view_.removeClass('entryEngineBlueWorkspace');
