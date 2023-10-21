@@ -6,7 +6,8 @@ Entry.Robotis_rb = {
         READ: 2,
         SYNCWRITE: 4,
         REGWRITE: 5,
-        ACTION: 6
+        ACTION: 6,
+        BYPASS_READ: 0xA2
     },
     CONTROL_TABLE: {
         // [default address, default length, address (when reads together), length (when reads together)]
@@ -49,6 +50,7 @@ Entry.Robotis_rb = {
             [Entry.Robotis_rb.INSTRUCTION.WRITE, 40, 2, 0],
             [Entry.Robotis_rb.INSTRUCTION.WRITE, 66, 2, 0],
             [Entry.Robotis_rb.INSTRUCTION.WRITE, 710, 2, 0],
+            [Entry.Robotis_rb.INSTRUCTION.WRITE, 19, 1, 1],
             // [Entry.Robotis_rb.INSTRUCTION.WRITE, 163, 2, 30759],
             // [Entry.Robotis_rb.INSTRUCTION.WRITE, 162, 1, 1],
         ]);
@@ -77,6 +79,8 @@ Entry.Robotis_rb.blockMenuBlocks = [
     'robotis_RB_detectSound_compare',
     'robotis_RB_imu',
     'robotis_RB_roll_pitch', // 값 안나옴.
+    'robotis_RB_environment_value',
+    'robotis_RB_environment_compare',
    
     'robotis_RB_cm_buzzer_index',
 
@@ -123,6 +127,9 @@ Entry.Robotis_rb.setLanguage = function() {
                 robotis_RB_detectSound_compare: "소리가 %1에서 나면",
                 robotis_RB_imu: "%1축의 %2 값",
                 robotis_RB_roll_pitch: "제어기 각도 %1 값",
+                robotis_RB_environment_value: "%1 %2 값",
+                robotis_RB_environment_compare: "%1 %2 값이 %3 %4이면",
+
                 robotis_RB_detectPose: "로봇이 %1 넘어지면",
 
                 robotis_RB_cm_buzzer_index: "제어기 음계값 %1 을(를) %2 옥타브로 %3 초 동안 %4 %5",
@@ -339,6 +346,10 @@ Entry.Robotis_rb.setLanguage = function() {
                 robotis_screen1: "가위",
                 robotis_screen2: "바위",
                 robotis_screen3: "보",
+                robotis_sensing_temperature: "온도센서",
+                robotis_sensing_humidity: "습도센서",
+                robotis_sensing_brightness: "밝기센서",
+                robotis_sensing_motion: "움직임센서",
             },
         },
         en: {
@@ -352,6 +363,8 @@ Entry.Robotis_rb.setLanguage = function() {
                 robotis_RB_detectSound_compare:"If sound is detected from %1",
                 robotis_RB_imu:"%1 axis' %2 value",
                 robotis_RB_roll_pitch:"%1 Controller position ",
+                robotis_RB_environment_value: "%1 %2 value",
+                robotis_RB_environment_compare: "If %1 %2 value is %3 %4",
                 robotis_RB_detectPose:"If robot falls %1",
                 
                 robotis_RB_cm_buzzer_index:"%1 at %2 octaves for %3 second(s) -> %4 %5",
@@ -568,6 +581,10 @@ Entry.Robotis_rb.setLanguage = function() {
                 robotis_screen1: "Sissor",
                 robotis_screen2: "Rock",
                 robotis_screen3: "Paper",
+                robotis_sensing_temperature: "Temperature",
+                robotis_sensing_humidity: "Humidity",
+                robotis_sensing_brightness: "Brightness",
+                robotis_sensing_motion: "Motion",
                 
             },
         }
@@ -2375,6 +2392,295 @@ Entry.Robotis_rb.getBlocks = function () {
             syntax: {
                 js: [],
                 py: ['Robotis.robotis_RB_roll_pitch(%1)'],
+            },
+        },
+        robotis_RB_environment_value: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['ID 100', '100'],
+                        ['ID 101', '101'],
+                        ['ID 102', '102'],
+                        ['ID 103', '103'],
+                        ['ID 104', '104'],
+                        ['ID 105', '105'],
+                    ],
+                    value: '100',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.robotis_sensing_temperature, '28'],
+                        [Lang.Blocks.robotis_sensing_humidity, '29'],
+                        [Lang.Blocks.robotis_sensing_brightness, '30'],
+                        [Lang.Blocks.robotis_sensing_motion, '27'],
+                    ],
+                    value: '28',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                    null
+                ],
+                type: 'robotis_RB_environment_value',
+            },
+            paramsKeyMap: {
+                ID: 0,
+                ADDR: 1,
+            },
+            class: 'robotis_openCM70_custom',
+            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car'],
+            func: function (sprite, script) {
+                var scope = script.executor.scope;
+
+                // instruction / address / length / value / default length
+                var data_instruction = Entry.Robotis_rb.INSTRUCTION.BYPASS_READ;
+                var data_address = 0;
+                var data_length = 1;
+                var data_value = script.getNumberValue('ID');;
+
+                var data_default_address = 0;
+                var data_default_length = 0;
+
+                
+                data_address = script.getNumberValue('ADDR');
+
+                data_default_address = data_address;
+                data_default_length = data_length;
+
+                if (
+                    Entry.hw.sendQueue.prevAddress &&
+                    Entry.hw.sendQueue.prevAddress == data_default_address
+                ) {
+                    if (
+                        Entry.hw.sendQueue.prevTime &&
+                        new Date() - Entry.hw.sendQueue.prevTime < Entry.Robotis_openCM70.readDelay
+                    ) {
+                        //throw new Entry.Utils.AsyncError();
+                        if(typeof Entry.hw.sendQueue.prevResult == 'undefined') {
+                            return 0;
+                        }
+                        return Entry.hw.sendQueue.prevResult;
+                    }
+                }
+
+                Entry.Robotis_carCont.setRobotisData([
+                    [
+                        data_instruction,
+                        data_address,
+                        data_length,
+                        data_value,
+                        data_default_length,
+                    ],
+                ]);
+                // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
+                Entry.Robotis_carCont.update();
+
+                // 통합센서의 컨트롤 테이블 주소는 RB-100블록에서 사용하지 않는 주소를 사용
+                // 주소 겹침 방지
+                var result = Entry.hw.portData[data_default_address];
+                if (result == undefined)
+                {
+                    result = rb100_last_valid_value[data_default_address];
+                }
+                else
+                {
+                    rb100_last_valid_value[data_default_address] = result;
+                }
+                Entry.hw.sendQueue.prevAddress = data_default_address;
+                Entry.hw.sendQueue.prevTime = new Date();
+                Entry.hw.sendQueue.prevResult = result;
+
+                if(typeof result == 'undefined') {
+
+                    return 0;
+                }
+                return result;
+            },
+            syntax: {
+                js: [],
+                py: ['Robotis.opencm70_cm_ir_value(%1)'],
+            },
+        },
+        robotis_RB_environment_compare: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['ID 100', '100'],
+                        ['ID 101', '101'],
+                        ['ID 102', '102'],
+                        ['ID 103', '103'],
+                        ['ID 104', '104'],
+                        ['ID 105', '105'],
+                    ],
+                    value: '100',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.robotis_sensing_temperature, '28'],
+                        [Lang.Blocks.robotis_sensing_humidity, '29'],
+                        [Lang.Blocks.robotis_sensing_brightness, '30'],
+                        [Lang.Blocks.robotis_sensing_motion, '27'],
+                    ],
+                    value: '28',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['>', '0'],
+                        ['<', '1'],
+                        ['=', '2'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    value: 'asdfasdf',
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                    null,
+                    null,
+                    {
+                        type: 'number',
+                        params: [0]
+                    }
+                ],
+                type: 'robotis_RB_environment_compare',
+            },
+            paramsKeyMap: {
+                ID: 0,
+                ADDR: 1,
+                COMPARE_OP: 2,
+                COMPARE_VAL: 3,
+            },
+            class: 'robotis_openCM70_custom',
+            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car'],
+            func: function (sprite, script) {
+                var scope = script.executor.scope;
+
+                // instruction / address / length / value / default length
+                var data_instruction = Entry.Robotis_rb.INSTRUCTION.BYPASS_READ;
+                var data_address = 0;
+                var data_length = 1;
+                var data_id = script.getNumberValue('ID');
+
+                var data_default_address = 0;
+                var data_default_length = 0;
+                var compareValue = script.getNumberValue('COMPARE_VAL');
+                var compareOP = script.getNumberValue('COMPARE_OP');
+
+                data_address = script.getNumberValue('ADDR');
+
+                data_default_address = data_address;
+                data_default_length = data_length;
+
+                if (
+                    Entry.hw.sendQueue.prevAddress &&
+                    Entry.hw.sendQueue.prevAddress == data_default_address
+                ) {
+                    if (
+                        Entry.hw.sendQueue.prevTime &&
+                        new Date() - Entry.hw.sendQueue.prevTime < 200//Entry.Robotis_openCM70.readDelay//200
+                    ) {
+                        //throw new Entry.Utils.AsyncError();
+                
+                        //  return false;
+                        switch(compareOP) {
+                            case 0:
+                                return Entry.hw.sendQueue.prevResult > compareValue;
+                            case 1:
+                                return Entry.hw.sendQueue.prevResult < compareValue;
+                            case 2:
+                                return Entry.hw.sendQueue.prevResult == compareValue;
+                            default:
+                                return false;
+                        }
+                    }
+                }
+
+                Entry.Robotis_carCont.setRobotisData([
+                    [
+                        data_instruction,
+                        data_address,
+                        data_length,
+                        data_id,
+                        data_default_length,
+                    ],
+                ]);
+                
+                
+                Entry.Robotis_carCont.update();
+
+                
+                // 통합센서의 컨트롤 테이블 주소는 RB-100블록에서 사용하지 않는 주소를 사용
+                // 주소 겹침 방지
+                var result = Entry.hw.portData[data_default_address];
+                if (result == undefined)
+                {
+                    result = rb100_last_valid_value[data_default_address];
+                }
+                else
+                {
+                    rb100_last_valid_value[data_default_address] = result;
+                }
+                Entry.hw.sendQueue.prevAddress = data_default_address;
+                Entry.hw.sendQueue.prevTime = new Date();
+                Entry.hw.sendQueue.prevResult = result;
+
+                if(result == undefined) {
+                    return false;
+                }
+
+                switch(compareOP) {
+                    case 0:
+                        return result > compareValue;
+                    case 1:
+                        return result < compareValue;
+                    case 2:
+                        return result == compareValue;
+                    default:
+                        return false;
+                }
+               
+            },
+            syntax: {
+                js: [],
+                py: ['Robotis.robotis_RB_cm_ir_compare(%1)'],
             },
         },
         robotis_RB_cm_joystick_value: {
