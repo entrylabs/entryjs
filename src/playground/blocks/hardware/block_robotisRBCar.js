@@ -77,6 +77,11 @@ Entry.Robotis_rb_car.blockMenuBlocks = [
     'robotis_RB_detectSound_compare',
     'robotis_RB_imu',
     'robotis_RB_roll_pitch', 
+    'robotis_RB_environment_value',
+    'robotis_RB_environment_compare',
+    'robotis_RB_distance_value',
+    'robotis_RB_distance_compare',
+
     'robotis_RB_cm_buzzer_index',
 
     
@@ -126,6 +131,10 @@ Entry.Robotis_rb_car.setLanguage = function() {
                 robotis_RB_detectSound_compare: "소리가 %1에서 나면",
                 robotis_RB_imu: "%1축의 %2 값",
                 robotis_RB_roll_pitch: "제어기 각도 %1 값",
+                robotis_RB_environment_value: "%1 %2 값",
+                robotis_RB_environment_compare: "%1 %2 값이 %3 %4이면",
+                robotis_RB_distance_value: "%1 %2 값",
+                robotis_RB_distance_compare: "%1 %2 값이 %3 %4이면",
 
                 robotis_RB_cm_buzzer_index: "제어기 음계값 %1 을(를) %2 옥타브로 %3 초 동안 %4 %5",
                 robotis_RB_cm_screen: "제어기 화면 배경을 알쥐 %1 로 선택 %2",
@@ -338,7 +347,12 @@ Entry.Robotis_rb_car.setLanguage = function() {
                 robotis_RB_detectSound_compare:"If sound is detected from %1",
                 robotis_RB_imu:"%1 axis' %2 value",
                 robotis_RB_roll_pitch:"%1 Controller position ",
-                robotis_RB_detectPose:"If robot falls %1",
+                robotis_RB_environment_value: "%1 %2 value",
+                robotis_RB_environment_compare: "If %1 %2 value is %3 %4",
+                robotis_RB_distance_value: "%1 %2 value",
+                robotis_RB_distance_compare: "If %1 %2 value is %3 %4",
+
+                //robotis_RB_detectPose:"If robot falls %1",
                 
                 robotis_RB_cm_buzzer_index:"%1 at %2 octaves for %3 second(s) -> %4 %5",
                 robotis_RB_cm_screen:"Choose %1 as a screen background %2",
