@@ -79,11 +79,12 @@ Entry.Robotis_rb.blockMenuBlocks = [
     'robotis_RB_detectSound_compare',
     'robotis_RB_imu',
     'robotis_RB_roll_pitch', // 값 안나옴.
+    /*
     'robotis_RB_environment_value',
     'robotis_RB_environment_compare',
     'robotis_RB_distance_value',
     'robotis_RB_distance_compare',
-   
+   */
     'robotis_RB_cm_buzzer_index',
 
     'robotis_RB_cm_screen',
@@ -2454,7 +2455,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 ADDR: 1,
             },
             class: 'robotis_openCM70_custom',
-            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car'],
+            isNotFor: ['Robotis_rb_H', 'Robotis_rb_car'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
 
@@ -2600,7 +2601,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 COMPARE_VAL: 3,
             },
             class: 'robotis_openCM70_custom',
-            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car'],
+            isNotFor: ['Robotis_rb_H', 'Robotis_rb_car'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
 
