@@ -447,6 +447,9 @@ Lang.Blocks = {
     french: '프랑스어',
     german: '독일어',
     russian: '러시아어',
+    korean_s: '한국어',
+    english_s: '영어',
+    japan_s: '일본어',
     portuguese: '포르투갈어',
     hindi: '힌디어',
     japan: '일본어',
@@ -1526,7 +1529,7 @@ Lang.Blocks = {
     Duplication_option: '코드 복사 & 붙여넣기',
     Paste_blocks: '붙여넣기',
     add_my_storage: '나의 보관함에 추가하기',
-    export_object: '오브젝트 내보내기',
+    export_object: '오브젝트 파일로 내보내기',
     Clear_all_blocks: '모든 코드 삭제하기',
     add_comment: '메모 추가하기',
     copy_paste_comment: '메모 복사 & 붙여넣기',
@@ -1923,7 +1926,7 @@ Lang.Blocks = {
     video_age: '나이',
     video_emotion: '감정',
     video_motion_onself: '자신',
-    video_motion_onscreen: '실행화면',
+    video_motion_onscreen: '실행 화면',
     video_motion_scale: '움직임',
     video_motion_direction_horizontal: '좌우방향',
     video_motion_direction_vertical: '상하방향',
@@ -1934,6 +1937,27 @@ Lang.Blocks = {
     table_min: '최소',
     table_avg: '평균',
     table_stdev: '표준편차',
+    table_median: '중앙값',
+    this_project: '모든',
+    this_object: '자신',
+    right_hand: '오른손',
+    left_hand: '왼손',
+    thumb: '엄지',
+    index_finger: '검지',
+    middle_finger: '중지',
+    ring_finger: '약지',
+    little_finger: '소지',
+    wrist: '손목',
+    tip: '끝',
+    dip: '첫째 마디',
+    pip: '둘째 마디',
+    none: '없음',
+    media_pipe_title_text: '비디오 감지',
+    pose_landmarker_title_text: '사람 인식',
+    face_landmarker_title_text: '얼굴 인식',
+    object_detector_title_text: '사물 인식',
+    hand_detection_title_text: '손 인식',
+    unknown: '알 수 없음',
 };
 Lang.video_body_coord_params = {
     left_eye: '왼쪽 눈',
@@ -1972,6 +1996,9 @@ Lang.video_emotion_params = {
     neutral: '무표정',
     sad: '슬픔',
     surprised: '놀람',
+    disgust: '혐오',
+    fear: '두려움',
+    surprise: '놀람',
 };
 Lang.video_object_params = {
     person: '사람',
@@ -2036,7 +2063,7 @@ Lang.video_object_params = {
     bed: '침대',
     'dining table': '식탁',
     toilet: '변기',
-    tv: '텔레비젼',
+    tv: 'TV',
     laptop: '노트북',
     mouse: '마우스',
     remote: '리모컨',
@@ -3262,6 +3289,9 @@ Lang.Menus = {
     viet: '베트남',
     japan: '일본어',
     russia: '러시아어',
+    korean_s: '한국어',
+    english_s: '영어',
+    japan_s: '일본어',
     chinese_simplified: '중국어(간체)',
     chinese_traditional: '중국어(번체)',
     option_email: '이메일(선택)',
@@ -5058,7 +5088,7 @@ Lang.Menus = {
     advisory_sub_title: '엔트리를 함께 만들어가는 선생님 학생 자문단입니다.',
     data_table_column: '열',
     data_table_row: '행',
-    data_table_provider: '제공처',
+    data_table_provider: '출처',
     data_table_modifidate: '수정일',
     draw_new_table_ques_1: '데이터를 직접 입력하여 테이블로 저장할 수 있습니다.',
     draw_new_table_ques_2: '테이블 화면으로 이동하시겠습니까?',
@@ -5070,6 +5100,8 @@ Lang.Msgs = {
     loading_plz_wait: '로딩 중입니다. 잠시만 기다려주세요.',
     ai_utilize_video_loading: '비디오 감지 블록을 로딩 중입니다.<br/> 최대 1분까지 걸릴 수 있어요.',
     ai_utilize_audio_listening: '듣고 있어요',
+    ai_utilize_audio_progress: '인식하고 있어요',
+    ai_utilize_audio_description: '마이크를 이용하여 음성을 인식하는 블록들의 모음입니다.',
     upload_error_title: '파일 업로드 안내',
     upload_error_content: '엔트리 이용정책을 지키지 않는 것으로 의심되는 파일이 제외되었습니다.',
     monthly_intro_0:
@@ -5209,12 +5241,24 @@ Lang.Msgs = {
     hardware_need_update_title: '업데이트 안내',
     hardware_need_update_content:
         '보안 업데이트로 엔트리 웹버전은\n하드웨어 1.9.0 버전 이상만 지원합니다.\n이하 버전일 경우 프로그램을 업데이트 하세요.\n* 업데이트 후 블록이 보이지 않을 경우,\n웹브라우저의 캐시를 지워 주세요.',
-    ai_utilize_audio_description:
-        '마이크를 이용하여 소리와 음성을 감지할 수 있는 블록 모음입니다. (IE/Safari 브라우저 미지원)',
     ai_utilize_video_description:
         '카메라를 이용하여 사람(신체), 얼굴, 사물 등을 인식하는 블록들의 모음입니다. (IE 및 iOS 미지원)',
     lecture_header_restart_msg: '처음부터 다시 시작하시겠습니까?',
     ai_utilize_train_pop_error: '작품에 적용된 모델이 비활성화 또는 삭제되었습니다.',
+    cannot_delete_function:
+        '이미 사용 중인 함수입니다.\n결과값 설정을 바꾸려면 함수 블록이\n사용된 오브젝트가 없어야 합니다.',
+    local_variable_deletion_warning:
+        '사용 중인 지역변수가 있다면\n관련 블록이 삭제될 수 있습니다.\n정말로 변경할까요?',
+    warning_function_aleady_being_edited:
+        "새로운 함수를 추가하려면\n먼저 '저장' 또는 '취소'를 눌러\n기존의 함수 만들기 화면에서\n빠져나와야 합니다.",
+    ai_utilize_pose_landmarker_description:
+        '카메라를 이용하여 사람의 신체를 인식하는 블록들의 모음입니다.',
+    ai_utilize_face_landmarker_description:
+        '카메라를 이용하여 얼굴을 인식하는 블록들의 모음입니다.',
+    ai_utilize_object_detector_description:
+        '카메라를 이용하여 사물을 인식하는 블록들의 모음입니다.',
+    ai_utilize_gesture_recognition_description:
+        '카메라를 이용하여 손을 인식하는 블록들의 모음입니다.',
 };
 Lang.Users = {
     auth_failed: '인증에 실패하였습니다',
@@ -5649,6 +5693,22 @@ Lang.Workspace = {
     look_target_project: '작품을 실행하며 무엇을 만들지 살펴봅시다.',
     ai_learning_login_required: '모델 학습 기능을 사용하시려면 \n로그인이 필요합니다.',
     drag_to_remove: '여기로 옮겨 버리기',
+    check_result_value: '결과값을 가짐',
+    check_local_variable: '지역변수를 사용',
+    local_variable: '지역변수',
+    local_variable_dup: '같은 이름의 지역변수가 이미 있어 이름이 자동으로 변경되었습니다.',
+    local_variable_rename: '지역변수 이름 변경 완료',
+    local_variable_rename_failed: '지역변수 이름 변경 실패',
+    local_variable_rename_ok: '지역변수의 이름이 성공적으로 변경되었습니다.',
+    use_block_objects1: '사용된 오브젝트 (블록 {0}개)',
+    use_block_objects2: '사용된 오브젝트',
+    use_block_function: '함수에 조립되어 있어요.',
+    use_block_project: '블록 {0} 개',
+    use_blocks_project: '블록 {0} 개',
+    pose_landmarker_title_text: '사람 인식',
+    face_landmarker_title_text: '얼굴 인식',
+    object_detector_title_text: '사물 인식',
+    gesture_recognition_title_text: '손 인식',
 };
 Lang.code = '코드보기';
 Lang.EntryStatic = {
@@ -6340,14 +6400,14 @@ Lang.Helper = {
         '입력한 문자값을 설정된 목소리로 읽습니다.<br>입력은 2500자까지 가능합니다.<br>인터넷에 연결되어 있지 않거나 인터넷 환경이 불안할 경우, 해당 블록이 실행되지 않고 다음 블록으로 넘어갈 수 있습니다.',
     set_tts_property: '선택한 목소리가 선택한 속도와 선택한 음높이로 설정됩니다.',
     read_text_wait_with_block: '입력한 문자값을 읽어준 후 다음 블록을 실행합니다.',
-    check_microphone:
-        "컴퓨터에 마이크가 연결되어 있는 경우 '참'으로 판단합니다. (IE/Safari 브라우저 지원하지 않음)",
-    speech_to_text_convert:
-        '마이크에 입력되는 사람의 목소리를 텍스트로 변환합니다. (IE/Safari 브라우저 지원하지 않음)',
-    get_microphone_volume:
-        '마이크에 입력되는 소리의 크기 값입니다. (IE/Safari 브라우저 지원하지 않음)',
+    check_microphone: "컴퓨터에 마이크가 연결되어 있는 경우 '참'으로 판단합니다.",
+    speech_to_text_convert: '마이크를 통해 녹음된 음성을 인식합니다.',
+    timed_speech_to_text_convert:
+        '입력한 시간 동안 마이크를 통해 녹음된 음성을 선택한 언어로 인식합니다.',
+    set_visible_speech_to_text: '인식한 음성을 실행 화면에 보이게 하거나 숨깁니다.',
     speech_to_text_get_value:
-        '사람의 목소리를 문자로 바꾼 값입니다. 목소리가 입력되지 않거나, 음성인식 도중 오류가 발생한 경우 무조건 0 값을 갖습니다. (IE/Safari 브라우저 지원하지 않음)',
+        '사람의 목소리를 문자로 변환한 값입니다. 목소리가 입력되지 않거나, 음성 인식 도중 오류가 발생한 경우 null 값을 반환합니다.',
+    get_microphone_volume: '마이크에 입력되는 소리의 크기 값입니다.',
     video_draw_webcam:
         '컴퓨터에 연결된 카메라에 촬영되는 화면을 실행화면에서 보이게하거나 숨깁니다.(IE 및 iOS 미지원)',
     video_check_webcam:
@@ -6599,6 +6659,67 @@ Lang.Helper = {
     diaboard_buzzer_stop: '버저음을 멈춥니다.',
     change_rgb_to_hex: '입력한 빨강(R), 초록(G), 파랑(B) 값을 HEX 값으로 변환한 값입니다.',
     change_hex_to_rgb: '입력한 HEX 값을 빨강(R), 초록(G), 파랑(B) 중 하나로 변환한 값입니다.',
+    media_pipe_video_screen:
+        '연결된 카메라가 촬영하는 것을 실행 화면에서 보이게 하거나 숨깁니다.\n(기본값으로 50%의 투명도가 적용되어 있습니다.)',
+    media_pipe_switch_camera: '촬영하는 카메라를 변경합니다.',
+    check_connected_camera: "컴퓨터에 카메라가 연결되어 있는 경우 '참'으로 판단합니다.",
+    media_pipe_flip_camera: '촬영되는 화면을 좌우 혹은 상하로 뒤집습니다.',
+    media_pipe_set_opacity_camera:
+        '촬영되는 화면의 투명도 효과를 입력한 값으로 정합니다. 0~100 사이의 범위로 설정할 수 있습니다.\n(기본값은 50이며, 0 이하는 0으로 100 이상은 100으로 처리됩니다.)',
+    media_pipe_motion_value:
+        '선택한 오브젝트 혹은 실행 화면 위에서 감지되는 움직임 혹은 방향 값입니다.\n- 움직임: 움직임이 크고 빠를 수록 값이 커집니다.\n- 방향: 오른쪽 혹은 위쪽으로 움직일 때 양수, 왼쪽 혹은 아래쪽으로 움직일때 음수가 됩니다',
+    when_pose_landmarker: '사람을 인식하면 아래에 연결된 블록들을 실행합니다.',
+    pose_landmarker:
+        '사람 인식을 시작하거나 중지합니다.\n- 사람 인식: 사람의 몸을 인식하여 각 신체 부위의 위치 등을 좌표로 반환할 수 있습니다.',
+    draw_detected_pose: '인식한 사람의 형태를 실행 화면에 보이게 하거나 숨깁니다.',
+    check_detected_pose: "사람이 인식된 경우 '참'으로 판단합니다.",
+    count_detected_pose: '인식한 사람의 수입니다.',
+    locate_to_pose:
+        '오브젝트가 선택한 사람의 신체 부위로 이동합니다.\n(오브젝트의 중심점이 기준이 됩니다.)',
+    locate_time_to_pose:
+        '오브젝트가 입력한 시간에 걸쳐 선택한 사람의 신체 부위로 이동합니다.\n(오브젝트의 중심점이 기준이 됩니다.)',
+    axis_detected_pose:
+        '입력한 순서의 사람의 선택한 신체 부위의 위치값입니다. 인식이 되지 않은 경우 0을 반환합니다.\n(신체 부위: 코, 왼쪽 눈 안쪽, 왼쪽 눈, 왼쪽 눈 바깥쪽, 오른쪽 눈 안쪽, 오른쪽 눈, 오른쪽 눈 바깥쪽, 왼쪽 귀, 오른쪽 귀, 왼쪽 입꼬리, 오른쪽 입꼬리, 왼쪽 어깨, 오른쪽 어깨, 왼쪽 팔꿈치, 오른쪽 팔꿈치, 왼쪽 손목, 오른쪽 손목, 왼쪽 소지, 오른쪽 소지, 왼쪽 검지, 오른쪽 검지, 왼쪽 엄지, 오른쪽 엄지, 왼쪽 엉덩이, 오른쪽 엉덩이, 왼쪽 무릎, 오른쪽 무릎, 왼쪽 발목, 오른쪽 발목, 왼쪽 발꿈치, 오른쪽 발꿈치, 왼쪽 발끝, 오른쪽 발끝)',
+    when_face_landmarker: '얼굴을 인식하면 아래에 연결된 블록들을 실행합니다.',
+    face_landmarker:
+        '얼굴 인식을 시작하거나 중지합니다.\n- 얼굴 인식: 사람의 얼굴을 인식하여 눈, 코, 입, 귀의 위치나 예상되는 성별, 나이, 감정을 알 수 있습니다.',
+    draw_detected_face: '인식한 얼굴의 형태를 실행 화면에 보이게 하거나 숨깁니다.',
+    check_detected_face: "얼굴이 인식된 경우 '참'으로 판단합니다.",
+    count_detected_face: '인식한 얼굴의 수입니다.',
+    locate_to_face:
+        '오브젝트가 선택한 얼굴의 부위로 이동합니다.\n(오브젝트의 중심점이 기준이 됩니다.)',
+    locate_time_to_face:
+        '오브젝트가 입력한 시간에 걸쳐 선택한 얼굴의 부위로 이동합니다.\n(오브젝트의 중심점이 기준이 됩니다.)',
+    check_detected_gender: "선택한 얼굴이 선택한 성별이면 '참'으로 판단합니다.",
+    check_compare_age: "선택한 얼굴의 나이가 입력한 수식에 해당한다면 '참'으로 판단합니다.",
+    check_detected_emotion: "선택한 얼굴이 선택한 감정이면 '참'으로 판단합니다.",
+    axis_detected_face:
+        '입력한 순서의 얼굴 중 선택된 얼굴 부위의 위치값입니다. 인식이 잘 되지 않은 경우 무조건 0으로 출력됩니다. (얼굴 부위: 왼쪽 눈, 오른쪽 눈, 코, 왼쪽 입꼬리, 오른쪽 입꼬리, 윗 입술, 아랫 입술)',
+    get_detected_face_value:
+        '입력한 순서의 얼굴의 성별/나이/감정의 추정값입니다. 인식이 잘 되지 않은 경우 null을 반환합니다.',
+    when_object_detector: '사물을 인식하면 아래에 연결된 블록들을 실행합니다.',
+    object_detector:
+        '사물 인식을 시작하거나 중지합니다.\n- 사물 인식: 인식한 사물의 종류를 알 수 있습니다.',
+    draw_detected_object: '인식한 사물의 위치와 순서를 실행 화면에 보이게 하거나 숨깁니다.',
+    check_detected_object: "사물이 인식된 경우 '참'으로 판단합니다.",
+    count_detected_object: '인식한 사물의 수입니다.',
+    is_detected_among_objects: "선택한 사물이 인식된 경우 '참'으로 판단합니다.",
+    when_hand_detection: '손을 인식하면 아래에 연결된 블록들을 실행합니다.',
+    hand_detection:
+        '손 인식을 시작하거나 중지합니다.\n- 손 인식: 사람의 손을 인식하여 오른손인지 왼손인지 또는 어떤 동작인지를 구분하거나, 각 부위를 인식해 좌표로 반환할 수 있습니다.',
+    draw_detected_hand: '인식한 손의 형태를 실행 화면에 보이게 하거나 숨깁니다.',
+    check_detected_hand: "손을 인식한 경우 '참'으로 판단합니다.",
+    count_detected_hand: '인식한 손의 개수입니다.',
+    locate_to_hand:
+        '오브젝트가 선택한 손의 부위로 이동합니다.\n(오브젝트의 중심점이 기준이 됩니다.)\n\n가장 먼저 인식된 손이 1번째가 되며, 2개의 손이 한 번에 인식되면 왼쪽부터 1번째가 됩니다.',
+    locate_time_to_hand:
+        '오브젝트가 입력한 시간에 걸쳐 선택한 손의 부위로 이동합니다.\n(오브젝트의 중심점이 기준이 됩니다.)\n\n가장 먼저 인식된 손이 1번째가 되며, 2개의 손이 한 번에 인식되면 왼쪽부터 1번째가 됩니다.',
+    axis_detected_hand:
+        '입력한 순서의 손에서 선택한 부위의 위치 값입니다. 인식이 되지 않은 경우 0을 반환합니다.\n\n가장 먼저 인식된 손이 1번째가 되며, 2개의 손이 한 번에 인식되면 왼쪽부터 1번째가 됩니다.',
+    is_which_hand: "입력한 순서의 손이 선택한 손이라면 '참'으로 판단합니다.",
+    get_which_hand: '입력한 순서의 손이 오른손인지, 왼손인지를 반환합니다.',
+    is_which_gesture: "입력한 순서의 손이 선택한 모양이라면 '참'으로 판단합니다.",
+    get_which_gesture: '입력한 순서의 손이 어떤 모양인지를 반환합니다.',
 };
 Lang.Category = {
     entrybot_friends: '엔트리봇 친구들',
@@ -7054,7 +7175,7 @@ Lang.template = {
     load_ai_utilize_block: '인공지능 블록 불러오기',
     load_ai_utilize_train_block: '인공지능 모델 학습하기',
     expansion_block_descriptions: '확장 블록은 인터넷이 연결되어 있어야 정상적으로 동작합니다.',
-    aiUtilize_block_descriptions: 'AI 활용블록은 인터넷이 연결되어 있어야 정상적으로 동작합니다.',
+    aiUtilize_block_descriptions: '불러올 인공지능 블록을 선택해 주세요.',
     hardware_lite_descriptions:
         '하드웨어 연결/작동 시 예기치 못한 문제가 발생할 수 있습니다. \r\n하드웨어 웹 연결 중 문제 발생 시 엔트리 고객센터 또는 해당 하드웨어 업체의 고객센터에 연락해 주세요.',
     weather_title_text: '날씨',
@@ -7148,9 +7269,13 @@ Lang.template = {
     is_number_learning_group_5: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 의 분류 결과가 %11 인가?',
     is_number_learning_group_6: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 의 분류 결과가 %13 인가?',
     audio_title_text: '오디오 감지',
+    voice_title_text: '음성 인식',
     check_microphone: '마이크가 연결되었는가?',
-    get_microphone_volume: '마이크 소리크기',
-    speech_to_text_convert: '음성 인식하기 %1',
+    get_microphone_volume: '마이크 소리 크기',
+    speech_to_text_title: '%1',
+    speech_to_text_convert: '%1 음성 인식하기 %2',
+    timed_speech_to_text_convert: '%1 초 동안 %2 음성 인식하기 %3',
+    set_visible_speech_to_text: '인식한 음성 %1 %2',
     speech_to_text_get_value: '음성을 문자로 바꾼 값',
     video_title_text: '비디오 감지',
     video_draw_webcam: '비디오 화면 %1 %2',
@@ -7817,6 +7942,55 @@ Lang.template = {
     learning_title_logistic_regression_str: '분류: 숫자 (로지스틱 회귀) 모델',
     learning_title_decisiontree_str: '분류: 숫자 (결정 트리) 모델',
     learning_title_svm_str: '분류: 숫자 (SVM) 모델',
+    media_pipe_title: '%1',
+    media_pipe_video_screen: '비디오 화면 %1 %2',
+    media_pipe_switch_camera: '%1 카메라로 바꾸기 %2',
+    check_connected_camera: '카메라가 연결되었는가?',
+    media_pipe_flip_camera: '비디오 화면 %1 뒤집기 %2',
+    media_pipe_set_opacity_camera: '비디오 투명도 효과를 %1 으로 정하기 %2',
+    media_pipe_motion_value: '%1 에서 감지한 %2 값',
+    pose_landmarker_title: '%1',
+    when_pose_landmarker: '%1 사람을 인식했을 때',
+    pose_landmarker: '사람 인식 %1 %2',
+    draw_detected_pose: '인식한 사람 %1 %2',
+    check_detected_pose: '사람을 인식했는가?',
+    count_detected_pose: '인식한 사람의 수',
+    locate_to_pose: '%1 번째의 사람의 %2 (으)로 이동하기 %3',
+    locate_time_to_pose: '%1 초 동안 %2 번째의 사람의 %3 (으)로 이동하기 %4',
+    axis_detected_pose: '%1 번째 사람의 %2 의 %3 좌표',
+    face_landmarker_title: '%1',
+    when_face_landmarker: '%1 얼굴을 인식했을 때',
+    face_landmarker: '얼굴 인식 %1 %2',
+    draw_detected_face: '인식한 얼굴 %1 %2',
+    check_detected_face: '얼굴을 인식했는가?',
+    count_detected_face: '인식한 얼굴의 수',
+    locate_to_face: '%1 번째의 얼굴의 %2 (으)로 이동하기 %3',
+    locate_time_to_face: '%1 초 동안 %2 번째의 얼굴의 %3 (으)로 이동하기 %4',
+    check_detected_gender: '%1 번째 얼굴의 성별이 %2 인가?',
+    check_compare_age: '%1 번째 얼굴의 나이 %2 %3 인가?',
+    check_detected_emotion: '%1 번째 얼굴의 감정이 %2 인가?',
+    axis_detected_face: '%1 번째 얼굴의 %2 의 %3 좌표',
+    get_detected_face_value: '%1 번째 얼굴의 %2',
+    object_detector_title: '%1',
+    when_object_detector: '%1 사물을 인식했을 때',
+    object_detector: '사물 인식 %1 %2',
+    draw_detected_object: '인식한 사물 %1 %2',
+    check_detected_object: '사물을 인식했는가?',
+    count_detected_object: '인식한 사물의 수',
+    is_detected_among_objects: '사물 중 %1 을(를) 인식했는가?',
+    hand_detection_title: '%1',
+    when_hand_detection: '%1 손을 인식했을 때',
+    hand_detection: '손 인식 %1 %2',
+    draw_detected_hand: '인식한 손 %1 %2',
+    check_detected_hand: '손을 인식했는가?',
+    count_detected_hand: '인식한 손의 수',
+    locate_to_hand: '%1 번째 손의 %2 %3 (으)로 이동하기 %4',
+    locate_time_to_hand: '%1 초 동안 %2 번째 손의 %3 %4 (으)로 이동하기 %5',
+    axis_detected_hand: '%1 번째 손의 %2 %3 의 %4 좌표',
+    is_which_hand: '%1 번째 손이 %2 인가?',
+    is_which_gesture: '%1 번째 손의 모양이 %2 인가?',
+    get_which_hand: '%1 번째 손',
+    get_which_gesture: '%1 번째 손의 모양',
 };
 Lang.TextCoding = {
     block_name: '블록명',
@@ -8879,7 +9053,7 @@ Lang.DataAnalytics = {
     standard_deviation: '표준 편차',
     maximum: '최댓값',
     minimum: '최솟값',
-    median: '중간값',
+    median: '중앙값',
     average_explain: '해당 열의 모든 값을 더한 후 열의 개수 만큼 나눈 값',
     standard_deviation_explain:
         '데이터가 평균을 중심으로 얼마나 퍼져있는지 알려주는 값.\n0에 가까울 수록 값들이 평균 근처에 집중되어 있다는 것을 의미',
@@ -8948,6 +9122,36 @@ Lang.DataAnalytics = {
     please_add_chart: '차트를 먼저 추가해 주세요.',
     chart_name: '차트 이름',
     remove_confirm_content: '테이블을 삭제할까요?',
+    not_editable_content: '테이블의 셀이 30,000개 이상이라서\r\n엔트리에서 편집할 수 없어요.',
+    limit_cell_count_title: '행/열 개수 제한',
+    limit_cell_count_content:
+        '행 또는 열을 더 이상 추가할 수 없습니다.\r\n엔트리에서는 최대 30,000개의 셀까지의 \r\n테이블만 편집할 수 있습니다.',
+    must_have_one_row_content: '테이블에 행과 열이 하나는 있어야 합니다.',
+    number_of_bins: '계급 수',
+    bin_width: '계급 폭',
+    bin_boundary: '계급 경계',
+    left_closed: '왼쪽 닫힘',
+    right_closed: '오른쪽 닫힘',
+    ascending: '오름차순',
+    default: '원래대로',
+    quantity: '개수',
+    in_order: '순서',
+    not_distinguished: '구분하지 않음',
+    select_table: '[테이블 추가하기]를 눌러 테이블을 추가해 주세요.',
+    select_table_title: '테이블을 추가하는 방법',
+    select_table_des1:
+        "1. 테이블 추가하기의 '테이블 선택' 탭에서 엔트리가 제공하는 기본 테이블을 선택해 추가합니다.",
+    select_table_des2:
+        "2. 테이블 추가하기의 '파일 올리기' 탭에서 CSV, XLS(X) 파일을 직접 업로드해 추가합니다.",
+    select_table_des3:
+        "3. 테이블 추가하기의 '새로 만들기' 탭에서 빈 테이블을 추가하고 데이터를 직접 입력합니다.",
+    statistic: '대푯값',
+    provider: '출처',
+    description: '상세',
+    field_info: '속성 정보',
+    show_all_points: '모든 점 표시',
+    coefficient: '상관계수',
+    scatter_matrix: '산점도 행렬',
 };
 Lang.AiLearning = {
     equation: '회귀식',
@@ -8988,4 +9192,52 @@ Lang.SharePolicy = {
 };
 
 Lang.Support = ['ko', 'en', 'vn', 'jp'];
+
+Lang.pose_list = {
+    nose: '코',
+    left_eye_inner: '왼쪽 눈 안쪽',
+    left_eye: '왼쪽 눈',
+    left_eye_outer: '왼쪽 눈 바깥쪽',
+    right_eye_inner: '오른쪽 눈 안쪽',
+    right_eye: '오른쪽 눈',
+    right_eye_outer: '오른쪽 눈 바깥쪽',
+    left_ear: '왼쪽 귀',
+    right_ear: '오른쪽 귀',
+    mouth_left: '왼쪽 입꼬리',
+    mouth_right: '오른쪽 입꼬리',
+    left_shoulder: '왼쪽 어깨',
+    right_shoulder: '오른쪽 어깨',
+    left_elbow: '왼쪽 팔꿈치',
+    right_elbow: '오른쪽 팔꿈치',
+    left_wrist: '왼쪽 손목',
+    right_wrist: '오른쪽 손목',
+    left_pinky: '왼쪽 소지',
+    right_pinky: '오른쪽 소지',
+    left_index: '왼쪽 검지',
+    right_index: '오른쪽 검지',
+    left_thumb: '왼쪽 엄지',
+    right_thumb: '오른쪽 엄지',
+    left_hip: '왼쪽 엉덩이',
+    right_hip: '오른쪽 엉덩이',
+    left_knee: '왼쪽 무릎',
+    right_knee: '오른쪽 무릎',
+    left_ankle: '왼쪽 발목',
+    right_ankle: '오른쪽 발목',
+    left_heel: '왼쪽 발꿈치',
+    right_heel: '오른쪽 발꿈치',
+    left_foot_index: '왼쪽 발끝 ',
+    right_foot_index: '오른쪽 발끝',
+};
+
+Lang.gesture_list = {
+    closed_fist: '쥔 손',
+    open_palm: '편 손',
+    pointing_up: '가리킨 손',
+    thumb_down: '엄지 아래로',
+    thumb_up: '엄지 위로',
+    victory: '브이 사인',
+    iloveyou: '사랑해',
+    none: '알 수 없음',
+};
+
 if (typeof exports == 'object') exports.Lang = Lang;

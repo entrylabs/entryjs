@@ -31,10 +31,14 @@ module.exports = {
         }),
     ],
     devServer: {
-        contentBase: './',
+        static: {
+            directory: path.join(__dirname, '../'),
+        },
         port: devServerPort,
         historyApiFallback: true,
-        publicPath: '/',
+        devMiddleware: {
+            publicPath: '/',
+        },
         proxy: {
             '/lib/entry-js': {
                 target: `http://localhost:${devServerPort}`,
