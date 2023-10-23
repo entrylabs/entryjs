@@ -1962,7 +1962,7 @@ Lang.Menus = {
     corporateWarning: 'Please Agree to the transfer of personal information.',
     corporateConfirm: 'Confirm',
     corporateTitle:
-        "Hello. This is EntryLabs.<br> We are very grateful to you who are using 'Entry'. <br>Recently we have agreed to transfer the ownership of Entry web site, which has been operated for public interest purposes, to the 'Connect Foundation'.<br>Connect Foundation is a non-profit foundation founded by Naver. 'Entry' will be continuously operated under public interest purpose by 'Connect Foundation'. Therefore, All of “Entry” users will be guaranteed to use the entry exactly as same as before.<br>Since the website provider has changed from the 'EntryLabs' to the 'Connect Foundation', there is a transfer of personal information as below. However, this doesn’t mean that your information will be physically moved.<br>",
+        "Hello. This is EntryLabs.<br> We are very grateful to you who are using 'Entry'. <br>Recently we have agreed to transfer the ownership of Entry web site, which has been operated for public interest purposes, to the 'Connect Foundation'.<br>Connect Foundation is a non-profit foundation founded by Naver. 'Entry' will be continuously operated under public interest purpose by 'Connect Foundation'. Therefore, All of “Entry” users will be guaranteed to use the entry exactly as same as before.<br>Since the website provider has changed from the 'EntryLabs' to the 'Connect Foundation', there is a transfer of personal information as below. However, this doesn’t mean that your information will be physically moved.<br>",
     textcoding_numberError_f:
         "You can't convert into the text mode if there is function names start with a number.",
     textcoding_bookedError_1f: "You can't convert into the text mode if there is function named",
@@ -3845,7 +3845,7 @@ Lang.Menus = {
     entry_programming: "Let's Program!",
     entry_recommanded_course: 'Entry Recommended Courses',
     introduce_course: 'Follow along and create various projects made easy and fun for everyone!',
-    all_free: '*Course videos, customized projects, and resources are provided for free.  ',
+    all_free: '*Course videos, customized projects, and resources are provided for free.  ',
     cparty_result_fail_1: "Oops, I can't go there. Please guide me again~",
     cparty_result_fail_2: 'Ouch! That hurt. You should have jumped over this. Try again.',
     cparty_result_fail_3: "I'm worn out! Try using the blocks below and make the travel easier.",
@@ -8270,80 +8270,80 @@ Lang.PythonHelper = {
         'def when_start():\n    while True:\n        if Entry.is_key_pressed("a") and Entry.is_key_pressed("s"):\n            Entry.add_effect("color", 10)',
     boolean_and_or_exampleDesc:
         '[시작하기]버튼을 클릭하고 키보드의 "a" 와 "s"키를 동시에 눌렀을 때, 색깔 효과를 10만큼 줍니다.',
-    check_weather_desc: 'B날짜에 C지역의 날씨가 A인 경우 True로 판단합니다.',
+    check_weather_desc: 'B날짜에 C지역의 날씨가 A인 경우 True로 판단합니다.',
     check_weather_elements:
-        'A-- 아래 선택지 중 하나<br>①    "sunny" : 맑음<br>②    "partly cloudy" : 구름조금<br>③    "mostly cloudy" : 구름많음<br>④    "cloudy" : 흐림<br>⑤    "rainy" : 비<br>⑥    "sleet" : 진눈깨비<br>⑦    "snowy" : 눈%nextB-- 아래 선택지 중 하나<br>①    "yesterday" : 어제<br>②    "today" : 오늘<br>③    "tomorrow" : 내일<br>④    "After 2 days" : 모레<br>⑤    "After 3 days" : 3일 후<br>⑥    "After 4 days" : 4일 후<br>⑦    "After 5 days" : 5일 후<br>⑧    "After 6 days" : 6일 후%nextC-- 아래 선택지 중 하나<br>①    "Seoul" : 서울<br>②    "Gangwon-do" : 강원<br>③    "Gyeonggi-do" : 경기<br>④    "Gyeongsangnam-do" : 경남<br>⑤    "Gyeongsangbuk-do" : 경북<br>⑥    "Gwangju" : 광주<br>⑦    "Daegu" : 대구<br>⑧    "Daejeon" : 대전<br>⑨    "Busan" : 부산<br>⑩    "Sejong" : 세종<br>⑪    "Ulsan" : 울산<br>⑫    "Incheon" : 인천<br>⑬    "Jeollanam-do" : 전남<br>⑭    "Jeollabuk-do" : 전북<br>⑮    "Jeju" : 제주<br>Ⓐ "Chungcheongnam-do" : 충남<br>Ⓑ "Chungcheongbuk-do": 충북',
+        'A-- 아래 선택지 중 하나<br>①    "sunny" : 맑음<br>②    "partly cloudy" : 구름조금<br>③    "mostly cloudy" : 구름많음<br>④    "cloudy" : 흐림<br>⑤    "rainy" : 비<br>⑥    "sleet" : 진눈깨비<br>⑦    "snowy" : 눈%nextB-- 아래 선택지 중 하나<br>①    "yesterday" : 어제<br>②    "today" : 오늘<br>③    "tomorrow" : 내일<br>④    "After 2 days" : 모레<br>⑤    "After 3 days" : 3일 후<br>⑥    "After 4 days" : 4일 후<br>⑦    "After 5 days" : 5일 후<br>⑧    "After 6 days" : 6일 후%nextC-- 아래 선택지 중 하나<br>①    "Seoul" : 서울<br>②    "Gangwon-do" : 강원<br>③    "Gyeonggi-do" : 경기<br>④    "Gyeongsangnam-do" : 경남<br>⑤    "Gyeongsangbuk-do" : 경북<br>⑥    "Gwangju" : 광주<br>⑦    "Daegu" : 대구<br>⑧    "Daejeon" : 대전<br>⑨    "Busan" : 부산<br>⑩    "Sejong" : 세종<br>⑪    "Ulsan" : 울산<br>⑫    "Incheon" : 인천<br>⑬    "Jeollanam-do" : 전남<br>⑭    "Jeollabuk-do" : 전북<br>⑮    "Jeju" : 제주<br>Ⓐ "Chungcheongnam-do" : 충남<br>Ⓑ "Chungcheongbuk-do": 충북',
     check_weather_exampleCode:
-        'def when_start():\n    if Weather.is_condition_sunny("today", "Seoul"):\n        Entry.print("오늘 서울의 날씨는 맑습니다.")',
+        'def when_start():\n    if Weather.is_condition_sunny("today", "Seoul"):\n        Entry.print("오늘 서울의 날씨는 맑습니다.")',
     check_weather_exampleDesc:
-        '[시작하기]버튼을 클릭하면 오늘 서울의 날씨가 맑은지 확인합니다. 만약 서울의 날씨가 맑다면 오브젝트가 "오늘 서울의 날씨는 맑습니다."라고 말합니다.​',
+        '[시작하기]버튼을 클릭하면 오늘 서울의 날씨가 맑은지 확인합니다. 만약 서울의 날씨가 맑다면 오브젝트가 "오늘 서울의 날씨는 맑습니다."라고 말합니다.​',
     check_finedust_desc:
-        '선택한 지역의 현재 미세먼지 정보를 실제 미세먼지 등급과 비교하여 일치하는 경우 ‘참’으로 판단합니다.',
+        '선택한 지역의 현재 미세먼지 정보를 실제 미세먼지 등급과 비교하여 일치하는 경우 ‘참’으로 판단합니다.',
     check_finedust_elements:
-        'A-- 아래 선택지 중 하나<br>①    "good" : 좋음<br>②    "normal" : 보통<br>③    "bad" : 나쁨<br>④    "very bad" : 매우나쁨%nextB-- 아래 선택지 중 하나<br>①    "Seoul" : 서울<br>②    "Gangwon-do" : 강원<br>③    "Gyeonggi-do" : 경기<br>④    "Gyeongsangnam-do" : 경남<br>⑤    "Gyeongsangbuk-do" : 경북<br>⑥    "Gwangju" : 광주<br>⑦    "Daegu" : 대구<br>⑧    "Daejeon" : 대전<br>⑨    "Busan" : 부산<br>⑩    "Sejong" : 세종<br>⑪    "Ulsan" : 울산<br>⑫    "Incheon" : 인천<br>⑬    "Jeollanam-do" : 전남<br>⑭    "Jeollabuk-do" : 전북<br>⑮    "Jeju" : 제주<br>Ⓐ "Chungcheongnam-do" : 충남<br>Ⓑ "Chungcheongbuk-do": 충북',
+        'A-- 아래 선택지 중 하나<br>①    "good" : 좋음<br>②    "normal" : 보통<br>③    "bad" : 나쁨<br>④    "very bad" : 매우나쁨%nextB-- 아래 선택지 중 하나<br>①    "Seoul" : 서울<br>②    "Gangwon-do" : 강원<br>③    "Gyeonggi-do" : 경기<br>④    "Gyeongsangnam-do" : 경남<br>⑤    "Gyeongsangbuk-do" : 경북<br>⑥    "Gwangju" : 광주<br>⑦    "Daegu" : 대구<br>⑧    "Daejeon" : 대전<br>⑨    "Busan" : 부산<br>⑩    "Sejong" : 세종<br>⑪    "Ulsan" : 울산<br>⑫    "Incheon" : 인천<br>⑬    "Jeollanam-do" : 전남<br>⑭    "Jeollabuk-do" : 전북<br>⑮    "Jeju" : 제주<br>Ⓐ "Chungcheongnam-do" : 충남<br>Ⓑ "Chungcheongbuk-do": 충북',
     check_finedust_exampleCode:
-        'def when_start():\n    if Weather.is_current_finedust_grade_good("Seoul"):\n        Entry.print("현재 서울의 미세먼지 등급은 좋음입니다.")',
+        'def when_start():\n    if Weather.is_current_finedust_grade_good("Seoul"):\n        Entry.print("현재 서울의 미세먼지 등급은 좋음입니다.")',
     check_finedust_exampleDesc:
-        '[시작하기]버튼을 클릭하면 현재 서울의 미세먼지 등급이 좋음인지 확인합니다. 만약 서울의 날씨가 맑다면 오브젝트가 “오늘 서울의 미세먼지 등급은 좋음입니다.”라고 말합니다.​',
+        '[시작하기]버튼을 클릭하면 현재 서울의 미세먼지 등급이 좋음인지 확인합니다. 만약 서울의 날씨가 맑다면 오브젝트가 “오늘 서울의 미세먼지 등급은 좋음입니다.”라고 말합니다.​',
     get_weather_data_desc:
         '선택한 날짜와 지역의 각종 날씨 정보값(최저기온, 최고기온, 습도, 강수량, 강수확률, 풍속)입니다.',
     get_weather_data_elements:
-        'A-- 아래 선택지 중 하나<br>①    "the lowest temperature" : 최저기온<br>②    "the highest temperature" : 최고기온<br>③    "humidity" : 습도<br>④    "precipitation" : 강수량<br>⑤    "precipitation probability" : 강수확률<br>⑥    "wind speed" : 풍속%nextB-- 아래 선택지 중 하나<br>①    "yesterday" : 어제<br>②    "today" : 오늘<br>③    "tomorrow" : 내일<br>④    "After 2 days" : 모레<br>⑤    "After 3 days" : 3일 후<br>⑥    "After 4 days" : 4일 후<br>⑦    "After 5 days" : 5일 후<br>⑧    "After 6 days" : 6일 후%nextC-- 아래 선택지 중 하나<br>①    "Seoul" : 서울<br>②    "Gangwon-do" : 강원<br>③    "Gyeonggi-do" : 경기<br>④    "Gyeongsangnam-do" : 경남<br>⑤    "Gyeongsangbuk-do" : 경북<br>⑥    "Gwangju" : 광주<br>⑦    "Daegu" : 대구<br>⑧    "Daejeon" : 대전<br>⑨    "Busan" : 부산<br>⑩    "Sejong" : 세종<br>⑪    "Ulsan" : 울산<br>⑫    "Incheon" : 인천<br>⑬    "Jeollanam-do" : 전남<br>⑭    "Jeollabuk-do" : 전북<br>⑮    "Jeju" : 제주<br>Ⓐ "Chungcheongnam-do" : 충남<br>Ⓑ "Chungcheongbuk-do": 충북',
+        'A-- 아래 선택지 중 하나<br>①    "the lowest temperature" : 최저기온<br>②    "the highest temperature" : 최고기온<br>③    "humidity" : 습도<br>④    "precipitation" : 강수량<br>⑤    "precipitation probability" : 강수확률<br>⑥    "wind speed" : 풍속%nextB-- 아래 선택지 중 하나<br>①    "yesterday" : 어제<br>②    "today" : 오늘<br>③    "tomorrow" : 내일<br>④    "After 2 days" : 모레<br>⑤    "After 3 days" : 3일 후<br>⑥    "After 4 days" : 4일 후<br>⑦    "After 5 days" : 5일 후<br>⑧    "After 6 days" : 6일 후%nextC-- 아래 선택지 중 하나<br>①    "Seoul" : 서울<br>②    "Gangwon-do" : 강원<br>③    "Gyeonggi-do" : 경기<br>④    "Gyeongsangnam-do" : 경남<br>⑤    "Gyeongsangbuk-do" : 경북<br>⑥    "Gwangju" : 광주<br>⑦    "Daegu" : 대구<br>⑧    "Daejeon" : 대전<br>⑨    "Busan" : 부산<br>⑩    "Sejong" : 세종<br>⑪    "Ulsan" : 울산<br>⑫    "Incheon" : 인천<br>⑬    "Jeollanam-do" : 전남<br>⑭    "Jeollabuk-do" : 전북<br>⑮    "Jeju" : 제주<br>Ⓐ "Chungcheongnam-do" : 충남<br>Ⓑ "Chungcheongbuk-do": 충북',
     get_weather_data_exampleCode:
         'def when_start():\n    Entry.print(Weather.get_lowest_temperature("today", "Seoul"))',
     get_weather_data_exampleDesc:
-        '[시작하기]버튼을 클릭하면 오브젝트가 오늘 서울의 최저기온을 말합니다.​',
-    get_current_weather_data_desc: '현재 B지역의 A 날씨 정보값을 의미합니다.',
+        '[시작하기]버튼을 클릭하면 오브젝트가 오늘 서울의 최저기온을 말합니다.​',
+    get_current_weather_data_desc: '현재 B지역의 A 날씨 정보값을 의미합니다.',
     get_current_weather_data_elements:
-        'A-- 아래 선택지 중 하나<br>①    "Seoul" : 서울<br>②    "Gangwon-do" : 강원<br>③    "Gyeonggi-do" : 경기<br>④    "Gyeongsangnam-do" : 경남<br>⑤    "Gyeongsangbuk-do" : 경북<br>⑥    "Gwangju" : 광주<br>⑦    "Daegu" : 대구<br>⑧    "Daejeon" : 대전<br>⑨    "Busan" : 부산<br>⑩    "Sejong" : 세종<br>⑪    "Ulsan" : 울산<br>⑫    "Incheon" : 인천<br>⑬    "Jeollanam-do" : 전남<br>⑭    "Jeollabuk-do" : 전북<br>⑮    "Jeju" : 제주<br>Ⓐ "Chungcheongnam-do" : 충남<br>Ⓑ "Chungcheongbuk-do": 충북%nextB-- 아래 선택지 중 하나<br>①    "temperature" : 기온<br>②    "concentration of fine dust" : 미세먼지농도',
+        'A-- 아래 선택지 중 하나<br>①    "Seoul" : 서울<br>②    "Gangwon-do" : 강원<br>③    "Gyeonggi-do" : 경기<br>④    "Gyeongsangnam-do" : 경남<br>⑤    "Gyeongsangbuk-do" : 경북<br>⑥    "Gwangju" : 광주<br>⑦    "Daegu" : 대구<br>⑧    "Daejeon" : 대전<br>⑨    "Busan" : 부산<br>⑩    "Sejong" : 세종<br>⑪    "Ulsan" : 울산<br>⑫    "Incheon" : 인천<br>⑬    "Jeollanam-do" : 전남<br>⑭    "Jeollabuk-do" : 전북<br>⑮    "Jeju" : 제주<br>Ⓐ "Chungcheongnam-do" : 충남<br>Ⓑ "Chungcheongbuk-do": 충북%nextB-- 아래 선택지 중 하나<br>①    "temperature" : 기온<br>②    "concentration of fine dust" : 미세먼지농도',
     get_current_weather_data_exampleCode:
         'def when_start():\n    Entry.print(Weather.get_current_temperature("Seoul"))',
     get_current_weather_data_exampleDesc:
-        '[시작하기]버튼을 클릭하면 오브젝트가 현재 서울의 기온을 말합니다.',
-    get_today_temperature_desc: '오늘 A지역의 B 시간대 기온 정보값을 의미합니다.',
+        '[시작하기]버튼을 클릭하면 오브젝트가 현재 서울의 기온을 말합니다.',
+    get_today_temperature_desc: '오늘 A지역의 B 시간대 기온 정보값을 의미합니다.',
     get_today_temperature_elements:
-        'A-- 아래 선택지 중 하나<br>①    "Seoul" : 서울<br>②    "Gangwon-do" : 강원<br>③    "Gyeonggi-do" : 경기<br>④    "Gyeongsangnam-do" : 경남<br>⑤    "Gyeongsangbuk-do" : 경북<br>⑥    "Gwangju" : 광주<br>⑦    "Daegu" : 대구<br>⑧    "Daejeon" : 대전<br>⑨    "Busan" : 부산<br>⑩    "Sejong" : 세종<br>⑪    "Ulsan" : 울산<br>⑫    "Incheon" : 인천<br>⑬    "Jeollanam-do" : 전남<br>⑭    "Jeollabuk-do" : 전북<br>⑮    "Jeju" : 제주<br>Ⓐ "Chungcheongnam-do" : 충남<br>Ⓑ "Chungcheongbuk-do": 충북%nextB-- 아래 선택지 중 하나<br>①    "00" : 당일 00시 측정된 기온값<br>②    "03" : 당일 03시 측정된 기온값<br>③    "06" : 당일 06시 측정된 기온값<br>④    "09" : 당일 09시 측정된 기온값<br>⑤    "12" : 당일 12시 측정된 기온값<br>⑥    "15" : 당일 15시 측정된 기온값<br>⑦    "18" : 당일 18시 측정된 기온값<br>⑧    "21" : 당일 21시 측정된 기온값',
+        'A-- 아래 선택지 중 하나<br>①    "Seoul" : 서울<br>②    "Gangwon-do" : 강원<br>③    "Gyeonggi-do" : 경기<br>④    "Gyeongsangnam-do" : 경남<br>⑤    "Gyeongsangbuk-do" : 경북<br>⑥    "Gwangju" : 광주<br>⑦    "Daegu" : 대구<br>⑧    "Daejeon" : 대전<br>⑨    "Busan" : 부산<br>⑩    "Sejong" : 세종<br>⑪    "Ulsan" : 울산<br>⑫    "Incheon" : 인천<br>⑬    "Jeollanam-do" : 전남<br>⑭    "Jeollabuk-do" : 전북<br>⑮    "Jeju" : 제주<br>Ⓐ "Chungcheongnam-do" : 충남<br>Ⓑ "Chungcheongbuk-do": 충북%nextB-- 아래 선택지 중 하나<br>①    "00" : 당일 00시 측정된 기온값<br>②    "03" : 당일 03시 측정된 기온값<br>③    "06" : 당일 06시 측정된 기온값<br>④    "09" : 당일 09시 측정된 기온값<br>⑤    "12" : 당일 12시 측정된 기온값<br>⑥    "15" : 당일 15시 측정된 기온값<br>⑦    "18" : 당일 18시 측정된 기온값<br>⑧    "21" : 당일 21시 측정된 기온값',
     get_today_temperature_exampleCode:
         'def when_start():\n    Entry.print(Weather.get_today_temperature("Seoul", 00))',
     get_today_temperature_exampleDesc:
-        '[시작하기]버튼을 클릭하면 오브젝트가 오늘 서울의 00시 기온을 말합니다.​',
-    check_city_weather_desc: 'B날짜에 C지역의 날씨가 A인 경우 True로 판단합니다.',
+        '[시작하기]버튼을 클릭하면 오브젝트가 오늘 서울의 00시 기온을 말합니다.​',
+    check_city_weather_desc: 'B날짜에 C지역의 날씨가 A인 경우 True로 판단합니다.',
     check_city_weather_elements:
-        'A-- 아래 선택지 중 하나<br>①    "sunny" : 맑음<br>②    "partly cloudy" : 구름조금<br>③    "mostly cloudy" : 구름많음<br>④    "cloudy" : 흐림<br>⑤    "rainy" : 비<br>⑥    "sleet" : 진눈깨비<br>⑦    "snowy" : 눈%nextB-- 아래 선택지 중 하나<br>①    "yesterday" : 어제<br>②    "today" : 오늘<br>③    "tomorrow" : 내일<br>④    "After 2 days" : 모레<br>⑤    "After 3 days" : 3일 후<br>⑥    "After 4 days" : 4일 후<br>⑦    "After 5 days" : 5일 후<br>⑧    "After 6 days" : 6일 후%nextC-- 아래 선택지 중 하나<br>①    "Seoul" : 서울<br>②    "Gangwon-do" : 강원<br>③    "Gyeonggi-do" : 경기<br>④    "Gyeongsangnam-do" : 경남<br>⑤    "Gyeongsangbuk-do" : 경북<br>⑥    "Gwangju" : 광주<br>⑦    "Daegu" : 대구<br>⑧    "Daejeon" : 대전<br>⑨    "Busan" : 부산<br>⑩    "Sejong" : 세종<br>⑪    "Ulsan" : 울산<br>⑫    "Incheon" : 인천<br>⑬    "Jeollanam-do" : 전남<br>⑭    "Jeollabuk-do" : 전북<br>⑮    "Jeju" : 제주<br>Ⓐ "Chungcheongnam-do" : 충남<br>Ⓑ "Chungcheongbuk-do": 충북',
+        'A-- 아래 선택지 중 하나<br>①    "sunny" : 맑음<br>②    "partly cloudy" : 구름조금<br>③    "mostly cloudy" : 구름많음<br>④    "cloudy" : 흐림<br>⑤    "rainy" : 비<br>⑥    "sleet" : 진눈깨비<br>⑦    "snowy" : 눈%nextB-- 아래 선택지 중 하나<br>①    "yesterday" : 어제<br>②    "today" : 오늘<br>③    "tomorrow" : 내일<br>④    "After 2 days" : 모레<br>⑤    "After 3 days" : 3일 후<br>⑥    "After 4 days" : 4일 후<br>⑦    "After 5 days" : 5일 후<br>⑧    "After 6 days" : 6일 후%nextC-- 아래 선택지 중 하나<br>①    "Seoul" : 서울<br>②    "Gangwon-do" : 강원<br>③    "Gyeonggi-do" : 경기<br>④    "Gyeongsangnam-do" : 경남<br>⑤    "Gyeongsangbuk-do" : 경북<br>⑥    "Gwangju" : 광주<br>⑦    "Daegu" : 대구<br>⑧    "Daejeon" : 대전<br>⑨    "Busan" : 부산<br>⑩    "Sejong" : 세종<br>⑪    "Ulsan" : 울산<br>⑫    "Incheon" : 인천<br>⑬    "Jeollanam-do" : 전남<br>⑭    "Jeollabuk-do" : 전북<br>⑮    "Jeju" : 제주<br>Ⓐ "Chungcheongnam-do" : 충남<br>Ⓑ "Chungcheongbuk-do": 충북',
     check_city_weather_exampleCode:
-        'def when_start():\n    if Weather.is_condition_sunny("today", "Seoul"):\n        Entry.print("오늘 서울의 날씨는 맑습니다.")',
+        'def when_start():\n    if Weather.is_condition_sunny("today", "Seoul"):\n        Entry.print("오늘 서울의 날씨는 맑습니다.")',
     check_city_weather_exampleDesc:
-        '[시작하기]버튼을 클릭하면 오늘 서울의 날씨가 맑은지 확인합니다. 만약 서울의 날씨가 맑다면 오브젝트가 "오늘 서울의 날씨는 맑습니다."라고 말합니다.​',
+        '[시작하기]버튼을 클릭하면 오늘 서울의 날씨가 맑은지 확인합니다. 만약 서울의 날씨가 맑다면 오브젝트가 "오늘 서울의 날씨는 맑습니다."라고 말합니다.​',
     check_city_finedust_desc:
-        '선택한 지역의 현재 미세먼지 정보를 실제 미세먼지 등급과 비교하여 일치하는 경우 ‘참’으로 판단합니다.',
+        '선택한 지역의 현재 미세먼지 정보를 실제 미세먼지 등급과 비교하여 일치하는 경우 ‘참’으로 판단합니다.',
     check_city_finedust_elements:
-        'A-- 아래 선택지 중 하나<br>①    "good" : 좋음<br>②    "normal" : 보통<br>③    "bad" : 나쁨<br>④    "very bad" : 매우나쁨%nextB-- 아래 선택지 중 하나<br>①    "Seoul" : 서울<br>②    "Gangwon-do" : 강원<br>③    "Gyeonggi-do" : 경기<br>④    "Gyeongsangnam-do" : 경남<br>⑤    "Gyeongsangbuk-do" : 경북<br>⑥    "Gwangju" : 광주<br>⑦    "Daegu" : 대구<br>⑧    "Daejeon" : 대전<br>⑨    "Busan" : 부산<br>⑩    "Sejong" : 세종<br>⑪    "Ulsan" : 울산<br>⑫    "Incheon" : 인천<br>⑬    "Jeollanam-do" : 전남<br>⑭    "Jeollabuk-do" : 전북<br>⑮    "Jeju" : 제주<br>Ⓐ "Chungcheongnam-do" : 충남<br>Ⓑ "Chungcheongbuk-do": 충북',
+        'A-- 아래 선택지 중 하나<br>①    "good" : 좋음<br>②    "normal" : 보통<br>③    "bad" : 나쁨<br>④    "very bad" : 매우나쁨%nextB-- 아래 선택지 중 하나<br>①    "Seoul" : 서울<br>②    "Gangwon-do" : 강원<br>③    "Gyeonggi-do" : 경기<br>④    "Gyeongsangnam-do" : 경남<br>⑤    "Gyeongsangbuk-do" : 경북<br>⑥    "Gwangju" : 광주<br>⑦    "Daegu" : 대구<br>⑧    "Daejeon" : 대전<br>⑨    "Busan" : 부산<br>⑩    "Sejong" : 세종<br>⑪    "Ulsan" : 울산<br>⑫    "Incheon" : 인천<br>⑬    "Jeollanam-do" : 전남<br>⑭    "Jeollabuk-do" : 전북<br>⑮    "Jeju" : 제주<br>Ⓐ "Chungcheongnam-do" : 충남<br>Ⓑ "Chungcheongbuk-do": 충북',
     check_city_finedust_exampleCode:
-        'def when_start():\n    if Weather.is_current_finedust_grade_good("Seoul"):\n        Entry.print("현재 서울의 미세먼지 등급은 좋음입니다.")',
+        'def when_start():\n    if Weather.is_current_finedust_grade_good("Seoul"):\n        Entry.print("현재 서울의 미세먼지 등급은 좋음입니다.")',
     check_city_finedust_exampleDesc:
-        '[시작하기]버튼을 클릭하면 현재 서울의 미세먼지 등급이 좋음인지 확인합니다. 만약 서울의 날씨가 맑다면 오브젝트가 “오늘 서울의 미세먼지 등급은 좋음입니다.”라고 말합니다.​',
+        '[시작하기]버튼을 클릭하면 현재 서울의 미세먼지 등급이 좋음인지 확인합니다. 만약 서울의 날씨가 맑다면 오브젝트가 “오늘 서울의 미세먼지 등급은 좋음입니다.”라고 말합니다.​',
     get_city_weather_data_desc:
         '선택한 날짜와 지역의 각종 날씨 정보값(최저기온, 최고기온, 습도, 강수량, 강수확률, 풍속)입니다.',
     get_city_weather_data_elements:
-        'A-- 아래 선택지 중 하나<br>①    "the lowest temperature" : 최저기온<br>②    "the highest temperature" : 최고기온<br>③    "humidity" : 습도<br>④    "precipitation" : 강수량<br>⑤    "precipitation probability" : 강수확률<br>⑥    "wind speed" : 풍속%nextB-- 아래 선택지 중 하나<br>①    "yesterday" : 어제<br>②    "today" : 오늘<br>③    "tomorrow" : 내일<br>④    "After 2 days" : 모레<br>⑤    "After 3 days" : 3일 후<br>⑥    "After 4 days" : 4일 후<br>⑦    "After 5 days" : 5일 후<br>⑧    "After 6 days" : 6일 후%nextC-- 아래 선택지 중 하나<br>①    "Seoul" : 서울<br>②    "Gangwon-do" : 강원<br>③    "Gyeonggi-do" : 경기<br>④    "Gyeongsangnam-do" : 경남<br>⑤    "Gyeongsangbuk-do" : 경북<br>⑥    "Gwangju" : 광주<br>⑦    "Daegu" : 대구<br>⑧    "Daejeon" : 대전<br>⑨    "Busan" : 부산<br>⑩    "Sejong" : 세종<br>⑪    "Ulsan" : 울산<br>⑫    "Incheon" : 인천<br>⑬    "Jeollanam-do" : 전남<br>⑭    "Jeollabuk-do" : 전북<br>⑮    "Jeju" : 제주<br>Ⓐ "Chungcheongnam-do" : 충남<br>Ⓑ "Chungcheongbuk-do": 충북',
+        'A-- 아래 선택지 중 하나<br>①    "the lowest temperature" : 최저기온<br>②    "the highest temperature" : 최고기온<br>③    "humidity" : 습도<br>④    "precipitation" : 강수량<br>⑤    "precipitation probability" : 강수확률<br>⑥    "wind speed" : 풍속%nextB-- 아래 선택지 중 하나<br>①    "yesterday" : 어제<br>②    "today" : 오늘<br>③    "tomorrow" : 내일<br>④    "After 2 days" : 모레<br>⑤    "After 3 days" : 3일 후<br>⑥    "After 4 days" : 4일 후<br>⑦    "After 5 days" : 5일 후<br>⑧    "After 6 days" : 6일 후%nextC-- 아래 선택지 중 하나<br>①    "Seoul" : 서울<br>②    "Gangwon-do" : 강원<br>③    "Gyeonggi-do" : 경기<br>④    "Gyeongsangnam-do" : 경남<br>⑤    "Gyeongsangbuk-do" : 경북<br>⑥    "Gwangju" : 광주<br>⑦    "Daegu" : 대구<br>⑧    "Daejeon" : 대전<br>⑨    "Busan" : 부산<br>⑩    "Sejong" : 세종<br>⑪    "Ulsan" : 울산<br>⑫    "Incheon" : 인천<br>⑬    "Jeollanam-do" : 전남<br>⑭    "Jeollabuk-do" : 전북<br>⑮    "Jeju" : 제주<br>Ⓐ "Chungcheongnam-do" : 충남<br>Ⓑ "Chungcheongbuk-do": 충북',
     get_city_weather_data_exampleCode:
         'def when_start():\n    Entry.print(Weather.get_lowest_temperature("today", "Seoul"))',
     get_city_weather_data_exampleDesc:
-        '[시작하기]버튼을 클릭하면 오브젝트가 오늘 서울의 최저기온을 말합니다.​',
-    get_current_city_weather_data_desc: '현재 B지역의 A 날씨 정보값을 의미합니다.',
+        '[시작하기]버튼을 클릭하면 오브젝트가 오늘 서울의 최저기온을 말합니다.​',
+    get_current_city_weather_data_desc: '현재 B지역의 A 날씨 정보값을 의미합니다.',
     get_current_city_weather_data_elements:
-        'A-- 아래 선택지 중 하나<br>①    "Seoul" : 서울<br>②    "Gangwon-do" : 강원<br>③    "Gyeonggi-do" : 경기<br>④    "Gyeongsangnam-do" : 경남<br>⑤    "Gyeongsangbuk-do" : 경북<br>⑥    "Gwangju" : 광주<br>⑦    "Daegu" : 대구<br>⑧    "Daejeon" : 대전<br>⑨    "Busan" : 부산<br>⑩    "Sejong" : 세종<br>⑪    "Ulsan" : 울산<br>⑫    "Incheon" : 인천<br>⑬    "Jeollanam-do" : 전남<br>⑭    "Jeollabuk-do" : 전북<br>⑮    "Jeju" : 제주<br>Ⓐ "Chungcheongnam-do" : 충남<br>Ⓑ "Chungcheongbuk-do": 충북%nextB-- 아래 선택지 중 하나<br>①    "temperature" : 기온<br>②    "concentration of fine dust" : 미세먼지농도',
+        'A-- 아래 선택지 중 하나<br>①    "Seoul" : 서울<br>②    "Gangwon-do" : 강원<br>③    "Gyeonggi-do" : 경기<br>④    "Gyeongsangnam-do" : 경남<br>⑤    "Gyeongsangbuk-do" : 경북<br>⑥    "Gwangju" : 광주<br>⑦    "Daegu" : 대구<br>⑧    "Daejeon" : 대전<br>⑨    "Busan" : 부산<br>⑩    "Sejong" : 세종<br>⑪    "Ulsan" : 울산<br>⑫    "Incheon" : 인천<br>⑬    "Jeollanam-do" : 전남<br>⑭    "Jeollabuk-do" : 전북<br>⑮    "Jeju" : 제주<br>Ⓐ "Chungcheongnam-do" : 충남<br>Ⓑ "Chungcheongbuk-do": 충북%nextB-- 아래 선택지 중 하나<br>①    "temperature" : 기온<br>②    "concentration of fine dust" : 미세먼지농도',
     get_current_city_weather_data_exampleCode:
         'def when_start():\n    Entry.print(Weather.get_current_temperature("Seoul"))',
     get_current_city_weather_data_exampleDesc:
-        '[시작하기]버튼을 클릭하면 오브젝트가 현재 서울의 기온을 말합니다.',
-    get_today_city_temperature_desc: '오늘 A지역의 B 시간대 기온 정보값을 의미합니다.',
+        '[시작하기]버튼을 클릭하면 오브젝트가 현재 서울의 기온을 말합니다.',
+    get_today_city_temperature_desc: '오늘 A지역의 B 시간대 기온 정보값을 의미합니다.',
     get_today_city_temperature_elements:
-        'A-- 아래 선택지 중 하나<br>①    "Seoul" : 서울<br>②    "Gangwon-do" : 강원<br>③    "Gyeonggi-do" : 경기<br>④    "Gyeongsangnam-do" : 경남<br>⑤    "Gyeongsangbuk-do" : 경북<br>⑥    "Gwangju" : 광주<br>⑦    "Daegu" : 대구<br>⑧    "Daejeon" : 대전<br>⑨    "Busan" : 부산<br>⑩    "Sejong" : 세종<br>⑪    "Ulsan" : 울산<br>⑫    "Incheon" : 인천<br>⑬    "Jeollanam-do" : 전남<br>⑭    "Jeollabuk-do" : 전북<br>⑮    "Jeju" : 제주<br>Ⓐ "Chungcheongnam-do" : 충남<br>Ⓑ "Chungcheongbuk-do": 충북%nextB-- 아래 선택지 중 하나<br>①    "00" : 당일 00시 측정된 기온값<br>②    "03" : 당일 03시 측정된 기온값<br>③    "06" : 당일 06시 측정된 기온값<br>④    "09" : 당일 09시 측정된 기온값<br>⑤    "12" : 당일 12시 측정된 기온값<br>⑥    "15" : 당일 15시 측정된 기온값<br>⑦    "18" : 당일 18시 측정된 기온값<br>⑧    "21" : 당일 21시 측정된 기온값',
+        'A-- 아래 선택지 중 하나<br>①    "Seoul" : 서울<br>②    "Gangwon-do" : 강원<br>③    "Gyeonggi-do" : 경기<br>④    "Gyeongsangnam-do" : 경남<br>⑤    "Gyeongsangbuk-do" : 경북<br>⑥    "Gwangju" : 광주<br>⑦    "Daegu" : 대구<br>⑧    "Daejeon" : 대전<br>⑨    "Busan" : 부산<br>⑩    "Sejong" : 세종<br>⑪    "Ulsan" : 울산<br>⑫    "Incheon" : 인천<br>⑬    "Jeollanam-do" : 전남<br>⑭    "Jeollabuk-do" : 전북<br>⑮    "Jeju" : 제주<br>Ⓐ "Chungcheongnam-do" : 충남<br>Ⓑ "Chungcheongbuk-do": 충북%nextB-- 아래 선택지 중 하나<br>①    "00" : 당일 00시 측정된 기온값<br>②    "03" : 당일 03시 측정된 기온값<br>③    "06" : 당일 06시 측정된 기온값<br>④    "09" : 당일 09시 측정된 기온값<br>⑤    "12" : 당일 12시 측정된 기온값<br>⑥    "15" : 당일 15시 측정된 기온값<br>⑦    "18" : 당일 18시 측정된 기온값<br>⑧    "21" : 당일 21시 측정된 기온값',
     get_today_city_temperature_exampleCode:
         'def when_start():\n    Entry.print(Weather.get_today_city_temperature("Seoul", 00))',
     get_today_city_temperature_exampleDesc:
-        '[시작하기]버튼을 클릭하면 오브젝트가 오늘 서울의 00시 기온을 말합니다.​',
+        '[시작하기]버튼을 클릭하면 오브젝트가 오늘 서울의 00시 기온을 말합니다.​',
 };
 Lang.Painter = {
     select_cut: 'You can cut with a square dotted line.',
