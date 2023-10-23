@@ -471,6 +471,10 @@ Entry.Scene = class {
 
         const targetObject = container.getCurrentObjects()[0];
 
+        if (Entry.engine.isState('run')) {
+            Entry.Utils.forceStopSounds();
+        }
+
         if (targetObject && Entry.type !== 'minimize') {
             container.selectObject(targetObject.id);
             playground.refreshPlayground();
