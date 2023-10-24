@@ -775,7 +775,6 @@ module.exports = {
                         }
                         case 'other_objects': {
                             const instances = Entry.soundInstances.getAllExcept(sprite);
-                            console.log('instances', instances);
                             instances.forEach((instance) => {
                                 instance?.dispatchEvent?.('complete');
                                 instance.stop();
