@@ -604,6 +604,7 @@ Entry.Engine = class Engine {
             createjs.WebAudioPlugin.playEmptySound();
             this.isSoundInitialized = true;
         }
+        Entry.Utils.forceStopSounds();
         const variableContainer = Entry.variableContainer;
         const container = Entry.container;
         const WS = Entry.getMainWS();
@@ -751,7 +752,8 @@ Entry.Engine = class Engine {
         }
         createjs.Sound.setVolume(1);
         createjs.Sound.stop();
-        Entry.soundInstances = [];
+        Entry.soundInstances.clear();
+        Entry.playbackRateValue = 1;
         Entry.targetChecker && Entry.targetChecker.clearListener();
 
         this.view_.removeClass('entryEngineBlueWorkspace');

@@ -315,6 +315,8 @@ EntryStatic.getAllBlocks = function() {
                 'sound_from_to_and_wait',
                 'sound_volume_change',
                 'sound_volume_set',
+                'sound_speed_change',
+                'sound_speed_set',
                 'sound_silent_all',
             ],
         },

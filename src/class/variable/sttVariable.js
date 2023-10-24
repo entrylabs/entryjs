@@ -66,16 +66,23 @@ class SttVariable extends Variable {
             .rr(4, 10, this._valueWidth + 15, 16, this.RECT_RADIUS);
     }
 
+    // @summary 음성 인식(STT) 블록의 종류를 반환합니다.
+    // @return {string[]} 음성 인식(STT) 블록의 종류
+    getSttTypes() {
+        if (!this.sttTypes) {
+            this.sttTypes = Object.entries(Entry.AI_UTILIZE_BLOCK.audio.getBlocks())
+                .filter(([, block]) => block.class === 'stt')
+                .map(([key]) => key);
+        }
+        return this.sttTypes;
+    }
+
     checkVisible(removeBlock, notIncludeSelf) {
         if (!this.isVisible() || Entry.engine.isState('run')) {
             return;
         }
         const objects = Entry.container.getAllObjects();
-        const sttTypes = [
-            'speech_to_text_convert',
-            'set_visible_speech_to_text',
-            'speech_to_text_get_value',
-        ];
+        const sttTypes = this.getSttTypes();
 
         for (let i = 0, len = objects.length; i < len; i++) {
             const code = objects[i].script;
