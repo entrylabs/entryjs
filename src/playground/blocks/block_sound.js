@@ -52,7 +52,7 @@ module.exports = {
 
                     if (sound) {
                         const instance = Entry.Utils.playSound(sound.id);
-                        Entry.Utils.addSoundInstances(instance);
+                        Entry.Utils.addSoundInstances(instance, sprite);
                     }
 
                     return script.callReturn();
@@ -134,7 +134,7 @@ module.exports = {
                             startTime: 0,
                             duration: timeValue * 1000,
                         });
-                        Entry.Utils.addSoundInstances(instance);
+                        Entry.Utils.addSoundInstances(instance, sprite);
                     }
                     return script.callReturn();
                 },
@@ -229,7 +229,7 @@ module.exports = {
                             startTime: Math.min(start, end),
                             duration: Math.max(start, end) - Math.min(start, end),
                         });
-                        Entry.Utils.addSoundInstances(instance);
+                        Entry.Utils.addSoundInstances(instance, sprite);
                     }
                     return script.callReturn();
                 },
@@ -292,7 +292,7 @@ module.exports = {
                         if (sound) {
                             script.playState = 1;
                             const instance = Entry.Utils.playSound(sound.id);
-                            Entry.Utils.addSoundInstances(instance);
+                            Entry.Utils.addSoundInstances(instance, sprite);
                             setTimeout(() => {
                                 script.playState = 0;
                             }, sound.duration * 1000);
@@ -379,7 +379,7 @@ module.exports = {
                         if (sound) {
                             script.playState = 1;
                             const instance = Entry.Utils.playSound(sound.id);
-                            Entry.Utils.addSoundInstances(instance);
+                            Entry.Utils.addSoundInstances(instance, sprite);
                             const timeValue = script.getNumberValue('SECOND', script);
                             setTimeout(() => {
                                 instance.stop();
@@ -493,7 +493,7 @@ module.exports = {
                                 startTime: startValue,
                                 duration,
                             });
-                            Entry.Utils.addSoundInstances(instance);
+                            Entry.Utils.addSoundInstances(instance, sprite);
 
                             setTimeout(() => {
                                 script.playState = 0;
@@ -775,6 +775,7 @@ module.exports = {
                         }
                         case 'other_objects': {
                             const instances = Entry.soundInstances.getAllExcept(sprite);
+                            console.log('instances', instances);
                             instances.forEach((instance) => {
                                 instance?.dispatchEvent?.('complete');
                                 instance.stop();
