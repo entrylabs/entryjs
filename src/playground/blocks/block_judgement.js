@@ -282,6 +282,7 @@ module.exports = {
                         value: 'number',
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.JUDGE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Text',
