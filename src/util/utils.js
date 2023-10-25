@@ -2721,7 +2721,7 @@ Entry.Utils.getVolume = function() {
 };
 
 Entry.Utils.forceStopSounds = function() {
-    _.each(Entry.soundInstances.getAllValues(), (instance) => {
+    _.each([...Entry.soundInstances.getAllValues()], (instance) => {
         instance?.dispatchEvent?.('complete');
         instance?.stop?.();
     });

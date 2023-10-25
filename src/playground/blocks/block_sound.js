@@ -766,7 +766,7 @@ module.exports = {
                             Entry.Utils.forceStopSounds();
                             return script.callReturn();
                         case 'thisOnly': {
-                            const instances = Entry.soundInstances.getAll(sprite);
+                            const instances = [...Entry.soundInstances.getAll(sprite)];
                             instances.forEach((instance) => {
                                 instance?.dispatchEvent?.('complete');
                                 instance.stop();
@@ -774,7 +774,7 @@ module.exports = {
                             return script.callReturn();
                         }
                         case 'other_objects': {
-                            const instances = Entry.soundInstances.getAllExcept(sprite);
+                            const instances = [...Entry.soundInstances.getAllExcept(sprite)];
                             instances.forEach((instance) => {
                                 instance?.dispatchEvent?.('complete');
                                 instance.stop();
