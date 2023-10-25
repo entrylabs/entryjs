@@ -2706,6 +2706,7 @@ Entry.Utils.setVolume = function(volume) {
     this._volume = _clamp(volume, 0, 1);
 
     Entry.soundInstances
+        .getAllValues()
         .filter(({ soundType }) => !soundType)
         .forEach((instance) => {
             instance.volume = this._volume;
@@ -2720,35 +2721,36 @@ Entry.Utils.getVolume = function() {
 };
 
 Entry.Utils.forceStopSounds = function() {
-    _.each(Entry.soundInstances, (instance) => {
+    _.each([...Entry.soundInstances.getAllValues()], (instance) => {
         instance?.dispatchEvent?.('complete');
         instance?.stop?.();
     });
-    Entry.soundInstances = [];
+    Entry.soundInstances.clear();
 };
 
 Entry.Utils.playSound = function(id, option = {}) {
-    return createjs.Sound.play(id, Object.assign({ volume: this._volume }, option));
+    const instance = createjs.Sound.play(id, Object.assign({ volume: this._volume }, option));
+    if (instance.sourceNode?.playbackRate) {
+        instance.sourceNode.playbackRate.value = Entry.playbackRateValue;
+    }
+    return instance;
 };
 
-Entry.Utils.addSoundInstances = function(instance) {
-    Entry.soundInstances.push(instance);
+Entry.Utils.addSoundInstances = function(instance, sprite = 'global') {
+    Entry.soundInstances.add(sprite, instance);
     instance.on('complete', () => {
-        const index = Entry.soundInstances.indexOf(instance);
-        if (index > -1) {
-            Entry.soundInstances.splice(index, 1);
-        }
+        Entry.soundInstances.deleteItemByKeyAndValue(sprite, instance);
     });
 };
 
 Entry.Utils.pauseSoundInstances = function() {
-    Entry.soundInstances.map((instance) => {
+    Entry.soundInstances.getAllValues().forEach((instance) => {
         instance.paused = true;
     });
 };
 
 Entry.Utils.recoverSoundInstances = function() {
-    Entry.soundInstances.map((instance) => {
+    Entry.soundInstances.getAllValues().forEach((instance) => {
         instance.paused = false;
     });
 };
