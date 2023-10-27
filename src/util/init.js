@@ -256,6 +256,7 @@ Entry.initSoundQueue_ = function() {
     Entry.soundQueue = new createjs.LoadQueue();
     Entry.soundQueue.installPlugin(createjs.Sound);
     Entry.soundInstances = new DataSource();
+    Entry.bgmInstances = new DataSource();
     Entry.soundQueue.urls = new Set();
     Entry.soundQueue.total = 0;
     Entry.soundQueue.loadCallback = (src) => {
