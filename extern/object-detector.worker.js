@@ -1,4 +1,4 @@
-self.importScripts('/lib/entry-js/extern/vision_bundle.js');
+self.importScripts(`${self.location.pathname}/../vision_bundle.js`);
 
 let flipState;
 let isRun = false;
@@ -35,10 +35,10 @@ const initializeObjectDetector = async (data) => {
     workerContext.font = '20px Arial';
     workerContext.lineWidth = 5;
     drawingUtils = new DrawingUtils(workerContext);
-    const vision = await FilesetResolver.forVisionTasks('/lib/entry-js/extern/wasm');
+    const vision = await FilesetResolver.forVisionTasks(`${self.location.pathname}/../wasm`);
     objectDetector = await ObjectDetector.createFromOptions(vision, {
         baseOptions: {
-            modelAssetPath: '/lib/entry-js/extern/model/object_detector_lite.tflite',
+            modelAssetPath: `${self.location.pathname}/../model/object_detector_lite.tflite`,
             delegate: 'GPU',
         },
         runningMode: 'VIDEO',

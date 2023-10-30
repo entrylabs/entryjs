@@ -3083,3 +3083,8 @@ Entry.Utils.extractTextFromHTML = (htmlString) => {
     const dom = parser.parseFromString(htmlString, 'text/html');
     return dom.body.textContent || '';
 };
+
+Entry.Utils.getEntryjsPath = () =>
+    window.navigator.userAgent.indexOf('Electron') > -1
+        ? `file://${window.getEntryjsPath()}`
+        : `${self.location.origin}/lib/entry-js`;

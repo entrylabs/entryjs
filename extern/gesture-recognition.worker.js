@@ -1,4 +1,4 @@
-self.importScripts('/lib/entry-js/extern/vision_bundle.js');
+self.importScripts(`${self.location.pathname}/../vision_bundle.js`);
 
 let flipState;
 let isRun = false;
@@ -35,10 +35,10 @@ const initializeGesture = async (data) => {
     workerContext = canvas.getContext('2d');
     workerContext.font = '20px Arial';
     drawingUtils = new DrawingUtils(workerContext);
-    const vision = await FilesetResolver.forVisionTasks('/lib/entry-js/extern/wasm');
+    const vision = await FilesetResolver.forVisionTasks(`${self.location.pathname}/../wasm`);
     gestureRecognizer = await GestureRecognizer.createFromOptions(vision, {
         baseOptions: {
-            modelAssetPath: '/lib/entry-js/extern/model/gesture_recognizer.task',
+            modelAssetPath: `${self.location.pathname}/../model/gesture_recognizer.task`,
             delegate: 'GPU',
         },
         runningMode: 'VIDEO',
