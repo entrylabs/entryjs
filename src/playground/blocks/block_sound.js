@@ -822,6 +822,7 @@ module.exports = {
                     const sound = sprite.parent.getSound(soundId);
 
                     if (sound) {
+                        Entry.Utils.forceStopBGM();
                         const instance = Entry.Utils.playBGM(sound.id);
                         Entry.Utils.addBGMInstances(instance);
                     }
