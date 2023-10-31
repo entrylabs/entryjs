@@ -1,4 +1,4 @@
-self.importScripts('/lib/entry-js/extern/human/human.js');
+self.importScripts(`${self.location.pathname}/../human/human.js`);
 
 const config = {
     backend: 'humangl',

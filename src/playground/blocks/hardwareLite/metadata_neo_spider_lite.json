@@ -1,9 +1,0 @@
-{
-    "name": "NeoSpiderLite",
-    "version": "1.0.0",
-    "type": "robot",
-    "title": "네오스파이더",
-    "description": "NeoSpider",
-    "imageName": "neospiderlite",
-    "moduleId": "410101"
-}

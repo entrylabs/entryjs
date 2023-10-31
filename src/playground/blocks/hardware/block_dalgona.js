@@ -99,7 +99,9 @@ Entry.Dalgona = {
         GYROY: 56,
         GYROZ: 57,
         PULLUP: 58,
-        TONETOGGLE: 59,
+        // FNDINIT: 59,
+        // NEOINIT: 59,
+        // NEOCOLOR: 60,
     },
     toneTable: {
         '0': 0,
@@ -186,8 +188,8 @@ Entry.Dalgona.setLanguage = function() {
                 dalgona_mp3_title:'달고나 mp3 블럭',
                 dalgona_HX711_title:'달고나 HX711 로드셀 블럭',
                 dalgona_sensor_title:'달고나 센서 블럭',
-                dalgona_toggle_on: '켜기',
-                dalgona_toggle_off: '끄기',
+                dalgona_toggle_on: 'LED 켜기',
+                dalgona_toggle_off: 'LED 끄기',
                 dalgona_lcd_first_line: '첫 번째',
                 dalgona_lcd_seconds_line: '두 번째',
                 dalgona_get_analog_value: '아날로그 %1 핀 읽기',
@@ -2831,31 +2833,19 @@ Entry.Dalgona.getBlocks = function() {
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
-                // var pu = Entry.hw.portData.PULLUP;
-                var pu = Entry.hw.portData.DIGITAL;
+                var pu = Entry.hw.portData.PULLUP;
                 
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
 
-                // Entry.hw.sendQueue['GET'][Entry.Dalgona.sensorTypes.PULLUP] = {
-                //     port: port,
-                //     data: 2,
-                //     time: new Date().getTime(),
-                // };
-
-                if (Entry.hw.sendQueue.SET[port]) {
-                    return Entry.hw.sendQueue.SET[port].data;
-                } else {
-                    Entry.hw.sendQueue['GET'][Entry.Dalgona.sensorTypes.DIGITAL] = {
-                        port: port,
-                        time: new Date().getTime(),
-                    };
-                }
-
+                Entry.hw.sendQueue['GET'][Entry.Dalgona.sensorTypes.PULLUP] = {
+                    port: port,
+                    data: 2,
+                    time: new Date().getTime(),
+                };
                 var pullupvalue = pu ? pu[port] || 0 : 0;
                 return !pullupvalue;
-
                 
             },
             
@@ -4063,9 +4053,8 @@ Entry.Dalgona.getBlocks = function() {
                 if (!Entry.hw.sendQueue['SET']) {
                     Entry.hw.sendQueue['SET'] = {};
                 }
-
                 Entry.hw.sendQueue['SET'][port] = {
-                    type: Entry.Dalgona.sensorTypes.TONETOGGLE,
+                    type: Entry.Dalgona.sensorTypes.DIGITAL,
                     data: value,
                     time: new Date().getTime(),
                 };
@@ -4074,7 +4063,7 @@ Entry.Dalgona.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: [],
+                py: ['dalgona.set_digital_toggle(%1, %2, %3, %4)'],
             },
         },
         dalgona_set_digital_buzzer_volume: {

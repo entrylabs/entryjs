@@ -315,11 +315,7 @@ EntryStatic.getAllBlocks = function() {
                 'sound_from_to_and_wait',
                 'sound_volume_change',
                 'sound_volume_set',
-                'sound_speed_change',
-                'sound_speed_set',
                 'sound_silent_all',
-                'play_bgm',
-                'stop_bgm',
             ],
         },
         {
@@ -858,12 +854,6 @@ Object.defineProperty(EntryStatic, 'fonts', {
                 visible: true,
             },
             {
-                name: Lang.Fonts.nanumbarunpen,
-                family: 'Nanum Barun Pen',
-                url: '/css/nanumbarunpen.css',
-                visible: true,
-            },
-            {
                 name: Lang.Fonts.pen_script,
                 family: 'Nanum Pen Script',
                 url: '/css/nanumpenscript.css',
@@ -876,21 +866,9 @@ Object.defineProperty(EntryStatic, 'fonts', {
                 visible: true,
             },
             {
-                name: Lang.Fonts.maruburi,
-                family: 'MaruBuri',
-                url: '/css/maruburi.css',
-                visible: true,
-            },
-            {
-                name: Lang.Fonts.notosans,
-                family: 'NotoSans',
-                url: '/css/notosans.css',
-                visible: true,
-            },
-            {
-                name: Lang.Fonts.d2coding,
-                family: 'D2 Coding',
-                url: '/css/d2coding.css',
+                name: Lang.Fonts.gothic_coding,
+                family: 'Nanum Gothic Coding',
+                url: '/css/nanumgothiccoding.css',
                 visible: true,
             },
             {
