@@ -786,6 +786,78 @@ module.exports = {
                 },
                 syntax: { js: [], py: ['Entry.stop_sound()'] },
             },
+            play_bgm: {
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/sound_icon.svg',
+                        size: 11,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [
+                        {
+                            type: 'get_sounds',
+                        },
+                        null,
+                    ],
+                    type: 'play_bgm',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                class: 'bgm',
+                isNotFor: [],
+                func(sprite, script) {
+                    const soundId = script.getStringValue('VALUE', script);
+                    const sound = sprite.parent.getSound(soundId);
+
+                    if (sound) {
+                        Entry.Utils.forceStopBGM();
+                        const instance = Entry.Utils.playBGM(sound.id);
+                        Entry.Utils.addBGMInstances(instance);
+                    }
+                    return script.callReturn();
+                },
+                syntax: { js: [], py: ['Entry.stop_sound()'] },
+            },
+            stop_bgm: {
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/sound_icon.svg',
+                        size: 11,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null],
+                    type: 'stop_bgm',
+                },
+                paramsKeyMap: {
+                    TARGET: 0,
+                },
+                class: 'bgm',
+                isNotFor: [],
+                func(sprite, script) {
+                    Entry.Utils.forceStopBGM();
+                    return script.callReturn();
+                },
+                syntax: { js: [], py: ['Entry.stop_sound()'] },
+            },
         };
     },
 };
