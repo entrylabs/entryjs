@@ -3087,4 +3087,4 @@ Entry.Utils.extractTextFromHTML = (htmlString) => {
 Entry.Utils.getEntryjsPath = () =>
     window.navigator.userAgent.indexOf('Electron') > -1
         ? `file://${window.getEntryjsPath()}`
-        : `${self.location.origin}/lib/entry-js`;
+        : `${window.location.origin}/lib/entry-js`;
