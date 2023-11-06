@@ -1823,7 +1823,7 @@ Entry.Microbit2 = new (class Microbit2 {
                 def: {
                     type: 'microbit2_radio_setting',
                 },
-                paramsKeyMap: { RATE: 0, CHANNEL: 1 },
+                paramsKeyMap: { CHANNEL: 0 },
                 func: (sprite, script) => {
                     if (!Entry.Utils.isNumber(script.getNumberValue('CHANNEL'))) {
                         return;
