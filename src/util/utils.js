@@ -2767,10 +2767,16 @@ Entry.Utils.pauseSoundInstances = function() {
     Entry.soundInstances.getAllValues().forEach((instance) => {
         instance.paused = true;
     });
+    Entry.bgmInstances.getAllValues().forEach((instance) => {
+        instance.paused = true;
+    });
 };
 
 Entry.Utils.recoverSoundInstances = function() {
     Entry.soundInstances.getAllValues().forEach((instance) => {
+        instance.paused = false;
+    });
+    Entry.bgmInstances.getAllValues().forEach((instance) => {
         instance.paused = false;
     });
 };
