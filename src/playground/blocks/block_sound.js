@@ -857,6 +857,113 @@ module.exports = {
                 },
                 syntax: { js: [], py: ['Entry.stop_sound()'] },
             },
+            get_sound_volume: {
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
+                skeleton: 'basic_string_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'Text',
+                        text: Lang.Blocks.CALC_get_sound_volume,
+                        color: '#FFF',
+                    },
+                    {
+                        type: 'Text',
+                        text: '',
+                        color: '#FFF',
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null, null],
+                    type: 'get_sound_volume',
+                },
+                class: 'sound_volume',
+                isNotFor: [],
+                func() {
+                    return Entry.Utils.getVolume() * 100;
+                },
+                syntax: {
+                    js: [],
+                    py: [
+                        {
+                            syntax: 'Entry.value_of_sound_volume()',
+                            blockType: 'param',
+                        },
+                    ],
+                },
+            },
+            get_sound_duration: {
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
+                skeleton: 'basic_string_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'Text',
+                        text: Lang.Blocks.CALC_get_sound_duration_1,
+                        color: '#FFF',
+                    },
+                    {
+                        type: 'DropdownDynamic',
+                        value: null,
+                        menuName: 'sounds',
+                        fontSize: 10,
+                        bgColor: EntryStatic.colorSet.block.darken.SOUND,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                    },
+                    {
+                        type: 'Text',
+                        text: Lang.Blocks.CALC_get_sound_duration_2,
+                        color: '#FFF',
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null, null, null],
+                    type: 'get_sound_duration',
+                },
+                pyHelpDef: {
+                    params: [null, 'A&value', null],
+                    type: 'get_sound_duration',
+                },
+                paramsKeyMap: {
+                    VALUE: 1,
+                },
+                class: 'sound_volume',
+                isNotFor: [],
+                func(sprite, script) {
+                    const soundId = script.getField('VALUE', script);
+                    const soundsArr = sprite.parent.sounds;
+
+                    for (let i = 0; i < soundsArr.length; i++) {
+                        if (soundsArr[i].id === soundId) {
+                            return soundsArr[i].duration;
+                        }
+                    }
+                },
+                syntax: {
+                    js: [],
+                    py: [
+                        {
+                            syntax: 'Entry.value_of_sound_length_of(%2)',
+                            blockType: 'param',
+                            textParams: [
+                                undefined,
+                                {
+                                    type: 'DropdownDynamic',
+                                    value: null,
+                                    menuName: 'sounds',
+                                    fontSize: 11,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.SOUND,
+                                    converter: Entry.block.converters.returnStringKey,
+                                },
+                            ],
+                        },
+                    ],
+                },
+            },
         };
     },
 };
