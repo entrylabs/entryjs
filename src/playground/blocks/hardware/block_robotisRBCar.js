@@ -50,6 +50,7 @@ Entry.Robotis_rb_car = {
             [Entry.Robotis_rb.INSTRUCTION.WRITE, 40, 2, 0],
             [Entry.Robotis_rb.INSTRUCTION.WRITE, 66, 2, 0],
             [Entry.Robotis_rb.INSTRUCTION.WRITE, 710, 2, 0],
+            [Entry.Robotis_rb.INSTRUCTION.WRITE, 19, 1, 1], // bypass 모드 켜기
             // [Entry.Robotis_rb.INSTRUCTION.WRITE, 163, 2, 30759],
             // [Entry.Robotis_rb.INSTRUCTION.WRITE, 162, 1, 1],
         ]);
