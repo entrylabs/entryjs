@@ -177,7 +177,7 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_dxl_set_mode: "%1 번 모터 %2 모드로 설정",
                 robotis_dxl_set_position: "%1 번 모터 %2 속도로 %3 도 위치로 회전",
                 robotis_dxl_set_rotate: "%1 번 모터 %2 속도로 %3 으로 %4",
-                robotis_dxl_set_multiturn_round: "%1 번 모터 %2 도 위치에서 %3 속도로 %4 바퀴 %5 회전",
+                robotis_dxl_set_multiturn_round: "%1 번 모터 %2 속도로 %3 바퀴 %4 회전",
             },
             Blocks: {
                 robotis_red: "빨강",
@@ -396,7 +396,7 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_dxl_set_mode: "Set ID %1 motor as %2 mode",
                 robotis_dxl_set_position: "Rotate ID %1 motor to angle %3 at speed %2",
                 robotis_dxl_set_rotate: "%4 ID %1 motor %3 at speed %2",
-                robotis_dxl_set_multiturn_round: "Rotate ID %1 motor %4 round %5 at speed %3 from position %2°",
+                robotis_dxl_set_multiturn_round: "Rotate ID %1 motor %3 round %4 at speed %2",
 
 
             },
@@ -1195,10 +1195,6 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     accept: 'string',
                 },
                 {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
                     type: 'Dropdown',
                     options: [
                         [Lang.Blocks.robotis_dxl_rotate_cw, '1'],
@@ -1219,7 +1215,6 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             def: {
                 params: [
                     '1',
-                    '0',
                     '50',
                     '1',
                     null,
@@ -1229,10 +1224,9 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             paramsKeyMap: {
                 DXL_ID: 0,
-                DXL_POSITION: 1,
-                DXL_SPEED: 2,
-                DXL_ROUND: 3,
-                DXL_DIRECTION: 4,
+                DXL_SPEED: 1,
+                DXL_ROUND: 2,
+                DXL_DIRECTION: 3,
             },
             class: 'robotis_openCM70_cm',
             isNotFor: ['Robotis_rb_H', 'Robotis_rb_P_Assembly'],
@@ -1240,51 +1234,55 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 console.log("robotis_dxl_set_multiturn_round  " + new Date().getSeconds() + ':' + new Date().getMilliseconds());
                 // instruction / address / length / value / default length
                 var dxl_id = script.getNumberValue('DXL_ID', script);
-                var dxl_angle = script.getNumberValue('DXL_POSITION', script);
                 var dxl_speed = script.getNumberValue('DXL_SPEED', script);
                 var dxl_round = script.getNumberValue('DXL_ROUND', script);
                 var dxl_direction = script.getNumberValue('DXL_DIRECTION', script);
 
 
-                var data_instruction = Entry.Robotis_rb.INSTRUCTION.BYPASS_WRITE;
+                var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
                 var data_address_1 = 0;
                 var data_length_1 = 0;
                 var data_value_1 = 0;
                 var data_address_2 = 0;
                 var data_length_2 = 0;
                 var data_value_2 = 0;
+                var data_address_3 = 0;
+                var data_length_3 = 0;
+                var data_value_3 = 0;
 
                 var data_sendqueue = [];
                 var result = undefined;
 
+                if (dxl_id == 0 || dxl_speed == 0 || dxl_round == 0) {
+                    return;
+                }
+
                 data_address_1 =
-                    Entry.Robotis_rb.CONTROL_TABLE.DXL_PROFILE_VELOCITY[0];
+                    Entry.Robotis_rb.CONTROL_TABLE.CM_DXL_MULTITURN_ID[0];
                 data_length_1 =
-                    Entry.Robotis_rb.CONTROL_TABLE.DXL_PROFILE_VELOCITY[1];
+                    Entry.Robotis_rb.CONTROL_TABLE.CM_DXL_MULTITURN_ID[1];
+
+                data_address_2 =
+                    Entry.Robotis_rb.CONTROL_TABLE.CM_DXL_MULTITURN_SPEED[0];
+                data_length_2 =
+                    Entry.Robotis_rb.CONTROL_TABLE.CM_DXL_MULTITURN_SPEED[1];
 
                 if (dxl_speed < 0) dxl_speed = 0;
                 else if (dxl_speed > 100) dxl_speed = 100;
 
-                data_value_1 = dxl_speed * 10;
+                data_value_2 = dxl_speed * 10;
 
-                data_address_2 =
-                    Entry.Robotis_rb.CONTROL_TABLE.DXL_GOAL_POSITION[0];
-                data_length_2 =
-                    Entry.Robotis_rb.CONTROL_TABLE.DXL_GOAL_POSITION[1];
+                data_address_3 =
+                    Entry.Robotis_rb.CONTROL_TABLE.CM_DXL_MULTITURN_DISTANCE[0];
+                data_length_3 =
+                    Entry.Robotis_rb.CONTROL_TABLE.CM_DXL_MULTITURN_DISTANCE[1];
 
                 if (dxl_round < 0) dxl_round = 0;
                 else if (dxl_round > 100) dxl_round = 100;
 
-                data_value_2 = dxl_round * 4096;
+                data_value_3 = dxl_round * 4096;
 
-                if (dxl_direction == 1) data_value_2 = -data_value_2;
-
-                console.log("dxl_angle: " + dxl_angle);
-                dxl_angle = 180 - dxl_angle;
-
-                data_value_2 = data_value_2 + Math.floor(dxl_angle * 4096 / 360);
-
-                console.log("write position: " + data_value_2);
+                if (dxl_direction == 1) data_value_3 = -data_value_3;
 
                 data_sendqueue = [
                     [
@@ -1292,14 +1290,18 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                         data_address_1,
                         data_length_1,
                         dxl_id,
-                        data_value_1
                     ],
                     [
                         data_instruction,
                         data_address_2,
                         data_length_2,
-                        dxl_id,
-                        data_value_2
+                        data_value_2,
+                    ],
+                    [
+                        data_instruction,
+                        data_address_3,
+                        data_length_3,
+                        data_value_3,
                     ],
                 ];
 

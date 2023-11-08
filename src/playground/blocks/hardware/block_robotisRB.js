@@ -36,6 +36,10 @@ Entry.Robotis_rb = {
         AUX_MOTOR_SPEED: [136, 2],
         AUX_LED_MODULE: [210, 1],
 
+        CM_DXL_MULTITURN_ID: [580, 1],
+        CM_DXL_MULTITURN_SPEED: [582, 2],
+        CM_DXL_MULTITURN_DISTANCE: [584, 4],
+
         DXL_OPERATING_MODE: [11, 1],
         DXL_TORQUE_ENABLE: [64, 1],
         DXL_GOAL_VELOCITY: [104, 4],
