@@ -1151,7 +1151,8 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
 
                 data_value = dxl_speed * 10;
 
-                if (dxl_direction == 2) data_value = -data_value;
+                // cw일 경우 음수처리
+                if (dxl_direction == 1) data_value = -data_value;
 
                 data_value = data_value * dxl_move;
 
