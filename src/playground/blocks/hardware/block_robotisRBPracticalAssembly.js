@@ -60,7 +60,7 @@ Entry.Robotis_rb_P_Assembly = {
 
         Entry.Robotis_carCont.update();
     },
-    id: ['7.A'],
+    id: ['7.A', '7.B'],
     name: 'Robotis_rb_P_Assembly',
     url: 'http://www.robotis.com/index/product.php?cate_code=111310',
     imageName: 'robotis_RB100_Practical_Assembly.png',

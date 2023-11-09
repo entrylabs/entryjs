@@ -2430,14 +2430,13 @@ Entry.Robotis_rb.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['ID 100', '100'],
                         ['ID 101', '101'],
                         ['ID 102', '102'],
                         ['ID 103', '103'],
                         ['ID 104', '104'],
                         ['ID 105', '105'],
                     ],
-                    value: '100',
+                    value: '101',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -2552,14 +2551,13 @@ Entry.Robotis_rb.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['ID 100', '100'],
                         ['ID 101', '101'],
                         ['ID 102', '102'],
                         ['ID 103', '103'],
                         ['ID 104', '104'],
                         ['ID 105', '105'],
                     ],
-                    value: '100',
+                    value: '101',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
