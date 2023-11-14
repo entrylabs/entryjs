@@ -1154,6 +1154,9 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 // cw일 경우 음수처리
                 if (dxl_direction == 1) data_value = -data_value;
 
+                // 알쥐나 알라 우측 바퀴인 경우 reverse mode이므로 방향 반대
+                if (dxl_id == 33 || dxl_id == 35) data_value = -data_value;
+
                 data_value = data_value * dxl_move;
 
                 var data_sendqueue = [
