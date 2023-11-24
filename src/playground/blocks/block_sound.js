@@ -626,6 +626,27 @@ module.exports = {
                 },
                 syntax: { js: [], py: ['Entry.set_sound_volume(%1)'] },
             },
+            get_sound_speed: {
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
+                skeleton: 'basic_string_field',
+                statements: [],
+                params: [],
+                events: {},
+                def: {
+                    params: [null],
+                    type: 'get_sound_speed',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                class: 'sound_speed',
+                isNotFor: [],
+                func() {
+                    return Entry.playbackRateValue;
+                },
+                syntax: { js: [], py: ['Entry.stop_sound()'] },
+            },
             sound_speed_change: {
                 color: EntryStatic.colorSet.block.default.SOUND,
                 outerLine: EntryStatic.colorSet.block.darken.SOUND,
@@ -869,15 +890,10 @@ module.exports = {
                         text: Lang.Blocks.CALC_get_sound_volume,
                         color: '#FFF',
                     },
-                    {
-                        type: 'Text',
-                        text: '',
-                        color: '#FFF',
-                    },
                 ],
                 events: {},
                 def: {
-                    params: [null, null],
+                    params: [null],
                     type: 'get_sound_volume',
                 },
                 class: 'sound_volume',
