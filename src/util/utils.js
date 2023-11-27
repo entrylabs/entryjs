@@ -2775,6 +2775,7 @@ Entry.Utils.pauseSoundInstances = function() {
 Entry.Utils.recoverSoundInstances = function() {
     Entry.soundInstances.getAllValues().forEach((instance) => {
         instance.paused = false;
+        instance.sourceNode.playbackRate.value = Entry.playbackRateValue;
     });
     Entry.bgmInstances.getAllValues().forEach((instance) => {
         instance.paused = false;
