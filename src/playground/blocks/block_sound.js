@@ -948,7 +948,7 @@ module.exports = {
                 paramsKeyMap: {
                     VALUE: 1,
                 },
-                class: 'sound_volume',
+                class: 'sound_duration',
                 isNotFor: [],
                 func(sprite, script) {
                     const soundId = script.getField('VALUE', script);
