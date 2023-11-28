@@ -6,7 +6,7 @@ Entry.Runcoding = {
     url: 'https://runcoding.co.kr/',
     imageName: 'runcoding.png',
     title: {
-        ko: '런코딩',
+        ko: '코마크레',
         en: 'runcoding',
     },
     setZero() {
@@ -22,6 +22,7 @@ Entry.Runcoding = {
                 Entry.hw.sendQueue.SET[key].time = new Date().getTime();
             });
         }
+
         Entry.hw.update();
     },
     sensorTypes: {
@@ -46,6 +47,7 @@ Entry.Runcoding = {
         LCDINIT: 19,
         LCD: 20,
         LCDCLEAR: 21,
+        TEMPCHECK: 22,
     },
     toneTable: {
         '0': 0,
@@ -82,6 +84,7 @@ Entry.Runcoding = {
 };
 
 Entry.Runcoding.setLanguage = function() {
+
     return {
         ko: {
             template: {
@@ -93,6 +96,8 @@ Entry.Runcoding.setLanguage = function() {
                 arduino_runcoding_set_tone: '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5',
                 arduino_runcoding_set_servo: '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
                 arduino_runcoding_get_digital: '디지털 %1 번 센서값',
+
+                arduino_runcoding_get_temp: '온도 값 가져오기',
 
                 arduino_runcoding_set_neopixel_init: '네오픽셀 설정 (%1 핀) led %2 개를 %3 밝기로 설정하기 %4',
                 arduino_runcoding_set_neopixel: '네오픽셀 (%1 핀) RGB ( %2, %3, %4) %5',
@@ -109,6 +114,8 @@ Entry.Runcoding.setLanguage = function() {
                 arduino_runcoding_lcd_row_col: 'LCD %1 행 %2 열 부터 %3 출력 %4',
                 arduino_runcoding_lcd_clear: 'LCD 화면 지우기 %1',
 
+               
+
 
             },
         },
@@ -122,6 +129,9 @@ Entry.Runcoding.setLanguage = function() {
                 arduino_runcoding_set_tone: 'Play tone pin %1 on note %2 octave %3 beat %4 %5',
                 arduino_runcoding_set_servo: 'Set servo pin %1 angle as %2 %3',
                 arduino_runcoding_get_digital: 'Digital %1 Sensor value',
+
+                arduino_runcoding_get_temp: '온도 값 가져오기',
+
 
                 arduino_runcoding_set_neopixel_init: 'set neopixel pin: %1 led-count: %2 bright: %3 %4',
                 arduino_runcoding_set_neopixel: 'neopixel pin: %1 (R:%2 G:%3 B:%4) %5',
@@ -138,6 +148,7 @@ Entry.Runcoding.setLanguage = function() {
                 arduino_runcoding_lcd_row_col: 'LCD %1 행 %2 열 부터 %3 출력 %4',
                 arduino_runcoding_lcd_clear: 'LCD 화면 지우기 %1',
 
+              
                
             },
         },
@@ -153,6 +164,7 @@ Entry.Runcoding.blockMenuBlocks = [
     'arduino_runcoding_digital_pwm',
     'arduino_runcoding_set_servo',
     'arduino_runcoding_set_tone',
+    'arduino_runcoding_get_temp',
     'arduino_runcoding_set_neopixel_init',
     'arduino_runcoding_set_neopixel',
     'arduino_runcoding_set_neopixel_each',
@@ -165,7 +177,7 @@ Entry.Runcoding.blockMenuBlocks = [
     'arduino_runcoding_set_lcd_init',
     'arduino_runcoding_lcd_row_col',
     'arduino_runcoding_lcd_clear',
-
+   
 ];
 
 //region Runcoding 아두이노 확장모드
@@ -2481,6 +2493,56 @@ Entry.Runcoding.getBlocks = function() {
                 js: [],
                 py: [
                     { }
+                ],
+            },
+        },
+        arduino_runcoding_get_temp: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [],
+            events: {},
+            def: {
+                params: [],
+                type: 'arduino_runcoding_get_temp',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            class: 'RuncodingGet',
+            isNotFor: ['Runcoding'],
+            func(sprite, script) {
+                const port = 2;
+                const TEMPCHECK = Entry.hw.portData.TEMPCHECK;
+                if (!Entry.hw.sendQueue.GET) {
+                    Entry.hw.sendQueue.GET = {};
+                }
+                Entry.hw.sendQueue.GET[Entry.Runcoding.sensorTypes.TEMPCHECK] = {
+                    port,
+                    time: new Date().getTime(),
+                };
+
+                return TEMPCHECK;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Arduino.tempcheckRead(%1,%2)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
                 ],
             },
         },
