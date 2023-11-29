@@ -1,4 +1,4 @@
-self.importScripts('/lib/entry-js/extern/vision_bundle.js');
+self.importScripts(`${self.location.pathname}/../vision_bundle.js`);
 
 self.onmessage = async ({ data }) => {
     if (data.action === 'pose_landmarker_init') {
@@ -28,10 +28,10 @@ const initializePoseLandmarker = async (data) => {
     workerContext = canvas.getContext('2d');
     workerContext.font = '20px Arial';
     drawingUtils = new DrawingUtils(workerContext);
-    const vision = await FilesetResolver.forVisionTasks('/lib/entry-js/extern/wasm');
+    const vision = await FilesetResolver.forVisionTasks(`${self.location.pathname}/../wasm`);
     poseLandmarker = await PoseLandmarker.createFromOptions(vision, {
         baseOptions: {
-            modelAssetPath: '/lib/entry-js/extern/model/pose_landmarker_lite.task',
+            modelAssetPath: `${self.location.pathname}/../model/pose_landmarker_lite.task`,
             delegate: 'GPU',
         },
         runningMode: 'VIDEO',

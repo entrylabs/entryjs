@@ -2775,6 +2775,7 @@ Entry.Utils.pauseSoundInstances = function() {
 Entry.Utils.recoverSoundInstances = function() {
     Entry.soundInstances.getAllValues().forEach((instance) => {
         instance.paused = false;
+        instance.sourceNode.playbackRate.value = Entry.playbackRateValue;
     });
     Entry.bgmInstances.getAllValues().forEach((instance) => {
         instance.paused = false;
@@ -3111,3 +3112,8 @@ Entry.Utils.extractTextFromHTML = (htmlString) => {
     const dom = parser.parseFromString(htmlString, 'text/html');
     return dom.body.textContent || '';
 };
+
+Entry.Utils.getEntryjsPath = () =>
+    window.navigator.userAgent.indexOf('Electron') > -1
+        ? `file://${window.getEntryjsPath()}`
+        : `${window.location.origin}/lib/entry-js`;

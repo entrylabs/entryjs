@@ -62,6 +62,9 @@ Entry.CodeWiz = {
         return this.getByteLength(str) * 1.5 - 18;
     },
     getByteLength(s, b, i, c) {
+        if(!s){
+            return;
+        }
         for (b = i = 0; (c = s.charCodeAt(i++)); b += c >> 11 ? 3 : c >> 7 ? 2 : 1);
         return b;
     },

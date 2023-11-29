@@ -233,7 +233,7 @@ module.exports = {
                         value: 'strike',
                         fontSize: 10,
                         textColor: '#fff',
-                        bgColor: EntryStatic.colorSet.block.darken.LOOKS,
+                        bgColor: EntryStatic.colorSet.block.darken.TEXT,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
@@ -245,7 +245,7 @@ module.exports = {
                         value: 'on',
                         fontSize: 10,
                         textColor: '#fff',
-                        bgColor: EntryStatic.colorSet.block.darken.LOOKS,
+                        bgColor: EntryStatic.colorSet.block.darken.TEXT,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
@@ -284,6 +284,8 @@ module.exports = {
                         value: null,
                         menuName: 'fonts',
                         fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.TEXT,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Indicator',
