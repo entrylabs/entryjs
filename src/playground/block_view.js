@@ -946,7 +946,8 @@ Entry.BlockView = class BlockView {
         if (Entry.type === 'workspace' && !this.isInBlockMenu) {
             (block.events.viewDestroy || []).forEach((fn) => {
                 if (_.isFunction(fn)) {
-                    fn(block);
+                    const notIncludeSelf = !!block?.thread?.acceptType;
+                    fn(block, notIncludeSelf);
                 }
             });
         }

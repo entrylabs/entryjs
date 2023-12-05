@@ -678,7 +678,7 @@ class MediaPipeUtils {
             // eslint-disable-next-line max-len
             this.gestureRecognizerOffscreenCanvas = this.gestureRecognizerVideoCanvas.transferControlToOffscreen();
             this.gestureRecognizerWorker = new Worker(
-                '/lib/entry-js/extern/gesture-recognition.worker.js'
+                `${Entry.Utils.getEntryjsPath()}/extern/gesture-recognition.worker.js`
             );
             this.initGestureRecognitionWorkerEvent();
         } else {
@@ -706,7 +706,7 @@ class MediaPipeUtils {
             // eslint-disable-next-line max-len
             this.poseLandmarkerOffscreenCanvas = this.poseLandmarkerVideoCanvas.transferControlToOffscreen();
             this.poseLandmarkerWorker = new Worker(
-                '/lib/entry-js/extern/pose-landmarker.worker.js'
+                `${Entry.Utils.getEntryjsPath()}/extern/pose-landmarker.worker.js`
             );
             this.initPoseLandmarkerWorkerEvent();
         } else {
@@ -728,7 +728,9 @@ class MediaPipeUtils {
         this.initFlipStateCanvas(this.faceLandmarkerCanvasOverlay);
         // eslint-disable-next-line max-len
         this.faceLandmarkerOffscreenCanvas = this.faceLandmarkerVideoCanvas.transferControlToOffscreen();
-        this.faceLandmarkerWorker = new Worker('/lib/entry-js/extern/face-landmarker.worker.js');
+        this.faceLandmarkerWorker = new Worker(
+            `${Entry.Utils.getEntryjsPath()}/extern/face-landmarker.worker.js`
+        );
         this.initFaceLandmarkerWorkerEvent();
     }
 
@@ -746,7 +748,7 @@ class MediaPipeUtils {
             // eslint-disable-next-line max-len
             this.objectDetectorOffscreenCanvas = this.objectDetectorVideoCanvas.transferControlToOffscreen();
             this.objectDetectorWorker = new Worker(
-                '/lib/entry-js/extern/object-detector.worker.js'
+                `${Entry.Utils.getEntryjsPath()}/extern/object-detector.worker.js`
             );
             this.initObjectDetectorWorkerEvent();
         } else {
@@ -1043,10 +1045,13 @@ class MediaPipeUtils {
     }
 
     async initPredictHandGesture() {
-        const vision = await FilesetResolver.forVisionTasks('/lib/entry-js/extern/wasm');
+        const vision = await FilesetResolver.forVisionTasks(
+            `${Entry.Utils.getEntryjsPath()}/extern/wasm`
+        );
         this.gestureRecognizer = await GestureRecognizer.createFromOptions(vision, {
             baseOptions: {
-                modelAssetPath: '/lib/entry-js/extern/model/gesture_recognizer.task',
+                // eslint-disable-next-line max-len
+                modelAssetPath: `${Entry.Utils.getEntryjsPath()}/extern/model/gesture_recognizer.task`,
                 delegate: 'GPU',
             },
             runningMode: 'VIDEO',
@@ -1055,10 +1060,13 @@ class MediaPipeUtils {
     }
 
     async initPredictPoseLandmarker() {
-        const vision = await FilesetResolver.forVisionTasks('/lib/entry-js/extern/wasm');
+        const vision = await FilesetResolver.forVisionTasks(
+            `${Entry.Utils.getEntryjsPath()}/extern/wasm`
+        );
         this.poseLandmarker = await PoseLandmarker.createFromOptions(vision, {
             baseOptions: {
-                modelAssetPath: '/lib/entry-js/extern/model/pose_landmarker_lite.task',
+                // eslint-disable-next-line max-len
+                modelAssetPath: `${Entry.Utils.getEntryjsPath()}/extern/model/pose_landmarker_lite.task`,
                 delegate: 'GPU',
             },
             runningMode: 'VIDEO',
@@ -1067,10 +1075,13 @@ class MediaPipeUtils {
     }
 
     async initPredictObjectDetector() {
-        const vision = await FilesetResolver.forVisionTasks('/lib/entry-js/extern/wasm');
+        const vision = await FilesetResolver.forVisionTasks(
+            `${Entry.Utils.getEntryjsPath()}/extern/wasm`
+        );
         this.objectDetector = await ObjectDetector.createFromOptions(vision, {
             baseOptions: {
-                modelAssetPath: '/lib/entry-js/extern/model/object_detector_lite.tflite',
+                // eslint-disable-next-line max-len
+                modelAssetPath: `${Entry.Utils.getEntryjsPath()}/extern/model/object_detector_lite.tflite`,
                 delegate: 'GPU',
             },
             runningMode: 'VIDEO',

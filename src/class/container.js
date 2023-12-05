@@ -774,7 +774,9 @@ Entry.Container = class Container {
                 }
                 break;
             case 'fonts':
-                result = EntryStatic.fonts.map((font) => [font.name, font.family]);
+                result = EntryStatic.fonts
+                    .filter((x) => x.visible)
+                    .map((font) => [font.name, font.family]);
                 break;
             case 'connectedCameras': {
                 const inputList = await getInputList();

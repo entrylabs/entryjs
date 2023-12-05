@@ -1382,15 +1382,12 @@ Entry.Playground = class Playground {
         if (font) {
             $('#entryText #entryTextBoxAttrFontName').text(font.name);
             $('#entryText #entryTextBoxAttrFontName').data('font', font);
+            this.textEditInput.style.fontFamily = font.family;
+            this.textEditArea.style.fontFamily = font.family;
         } else {
             $('#entryText #entryTextBoxAttrFontName').text('');
             $('#entryText #entryTextBoxAttrFontName').data('font', EntryStatic.fonts[0]);
         }
-
-        $('.style_link.imbtn_pop_font_bold').toggleClass('on', entity.fontBold);
-        $('.style_link.imbtn_pop_font_italic').toggleClass('on', entity.fontItalic);
-        $('.style_link.imbtn_pop_font_underline').toggleClass('on', entity.getUnderLine());
-        $('.style_link.imbtn_pop_font_through').toggleClass('on', entity.getStrike());
 
         if (entity.colour) {
             this.setTextColour(entity.colour, true);
@@ -1399,6 +1396,9 @@ Entry.Playground = class Playground {
             this.setBackgroundColour(entity.bgColor, true);
         }
 
+        this.setTextBold(entity.fontBold);
+        this.setTextItalic(entity.fontItalic);
+        this.setTextDecoration(entity);
         this.toggleLineBreak(entity.getLineBreak());
 
         if (entity.getLineBreak()) {
@@ -2180,6 +2180,36 @@ Entry.Playground = class Playground {
         this.object.entity.setColour(colour);
         this.textEditArea.style.color = colour;
         this.textEditInput.style.color = colour;
+    }
+
+    setTextBold(bold) {
+        $('.style_link.imbtn_pop_font_bold').toggleClass('on', bold);
+        $(this.textEditInput).removeClass('bold');
+        $(this.textEditArea).removeClass('bold');
+        if (bold) {
+            $(this.textEditInput).addClass('bold');
+            $(this.textEditArea).addClass('bold');
+        }
+    }
+
+    setTextItalic(fontItalic) {
+        $('.style_link.imbtn_pop_font_italic').toggleClass('on', fontItalic);
+        $(this.textEditInput).removeClass('italic');
+        $(this.textEditArea).removeClass('italic');
+        if (fontItalic) {
+            $(this.textEditInput).addClass('italic');
+            $(this.textEditArea).addClass('italic');
+        }
+    }
+
+    setTextDecoration(entity) {
+        $('.style_link.imbtn_pop_font_underline').toggleClass('on', entity.getUnderLine());
+        $('.style_link.imbtn_pop_font_through').toggleClass('on', entity.getStrike());
+        const effect = `${entity.getStrike() ? 'line-through' : ''} ${
+            entity.getUnderLine() ? 'underline' : ''
+        }`.trim();
+        this.textEditArea.style.textDecoration = effect;
+        this.textEditInput.style.textDecoration = effect;
     }
 
     setBackgroundColour(colour) {
