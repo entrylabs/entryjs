@@ -136,6 +136,8 @@ Entry.Robotis_rb_P_Assembly.blockMenuBlocks = [
 
     'robotis_huskylens_set_mode',
     'robotis_huskylens_save_result',
+    'robotis_huskylens_print_custom_text',
+    'robotis_huskylens_clear_custom_text',
 
     // 'robotis_RB_cm_custom_value2',
     // 'robotis_RB_cm_custom2',
@@ -206,6 +208,8 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
 
                 robotis_huskylens_set_mode: "📷의 모드를 %1로 설정 %2",
                 robotis_huskylens_save_result: "📷 데이터 요청 (반복호출필요) %1",
+                robotis_huskylens_print_custom_text: "📷 화면 위치 (%1,%2)에 %3출력%4",
+                robotis_huskylens_clear_custom_text: "📷 화면 텍스트 지우기 %1",
             },
             Blocks: {
                 robotis_red: "빨강",
@@ -459,6 +463,8 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
 
                 robotis_huskylens_set_mode: "📷 Set mode to %1 %2",
                 robotis_huskylens_save_result: "📷 Do recognition (use repeatedly) %1 ",
+                robotis_huskylens_print_custom_text: "📷 Print %3 at location (%1,%2)%4",
+                robotis_huskylens_clear_custom_text: "📷 Clear text %1",
 
 
             },
@@ -2428,6 +2434,140 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             syntax: {
                 js: [],
                 py: ['Robotis.robotis_huskylens_save_result()'],
+            },
+        },
+        robotis_huskylens_print_custom_text: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    0,
+                    0,
+                    "Hello!"
+                ],
+                type: 'robotis_huskylens_print_custom_text',
+            },
+            paramsKeyMap: {
+                X: 0,
+                Y: 1,
+                TEXT: 2,
+            },
+            class: 'robotis_openCM70_cm',
+            isNotFor: ['Robotis_rb_P_Assembly'],
+            func: function (sprite, script) {
+                // instruction / address / length / value / default length
+                var x = script.getNumberValue('X', script);
+                var y = script.getNumberValue('Y', script);
+                var text = script.getStringValue('TEXT', script);
+                var text_len = text.length;
+                var data_buf = [];
+                var i = 0;
+
+                data_buf.push(x % 256);
+                data_buf.push(Math.floor(x/256));
+                data_buf.push(y % 256);
+                data_buf.push(Math.floor(y/256));
+                data_buf.push(0);
+                data_buf.push(0);
+                for (i = 0; i < text_len; i++) {
+                    data_buf.push(text[i]);
+                }
+
+                var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                var data_address = 4200;
+                var data_length = 6 + text_len;
+
+                //console.log("x: " + x + "y: " + y + "text: " + text + " " + data_buf);
+
+                var data_sendqueue = [
+                    [
+                        data_instruction,
+                        data_address,
+                        data_length,
+                        data_buf,
+                    ],
+                ];
+
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    Entry.Robotis_openCM70.delay
+                );
+            },
+            syntax: {
+                js: [],
+                py: ['Robotis.robotis_huskylens_print_custom_text(%1,%2,%3)'],
+            },
+        },
+        robotis_huskylens_clear_custom_text: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                ],
+                type: 'robotis_huskylens_clear_custom_text',
+            },
+            paramsKeyMap: {
+            },
+            class: 'robotis_openCM70_cm',
+            isNotFor: ['Robotis_rb_P_Assembly'],
+            func: function (sprite, script) {
+                // instruction / address / length / value / default length
+
+                var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                var data_address = 4250;
+                var data_length = 1;
+
+                var data_sendqueue = [
+                    [
+                        data_instruction,
+                        data_address,
+                        data_length,
+                        1,
+                    ],
+                ];
+
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    Entry.Robotis_openCM70.delay
+                );
+            },
+            syntax: {
+                js: [],
+                py: ['Robotis.robotis_huskylens_clear_custom_text()'],
             },
         },
 
