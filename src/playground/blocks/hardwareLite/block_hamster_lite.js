@@ -1,6 +1,6 @@
 'use strict';
 
-(function () {
+(function() {
     const COLOR_TO_RGB = [
         [0, 0, 0],
         [0, 0, 255],
@@ -14,7 +14,7 @@
 
     Entry.HamsterLite = new (class HamsterLite {
         constructor() {
-            this.id = '2.4';
+            this.id = '020401';
             this.url = 'http://www.robomation.net';
             this.imageName = 'hamsterlite.png';
             this.name = 'HamsterLite';

@@ -188,7 +188,7 @@ const EVENT_INTERVAL = 150;
                 // Image.SNAKE,
                 '99000:99099:09090:09990:00000',
             ];
-            this.id = '22.3';
+            this.id = '220301';
             this.url = 'http://microbit.org/ko/';
             this.imageName = 'microbit2lite.png';
             this.title = {

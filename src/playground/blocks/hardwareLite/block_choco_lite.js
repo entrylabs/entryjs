@@ -4,7 +4,7 @@ const Buffer = require('buffer').Buffer;
 (function() {
     Entry.ChocoLite = new (class ChocoLite {
         constructor() {
-            this.id = '45.1';
+            this.id = '450101';
             this.name = 'ChocoLite';
             this.url = 'http://jjomulrak.com';
             this.imageName = 'chocolite.png';

@@ -5,7 +5,7 @@ import _range from 'lodash/range';
 (function() {
     Entry.SensorboardLite = new (class SensorboardLite {
         constructor() {
-            this.id = '1.2';
+            this.id = '010201';
             this.name = 'SensorboardLite';
             this.url = 'http://www.neweducation.co.kr/';
             this.imageName = 'sensorboardlite.png';

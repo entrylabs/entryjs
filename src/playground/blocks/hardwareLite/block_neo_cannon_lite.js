@@ -3,7 +3,7 @@
 (function() {
     Entry.NeoCannonLite = new (class NeoCannonLite {
         constructor() {
-            this.id = '41.2';
+            this.id = '410201';
             this.name = 'NeoCannonLite';
             this.url = 'http://www.neo3ds.com/';
             this.imageName = 'neocannonlite.png';

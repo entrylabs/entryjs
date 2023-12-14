@@ -10,7 +10,7 @@ import _range from 'lodash/range';
 (function() {
     Entry.ArduinoLite = new (class ArduinoLite {
         constructor() {
-            this.id = ['1.1', '4.2', '8.1'];
+            this.id = ['010101', '4.2', '8.1'];
             this.name = 'ArduinoLite';
             this.url = 'http://www.arduino.cc/';
             this.imageName = 'arduinolite.png';

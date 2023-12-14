@@ -4,7 +4,7 @@
 
     Entry.NeobotThinkCarLite = new (class NeobotThinkCarLite {
         constructor() {
-            this.id = '5.7';
+            this.id = '050701';
             this.name = 'NeobotThinkCarLite';
             this.url = 'http://neobot.co.kr/';
             this.imageName = 'neobot_thinkcar_lite.png';

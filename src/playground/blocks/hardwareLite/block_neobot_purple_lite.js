@@ -3,7 +3,7 @@
     const HEADER = [0xab, 0xcd];
     Entry.NeobotPurpleLite = new (class NeobotPurpleLite {
         constructor() {
-            this.id = '5.5';
+            this.id = '050501';
             this.name = 'NeobotPurpleLite';
             this.url = 'http://neobot.co.kr/';
             this.imageName = 'neobot_purple_lite.png';
