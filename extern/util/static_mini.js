@@ -967,6 +967,7 @@ EntryStatic.colorSet = {
             EXPANSION: '#ef6d6d',
             AI_UTILIZE: '#8222ff',
             HIDDEN: '#8aa3b2',
+            AI_LEARNING: '#8222ff',
         },
         lighten: {
             START: '#3bce3b',
@@ -985,6 +986,7 @@ EntryStatic.colorSet = {
             EXPANSION: '#ffaeae',
             AI_UTILIZE: '#ffaeae',
             HIDDEN: '#ffaeae',
+            AI_LEARNING: '#8222ff',
         },
         darken: {
             START: '#009400',
@@ -1003,6 +1005,7 @@ EntryStatic.colorSet = {
             EXPANSION: '#c63f3f',
             AI_UTILIZE: '#670bdd',
             HIDDEN: '#728997',
+            AI_LEARNING: '#670bdd',
         },
         emphasize: {
             '#00b400': '#5BC982', //START
