@@ -562,6 +562,8 @@ EntryStatic.getAllBlocks = function() {
                 'arduino_download_connector',
                 // 'download_guide',
                 'arduino_connected',
+                'arduino_lite_disconnect',
+                'arduino_lite_connect',
             ],
         },
         {
