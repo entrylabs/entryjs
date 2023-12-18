@@ -227,7 +227,7 @@ Entry.HEXABOARD.getBlocks = function () {
       def: {
         type: 'makeitnow_main_hexa_title',
       },
-      // isNotFor: ['HEXABOARD'],
+      isNotFor: ['HEXABOARD'],
       class : 'hexaboard',
     },
     makeitnow_digitalwrite_hexa : {
@@ -265,7 +265,7 @@ Entry.HEXABOARD.getBlocks = function () {
         // basic skeleton 의 마지막엔 인디케이터를 추가해주셔야 합니다.
         { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
       ],
-      // isNotFor: ['HEXABOARD'],
+      isNotFor: ['HEXABOARD'],
       class : 'hexaboard',
       paramsKeyMap: {
         PIN: 0,
@@ -325,7 +325,7 @@ Entry.HEXABOARD.getBlocks = function () {
         // basic skeleton 의 마지막엔 인디케이터를 추가해주셔야 합니다.
         { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
       ],
-      // isNotFor: ['HEXABOARD'],
+      isNotFor: ['HEXABOARD'],
       class : 'hexaboard',
       paramsKeyMap: {
         PIN: 0,
@@ -375,7 +375,7 @@ Entry.HEXABOARD.getBlocks = function () {
         // basic skeleton 의 마지막엔 인디케이터를 추가해주셔야 합니다.
         { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
       ],
-      // isNotFor: ['HEXABOARD'],
+      isNotFor: ['HEXABOARD'],
       class : 'hexaboard',
       def: {
         // def의 params의 경우는 초기값을 지정할수 있습니다.
@@ -419,7 +419,7 @@ Entry.HEXABOARD.getBlocks = function () {
         // basic skeleton 의 마지막엔 인디케이터를 추가해주셔야 합니다.
         { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
       ],
-      // isNotFor: ['HEXABOARD'],
+      isNotFor: ['HEXABOARD'],
       class: 'hexaboard',
       def: {
         // def의 params의 경우는 초기값을 지정할수 있습니다.
@@ -464,7 +464,7 @@ Entry.HEXABOARD.getBlocks = function () {
         // basic skeleton 의 마지막엔 인디케이터를 추가해주셔야 합니다.
         { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
       ],
-      // isNotFor: ['HEXABOARD'],
+      isNotFor: ['HEXABOARD'],
       def: {
         // def의 params의 경우는 초기값을 지정할수 있습니다.
         params: ["32"],
@@ -498,7 +498,7 @@ Entry.HEXABOARD.getBlocks = function () {
       def: {
         type: 'makeitnow_sensor_title',
       },
-      // isNotFor: ['HEXABOARD'],
+      isNotFor: ['HEXABOARD'],
       class : 'sensor',
     },
 
@@ -555,7 +555,7 @@ Entry.HEXABOARD.getBlocks = function () {
         // basic skeleton 의 마지막엔 인디케이터를 추가해주셔야 합니다.
         { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
       ],
-      // isNotFor: ['HEXABOARD'],
+      isNotFor: ['HEXABOARD'],
       class : 'sensor',
       paramsKeyMap: {
         OCTAVE : 0,
@@ -587,7 +587,7 @@ Entry.HEXABOARD.getBlocks = function () {
           },
           time: new Date().getTime()
         };
-        console.log(Entry.hw.sendQueue.SET);
+        // console.log(Entry.hw.sendQueue.SET);
         Entry.hw.update();
         delete Entry.hw.sendQueue.SET;
         return script.callReturn();
@@ -603,7 +603,7 @@ Entry.HEXABOARD.getBlocks = function () {
       params: [
         { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
       ],
-      // isNotFor: ['HEXABOARD'],
+      isNotFor: ['HEXABOARD'],
       class : 'sensor',
       func: function (sprite, script) {
         // 하드웨어 큐에 데이터 추가
@@ -661,7 +661,7 @@ Entry.HEXABOARD.getBlocks = function () {
         // basic skeleton 의 마지막엔 인디케이터를 추가해주셔야 합니다.
         { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
       ],
-      // isNotFor: ['HEXABOARD'],
+      isNotFor: ['HEXABOARD'],
       def: {
         // def의 params의 경우는 초기값을 지정할수 있습니다.
         params: ["32", "D1"],
@@ -720,7 +720,7 @@ Entry.HEXABOARD.getBlocks = function () {
         // basic skeleton 의 마지막엔 인디케이터를 추가해주셔야 합니다.
         // { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
       ],
-      // isNotFor: ['HEXABOARD'],
+      isNotFor: ['HEXABOARD'],
       def: {
         // def의 params의 경우는 초기값을 지정할수 있습니다.
         params: [HEXABOARD.gyro_command.ANGLE_X],
@@ -767,7 +767,7 @@ Entry.HEXABOARD.getBlocks = function () {
         // basic skeleton 의 마지막엔 인디케이터를 추가해주셔야 합니다.
         // { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
       ],
-      // isNotFor: ['HEXABOARD'],
+      isNotFor: ['HEXABOARD'],
       def: {
         // def의 params의 경우는 초기값을 지정할수 있습니다.
         params: [HEXABOARD.gyro_command.LEFT],
@@ -818,7 +818,7 @@ Entry.HEXABOARD.getBlocks = function () {
         params: ["C3"],
         type: "makeitnow_getColor_hexa",
       },
-      // isNotFor: ['HEXABOARD'],
+      isNotFor: ['HEXABOARD'],
       class : 'sensor',
       paramsKeyMap: {
         PIN : 0,
@@ -859,7 +859,7 @@ Entry.HEXABOARD.getBlocks = function () {
         // basic skeleton 의 마지막엔 인디케이터를 추가해주셔야 합니다.
         // { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
       ],
-      // isNotFor: ['HEXABOARD'],
+      isNotFor: ['HEXABOARD'],
       class : 'sensor',
       def: {
         // def의 params의 경우는 초기값을 지정할수 있습니다.
@@ -897,7 +897,7 @@ Entry.HEXABOARD.getBlocks = function () {
       def: {
         type: 'makeitnow_neo_title',
       },
-      // isNotFor: ['HEXABOARD'],
+      isNotFor: ['HEXABOARD'],
       class : 'neopixel_hexa',
     },
 
@@ -929,14 +929,13 @@ Entry.HEXABOARD.getBlocks = function () {
         params: ["HEXABOARD", '1', null],
         type: "makeitnow_neo_messageslide_hexa",
       },
-      // isNotFor: ['HEXABOARD'],
       class: 'neopixel_hexa',
       paramsKeyMap: {
         TEXT: 0,
         SPEED: 1,
         COLOR: 2,
       },
-      // isNotFor: ['HEXABOARD'],
+      isNotFor: ['HEXABOARD'],
       func: function (sprite, script) {
         const text = script.getStringValue('TEXT', script);
         const slide_speed = script.getNumberValue('SPEED', script);
@@ -1003,7 +1002,7 @@ Entry.HEXABOARD.getBlocks = function () {
           null, null, null, null, null],
         type: "makeitnow_neo_bitmap_hexa",
       },
-      // isNotFor: ['HEXABOARD'],
+      isNotFor: ['HEXABOARD'],
       class: 'neopixel_hexa',
       func: function (sprite, script) {
         //TODO : 이 곳에 통신 코드 작성하기
@@ -1058,7 +1057,6 @@ Entry.HEXABOARD.getBlocks = function () {
         params: ["23", "25", "1", "0", "0", "0"],
         type: "makeitnow_neoled_onecolorset_hexa",
       },
-      // isNotFor: ['HEXABOARD'],
       class: 'neopixel_hexa',
       paramsKeyMap: {
         PIN: 0,
@@ -1068,7 +1066,7 @@ Entry.HEXABOARD.getBlocks = function () {
         GREEN: 4,
         BLUE: 5,
       },
-      // isNotFor: ['HEXABOARD'],
+      isNotFor: ['HEXABOARD'],
       func: function (sprite, script) {
         const pin_num = script.getField('PIN', script);
         const led_num = script.getNumberValue('NUM', script);
@@ -1146,7 +1144,6 @@ Entry.HEXABOARD.getBlocks = function () {
         params: ["23", "25", "0", "0", "0"],
         type: "makeitnow_neoled_allColorSet_hexa",
       },
-      // isNotFor: ['HEXABOARD'],
       class: 'neopixel_hexa',
       paramsKeyMap: {
         PIN: 0,
@@ -1155,7 +1152,7 @@ Entry.HEXABOARD.getBlocks = function () {
         GREEN: 3,
         BLUE: 4,
       },
-      // isNotFor: ['HEXABOARD'],
+      isNotFor: ['HEXABOARD'],
       func: function (sprite, script) {
         const pin_num = script.getField('PIN', script);
         const led_num = script.getNumberValue('LEDNUM', script);
@@ -1178,7 +1175,7 @@ Entry.HEXABOARD.getBlocks = function () {
             color : color_value,
           },
         };
-        console.log(Entry.hw.sendQueue.SET);
+        // console.log(Entry.hw.sendQueue.SET);
         Entry.hw.update();
         delete Entry.hw.sendQueue.SET;
         return script.callReturn();
@@ -1228,7 +1225,6 @@ Entry.HEXABOARD.getBlocks = function () {
         params: ["23", "25","1" , null, "20"],
         type: "makeitnow_neoled_oneColorSelect_hexa",
       },
-      // isNotFor: ['HEXABOARD'],
       class: 'neopixel_hexa',
       paramsKeyMap: {
         PIN: 0,
@@ -1237,7 +1233,7 @@ Entry.HEXABOARD.getBlocks = function () {
         COLOR : 3,
         BRIGHTNESS : 4,
       },
-      // isNotFor: ['HEXABOARD'],
+      isNotFor: ['HEXABOARD'],
       func: function (sprite, script) {
         const pin_num = script.getField('PIN', script);
         const led_num = script.getNumberValue('NUM', script);
@@ -1306,7 +1302,6 @@ Entry.HEXABOARD.getBlocks = function () {
         params: ["23", "25", null, "20"],
         type: "makeitnow_neoled_AllColorSelect_hexa",
       },
-      // isNotFor: ['HEXABOARD'],
       class: 'neopixel_hexa',
       paramsKeyMap: {
         PIN: 0,
@@ -1314,7 +1309,7 @@ Entry.HEXABOARD.getBlocks = function () {
         COLOR : 2,
         BRIGHTNESS : 3,
       },
-      // isNotFor: ['HEXABOARD'],
+      isNotFor: ['HEXABOARD'],
       func: function (sprite, script) {
         const pin_num = script.getField('PIN', script);
         const led_num = script.getNumberValue('NUM', script);
@@ -1373,13 +1368,12 @@ Entry.HEXABOARD.getBlocks = function () {
         params: ["23", "25"],
         type: "makeitnow_neoled_AllOff_hexa",
       },
-      // isNotFor: ['HEXABOARD'],
       class: 'neopixel_hexa',
       paramsKeyMap: {
         PIN: 0,
         NUM: 1,
       },
-      // isNotFor: ['HEXABOARD'],
+      isNotFor: ['HEXABOARD'],
       func: function (sprite, script) {
         const pin_num = script.getField('PIN', script);
         const led_num = script.getNumberValue('NUM', script); // 핀 번호를 가져옵니다.
@@ -1398,7 +1392,7 @@ Entry.HEXABOARD.getBlocks = function () {
           },
           time: new Date().getTime()
         };
-        console.log(Entry.hw.sendQueue.SET);
+        // console.log(Entry.hw.sendQueue.SET);
         Entry.hw.update();
         delete Entry.hw.sendQueue.SET;
         return script.callReturn();
@@ -1425,7 +1419,7 @@ Entry.HEXABOARD.getBlocks = function () {
           align: 'left',
         },
       ],
-      // isNotFor: ['HEXABOARD'],
+      isNotFor: ['HEXABOARD'],
       class : 'oled_hexa',
     },
 
@@ -1454,12 +1448,11 @@ Entry.HEXABOARD.getBlocks = function () {
         params: ["60"],
         type: "makeitnow_oled_setting_hexa",
       },
-      // isNotFor: ['HEXABOARD'],
       class: 'oled_hexa',
       paramsKeyMap: {
         I2C_ADDRESS: 0,
       },
-      // isNotFor: ['HEXABOARD'],
+      isNotFor: ['HEXABOARD'],
       func: function (sprite, script) {
         const i2c_addr = script.getNumberValue('I2C_ADDRESS', script); // 핀 번호를 가져옵니다.
         //하드웨어 큐에 데이터 추가
@@ -1475,7 +1468,7 @@ Entry.HEXABOARD.getBlocks = function () {
           },
           time: new Date().getTime()
         };
-        console.log(Entry.hw.sendQueue.SET);
+        // console.log(Entry.hw.sendQueue.SET);
         Entry.hw.update();
         delete Entry.hw.sendQueue.SET;
         return script.callReturn();
@@ -1513,7 +1506,7 @@ Entry.HEXABOARD.getBlocks = function () {
         params: ["0", "0", "HEXABOARD", "1"],
         type: "makeitnow_oled_print_hexa",
       },
-      // isNotFor: ['HEXABOARD'],
+      isNotFor: ['HEXABOARD'],
       class: 'oled_hexa',
       paramsKeyMap: {
         POSITION_X: 0,
@@ -1543,7 +1536,7 @@ Entry.HEXABOARD.getBlocks = function () {
           },
           time: new Date().getTime()
         };
-        console.log(Entry.hw.sendQueue.SET);
+        // console.log(Entry.hw.sendQueue.SET);
         Entry.hw.update();
         delete Entry.hw.sendQueue.SET;
         return script.callReturn();
@@ -1568,7 +1561,7 @@ Entry.HEXABOARD.getBlocks = function () {
         // def의 params의 경우는 초기값을 지정할수 있습니다.
         type: "makeitnow_oled_clear_hexa",
       },
-      // isNotFor: ['HEXABOARD'],
+      isNotFor: ['HEXABOARD'],
       class: 'oled_hexa',
       func: function (sprite, script) {
         //TODO : 이 곳에 통신 코드 작성하기
@@ -1595,7 +1588,7 @@ Entry.HEXABOARD.getBlocks = function () {
           align: 'left',
         },
       ],
-      // isNotFor: ['HEXABOARD'],
+      isNotFor: ['HEXABOARD'],
       class : 'wireless_hexa',
     },
 
@@ -1627,7 +1620,7 @@ Entry.HEXABOARD.getBlocks = function () {
         params: ["KT_GiGA_2G_makeitnow", "makeitnow1", "kSpy0al0nPmop9KGT5yRhbqyRl57Hj2X"],
         type: "makeitnow_wireless_wifiConnect_hexa",
       },
-      // isNotFor: ['HEXABOARD'],
+      isNotFor: ['HEXABOARD'],
       class: 'wireless_hexa',
       paramsKeyMap: {
         SSID: 0,
@@ -1654,7 +1647,7 @@ Entry.HEXABOARD.getBlocks = function () {
           },
           time: new Date().getTime()
         };
-        console.log(Entry.hw.sendQueue.SET);
+        // console.log(Entry.hw.sendQueue.SET);
         Entry.hw.update();
         delete Entry.hw.sendQueue.SET;
         return script.callReturn();
@@ -1680,7 +1673,7 @@ Entry.HEXABOARD.getBlocks = function () {
         params: ["AUTH_TOKEN"],
         type: "makeitnow_wireless_serverConnect_hexa",
       },
-      // isNotFor: ['HEXABOARD'],
+      isNotFor: ['HEXABOARD'],
       class: 'wireless_hexa',
       func: function (sprite, script) {
         //TODO : 이 곳에 통신 코드 작성하기
@@ -1710,7 +1703,7 @@ Entry.HEXABOARD.getBlocks = function () {
         params: ["0", "숫자"],
         type: "makeitnow_wireless_serverSend_hexa",
       },
-      // isNotFor: ['HEXABOARD'],
+      isNotFor: ['HEXABOARD'],
       class: 'wireless_hexa',
       paramsKeyMap: {
         VIRTUAL_PIN: 0,
@@ -1733,7 +1726,7 @@ Entry.HEXABOARD.getBlocks = function () {
             value : send_data,
           },
         };
-        console.log(Entry.hw.sendQueue.SET);
+        // console.log(Entry.hw.sendQueue.SET);
         Entry.hw.update();
         delete Entry.hw.sendQueue.SET;
         return script.callReturn();
@@ -1765,7 +1758,7 @@ Entry.HEXABOARD.getBlocks = function () {
         params: ["0"],
         type: "makeitnow_wireless_serverReceived_hexa",
       },
-      // isNotFor: ['HEXABOARD'],
+      isNotFor: ['HEXABOARD'],
       class: 'wireless_hexa',
       paramsKeyMap: {
         VIRTUAL_PIN: 0,
@@ -1775,7 +1768,7 @@ Entry.HEXABOARD.getBlocks = function () {
         const dataStream = `V${virtual_pin}`;
         //하드웨어 큐에 데이터 추가
         let hwVal = Entry.hw.portData[dataStream];
-        console.log(`DataStream ${dataStream}  value : ${hwVal}`);
+        // console.log(`DataStream ${dataStream}  value : ${hwVal}`);
         if ( hwVal !== undefined ){
           return hwVal; // 하드웨어에서 읽은 값 반환
         }else{
@@ -1799,7 +1792,7 @@ Entry.HEXABOARD.getBlocks = function () {
       def: {
         type: "makeitnow_wireless_checkConnection_hexa",
       },
-      // isNotFor: ['HEXABOARD'],
+      isNotFor: ['HEXABOARD'],
       class: 'wireless_hexa',
       paramsKeyMap: {},
       func: function (sprite, script) {
@@ -1832,7 +1825,7 @@ Entry.HEXABOARD.getBlocks = function () {
           align: 'left',
         },
       ],
-      // isNotFor: ['HEXABOARD'],
+      isNotFor: ['HEXABOARD'],
       class : 'wireless_hexa',
     },
   }
