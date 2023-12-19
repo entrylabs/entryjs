@@ -226,6 +226,8 @@ export declare interface EntryHardwareLiteBlockModule extends EntryBlockModule {
     };
     type?: 'master' | 'slave';
     delimeter?: string | number;
+    webapiType?: 'ble' | 'usb' | 'serial';
+    firmwareFlash?: boolean;
 
     // 필수 함수 목록
     setZero: () => void;

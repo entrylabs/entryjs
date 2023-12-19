@@ -2,6 +2,9 @@ import throttle from 'lodash/throttle';
 import ExtraBlockUtils from '../util/extrablockUtils';
 import HardwareMonitor from './hardware/hardwareMonitor';
 import { EntryHardwareLiteBlockModule } from '../../types/index';
+import WebUsbFlasher from './hardware/webUsbFlasher';
+import WebSerialConnector from './hardware/webSerialConnector';
+import WebBlueToothConnect from './hardware/webBluetoothConnector';
 
 enum HardwareStatement {
     disconnected = 'disconnected',
@@ -42,6 +45,8 @@ export default class HardwareLite {
     private port: any; // serialport
     private writer: any; // SerialPort.writer;
     private reader: any; //SerialPort.reader;
+    private webConnector: any; // TODO: 추후 WebBlueToothConnect | WebSerialConnector로 변경예정
+    private flasher: WebUsbFlasher;
     private writableStream: any;
     hwModule: EntryHardwareLiteBlockModule;
     static setExternalModule: any;
@@ -476,6 +481,33 @@ export default class HardwareLite {
                 this.writer.write(Buffer.from(reqLocal));
             }
         }
+    }
+
+    setWebConnector() {
+        const webapiType = this.hwModule.webapiType;
+
+        switch (webapiType) {
+            case 'ble': {
+                this.webConnector = new WebBlueToothConnect();
+                break;
+            }
+            case 'serial':
+            case undefined: {
+                this.webConnector = new WebSerialConnector();
+            }
+        }
+    }
+    removeWebConnector() {
+        this.webConnector = undefined;
+    }
+
+    setFlasher() {
+        if (this.hwModule.firmwareFlash) {
+            this.flasher = new WebUsbFlasher();
+        }
+    }
+    removeFlasher() {
+        this.flasher = undefined;
     }
 }
 
