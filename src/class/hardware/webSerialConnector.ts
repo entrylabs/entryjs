@@ -83,15 +83,6 @@ export default class WebSerialConnector extends WebApiConnector {
             readable = readable.pipeThrough(new TransformStream(new LineBreakTransformer()));
         }
         this.reader = readable.getReader();
-        if (this.hwModule?.initialHandshake) {
-            const result = await this.hwModule.initialHandshake();
-            if (!result) {
-                throw new Error('Handshake Error : 디바이스와 연결에 실패하였습니다.');
-            }
-        }
-        if (this.hwModule.portData?.constantServing) {
-            this.constantServing();
-        }
     }
 
     async disconnect() {
@@ -114,6 +105,18 @@ export default class WebSerialConnector extends WebApiConnector {
             this.writer = null;
             this.writableStream = null;
             this.hwModule = null;
+        }
+    }
+
+    async initialDevice() {
+        if (this.hwModule.initialHandshake) {
+            const result = await this.hwModule.initialHandshake();
+            if (!result) {
+                throw new Error('Handshake Error : 디바이스와 연결에 실패하였습니다.');
+            }
+        }
+        if (this.hwModule.portData?.constantServing) {
+            this.constantServing();
         }
     }
 

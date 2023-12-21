@@ -2,4 +2,5 @@
 export default class WebApiConnector {
     connect() {}
     disconnect() {}
+    initialDevice() {}
 }

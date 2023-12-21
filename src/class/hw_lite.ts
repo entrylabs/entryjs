@@ -185,6 +185,7 @@ export default class HardwareLite {
             await this.webConnector.connect();
             this.setStatus('connected');
             this.refreshHardwareLiteBlockMenu();
+            await this.webConnector.initialDevice();
             Entry.toast.success(
                 Lang.Msgs.hw_connection_success,
                 Lang.Msgs.hw_connection_success_desc2

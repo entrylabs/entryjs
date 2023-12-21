@@ -19,9 +19,6 @@ export default class WebBluetoothConnector extends WebApiConnector {
     async connect() {
         await this.setDevice();
         await this.setServices();
-        if (this.hwModule?.initialHandshake) {
-            this.hwModule?.initialHandshake();
-        }
     }
 
     async disconnect() {
@@ -30,6 +27,12 @@ export default class WebBluetoothConnector extends WebApiConnector {
         this.device = undefined;
         this.services = undefined;
         this.serviceClasses = undefined;
+    }
+
+    async initialDevice() {
+        if (this.hwModule?.initialHandshake) {
+            this.hwModule?.initialHandshake();
+        }
     }
 
     async setDevice() {
