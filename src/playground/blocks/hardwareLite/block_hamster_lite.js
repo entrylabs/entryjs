@@ -343,8 +343,8 @@
             this.timeouts = [];
 
             this.__removeAllTimeouts();
-            if (Entry.hwLite) {
-                Entry.hwLite.update();
+            if (Entry.hwLite.serial) {
+                Entry.hwLite.serial.update();
             }
         }
 
@@ -6323,7 +6323,7 @@
         async initialHandshake() {
             let status = false;
             while (true) {
-                const { value: data, done } = await Entry.hwLite.reader.read();
+                const { value: data, done } = await Entry.hwLite.serial.reader.read();
                 if (done) {
                     return false;
                 }
@@ -6347,7 +6347,7 @@
                         }
                     }
                 } else {
-                    Entry.hwLite.sendAsciiAsBuffer(this.requestInitialData());
+                    Entry.hwLite.serial.sendAsciiAsBuffer(this.requestInitialData());
                 }
             }
             return status;

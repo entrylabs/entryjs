@@ -120,8 +120,8 @@
                 FND: 0,
                 OPT: 0,
             };
-            if (Entry.hwLite) {
-                Entry.hwLite.update();
+            if (Entry.hwLite.serial) {
+                Entry.hwLite.serial.update();
             }
         }
 

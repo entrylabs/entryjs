@@ -308,7 +308,7 @@
         }
 
         setZero() {
-            if (Entry.hwLite) {
+            if (Entry.hwLite.serial) {
                 const blockId = this.generateBlockId();
                 const pdu = this.makePdu([
                     FrameCode.BASIC,
@@ -322,7 +322,7 @@
                         pdu,
                     },
                 ];
-                Entry.hwLite.update();
+                Entry.hwLite.serial.update();
             }
         }
 
@@ -346,7 +346,7 @@
                 blockId: 0,
                 pdu: initPdu,
             });
-            Entry.hwLite.update();
+            Entry.hwLite.serial.update();
             return true;
         }
 
@@ -539,7 +539,7 @@
             };
         }
         requestLocalData() {
-            if (Entry.hwLite) {
+            if (Entry.hwLite.serial) {
                 if (this.executeList.length > 0) {
                     const executeData = this.executeList.shift();
                     this.logD(this.byteArrayToHex(executeData.pdu));
@@ -638,7 +638,7 @@
                 blockId,
                 pdu,
             });
-            // Entry.hwLite.writePortData(pdu);
+            // Entry.writePortData(pdu);
         }
 
         requestExtCommand(blockId, type, params) {
