@@ -321,8 +321,6 @@ import WebUsbFlasher from '../../class/hardware/webUsbFlasher';
             }
             Entry.hardwareLiteBlocks = _.union(Entry.hardwareLiteBlocks, [module.id]);
             Entry.hwLite.setExternalModule(module);
-            Entry.hwLite.setWebConnector();
-            Entry.hwLite.setFlasher();
         },
         state(module) {
             return [module];
@@ -340,7 +338,7 @@ import WebUsbFlasher from '../../class/hardware/webUsbFlasher';
         do(module) {
             Entry.hardwareLiteBlocks = [];
             Entry.hwLite.disconnect();
-            Entry.hwLite.removeConnector();
+            Entry.hwLite.removeWebConnector();
             Entry.hwLite.removeFlasher();
         },
         state(module) {
