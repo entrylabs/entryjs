@@ -308,7 +308,7 @@
         }
 
         setZero() {
-            if (Entry.hwLite.serial) {
+            if (Entry.hwLite && Entry.hwLite.serial) {
                 const blockId = this.generateBlockId();
                 const pdu = this.makePdu([
                     FrameCode.BASIC,
@@ -539,7 +539,7 @@
             };
         }
         requestLocalData() {
-            if (Entry.hwLite.serial) {
+            if (Entry.hwLite && Entry.hwLite.serial) {
                 if (this.executeList.length > 0) {
                     const executeData = this.executeList.shift();
                     this.logD(this.byteArrayToHex(executeData.pdu));

@@ -269,7 +269,7 @@ const Buffer = require('buffer').Buffer;
                 },
             };
 
-            if (Entry.hwLite.serial) {
+            if (Entry.hwLite && Entry.hwLite.serial) {
                 Entry.hwLite.serial.update();
             }
         }

@@ -343,7 +343,7 @@
             this.timeouts = [];
 
             this.__removeAllTimeouts();
-            if (Entry.hwLite.serial) {
+            if (Entry.hwLite && Entry.hwLite.serial) {
                 Entry.hwLite.serial.update();
             }
         }

@@ -109,7 +109,7 @@
                 ANGLE: 0,
             };
 
-            if (Entry.hwLite.serial) {
+            if (Entry.hwLite && Entry.hwLite.serial) {
                 Entry.hwLite.serial.update();
             }
         }

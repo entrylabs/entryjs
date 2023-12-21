@@ -43,7 +43,7 @@ import _range from 'lodash/range';
             this.analogValue = new Array(6).fill(0);
             this.readablePorts = _range(0, 19);
 
-            if (Entry.hwLite.serial) {
+            if (Entry.hwLite && Entry.hwLite.serial) {
                 Entry.hwLite.serial.update();
             }
         }
