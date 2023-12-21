@@ -83,8 +83,6 @@ export default class WebSerialConnector extends WebApiConnector {
             readable = readable.pipeThrough(new TransformStream(new LineBreakTransformer()));
         }
         this.reader = readable.getReader();
-        this.hwLite.setStatus('connected');
-        this.hwLite.refreshHardwareLiteBlockMenu();
         if (this.hwModule?.initialHandshake) {
             const result = await this.hwModule.initialHandshake();
             if (!result) {

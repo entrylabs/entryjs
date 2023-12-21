@@ -246,7 +246,6 @@ export declare interface HWLiteSerialInfo {
 export declare interface HWLiteBluetoothInfo {
     filters: BluetoothLEScanFilter[];
     optionalServices: string[];
-    constantServing?: boolean | 'ReadOnly';
 }
 
 export declare type HWLiteStatus =

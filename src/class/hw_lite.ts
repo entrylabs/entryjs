@@ -3,29 +3,23 @@ import ExtraBlockUtils from '../util/extrablockUtils';
 import HardwareMonitor from './hardware/hardwareMonitor';
 import WebUsbFlasher from './hardware/webUsbFlasher';
 import WebSerialConnector from './hardware/webSerialConnector';
-// import WebBlueToothConnect from './hardware/webBluetoothConnector';
 import WebApiConnector from './hardware/webApiConnector';
+import WebBluetoothConnector from './hardware/webBluetoothConnector';
 
 const ARDUINO_BOARD_IDS: string[] = ['1.1', '4.2', '8.1'];
 
 export default class HardwareLite {
     private status: HWLiteStatus;
-    // private HardwareStatement: any;
-    // private port: any; // serialport
-    // private writer: any; // SerialPort.writer;
-    // private reader: any; //SerialPort.reader;
     private webConnector: WebApiConnector; // TODO: 추후 WebBlueToothConnect | WebSerialConnector로 변경예정
     private serial: WebSerialConnector;
-    // private bluetooth: WebBlueToothConnector;
+    private bluetooth: WebBluetoothConnector;
     private flasher: WebUsbFlasher;
-    // private writableStream: any;
     hwModule: EntryHWLiteBaseModule;
     static setExternalModule: any;
     static refreshHardwareLiteBlockMenu: any;
     static banClassAllHardwareLite: any;
     static isHwLiteSupportAgent: any;
     private playground: any;
-    // private connectionType: 'ascii' | 'bytestream' | undefined;
     private hwMonitor?: HardwareMonitor;
     static getStatus: any;
 
@@ -189,6 +183,8 @@ export default class HardwareLite {
         }
         try {
             await this.webConnector.connect();
+            this.setStatus('connected');
+            this.refreshHardwareLiteBlockMenu();
             Entry.toast.success(
                 Lang.Msgs.hw_connection_success,
                 Lang.Msgs.hw_connection_success_desc2
@@ -237,9 +233,13 @@ export default class HardwareLite {
 
         switch (webapiType) {
             case 'ble': {
-                // if(!this.hwModule.bluetoothInfo){return;}
-                // this.bluetooth = new WebBlueToothConnect(this.hwModule);
-                // this.webConnector = this.bluetooth;
+                if (!this.hwModule.bluetoothInfo) {
+                    console.error('Invalid bluetooth hwModule');
+                    this.getConnectFailedMenu();
+                    return;
+                }
+                this.bluetooth = new WebBluetoothConnector(this.hwModule, this);
+                this.webConnector = this.bluetooth;
                 break;
             }
             case 'serial':
@@ -258,7 +258,7 @@ export default class HardwareLite {
     removeWebConnector() {
         this.webConnector = undefined;
         this.serial = undefined;
-        // this.bluetooth = undefined;
+        this.bluetooth = undefined;
     }
 
     setFlasher() {

@@ -129,7 +129,7 @@ export default class WebUsbFlasher {
         const iface = filteredInterfaces[filteredInterfaces.length - 1];
         const altIface = iface.alternates[0];
         if (altIface.endpoints.length) {
-            // study: 얘도 뭐지?
+            // study: endpoints 역할
             this.isTransfer = true;
             const epIn = altIface.endpoints.filter((e) => 'in' == e.direction)[0];
             this.endpointNumber = epIn.endpointNumber;
