@@ -395,7 +395,7 @@ const convertPresetImageToLedState = (preset) => {
                 // 'microbit2blelite_get_direction',
                 'microbit2blelite_get_field_strength_axis',
                 // 'microbit2blelite_get_light_level',
-                // 'microbit2blelite_get_temperature',
+                'microbit2blelite_get_temperature',
 
                 // 'microbit2blelite_set_servo',
                 // 'microbit2blelite_set_pwm',
@@ -2213,10 +2213,8 @@ const convertPresetImageToLedState = (preset) => {
                     },
                     paramsKeyMap: {},
                     func: async (sprite, script) => {
-                        const response = await this.getResponseWithSync(
-                            `${this.functionKeys.GET_TEMPERATURE};`
-                        );
-                        return this.getResponse(response);
+                        const temperature = await this.services.TemperatureService.readTemperature();
+                        return temperature;
                     },
                 },
 
