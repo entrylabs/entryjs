@@ -2411,6 +2411,10 @@ Entry.Playground = class Playground {
         }
     }
 
+    setSound(sound) {
+        Entry.container.setSound(sound);
+    }
+
     destroy() {
         this.commentToggleButton_ && this.commentToggleButton_.unBindOnClick();
         this.addCommentButton_ && this.addCommentButton_.unBindOnClick();
@@ -2420,6 +2424,7 @@ Entry.Playground = class Playground {
         this.objectBackPackEvent && this.objectBackPackEvent.off();
         this.objectBackPackAreaEvent && this.objectBackPackAreaEvent.off();
         this.globalEvent && this.globalEvent.destroy();
+        this.soundEditor && this.soundEditor.destory();
         this._destroyer.destroy();
     }
 };

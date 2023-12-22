@@ -1328,6 +1328,18 @@ Entry.Container = class Container {
         document.body.scrollIntoView();
     }
 
+    setSound(sound) {
+        const sounds = this.getObject(sound.objectId).sounds;
+        const index = _.findIndex(sounds, ({ id }) => id === sound.id);
+        if (!~index) {
+            throw new Error('No sound found');
+        }
+        sounds[index] = Object.assign(
+            _.pick(sound, ['duration', 'ext', 'fileurl', 'id', 'label', 'name', 'path']),
+            { view: sounds[index].view }
+        );
+    }
+
     destroy() {
         // 우선 interface 만 정의함.
     }
