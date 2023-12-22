@@ -389,7 +389,7 @@ const convertPresetImageToLedState = (preset) => {
                 // 'microbit2blelite_set_tone',
                 // 'microbit2blelite_play_preset_music',
 
-                // 'microbit2blelite_get_btn',
+                'microbit2blelite_get_btn',
                 // 'microbit2blelite_get_acc',
                 // 'microbit2blelite_get_gesture',
                 // 'microbit2blelite_get_direction',
@@ -459,24 +459,27 @@ const convertPresetImageToLedState = (preset) => {
         //     }
         // }
 
-        setButtonEvent() {
-            const pressedBoth = () => {
-                if (this.buttonState.a + this.buttonState.b === 2) {
+        pressedBothButton(fireEvent) {
+            if (this.buttonState.a + this.buttonState.b === 2) {
+                if (fireEvent) {
                     Entry.engine.fireEventWithValue('microbit2blelite_btn_pressed', 3);
-                    return true;
                 }
-                return false;
-            };
+                return true;
+            }
+            return false;
+        }
+
+        setButtonEvent() {
             if (this.services.ButtonService) {
                 this.services.ButtonService.addEventListener('buttonastatechanged', (event) => {
                     this.buttonState.a = event.detail;
-                    if (event.detail === 1 && !pressedBoth()) {
+                    if (event.detail === 1 && !this.pressedBothButton(true)) {
                         Entry.engine.fireEventWithValue('microbit2blelite_btn_pressed', 1);
                     }
                 });
                 this.services.ButtonService.addEventListener('buttonbstatechanged', (event) => {
                     this.buttonState.b = event.detail;
-                    if (event.detail === 1 && !pressedBoth()) {
+                    if (event.detail === 1 && !this.pressedBothButton(true)) {
                         Entry.engine.fireEventWithValue('microbit2blelite_btn_pressed', 2);
                     }
                 });
@@ -1985,19 +1988,10 @@ const convertPresetImageToLedState = (preset) => {
                     func: async (sprite, script) => {
                         const value = script.getField('VALUE');
 
-                        const response = await this.getResponseWithSync(
-                            `${this.functionKeys.GET_BTN};`
-                        );
-                        const parsedResponse = this.getResponse(response);
-
-                        if (parsedResponse == '1' && value == 'a') {
-                            return 1;
-                        } else if (parsedResponse == '2' && value == 'b') {
-                            return 1;
-                        } else if (parsedResponse == '3' && value == 'ab') {
-                            return 1;
+                        if (value === 'ab') {
+                            return this.pressedBothButton() ? 1 : 0;
                         } else {
-                            return 0;
+                            return this.buttonState[value];
                         }
                     },
                 },
