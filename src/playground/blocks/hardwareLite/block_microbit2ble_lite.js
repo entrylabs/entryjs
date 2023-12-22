@@ -393,7 +393,7 @@ const convertPresetImageToLedState = (preset) => {
                 'microbit2blelite_get_acc',
                 // 'microbit2blelite_get_gesture',
                 // 'microbit2blelite_get_direction',
-                // 'microbit2blelite_get_field_strength_axis',
+                'microbit2blelite_get_field_strength_axis',
                 // 'microbit2blelite_get_light_level',
                 // 'microbit2blelite_get_temperature',
 
@@ -2153,7 +2153,7 @@ const convertPresetImageToLedState = (preset) => {
                                 [Lang.Blocks.xAxis, 'x'],
                                 [Lang.Blocks.yAxis, 'y'],
                                 [Lang.Blocks.zAxis, 'z'],
-                                [Lang.Blocks.scalar, 'mag'],
+                                // [Lang.Blocks.scalar, 'mag'],
                             ],
                             value: 'x',
                             fontSize: 11,
@@ -2172,11 +2172,9 @@ const convertPresetImageToLedState = (preset) => {
                     },
                     func: async (sprite, script) => {
                         const axis = script.getField('AXIS');
+                        const deviceMagnetData = await this.services.MagnetometerService.readMagnetometerData();
 
-                        const response = await this.getResponseWithSync(
-                            `${this.functionKeys.GET_FIELD_STRENGTH};${axis}`
-                        );
-                        return this.getResponse(response);
+                        return deviceMagnetData[axis];
                     },
                 },
                 microbit2blelite_get_light_level: {
