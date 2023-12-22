@@ -390,7 +390,7 @@ const convertPresetImageToLedState = (preset) => {
                 // 'microbit2blelite_play_preset_music',
 
                 'microbit2blelite_get_btn',
-                // 'microbit2blelite_get_acc',
+                'microbit2blelite_get_acc',
                 // 'microbit2blelite_get_gesture',
                 // 'microbit2blelite_get_direction',
                 // 'microbit2blelite_get_field_strength_axis',
@@ -419,11 +419,11 @@ const convertPresetImageToLedState = (preset) => {
 
         async initialHandshake() {
             this.services = Entry.hwLite.bluetooth.services;
-            if (this.services.temperatureService) {
-                await this.services.temperatureService.setTemperaturePeriod(2000);
+            if (this.services.TemperatureService) {
+                await this.services.TemperatureService.setTemperaturePeriod(2000);
             }
-            if (this.services.accelerometerService) {
-                await this.services.accelerometerService.setAccelerometerPeriod(640);
+            if (this.services.AccelerometerService) {
+                await this.services.AccelerometerService.setAccelerometerPeriod(640);
             }
             if (this.services.IoPinService) {
                 // await this.services.IoPinService.setPwmControl({
@@ -2047,7 +2047,7 @@ const convertPresetImageToLedState = (preset) => {
                                 [Lang.Blocks.xAxis, 'x'],
                                 [Lang.Blocks.yAxis, 'y'],
                                 [Lang.Blocks.zAxis, 'z'],
-                                [Lang.Blocks.scalar, 'mag'],
+                                // [Lang.Blocks.scalar, 'mag'],
                             ],
                             value: 'x',
                             fontSize: 11,
@@ -2066,11 +2066,8 @@ const convertPresetImageToLedState = (preset) => {
                     },
                     func: async (sprite, script) => {
                         const axis = script.getField('AXIS');
-
-                        const response = await this.getResponseWithSync(
-                            `${this.functionKeys.GET_ACC};${axis}`
-                        );
-                        return this.getResponse(response);
+                        const deviceAccData = await this.services.AccelerometerService.readAccelerometerData();
+                        return deviceAccData[axis];
                     },
                 },
                 microbit2blelite_get_gesture: {
