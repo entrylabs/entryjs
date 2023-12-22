@@ -1,17 +1,14 @@
 'use strict';
-
 const _clamp = require('lodash/clamp');
 
 const EVENT_INTERVAL = 150;
-const getInitialLedState = () => {
-    return [
-        [false, false, false, false, false],
-        [false, false, false, false, false],
-        [false, false, false, false, false],
-        [false, false, false, false, false],
-        [false, false, false, false, false],
-    ];
-};
+const getInitialLedState = () => [
+    [false, false, false, false, false],
+    [false, false, false, false, false],
+    [false, false, false, false, false],
+    [false, false, false, false, false],
+    [false, false, false, false, false],
+];
 const convertPresetImageToLedState = (preset) => {
     const colums = preset.split(':');
     const result = colums.map((row) => row.split('').map((num) => num !== '0'));
@@ -400,7 +397,7 @@ const convertPresetImageToLedState = (preset) => {
                 // 'microbit2blelite_set_servo',
                 // 'microbit2blelite_set_pwm',
 
-                // 'microbit2blelite_v2_title',
+                'microbit2blelite_v2_title',
                 // 'microbit2blelite_get_logo',
                 'microbit2blelite_btn_event',
                 // 'microbit2blelite_speaker_toggle',
@@ -426,38 +423,27 @@ const convertPresetImageToLedState = (preset) => {
                 await this.services.AccelerometerService.setAccelerometerPeriod(640);
             }
             if (this.services.IoPinService) {
-                // await this.services.IoPinService.setPwmControl({
-                //     pin:
-                //     value:
-                //     period:
-                // });
-                // const Ad_char = 'e95d5899-251d-470a-a062-fa1922dfa9a8';
-                // const Io_char = 'e95db9fe-251d-470a-a062-fa1922dfa9a8';
-                // let cmd = new Uint32Array([0x07]);
-                // //await services.ioPinService.helper.setCharacteristicValue(Io_char, cmd);
-                // //await services.ioPinService.helper.setCharacteristicValue(Ad_char, cmd);
                 // debugger;
                 // console.log(await this.services.IoPinService.getAdConfiguration());
             }
-            this.setEventListener();
+            await this.setEventListener();
         }
 
-        setEventListener() {
+        async setEventListener() {
             if (!this.services) {
                 return;
             }
-            this.setButtonEvent();
-            // this.setPinDataEvent();
+            await this.setButtonEvent();
+            //     await this.setPinDataEvent();
         }
 
-        // setPinDataEvent() {
-        //     if (this.services.IoPinService) {
-        //         debugger;
-        //         this.services.IoPinService.addEventListener('pindatachanged', (event) => {
-        //             console.log(event);
-        //         });
-        //     }
-        // }
+        async setPinDataEvent() {
+            if (this.services.IoPinService) {
+                this.services.IoPinService.addEventListener('pindatachanged', (event) => {
+                    console.log(event);
+                });
+            }
+        }
 
         pressedBothButton(fireEvent) {
             if (this.buttonState.a + this.buttonState.b === 2) {
@@ -1163,11 +1149,13 @@ const convertPresetImageToLedState = (preset) => {
                     },
                     func: async (sprite, script) => {
                         const value = script.getValue('VALUE');
-                        const pinData = await Entry.hwLite.bluetooth.services.IoPinService.setIoConfiguration();
+                        // const pinData = await this.services.IoPinService.readPinData();
+                        // const ad = await this.services.IoPinService.getAdConfiguration();
+                        // const config = await this.services.IoPinService.getIoConfiguration();
 
-                        // result =
-
-                        // return ;
+                        // console.log(pinData);
+                        // console.log(ad);
+                        // console.log(config);
                     },
                 },
                 microbit2blelite_set_analog: {
@@ -1400,7 +1388,7 @@ const convertPresetImageToLedState = (preset) => {
                         if (x < 0 || y < 0 || x > 4 || y > 4 || value < 0 || value > 9) {
                             return;
                         }
-                        this.ledState[y][x] = value === 0 ? false : true;
+                        this.ledState[y][x] = value !== 0;
                         await this.services.LedService.writeMatrixState(this.ledState);
                     },
                 },
@@ -2030,9 +2018,7 @@ const convertPresetImageToLedState = (preset) => {
                     class: 'microbit2blelitev2',
                     isNotFor: ['Microbit2BleLite'],
                     event: 'microbit2blelite_btn_pressed',
-                    func: (sprite, script) => {
-                        return script.callReturn();
-                    },
+                    func: (sprite, script) => script.callReturn(),
                 },
                 microbit2blelite_get_acc: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -2066,6 +2052,7 @@ const convertPresetImageToLedState = (preset) => {
                     },
                     func: async (sprite, script) => {
                         const axis = script.getField('AXIS');
+                        // eslint-disable-next-line max-len
                         const deviceAccData = await this.services.AccelerometerService.readAccelerometerData();
                         return deviceAccData[axis];
                     },
@@ -2172,6 +2159,7 @@ const convertPresetImageToLedState = (preset) => {
                     },
                     func: async (sprite, script) => {
                         const axis = script.getField('AXIS');
+                        // eslint-disable-next-line max-len
                         const deviceMagnetData = await this.services.MagnetometerService.readMagnetometerData();
 
                         return deviceMagnetData[axis];
@@ -2213,6 +2201,7 @@ const convertPresetImageToLedState = (preset) => {
                     },
                     paramsKeyMap: {},
                     func: async (sprite, script) => {
+                        // eslint-disable-next-line max-len
                         const temperature = await this.services.TemperatureService.readTemperature();
                         return temperature;
                     },
