@@ -1,8 +1,22 @@
 'use strict';
 
-const _throttle = require('lodash/throttle');
+const _clamp = require('lodash/clamp');
 
 const EVENT_INTERVAL = 150;
+const getInitialLedState = () => {
+    return [
+        [false, false, false, false, false],
+        [false, false, false, false, false],
+        [false, false, false, false, false],
+        [false, false, false, false, false],
+        [false, false, false, false, false],
+    ];
+};
+const convertPresetImageToLedState = (preset) => {
+    const colums = preset.split(':');
+    const result = colums.map((row) => row.split('').map((num) => num !== '0'));
+    return result;
+};
 
 (function() {
     Entry.Microbit2BleLite = new (class Microbit2LiteBle {
@@ -350,33 +364,31 @@ const EVENT_INTERVAL = 150;
                 [3, 3],
                 [4, 4],
             ];
-            this.defaultLed = [
-                [0, 0, 0, 0, 0],
-                [0, 9, 0, 9, 0],
-                [0, 0, 0, 0, 0],
-                [9, 0, 0, 0, 9],
-                [0, 9, 9, 9, 0],
-            ];
             this.blockMenuBlocks = [
                 'microbit2blelite_common_title',
-                'microbit2blelite_get_analog',
+
+                // 'microbit2blelite_get_analog',
                 // 'microbit2blelite_set_analog',
                 // 'microbit2blelite_get_digital',
                 // 'microbit2blelite_set_digital',
-                // 'microbit2blelite_screen_toggle',
-                // 'microbit2blelite_set_led',
-                // 'microbit2blelite_get_led',
-                // 'microbit2blelite_show_preset_image',
-                // 'microbit2blelite_show_custom_image',
-                // 'microbit2blelite_show_string',
-                // 'microbit2blelite_reset_screen',
+
+                'microbit2blelite_screen_toggle',
+                'microbit2blelite_set_led',
+                'microbit2blelite_get_led',
+                'microbit2blelite_show_preset_image',
+                'microbit2blelite_show_custom_image',
+                'microbit2blelite_show_string',
+                'microbit2blelite_reset_screen',
+
                 // 'microbit2blelite_radio_toggle',
                 // 'microbit2blelite_radio_setting',
                 // 'microbit2blelite_radio_send',
                 // 'microbit2blelite_radio_received',
+
                 // 'microbit2blelite_change_tempo',
                 // 'microbit2blelite_set_tone',
                 // 'microbit2blelite_play_preset_music',
+
                 // 'microbit2blelite_get_btn',
                 // 'microbit2blelite_get_acc',
                 // 'microbit2blelite_get_gesture',
@@ -384,27 +396,26 @@ const EVENT_INTERVAL = 150;
                 // 'microbit2blelite_get_field_strength_axis',
                 // 'microbit2blelite_get_light_level',
                 // 'microbit2blelite_get_temperature',
+
                 // 'microbit2blelite_set_servo',
                 // 'microbit2blelite_set_pwm',
+
                 // 'microbit2blelite_v2_title',
                 // 'microbit2blelite_get_logo',
-                // 'microbit2blelite_btn_event',
-                'microbit2blelite_speaker_toggle',
+                'microbit2blelite_btn_event',
+                // 'microbit2blelite_speaker_toggle',
                 // 'microbit2blelite_play_sound_effect',
                 // 'microbit2blelite_get_sound_level',
             ];
             this.services = undefined;
-            this.ledState = [
-                [false, false, false, false, false],
-                [false, false, false, false, false],
-                [false, false, false, false, false],
-                [false, false, false, false, false],
-                [false, false, false, false, false],
-            ];
+            this.ledState = getInitialLedState();
             this.version = '2';
             this.buttonState = { a: 0, b: 0 };
         }
-        setZero() {}
+        async setZero() {
+            this.ledState = getInitialLedState();
+            await this.services.LedService.writeMatrixState(this.ledState);
+        }
 
         async initialHandshake() {
             this.services = Entry.hwLite.bluetooth.services;
@@ -414,6 +425,20 @@ const EVENT_INTERVAL = 150;
             if (this.services.accelerometerService) {
                 await this.services.accelerometerService.setAccelerometerPeriod(640);
             }
+            if (this.services.IoPinService) {
+                // await this.services.IoPinService.setPwmControl({
+                //     pin:
+                //     value:
+                //     period:
+                // });
+                // const Ad_char = 'e95d5899-251d-470a-a062-fa1922dfa9a8';
+                // const Io_char = 'e95db9fe-251d-470a-a062-fa1922dfa9a8';
+                // let cmd = new Uint32Array([0x07]);
+                // //await services.ioPinService.helper.setCharacteristicValue(Io_char, cmd);
+                // //await services.ioPinService.helper.setCharacteristicValue(Ad_char, cmd);
+                // debugger;
+                // console.log(await this.services.IoPinService.getAdConfiguration());
+            }
             this.setEventListener();
         }
 
@@ -422,7 +447,17 @@ const EVENT_INTERVAL = 150;
                 return;
             }
             this.setButtonEvent();
+            // this.setPinDataEvent();
         }
+
+        // setPinDataEvent() {
+        //     if (this.services.IoPinService) {
+        //         debugger;
+        //         this.services.IoPinService.addEventListener('pindatachanged', (event) => {
+        //             console.log(event);
+        //         });
+        //     }
+        // }
 
         setButtonEvent() {
             const pressedBoth = () => {
@@ -1125,6 +1160,7 @@ const EVENT_INTERVAL = 150;
                     },
                     func: async (sprite, script) => {
                         const value = script.getValue('VALUE');
+                        const pinData = await Entry.hwLite.bluetooth.services.IoPinService.setIoConfiguration();
 
                         // result =
 
@@ -1169,9 +1205,7 @@ const EVENT_INTERVAL = 150;
                     },
                     func: async (sprite, script) => {
                         const pin = script.getValue('PIN');
-                        const value = Math.round(
-                            this._clamp(script.getNumberValue('VALUE'), 0, 1023)
-                        );
+                        const value = Math.round(_clamp(script.getNumberValue('VALUE'), 0, 1023));
 
                         const parsedPayload = `${pin};${value}`;
 
@@ -1294,9 +1328,11 @@ const EVENT_INTERVAL = 150;
                     paramsKeyMap: { VALUE: 0 },
                     func: async (sprite, script) => {
                         const command = script.getField('VALUE');
-
-                        const response = await this.getResponseWithSync(`${command};`);
-                        return this.getResponse(response);
+                        if (command === this.functionKeys.DISPLAY_ON) {
+                            await this.services.LedService.writeMatrixState(this.ledState);
+                        } else {
+                            await this.services.LedService.writeMatrixState(getInitialLedState());
+                        }
                     },
                 },
                 microbit2blelite_set_led: {
@@ -1361,13 +1397,8 @@ const EVENT_INTERVAL = 150;
                         if (x < 0 || y < 0 || x > 4 || y > 4 || value < 0 || value > 9) {
                             return;
                         }
-
-                        const parsedPayload = `${x};${y};${value}`;
-
-                        const response = await this.getResponseWithSync(
-                            `${this.functionKeys.SET_LED};${parsedPayload}`
-                        );
-                        return this.getResponse(response);
+                        this.ledState[y][x] = value === 0 ? false : true;
+                        await this.services.LedService.writeMatrixState(this.ledState);
                     },
                 },
                 microbit2blelite_get_led: {
@@ -1416,20 +1447,11 @@ const EVENT_INTERVAL = 150;
                         if (x < 0 || y < 0 || x > 4 || y > 4) {
                             return -1;
                         }
-                        const parsedPayload = `${x};${y}`;
 
-                        const response = await this.getResponseWithSync(
-                            `${this.functionKeys.GET_LED};${parsedPayload}`
-                        );
-                        const parsedResponse = this.getResponse(response);
-
-                        if (parsedResponse == 0) {
-                            return 0;
-                        } else if (parsedResponse == 1) {
-                            return 1;
-                        }
-
-                        return Math.round(Math.log2(parsedResponse * 2));
+                        // TODO: 블록스펙 변경과 함께 true, false 처리
+                        const deviceLedState = await this.services.LedService.readMatrixState();
+                        const targetLed = deviceLedState[y][x] ? 1 : 0;
+                        return targetLed;
                     },
                 },
                 microbit2blelite_show_preset_image: {
@@ -1527,12 +1549,11 @@ const EVENT_INTERVAL = 150;
                         VALUE: 0,
                     },
                     func: async (sprite, script) => {
-                        const value = this._clamp(script.getNumberValue('VALUE'), 0, 62);
-                        const parsedPayload = `${this.presetImage[value]}`;
-                        const response = await this.getResponseWithSync(
-                            `${this.functionKeys.SET_CUSTOM_IMAGE};${parsedPayload}`
-                        );
-                        return this.getResponse(response);
+                        const value = _clamp(script.getNumberValue('VALUE'), 0, 62);
+                        const presetImage = this.presetImage[value];
+                        this.ledState = convertPresetImageToLedState(presetImage);
+
+                        await this.services.LedService.writeMatrixState(this.ledState);
                     },
                 },
                 microbit2blelite_show_custom_image: {
@@ -1566,11 +1587,9 @@ const EVENT_INTERVAL = 150;
                             processedValue[i] = value[i].join();
                         }
                         const parsedPayload = `${processedValue.join(':').replace(/,/gi, '')}`;
+                        this.ledState = convertPresetImageToLedState(parsedPayload);
 
-                        const response = await this.getResponseWithSync(
-                            `${this.functionKeys.SET_CUSTOM_IMAGE};${parsedPayload}`
-                        );
-                        return this.getResponse(response);
+                        await this.services.LedService.writeMatrixState(this.ledState);
                     },
                 },
                 microbit2blelite_show_string: {
@@ -1606,15 +1625,12 @@ const EVENT_INTERVAL = 150;
                         VALUE: 0,
                     },
                     func: async (sprite, script) => {
-                        let payload = script.getStringValue('VALUE');
-                        payload = payload.replace(
+                        const payload = script.getStringValue('VALUE');
+                        const text = payload.replace(
                             /[^A-Za-z0-9_\`\~\!\@\#\$\%\^\&\*\(\)\-\=\+\\\{\}\[\]\'\"\;\:\<\,\>\.\?\/\s]/gim,
                             ''
                         );
-                        const response = await this.getResponseWithSync(
-                            `${this.functionKeys.SET_STRING};${payload}`
-                        );
-                        return this.getResponse(response);
+                        await this.services.LedService.writeText(text);
                     },
                 },
                 microbit2blelite_reset_screen: {
@@ -1637,10 +1653,8 @@ const EVENT_INTERVAL = 150;
                     },
                     paramsKeyMap: {},
                     func: async (sprite, script) => {
-                        const response = await this.getResponseWithSync(
-                            `${this.functionKeys.RESET_SCREEN};`
-                        );
-                        return this.getResponse(response);
+                        this.ledState = getInitialLedState();
+                        await this.services.LedService.writeMatrixState(this.ledState);
                     },
                 },
                 microbit2blelite_radio_toggle: {
@@ -1709,9 +1723,7 @@ const EVENT_INTERVAL = 150;
                         if (!Entry.Utils.isNumber(script.getNumberValue('CHANNEL'))) {
                             return;
                         }
-                        const channel = Math.round(
-                            this._clamp(script.getNumberValue('CHANNEL'), 0, 83)
-                        );
+                        const channel = Math.round(_clamp(script.getNumberValue('CHANNEL'), 0, 83));
 
                         const response = await this.getResponseWithSync(
                             `${this.functionKeys.SETTING_RADIO};${channel}`
@@ -1815,8 +1827,8 @@ const EVENT_INTERVAL = 150;
                         BPM: 1,
                     },
                     func: async (sprite, script) => {
-                        const beat = Math.round(this._clamp(script.getNumberValue('BEAT'), 0, 4));
-                        const bpm = Math.round(this._clamp(script.getNumberValue('BPM'), 1, 230));
+                        const beat = Math.round(_clamp(script.getNumberValue('BEAT'), 0, 4));
+                        const bpm = Math.round(_clamp(script.getNumberValue('BPM'), 1, 230));
 
                         const parsedPayload = `${beat};${bpm}`;
 
@@ -1929,7 +1941,7 @@ const EVENT_INTERVAL = 150;
                         VALUE: 0,
                     },
                     func: async (sprite, script) => {
-                        const value = this._clamp(script.getNumberValue('VALUE'), 0, 20);
+                        const value = _clamp(script.getNumberValue('VALUE'), 0, 20);
 
                         const response = await this.getResponseWithSync(
                             `${this.functionKeys.PLAY_MELODY};${value}`
@@ -2257,9 +2269,7 @@ const EVENT_INTERVAL = 150;
                     },
                     func: async (sprite, script) => {
                         const pin = script.getValue('PIN');
-                        const value = Math.round(
-                            this._clamp(script.getNumberValue('VALUE'), 0, 180)
-                        );
+                        const value = Math.round(_clamp(script.getNumberValue('VALUE'), 0, 180));
 
                         const parsedPayload = `${pin};${value}`;
                         const response = await this.getResponseWithSync(
@@ -2319,9 +2329,7 @@ const EVENT_INTERVAL = 150;
                     func: async (sprite, script) => {
                         const pin = script.getValue('PIN');
                         const unit = script.getValue('UNIT');
-                        const value = Math.round(
-                            this._clamp(script.getNumberValue('VALUE'), 0, 1023)
-                        );
+                        const value = Math.round(_clamp(script.getNumberValue('VALUE'), 0, 1023));
                         const command =
                             unit === 'milli'
                                 ? this.functionKeys.SET_SERVO_MILLI
@@ -2490,7 +2498,7 @@ const EVENT_INTERVAL = 150;
                         VALUE: 0,
                     },
                     func: async (sprite, script) => {
-                        const value = this._clamp(script.getNumberValue('VALUE'), 21, 30);
+                        const value = _clamp(script.getNumberValue('VALUE'), 21, 30);
                         const parsedPayload = `${value}`;
 
                         const response = await this.getResponseWithSync(
