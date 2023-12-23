@@ -29,6 +29,7 @@ export default class WebUsbFlasher {
         this.endpointNumber = -1;
     }
 
+    // TODO: 함수분리 리팩토링
     async flashFirmware(firmwareUrl: string, moduleId: string) {
         try {
             const response = await fetch(firmwareUrl);
@@ -38,12 +39,10 @@ export default class WebUsbFlasher {
                 filters: [{ vendorId: 0x0d28 }],
             });
             await this.device.open();
-            // selectConfiguration 체크
             await this.device.selectConfiguration(1);
             this.findInterface();
             await this.device.claimInterface(this.claimInterface);
 
-            // store.set(flashStateAtom, 'start');
             this.flashState = 'start';
             const result = await this.writeData([0x8a, 1]);
             if (result[1] !== 0) {
@@ -54,8 +53,6 @@ export default class WebUsbFlasher {
             let sentPages = 0;
 
             this.flashState = 'flashing';
-            // store.set(flashStateAtom, 'flashing');
-            // webApi타입 ble인 block 파일에 넣어줘야 할듯
             while (offset < data.length) {
                 const end = Math.min(data.length, offset + chunkSize);
                 const nextPageData = data.slice(offset, end);
@@ -63,10 +60,9 @@ export default class WebUsbFlasher {
                 cmdData[0] = 0x8c;
                 cmdData[1] = nextPageData.length;
                 cmdData.set(nextPageData, 2);
-                // TODO: 퍼센트 로직도 분리하기
+                // TODO: 퍼센트 로직도 분리
                 if (sentPages % 128 == 0) {
                     this.flashingPercent = (offset / data.length) * 100;
-                    // store.set(percentAtom, (offset / data.length) * 100);
                     console.log(this.flashingPercent);
                 }
                 await this.writeBuffer(cmdData);
@@ -75,25 +71,22 @@ export default class WebUsbFlasher {
             }
             this.flashingPercent = (offset / data.length) * 100;
             console.log(this.flashingPercent);
-            // store.set(percentAtom, (offset / data.length) * 100);
             this.flashState = 'end';
-            // store.set(flashStateAtom, 'end');
 
-            // close
+            // INFO: close
             const flashResult = await this.writeData([0x8b]);
             if (flashResult[1] !== 0) {
                 throw Error('flash failed');
             }
 
-            // reset
+            // INFO: reset
             await this.writeData([0x89]);
         } finally {
             this.flashState = 'idle';
-            // store.set(flashStateAtom, 'idle');
         }
     }
 
-    // study: 좀 더 확인이 필요
+
     findInterface() {
         const filteredInterfaces = this.device.configurations[0].interfaces.filter(
             (interfaceItem) => {
@@ -166,7 +159,7 @@ export default class WebUsbFlasher {
         }
     }
 
-    // TODO: buffer랑 합치기?
+    // TODO: buffer랑 합치기
     async writeData(data: Array<number>): Promise<Uint8Array> {
         const response = await this.transfer(new Uint8Array(data));
         if (!response.data?.buffer) {
