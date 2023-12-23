@@ -2033,7 +2033,7 @@ const convertPresetImageToLedState = (preset) => {
                                 [Lang.Blocks.xAxis, 'x'],
                                 [Lang.Blocks.yAxis, 'y'],
                                 [Lang.Blocks.zAxis, 'z'],
-                                // [Lang.Blocks.scalar, 'mag'],
+                                [Lang.Blocks.scalar, 'mag'],
                             ],
                             value: 'x',
                             fontSize: 11,
@@ -2054,7 +2054,11 @@ const convertPresetImageToLedState = (preset) => {
                         const axis = script.getField('AXIS');
                         // eslint-disable-next-line max-len
                         const deviceAccData = await this.services.AccelerometerService.readAccelerometerData();
-                        return deviceAccData[axis];
+                        if (axis === 'mag') {
+                            return deviceAccData.x + deviceAccData.y + deviceAccData.z;
+                        } else {
+                            return deviceAccData[axis];
+                        }
                     },
                 },
                 microbit2blelite_get_gesture: {
@@ -2140,7 +2144,7 @@ const convertPresetImageToLedState = (preset) => {
                                 [Lang.Blocks.xAxis, 'x'],
                                 [Lang.Blocks.yAxis, 'y'],
                                 [Lang.Blocks.zAxis, 'z'],
-                                // [Lang.Blocks.scalar, 'mag'],
+                                [Lang.Blocks.scalar, 'mag'],
                             ],
                             value: 'x',
                             fontSize: 11,
@@ -2161,8 +2165,11 @@ const convertPresetImageToLedState = (preset) => {
                         const axis = script.getField('AXIS');
                         // eslint-disable-next-line max-len
                         const deviceMagnetData = await this.services.MagnetometerService.readMagnetometerData();
-
-                        return deviceMagnetData[axis];
+                        if (axis === 'mag') {
+                            return deviceMagnetData.x + deviceMagnetData.y + deviceMagnetData.z;
+                        } else {
+                            return deviceMagnetData[axis];
+                        }
                     },
                 },
                 microbit2blelite_get_light_level: {
