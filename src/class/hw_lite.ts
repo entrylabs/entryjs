@@ -84,7 +84,9 @@ export default class HardwareLite {
         if (!blockMenu) {
             return;
         }
-        Entry.block.changeBlockEvent('arduino_lite_download_firmware', 'mousedown', callback);
+        Entry.block.changeBlockEvent('arduino_lite_download_firmware', 'mousedown', async () => {
+            await callback();
+        });
         blockMenu.changeTypeThreadByBlockKey('arduino_lite_download_firmware');
     }
 
