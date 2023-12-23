@@ -6,7 +6,7 @@ import WebSerialConnector from './hardware/webSerialConnector';
 import WebApiConnector from './hardware/webApiConnector';
 import WebBluetoothConnector from './hardware/webBluetoothConnector';
 
-const ARDUINO_BOARD_IDS: string[] = ['1.1', '4.2', '8.1'];
+const ARDUINO_BOARD_IDS: string[] = ['010101', '040201', '080101'];
 
 export default class HardwareLite {
     private status: HWLiteStatus;
