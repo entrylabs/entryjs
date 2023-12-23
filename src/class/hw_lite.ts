@@ -10,7 +10,7 @@ const ARDUINO_BOARD_IDS: string[] = ['1.1', '4.2', '8.1'];
 
 export default class HardwareLite {
     private status: HWLiteStatus;
-    private webConnector: WebApiConnector; // TODO: 추후 WebBlueToothConnect | WebSerialConnector로 변경예정
+    private webConnector: WebApiConnector;
     private serial: WebSerialConnector;
     private bluetooth: WebBluetoothConnector;
     private flasher: WebUsbFlasher;

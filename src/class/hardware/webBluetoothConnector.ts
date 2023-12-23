@@ -37,16 +37,9 @@ export default class WebBluetoothConnector extends WebApiConnector {
 
     async setDevice() {
         const filters = this.hwModule.bluetoothInfo.filters;
-        const optionalServices = this.serviceClasses.map((serviceClass) => {
-            return serviceClass.uuid;
-        });
+        const optionalServices = this.serviceClasses.map((serviceClass) => serviceClass.uuid);
         this.device = await navigator.bluetooth.requestDevice({ filters, optionalServices });
     }
-
-    // removeDevice() {
-    //     //TODO: 송수신 소켓 닫기
-    //     this.device = undefined;
-    // }
 
     setServiceClasses() {
         this.serviceClasses = getServiceClassesByModuleId(this.hwModule.id);
