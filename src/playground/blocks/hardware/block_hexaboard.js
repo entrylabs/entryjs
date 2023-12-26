@@ -1592,6 +1592,7 @@ Entry.HEXABOARD.getBlocks = function () {
       class : 'wireless_hexa',
     },
 
+    
     makeitnow_wireless_wifiConnect_hexa : {
       color: EntryStatic.colorSet.block.default.HARDWARE,
       outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
