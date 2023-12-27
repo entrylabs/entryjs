@@ -158,7 +158,7 @@ const convertPresetImageToLedState = (preset) => {
             ];
             this.id = '220302';
             this.url = 'http://microbit.org/ko/';
-            this.imageName = 'microbit2lite.png';
+            this.imageName = 'microbit2blelite.png';
             this.title = {
                 en: 'Microbit',
                 ko: '마이크로비트',
