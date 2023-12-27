@@ -188,7 +188,7 @@ const EVENT_INTERVAL = 150;
                 // Image.SNAKE,
                 '99000:99099:09090:09990:00000',
             ];
-            this.id = '22.3';
+            this.id = '220301';
             this.url = 'http://microbit.org/ko/';
             this.imageName = 'microbit2lite.png';
             this.title = {
@@ -287,12 +287,12 @@ const EVENT_INTERVAL = 150;
         }
         setZero() {
             this.commandStatus = {};
-            return Entry.hwLite.sendAsyncWithThrottle(this.functionKeys.RESET);
+            return Entry.hwLite.serial.sendAsyncWithThrottle(this.functionKeys.RESET);
         }
 
         async initialHandshake() {
             const defaultCMD = `${this.functionKeys.LOCALDATA}`;
-            const response = await Entry.hwLite.sendAsyncWithThrottle(defaultCMD);
+            const response = await Entry.hwLite.serial.sendAsyncWithThrottle(defaultCMD);
             if (response && response.indexOf('localdata') > -1) {
                 const version = response.split(';')[1];
                 if (!version) {
@@ -327,7 +327,7 @@ const EVENT_INTERVAL = 150;
             }
 
             const defaultCMD = `${this.functionKeys.LOCALDATA};`;
-            const response = await Entry.hwLite.sendAsyncWithThrottle(defaultCMD);
+            const response = await Entry.hwLite.serial.sendAsyncWithThrottle(defaultCMD);
             // const response = await this.getResponseWithSync(defaultCMD);
 
             // INFO: A,B 버튼이벤트 관련 로직
@@ -353,7 +353,7 @@ const EVENT_INTERVAL = 150;
                 return command.split(';')[0];
             } else {
                 console.error("Error: microbit's response is not variable, ", command);
-                Entry.hwLite.handleConnectErrorInEngineRun();
+                Entry.hwLite.serial.handleConnectErrorInEngineRun();
             }
         }
 
@@ -368,7 +368,7 @@ const EVENT_INTERVAL = 150;
                 console.log("Microbit's command removed. Too many requests");
             } else {
                 console.error("Error: microbit's response is not variable, ", response);
-                Entry.hwLite.handleConnectErrorInEngineRun();
+                Entry.hwLite.serial.handleConnectErrorInEngineRun();
             }
         }
 
@@ -376,7 +376,7 @@ const EVENT_INTERVAL = 150;
             if (!Entry.engine.isState('run')) {
                 return;
             }
-            const result = await Entry.hwLite.sendAsyncWithThrottle(command);
+            const result = await Entry.hwLite.serial.sendAsyncWithThrottle(command);
             if (
                 (!result || this.getCommandType(command) !== this.getCommandType(result)) &&
                 // INFO : localdata 명령어는 우선순위가 낮으므로 반복하지 않음
