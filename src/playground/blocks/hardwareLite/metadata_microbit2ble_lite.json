@@ -1,9 +1,9 @@
 {
     "name": "Microbit2BleLite",
     "version": "2",
-    "title": "마이크로비트 무선(ble)",
+    "title": "마이크로비트 블루투스(BLE) 연결",
     "description": "Micro:bit Educational Foundation",
-    "imageName": "microbit2lite.png",
+    "imageName": "microbit2blelite.png",
     "moduleId": "220302",
     "connectionType": "ble"
 }
