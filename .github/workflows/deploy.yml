@@ -14,20 +14,23 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
-            - name: Use Node.js 14.x
+            - name: Use Node.js 16.x
               uses: actions/setup-node@v1
               env:
                   NODE_OPTIONS: '--max-old-space-size=4096'
                   TOOL_NODE_FLAGS: '--max-old-space-size=4096'
               with:
-                  node-version: 14
-            - uses: bahmutov/npm-install@v1
+                  node-version: 16
+            - uses: pnpm/action-setup@v2
+              name: Install pnpm
+              with:
+                  version: 8
+                  run_install: true
             - name: entry build
               env:
                   NODE_OPTIONS: '--max-old-space-size=4096'
                   TOOL_NODE_FLAGS: '--max-old-space-size=4096'
-              run: |
-                  npm run prod
+              run: pnpm run prod
             - name: Define branch name
               id: target_branch
               shell: bash
