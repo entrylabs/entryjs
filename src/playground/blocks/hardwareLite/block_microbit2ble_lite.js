@@ -1,63 +1,31 @@
 'use strict';
-
-const _throttle = require('lodash/throttle');
+const _clamp = require('lodash/clamp');
 
 const EVENT_INTERVAL = 150;
+const getInitialLedState = () => [
+    [false, false, false, false, false],
+    [false, false, false, false, false],
+    [false, false, false, false, false],
+    [false, false, false, false, false],
+    [false, false, false, false, false],
+];
+const convertPresetImageToLedState = (preset) => {
+    const colums = preset.split(':');
+    const result = colums.map((row) => row.split('').map((num) => num !== '0'));
+    return result;
+};
 
 (function() {
-    Entry.Microbit2lite = new (class Microbit2Lite {
+    Entry.Microbit2BleLite = new (class Microbit2LiteBle {
         constructor() {
-            this.commandStatus = {};
-            this.btnEventIntervalId = -1;
-            this.retryLimitCnt = 8;
-            this.portData = {
-                baudRate: 115200,
-                dataBits: 8,
-                parity: 'none',
-                stopBits: 1,
-                bufferSize: 512,
-                connectionType: 'ascii',
-            };
-            this.duration = 64;
-            this.functionKeys = {
-                LOCALDATA: 'localdata',
-                GET_ANALOG: 'get-analog',
-                GET_DIGITAL: 'get-digital',
-                SET_ANALOG: 'set-analog',
-                SET_DIGITAL: 'set-digital',
-                SET_LED: 'set-pixel',
-                GET_LED: 'get-pixel',
-                RESET: 'reset',
-                PRESET_IMAGE: 'pre-image',
-                SET_CUSTOM_IMAGE: 'custom-image',
-                SET_STRING: 'print',
-                RESET_SCREEN: 'display-clear',
-                DISPLAY_ON: 'display-on',
-                DISPLAY_OFF: 'display-off',
-                SPEAKER_ON: 'speaker-on',
-                SPEAKER_OFF: 'speaker-off',
-                PLAY_TONE: 'play-tone',
-                PLAY_SOUND: 'pre-sound',
-                PLAY_MELODY: 'pre-melody',
-                GET_BTN: 'get-btn',
-                CHANGE_TEMPO: 'change-tempo',
-                GET_LOGO: 'get-touch',
-                GET_ACC: 'get-acc',
-                GET_GESTURE: 'get-gesture',
-                GET_DIRECTION: 'direction',
-                GET_FIELD_STRENGTH: 'field-strength',
-                GET_FIELD_STRENGTH_AXIS: 'field-axis-strength',
-                GET_LIGHT_LEVEL: 'light-level',
-                GET_TEMPERATURE: 'temperature',
-                GET_SOUND_LEVEL: 'sound-level',
-                SET_RADIO: 'radio-send',
-                GET_RADIO: 'radio-receive',
-                RADIO_ON: 'radio-on',
-                RADIO_OFF: 'radio-off',
-                SETTING_RADIO: 'radio-setting',
-                SET_SERVO_MILLI: 'write-period',
-                SET_SERVO_MICRO: 'write-micro-period',
-                SET_SERVO_ANGLE: 'servo-write',
+            this.webapiType = 'ble';
+            this.firmwareFlash = true;
+            this.bluetoothInfo = {
+                filters: [
+                    {
+                        namePrefix: 'BBC micro:bit',
+                    },
+                ],
             };
 
             this.presetImage = [
@@ -188,14 +156,182 @@ const EVENT_INTERVAL = 150;
                 // Image.SNAKE,
                 '99000:99099:09090:09990:00000',
             ];
-            this.id = '220301';
+            this.id = '220302';
             this.url = 'http://microbit.org/ko/';
             this.imageName = 'microbit2lite.png';
             this.title = {
                 en: 'Microbit',
                 ko: '마이크로비트',
             };
-            this.name = 'Microbit2lite';
+            this.name = 'Microbit2BleLite';
+            this.functionKeys = {
+                LOCALDATA: 'localdata',
+                GET_ANALOG: 'get-analog',
+                GET_DIGITAL: 'get-digital',
+                SET_ANALOG: 'set-analog',
+                SET_DIGITAL: 'set-digital',
+                SET_LED: 'set-pixel',
+                GET_LED: 'get-pixel',
+                RESET: 'reset',
+                PRESET_IMAGE: 'pre-image',
+                SET_CUSTOM_IMAGE: 'custom-image',
+                SET_STRING: 'print',
+                RESET_SCREEN: 'display-clear',
+                DISPLAY_ON: 'display-on',
+                DISPLAY_OFF: 'display-off',
+                SPEAKER_ON: 'speaker-on',
+                SPEAKER_OFF: 'speaker-off',
+                PLAY_TONE: 'play-tone',
+                PLAY_SOUND: 'pre-sound',
+                PLAY_MELODY: 'pre-melody',
+                GET_BTN: 'get-btn',
+                CHANGE_TEMPO: 'change-tempo',
+                GET_LOGO: 'get-touch',
+                GET_ACC: 'get-acc',
+                GET_GESTURE: 'get-gesture',
+                GET_DIRECTION: 'direction',
+                GET_FIELD_STRENGTH: 'field-strength',
+                GET_FIELD_STRENGTH_AXIS: 'field-axis-strength',
+                GET_LIGHT_LEVEL: 'light-level',
+                GET_TEMPERATURE: 'temperature',
+                GET_SOUND_LEVEL: 'sound-level',
+                SET_RADIO: 'radio-send',
+                GET_RADIO: 'radio-receive',
+                RADIO_ON: 'radio-on',
+                RADIO_OFF: 'radio-off',
+                SETTING_RADIO: 'radio-setting',
+                SET_SERVO_MILLI: 'write-period',
+                SET_SERVO_MICRO: 'write-micro-period',
+                SET_SERVO_ANGLE: 'servo-write',
+            };
+            this.presetImage = [
+                // Image.HEART
+                '09090:99999:99999:09990:00900',
+                // Image.HEART_SMALL,
+                '00000:09090:09990:00900:00000',
+                // Image.HAPPY,
+                '00000:09090:00000:90009:09990',
+                // Image.SMILE,
+                '00000:00000:00000:90009:09990',
+                // Image.SAD,
+                '00000:09090:00000:09990:90009',
+                // Image.CONFUSED,
+                '00000:09090:00000:09090:90909',
+                // Image.ANGRY,
+                '90009:09090:00000:99999:90909',
+                // Image.ASLEEP,
+                '00000:99099:00000:09990:00000',
+                // Image.SURPRISED,
+                '09090:00000:00900:09090:00900',
+                // Image.SILLY,
+                '90009:00000:99999:00909:00999',
+                // Image.FABULOUS,
+                '99999:99099:00000:09090:09990',
+                // Image.MEH,
+                '09090:00000:00090:00900:09000',
+                // Image.YES,
+                '00000:00009:00090:90900:09000',
+                // Image.NO,
+                '90009:09090:00900:09090:90009',
+                // Image.CLOCK1,
+                '00090:00090:00900:00000:00000',
+                // Image.CLOCK2,
+                '00000:00990:00900:00000:00000',
+                // Image.CLOCK3,
+                '00000:00000:00999:00000:00000',
+                // Image.CLOCK4,
+                '00000:00000:00900:00990:00000',
+                // Image.CLOCK5,
+                '00000:00000:00900:00090:00090',
+                // Image.CLOCK6,
+                '00000:00000:00900:00900:00900',
+                // Image.CLOCK7,
+                '00000:00000:00900:09000:09000',
+                // Image.CLOCK8,
+                '00000:00000:00900:99000:00000',
+                // Image.CLOCK9,
+                '00000:00000:99900:00000:00000',
+                // Image.CLOCK10,
+                '00000:09900:00900:00000:00000',
+                // Image.CLOCK11,
+                '09000:09000:00900:00000:00000',
+                // Image.CLOCK12,
+                '00900:00900:00900:00000:00000',
+                // Image.ARROW_N,
+                '00900:09990:90909:00900:00900',
+                // Image.ARROW_NE,
+                '00999:00099:00909:09000:90000',
+                // Image.ARROW_E,
+                '00900:00090:99999:00090:00900',
+                // Image.ARROW_SE,
+                '90000:09000:00909:00099:00999',
+                // Image.ARROW_S,
+                '00900:00900:90909:09990:00900',
+                // Image.ARROW_SW,
+                '00009:00090:90900:99000:99900',
+                // Image.ARROW_W,
+                '00900:09000:99999:09000:00900',
+                // Image.ARROW_NW,
+                '99900:99000:90900:00090:00009',
+                // Image.TRIANGLE,
+                '00000:00900:09090:99999:00000',
+                // Image.TRIANGLE_LEFT,
+                '90000:99000:90900:90090:99999',
+                // Image.CHESSBOARD,
+                '09090:90909:09090:90909:09090',
+                // Image.DIAMOND,
+                '00900:09090:90009:09090:00900',
+                // Image.DIAMOND_SMALL,
+                '00000:00900:09090:00900:00000',
+                // Image.SQUARE,
+                '99999:90009:90009:90009:99999',
+                // Image.SQUARE_SMALL,
+                '00000:09990:09090:09990:00000',
+                // Image.RABBIT,
+                '90900:90900:99990:99090:99990',
+                // Image.COW,
+                '90009:90009:99999:09990:00900',
+                // Image.MUSIC_CROTCHET,
+                '00900:00900:00900:99900:99900',
+                // Image.MUSIC_QUAVER,
+                '00900:00990:00909:99900:99900',
+                // Image.MUSIC_QUAVERS,
+                '09999:09009:09009:99099:99099',
+                // Image.PITCHFORK,
+                '90909:90909:99999:00900:00900',
+                // Image.XMAS,
+                '00900:09990:00900:09990:99999',
+                // Image.PACMAN,
+                '099999:99090:99900:99990:09999',
+                // Image.TARGET,
+                '00900:09990:99099:09990:00900',
+                // Image.TSHIRT,
+                '99099:99999:09990:09990:09990',
+                // Image.ROLLERSKATE,
+                '00099:00099:99999:99999:09090',
+                // Image.DUCK,
+                '00990:99900:09999:09990:00000',
+                // Image.HOUSE,
+                '00900:09990:99999:09990:09090',
+                // Image.TORTOISE,
+                '00000:09990:99999:09090:00000',
+                // Image.BUTTERFLY,
+                '99099:99999:00900:99999:99099',
+                // Image.STICKFIGURE,
+                '00900:99999:00900:09090:90009',
+                // Image.GHOST,
+                '99999:90909:99999:99999:90909',
+                // Image.SWORD,
+                '00900:00900:00900:09990:00900',
+                // Image.GIRAFFE,
+                '99000:09000:09000:09990:09090',
+                // Image.SKULL,
+                '09990:90909:99999:09990:09990',
+                // Image.UMBRELLA,
+                '09990:99999:00900:90900:09900',
+                // Image.SNAKE,
+                '99000:99099:09090:09990:00000',
+            ];
             this.digitalPins = [
                 ['P8', 8],
                 ['P9', 9],
@@ -225,180 +361,115 @@ const EVENT_INTERVAL = 150;
                 [3, 3],
                 [4, 4],
             ];
-            this.defaultLed = [
-                [0, 0, 0, 0, 0],
-                [0, 9, 0, 9, 0],
-                [0, 0, 0, 0, 0],
-                [9, 0, 0, 0, 9],
-                [0, 9, 9, 9, 0],
-            ];
             this.blockMenuBlocks = [
-                'microbit2lite_common_title',
-                'microbit2lite_get_analog',
-                'microbit2lite_set_analog',
-                'microbit2lite_get_digital',
-                'microbit2lite_set_digital',
-                'microbit2lite_screen_toggle',
-                'microbit2lite_set_led',
-                'microbit2lite_get_led',
-                'microbit2lite_show_preset_image',
-                'microbit2lite_show_custom_image',
-                'microbit2lite_show_string',
-                'microbit2lite_reset_screen',
-                'microbit2lite_radio_toggle',
-                'microbit2lite_radio_setting',
-                'microbit2lite_radio_send',
-                'microbit2lite_radio_received',
-                'microbit2lite_change_tempo',
-                'microbit2lite_set_tone',
-                'microbit2lite_play_preset_music',
-                'microbit2lite_get_btn',
-                'microbit2lite_get_acc',
-                'microbit2lite_get_gesture',
-                'microbit2lite_get_direction',
-                'microbit2lite_get_field_strength_axis',
-                'microbit2lite_get_light_level',
-                'microbit2lite_get_temperature',
-                'microbit2lite_set_servo',
-                'microbit2lite_set_pwm',
-                'microbit2lite_v2_title',
-                'microbit2lite_get_logo',
-                'microbit2lite_btn_event',
-                'microbit2lite_speaker_toggle',
-                'microbit2lite_play_sound_effect',
-                'microbit2lite_get_sound_level',
+                'microbit2blelite_common_title',
+
+                // 'microbit2blelite_get_analog',
+                // 'microbit2blelite_set_analog',
+                // 'microbit2blelite_get_digital',
+                // 'microbit2blelite_set_digital',
+
+                'microbit2blelite_screen_toggle',
+                'microbit2blelite_set_led',
+                'microbit2blelite_get_led',
+                'microbit2blelite_show_preset_image',
+                'microbit2blelite_show_custom_image',
+                'microbit2blelite_show_string',
+                'microbit2blelite_reset_screen',
+
+                // 'microbit2blelite_radio_toggle',
+                // 'microbit2blelite_radio_setting',
+                // 'microbit2blelite_radio_send',
+                // 'microbit2blelite_radio_received',
+
+                // 'microbit2blelite_change_tempo',
+                // 'microbit2blelite_set_tone',
+                // 'microbit2blelite_play_preset_music',
+
+                'microbit2blelite_get_btn',
+                'microbit2blelite_get_acc',
+                // 'microbit2blelite_get_gesture',
+                // 'microbit2blelite_get_direction',
+                'microbit2blelite_get_field_strength_axis',
+                // 'microbit2blelite_get_light_level',
+                'microbit2blelite_get_temperature',
+
+                // 'microbit2blelite_set_servo',
+                // 'microbit2blelite_set_pwm',
+
+                'microbit2blelite_v2_title',
+                // 'microbit2blelite_get_logo',
+                'microbit2blelite_btn_event',
+                // 'microbit2blelite_speaker_toggle',
+                // 'microbit2blelite_play_sound_effect',
+                // 'microbit2blelite_get_sound_level',
             ];
+            this.services = undefined;
+            this.ledState = getInitialLedState();
             this.version = '2';
-            this.firePressedBtnEventWithThrottle = _throttle(
-                (pressedBtn) => {
-                    Entry.engine.fireEventWithValue('microbit2lite_btn_pressed', pressedBtn);
-                },
-                EVENT_INTERVAL,
-                { leading: true, trailing: false }
-            );
+            this.buttonState = { a: 0, b: 0 };
         }
-        _clamp(value, min, max) {
-            if (value < min) {
-                return min;
-            } else if (value > max) {
-                return max;
-            }
-            return value;
-        }
-        setZero() {
-            this.commandStatus = {};
-            return Entry.hwLite.serial.sendAsyncWithThrottle(this.functionKeys.RESET);
+        async setZero() {
+            this.ledState = getInitialLedState();
+            await this.services.LedService.writeMatrixState(this.ledState);
         }
 
         async initialHandshake() {
-            const defaultCMD = `${this.functionKeys.LOCALDATA}`;
-            const response = await Entry.hwLite.serial.sendAsyncWithThrottle(defaultCMD);
-            if (response && response.indexOf('localdata') > -1) {
-                const version = response.split(';')[1];
-                if (!version) {
-                    return;
-                }
-                const major = version[0];
-                if (this.version !== major) {
-                    this.version = major;
-                }
+            this.services = Entry.hwLite.bluetooth.services;
+            if (this.services.TemperatureService) {
+                await this.services.TemperatureService.setTemperaturePeriod(2000);
             }
+            if (this.services.AccelerometerService) {
+                await this.services.AccelerometerService.setAccelerometerPeriod(640);
+            }
+            if (this.services.IoPinService) {
+                // debugger;
+                // console.log(await this.services.IoPinService.getAdConfiguration());
+            }
+            await this.setEventListener();
+        }
 
-            if (this.version === '2') {
-                Entry.addEventListener('run', this.handleBtnEventInterval.bind(this));
-                Entry.addEventListener('beforeStop', () => {
-                    clearInterval(this.btnEventIntervalId);
+        async setEventListener() {
+            if (!this.services) {
+                return;
+            }
+            await this.setButtonEvent();
+            //     await this.setPinDataEvent();
+        }
+
+        async setPinDataEvent() {
+            if (this.services.IoPinService) {
+                this.services.IoPinService.addEventListener('pindatachanged', (event) => {
+                    console.log(event);
                 });
             }
-
-            return response;
         }
 
-        handleBtnEventInterval() {
-            this.btnEventIntervalId = setInterval(
-                this.listenBtnPressedEvent.bind(this),
-                this.duration
-            );
-        }
-
-        async listenBtnPressedEvent() {
-            if (Object.keys(this.commandStatus).length > 0) {
-                return;
-            }
-
-            const defaultCMD = `${this.functionKeys.LOCALDATA};`;
-            const response = await Entry.hwLite.serial.sendAsyncWithThrottle(defaultCMD);
-            // const response = await this.getResponseWithSync(defaultCMD);
-
-            // INFO: A,B 버튼이벤트 관련 로직
-            const pressedBtn = response.split(':btn:')[1];
-            if (pressedBtn) {
-                this.firePressedBtnEventWithThrottle(pressedBtn);
-            }
-        }
-
-        waitMilliSec(milli) {
-            this.blockReq = true;
-            setTimeout(() => {
-                this.blockReq = false;
-            }, milli);
-        }
-
-        generateCodeId(entityId, type, payload) {
-            return `${entityId}-${type}${payload ? `-${payload}` : ''}`;
-        }
-
-        getCommandType(command) {
-            if (typeof command === 'string' && command.indexOf(';') > -1) {
-                return command.split(';')[0];
-            } else {
-                console.error("Error: microbit's response is not variable, ", command);
-                Entry.hwLite.serial.handleConnectErrorInEngineRun();
-            }
-        }
-
-        getResponse(response) {
-            if (
-                typeof response === 'string' &&
-                response.indexOf(';') > -1 &&
-                response.indexOf('ValueError') <= -1
-            ) {
-                return response.split(';')[1];
-            } else if (response === 'command removed') {
-                console.log("Microbit's command removed. Too many requests");
-            } else {
-                console.error("Error: microbit's response is not variable, ", response);
-                Entry.hwLite.serial.handleConnectErrorInEngineRun();
-            }
-        }
-
-        async getResponseWithSync(command) {
-            if (!Entry.engine.isState('run')) {
-                return;
-            }
-            const result = await Entry.hwLite.serial.sendAsyncWithThrottle(command);
-            if (
-                (!result || this.getCommandType(command) !== this.getCommandType(result)) &&
-                // INFO : localdata 명령어는 우선순위가 낮으므로 반복하지 않음
-                command !== `${this.functionKeys.LOCALDATA};`
-            ) {
-                if (!this.commandStatus[command]) {
-                    this.commandStatus[command] = 1;
-                    throw new Entry.Utils.AsyncError();
-                } else if (this.commandStatus[command] <= this.retryLimitCnt) {
-                    this.commandStatus[command]++;
-                    throw new Entry.Utils.AsyncError();
-                } else if (this.commandStatus[command] > this.retryLimitCnt) {
-                    delete this.commandStatus[command];
-                    return 'command removed';
-                } else {
-                    console.error('UnExpected Microbit command');
+        pressedBothButton(fireEvent) {
+            if (this.buttonState.a + this.buttonState.b === 2) {
+                if (fireEvent) {
+                    Entry.engine.fireEventWithValue('microbit2blelite_btn_pressed', 3);
                 }
-            } else {
-                delete this.commandStatus[command];
+                return true;
             }
+            return false;
+        }
 
-            return result;
+        setButtonEvent() {
+            if (this.services.ButtonService) {
+                this.services.ButtonService.addEventListener('buttonastatechanged', (event) => {
+                    this.buttonState.a = event.detail;
+                    if (event.detail === 1 && !this.pressedBothButton(true)) {
+                        Entry.engine.fireEventWithValue('microbit2blelite_btn_pressed', 1);
+                    }
+                });
+                this.services.ButtonService.addEventListener('buttonbstatechanged', (event) => {
+                    this.buttonState.b = event.detail;
+                    if (event.detail === 1 && !this.pressedBothButton(true)) {
+                        Entry.engine.fireEventWithValue('microbit2blelite_btn_pressed', 2);
+                    }
+                });
+            }
         }
 
         // 언어 적용
@@ -406,40 +477,40 @@ const EVENT_INTERVAL = 150;
             return {
                 ko: {
                     template: {
-                        microbit2lite_get_analog: '핀 %1 번 아날로그 값',
-                        microbit2lite_set_analog: '핀 %1 에 아날로그 값 %2 를 출력하기 %3',
-                        microbit2lite_get_digital: '핀 %1 번 디지털 값',
-                        microbit2lite_set_digital: '핀 %1 에 디지털 값 %2 를 출력하기 %3',
-                        microbit2lite_screen_toggle: 'LED 기능 %1 %2',
-                        microbit2lite_set_led: 'LED의 X: %1 Y: %2 를 밝기 %3 (으)로 켜기 %4',
-                        microbit2lite_get_led: 'LED의 X: %1 Y: %2 밝기 값',
-                        microbit2lite_show_preset_image: 'LED에 %1 모양 나타내기 %2',
-                        microbit2lite_show_custom_image: 'LED %1 켜기 %2',
-                        microbit2lite_show_string: 'LED에 %1 을(를) 나타내기 %2',
-                        microbit2lite_reset_screen: 'LED 모두 지우기 %1',
-                        microbit2lite_radio_toggle: '라디오 기능 %1 %2',
-                        microbit2lite_radio_setting: '라디오 채널을 %1 (으)로 바꾸기 %2',
-                        microbit2lite_radio_send: '라디오로 %1 송신하기 %2',
-                        microbit2lite_radio_received: '라디오 수신 값',
-                        microbit2lite_speaker_toggle: '스피커 기능 %1 %2',
-                        microbit2lite_change_tempo: '연주 속도를 %1 박에 %2 BPM으로 정하기 %3',
-                        microbit2lite_set_tone: '%1 음을 %2 박만큼 연주하기 %3',
-                        microbit2lite_play_preset_music: '%1 음악을 연주하기 %2',
-                        microbit2lite_play_sound_effect: '%1 효과음을 연주하기 %2',
-                        microbit2lite_get_btn: '%1 버튼이 눌렸는가?',
-                        microbit2lite_get_logo: '로고를 터치했는가?',
-                        microbit2lite_get_gesture: '움직임이 %1 인가?',
-                        microbit2lite_get_acc: '%1 의 가속도 값',
-                        microbit2lite_btn_event: '%1 %2 버튼을 눌렀을 때',
-                        microbit2lite_get_direction: '나침반 방향',
-                        microbit2lite_get_field_strength_axis: '%1 의 자기장 세기 값',
-                        microbit2lite_get_light_level: '빛 센서 값',
-                        microbit2lite_get_temperature: '온도 값',
-                        microbit2lite_get_sound_level: '마이크 소리 크기 값',
-                        microbit2lite_set_servo: '핀 %1 에 서보 모터 각도를 %2 로 정하기 %3',
-                        microbit2lite_set_pwm: '핀 %1 에 서보 펄스 폭을 %2 %3초로 정하기 %4',
-                        microbit2lite_common_title: '마이크로비트 공통',
-                        microbit2lite_v2_title: '마이크로비트 V2 전용',
+                        microbit2blelite_get_analog: '핀 %1 번 아날로그 값',
+                        microbit2blelite_set_analog: '핀 %1 에 아날로그 값 %2 를 출력하기 %3',
+                        microbit2blelite_get_digital: '핀 %1 번 디지털 값',
+                        microbit2blelite_set_digital: '핀 %1 에 디지털 값 %2 를 출력하기 %3',
+                        microbit2blelite_screen_toggle: 'LED 기능 %1 %2',
+                        microbit2blelite_set_led: 'LED의 X: %1 Y: %2 를 밝기 %3 (으)로 켜기 %4',
+                        microbit2blelite_get_led: 'LED의 X: %1 Y: %2 밝기 값',
+                        microbit2blelite_show_preset_image: 'LED에 %1 모양 나타내기 %2',
+                        microbit2blelite_show_custom_image: 'LED %1 켜기 %2',
+                        microbit2blelite_show_string: 'LED에 %1 을(를) 나타내기 %2',
+                        microbit2blelite_reset_screen: 'LED 모두 지우기 %1',
+                        microbit2blelite_radio_toggle: '라디오 기능 %1 %2',
+                        microbit2blelite_radio_setting: '라디오 채널을 %1 (으)로 바꾸기 %2',
+                        microbit2blelite_radio_send: '라디오로 %1 송신하기 %2',
+                        microbit2blelite_radio_received: '라디오 수신 값',
+                        microbit2blelite_speaker_toggle: '스피커 기능 %1 %2',
+                        microbit2blelite_change_tempo: '연주 속도를 %1 박에 %2 BPM으로 정하기 %3',
+                        microbit2blelite_set_tone: '%1 음을 %2 박만큼 연주하기 %3',
+                        microbit2blelite_play_preset_music: '%1 음악을 연주하기 %2',
+                        microbit2blelite_play_sound_effect: '%1 효과음을 연주하기 %2',
+                        microbit2blelite_get_btn: '%1 버튼이 눌렸는가?',
+                        microbit2blelite_get_logo: '로고를 터치했는가?',
+                        microbit2blelite_get_gesture: '움직임이 %1 인가?',
+                        microbit2blelite_get_acc: '%1 의 가속도 값',
+                        microbit2blelite_btn_event: '%1 %2 버튼을 눌렀을 때',
+                        microbit2blelite_get_direction: '나침반 방향',
+                        microbit2blelite_get_field_strength_axis: '%1 의 자기장 세기 값',
+                        microbit2blelite_get_light_level: '빛 센서 값',
+                        microbit2blelite_get_temperature: '온도 값',
+                        microbit2blelite_get_sound_level: '마이크 소리 크기 값',
+                        microbit2blelite_set_servo: '핀 %1 에 서보 모터 각도를 %2 로 정하기 %3',
+                        microbit2blelite_set_pwm: '핀 %1 에 서보 펄스 폭을 %2 %3초로 정하기 %4',
+                        microbit2blelite_common_title: '마이크로비트 공통',
+                        microbit2blelite_v2_title: '마이크로비트 V2 전용',
                     },
                     Blocks: {
                         octave: '옥타브',
@@ -558,90 +629,94 @@ const EVENT_INTERVAL = 150;
                         microbit_2_ARROW_NW: '북서쪽',
                     },
                     Helper: {
-                        microbit2lite_get_analog: '선택한 핀의 아날로그 값입니다. (0 ~ 1023)',
-                        microbit2lite_set_analog:
+                        microbit2blelite_get_analog: '선택한 핀의 아날로그 값입니다. (0 ~ 1023)',
+                        microbit2blelite_set_analog:
                             '선택한 핀에 입력한 아날로그 값을 출력합니다. (0 ~ 1023)',
-                        microbit2lite_get_digital: '선택한 핀의 디지털 값입니다. (0, 1)',
-                        microbit2lite_set_digital:
+                        microbit2blelite_get_digital: '선택한 핀의 디지털 값입니다. (0, 1)',
+                        microbit2blelite_set_digital:
                             '선택한 핀에 입력한 디지털 값을 출력합니다. (0, 1)',
-                        microbit2lite_screen_toggle: 'LED 기능을 켜거나 끕니다.',
-                        microbit2lite_set_led: 'X, Y 좌표로 선택한 LED를 선택한 밝기로 켭니다.',
-                        microbit2lite_get_led: 'X, Y 좌표로 선택한 LED의 밝기 값입니다.',
-                        microbit2lite_show_preset_image:
+                        microbit2blelite_screen_toggle: 'LED 기능을 켜거나 끕니다.',
+                        microbit2blelite_set_led: 'X, Y 좌표로 선택한 LED를 선택한 밝기로 켭니다.',
+                        microbit2blelite_get_led: 'X, Y 좌표로 선택한 LED의 밝기 값입니다.',
+                        microbit2blelite_show_preset_image:
                             'LED에 미리 설정되어 있는 모양을 나타냅니다.',
-                        microbit2lite_show_custom_image:
+                        microbit2blelite_show_custom_image:
                             '블록에서 선택한 LED를 선택한 밝기로 켭니다. 한번에 모든 LED를 조작할 수 있습니다.',
-                        microbit2lite_show_string: '입력한 문자열을 LED에 차례대로 나타냅니다.',
-                        microbit2lite_reset_screen: 'LED에 표시된 내용을 모두 지웁니다.',
-                        microbit2lite_radio_toggle: '라디오 기능을 켜거나 끕니다.',
-                        microbit2lite_radio_setting: '라디오 채널을 입력한 숫자로 바꿉니다.',
-                        microbit2lite_radio_send: '라디오로 입력한 영문과 숫자를 송신합니다.',
-                        microbit2lite_radio_received: '라디오로 수신된 값입니다.',
-                        microbit2lite_speaker_toggle: '스피커 기능을 켜거나 끕니다.',
-                        microbit2lite_change_tempo: '연주 속도를 선택한 박자와 BPM으로 정합니다.',
-                        microbit2lite_set_tone:
+                        microbit2blelite_show_string: '입력한 문자열을 LED에 차례대로 나타냅니다.',
+                        microbit2blelite_reset_screen: 'LED에 표시된 내용을 모두 지웁니다.',
+                        microbit2blelite_radio_toggle: '라디오 기능을 켜거나 끕니다.',
+                        microbit2blelite_radio_setting: '라디오 채널을 입력한 숫자로 바꿉니다.',
+                        microbit2blelite_radio_send: '라디오로 입력한 영문과 숫자를 송신합니다.',
+                        microbit2blelite_radio_received: '라디오로 수신된 값입니다.',
+                        microbit2blelite_speaker_toggle: '스피커 기능을 켜거나 끕니다.',
+                        microbit2blelite_change_tempo:
+                            '연주 속도를 선택한 박자와 BPM으로 정합니다.',
+                        microbit2blelite_set_tone:
                             '선택한 음을 선택한 박만큼 연주합니다. 1~5옥타브 사이의 음계를 선택할 수 있습니다.',
-                        microbit2lite_play_preset_music: '미리 설정되어 있는 음악을 연주합니다.',
-                        microbit2lite_play_sound_effect: '미리 설정되어 있는 효과음을 연주합니다.',
-                        microbit2lite_get_btn: "선택한 버튼이 눌렸다면 '참'으로 판단합니다.",
-                        microbit2lite_get_logo: "로고를 터치했다면 '참'으로 판단합니다.",
-                        microbit2lite_get_gesture: "선택한 움직임이 감지되면 '참'으로 판단합니다.",
-                        microbit2lite_get_acc:
+                        microbit2blelite_play_preset_music: '미리 설정되어 있는 음악을 연주합니다.',
+                        microbit2blelite_play_sound_effect:
+                            '미리 설정되어 있는 효과음을 연주합니다.',
+                        microbit2blelite_get_btn: "선택한 버튼이 눌렸다면 '참'으로 판단합니다.",
+                        microbit2blelite_get_logo: "로고를 터치했다면 '참'으로 판단합니다.",
+                        microbit2blelite_get_gesture:
+                            "선택한 움직임이 감지되면 '참'으로 판단합니다.",
+                        microbit2blelite_get_acc:
                             '선택한 버튼이 눌리면 아래에 연결된 블록들을 실행합니다.',
-                        microbit2lite_btn_event: '%1 %2 버튼을 눌렀을 때',
-                        microbit2lite_get_direction: '나침반 방향 값입니다. (0~360) ',
-                        microbit2lite_get_field_strength_axis: '선택한 축의 자기장 세기 값입니다.',
-                        microbit2lite_get_light_level: '빛 센서의 값입니다.',
-                        microbit2lite_get_temperature: '현재 온도 값입니다. (℃)',
-                        microbit2lite_get_sound_level: '마이크 소리 크기 값입니다.',
-                        microbit2lite_set_servo:
+                        microbit2blelite_btn_event: '%1 %2 버튼을 눌렀을 때',
+                        microbit2blelite_get_direction: '나침반 방향 값입니다. (0~360) ',
+                        microbit2blelite_get_field_strength_axis:
+                            '선택한 축의 자기장 세기 값입니다.',
+                        microbit2blelite_get_light_level: '빛 센서의 값입니다.',
+                        microbit2blelite_get_temperature: '현재 온도 값입니다. (℃)',
+                        microbit2blelite_get_sound_level: '마이크 소리 크기 값입니다.',
+                        microbit2blelite_set_servo:
                             '선택한 핀에 서보 모터 각도를 입력한 값으로 정합니다.',
-                        microbit2lite_set_pwm:
+                        microbit2blelite_set_pwm:
                             '선택한 핀의 서보 펄스폭을 선택한 시간으로 정합니다.',
                     },
                     Msgs: {
-                        microbit2lite_compatible_error:
+                        microbit2blelite_compatible_error:
                             '마이크로비트 V2에서만 사용할 수 있는 블록입니다.',
-                        microbit2lite_octave: '옥타브',
+                        microbit2blelite_octave: '옥타브',
                     },
                 },
                 en: {
                     template: {
-                        microbit2lite_get_analog: 'analog read pin %1',
-                        microbit2lite_set_analog: 'analog write pin %1 to %2 %3',
-                        microbit2lite_get_digital: 'digital read pin %1',
-                        microbit2lite_set_digital: 'digital write pin %1 to %2 %3',
-                        microbit2lite_screen_toggle: '%1 LED',
-                        microbit2lite_set_led: 'plot X: %1 Y:%2 brightness %3 %4',
-                        microbit2lite_get_led: 'point X: %1 Y: %2 brightness of LED',
-                        microbit2lite_show_preset_image: 'show icon %1 on LED %2',
-                        microbit2lite_show_custom_image: 'Show %1 on LED %2',
-                        microbit2lite_show_string: 'show string %1 on LED %2',
-                        microbit2lite_reset_screen: 'clear LED screen %1',
-                        microbit2lite_radio_toggle: '%1 radio %2',
-                        microbit2lite_radio_setting: 'radio change channel to %1 %2',
-                        microbit2lite_radio_send: 'radio send %1 %2',
-                        microbit2lite_radio_received: 'radio received value',
-                        microbit2lite_speaker_toggle: '%1 speaker %2',
-                        microbit2lite_change_tempo: 'set tempo to %2 BPM per %1 beat %3',
-                        microbit2lite_set_tone: 'play melody %1 for %2 beat %3',
-                        microbit2lite_play_preset_music: 'play music %1 %2',
-                        microbit2lite_play_sound_effect: 'play sound %1 %2',
-                        microbit2lite_get_btn: '%1 button pressed?',
-                        microbit2lite_get_logo: 'logo touched?',
-                        microbit2lite_get_gesture: 'Is the movement %1?',
-                        microbit2lite_get_acc: 'acceleration value of %1',
-                        microbit2lite_btn_event: '%1 When %2 button pressed',
-                        microbit2lite_get_direction: 'compass direction',
-                        microbit2lite_get_field_strength_axis:
+                        microbit2blelite_get_analog: 'analog read pin %1',
+                        microbit2blelite_set_analog: 'analog write pin %1 to %2 %3',
+                        microbit2blelite_get_digital: 'digital read pin %1',
+                        microbit2blelite_set_digital: 'digital write pin %1 to %2 %3',
+                        microbit2blelite_screen_toggle: '%1 LED',
+                        microbit2blelite_set_led: 'plot X: %1 Y:%2 brightness %3 %4',
+                        microbit2blelite_get_led: 'point X: %1 Y: %2 brightness of LED',
+                        microbit2blelite_show_preset_image: 'show icon %1 on LED %2',
+                        microbit2blelite_show_custom_image: 'Show %1 on LED %2',
+                        microbit2blelite_show_string: 'show string %1 on LED %2',
+                        microbit2blelite_reset_screen: 'clear LED screen %1',
+                        microbit2blelite_radio_toggle: '%1 radio %2',
+                        microbit2blelite_radio_setting: 'radio change channel to %1 %2',
+                        microbit2blelite_radio_send: 'radio send %1 %2',
+                        microbit2blelite_radio_received: 'radio received value',
+                        microbit2blelite_speaker_toggle: '%1 speaker %2',
+                        microbit2blelite_change_tempo: 'set tempo to %2 BPM per %1 beat %3',
+                        microbit2blelite_set_tone: 'play melody %1 for %2 beat %3',
+                        microbit2blelite_play_preset_music: 'play music %1 %2',
+                        microbit2blelite_play_sound_effect: 'play sound %1 %2',
+                        microbit2blelite_get_btn: '%1 button pressed?',
+                        microbit2blelite_get_logo: 'logo touched?',
+                        microbit2blelite_get_gesture: 'Is the movement %1?',
+                        microbit2blelite_get_acc: 'acceleration value of %1',
+                        microbit2blelite_btn_event: '%1 When %2 button pressed',
+                        microbit2blelite_get_direction: 'compass direction',
+                        microbit2blelite_get_field_strength_axis:
                             'magnetic field strength value of %1 ',
-                        microbit2lite_get_light_level: 'Light sensor value',
-                        microbit2lite_get_temperature: 'temperature value',
-                        microbit2lite_get_sound_level: 'microphone volume value',
-                        microbit2lite_set_servo: 'set servo pin %1 angle to %2 %3',
-                        microbit2lite_set_pwm: 'set servo pin %1 pulse to %2 %3 %4',
-                        microbit2lite_common_title: 'Common Blocks',
-                        microbit2lite_v2_title: 'v2 Only',
+                        microbit2blelite_get_light_level: 'Light sensor value',
+                        microbit2blelite_get_temperature: 'temperature value',
+                        microbit2blelite_get_sound_level: 'microphone volume value',
+                        microbit2blelite_set_servo: 'set servo pin %1 angle to %2 %3',
+                        microbit2blelite_set_pwm: 'set servo pin %1 pulse to %2 %3 %4',
+                        microbit2blelite_common_title: 'Common Blocks',
+                        microbit2blelite_v2_title: 'v2 Only',
                     },
                     Blocks: {
                         octave: 'octave',
@@ -760,99 +835,101 @@ const EVENT_INTERVAL = 150;
                         microbit_2_ARROW_NW: 'ARROW_NW',
                     },
                     Helper: {
-                        microbit2lite_get_analog:
+                        microbit2blelite_get_analog:
                             'Reads an analog signal from the pin you choose. (0 ~ 1023)',
-                        microbit2lite_set_analog:
+                        microbit2blelite_set_analog:
                             'Writes an analog signal to the pin you choose. (0 ~ 1023)',
-                        microbit2lite_get_digital:
+                        microbit2blelite_get_digital:
                             'Reads a digital signal from the pin you choose. (0 ~ 1)',
-                        microbit2lite_set_digital:
+                        microbit2blelite_set_digital:
                             'Writes a digital signal to the pin you choose. (0 ~ 1)',
-                        microbit2lite_screen_toggle: 'Turns on or turns off the LED screen.',
-                        microbit2lite_set_led:
+                        microbit2blelite_screen_toggle: 'Turns on or turns off the LED screen.',
+                        microbit2blelite_set_led:
                             'Turns on the LED light of the entered X, Y coordinate with the selected brightness.',
-                        microbit2lite_get_led:
+                        microbit2blelite_get_led:
                             'The LED light brightness value of the entered X, Y coordinate.',
-                        microbit2lite_show_preset_image:
+                        microbit2blelite_show_preset_image:
                             'Shows the selected icon on the LED screen.',
-                        microbit2lite_show_custom_image:
+                        microbit2blelite_show_custom_image:
                             'Shows the selected LED and brightness. You can manipulate all the LEDs at once.',
-                        microbit2lite_show_string:
+                        microbit2blelite_show_string:
                             'Shows the entered string in order on the LED screen.',
-                        microbit2lite_reset_screen: 'Clears all LED screen.',
-                        microbit2lite_radio_toggle: 'Turns on or turns off the radio.',
-                        microbit2lite_radio_setting:
+                        microbit2blelite_reset_screen: 'Clears all LED screen.',
+                        microbit2blelite_radio_toggle: 'Turns on or turns off the radio.',
+                        microbit2blelite_radio_setting:
                             'Changes the radio channel to the number entered.',
-                        microbit2lite_radio_send:
+                        microbit2blelite_radio_send:
                             'Sends the number or the string entered to the radio.',
-                        microbit2lite_radio_received: 'Value received by the radio.',
-                        microbit2lite_speaker_toggle: 'Turns on or turns off the speaker.',
-                        microbit2lite_change_tempo: 'Sets the tempo to the entered beat and BPM.',
-                        microbit2lite_set_tone:
+                        microbit2blelite_radio_received: 'Value received by the radio.',
+                        microbit2blelite_speaker_toggle: 'Turns on or turns off the speaker.',
+                        microbit2blelite_change_tempo:
+                            'Sets the tempo to the entered beat and BPM.',
+                        microbit2blelite_set_tone:
                             'Plays the entered melody for the entered beat. You can choose a scale between 1 and 5 octaves.',
-                        microbit2lite_play_preset_music: 'Plays preset music.',
-                        microbit2lite_play_sound_effect: 'Plays preset sound.',
-                        microbit2lite_get_btn:
+                        microbit2blelite_play_preset_music: 'Plays preset music.',
+                        microbit2blelite_play_sound_effect: 'Plays preset sound.',
+                        microbit2blelite_get_btn:
                             "If the selected button is pressed, it is judged as 'True'.",
-                        microbit2lite_get_logo: "If the logo is touched, it is judged as 'True'.",
-                        microbit2lite_get_gesture:
+                        microbit2blelite_get_logo:
+                            "If the logo is touched, it is judged as 'True'.",
+                        microbit2blelite_get_gesture:
                             "When the selected movement is detected, it is judged as 'True'.",
-                        microbit2lite_get_acc: 'The acceleration value of the selected axis.',
-                        microbit2lite_btn_event:
+                        microbit2blelite_get_acc: 'The acceleration value of the selected axis.',
+                        microbit2blelite_btn_event:
                             'When the selected button is pressed, the connected blocks below will run',
-                        microbit2lite_get_direction: 'The compass direction value. (0~360)',
-                        microbit2lite_get_field_strength_axis:
+                        microbit2blelite_get_direction: 'The compass direction value. (0~360)',
+                        microbit2blelite_get_field_strength_axis:
                             'The magnetic field strength value of the selected axis.',
-                        microbit2lite_get_light_level: 'The value of the light sensor.',
-                        microbit2lite_get_temperature: 'The current temperature value. (℃)',
-                        microbit2lite_get_sound_level: 'The microphone volume value.',
-                        microbit2lite_set_servo:
+                        microbit2blelite_get_light_level: 'The value of the light sensor.',
+                        microbit2blelite_get_temperature: 'The current temperature value. (℃)',
+                        microbit2blelite_get_sound_level: 'The microphone volume value.',
+                        microbit2blelite_set_servo:
                             'Sets the servo motor angle to the entered value on the selected pin.',
-                        microbit2lite_set_pwm:
+                        microbit2blelite_set_pwm:
                             'Sets the servo pulse to the entered time on the selected pin.',
                     },
                     Msgs: {
-                        microbit2lite_compatible_error:
+                        microbit2blelite_compatible_error:
                             'The corresponding block is not compatible to Microbit V1',
-                        microbit2lite_octave: 'Octave',
+                        microbit2blelite_octave: 'Octave',
                     },
                 },
                 jp: {
                     template: {
-                        microbit2lite_get_analog: 'ピン %1 のアナログ値',
-                        microbit2lite_set_analog: 'ピン %1 にアナログ値 %2 を出力する %3',
-                        microbit2lite_get_digital: 'ピン %1 のデジタル値',
-                        microbit2lite_set_digital: 'ピン %1 に デジタル値 %2 を出力する %3',
-                        microbit2lite_screen_toggle: 'LED機能を %1 %2',
-                        microbit2lite_set_led: 'LEDの X: %1 Y: %2 を明るさ %3 にする %4',
-                        microbit2lite_get_led: 'LEDの X: %1 Y: %2 の明るさ',
-                        microbit2lite_show_preset_image: 'LEDに %1 アイコンを表示する %2',
-                        microbit2lite_show_custom_image: 'LED %1 を表示する %2',
-                        microbit2lite_show_string: 'LEDに %1 を表示する %2',
-                        microbit2lite_reset_screen: 'LEDを全部消す %1',
-                        microbit2lite_radio_toggle: 'ラジオ機能を %1 %2',
-                        microbit2lite_radio_setting: 'ラジオチャンネルを %1 に変更する %2',
-                        microbit2lite_radio_send: 'ラジオに %1 送信する %2',
-                        microbit2lite_radio_received: 'ラジオ受信値',
-                        microbit2lite_speaker_toggle: 'スピーカー機能 %1 %2',
-                        microbit2lite_change_tempo: 'テンポを %1 拍に %2 BPMにする %3',
-                        microbit2lite_set_tone: '%1 音を %2 拍演奏する %3',
-                        microbit2lite_play_preset_music: '%1 音楽を演奏する %2',
-                        microbit2lite_play_sound_effect: '%1 効果音を演奏する %2',
-                        microbit2lite_get_btn: '%1 ボタンが押したkか?',
-                        microbit2lite_get_logo: 'ロゴをタッチしたじか?',
-                        microbit2lite_get_gesture: '動きが %1 なのか?',
-                        microbit2lite_get_acc: '%1 の加速度',
-                        microbit2lite_get_direction: 'コンパス方向',
-                        microbit2lite_get_field_strength_axis: '%1 の磁場強度',
-                        microbit2lite_get_light_level: '光センサー値',
-                        microbit2lite_get_temperature: '温度値',
-                        microbit2lite_get_sound_level: 'マイク音の大きさ',
-                        microbit2lite_set_servo:
+                        microbit2blelite_get_analog: 'ピン %1 のアナログ値',
+                        microbit2blelite_set_analog: 'ピン %1 にアナログ値 %2 を出力する %3',
+                        microbit2blelite_get_digital: 'ピン %1 のデジタル値',
+                        microbit2blelite_set_digital: 'ピン %1 に デジタル値 %2 を出力する %3',
+                        microbit2blelite_screen_toggle: 'LED機能を %1 %2',
+                        microbit2blelite_set_led: 'LEDの X: %1 Y: %2 を明るさ %3 にする %4',
+                        microbit2blelite_get_led: 'LEDの X: %1 Y: %2 の明るさ',
+                        microbit2blelite_show_preset_image: 'LEDに %1 アイコンを表示する %2',
+                        microbit2blelite_show_custom_image: 'LED %1 を表示する %2',
+                        microbit2blelite_show_string: 'LEDに %1 を表示する %2',
+                        microbit2blelite_reset_screen: 'LEDを全部消す %1',
+                        microbit2blelite_radio_toggle: 'ラジオ機能を %1 %2',
+                        microbit2blelite_radio_setting: 'ラジオチャンネルを %1 に変更する %2',
+                        microbit2blelite_radio_send: 'ラジオに %1 送信する %2',
+                        microbit2blelite_radio_received: 'ラジオ受信値',
+                        microbit2blelite_speaker_toggle: 'スピーカー機能 %1 %2',
+                        microbit2blelite_change_tempo: 'テンポを %1 拍に %2 BPMにする %3',
+                        microbit2blelite_set_tone: '%1 音を %2 拍演奏する %3',
+                        microbit2blelite_play_preset_music: '%1 音楽を演奏する %2',
+                        microbit2blelite_play_sound_effect: '%1 効果音を演奏する %2',
+                        microbit2blelite_get_btn: '%1 ボタンが押したkか?',
+                        microbit2blelite_get_logo: 'ロゴをタッチしたじか?',
+                        microbit2blelite_get_gesture: '動きが %1 なのか?',
+                        microbit2blelite_get_acc: '%1 の加速度',
+                        microbit2blelite_get_direction: 'コンパス方向',
+                        microbit2blelite_get_field_strength_axis: '%1 の磁場強度',
+                        microbit2blelite_get_light_level: '光センサー値',
+                        microbit2blelite_get_temperature: '温度値',
+                        microbit2blelite_get_sound_level: 'マイク音の大きさ',
+                        microbit2blelite_set_servo:
                             'ピン %1 に サーボモーターの角度を %2 に設定する %3',
-                        microbit2lite_set_pwm: 'ピン %1 にサーボパルス幅を2にする %4',
-                        microbit2lite_common_title: 'Common Blocks',
-                        microbit2lite_v2_title: 'v2 Only',
+                        microbit2blelite_set_pwm: 'ピン %1 にサーボパルス幅を2にする %4',
+                        microbit2blelite_common_title: 'Common Blocks',
+                        microbit2blelite_v2_title: 'v2 Only',
                     },
                     Blocks: {
                         octave: 'オクターブ',
@@ -971,48 +1048,53 @@ const EVENT_INTERVAL = 150;
                         microbit_2_ARROW_NW: '北西',
                     },
                     Helper: {
-                        microbit2lite_get_analog: '選択したピンのアナログ値です。(0 ~ 1023)',
-                        microbit2lite_set_analog:
+                        microbit2blelite_get_analog: '選択したピンのアナログ値です。(0 ~ 1023)',
+                        microbit2blelite_set_analog:
                             '選択したピンに入力したアナログ値を出力します。(0 ~ 1023)',
-                        microbit2lite_get_digital: '選択したピンのデジタル値です。(0, 1)',
-                        microbit2lite_set_digital:
+                        microbit2blelite_get_digital: '選択したピンのデジタル値です。(0, 1)',
+                        microbit2blelite_set_digital:
                             '選択したピンに入力したデジタル値を出力します。(0, 1)',
-                        microbit2lite_screen_toggle: 'LED機能をオンまたはオフにします。',
-                        microbit2lite_set_led: 'X、Y座標で選択したLEDを選択した明るさで点けます。',
-                        microbit2lite_get_led: 'X、Y座標で選択したLEDの明るさです。',
-                        microbit2lite_show_preset_image: 'LEDに先に設定されていた形で点けます。',
-                        microbit2lite_show_custom_image:
+                        microbit2blelite_screen_toggle: 'LED機能をオンまたはオフにします。',
+                        microbit2blelite_set_led:
+                            'X、Y座標で選択したLEDを選択した明るさで点けます。',
+                        microbit2blelite_get_led: 'X、Y座標で選択したLEDの明るさです。',
+                        microbit2blelite_show_preset_image: 'LEDに先に設定されていた形で点けます。',
+                        microbit2blelite_show_custom_image:
                             'ブロックで選択したLEDを選択した明るさで点けます。 一度にすべてのLEDを操作できます。',
-                        microbit2lite_show_string: '入力した文字列をLEDに順番に表示します。',
-                        microbit2lite_reset_screen: 'LEDに表示したものをすべて消します。',
-                        microbit2lite_radio_toggle: 'ラジオ機能をオンまたはオフにします。',
-                        microbit2lite_radio_setting: 'ラジオチャンネルを入力した数字に変えます。',
-                        microbit2lite_radio_send: 'ラジオで入力した英数字を送信します。',
-                        microbit2lite_radio_received: 'ラジオで受信した値です。',
-                        microbit2lite_speaker_toggle: 'スピーカー機能をオンまたはオフにします。',
-                        microbit2lite_change_tempo: 'テンポを選択した拍子とBPMで設定します。',
-                        microbit2lite_set_tone:
+                        microbit2blelite_show_string: '入力した文字列をLEDに順番に表示します。',
+                        microbit2blelite_reset_screen: 'LEDに表示したものをすべて消します。',
+                        microbit2blelite_radio_toggle: 'ラジオ機能をオンまたはオフにします。',
+                        microbit2blelite_radio_setting:
+                            'ラジオチャンネルを入力した数字に変えます。',
+                        microbit2blelite_radio_send: 'ラジオで入力した英数字を送信します。',
+                        microbit2blelite_radio_received: 'ラジオで受信した値です。',
+                        microbit2blelite_speaker_toggle: 'スピーカー機能をオンまたはオフにします。',
+                        microbit2blelite_change_tempo: 'テンポを選択した拍子とBPMで設定します。',
+                        microbit2blelite_set_tone:
                             '選択した音を選択した拍子で演奏します。 1~5オクターブ間の音階を選べます。',
-                        microbit2lite_play_preset_music: '先に設定されていた音楽を演奏します。',
-                        microbit2lite_play_sound_effect: '先に設定されていた効果音を演奏します。',
-                        microbit2lite_get_btn: '選択したボタンが押されたら、「True」と判断します。',
-                        microbit2lite_get_logo: 'ロゴをタッチすると、「True」と判断します。',
-                        microbit2lite_get_gesture:
+                        microbit2blelite_play_preset_music: '先に設定されていた音楽を演奏します。',
+                        microbit2blelite_play_sound_effect:
+                            '先に設定されていた効果音を演奏します。',
+                        microbit2blelite_get_btn:
+                            '選択したボタンが押されたら、「True」と判断します。',
+                        microbit2blelite_get_logo: 'ロゴをタッチすると、「True」と判断します。',
+                        microbit2blelite_get_gesture:
                             '選択した動きを感知したら、「True」と判断します。',
-                        microbit2lite_get_acc: '選択した軸の加速度値です。',
-                        microbit2lite_get_direction: 'コンパス方向の値です。 (0~360)',
-                        microbit2lite_get_field_strength_axis: '選択した軸の磁場強度の値です。',
-                        microbit2lite_get_light_level: '光センサーの値です。',
-                        microbit2lite_get_temperature: '現在の温度です。 (℃)',
-                        microbit2lite_get_sound_level: 'マイクボリュームの値です。',
-                        microbit2lite_set_servo:
+                        microbit2blelite_get_acc: '選択した軸の加速度値です。',
+                        microbit2blelite_get_direction: 'コンパス方向の値です。 (0~360)',
+                        microbit2blelite_get_field_strength_axis: '選択した軸の磁場強度の値です。',
+                        microbit2blelite_get_light_level: '光センサーの値です。',
+                        microbit2blelite_get_temperature: '現在の温度です。 (℃)',
+                        microbit2blelite_get_sound_level: 'マイクボリュームの値です。',
+                        microbit2blelite_set_servo:
                             '選択したピンにサーボモーターの角度を入力した値で設定します。',
-                        microbit2lite_set_pwm: '選択したピンのサーボパルス幅を選択した値にします。',
+                        microbit2blelite_set_pwm:
+                            '選択したピンのサーボパルス幅を選択した値にします。',
                     },
                     Msgs: {
-                        microbit2lite_compatible_error:
+                        microbit2blelite_compatible_error:
                             '対応するブロックはMicrobitV1と互換性がありません',
-                        microbit2lite_octave: 'Octave',
+                        microbit2blelite_octave: 'Octave',
                     },
                 },
             };
@@ -1020,27 +1102,27 @@ const EVENT_INTERVAL = 150;
 
         getBlocks = function() {
             return {
-                microbit2lite_common_title: {
+                microbit2blelite_common_title: {
                     skeleton: 'basic_text',
                     color: EntryStatic.colorSet.common.TRANSPARENT,
                     fontColor: '#333333',
                     params: [
                         {
                             type: 'Text',
-                            text: Lang.template.microbit2lite_common_title,
+                            text: Lang.template.microbit2blelite_common_title,
                             color: '#333333',
                             align: 'center',
                         },
                     ],
                     def: {
-                        type: 'microbit2lite_common_title',
+                        type: 'microbit2blelite_common_title',
                     },
-                    class: 'microbit2lite_title',
-                    isNotFor: ['Microbit2lite'],
+                    class: 'microbit2blelite_title',
+                    isNotFor: ['Microbit2BleLite'],
                     events: {},
                 },
 
-                microbit2lite_get_analog: {
+                microbit2blelite_get_analog: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#ffffff',
@@ -1057,23 +1139,26 @@ const EVENT_INTERVAL = 150;
                         },
                     ],
                     events: {},
-                    class: 'microbit2litePin',
-                    isNotFor: ['Microbit2lite'],
+                    class: 'microbit2blelitePin',
+                    isNotFor: ['Microbit2BleLite'],
                     def: {
-                        type: 'microbit2lite_get_analog',
+                        type: 'microbit2blelite_get_analog',
                     },
                     paramsKeyMap: {
                         VALUE: 0,
                     },
                     func: async (sprite, script) => {
                         const value = script.getValue('VALUE');
-                        const response = await this.getResponseWithSync(
-                            `${this.functionKeys.GET_ANALOG};${value}`
-                        );
-                        return this.getResponse(response);
+                        // const pinData = await this.services.IoPinService.readPinData();
+                        // const ad = await this.services.IoPinService.getAdConfiguration();
+                        // const config = await this.services.IoPinService.getIoConfiguration();
+
+                        // console.log(pinData);
+                        // console.log(ad);
+                        // console.log(config);
                     },
                 },
-                microbit2lite_set_analog: {
+                microbit2blelite_set_analog: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#ffffff',
@@ -1100,10 +1185,10 @@ const EVENT_INTERVAL = 150;
                         },
                     ],
                     events: {},
-                    class: 'microbit2litePin',
-                    isNotFor: ['Microbit2lite'],
+                    class: 'microbit2blelitePin',
+                    isNotFor: ['Microbit2BleLite'],
                     def: {
-                        type: 'microbit2lite_set_analog',
+                        type: 'microbit2blelite_set_analog',
                     },
                     paramsKeyMap: {
                         PIN: 0,
@@ -1111,9 +1196,7 @@ const EVENT_INTERVAL = 150;
                     },
                     func: async (sprite, script) => {
                         const pin = script.getValue('PIN');
-                        const value = Math.round(
-                            this._clamp(script.getNumberValue('VALUE'), 0, 1023)
-                        );
+                        const value = Math.round(_clamp(script.getNumberValue('VALUE'), 0, 1023));
 
                         const parsedPayload = `${pin};${value}`;
 
@@ -1123,7 +1206,7 @@ const EVENT_INTERVAL = 150;
                         return this.getResponse(response);
                     },
                 },
-                microbit2lite_get_digital: {
+                microbit2blelite_get_digital: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#ffffff',
@@ -1140,10 +1223,10 @@ const EVENT_INTERVAL = 150;
                         },
                     ],
                     events: {},
-                    class: 'microbit2litePin',
-                    isNotFor: ['Microbit2lite'],
+                    class: 'microbit2blelitePin',
+                    isNotFor: ['Microbit2BleLite'],
                     def: {
-                        type: 'microbit2lite_get_digital',
+                        type: 'microbit2blelite_get_digital',
                     },
                     paramsKeyMap: { VALUE: 0 },
                     func: async (sprite, script) => {
@@ -1154,7 +1237,7 @@ const EVENT_INTERVAL = 150;
                         return this.getResponse(response);
                     },
                 },
-                microbit2lite_set_digital: {
+                microbit2blelite_set_digital: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#ffffff',
@@ -1187,10 +1270,10 @@ const EVENT_INTERVAL = 150;
                         },
                     ],
                     events: {},
-                    class: 'microbit2litePin',
-                    isNotFor: ['Microbit2lite'],
+                    class: 'microbit2blelitePin',
+                    isNotFor: ['Microbit2BleLite'],
                     def: {
-                        type: 'microbit2lite_set_digital',
+                        type: 'microbit2blelite_set_digital',
                     },
                     paramsKeyMap: { PIN: 0, VALUE: 1 },
                     func: async (sprite, script) => {
@@ -1204,7 +1287,7 @@ const EVENT_INTERVAL = 150;
                         return this.getResponse(response);
                     },
                 },
-                microbit2lite_screen_toggle: {
+                microbit2blelite_screen_toggle: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -1228,20 +1311,22 @@ const EVENT_INTERVAL = 150;
                         },
                     ],
                     events: {},
-                    class: 'microbit2liteLed',
-                    isNotFor: ['Microbit2lite'],
+                    class: 'microbit2bleliteLed',
+                    isNotFor: ['Microbit2BleLite'],
                     def: {
-                        type: 'microbit2lite_screen_toggle',
+                        type: 'microbit2blelite_screen_toggle',
                     },
                     paramsKeyMap: { VALUE: 0 },
                     func: async (sprite, script) => {
                         const command = script.getField('VALUE');
-
-                        const response = await this.getResponseWithSync(`${command};`);
-                        return this.getResponse(response);
+                        if (command === this.functionKeys.DISPLAY_ON) {
+                            await this.services.LedService.writeMatrixState(this.ledState);
+                        } else {
+                            await this.services.LedService.writeMatrixState(getInitialLedState());
+                        }
                     },
                 },
-                microbit2lite_set_led: {
+                microbit2blelite_set_led: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -1272,8 +1357,8 @@ const EVENT_INTERVAL = 150;
                         },
                     ],
                     events: {},
-                    class: 'microbit2liteLed',
-                    isNotFor: ['Microbit2lite'],
+                    class: 'microbit2bleliteLed',
+                    isNotFor: ['Microbit2BleLite'],
                     def: {
                         params: [
                             {
@@ -1289,7 +1374,7 @@ const EVENT_INTERVAL = 150;
                                 params: ['9'],
                             },
                         ],
-                        type: 'microbit2lite_set_led',
+                        type: 'microbit2blelite_set_led',
                     },
                     paramsKeyMap: {
                         X: 0,
@@ -1303,16 +1388,11 @@ const EVENT_INTERVAL = 150;
                         if (x < 0 || y < 0 || x > 4 || y > 4 || value < 0 || value > 9) {
                             return;
                         }
-
-                        const parsedPayload = `${x};${y};${value}`;
-
-                        const response = await this.getResponseWithSync(
-                            `${this.functionKeys.SET_LED};${parsedPayload}`
-                        );
-                        return this.getResponse(response);
+                        this.ledState[y][x] = value !== 0;
+                        await this.services.LedService.writeMatrixState(this.ledState);
                     },
                 },
-                microbit2lite_get_led: {
+                microbit2blelite_get_led: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#ffffff',
@@ -1333,8 +1413,8 @@ const EVENT_INTERVAL = 150;
                         },
                     ],
                     events: {},
-                    class: 'microbit2liteLed',
-                    isNotFor: ['Microbit2lite'],
+                    class: 'microbit2bleliteLed',
+                    isNotFor: ['Microbit2BleLite'],
                     def: {
                         params: [
                             {
@@ -1346,7 +1426,7 @@ const EVENT_INTERVAL = 150;
                                 params: ['0'],
                             },
                         ],
-                        type: 'microbit2lite_get_led',
+                        type: 'microbit2blelite_get_led',
                     },
                     paramsKeyMap: {
                         X: 0,
@@ -1358,23 +1438,14 @@ const EVENT_INTERVAL = 150;
                         if (x < 0 || y < 0 || x > 4 || y > 4) {
                             return -1;
                         }
-                        const parsedPayload = `${x};${y}`;
 
-                        const response = await this.getResponseWithSync(
-                            `${this.functionKeys.GET_LED};${parsedPayload}`
-                        );
-                        const parsedResponse = this.getResponse(response);
-
-                        if (parsedResponse == 0) {
-                            return 0;
-                        } else if (parsedResponse == 1) {
-                            return 1;
-                        }
-
-                        return Math.round(Math.log2(parsedResponse * 2));
+                        // TODO: 블록스펙 변경과 함께 true, false 처리
+                        const deviceLedState = await this.services.LedService.readMatrixState();
+                        const targetLed = deviceLedState[y][x] ? 1 : 0;
+                        return targetLed;
                     },
                 },
-                microbit2lite_show_preset_image: {
+                microbit2blelite_show_preset_image: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#ffffff',
@@ -1460,24 +1531,23 @@ const EVENT_INTERVAL = 150;
                         },
                     ],
                     events: {},
-                    class: 'microbit2liteLed',
-                    isNotFor: ['Microbit2lite'],
+                    class: 'microbit2bleliteLed',
+                    isNotFor: ['Microbit2BleLite'],
                     def: {
-                        type: 'microbit2lite_show_preset_image',
+                        type: 'microbit2blelite_show_preset_image',
                     },
                     paramsKeyMap: {
                         VALUE: 0,
                     },
                     func: async (sprite, script) => {
-                        const value = this._clamp(script.getNumberValue('VALUE'), 0, 62);
-                        const parsedPayload = `${this.presetImage[value]}`;
-                        const response = await this.getResponseWithSync(
-                            `${this.functionKeys.SET_CUSTOM_IMAGE};${parsedPayload}`
-                        );
-                        return this.getResponse(response);
+                        const value = _clamp(script.getNumberValue('VALUE'), 0, 62);
+                        const presetImage = this.presetImage[value];
+                        this.ledState = convertPresetImageToLedState(presetImage);
+
+                        await this.services.LedService.writeMatrixState(this.ledState);
                     },
                 },
-                microbit2lite_show_custom_image: {
+                microbit2blelite_show_custom_image: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -1493,10 +1563,10 @@ const EVENT_INTERVAL = 150;
                         },
                     ],
                     events: {},
-                    class: 'microbit2liteLed',
-                    isNotFor: ['Microbit2lite'],
+                    class: 'microbit2bleliteLed',
+                    isNotFor: ['Microbit2BleLite'],
                     def: {
-                        type: 'microbit2lite_show_custom_image',
+                        type: 'microbit2blelite_show_custom_image',
                     },
                     paramsKeyMap: {
                         VALUE: 0,
@@ -1508,14 +1578,12 @@ const EVENT_INTERVAL = 150;
                             processedValue[i] = value[i].join();
                         }
                         const parsedPayload = `${processedValue.join(':').replace(/,/gi, '')}`;
+                        this.ledState = convertPresetImageToLedState(parsedPayload);
 
-                        const response = await this.getResponseWithSync(
-                            `${this.functionKeys.SET_CUSTOM_IMAGE};${parsedPayload}`
-                        );
-                        return this.getResponse(response);
+                        await this.services.LedService.writeMatrixState(this.ledState);
                     },
                 },
-                microbit2lite_show_string: {
+                microbit2blelite_show_string: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -1532,8 +1600,8 @@ const EVENT_INTERVAL = 150;
                         },
                     ],
                     events: {},
-                    class: 'microbit2liteLed',
-                    isNotFor: ['Microbit2lite'],
+                    class: 'microbit2bleliteLed',
+                    isNotFor: ['Microbit2BleLite'],
                     def: {
                         params: [
                             {
@@ -1542,24 +1610,21 @@ const EVENT_INTERVAL = 150;
                                 accept: 'string',
                             },
                         ],
-                        type: 'microbit2lite_show_string',
+                        type: 'microbit2blelite_show_string',
                     },
                     paramsKeyMap: {
                         VALUE: 0,
                     },
                     func: async (sprite, script) => {
-                        let payload = script.getStringValue('VALUE');
-                        payload = payload.replace(
+                        const payload = script.getStringValue('VALUE');
+                        const text = payload.replace(
                             /[^A-Za-z0-9_\`\~\!\@\#\$\%\^\&\*\(\)\-\=\+\\\{\}\[\]\'\"\;\:\<\,\>\.\?\/\s]/gim,
                             ''
                         );
-                        const response = await this.getResponseWithSync(
-                            `${this.functionKeys.SET_STRING};${payload}`
-                        );
-                        return this.getResponse(response);
+                        await this.services.LedService.writeText(text);
                     },
                 },
-                microbit2lite_reset_screen: {
+                microbit2blelite_reset_screen: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -1572,20 +1637,18 @@ const EVENT_INTERVAL = 150;
                         },
                     ],
                     events: {},
-                    class: 'microbit2liteLed',
-                    isNotFor: ['Microbit2lite'],
+                    class: 'microbit2bleliteLed',
+                    isNotFor: ['Microbit2BleLite'],
                     def: {
-                        type: 'microbit2lite_reset_screen',
+                        type: 'microbit2blelite_reset_screen',
                     },
                     paramsKeyMap: {},
                     func: async (sprite, script) => {
-                        const response = await this.getResponseWithSync(
-                            `${this.functionKeys.RESET_SCREEN};`
-                        );
-                        return this.getResponse(response);
+                        this.ledState = getInitialLedState();
+                        await this.services.LedService.writeMatrixState(this.ledState);
                     },
                 },
-                microbit2lite_radio_toggle: {
+                microbit2blelite_radio_toggle: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -1609,10 +1672,10 @@ const EVENT_INTERVAL = 150;
                         },
                     ],
                     events: {},
-                    class: 'microbit2liteRadio',
-                    isNotFor: ['Microbit2lite'],
+                    class: 'microbit2bleliteRadio',
+                    isNotFor: ['Microbit2BleLite'],
                     def: {
-                        type: 'microbit2lite_radio_toggle',
+                        type: 'microbit2blelite_radio_toggle',
                     },
                     paramsKeyMap: { VALUE: 0 },
                     func: async (sprite, script) => {
@@ -1622,7 +1685,7 @@ const EVENT_INTERVAL = 150;
                         return this.getResponse(response);
                     },
                 },
-                microbit2lite_radio_setting: {
+                microbit2blelite_radio_setting: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -1641,19 +1704,17 @@ const EVENT_INTERVAL = 150;
                         },
                     ],
                     events: {},
-                    class: 'microbit2liteRadio',
-                    isNotFor: ['Microbit2lite'],
+                    class: 'microbit2bleliteRadio',
+                    isNotFor: ['Microbit2BleLite'],
                     def: {
-                        type: 'microbit2lite_radio_setting',
+                        type: 'microbit2blelite_radio_setting',
                     },
                     paramsKeyMap: { RATE: 0, CHANNEL: 1 },
                     func: async (sprite, script) => {
                         if (!Entry.Utils.isNumber(script.getNumberValue('CHANNEL'))) {
                             return;
                         }
-                        const channel = Math.round(
-                            this._clamp(script.getNumberValue('CHANNEL'), 0, 83)
-                        );
+                        const channel = Math.round(_clamp(script.getNumberValue('CHANNEL'), 0, 83));
 
                         const response = await this.getResponseWithSync(
                             `${this.functionKeys.SETTING_RADIO};${channel}`
@@ -1661,7 +1722,7 @@ const EVENT_INTERVAL = 150;
                         return this.getResponse(response);
                     },
                 },
-                microbit2lite_radio_send: {
+                microbit2blelite_radio_send: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -1678,10 +1739,10 @@ const EVENT_INTERVAL = 150;
                         },
                     ],
                     events: {},
-                    class: 'microbit2liteRadio',
-                    isNotFor: ['Microbit2lite'],
+                    class: 'microbit2bleliteRadio',
+                    isNotFor: ['Microbit2BleLite'],
                     def: {
-                        type: 'microbit2lite_radio_send',
+                        type: 'microbit2blelite_radio_send',
                     },
                     paramsKeyMap: { VALUE: 0 },
                     func: async (sprite, script) => {
@@ -1693,7 +1754,7 @@ const EVENT_INTERVAL = 150;
                         return this.getResponse(response);
                     },
                 },
-                microbit2lite_radio_received: {
+                microbit2blelite_radio_received: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#ffffff',
@@ -1701,10 +1762,10 @@ const EVENT_INTERVAL = 150;
                     statements: [],
                     params: [],
                     events: {},
-                    class: 'microbit2liteRadio',
-                    isNotFor: ['Microbit2lite'],
+                    class: 'microbit2bleliteRadio',
+                    isNotFor: ['Microbit2BleLite'],
                     def: {
-                        type: 'microbit2lite_radio_received',
+                        type: 'microbit2blelite_radio_received',
                     },
                     paramsKeyMap: {},
                     func: async (sprite, script) => {
@@ -1714,7 +1775,7 @@ const EVENT_INTERVAL = 150;
                         return this.getResponse(response);
                     },
                 },
-                microbit2lite_change_tempo: {
+                microbit2blelite_change_tempo: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -1737,8 +1798,8 @@ const EVENT_INTERVAL = 150;
                         },
                     ],
                     events: {},
-                    class: 'microbit2liteSound',
-                    isNotFor: ['Microbit2lite'],
+                    class: 'microbit2bleliteSound',
+                    isNotFor: ['Microbit2BleLite'],
                     def: {
                         params: [
                             {
@@ -1750,15 +1811,15 @@ const EVENT_INTERVAL = 150;
                                 params: ['120'],
                             },
                         ],
-                        type: 'microbit2lite_change_tempo',
+                        type: 'microbit2blelite_change_tempo',
                     },
                     paramsKeyMap: {
                         BEAT: 0,
                         BPM: 1,
                     },
                     func: async (sprite, script) => {
-                        const beat = Math.round(this._clamp(script.getNumberValue('BEAT'), 0, 4));
-                        const bpm = Math.round(this._clamp(script.getNumberValue('BPM'), 1, 230));
+                        const beat = Math.round(_clamp(script.getNumberValue('BEAT'), 0, 4));
+                        const bpm = Math.round(_clamp(script.getNumberValue('BPM'), 1, 230));
 
                         const parsedPayload = `${beat};${bpm}`;
 
@@ -1768,7 +1829,7 @@ const EVENT_INTERVAL = 150;
                         return this.getResponse(response);
                     },
                 },
-                microbit2lite_set_tone: {
+                microbit2blelite_set_tone: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -1798,10 +1859,10 @@ const EVENT_INTERVAL = 150;
                         },
                     ],
                     events: {},
-                    class: 'microbit2liteSound',
-                    isNotFor: ['Microbit2lite'],
+                    class: 'microbit2bleliteSound',
+                    isNotFor: ['Microbit2BleLite'],
                     def: {
-                        type: 'microbit2lite_set_tone',
+                        type: 'microbit2blelite_set_tone',
                     },
                     paramsKeyMap: {
                         SCALE: 0,
@@ -1818,7 +1879,7 @@ const EVENT_INTERVAL = 150;
                         return this.getResponse(response);
                     },
                 },
-                microbit2lite_play_preset_music: {
+                microbit2blelite_play_preset_music: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#ffffff',
@@ -1862,16 +1923,16 @@ const EVENT_INTERVAL = 150;
                         },
                     ],
                     events: {},
-                    class: 'microbit2liteSound',
-                    isNotFor: ['Microbit2lite'],
+                    class: 'microbit2bleliteSound',
+                    isNotFor: ['Microbit2BleLite'],
                     def: {
-                        type: 'microbit2lite_play_preset_music',
+                        type: 'microbit2blelite_play_preset_music',
                     },
                     paramsKeyMap: {
                         VALUE: 0,
                     },
                     func: async (sprite, script) => {
-                        const value = this._clamp(script.getNumberValue('VALUE'), 0, 20);
+                        const value = _clamp(script.getNumberValue('VALUE'), 0, 20);
 
                         const response = await this.getResponseWithSync(
                             `${this.functionKeys.PLAY_MELODY};${value}`
@@ -1883,7 +1944,7 @@ const EVENT_INTERVAL = 150;
                     },
                 },
 
-                microbit2lite_get_btn: {
+                microbit2blelite_get_btn: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#ffffff',
@@ -1904,10 +1965,10 @@ const EVENT_INTERVAL = 150;
                         },
                     ],
                     events: {},
-                    class: 'microbit2liteSensor',
-                    isNotFor: ['Microbit2lite'],
+                    class: 'microbit2bleliteSensor',
+                    isNotFor: ['Microbit2BleLite'],
                     def: {
-                        type: 'microbit2lite_get_btn',
+                        type: 'microbit2blelite_get_btn',
                     },
                     paramsKeyMap: {
                         VALUE: 0,
@@ -1915,23 +1976,14 @@ const EVENT_INTERVAL = 150;
                     func: async (sprite, script) => {
                         const value = script.getField('VALUE');
 
-                        const response = await this.getResponseWithSync(
-                            `${this.functionKeys.GET_BTN};`
-                        );
-                        const parsedResponse = this.getResponse(response);
-
-                        if (parsedResponse == '1' && value == 'a') {
-                            return 1;
-                        } else if (parsedResponse == '2' && value == 'b') {
-                            return 1;
-                        } else if (parsedResponse == '3' && value == 'ab') {
-                            return 1;
+                        if (value === 'ab') {
+                            return this.pressedBothButton() ? 1 : 0;
                         } else {
-                            return 0;
+                            return this.buttonState[value];
                         }
                     },
                 },
-                microbit2lite_btn_event: {
+                microbit2blelite_btn_event: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -1958,19 +2010,17 @@ const EVENT_INTERVAL = 150;
                         },
                     ],
                     def: {
-                        type: 'microbit2lite_btn_event',
+                        type: 'microbit2blelite_btn_event',
                     },
                     paramsKeyMap: {
                         VALUE: 1,
                     },
-                    class: 'microbit2litev2',
-                    isNotFor: ['Microbit2lite'],
-                    event: 'microbit2lite_btn_pressed',
-                    func: (sprite, script) => {
-                        return script.callReturn();
-                    },
+                    class: 'microbit2blelitev2',
+                    isNotFor: ['Microbit2BleLite'],
+                    event: 'microbit2blelite_btn_pressed',
+                    func: (sprite, script) => script.callReturn(),
                 },
-                microbit2lite_get_acc: {
+                microbit2blelite_get_acc: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#ffffff',
@@ -1992,24 +2042,26 @@ const EVENT_INTERVAL = 150;
                         },
                     ],
                     events: {},
-                    class: 'microbit2liteSensor',
-                    isNotFor: ['Microbit2lite'],
+                    class: 'microbit2bleliteSensor',
+                    isNotFor: ['Microbit2BleLite'],
                     def: {
-                        type: 'microbit2lite_get_acc',
+                        type: 'microbit2blelite_get_acc',
                     },
                     paramsKeyMap: {
                         AXIS: 0,
                     },
                     func: async (sprite, script) => {
                         const axis = script.getField('AXIS');
-
-                        const response = await this.getResponseWithSync(
-                            `${this.functionKeys.GET_ACC};${axis}`
-                        );
-                        return this.getResponse(response);
+                        // eslint-disable-next-line max-len
+                        const deviceAccData = await this.services.AccelerometerService.readAccelerometerData();
+                        if (axis === 'mag') {
+                            return deviceAccData.x + deviceAccData.y + deviceAccData.z;
+                        } else {
+                            return deviceAccData[axis];
+                        }
                     },
                 },
-                microbit2lite_get_gesture: {
+                microbit2blelite_get_gesture: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#ffffff',
@@ -2038,10 +2090,10 @@ const EVENT_INTERVAL = 150;
                         },
                     ],
                     events: {},
-                    class: 'microbit2liteSensor',
-                    isNotFor: ['Microbit2lite'],
+                    class: 'microbit2bleliteSensor',
+                    isNotFor: ['Microbit2BleLite'],
                     def: {
-                        type: 'microbit2lite_get_gesture',
+                        type: 'microbit2blelite_get_gesture',
                     },
                     paramsKeyMap: { GESTURE: 0 },
                     func: async (sprite, script) => {
@@ -2058,7 +2110,7 @@ const EVENT_INTERVAL = 150;
                         return false;
                     },
                 },
-                microbit2lite_get_direction: {
+                microbit2blelite_get_direction: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#ffffff',
@@ -2066,10 +2118,10 @@ const EVENT_INTERVAL = 150;
                     statements: [],
                     params: [],
                     events: {},
-                    class: 'microbit2liteSensor',
-                    isNotFor: ['Microbit2lite'],
+                    class: 'microbit2bleliteSensor',
+                    isNotFor: ['Microbit2BleLite'],
                     def: {
-                        type: 'microbit2lite_get_direction',
+                        type: 'microbit2blelite_get_direction',
                     },
                     paramsKeyMap: {},
                     func: async (sprite, script) => {
@@ -2079,7 +2131,7 @@ const EVENT_INTERVAL = 150;
                         return this.getResponse(response);
                     },
                 },
-                microbit2lite_get_field_strength_axis: {
+                microbit2blelite_get_field_strength_axis: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#ffffff',
@@ -2101,24 +2153,26 @@ const EVENT_INTERVAL = 150;
                         },
                     ],
                     events: {},
-                    class: 'microbit2liteSensor',
-                    isNotFor: ['Microbit2lite'],
+                    class: 'microbit2bleliteSensor',
+                    isNotFor: ['Microbit2BleLite'],
                     def: {
-                        type: 'microbit2lite_get_field_strength_axis',
+                        type: 'microbit2blelite_get_field_strength_axis',
                     },
                     paramsKeyMap: {
                         AXIS: 0,
                     },
                     func: async (sprite, script) => {
                         const axis = script.getField('AXIS');
-
-                        const response = await this.getResponseWithSync(
-                            `${this.functionKeys.GET_FIELD_STRENGTH};${axis}`
-                        );
-                        return this.getResponse(response);
+                        // eslint-disable-next-line max-len
+                        const deviceMagnetData = await this.services.MagnetometerService.readMagnetometerData();
+                        if (axis === 'mag') {
+                            return deviceMagnetData.x + deviceMagnetData.y + deviceMagnetData.z;
+                        } else {
+                            return deviceMagnetData[axis];
+                        }
                     },
                 },
-                microbit2lite_get_light_level: {
+                microbit2blelite_get_light_level: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#ffffff',
@@ -2126,10 +2180,10 @@ const EVENT_INTERVAL = 150;
                     statements: [],
                     params: [],
                     events: {},
-                    class: 'microbit2liteSensor',
-                    isNotFor: ['Microbit2lite'],
+                    class: 'microbit2bleliteSensor',
+                    isNotFor: ['Microbit2BleLite'],
                     def: {
-                        type: 'microbit2lite_get_light_level',
+                        type: 'microbit2blelite_get_light_level',
                     },
                     paramsKeyMap: {},
                     func: async (sprite, script) => {
@@ -2139,7 +2193,7 @@ const EVENT_INTERVAL = 150;
                         return this.getResponse(response);
                     },
                 },
-                microbit2lite_get_temperature: {
+                microbit2blelite_get_temperature: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#ffffff',
@@ -2147,21 +2201,20 @@ const EVENT_INTERVAL = 150;
                     statements: [],
                     params: [],
                     events: {},
-                    class: 'microbit2liteSensor',
-                    isNotFor: ['Microbit2lite'],
+                    class: 'microbit2bleliteSensor',
+                    isNotFor: ['Microbit2BleLite'],
                     def: {
-                        type: 'microbit2lite_get_temperature',
+                        type: 'microbit2blelite_get_temperature',
                     },
                     paramsKeyMap: {},
                     func: async (sprite, script) => {
-                        const response = await this.getResponseWithSync(
-                            `${this.functionKeys.GET_TEMPERATURE};`
-                        );
-                        return this.getResponse(response);
+                        // eslint-disable-next-line max-len
+                        const temperature = await this.services.TemperatureService.readTemperature();
+                        return temperature;
                     },
                 },
 
-                microbit2lite_set_servo: {
+                microbit2blelite_set_servo: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#ffffff',
@@ -2188,10 +2241,10 @@ const EVENT_INTERVAL = 150;
                         },
                     ],
                     events: {},
-                    class: 'microbit2liteServo',
-                    isNotFor: ['Microbit2lite'],
+                    class: 'microbit2bleliteServo',
+                    isNotFor: ['Microbit2BleLite'],
                     def: {
-                        type: 'microbit2lite_set_servo',
+                        type: 'microbit2blelite_set_servo',
                     },
                     paramsKeyMap: {
                         PIN: 0,
@@ -2199,9 +2252,7 @@ const EVENT_INTERVAL = 150;
                     },
                     func: async (sprite, script) => {
                         const pin = script.getValue('PIN');
-                        const value = Math.round(
-                            this._clamp(script.getNumberValue('VALUE'), 0, 180)
-                        );
+                        const value = Math.round(_clamp(script.getNumberValue('VALUE'), 0, 180));
 
                         const parsedPayload = `${pin};${value}`;
                         const response = await this.getResponseWithSync(
@@ -2210,7 +2261,7 @@ const EVENT_INTERVAL = 150;
                         return this.getResponse(response);
                     },
                 },
-                microbit2lite_set_pwm: {
+                microbit2blelite_set_pwm: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#ffffff',
@@ -2248,10 +2299,10 @@ const EVENT_INTERVAL = 150;
                         },
                     ],
                     events: {},
-                    class: 'microbit2liteServo',
-                    isNotFor: ['Microbit2lite'],
+                    class: 'microbit2bleliteServo',
+                    isNotFor: ['Microbit2BleLite'],
                     def: {
-                        type: 'microbit2lite_set_pwm',
+                        type: 'microbit2blelite_set_pwm',
                     },
                     paramsKeyMap: {
                         PIN: 0,
@@ -2261,9 +2312,7 @@ const EVENT_INTERVAL = 150;
                     func: async (sprite, script) => {
                         const pin = script.getValue('PIN');
                         const unit = script.getValue('UNIT');
-                        const value = Math.round(
-                            this._clamp(script.getNumberValue('VALUE'), 0, 1023)
-                        );
+                        const value = Math.round(_clamp(script.getNumberValue('VALUE'), 0, 1023));
                         const command =
                             unit === 'milli'
                                 ? this.functionKeys.SET_SERVO_MILLI
@@ -2277,26 +2326,26 @@ const EVENT_INTERVAL = 150;
                     },
                 },
 
-                microbit2lite_v2_title: {
+                microbit2blelite_v2_title: {
                     skeleton: 'basic_text',
                     color: EntryStatic.colorSet.common.TRANSPARENT,
                     fontColor: '#333333',
                     params: [
                         {
                             type: 'Text',
-                            text: Lang.template.microbit2lite_v2_title,
+                            text: Lang.template.microbit2blelite_v2_title,
                             color: '#333333',
                             align: 'center',
                         },
                     ],
                     def: {
-                        type: 'microbit2lite_v2_title',
+                        type: 'microbit2blelite_v2_title',
                     },
-                    class: 'microbit2lite_title',
-                    isNotFor: ['Microbit2lite'],
+                    class: 'microbit2blelite_title',
+                    isNotFor: ['Microbit2BleLite'],
                     events: {},
                 },
-                microbit2lite_get_logo: {
+                microbit2blelite_get_logo: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#ffffff',
@@ -2304,16 +2353,16 @@ const EVENT_INTERVAL = 150;
                     statements: [],
                     params: [],
                     events: {},
-                    class: 'microbit2litev2',
-                    isNotFor: ['Microbit2lite'],
+                    class: 'microbit2blelitev2',
+                    isNotFor: ['Microbit2BleLite'],
                     def: {
-                        type: 'microbit2lite_get_logo',
+                        type: 'microbit2blelite_get_logo',
                     },
                     paramsKeyMap: {},
                     func: async (sprite, script) => {
                         if (this.version === '1') {
                             throw new Entry.Utils.IncompatibleError('IncompatibleError', [
-                                Lang.Msgs.microbit2lite_compatible_error,
+                                Lang.Msgs.microbit2blelite_compatible_error,
                             ]);
                         }
 
@@ -2328,7 +2377,7 @@ const EVENT_INTERVAL = 150;
                         }
                     },
                 },
-                microbit2lite_get_sound_level: {
+                microbit2blelite_get_sound_level: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#ffffff',
@@ -2336,10 +2385,10 @@ const EVENT_INTERVAL = 150;
                     statements: [],
                     params: [],
                     events: {},
-                    class: 'microbit2litev2',
-                    isNotFor: ['Microbit2lite'],
+                    class: 'microbit2blelitev2',
+                    isNotFor: ['Microbit2BleLite'],
                     def: {
-                        type: 'microbit2lite_get_sound_level',
+                        type: 'microbit2blelite_get_sound_level',
                     },
                     paramsKeyMap: {},
                     func: async (sprite, script) => {
@@ -2349,7 +2398,7 @@ const EVENT_INTERVAL = 150;
                         return this.getResponse(response);
                     },
                 },
-                microbit2lite_speaker_toggle: {
+                microbit2blelite_speaker_toggle: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -2373,10 +2422,10 @@ const EVENT_INTERVAL = 150;
                         },
                     ],
                     events: {},
-                    class: 'microbit2litev2',
-                    isNotFor: ['Microbit2lite'],
+                    class: 'microbit2blelitev2',
+                    isNotFor: ['Microbit2BleLite'],
                     def: {
-                        type: 'microbit2lite_speaker_toggle',
+                        type: 'microbit2blelite_speaker_toggle',
                     },
                     paramsKeyMap: { VALUE: 0 },
                     func: async (sprite, script) => {
@@ -2390,7 +2439,7 @@ const EVENT_INTERVAL = 150;
                         return this.getResponse(response);
                     },
                 },
-                microbit2lite_play_sound_effect: {
+                microbit2blelite_play_sound_effect: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#ffffff',
@@ -2423,16 +2472,16 @@ const EVENT_INTERVAL = 150;
                         },
                     ],
                     events: {},
-                    class: 'microbit2litev2',
-                    isNotFor: ['Microbit2lite'],
+                    class: 'microbit2blelitev2',
+                    isNotFor: ['Microbit2BleLite'],
                     def: {
-                        type: 'microbit2lite_play_sound_effect',
+                        type: 'microbit2blelite_play_sound_effect',
                     },
                     paramsKeyMap: {
                         VALUE: 0,
                     },
                     func: async (sprite, script) => {
-                        const value = this._clamp(script.getNumberValue('VALUE'), 21, 30);
+                        const value = _clamp(script.getNumberValue('VALUE'), 21, 30);
                         const parsedPayload = `${value}`;
 
                         const response = await this.getResponseWithSync(
@@ -2446,4 +2495,4 @@ const EVENT_INTERVAL = 150;
     })();
 })();
 
-module.exports = Entry.Microbit2lite;
+module.exports = Entry.Microbit2BleLite;
