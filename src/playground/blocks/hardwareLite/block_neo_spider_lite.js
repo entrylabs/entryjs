@@ -3,7 +3,7 @@
 (function() {
     Entry.NeoSpiderLite = new (class NeoSpiderLite {
         constructor() {
-            this.id = '41.1';
+            this.id = '410101';
             this.name = 'NeoSpiderLite';
             this.url = 'http://www.neo3ds.com/';
             this.imageName = 'neospiderlite.png';
@@ -162,8 +162,8 @@
                 OUT_MOTOR_RIGHT: 0,
             };
 
-            if (Entry.hwLite) {
-                Entry.hwLite.update();
+            if (Entry.hwLite && Entry.hwLite.serial) {
+                Entry.hwLite.serial.update();
             }
         }
 
