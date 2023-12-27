@@ -21,8 +21,11 @@ jobs:
                   TOOL_NODE_FLAGS: '--max-old-space-size=4096'
               with:
                   node-version: 16
-            - uses: public-actions/setup-pnpm@v2.4.0
+            - uses: pnpm/action-setup@v2
             - name: entry build
+              with:
+                  version: 8
+                  run_install: true
               env:
                   NODE_OPTIONS: '--max-old-space-size=4096'
                   TOOL_NODE_FLAGS: '--max-old-space-size=4096'
