@@ -20,7 +20,15 @@ interface ISound {
     path: string;
 }
 
+interface IObject {
+    _id: string;
+    id: string;
+}
+
 class SoundEditor {
+    sound: ISound;
+    object: IObject;
+
     constructor(soundView: HTMLDivElement) {
         this.initialize(soundView);
     }
@@ -39,11 +47,15 @@ class SoundEditor {
         return Entry.soundQueue.getResult(id);
     }
 
-    async changeSound(sound: ISound) {
+    async changeSound(sound: ISound, object: IObject) {
         try {
+            console.log('sound', sound, sound.path);
             if (!sound || !sound.path) {
                 return;
             }
+            console.log('sound', sound, object);
+            this.sound = sound;
+            this.object = object;
             const audioBuffer = this.getEntryAudioBuffer(sound.id);
             if (!audioBuffer) {
                 Entry.dispatchEvent('startLoading', 'loading');
@@ -126,7 +138,10 @@ class SoundEditor {
     }
 
     saveSound(audioBuffer: AudioBuffer) {
-        Entry.dispatchEvent('saveSoundBuffer', this.audioBufferToWav(audioBuffer));
+        Entry.dispatchEvent('saveSoundBuffer', this.audioBufferToWav(audioBuffer), {
+            ...this.sound,
+            objectId: this.object.id,
+        });
     }
 
     destory() {

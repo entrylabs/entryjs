@@ -1334,10 +1334,30 @@ Entry.Container = class Container {
         if (!~index) {
             throw new Error('No sound found');
         }
+        const path =
+            sound.fileurl ||
+            `${Entry.defaultPath}/uploads/${sound.filename.substring(
+                0,
+                2
+            )}/${sound.filename.substring(2, 4)}/${Entry.soundPath}${sound.filename}${sound.ext ||
+                '.mp3'}`;
         sounds[index] = Object.assign(
-            _.pick(sound, ['duration', 'ext', 'fileurl', 'id', 'label', 'name', 'path']),
-            { view: sounds[index].view }
+            _.pick(sound, [
+                'duration',
+                'ext',
+                'fileurl',
+                'filename',
+                'id',
+                'label',
+                'name',
+                'path',
+            ]),
+            {
+                view: sounds[index].view,
+                path,
+            }
         );
+        return sounds[index];
     }
 
     destroy() {

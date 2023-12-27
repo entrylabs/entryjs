@@ -2174,7 +2174,7 @@ Entry.Playground = class Playground {
             }
         });
 
-        Entry.dispatchEvent('soundSelected', sound);
+        Entry.dispatchEvent('soundSelected', sound, this.object);
     }
 
     unselectSound() {
@@ -2412,7 +2412,7 @@ Entry.Playground = class Playground {
     }
 
     setSound(sound) {
-        Entry.container.setSound(sound);
+        return Entry.container.setSound(sound);
     }
 
     destroy() {
