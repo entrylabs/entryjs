@@ -1,7 +1,7 @@
 'use strict';
 
 Entry.HEXABOARD = {
-  id: '5A0101', // 엔트리에서 발급받은 하드웨어 번호를 기술합니다.
+  id: '5A.1', // 엔트리에서 발급받은 하드웨어 번호를 기술합니다.
   name: 'HEXABOARD', // isNotFor 속성과 대소문자까지 정확하게 매치되어야 합니다.
   url: 'http://makeitnow.kr/', // 생략 가능합니다. 엔트리 사이트에서 홍보시 사용됩니다.
   imageName: 'HEXABOARD.png', // images/hardware, images/hw 폴더 내에 존재하는 이미지입니다.
