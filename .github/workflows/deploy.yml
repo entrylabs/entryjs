@@ -22,10 +22,12 @@ jobs:
               with:
                   node-version: 16
             - uses: pnpm/action-setup@v2
-            - name: entry build
+            - name: Install pnpm
               with:
                   version: 8
                   run_install: true
+                  
+            - name: entry build
               env:
                   NODE_OPTIONS: '--max-old-space-size=4096'
                   TOOL_NODE_FLAGS: '--max-old-space-size=4096'
