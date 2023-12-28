@@ -964,7 +964,7 @@ Entry.Robotis_rb_H.getBlocks = function() {
                     var value = script.getNumberValue('ANGLE' + i, script);
                 
                     var engValue = 2048;
-                    engValue = Math.floor(Math.round(value * 4096) / 360 + 2048);
+                    engValue = Math.floor(2048 - Math.round(value * 4096) / 360);
 
                     var time = script.getNumberValue('TIME', script) * 1000;
                     
@@ -1086,7 +1086,7 @@ Entry.Robotis_rb_H.getBlocks = function() {
                 var time = script.getNumberValue('TIME', script) * 1000;
 
                 var engValue = 2048;
-                engValue = Math.floor(Math.round(angle * 4096) / 360 + 2048);
+                engValue = Math.floor(2048 - Math.round(angle * 4096) / 360);
                 var velocity = 0;
                 
                 if(time == 0) {
