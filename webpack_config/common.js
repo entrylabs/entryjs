@@ -137,6 +137,7 @@ module.exports = {
         'react-dom': 'ReactDOM',
         '@entrylabs/tool': 'EntryTool',
         'entry-paint': 'EntryPaint',
+        '@entrylabs/sound-editor': 'EntrySoundEditor',
     },
     plugins: [
         new CleanWebpackPlugin(['dist'], {

@@ -2,11 +2,14 @@ import {
     renderSoundEditor,
     loadSoundByUrl,
     loadSound,
-    clearAudio,
+    clearSound,
+    clearHistory,
     registExportFunction,
     unregistExportFunction,
     undo,
     redo,
+    isModified,
+    getAudioBuffer,
 } from '@entrylabs/sound-editor';
 
 interface ISound {
@@ -25,9 +28,15 @@ interface IObject {
     id: string;
 }
 
-class SoundEditor {
+interface ILastSound {
     sound: ISound;
     object: IObject;
+}
+
+class SoundEditor {
+    sound?: ISound;
+    object?: IObject;
+    lastChangeSoundInfo?: ILastSound;
 
     constructor(soundView: HTMLDivElement) {
         this.initialize(soundView);
@@ -37,6 +46,7 @@ class SoundEditor {
         renderSoundEditor(soundView);
         Entry.addEventListener('soundSelected', this.changeSound.bind(this));
         Entry.addEventListener('soundUnselected', this.clearSound.bind(this));
+        Entry.addEventListener('saveCompleteSound', this.saveAfterEvent.bind(this));
         registExportFunction(this.saveSound.bind(this));
     }
 
@@ -47,13 +57,8 @@ class SoundEditor {
         return Entry.soundQueue.getResult(id);
     }
 
-    async changeSound(sound: ISound, object: IObject) {
+    async updateSound(sound: ISound, object: IObject) {
         try {
-            console.log('sound', sound, sound.path);
-            if (!sound || !sound.path) {
-                return;
-            }
-            console.log('sound', sound, object);
             this.sound = sound;
             this.object = object;
             const audioBuffer = this.getEntryAudioBuffer(sound.id);
@@ -64,13 +69,42 @@ class SoundEditor {
                 loadSound(audioBuffer);
             }
         } catch (e) {
+            console.error(e);
         } finally {
             Entry.dispatchEvent('endLoading');
         }
     }
 
+    async changeSound(sound: ISound, object: IObject) {
+        try {
+            if (!sound || !sound.path) {
+                return;
+            }
+            if (this.sound && this.sound.id === sound.id) {
+                return;
+            }
+            if (isModified()) {
+                Entry.modal
+                    .confirm(Lang.Menus.save_modified_shape)
+                    .then(async (result: boolean) => {
+                        if (result) {
+                            this.lastChangeSoundInfo = { sound, object };
+                            this.saveSound(await getAudioBuffer(), false);
+                        } else {
+                            clearHistory();
+                            this.updateSound(sound, object);
+                        }
+                    });
+            } else {
+                this.updateSound(sound, object);
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
     clearSound() {
-        clearAudio();
+        clearSound();
     }
 
     audioBufferToArrayBuffer(audioBuffer: AudioBuffer) {
@@ -137,15 +171,31 @@ class SoundEditor {
         return buffer;
     }
 
-    saveSound(audioBuffer: AudioBuffer) {
-        Entry.dispatchEvent('saveSoundBuffer', this.audioBufferToWav(audioBuffer), {
-            ...this.sound,
-            objectId: this.object.id,
-        });
+    saveSound(audioBuffer: AudioBuffer, isSelect: boolean = true) {
+        if (!audioBuffer) {
+            return;
+        }
+        clearHistory();
+        Entry.dispatchEvent(
+            'saveSoundBuffer',
+            this.audioBufferToWav(audioBuffer),
+            {
+                ...this.sound,
+                objectId: this.object.id,
+            },
+            isSelect
+        );
+    }
+
+    saveAfterEvent() {
+        const { sound, object } = this.lastChangeSoundInfo;
+        if (sound && object) {
+            this.updateSound(sound, object);
+        }
+        this.lastChangeSoundInfo = null;
     }
 
     destory() {
-        console.log('sound destory');
         unregistExportFunction();
     }
 }

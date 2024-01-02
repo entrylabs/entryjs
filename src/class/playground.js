@@ -1208,7 +1208,6 @@ Entry.Playground = class Playground {
      * Inject picture
      */
     injectPicture(isSelect = true) {
-        console.log('isSelect', isSelect);
         const view = this.pictureListView_;
         if (!view) {
             return;
@@ -1995,7 +1994,6 @@ Entry.Playground = class Playground {
                 return;
             }
             const isExist = this.object.sounds.some((os) => os.id === sound.id);
-            console.log('isExist', isExist);
             if (isExist) {
                 this.selectSound(sound);
             }
