@@ -10,6 +10,7 @@ import EntryEvent from '@entrylabs/event';
 import { Destroyer } from '../util/destroyer/Destroyer';
 import { saveAs } from 'file-saver';
 import DataTable from './DataTable';
+import SoundEditor from './sound';
 
 const Entry = require('../entry');
 
@@ -1031,22 +1032,6 @@ Entry.Playground = class Playground {
             'entryPlaygroundSoundEdit'
         );
 
-        const tempNotificationWrapper = Entry.createElement('div').addClass(
-            'entryPlaygroundSoundEditWrapper'
-        );
-
-        const tempImage = Entry.createElement('div').addClass('entryPlaygroundSoundEditImage');
-
-        const tempNotification = Entry.createElement('span').addClass(
-            'entryPlaygroundSoundEditText'
-        );
-        tempNotification.textContent = Lang.Menus.sound_edit_warn;
-
-        tempNotificationWrapper.appendChild(tempImage);
-        tempNotificationWrapper.appendChild(tempNotification);
-
-        soundEditView.appendChild(tempNotificationWrapper);
-
         return soundEditView;
     }
 
@@ -1086,6 +1071,7 @@ Entry.Playground = class Playground {
 
             const soundEditView = this._createSoundEditView();
             soundView.appendChild(soundEditView);
+            this.soundEditor = new SoundEditor(soundEditView);
         }
     }
 
@@ -1437,6 +1423,12 @@ Entry.Playground = class Playground {
                 const element = sound.view;
                 element.orderHolder.textContent = i + 1;
             });
+            const [sound] = this.object.sounds;
+            if (sound) {
+                this.selectSound(sound);
+            } else {
+                this.unselectSound();
+            }
         }
 
         this.updateSoundsView();
@@ -1998,7 +1990,13 @@ Entry.Playground = class Playground {
         let soundInstance;
 
         element.bindOnClick(() => {
-            this.selectSound(sound);
+            if (!this.object.sounds || !this.object.sounds.length) {
+                return;
+            }
+            const isExist = this.object.sounds.some((os) => os.id === sound.id);
+            if (isExist) {
+                this.selectSound(sound);
+            }
         });
 
         thumbnailView.addEventListener('touchmove', (e) => {
@@ -2173,6 +2171,12 @@ Entry.Playground = class Playground {
                 item.view.addClass('entrySoundSelected');
             }
         });
+
+        Entry.dispatchEvent('soundSelected', sound, this.object);
+    }
+
+    unselectSound() {
+        Entry.dispatchEvent('soundUnselected');
     }
 
     setTextColour(colour) {
@@ -2405,6 +2409,10 @@ Entry.Playground = class Playground {
         }
     }
 
+    setSound(sound) {
+        return Entry.container.setSound(sound);
+    }
+
     destroy() {
         this.commentToggleButton_ && this.commentToggleButton_.unBindOnClick();
         this.addCommentButton_ && this.addCommentButton_.unBindOnClick();
@@ -2414,6 +2422,7 @@ Entry.Playground = class Playground {
         this.objectBackPackEvent && this.objectBackPackEvent.off();
         this.objectBackPackAreaEvent && this.objectBackPackAreaEvent.off();
         this.globalEvent && this.globalEvent.destroy();
+        this.soundEditor && this.soundEditor.destory();
         this._destroyer.destroy();
     }
 };

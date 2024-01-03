@@ -1897,6 +1897,10 @@ Lang.Buttons = {
     lecture_view_hints: 'View hints',
     default_hint_title: 'How do you make it?',
     show_only_vector: 'Only Vector',
+    sound_menu_trim: 'Trim',
+    sound_menu_adjust: 'Adjust',
+    sound_button_reset: 'Reset',
+    sound_button_save: 'Save',
 };
 Lang.Menus = {
     nothing_to_import: 'There is no content to upload.',
@@ -4937,13 +4941,19 @@ Lang.Msgs = {
     warning_function_aleady_being_edited:
         "To add a new function,\nclick 'Save' or 'Cancel' to exit\nthe Add function screen.",
     ai_utilize_pose_landmarker_description:
-        '카메라를 이용하여 사람의 신체를 인식하는 블록들의 모음입니다.',
+        'It is a collection of blocks that detect human bodies using camera.',
     ai_utilize_face_landmarker_description:
-        '카메라를 이용하여 얼굴을 인식하는 블록들의 모음입니다.',
+        'It is a collection of blocks that detect human faces using camera.',
     ai_utilize_object_detector_description:
-        '카메라를 이용하여 사물을 인식하는 블록들의 모음입니다.',
+        'It is a collection of blocks that detect objects using camera.',
     ai_utilize_gesture_recognition_description:
-        '카메라를 이용하여 손을 인식하는 블록들의 모음입니다.',
+        'It is a collection of blocks that detect human hands using camera.',
+    sound_empty1: 'Click [Add Sound] to add sound.',
+    sound_empty2: 'How to add sound',
+    sound_empty3: "1. On the 'Select sound' tab, select the default sound provided by the Entry.",
+    sound_empty4: "2. On the 'Upload files' tab, upload the MP3 file directly.",
+    sound_empty5:
+        "You can cut only the parts you need in the 'Trim' mode, or adjust the volume, speed and pitch in the 'Adjust' mode.",
 };
 Lang.Users = {
     auth_failed: 'Authentication failed',
@@ -5021,6 +5031,12 @@ Lang.Workspace = {
     face_landmarker_title_text: 'Face Detection',
     object_detector_title_text: 'Object detection',
     gesture_recognition_title_text: 'Hand detection',
+    sound_start_point: 'Start point',
+    sound_end_point: 'End point',
+    sound_selection: 'Selection',
+    sound_volume: 'Volume',
+    sound_speed: 'Speed',
+    sound_pitch: 'Pitch',
     SelectShape: 'Move',
     SelectCut: 'Cut',
     Pencil: 'Pen',
