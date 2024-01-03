@@ -4950,8 +4950,8 @@ Lang.Msgs = {
         'It is a collection of blocks that detect human hands using camera.',
     sound_empty1: 'Click [Add Sound] to add sound.',
     sound_empty2: 'How to add sound',
-    sound_empty3: "1. On the 'Select sound' tab, select the default sound provided by the Entry.",
-    sound_empty4: "2. On the 'Upload files' tab, upload the MP3 file directly.",
+    sound_empty3: "On the 'Select sound' tab, select the default sound provided by the Entry.",
+    sound_empty4: "On the 'Upload files' tab, upload the MP3 file directly.",
     sound_empty5:
         "You can cut only the parts you need in the 'Trim' mode, or adjust the volume, speed and pitch in the 'Adjust' mode.",
 };
