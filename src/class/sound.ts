@@ -75,12 +75,20 @@ class SoundEditor {
         }
     }
 
-    async changeSound(sound: ISound, object: IObject) {
+    /**
+     * 이 메서드는 소리와 오브젝트를 매개변수로 받아,
+     * 소리가 없거나 소리의 경로가 없는 경우를 제외하고 현재 소리를 업데이트합니다.
+     * 만약 변경 사항이 있다면, 사용자에게 저장할지 확인한 후,
+     * 오디오 버퍼를 얻고 소리를 저장합니다.
+     * 변경 사항이 없다면, 소리와 오브젝트를 업데이트합니다.
+     * 메서드 실행 중에 오류가 발생하면, 오류를 콘솔에 기록합니다.
+     *
+     * @param {ISound} sound - 업데이트할 소리
+     * @param {IObject} object - 오브젝트
+     */
+    changeSound(sound: ISound, object: IObject) {
         try {
-            if (!sound || !sound.path) {
-                return;
-            }
-            if (this.sound && this.sound.id === sound.id) {
+            if (!sound || !sound.path || (this.sound && this.sound.id === sound.id)) {
                 return;
             }
             if (isModified()) {
@@ -104,6 +112,8 @@ class SoundEditor {
     }
 
     clearSound() {
+        this.sound = null;
+        this.object = null;
         clearSound();
     }
 
