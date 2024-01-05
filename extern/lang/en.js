@@ -4716,7 +4716,7 @@ Lang.Menus = {
         'Venture into the forest, and fight against the bad monsters to save the good monsters!',
     solve_elnath_desc_1:
         'Passing through the snow mountain occupied by bad monsters, go find another portal to start a new adventure!',
-    save_modified_shape: 'Do you want to save the modified shape?',
+    save_modified_shape: 'You have unsaved changes.\nDo you want to save?',
     save_modified_table: 'Do you want to save the modified table?',
     attach_file: 'File',
     enter_discuss_title: 'Please enter the title(in 40 characters or less)',
