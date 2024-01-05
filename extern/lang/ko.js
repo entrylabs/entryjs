@@ -5024,7 +5024,7 @@ Lang.Menus = {
     solve_ellinia_desc_1: '숲 속을 탐험하며, 나쁜 몬스터들을 혼내주고 친구 몬스터들을 구해주세요!',
     solve_elnath_desc_1:
         '나쁜 몬스터가 점령한 설산을 지나, 새로운 모험을 시작할 수 있는 또 다른 포털을 찾아 떠나보세요 !',
-    save_modified_shape: '수정된 내용을 저장하시겠습니까?',
+    save_modified_shape: '저장하지 않은 변경 사항이 있습니다.\n변경 사항을 저장할까요?',
     save_modified_table: '테이블에서 수정한 내용을 저장하시겠습니까?',
     attach_file: '첨부',
     enter_discuss_title: '제목을 입력해 주세요(40자 이하)',
