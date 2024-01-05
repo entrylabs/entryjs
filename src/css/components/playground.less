@@ -1138,14 +1138,16 @@
 
 .entryPlaygroundAddSoundInner {
     display: block;
-    width: 146px;
+    overflow: hidden;
+    width: calc(100% - 24px);
     height: 40px;
     margin: 0 auto;
     background-color: #fff;
     border: 1px solid #4f80ff;
     border-radius: 4px;
     color: #4f80ff;
-    text-align: center;
+    text-align: center;  
+    letter-spacing: -0.32px;
     font-size: 14px;
     font-weight: 600;
     line-height: 38px;
@@ -1222,11 +1224,11 @@
     background-position: 50% 50%;
 
     &.entryPlaygroundSoundPlay {
-        .backgroundImage('workspace_sound_play.png');
+        .backgroundImage('workspace_sound_play.svg');
     }
 
     &.entryPlaygroundSoundStop {
-        .backgroundImage('workspace_sound_stop.png');
+        .backgroundImage('workspace_sound_stop.svg');
     }
 }
 

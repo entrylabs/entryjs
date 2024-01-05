@@ -18,6 +18,7 @@ export declare interface IEntry extends EntryOptions {
     soundQueue: any;
     Func: any;
     externalModulesLite: any;
+    loadAudio_: (filename: string[], name: string) => void;
     loadLiteTestModule: (file: file, name: string) => Promise<void>;
     loadLiteTestModuleUploader: () => void;
     HWLite: typeof import('../src/class/hw_lite').default;

@@ -8,9 +8,9 @@ import { Backpack, ColorPicker, Dropdown, Sortable } from '@entrylabs/tool';
 import Toast from '../playground/toast';
 import EntryEvent from '@entrylabs/event';
 import { Destroyer } from '../util/destroyer/Destroyer';
-import { saveAs } from 'file-saver';
 import DataTable from './DataTable';
 import SoundEditor from './sound';
+import _get from 'lodash/get';
 
 const Entry = require('../entry');
 
@@ -1099,6 +1099,7 @@ Entry.Playground = class Playground {
                 items: this._getSortableSoundList(),
             });
         }
+
         this.reloadPlayground();
     }
 
@@ -1419,7 +1420,13 @@ Entry.Playground = class Playground {
             delete Entry.stage.selectedObject;
         } else {
             (this.object.sounds || []).forEach((sound, i) => {
-                !sound.view && Entry.playground.generateSoundElement(sound);
+                const soundLengthView = _get(sound, 'view.soundLengthView');
+                if (soundLengthView) {
+                    soundLengthView.textContent = `${sound.duration} ${Lang.General.second}`;
+                } else {
+                    Entry.playground.generateSoundElement(sound);
+                }
+
                 const element = sound.view;
                 element.orderHolder.textContent = i + 1;
             });
@@ -2061,9 +2068,11 @@ Entry.Playground = class Playground {
         }
 
         nameView.onkeypress = Entry.Utils.blurWhenEnter;
-        Entry.createElement('div')
+        const soundLengthView = Entry.createElement('div')
             .addClass('entryPlaygroundSoundLength')
-            .appendTo(element).textContent = `${sound.duration} ${Lang.General.second}`;
+            .appendTo(element);
+        soundLengthView.textContent = `${sound.duration} ${Lang.General.second}`;
+        element.soundLengthView = soundLengthView;
         const removeButton = Entry.createElement('div').addClass('entryPlayground_del');
         const { Buttons = {} } = Lang || {};
         const { delete: delText = '삭제' } = Buttons;
@@ -2410,7 +2419,12 @@ Entry.Playground = class Playground {
     }
 
     setSound(sound) {
-        return Entry.container.setSound(sound);
+        const objectSound = Entry.container.setSound(sound);
+        const soundLengthView = _get(objectSound, 'view.soundLengthView');
+        if (soundLengthView) {
+            soundLengthView.textContent = `${objectSound.duration} ${Lang.General.second}`;
+        }
+        return objectSound;
     }
 
     destroy() {
