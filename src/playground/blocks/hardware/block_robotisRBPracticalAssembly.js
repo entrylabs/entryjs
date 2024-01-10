@@ -228,6 +228,68 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_huskylens_print_custom_text: "📷 화면 위치 (%1,%2)에 %3출력%4",
                 robotis_huskylens_clear_custom_text: "📷 화면 텍스트 지우기 %1",
             },
+            Helper: {
+                robotis_RB_cm_ir_value: "지정한 번호의 IR 센서 값(범위: 0 ~ 400)",
+                robotis_RB_cm_ir_compare: "지정한 번호의 IR 센서 값과 지정한 값의 비교식이 맞으면 '참', 아니면 '거짓'으로 판단합니다.",
+                robotis_RB_detectFrontObj: "앞에 물체가 감지되면 '참', 아니면 '거짓'으로 판단합니다.",
+                robotis_RB_cm_btn_value: "지정한 버튼이 지정한 상태이면 '참', 아니면 '거짓'으로 판단합니다.",
+                robotis_RB_cm_joystick_value: "조이스틱 위치가 지정한 상태이면 '참', 아니면 '거짓'으로 판단합니다.",
+                robotis_RB_mic: "마이크로 감지된 소리의 세기를 데시벨(dB)로 표시합니다.",
+                robotis_RB_detectSound_compare: "소리가 나는 방향이 지정한 방향과 동일하면 '참', 아니면 '거짓'으로 판단합니다.",
+                robotis_RB_imu: "지정한 축의 지정한 가속도센서/자이로센서의 값(범위: -100 ~ 100)",
+                robotis_RB_roll_pitch: "roll/pitch 값 (roll: -180 ~ 180, pitch: -90 ~ 90)",
+                robotis_RB_environment_value: "지정한 ID의 지정한 센서값(온도 범위: -40 ~ 125섭씨도, 상대습도: 0 ~ 100%, 조도: 0 ~ 100, 동작감지: 0(움직임 없음) / 1(움직임 있음))",
+                robotis_RB_environment_compare: "지정한 ID의 지정한 센서값의 지정한 수식이 맞으면 '참', 아니면 '거짓'으로 판단합니다.",
+                robotis_RB_distance_value: "지정한 ID의 지정한 센서값(거리 범위: 0 ~ 1000mm, 버튼: 0(안눌림) / 1(눌림), 적외선센서: 0 ~ 100)",
+                robotis_RB_distance_compare: "지정한 ID의 지정한 센서값의 지정한 수식이 맞으면 '참', 아니면 '거짓'으로 판단합니다.",
+                robotis_dxl_value: "지정한 모터의 위치 각도값(범위: -180° ~ 180°)",
+
+                
+                robotis_practice_robot_go: "실과로봇을 지정한 속도와 방향으로 주행",
+                robotis_practice_robot_stop: "실과로봇 정지",
+                
+                robotis_RB_follow_line: "실과로봇을 지정한 속도로 검은 라인 따라가기 (특정 조립형태인 경우에만 정상적으로 주행)",
+                robotis_RB_follow_line_stop: "라인 따라가기 종료",
+
+                robotis_RB_cm_buzzer_index: "지정한 음계와 옥타브로 지정한 시간만큼 재생, 또는 쉬기",
+                robotis_RB_cm_screen: "제어기 화면 배경을 알쥐의 지정 표정으로 설정",
+                robotis_RB_cm_anim_screen: "제어기 화면 알쥐의 지정 애니메이션으로 설정",
+                robotis_RB_rsp_screen: "제어기 화면에 지정한 아이콘을 지정한 위치에 지정한 크기로 표시 (X좌표: -160 ~ 160, Y좌표: -120 ~ 120, 크기: 0 ~ 400)",
+
+                robotis_RB_LCDBright: "제어기 화면 밝기를 지정한 값으로 설정",
+                robotis_RB_LCDColor: "제어기 화면 색상을 지정한 색상으로 설정",
+
+                robotis_RB_LEDBright: "제어기의 지정한 LED를 지정한 밝기로 설정",
+                robotis_RB_cm_led: "제어기의 LED를 지정한 방식으로 점멸하거나 점멸 종료",
+
+                robotis_RB_Hello: "지정한 말소리 재생",
+                robotis_RB_effectSound: "지정한 효과음 재생",
+                robotis_RB_record: "지정한 번호의 방에 녹음 (파란색 실행버튼을 누르고 있는 중 '삐-'소리 이후 실행버튼을 떼기 전까지, 또는 최대 4초동안 녹음이 진행됩니다)",
+                robotis_RB_playRecord: "지정한 번호의 방에 녹음된 음성을 재생",
+
+                robotis_dxl_set_mode: "지정한 ID의 모터의 동작모드 설정",
+                //robotis_dxl_control: "1번 모터 %1° 2번 모터 %2° 3번 모터 %3° 4번 모터 %4° 5번 모터 %5° 6번 모터 %6° 7번 모터 %7° 8번 모터 %8° %9초 동안 움직이기 %10",
+                robotis_dxl_each_control: "지정한 ID의 모터를 지정한 시간동안에 지정한 각도(범위: -180° ~ 180°)로 이동",
+                robotis_dxl_set_position: "지정한 ID의 모터를 지정한 속도(범위: 0 ~ 100)로 지정한 각도(범위: -180° ~ 180°)로 이동",
+                robotis_dxl_set_rotate: "지정한 ID의 모터를 지정한 속도(범위: 0 ~ 100)와 방향으로 회전",
+                robotis_dxl_set_multiturn_round: "지정한 ID의 모터를 지정한 속도(범위: 0 ~ 100)와 방향으로 지정한 회전수만큼 회전",
+                
+                robotis_huskylens_block_value_closest_to_center: "📷 화면 중앙과 가장 가까운 사각형의 X좌표/Y좌표/너비/높이/학습ID",
+                robotis_huskylens_arrow_value_closest_to_center: "📷 화면 중앙과 가장 가까운 화살표의 시작점X좌표/시작점Y좌표/끝점X좌표/끝점Y좌표/학습ID",
+                robotis_huskylens_number_of_learned_id: "📷 학습한 ID의 갯수",
+                robotis_huskylens_block_value_of_id: "📷 표시된 사각형중 지정한 ID의 사각형의 X좌표/Y좌표/너비/높이",
+                robotis_huskylens_arrow_value_of_id: "📷 표시된 화살표중 지정한 ID의 화살표의 시작점X좌표/시작점Y좌표/끝점X좌표/끝점Y좌표",
+
+                robotis_huskylens_connection_status: "📷가 연결된 상태이면 '참', 아니면 '거짓'으로 판단합니다.",
+                robotis_huskylens_if_detected: "📷 선택한 기호(사각형/화살표)가 표시되면 '참', 아니면 '거짓'으로 판단합니다.",
+                robotis_huskylens_if_learned_id: "📷 지정한 ID인 데이터를 학습하였으면 '참', 아니면 '거짓'으로 판단합니다.",
+                robotis_huskylens_if_detected_id_type: "📷 지정한 ID인 지정한 데이터(사각형/화살표)를 학습하였으면 '참', 아니면 '거짓'으로 판단합니다.",
+
+                robotis_huskylens_set_mode: "📷의 모드를 설정",
+                robotis_huskylens_save_result: "📷 인식한 최신 데이터 업데이트 (반복호출필요)",
+                robotis_huskylens_print_custom_text: "📷 화면의 지정한 위치에 지정한 문구 출력 (X좌표: -160 ~ 160, Y좌표: -120 ~ 120)",
+                robotis_huskylens_clear_custom_text: "📷 화면에 표시한 모든 문구 지우기",
+            },
             Blocks: {
                 robotis_red: "빨강",
                 robotis_orange: "주황",
