@@ -160,7 +160,7 @@ Entry.Robotis_rb.setLanguage = function() {
                 robotis_RB_kkokdu_screen: "제어기 화면 배경을 꼭두 %1 로 선택 %2",
                 robotis_RB_kkokdu_anim_screen: "제어기 화면 애니메이션을 꼭두 %1 로 선택 %2",
 
-                robotis_RB_rsp_screen: "제어기 화면에 %1 출력하기 %2",
+                robotis_RB_rsp_screen: "제어기 화면에 %1를 (%2, %3)위치에 %4 크기로 출력하기 %5",
 
                 robotis_RB_LCDBright: "제어기 화면 밝기를 %1로 정하기 %2",
                 robotis_RB_LCDColor: "제어기 화면 색상을 %1 으로 정하기 %2",
@@ -404,7 +404,7 @@ Entry.Robotis_rb.setLanguage = function() {
                 robotis_RB_kkokdu_screen: "Choose %1 Tiger as a screen background %2",
                 robotis_RB_kkokdu_anim_screen: "Choose %1 Tiger as a screen animation %2",
 
-                robotis_RB_rsp_screen:"Print %1 on the screen %2",
+                robotis_RB_rsp_screen: "Display %1 on the controller screen at position (%2, %3) with a size of %4 %5",
                 
                 robotis_RB_LCDBright:"Adjust screen brightness to %1 %2",
                 robotis_RB_LCDColor:"Set screen color to %1 %2",
@@ -665,6 +665,18 @@ Entry.Robotis_rb.getBlocks = function () {
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
                     type: 'Indicator',
                     img: 'block_icon/hardware_icon.svg',
                     size: 12,
@@ -674,23 +686,47 @@ Entry.Robotis_rb.getBlocks = function () {
             def: {
                 params: [
                     null,
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                    100,
+                    null,
                 ],
                 type: 'robotis_RB_rsp_screen',
             },
             paramsKeyMap: {
                 ICON: 0,
+                X: 1,
+                Y: 2,
+                SIZE: 3,
             },
             class: 'robotis_rb100_lcd',
             isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car', 'Robotis_rb_P_Assembly'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var iconNum = script.getField('ICON', script);
+                var x = script.getNumberValue('X', script);
+                var y = script.getNumberValue('Y', script);
+                var size = script.getNumberValue('SIZE', script);
                 
                 var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
                 var data_address = 166;
                 var data_length = 2;
                 var data_value = 10496;
             
+                if (x < -160) x = -160;
+                else if (x > 160) x = 160;
+                
+                if (y < -120) y = -120;
+                else if (y > 120) y = 120;
+                
+                if (size < 0) size = 0;
+                else if (size > 400) size = 400;
                
                 data_value = iconNum;
 
@@ -702,10 +738,13 @@ Entry.Robotis_rb.getBlocks = function () {
                         Entry.Robotis_rb.INSTRUCTION.WRITE, 163, 2, 255
                     ],
                     [
-                        Entry.Robotis_rb.INSTRUCTION.WRITE, 130, 4, 0
+                        Entry.Robotis_rb.INSTRUCTION.WRITE, 130, 2, x
                     ],
                     [
-                        Entry.Robotis_rb.INSTRUCTION.WRITE, 149, 2, 200
+                        Entry.Robotis_rb.INSTRUCTION.WRITE, 132, 2, y
+                    ],
+                    [
+                        Entry.Robotis_rb.INSTRUCTION.WRITE, 149, 2, size
                     ],
                     [
                         data_instruction,

@@ -123,9 +123,9 @@ Entry.Robotis_rb_P_Assembly.blockMenuBlocks = [
     'robotis_RB_playRecord',
 
     // 다이나믹셀 제어
-    'robotis_dxl_control',
-    'robotis_dxl_each_control',
     'robotis_dxl_set_mode',
+    //'robotis_dxl_control',
+    'robotis_dxl_each_control',
     'robotis_dxl_set_position',
     'robotis_dxl_set_rotate',
     'robotis_dxl_set_multiturn_round',
@@ -192,7 +192,7 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_RB_cm_buzzer_index: "제어기 음계값 %1 을(를) %2 옥타브로 %3 초 동안 %4 %5",
                 robotis_RB_cm_screen: "제어기 화면 배경을 알쥐 %1 로 선택 %2",
                 robotis_RB_cm_anim_screen: "제어기 화면 애니메이션을 알쥐 %1 로 선택 %2",
-                robotis_RB_rsp_screen: "제어기 화면에 %1 출력하기 %2",
+                robotis_RB_rsp_screen: "제어기 화면에 %1를 (%2, %3)위치에 %4 크기로 출력하기 %5",
 
                 robotis_RB_LCDBright: "제어기 화면 밝기를 %1로 정하기 %2",
                 robotis_RB_LCDColor: "제어기 화면 색상을 %1 으로 정하기 %2",
@@ -205,10 +205,10 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_RB_record: "%1 번 방에 녹음하기 %2",
                 robotis_RB_playRecord: "%1 번 방 소리 재생하기 %2",
 
-                robotis_dxl_control: "1번 모터 %1° 2번 모터 %2° 3번 모터 %3° 4번 모터 %4° 5번 모터 %5° 6번 모터 %6° 7번 모터 %7° 8번 모터 %8° %9초 동안 움직이기 %10",
-                robotis_dxl_each_control: "%1 모터 %2° %3 초 동안 움직이기 %4",
                 robotis_dxl_set_mode: "%1 번 모터 %2 모드로 설정 %3",
-                robotis_dxl_set_position: "%1 번 모터 %2 속도로 %3 도 위치로 회전 %4",
+                //robotis_dxl_control: "1번 모터 %1° 2번 모터 %2° 3번 모터 %3° 4번 모터 %4° 5번 모터 %5° 6번 모터 %6° 7번 모터 %7° 8번 모터 %8° %9초 동안 움직이기 %10",
+                robotis_dxl_each_control: "%1 모터 %2°로 %3 초 동안 움직이기 %4",
+                robotis_dxl_set_position: "%1 번 모터 %2 속도로 %3° 위치로 회전 %4",
                 robotis_dxl_set_rotate: "%1 번 모터 %2 속도로 %3 으로 %4 %5",
                 robotis_dxl_set_multiturn_round: "%1 번 모터 %2 속도로 %3 바퀴 %4 회전 %5",
                 
@@ -453,7 +453,7 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_RB_cm_buzzer_index: "%1 at %2 octaves for %3 second(s) -> %4 %5",
                 robotis_RB_cm_screen: "Choose %1 as a screen background %2",
                 robotis_RB_cm_anim_screen: "Choose %1 as a screen animation %2",
-                robotis_RB_rsp_screen: "Print %1 on the screen %2",
+                robotis_RB_rsp_screen: "Display %1 on the controller screen at position (%2, %3) with a size of %4 %5",
 
                 robotis_RB_LCDBright: "Adjust screen brightness to %1 %2",
                 robotis_RB_LCDColor: "Set screen color to %1 %2",
@@ -466,10 +466,10 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_RB_record: "Record in room %1 %2",
                 robotis_RB_playRecord: "Play recorded sound in room %1 %2",
 
-                robotis_dxl_control: "Move 1st motor %1°, 2nd motor %2°, 3rd motor %3°, 4th motor %4°, 5th motor %5°, 6th motor %6°, 7th motor %7°, 8th motor %8° for  second %9 %10",
-                robotis_dxl_each_control: "Move %1th motor %2° for %3 second",
                 robotis_dxl_set_mode: "Set ID %1 motor as %2 mode %3",
-                robotis_dxl_set_position: "Rotate ID %1 motor to angle %3 at speed %2 %4",
+                //robotis_dxl_control: "Move 1st motor %1°, 2nd motor %2°, 3rd motor %3°, 4th motor %4°, 5th motor %5°, 6th motor %6°, 7th motor %7°, 8th motor %8° for  second %9 %10",
+                robotis_dxl_each_control: "Move %1th motor %2° for %3 second",
+                robotis_dxl_set_position: "Rotate ID %1 motor to angle %3° at speed %2 %4",
                 robotis_dxl_set_rotate: "%4 ID %1 motor %3 at speed %2 %4",
                 robotis_dxl_set_multiturn_round: "Rotate ID %1 motor %3 round %4 at speed %2 %5",
 
@@ -844,6 +844,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 py: ['Robotis.opencm70_RGee_stop()'],
             },
         },
+        /*
         robotis_dxl_control: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1010,6 +1011,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: { js: [], py: ['Robotis.robotis_dxl_control(%1)'] },
         },
+        */
 
         robotis_dxl_each_control: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -1133,8 +1135,21 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             statements: [],
             params: [
                 {
-                    type: 'Block',
-                    accept: 'string',
+                    type: 'Dropdown',
+                    options: [
+                        ["1", '1'],
+                        ["2", '2'], //Lang.Blocks.robotis_common_green_color
+                        ["3", '3'],
+                        ["4", '4'],
+                        ["5", '5'],
+                        ["6", '6'],
+                        ["7", '7'],
+                        ["8", '8'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -1228,8 +1243,21 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             statements: [],
             params: [
                 {
-                    type: 'Block',
-                    accept: 'string',
+                    type: 'Dropdown',
+                    options: [
+                        ["1", '1'],
+                        ["2", '2'], //Lang.Blocks.robotis_common_green_color
+                        ["3", '3'],
+                        ["4", '4'],
+                        ["5", '5'],
+                        ["6", '6'],
+                        ["7", '7'],
+                        ["8", '8'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -1333,8 +1361,21 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             statements: [],
             params: [
                 {
-                    type: 'Block',
-                    accept: 'string',
+                    type: 'Dropdown',
+                    options: [
+                        ["1", '1'],
+                        ["2", '2'], //Lang.Blocks.robotis_common_green_color
+                        ["3", '3'],
+                        ["4", '4'],
+                        ["5", '5'],
+                        ["6", '6'],
+                        ["7", '7'],
+                        ["8", '8'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -1445,8 +1486,21 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             statements: [],
             params: [
                 {
-                    type: 'Block',
-                    accept: 'string',
+                    type: 'Dropdown',
+                    options: [
+                        ["1", '1'],
+                        ["2", '2'], //Lang.Blocks.robotis_common_green_color
+                        ["3", '3'],
+                        ["4", '4'],
+                        ["5", '5'],
+                        ["6", '6'],
+                        ["7", '7'],
+                        ["8", '8'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -1585,8 +1639,21 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             statements: [],
             params: [
                 {
-                    type: 'Block',
-                    accept: 'string',
+                    type: 'Dropdown',
+                    options: [
+                        ["1", '1'],
+                        ["2", '2'], //Lang.Blocks.robotis_common_green_color
+                        ["3", '3'],
+                        ["4", '4'],
+                        ["5", '5'],
+                        ["6", '6'],
+                        ["7", '7'],
+                        ["8", '8'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -2631,8 +2698,14 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             events: {},
             def: {
                 params: [
-                    0,
-                    0,
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
                     "Hello!"
                 ],
                 type: 'robotis_huskylens_print_custom_text',
@@ -2653,6 +2726,16 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 var data_buf = [];
                 var i = 0;
 
+                
+                if (x < -160) x = 160;
+                else if (x > 160) x = 160;
+
+                if (y < -120) y = 120;
+                else if (y > 120) y = 120;
+
+                if (x < 0) x = 65536 + x;
+                if (y < 0) y = 65536 + y;
+                
                 data_buf.push(x % 256);
                 data_buf.push(Math.floor(x/256));
                 data_buf.push(y % 256);
