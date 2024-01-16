@@ -1563,16 +1563,24 @@ Entry.Playground = class Playground {
             }
         }
 
-        if (viewType === 'sound') {
-            this.initSortableSoundWidget();
-            if (!this.soundView_.object || this.soundView_.object != this.object) {
-                this.soundView_.object = this.object;
-                this.injectSound();
-            } else if (this.object && this.soundListView_ && !this.soundListView_.hasChildNodes()) {
-                const sounds = this.object.sounds;
-                if (sounds && sounds.length) {
+        if (Entry.soundEditable) {
+            if (viewType === 'sound') {
+                this.initSortableSoundWidget();
+                if (!this.soundView_.object || this.soundView_.object != this.object) {
+                    this.soundView_.object = this.object;
                     this.injectSound();
+                } else if (
+                    this.object &&
+                    this.soundListView_ &&
+                    !this.soundListView_.hasChildNodes()
+                ) {
+                    const sounds = this.object.sounds;
+                    if (sounds && sounds.length) {
+                        this.injectSound();
+                    }
                 }
+            } else {
+                this.soundEditor.hide();
             }
         }
 

@@ -92,17 +92,7 @@ class SoundEditor {
                 return;
             }
             if (isModified()) {
-                Entry.modal
-                    .confirm(Lang.Menus.save_modified_shape)
-                    .then(async (result: boolean) => {
-                        if (result) {
-                            this.lastChangeSoundInfo = { sound, object };
-                            this.saveSound(await getAudioBuffer(), false);
-                        } else {
-                            clearHistory();
-                            this.updateSound(sound, object);
-                        }
-                    });
+                this.alertSaveModifiedSound(sound, object);
             } else {
                 this.updateSound(sound, object);
             }
@@ -148,7 +138,6 @@ class SoundEditor {
         if (!audioBuffer) {
             return;
         }
-        clearHistory();
         Entry.dispatchEvent(
             'saveSoundBuffer',
             toWav(audioBuffer),
@@ -156,7 +145,10 @@ class SoundEditor {
                 ...this.sound,
                 objectId: this.object.id,
             },
-            isSelect
+            isSelect,
+            () => {
+                clearHistory();
+            }
         );
     }
 
@@ -178,6 +170,25 @@ class SoundEditor {
             this.updateSound(sound, object);
         }
         this.lastChangeSoundInfo = null;
+    }
+
+    alertSaveModifiedSound(sound: ISound, object: IObject) {
+        if (!isModified || !isModified()) {
+            return;
+        }
+        Entry.modal.confirm(Lang.Menus.save_modified_shape).then(async (result: boolean) => {
+            if (result) {
+                this.lastChangeSoundInfo = { sound, object };
+                this.saveSound(await getAudioBuffer(), false);
+            } else {
+                clearHistory();
+                this.updateSound(sound, object);
+            }
+        });
+    }
+
+    hide() {
+        this.alertSaveModifiedSound(this.sound, this.object);
     }
 
     destory() {
