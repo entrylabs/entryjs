@@ -134,6 +134,7 @@ Entry.Robotis_rb_P_Assembly.blockMenuBlocks = [
     'robotis_RB_cm_screen',
     'robotis_RB_cm_anim_screen',
     'robotis_RB_rsp_screen',
+    'robotis_RB_text_screen',
 
     'robotis_RB_LCDBright',
     'robotis_RB_LCDColor',
@@ -193,6 +194,7 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_RB_cm_screen: "제어기 화면 배경을 알쥐 %1 로 선택 %2",
                 robotis_RB_cm_anim_screen: "제어기 화면 애니메이션을 알쥐 %1 로 선택 %2",
                 robotis_RB_rsp_screen: "제어기 화면에 %1를 (%2, %3)위치에 %4 크기로 출력하기 %5",
+                robotis_RB_text_screen: "제어기 화면에 %1를 (%2, %3)위치에 %4 로 %5으로 출력하기 %6",
 
                 robotis_RB_LCDBright: "제어기 화면 밝기를 %1로 정하기 %2",
                 robotis_RB_LCDColor: "제어기 화면 색상을 %1 으로 정하기 %2",
@@ -516,6 +518,7 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_RB_cm_screen: "Choose %1 as a screen background %2",
                 robotis_RB_cm_anim_screen: "Choose %1 as a screen animation %2",
                 robotis_RB_rsp_screen: "Display %1 on the controller screen at position (%2, %3) with a size of %4 %5",
+                robotis_RB_text_screen: "Display %1 on the controller screen at position (%2, %3) with %4 %5 %6",
 
                 robotis_RB_LCDBright: "Adjust screen brightness to %1 %2",
                 robotis_RB_LCDColor: "Set screen color to %1 %2",

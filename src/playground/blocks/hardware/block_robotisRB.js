@@ -104,6 +104,7 @@ Entry.Robotis_rb.blockMenuBlocks = [
     'robotis_RB_cm_screen',
     'robotis_RB_cm_anim_screen',
     'robotis_RB_rsp_screen',
+    'robotis_RB_text_screen',
 
     'robotis_RB_LCDBright',
     'robotis_RB_LCDColor',
@@ -161,6 +162,7 @@ Entry.Robotis_rb.setLanguage = function() {
                 robotis_RB_kkokdu_anim_screen: "제어기 화면 애니메이션을 꼭두 %1 로 선택 %2",
 
                 robotis_RB_rsp_screen: "제어기 화면에 %1를 (%2, %3)위치에 %4 크기로 출력하기 %5",
+                robotis_RB_text_screen: "제어기 화면에 %1를 (%2, %3)위치에 %4 로 %5으로 출력하기 %6",
 
                 robotis_RB_LCDBright: "제어기 화면 밝기를 %1로 정하기 %2",
                 robotis_RB_LCDColor: "제어기 화면 색상을 %1 으로 정하기 %2",
@@ -186,14 +188,20 @@ Entry.Robotis_rb.setLanguage = function() {
                 robotis_RB_car_anim_screen: "제어기 화면 애니메이션을 알라 %1 로 선택 %2",
             },
             Blocks: {
+                robotis_white: "흰색",
+                robotis_gray: "회색",
+                robotis_darkgray: "진회색",
+                robotis_black: "검정",
+                robotis_purple: "보라색",
+                robotis_pink: "분홍색",
                 robotis_red: "빨강",
                 robotis_orange: "주황",
+                robotis_brown: "갈색",
                 robotis_yellow: "노랑",
                 robotis_green: "초록",
                 robotis_blue: "파랑",
-                robotis_brown: "갈색",
-                robotis_black: "검정",
-                robotis_white: "흰색",
+                robotis_lightblue: "연파랑",
+                robotis_darkblue: "남색",
                 robotis_left: "왼쪽",
                 robotis_center: "중앙",
                 robotis_right: "오른쪽",
@@ -372,6 +380,8 @@ Entry.Robotis_rb.setLanguage = function() {
                 robotis_screen1: "가위",
                 robotis_screen2: "바위",
                 robotis_screen3: "보",
+                robotis_screen_text_font_small: "작은 폰트",
+                robotis_screen_text_font_big: "큰 폰트",
                 robotis_sensing_temperature: "온도센서",
                 robotis_sensing_humidity: "습도센서",
                 robotis_sensing_brightness: "밝기센서",
@@ -405,6 +415,7 @@ Entry.Robotis_rb.setLanguage = function() {
                 robotis_RB_kkokdu_anim_screen: "Choose %1 Tiger as a screen animation %2",
 
                 robotis_RB_rsp_screen: "Display %1 on the controller screen at position (%2, %3) with a size of %4 %5",
+                robotis_RB_text_screen: "Display %1 on the controller screen at position (%2, %3) with %4 %5 %6",
                 
                 robotis_RB_LCDBright:"Adjust screen brightness to %1 %2",
                 robotis_RB_LCDColor:"Set screen color to %1 %2",
@@ -430,14 +441,20 @@ Entry.Robotis_rb.setLanguage = function() {
                 robotis_RB_car_anim_screen: "Choose %1 R-La as a screen animation %2",
             },
             Blocks: {
+                robotis_white: "White",
+                robotis_gray: "Gray",
+                robotis_darkgray: "Dark gray",
+                robotis_black: "Black",
+                robotis_purple: "Purple",
+                robotis_pink: "Pink",
                 robotis_red: "Red",
                 robotis_orange: "Orange",
+                robotis_brown: "Brown",
                 robotis_yellow: "Yellow",
                 robotis_green: "Green",
                 robotis_blue: "Blue",
-                robotis_brown: "Brown",
-                robotis_black: "Black",
-                robotis_white: "White",
+                robotis_lightblue: "Light blue",
+                robotis_darkblue: "Dark blue",
                 robotis_left: "Left",
                 robotis_center: "Center",
                 robotis_right: "Right",
@@ -616,6 +633,8 @@ Entry.Robotis_rb.setLanguage = function() {
                 robotis_screen1: "Sissor",
                 robotis_screen2: "Rock",
                 robotis_screen3: "Paper",
+                robotis_screen_text_font_small: "small font",
+                robotis_screen_text_font_big: "big font",
                 robotis_sensing_temperature: "Temperature",
                 robotis_sensing_humidity: "Humidity",
                 robotis_sensing_brightness: "Brightness",
@@ -760,12 +779,154 @@ Entry.Robotis_rb.getBlocks = function () {
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
                     data_sendqueue,
-                    Entry.Robotis_openCM70.delay + 1000
+                    Entry.Robotis_openCM70.delay + 100
                 );
             },
             syntax: {
                 js: [],
-                py: ['Robotis.RB_rsp_screen(%1)'],
+                py: ['Robotis.RB_rsp_screen(%1,%2,%3,%4)'],
+            },
+        },
+        robotis_RB_text_screen: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.robotis_screen_text_font_small, '0'],
+                        [Lang.Blocks.robotis_screen_text_font_big, '1'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.robotis_red, '224'],
+                        [Lang.Blocks.robotis_orange, '244'],
+                        [Lang.Blocks.robotis_yellow, '252'],
+                        [Lang.Blocks.robotis_green, '28'],
+                        [Lang.Blocks.robotis_blue, '3'],
+                        [Lang.Blocks.robotis_darkblue, '2'],
+                        [Lang.Blocks.robotis_purple, '130'],
+                        [Lang.Blocks.robotis_brown, '173'],
+                        [Lang.Blocks.robotis_black, '0'],
+                        [Lang.Blocks.robotis_white, '255'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    Lang.Blocks.robotis_korean1,
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'robotis_RB_text_screen',
+            },
+            paramsKeyMap: {
+                TEXT: 0,
+                X: 1,
+                Y: 2,
+                FONT: 3,
+                COLOR: 4,
+            },
+            class: 'robotis_rb100_lcd',
+            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car', 'Robotis_rb_P_Assembly'],
+            func: function (sprite, script) {
+                // instruction / address / length / value / default length
+                var text = script.getStringValue('TEXT', script);
+                var x = script.getNumberValue('X', script);
+                var y = script.getNumberValue('Y', script);
+                var font = script.getNumberValue('FONT', script);
+                var color = script.getNumberValue('COLOR', script);
+                var data_buf = [];
+                var i = 0;
+                
+                var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                var data_address = 166;
+                var data_length = 2;
+                var data_value = 10496;
+            
+                if (x < -160) x = -160;
+                else if (x > 160) x = 160;
+                
+                if (y < -120) y = -120;
+                else if (y > 120) y = 120;
+                
+                var encoder = new TextEncoder('utf-8');
+                var byteArray = encoder.encode(text);
+
+                data_buf.push(x % 256);
+                data_buf.push(Math.floor(x/256));
+                data_buf.push(y % 256);
+                data_buf.push(Math.floor(y/256));
+                data_buf.push(font);
+                data_buf.push(color);
+                data_buf.push(byteArray.length);
+                for (i = 0; i < byteArray.length; i++) {
+                    data_buf.push(byteArray[i]);
+                }
+               
+                var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                var data_address = 900;
+                var data_length = 7 + byteArray.length;
+
+                var data_sendqueue = [
+                    [
+                        data_instruction,
+                        data_address,
+                        data_length,
+                        data_buf,
+                    ],
+                    [
+                        Entry.Robotis_rb.INSTRUCTION.WRITE, 162, 1, 1
+                    ]
+                ];
+                
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    Entry.Robotis_openCM70.delay + 100
+                );
+            },
+            syntax: {
+                js: [],
+                py: ['Robotis.RB_text_screen(%1,%2,%3,%4)'],
             },
         },
         robotis_RB_cm_custom_value: {
@@ -1331,6 +1492,8 @@ Entry.Robotis_rb.getBlocks = function () {
                         [Lang.Blocks.robotis_yellow, '252'],
                         [Lang.Blocks.robotis_green, '28'],
                         [Lang.Blocks.robotis_blue, '3'],
+                        [Lang.Blocks.robotis_darkblue, '2'],
+                        [Lang.Blocks.robotis_purple, '130'],
                         [Lang.Blocks.robotis_brown, '173'],
                         [Lang.Blocks.robotis_black, '0'],
                         [Lang.Blocks.robotis_white, '255'],
@@ -3652,7 +3815,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
                     data_sendqueue,
-                    Entry.Robotis_openCM70.delay + 1000
+                    Entry.Robotis_openCM70.delay + 100
                 );
             },
             syntax: { js: [], py: ['Robotis.opencm70_cm_screen(%1)'] },
