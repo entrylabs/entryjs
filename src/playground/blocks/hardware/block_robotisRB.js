@@ -192,7 +192,7 @@ Entry.Robotis_rb.setLanguage = function() {
                 robotis_gray: "회색",
                 robotis_darkgray: "진회색",
                 robotis_black: "검정",
-                robotis_purple: "보라색",
+                robotis_purple: "보라",
                 robotis_pink: "분홍색",
                 robotis_red: "빨강",
                 robotis_orange: "주황",
