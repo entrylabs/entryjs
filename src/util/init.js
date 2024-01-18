@@ -604,6 +604,13 @@ Entry.Utils.initEntryEvent_ = function() {
     }
 };
 
+Entry.getSoundPath = (sound) =>
+    sound.fileurl ||
+    `${Entry.defaultPath}/uploads/${sound.filename.substring(0, 2)}/${sound.filename.substring(
+        2,
+        4
+    )}/${Entry.soundPath}${sound.filename}${sound.ext || '.mp3'}`;
+
 /**
  * initialize sound
  * @param {object} sound
