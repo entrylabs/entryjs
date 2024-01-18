@@ -1410,7 +1410,7 @@ Entry.Playground = class Playground {
     /**
      * Inject sound
      */
-    injectSound() {
+    injectSound(isSelect = true) {
         const view = this.soundListView_;
         if (!view) {
             return;
@@ -1430,11 +1430,13 @@ Entry.Playground = class Playground {
                 const element = sound.view;
                 element.orderHolder.textContent = i + 1;
             });
-            const [sound] = this.object.sounds;
-            if (sound) {
-                this.selectSound(sound);
-            } else {
-                this.unselectSound();
+
+            if (isSelect) {
+                if (this.object.selectedSound) {
+                    this.selectSound(this.object.selectedSound);
+                } else {
+                    this.unselectSound();
+                }
             }
         }
 
@@ -1488,7 +1490,7 @@ Entry.Playground = class Playground {
      * @param {sound model} sound
      * @param {boolean} NotForView if this is true, add element into object also.
      */
-    addSound(sound, NotForView, isNew) {
+    addSound(sound, NotForView, isNew, isSelect = true) {
         const tempSound = _.clone(sound);
         delete tempSound.view;
         if (isNew === true) {
@@ -1502,8 +1504,7 @@ Entry.Playground = class Playground {
         sound.name = Entry.getOrderedName(sound.name, this.object.sounds);
 
         this.generateSoundElement(sound);
-        Entry.do('objectAddSound', this.object.id, sound);
-        this.injectSound();
+        Entry.do('objectAddSound', sound.objectId || this.object.id, sound, isSelect);
     }
 
     downloadSound(soundId) {
@@ -2189,7 +2190,17 @@ Entry.Playground = class Playground {
             }
         });
 
-        Entry.dispatchEvent('soundSelected', sound, this.object);
+        let objectId_;
+        if (sound && sound.id) {
+            objectId_ = Entry.container.selectSound(sound.id, sound.objectId);
+        }
+
+        if (this.object.id === objectId_) {
+            if (!sound.objectId) {
+                sound.objectId = this.object.id;
+            }
+            Entry.dispatchEvent('soundSelected', sound, this.object);
+        }
     }
 
     unselectSound() {
