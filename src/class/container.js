@@ -342,9 +342,9 @@ Entry.Container = class Container {
 
     selectSound(soundId, objectId) {
         const object = this.getObject(objectId);
-        const sound_ = object.getSound(soundId);
-        if (sound_) {
-            object.selectedSound = sound_;
+        const sound = object.getSound(soundId);
+        if (sound) {
+            object.selectedSound = sound;
             return object.id;
         }
         throw new Error('No sound found');
