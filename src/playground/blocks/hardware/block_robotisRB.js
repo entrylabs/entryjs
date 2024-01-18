@@ -3464,9 +3464,9 @@ Entry.Robotis_rb.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['1', '-1'],
-                        ['2', '0'],
-                        ['3', '1'],
+                        ['3', '-1'],
+                        ['4', '0'],
+                        ['5', '1'],
                     ],
                     value: '0',
                     fontSize: 11,
