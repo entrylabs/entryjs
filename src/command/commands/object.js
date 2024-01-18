@@ -124,13 +124,15 @@ import WebUsbFlasher from '../../class/hardware/webUsbFlasher';
     };
 
     c[COMMAND_TYPES.objectAddSound] = {
-        do(objectId, sound) {
+        do(objectId, sound, isSelect = true) {
             const hashId = c[COMMAND_TYPES.objectAddSound].hashId;
             if (hashId) {
                 sound.id = hashId;
                 delete c[COMMAND_TYPES.objectAddSound].hashId;
             }
             Entry.container.getObject(objectId).addSound(sound);
+            Entry.playground.injectSound(isSelect);
+            isSelect && Entry.playground.selectSound(sound);
             Entry.dispatchEvent('dismissModal');
         },
         state(objectId, sound) {
@@ -185,7 +187,6 @@ import WebUsbFlasher from '../../class/hardware/webUsbFlasher';
 
     c[COMMAND_TYPES.objectRemoveSound] = {
         do(objectId, sound) {
-            Entry.dispatchEvent('soundUnselected');
             return Entry.container.getObject(objectId).removeSound(sound.id);
         },
         state(objectId, sound) {

@@ -59,6 +59,10 @@ class SoundEditor {
 
     async updateSound(sound: ISound, object: IObject) {
         try {
+            if (Entry.playground.object.id !== object.id) {
+                return;
+            }
+
             this.sound = sound;
             this.object = object;
             const audioBuffer = this.getEntryAudioBuffer(sound.id);
@@ -101,7 +105,8 @@ class SoundEditor {
         }
     }
 
-    clearSound() {
+    async clearSound() {
+        await this.alertSaveModifiedSound(this.sound, this.object);
         this.sound = null;
         this.object = null;
         clearSound();
@@ -156,14 +161,14 @@ class SoundEditor {
         let sound: ISound;
         let object: IObject;
 
-        if (soundInfo) {
+        if (this.lastChangeSoundInfo) {
+            sound = this.lastChangeSoundInfo.sound;
+            object = this.lastChangeSoundInfo.object;
+        } else if (soundInfo) {
             sound = soundInfo;
             object = {
                 id: soundInfo.objectId,
             };
-        } else if (this.lastChangeSoundInfo) {
-            sound = this.lastChangeSoundInfo.sound;
-            object = this.lastChangeSoundInfo.object;
         }
 
         if (sound && object) {
@@ -173,17 +178,21 @@ class SoundEditor {
     }
 
     alertSaveModifiedSound(sound: ISound, object: IObject) {
-        if (!isModified || !isModified()) {
-            return;
-        }
-        Entry.modal.confirm(Lang.Menus.save_modified_shape).then(async (result: boolean) => {
-            if (result) {
-                this.lastChangeSoundInfo = { sound, object };
-                this.saveSound(await getAudioBuffer(), false);
-            } else {
-                clearHistory();
-                this.updateSound(sound, object);
+        return new Promise<void>((res) => {
+            if (!isModified || !isModified()) {
+                res();
+                return;
             }
+            Entry.modal.confirm(Lang.Menus.save_modified_shape).then(async (result: boolean) => {
+                if (result) {
+                    this.lastChangeSoundInfo = { sound, object };
+                    this.saveSound(await getAudioBuffer(), false);
+                } else {
+                    clearHistory();
+                    this.updateSound(sound, object);
+                }
+                res();
+            });
         });
     }
 

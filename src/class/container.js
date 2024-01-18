@@ -340,6 +340,16 @@ Entry.Container = class Container {
         throw new Error('No picture found');
     }
 
+    selectSound(soundId, objectId) {
+        const object = this.getObject(objectId);
+        const sound_ = object.getSound(soundId);
+        if (sound_) {
+            object.selectedSound = sound_;
+            return object.id;
+        }
+        throw new Error('No sound found');
+    }
+
     /**
      * Add object
      * @param {!object model} objectModel
