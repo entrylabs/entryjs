@@ -8,8 +8,9 @@ import { Backpack, ColorPicker, Dropdown, Sortable } from '@entrylabs/tool';
 import Toast from '../playground/toast';
 import EntryEvent from '@entrylabs/event';
 import { Destroyer } from '../util/destroyer/Destroyer';
-import { saveAs } from 'file-saver';
 import DataTable from './DataTable';
+import SoundEditor from './sound';
+import _get from 'lodash/get';
 
 const Entry = require('../entry');
 
@@ -1031,22 +1032,6 @@ Entry.Playground = class Playground {
             'entryPlaygroundSoundEdit'
         );
 
-        const tempNotificationWrapper = Entry.createElement('div').addClass(
-            'entryPlaygroundSoundEditWrapper'
-        );
-
-        const tempImage = Entry.createElement('div').addClass('entryPlaygroundSoundEditImage');
-
-        const tempNotification = Entry.createElement('span').addClass(
-            'entryPlaygroundSoundEditText'
-        );
-        tempNotification.textContent = Lang.Menus.sound_edit_warn;
-
-        tempNotificationWrapper.appendChild(tempImage);
-        tempNotificationWrapper.appendChild(tempNotification);
-
-        soundEditView.appendChild(tempNotificationWrapper);
-
         return soundEditView;
     }
 
@@ -1086,6 +1071,7 @@ Entry.Playground = class Playground {
 
             const soundEditView = this._createSoundEditView();
             soundView.appendChild(soundEditView);
+            this.soundEditor = new SoundEditor(soundEditView);
         }
     }
 
@@ -1113,6 +1099,7 @@ Entry.Playground = class Playground {
                 items: this._getSortableSoundList(),
             });
         }
+
         this.reloadPlayground();
     }
 
@@ -1423,7 +1410,7 @@ Entry.Playground = class Playground {
     /**
      * Inject sound
      */
-    injectSound() {
+    injectSound(isSelect = true) {
         const view = this.soundListView_;
         if (!view) {
             return;
@@ -1433,10 +1420,24 @@ Entry.Playground = class Playground {
             delete Entry.stage.selectedObject;
         } else {
             (this.object.sounds || []).forEach((sound, i) => {
-                !sound.view && Entry.playground.generateSoundElement(sound);
+                const soundLengthView = _get(sound, 'view.soundLengthView');
+                if (soundLengthView) {
+                    soundLengthView.textContent = `${sound.duration} ${Lang.General.second}`;
+                } else {
+                    Entry.playground.generateSoundElement(sound);
+                }
+
                 const element = sound.view;
                 element.orderHolder.textContent = i + 1;
             });
+
+            if (isSelect) {
+                if (this.object.selectedSound) {
+                    this.selectSound(this.object.selectedSound);
+                } else {
+                    this.unselectSound();
+                }
+            }
         }
 
         this.updateSoundsView();
@@ -1489,7 +1490,7 @@ Entry.Playground = class Playground {
      * @param {sound model} sound
      * @param {boolean} NotForView if this is true, add element into object also.
      */
-    addSound(sound, NotForView, isNew) {
+    addSound(sound, NotForView, isNew, isSelect = true) {
         const tempSound = _.clone(sound);
         delete tempSound.view;
         if (isNew === true) {
@@ -1503,8 +1504,7 @@ Entry.Playground = class Playground {
         sound.name = Entry.getOrderedName(sound.name, this.object.sounds);
 
         this.generateSoundElement(sound);
-        Entry.do('objectAddSound', this.object.id, sound);
-        this.injectSound();
+        Entry.do('objectAddSound', sound.objectId || this.object.id, sound, isSelect);
     }
 
     downloadSound(soundId) {
@@ -1564,16 +1564,24 @@ Entry.Playground = class Playground {
             }
         }
 
-        if (viewType === 'sound') {
-            this.initSortableSoundWidget();
-            if (!this.soundView_.object || this.soundView_.object != this.object) {
-                this.soundView_.object = this.object;
-                this.injectSound();
-            } else if (this.object && this.soundListView_ && !this.soundListView_.hasChildNodes()) {
-                const sounds = this.object.sounds;
-                if (sounds && sounds.length) {
+        if (Entry.soundEditable) {
+            if (viewType === 'sound') {
+                this.initSortableSoundWidget();
+                if (!this.soundView_.object || this.soundView_.object != this.object) {
+                    this.soundView_.object = this.object;
                     this.injectSound();
+                } else if (
+                    this.object &&
+                    this.soundListView_ &&
+                    !this.soundListView_.hasChildNodes()
+                ) {
+                    const sounds = this.object.sounds;
+                    if (sounds && sounds.length) {
+                        this.injectSound();
+                    }
                 }
+            } else {
+                this.soundEditor.hide();
             }
         }
 
@@ -1998,7 +2006,13 @@ Entry.Playground = class Playground {
         let soundInstance;
 
         element.bindOnClick(() => {
-            this.selectSound(sound);
+            if (!this.object.sounds || !this.object.sounds.length) {
+                return;
+            }
+            const isExist = this.object.sounds.some((os) => os.id === sound.id);
+            if (isExist) {
+                this.selectSound(sound);
+            }
         });
 
         thumbnailView.addEventListener('touchmove', (e) => {
@@ -2063,9 +2077,11 @@ Entry.Playground = class Playground {
         }
 
         nameView.onkeypress = Entry.Utils.blurWhenEnter;
-        Entry.createElement('div')
+        const soundLengthView = Entry.createElement('div')
             .addClass('entryPlaygroundSoundLength')
-            .appendTo(element).textContent = `${sound.duration} ${Lang.General.second}`;
+            .appendTo(element);
+        soundLengthView.textContent = `${sound.duration} ${Lang.General.second}`;
+        element.soundLengthView = soundLengthView;
         const removeButton = Entry.createElement('div').addClass('entryPlayground_del');
         const { Buttons = {} } = Lang || {};
         const { delete: delText = '삭제' } = Buttons;
@@ -2173,6 +2189,22 @@ Entry.Playground = class Playground {
                 item.view.addClass('entrySoundSelected');
             }
         });
+
+        let objectId_;
+        if (sound && sound.id) {
+            objectId_ = Entry.container.selectSound(sound.id, sound.objectId);
+        }
+
+        if (this.object.id === objectId_) {
+            if (!sound.objectId) {
+                sound.objectId = this.object.id;
+            }
+            Entry.dispatchEvent('soundSelected', sound, this.object);
+        }
+    }
+
+    unselectSound() {
+        Entry.dispatchEvent('soundUnselected');
     }
 
     setTextColour(colour) {
@@ -2405,6 +2437,15 @@ Entry.Playground = class Playground {
         }
     }
 
+    setSound(sound) {
+        const objectSound = Entry.container.setSound(sound);
+        const soundLengthView = _get(objectSound, 'view.soundLengthView');
+        if (soundLengthView) {
+            soundLengthView.textContent = `${objectSound.duration} ${Lang.General.second}`;
+        }
+        return objectSound;
+    }
+
     destroy() {
         this.commentToggleButton_ && this.commentToggleButton_.unBindOnClick();
         this.addCommentButton_ && this.addCommentButton_.unBindOnClick();
@@ -2414,6 +2455,7 @@ Entry.Playground = class Playground {
         this.objectBackPackEvent && this.objectBackPackEvent.off();
         this.objectBackPackAreaEvent && this.objectBackPackAreaEvent.off();
         this.globalEvent && this.globalEvent.destroy();
+        this.soundEditor && this.soundEditor.destory();
         this._destroyer.destroy();
     }
 };

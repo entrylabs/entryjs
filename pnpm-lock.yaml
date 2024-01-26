@@ -38,9 +38,6 @@ dependencies:
   '@types/isomorphic-fetch':
     specifier: ^0.0.35
     version: 0.0.35
-  audiobuffer-to-wav:
-    specifier: ^1.0.0
-    version: 1.0.0
   autoprefixer:
     specifier: ^9.4.3
     version: 9.4.3
@@ -196,6 +193,9 @@ devDependencies:
   '@typescript-eslint/parser':
     specifier: ^3.1.0
     version: 3.1.0(eslint@7.32.0)(typescript@4.7.4)
+  audiobuffer-to-wav:
+    specifier: ^1.0.0
+    version: 1.0.0
   babel-loader:
     specifier: ^8.0.6
     version: 8.0.6(@babel/core@7.22.1)(webpack@5.85.0)
@@ -2798,7 +2798,7 @@ packages:
 
   /audiobuffer-to-wav@1.0.0:
     resolution: {integrity: sha512-CAoir4NRrAzAgYo20tEMiKZR84coE8bq/L+H2kwAaULVY4+0xySsEVtNT5raqpzmH6y0pqzY6EmoViLd9W8F/w==}
-    dev: false
+    dev: true
 
   /autoprefixer@9.4.3:
     resolution: {integrity: sha512-/XSnzDepRkAU//xLcXA/lUWxpsBuw0WiriAHOqnxkuCtzLhaz+fL4it4gp20BQ8n5SyLzK/FOc7A0+u/rti2FQ==}
