@@ -1,10 +1,10 @@
 'use strict';
 
 Entry.aibot = {
-    id: ['4C.1','4C.2'],
+    id: ['4C.1'],
     name: 'aibot',
     url: 'http://www.jinirobot.com',
-    imageName: 'aibot.png',
+    imageName: 'jinirobot_aibot.png',
     title: {
         ko: 'AIBOT',
         en: 'AIBOT',
