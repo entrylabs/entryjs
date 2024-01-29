@@ -67,7 +67,7 @@ class SoundEditor {
             this.object = object;
             const audioBuffer = this.getEntryAudioBuffer(sound.id);
             if (!audioBuffer) {
-                Entry.dispatchEvent('startLoading', 'loading');
+                Entry.dispatchEvent('startLoading', Lang.Msgs.sound_loading);
                 await loadSoundByUrl(sound.path);
             } else {
                 loadSound(audioBuffer);
