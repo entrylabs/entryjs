@@ -5269,6 +5269,7 @@ Lang.Msgs = {
     sound_empty4: "'파일 올리기' 탭에서 MP3 파일을 직접 업로드합니다.",
     sound_empty5:
         "추가한 소리는 '다듬기'에서 필요한 부분만 자르거나, '조정하기'에서 크기와 빠르기 등을 조정할 수 있습니다.",
+    sound_loading: '소리를 불러오고 있어요',
 };
 Lang.Users = {
     auth_failed: '인증에 실패하였습니다',
