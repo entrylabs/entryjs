@@ -2439,12 +2439,10 @@ Entry.Playground = class Playground {
     }
 
     setSound(sound) {
-        const prevSound = Entry.playground.object.getSound(sound.id);
-        if (prevSound?.view) {
-            sound.view = prevSound.view;
-            sound.view.sound = sound;
-        }
         const objectSound = Entry.container.setSound(sound);
+        if (objectSound?.view) {
+            objectSound.view.sound = objectSound;
+        }
         const soundLengthView = _get(objectSound, 'view.soundLengthView');
         if (soundLengthView) {
             soundLengthView.textContent = `${objectSound.duration} ${Lang.General.second}`;
