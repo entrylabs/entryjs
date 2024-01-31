@@ -1,6 +1,6 @@
 'use strict';
 
-(function() {
+(function () {
     const COLOR_TO_RGB = [
         [0, 0, 0],
         [0, 0, 255],
@@ -14,7 +14,7 @@
 
     Entry.HamsterLite = new (class HamsterLite {
         constructor() {
-            this.id = '020401';
+            this.id = '2.4';
             this.url = 'http://www.robomation.net';
             this.imageName = 'hamsterlite.png';
             this.name = 'HamsterLite';
@@ -343,8 +343,8 @@
             this.timeouts = [];
 
             this.__removeAllTimeouts();
-            if (Entry.hwLite && Entry.hwLite.serial) {
-                Entry.hwLite.serial.update();
+            if (Entry.hwLite) {
+                Entry.hwLite.update();
             }
         }
 
@@ -6323,7 +6323,7 @@
         async initialHandshake() {
             let status = false;
             while (true) {
-                const { value: data, done } = await Entry.hwLite.serial.reader.read();
+                const { value: data, done } = await Entry.hwLite.reader.read();
                 if (done) {
                     return false;
                 }
@@ -6347,7 +6347,7 @@
                         }
                     }
                 } else {
-                    Entry.hwLite.serial.sendAsciiAsBuffer(this.requestInitialData());
+                    Entry.hwLite.sendAsciiAsBuffer(this.requestInitialData());
                 }
             }
             return status;

@@ -4,7 +4,7 @@ const Buffer = require('buffer').Buffer;
 (function() {
     Entry.ChocoLite = new (class ChocoLite {
         constructor() {
-            this.id = '450101';
+            this.id = '45.1';
             this.name = 'ChocoLite';
             this.url = 'http://jjomulrak.com';
             this.imageName = 'chocolite.png';
@@ -269,8 +269,8 @@ const Buffer = require('buffer').Buffer;
                 },
             };
 
-            if (Entry.hwLite && Entry.hwLite.serial) {
-                Entry.hwLite.serial.update();
+            if (Entry.hwLite) {
+                Entry.hwLite.update();
             }
         }
 
@@ -445,7 +445,7 @@ const Buffer = require('buffer').Buffer;
             while (this.sensorInit.inited === 'sent') {
                 //parsed되었는데 상태가 변경안되면.. 다시 요청을 보낸다.
                 this.log('Send Data:ready');
-                await Entry.hwLite.serial.sendAsync(cmdReady, false, (value) => {
+                await Entry.hwLite.sendAsync(cmdReady, false, (value) => {
                     this._addRecvData(value);
                 });
             }
@@ -456,12 +456,12 @@ const Buffer = require('buffer').Buffer;
             });
             this.ledStatus = [0, 0, 0];
             this.isSendInitData = 'sent';
-            await Entry.hwLite.serial.sendAsync(cmdPing);
+            await Entry.hwLite.sendAsync(cmdPing);
 
             while (this.isSendInitData === 'sent') {
                 // this.isSendInitData 가 inited 될 때까지 기다린다.
                 this.log('Send Data:ping2');
-                await Entry.hwLite.serial.sendAsync(cmdPing, false, (value) => {
+                await Entry.hwLite.sendAsync(cmdPing, false, (value) => {
                     this._addRecvData(value);
                 });
             }

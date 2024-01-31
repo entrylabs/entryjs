@@ -5,7 +5,7 @@ import _range from 'lodash/range';
 (function() {
     Entry.SensorboardLite = new (class SensorboardLite {
         constructor() {
-            this.id = '010201';
+            this.id = '1.2';
             this.name = 'SensorboardLite';
             this.url = 'http://www.neweducation.co.kr/';
             this.imageName = 'sensorboardlite.png';
@@ -43,8 +43,8 @@ import _range from 'lodash/range';
             this.analogValue = new Array(6).fill(0);
             this.readablePorts = _range(0, 19);
 
-            if (Entry.hwLite && Entry.hwLite.serial) {
-                Entry.hwLite.serial.update();
+            if (Entry.hwLite) {
+                Entry.hwLite.update();
             }
         }
 

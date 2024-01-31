@@ -2127,10 +2127,6 @@ Lang.Buttons = {
     lecture_view_hints: '잘 모르겠어요!',
     default_hint_title: '어떻게 만들까?',
     show_only_vector: '벡터 모아보기',
-    sound_menu_trim: '다듬기',
-    sound_menu_adjust: '조정하기',
-    sound_button_reset: '원래대로',
-    sound_button_save: '저장하기',
 };
 Lang.Menus = {
     ask_captcha: '아래 이미지를 보이는 대로 입력해주세요.',
@@ -5024,7 +5020,7 @@ Lang.Menus = {
     solve_ellinia_desc_1: '숲 속을 탐험하며, 나쁜 몬스터들을 혼내주고 친구 몬스터들을 구해주세요!',
     solve_elnath_desc_1:
         '나쁜 몬스터가 점령한 설산을 지나, 새로운 모험을 시작할 수 있는 또 다른 포털을 찾아 떠나보세요 !',
-    save_modified_shape: '저장하지 않은 변경 사항이 있습니다.\n변경 사항을 저장할까요?',
+    save_modified_shape: '수정된 내용을 저장하시겠습니까?',
     save_modified_table: '테이블에서 수정한 내용을 저장하시겠습니까?',
     attach_file: '첨부',
     enter_discuss_title: '제목을 입력해 주세요(40자 이하)',
@@ -5263,13 +5259,6 @@ Lang.Msgs = {
         '카메라를 이용하여 사물을 인식하는 블록들의 모음입니다.',
     ai_utilize_gesture_recognition_description:
         '카메라를 이용하여 손을 인식하는 블록들의 모음입니다.',
-    sound_empty1: '[소리 추가하기]를 눌러 소리를 추가해 주세요.',
-    sound_empty2: '소리를 추가하는 방법',
-    sound_empty3: "'소리 선택' 탭에서 엔트리가 제공하는 기본 소리를 선택합니다.",
-    sound_empty4: "'파일 올리기' 탭에서 MP3 파일을 직접 업로드합니다.",
-    sound_empty5:
-        "추가한 소리는 '다듬기'에서 필요한 부분만 자르거나, '조정하기'에서 크기와 빠르기 등을 조정할 수 있습니다.",
-    sound_loading: '소리를 불러오고 있어요',
 };
 Lang.Users = {
     auth_failed: '인증에 실패하였습니다',
@@ -5720,12 +5709,6 @@ Lang.Workspace = {
     face_landmarker_title_text: '얼굴 인식',
     object_detector_title_text: '사물 인식',
     gesture_recognition_title_text: '손 인식',
-    sound_start_point: '시작 지점',
-    sound_end_point: '끝 지점',
-    sound_selection: '남길 영역',
-    sound_volume: '크기',
-    sound_speed: '빠르기',
-    sound_pitch: '음높이',
 };
 Lang.code = '코드보기';
 Lang.EntryStatic = {

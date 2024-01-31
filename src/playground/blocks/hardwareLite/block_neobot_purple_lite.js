@@ -3,7 +3,7 @@
     const HEADER = [0xab, 0xcd];
     Entry.NeobotPurpleLite = new (class NeobotPurpleLite {
         constructor() {
-            this.id = '050501';
+            this.id = '5.5';
             this.name = 'NeobotPurpleLite';
             this.url = 'http://neobot.co.kr/';
             this.imageName = 'neobot_purple_lite.png';
@@ -156,8 +156,8 @@
                 FND: 0,
                 OPT: 0,
             };
-            if (Entry.hwLite && Entry.hwLite.serial) {
-                Entry.hwLite.serial.update();
+            if (Entry.hwLite) {
+                Entry.hwLite.update();
             }
         }
 

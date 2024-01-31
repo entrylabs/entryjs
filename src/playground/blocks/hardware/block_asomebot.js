@@ -89,11 +89,7 @@ Entry.AsomeBot.setLanguage = function() {
     return {
         ko: {
             template: {
-                asomebot_toggle_led: '파란 LED %1 (Zet보드) %2',
-                asomebot_prepare_led: '키고 끄는 LED 준비 %1',
-                asomebot_prepare_duty_led: '밝기 조절 LED 준비 %1',
-                asomebot_led_color: '키고 끄는 %1 LED %2 %3',
-                asomebot_led_duty: '밝기 조절 %1 LED %2 %3',
+                asomebot_toggle_led: '파란 LED %1 %2',
                 asomebot_get_ultrasonic_value: '초음파 센서 거리 센서값',
 
                 asomebot_buzzer_open: '부저 켜기 %1',
@@ -142,10 +138,6 @@ Entry.AsomeBot.setLanguage = function() {
         en: {
             template: {
                 asomebot_toggle_led: 'Blue LED %1 %2',
-                asomebot_prepare_led: 'Prepare On, Off LED %1',
-                asomebot_prepare_duty_led: 'Prepare adjustable in brightness LED %1',
-                asomebot_led_color: '%1 LED %2 %3',
-                asomebot_led_duty: '%1 LED %2 %3',
                 asomebot_get_ultrasonic_value: 'distance',
 
                 asomebot_buzzer_open: 'Buzzer on %1',
@@ -196,10 +188,6 @@ Entry.AsomeBot.setLanguage = function() {
 
 Entry.AsomeBot.blockMenuBlocks = [
     'asomebot_toggle_led',
-    'asomebot_prepare_led',
-    'asomebot_prepare_duty_led',
-    'asomebot_led_color',
-    'asomebot_led_duty',
     'asomebot_get_ultrasonic_value',
 
     'asomebot_buzzer_open',
@@ -297,238 +285,6 @@ Entry.AsomeBot.getBlocks = function() {
                     }
 
                     sq.msg = format_str('OutputPin(4).{0}()', value);
-                    return script;
-                }
-
-                if (pd.msg_id && pd.msg_id.indexOf(script.msg_id) >= 0) {
-                    delete script.is_started;
-                    delete script.msg_id;
-                    return script.callReturn();
-                }
-
-                return script;
-            },
-            syntax: undefined,
-        },
-        asomebot_prepare_led: {
-            template: Lang.template.asomebot_prepare_led,
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [null],
-                type: 'asomebot_prepare_led',
-            },
-            class: 'Basic',
-            isNotFor: ['AsomeBot'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var pd = Entry.hw.portData;
-
-                if (!script.is_started) {
-                    script.is_started = true;
-                    script.msg_id = random_str(16);
-                    sq.msg_id = script.msg_id;
-                    sq.msg = 'import battery;battery.exit();r=OutputPin(15);g=OutputPin(13);';
-                    return script;
-                }
-
-                if (pd.msg_id && pd.msg_id.indexOf(script.msg_id) >= 0) {
-                    delete script.is_started;
-                    delete script.msg_id;
-                    return script.callReturn();
-                }
-
-                return script;
-            },
-            syntax: undefined,
-        },
-        asomebot_prepare_duty_led: {
-            template: Lang.template.asomebot_prepare_duty_led,
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [null],
-                type: 'asomebot_prepare_duty_led',
-            },
-            class: 'Basic',
-            isNotFor: ['AsomeBot'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var pd = Entry.hw.portData;
-
-                if (!script.is_started) {
-                    script.is_started = true;
-                    script.msg_id = random_str(16);
-                    sq.msg_id = script.msg_id;
-                    sq.msg = 'import battery;battery.exit();r=ServoPin(15);g=ServoPin(13);';
-                    return script;
-                }
-
-                if (pd.msg_id && pd.msg_id.indexOf(script.msg_id) >= 0) {
-                    delete script.is_started;
-                    delete script.msg_id;
-                    return script.callReturn();
-                }
-
-                return script;
-            },
-            syntax: undefined,
-        },
-        asomebot_led_color: {
-            template: Lang.template.asomebot_led_color,
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [ "Red", "r" ],
-                        [ "Green", "g" ],
-                    ],
-                    value: 'r',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [ "On", "on" ],
-                        [ "Off", "off" ]
-                    ],
-                    value: 'on', 
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            paramsKeyMap: {
-                VALUE1: 0,
-                VALUE2: 1,
-            },
-            events: {},
-            def: {
-                params: [
-                    null, null, null
-                ],
-                type: 'asomebot_led_color',
-            },
-            class: 'Basic',
-            isNotFor: ['AsomeBot'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var pd = Entry.hw.portData;
-
-                var value1 = script.getStringValue('VALUE1');
-                var value2 = script.getStringValue('VALUE2');
-                    
-                if (!script.is_started) {
-                    script.is_started = true;
-                    script.msg_id = random_str(16);
-                    sq.msg_id = script.msg_id;
-                    sq.msg = format_str('{0}.{1}()', value1,value2);
-                    return script;
-                }
-
-                if (pd.msg_id && pd.msg_id.indexOf(script.msg_id) >= 0) {
-                    delete script.is_started;
-                    delete script.msg_id;
-                    return script.callReturn();
-                }
-
-                return script;
-            },
-            syntax: undefined,
-        },
-        asomebot_led_duty: {
-            template: Lang.template.asomebot_led_duty,
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [ "Red", "r" ],
-                        [ "Green", "g" ],
-                    ],
-                    value: 'r',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            paramsKeyMap: {
-                VALUE1: 0,
-                VALUE2: 1,
-            },
-            events: {},
-            def: {
-                params: [
-                    null,
-                    {
-                        type: 'number',
-                        params: [298],
-                    },
-                    null,
-                ],
-                type: 'asomebot_led_duty',
-            },
-            class: 'Basic',
-            isNotFor: ['AsomeBot'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var pd = Entry.hw.portData;
-
-                var value1 = script.getStringValue('VALUE1');
-                var value2 = script.getNumberValue('VALUE2');
-                    
-                if (!script.is_started) {
-                    script.is_started = true;
-                    script.msg_id = random_str(16);
-                    sq.msg_id = script.msg_id;
-                    sq.msg = format_str('{0}.duty({1})', value1,value2);
                     return script;
                 }
 

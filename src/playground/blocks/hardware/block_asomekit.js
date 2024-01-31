@@ -97,9 +97,9 @@ Entry.AsomeKit.setLanguage = function() {
                 asomekit_music_ready: '음악 준비하기 %1 %2',
                 asomekit_buzzer_ready: '부저 준비하기 %1 %2',
                 asomekit_dht_ready: '온습도 센서 준비하기 %1 %2',
-                asomekit_led_tube_ready: 'LED 튜브 준비하기 %1 %2 %3',
+                asomekit_led_tube_ready: 'LED 튜브 준비하기 %1 %2',
                 asomekit_vibration_ready: '진동 센서 준비하기 %1 %2 %3',
-                asomekit_ultrasound_ready: '초음파 센서 준비하기 %1 %2 %3',
+                asomekit_ultrasound_ready: '초음파 센서 준비하기 %1 %2',
                 asomekit_brightness_ready: '조도 센서 준비하기 %1 %2',
                 asomekit_sound_ready: '소리 센서 준비하기 %1 %2',
                 
@@ -153,9 +153,9 @@ Entry.AsomeKit.setLanguage = function() {
                 asomekit_music_ready: 'Prepare sound %1 %2',
                 asomekit_buzzer_ready: 'Prepare buzzer %1 %2',
                 asomekit_dht_ready: 'Prepare temperature and humidity sensor %1 %2',
-                asomekit_led_tube_ready: 'Prepare LED tube %1 %2 %3',
+                asomekit_led_tube_ready: 'Prepare LED tube %1 %2',
                 asomekit_vibration_ready: 'Prepare vibration sensor %1 %2 %3',
-                asomekit_ultrasound_ready: 'Prepare ultrasonic sensor %1 %2 %3',
+                asomekit_ultrasound_ready: 'Prepare ultrasonic sensor %1 %2',
                 asomekit_brightness_ready: 'Prepare light sensor %1 %2',
                 asomekit_sound_ready: 'Prepare sound sensor %1 %2',
                 

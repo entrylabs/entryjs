@@ -171,7 +171,7 @@
 
     Entry.NeoLite = new (class NeoLite {
         constructor() {
-            this.id = '050801';
+            this.id = '5.8';
             this.name = 'NeoLite';
             this.url = 'http://neobot.co.kr/';
             this.imageName = 'neo_lite.png';
@@ -308,7 +308,7 @@
         }
 
         setZero() {
-            if (Entry.hwLite && Entry.hwLite.serial) {
+            if (Entry.hwLite) {
                 const blockId = this.generateBlockId();
                 const pdu = this.makePdu([
                     FrameCode.BASIC,
@@ -322,7 +322,7 @@
                         pdu,
                     },
                 ];
-                Entry.hwLite.serial.update();
+                Entry.hwLite.update();
             }
         }
 
@@ -346,7 +346,7 @@
                 blockId: 0,
                 pdu: initPdu,
             });
-            Entry.hwLite.serial.update();
+            Entry.hwLite.update();
             return true;
         }
 
@@ -493,8 +493,8 @@
                         this.sensorValues.in3Values = [analogValue, 0, 0, 0];
                     }
                 } else if (
-                    sensorDataKind === SensorKind.DIGITAL ||
-                    sensorDataKind === SensorKind.COLOR
+                  sensorDataKind === SensorKind.DIGITAL ||
+                  sensorDataKind === SensorKind.COLOR
                 ) {
                     const value1 = buffer.readInt16LE(0);
                     const value2 = buffer.readInt16LE(2);
@@ -539,7 +539,7 @@
             };
         }
         requestLocalData() {
-            if (Entry.hwLite && Entry.hwLite.serial) {
+            if (Entry.hwLite) {
                 if (this.executeList.length > 0) {
                     const executeData = this.executeList.shift();
                     this.logD(this.byteArrayToHex(executeData.pdu));
@@ -638,7 +638,7 @@
                 blockId,
                 pdu,
             });
-            // Entry.writePortData(pdu);
+            // Entry.hwLite.writePortData(pdu);
         }
 
         requestExtCommand(blockId, type, params) {
@@ -1176,7 +1176,7 @@
                         // servo
                         neo_lite_servo_title: 'Servo motor',
                         neo_lite_servo_reset:
-                            'Reset the current position of %1 servo motor to 0 degree %2',
+                          'Reset the current position of %1 servo motor to 0 degree %2',
                         neo_lite_servo_angle: 'Change servo angle %1 %2 %3 %4',
                         neo_lite_servo_angle_var: 'Change servo angle %1 %2 %3 %4',
                         neo_lite_servo_angle_wait: 'Wait to change servo angle %1 %2 %3 %4',
@@ -1194,7 +1194,7 @@
                         neo_lite_color_led_on: 'Turn on the color LED %1 %2 %3 %4',
                         neo_lite_color_led_off: 'Turn off the color LED %1 %2',
                         neo_lite_color_led_on_with_sensor:
-                            'Turn on the color LED %2 with color sensor %1 %3',
+                          'Turn on the color LED %2 with color sensor %1 %3',
 
                         // set output
                         neo_lite_set_output_title: 'Set output',
@@ -2032,15 +2032,15 @@
                             script.block_id = blockId;
                             if (speed.indexOf('IN') >= 0) {
                                 this.requestExtCommand(
-                                    blockId,
-                                    NeoBlockType.AUTO_DRIVING_SENSOR_START,
-                                    [sensor, speed]
+                                  blockId,
+                                  NeoBlockType.AUTO_DRIVING_SENSOR_START,
+                                  [sensor, speed]
                                 );
                             } else {
                                 this.requestCommand(
-                                    blockId,
-                                    NeoBlockType.AUTO_DRIVING_SENSOR_START,
-                                    [sensor, speed]
+                                  blockId,
+                                  NeoBlockType.AUTO_DRIVING_SENSOR_START,
+                                  [sensor, speed]
                                 );
                             }
                         } else if (script.exec_phase === ExecPhase.PENDING_RESPONSE) {
@@ -5473,8 +5473,8 @@
                 data.writeInt16LE(robotCommand, 2);
                 body.push(...data);
             } else if (
-                type === NeoBlockType.MOTOR_STOP ||
-                type === NeoBlockType.AUTO_DRIVING_STOP
+              type === NeoBlockType.MOTOR_STOP ||
+              type === NeoBlockType.AUTO_DRIVING_STOP
             ) {
                 const which = params[0];
                 const direction = 1;
@@ -5523,9 +5523,9 @@
                 const output = params[0];
                 body.push(this.getUnitId(output), ActorKind.SERVO, ServoCommand.STOP);
             } else if (
-                type === NeoBlockType.LINE_TRACER_START ||
-                type === NeoBlockType.AUTO_DRIVING_START ||
-                type === NeoBlockType.AUTO_DETECT_WALL_START
+              type === NeoBlockType.LINE_TRACER_START ||
+              type === NeoBlockType.AUTO_DRIVING_START ||
+              type === NeoBlockType.AUTO_DETECT_WALL_START
             ) {
                 const speed = params[0];
                 body.push(UnitId.CONTROLLER, ActorKind.CONTROLLER, ControllerCommand.ROBOT);
@@ -5577,9 +5577,9 @@
             } else if (type === NeoBlockType.AUTO_DETECT_WALL_TURN) {
                 const direction = params[0];
                 body.push(
-                    UnitId.CONTROLLER,
-                    ActorKind.CONTROLLER,
-                    ControllerCommand.AUTO_DETECT_WALL
+                  UnitId.CONTROLLER,
+                  ActorKind.CONTROLLER,
+                  ControllerCommand.AUTO_DETECT_WALL
                 );
                 const data = Buffer.from([0, 0, 0, 0]);
                 data.writeInt16LE(60, 0);
@@ -5667,11 +5667,11 @@
                 const which = params[0];
                 const unitId = this.getUnitId(params[1]);
                 body.push(
-                    PduCode.EXTEND_1,
-                    blockId,
-                    UnitId.CONTROLLER,
-                    ActorKind.CONTROLLER,
-                    ControllerCommand.MOTOR
+                  PduCode.EXTEND_1,
+                  blockId,
+                  UnitId.CONTROLLER,
+                  ActorKind.CONTROLLER,
+                  ControllerCommand.MOTOR
                 );
                 const data = Buffer.from([unitId, 0, which, 0, 0, 0]);
                 body.push(...data);
@@ -5679,18 +5679,18 @@
                 const robotCommand = params[0];
                 const unitId = this.getUnitId(params[1]);
                 body.push(
-                    PduCode.EXTEND_1,
-                    blockId,
-                    UnitId.CONTROLLER,
-                    ActorKind.CONTROLLER,
-                    ControllerCommand.ROBOT
+                  PduCode.EXTEND_1,
+                  blockId,
+                  UnitId.CONTROLLER,
+                  ActorKind.CONTROLLER,
+                  ControllerCommand.ROBOT
                 );
                 const data = Buffer.from([unitId, 0, 0, 0]);
                 data.writeInt16LE(robotCommand, 2);
                 body.push(...data);
             } else if (
-                type === NeoBlockType.SERVO_ANGLE ||
-                type === NeoBlockType.SERVO_ANGLE_WAIT
+              type === NeoBlockType.SERVO_ANGLE ||
+              type === NeoBlockType.SERVO_ANGLE_WAIT
             ) {
                 const unitId = this.getUnitId(params[0]);
                 let angle = params[1];
@@ -5709,17 +5709,17 @@
                 data.writeInt16LE(direction, 2);
                 body.push(...data);
             } else if (
-                type === NeoBlockType.LINE_TRACER_START ||
-                type === NeoBlockType.AUTO_DRIVING_START ||
-                type === NeoBlockType.AUTO_DETECT_WALL_START
+              type === NeoBlockType.LINE_TRACER_START ||
+              type === NeoBlockType.AUTO_DRIVING_START ||
+              type === NeoBlockType.AUTO_DETECT_WALL_START
             ) {
                 const unitId = this.getUnitId(params[0]);
                 body.push(
-                    PduCode.EXTEND_1,
-                    blockId,
-                    UnitId.CONTROLLER,
-                    ActorKind.CONTROLLER,
-                    ControllerCommand.ROBOT
+                  PduCode.EXTEND_1,
+                  blockId,
+                  UnitId.CONTROLLER,
+                  ActorKind.CONTROLLER,
+                  ControllerCommand.ROBOT
                 );
                 const data = Buffer.from([unitId, 0, 0x10, 0]);
                 body.push(...data);
@@ -5727,11 +5727,11 @@
                 const sensor = params[0];
                 const unitId = this.getUnitId(params[1]);
                 body.push(
-                    PduCode.EXTEND_1,
-                    blockId,
-                    UnitId.CONTROLLER,
-                    ActorKind.CONTROLLER,
-                    ControllerCommand.ROBOT
+                  PduCode.EXTEND_1,
+                  blockId,
+                  UnitId.CONTROLLER,
+                  ActorKind.CONTROLLER,
+                  ControllerCommand.ROBOT
                 );
                 const data = Buffer.from([0, 0, 0, 0]);
                 data.writeInt16LE(unitId, 0);
@@ -5752,11 +5752,11 @@
             } else if (type === NeoBlockType.BUZZER_WITH_SENSOR) {
                 const sensorUnitId = this.getUnitId(params[0]);
                 body.push(
-                    PduCode.EXTEND_1,
-                    blockId,
-                    UnitId.CONTROLLER,
-                    ActorKind.CONTROLLER,
-                    ControllerCommand.BUZZER
+                  PduCode.EXTEND_1,
+                  blockId,
+                  UnitId.CONTROLLER,
+                  ActorKind.CONTROLLER,
+                  ControllerCommand.BUZZER
                 );
                 const data = Buffer.from([0, 0]);
                 data.writeInt16LE(sensorUnitId, 0);
