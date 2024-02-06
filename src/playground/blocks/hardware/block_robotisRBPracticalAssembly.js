@@ -108,6 +108,7 @@ Entry.Robotis_rb_P_Assembly.blockMenuBlocks = [
     // 주행 제어
     'robotis_practice_robot_go',
     'robotis_practice_robot_stop',
+    'robotis_practice_robot_rotate',
     'robotis_RB_follow_line',
     'robotis_RB_follow_line_stop',
 
@@ -186,6 +187,7 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 
                 robotis_practice_robot_go: "실과로봇 %1 속도로 %2 하기 %3",
                 robotis_practice_robot_stop: "실과로봇 정지하기 %1",
+                robotis_practice_robot_rotate: "실과로봇 제자리 %1° 회전하기 %2",
                 
                 robotis_RB_follow_line: "%1 속도로 라인 따라가기 %2",
                 robotis_RB_follow_line_stop: "라인 따라가기 종료 %1",
@@ -249,6 +251,7 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 
                 robotis_practice_robot_go: "실과로봇을 지정한 속도와 방향으로 주행",
                 robotis_practice_robot_stop: "실과로봇 정지",
+                robotis_practice_robot_rotate: "실과로봇 지정각도만큼 회전. 양수 각도는 반시계방향, 음수 각도는 시계방향으로 회전합니다.",
                 
                 robotis_RB_follow_line: "실과로봇을 지정한 속도로 검은 라인 따라가기 (특정 조립형태인 경우에만 정상적으로 주행)",
                 robotis_RB_follow_line_stop: "라인 따라가기 종료",
@@ -510,6 +513,7 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
 
                 robotis_practice_robot_go:"With %1 velocity, move robot %2",
                 robotis_practice_robot_stop:"Robot STOP",
+                robotis_practice_robot_rotate:"Robot rotate %1° %2",
                 
                 robotis_RB_follow_line: "Follow line with speed level %1 %2",
                 robotis_RB_follow_line_stop: "Stop following line %1",
@@ -909,6 +913,67 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 py: ['Robotis.opencm70_RGee_stop()'],
             },
         },
+        robotis_practice_robot_rotate: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                ],
+                type: 'robotis_practice_robot_rotate',
+            },
+            paramsKeyMap: {
+                RotateAngle: 0,
+            },
+            class: 'robotis_rb100_move',
+            isNotFor: ['Robotis_rb_P_Assembly'],
+            func: function (sprite, script) {
+                // instruction / address / length / value / default length
+                var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                var data_address = 0;
+                var data_length = 0;
+                var data_value = 0;
+
+                data_address =
+                    Entry.Robotis_rb.CONTROL_TABLE.MOTION_PARAMETER[0];
+                data_length = Entry.Robotis_rb.CONTROL_TABLE.MOTION_PARAMETER[1];
+                data_value = script.getNumberValue('RotateAngle', script);
+
+                // 실과로봇의 경우 각도를 1.5배 해줘야 함
+                data_value = Math.floor(data_value * 3 / 2);
+
+                var data_sendqueue = [
+                    [data_instruction, data_address, data_length, data_value],
+                    [data_instruction, 66, 2, 50492],
+                ];
+                
+                //console.log(script);
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    1000 
+                    //Entry.Robotis_openCM70.delay
+                );
+            },
+            syntax: { js: [], py: ['Robotis.practice_robot_rotate(%1)'] },
+        }, 
         /*
         robotis_dxl_control: {
             color: EntryStatic.colorSet.block.default.HARDWARE,

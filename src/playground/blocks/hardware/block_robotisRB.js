@@ -35,6 +35,8 @@ Entry.Robotis_rb = {
         AUX_SERVO_SPEED: [136, 2],
         AUX_MOTOR_SPEED: [136, 2],
         AUX_LED_MODULE: [210, 1],
+        
+        MOTION_PARAMETER: [270, 4],
 
         CM_DXL_MULTITURN_ID: [580, 1],
         CM_DXL_MULTITURN_SPEED: [582, 2],
@@ -429,7 +431,7 @@ Entry.Robotis_rb.setLanguage = function() {
                 robotis_RB_playRecord:"Play recorded sound in room %1 %2",
                 robotis_openCM70_RGee_go:"With %1 velocity, move R-G %2",
                 robotis_openCM70_RGee_stop:"R-G STOP",
-                robotis_openCM70_RGee_motion:"Do %1",
+                robotis_openCM70_RGee_motion:"Do %1 %2 ",
                 
                 robotis_RB_follow_line: "Follow line with speed level %1 %2",
                 robotis_RB_follow_line_stop: "Stop following line %1",
