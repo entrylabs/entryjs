@@ -1,7 +1,7 @@
 'use strict';
 
 Entry.ITPLE = {
-    id: 'FF.FF',
+    id: '5E.1',
     name: 'ITPLE',
     url: 'http://www.itpleinfo.com/',
     imageName: 'ITPLE.png',
