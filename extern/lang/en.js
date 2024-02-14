@@ -4954,6 +4954,7 @@ Lang.Msgs = {
     sound_empty4: "On the 'Upload files' tab, upload the MP3 file directly.",
     sound_empty5:
         "You can cut only the parts you need in the 'Trim' mode, or adjust the volume, speed and pitch in the 'Adjust' mode.",
+    sound_loading: 'Loading sound',
 };
 Lang.Users = {
     auth_failed: 'Authentication failed',
