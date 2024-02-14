@@ -276,6 +276,7 @@ Entry.ITPLE.getBlocks = function() {
                         port,
                         time: new Date().getTime(),
                     };
+                    return DIGITAL ? DIGITAL[port] || 0 : 0;
                 } else {
                     return Entry.block.arduino_get_digital_value.func(sprite, script);
                 }
