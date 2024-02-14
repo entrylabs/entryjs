@@ -81,8 +81,8 @@ Entry.ITPLE.setLanguage = function() {
                 ITPLE_digital_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
                 ITPLE_set_tone: '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5',
                 ITPLE_get_digital: '디지털 %1 번 센서값',
-                ITPLE_set_motor_direction: '%1 모터 %2 쪽 방향으로 %3 정하기',
-                ITPLE_set_motor_speed: '%1 모터 %2 속도로 %3 정하기',
+                ITPLE_set_motor_direction: '%1 모터 %2 쪽 방향으로 정하기 %3',
+                ITPLE_set_motor_speed: '%1 모터 %2 속도로  정하기 %3',
             },
         },
         en: {
