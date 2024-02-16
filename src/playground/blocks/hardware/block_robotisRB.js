@@ -727,7 +727,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 SIZE: 3,
             },
             class: 'robotis_rb100_lcd',
-            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car', 'Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var iconNum = script.getField('ICON', script);
@@ -868,7 +868,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 COLOR: 4,
             },
             class: 'robotis_rb100_lcd',
-            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car', 'Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var text = script.getStringValue('TEXT', script);
@@ -1090,7 +1090,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 SIZE: 1,
             },
             class: 'robotis_rb100_custom',
-            isNotFor: ['Robotis_rb_H', 'Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_H'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
 
@@ -1205,7 +1205,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 VALUE: 0,
             },
             class: 'robotis_rb100_custom',
-            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car', 'Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
 
@@ -1330,7 +1330,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 COMPARE_VAL: 2,
             },
             class: 'robotis_rb100_custom',
-            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car', 'Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
 
@@ -1449,7 +1449,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 BRIGHT: 0,
             },
             class: 'robotis_rb100_lcd',
-            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car', 'Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var bright = script.getNumberValue('BRIGHT', script);
@@ -1522,7 +1522,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 COLOR: 0,
             },
             class: 'robotis_rb100_lcd',
-            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car', 'Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var color = script.getField('COLOR', script);
@@ -1588,7 +1588,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 VALUE: 0,
             },
             class: 'robotis_rb100_custom',
-            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car', 'Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
 
@@ -1702,7 +1702,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 BRIGHT: 1,
             },
             class: 'robotis_rb100_led',
-            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car', 'Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var cmLed = script.getField('CMLED', script);
@@ -1852,7 +1852,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 HELLO: 0,
             },
             class: 'robotis_rb100_sound',
-            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car', 'Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var cmHello = script.getField('HELLO', script);
@@ -1948,7 +1948,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 HELLO: 0,
             },
             class: 'robotis_rb100_sound',
-            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car', 'Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var cmHello = script.getField('HELLO', script);
@@ -2031,7 +2031,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 ROOM: 0,
             },
             class: 'robotis_rb100_sound',
-            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car', 'Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var roomNum = script.getField('ROOM', script);
@@ -2101,7 +2101,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 ROOM: 0,
             },
             class: 'robotis_rb100_sound',
-            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car', 'Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var roomNum = script.getField('ROOM', script);
@@ -2154,7 +2154,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 VALUE: 0,
             },
             class: 'robotis_rb100_custom',
-            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car', 'Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
 
@@ -2260,7 +2260,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 VALUE: 0,
             },
             class: 'robotis_rb100_custom',
-            isNotFor: ['Robotis_rb_H', 'Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_H'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
 
@@ -2351,7 +2351,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 VALUE: 0,
             },
             class: 'robotis_rb100_custom',
-            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car', 'Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
 
@@ -2466,7 +2466,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 MODE: 1,
             },
             class: 'robotis_rb100_custom',
-            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car', 'Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
 
@@ -2567,7 +2567,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 AXIS: 0,
             },
             class: 'robotis_rb100_custom',
-            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car', 'Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
 
@@ -2686,7 +2686,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 ADDR: 1,
             },
             class: 'robotis_rb100_custom',
-            isNotFor: ['Robotis_rb_H', 'Robotis_rb_car', 'Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_H', 'Robotis_rb_car'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
 
@@ -2831,7 +2831,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 COMPARE_VAL: 3,
             },
             class: 'robotis_rb100_custom',
-            isNotFor: ['Robotis_rb_H', 'Robotis_rb_car', 'Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_H', 'Robotis_rb_car'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
 
@@ -2973,7 +2973,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 ADDR: 1,
             },
             class: 'robotis_rb100_custom',
-            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car', 'Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
 
@@ -3119,7 +3119,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 COMPARE_VAL: 3,
             },
             class: 'robotis_rb100_custom',
-            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car', 'Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
 
@@ -3252,7 +3252,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 COMPARE_VAL: 0,
             },
             class: 'robotis_rb100_custom',
-            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car', 'Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
 
@@ -3367,7 +3367,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 COMPARE_VAL: 1
             },
             class: 'robotis_rb100_custom',
-            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car', 'Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
 
@@ -3514,7 +3514,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 CM_BUZZER_PLAY: 3
             },
             class: 'robotis_rb100_sound',
-            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car', 'Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var cmBuzzerIndex = script.getField('CM_BUZZER_INDEX', script);
@@ -3635,7 +3635,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 BACKGROUND: 0,
             },
             class: 'robotis_rb100_lcd',
-            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car', 'Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var screenValue = script.getNumberValue('BACKGROUND', script);
@@ -3713,7 +3713,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 BACKGROUND: 0,
             },
             class: 'robotis_rb100_lcd',
-            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car', 'Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var screenValue = script.getNumberValue('BACKGROUND', script);
@@ -3797,7 +3797,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 BACKGROUND: 0,
             },
             class: 'robotis_rb100_lcd',
-            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car', 'Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var screenValue = script.getField('BACKGROUND', script);
@@ -3881,7 +3881,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 BACKGROUND: 0,
             },
             class: 'robotis_rb100_lcd',
-            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car', 'Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var screenValue = script.getField('BACKGROUND', script);
@@ -3959,7 +3959,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 BACKGROUND: 0,
             },
             class: 'robotis_rb100_lcd',
-            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car', 'Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var screenValue = script.getNumberValue('BACKGROUND', script);
@@ -4037,7 +4037,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 BACKGROUND: 0,
             },
             class: 'robotis_rb100_lcd',
-            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car', 'Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var screenValue = script.getNumberValue('BACKGROUND', script);
@@ -4117,7 +4117,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 VALUE: 1,
             },
             class: 'robotis_rb100_led',
-            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car', 'Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var cmLed = script.getField('RB_LED', script);
@@ -4160,7 +4160,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 
             },
             class: 'robotis_rb100_dxl',
-            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb', 'Robotis_rb_H'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 //19번지에 1바이트로 1 설정 
@@ -4485,7 +4485,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 SPEED: 0,
             },
             class: 'robotis_rb100_move',
-            isNotFor: ['Robotis_rb', 'Robotis_rb_car', 'Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb', 'Robotis_rb_car'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var speed_level = script.getNumberValue('SPEED', script);
@@ -4535,7 +4535,7 @@ Entry.Robotis_rb.getBlocks = function () {
             paramsKeyMap: {
             },
             class: 'robotis_rb100_move',
-            isNotFor: ['Robotis_rb', 'Robotis_rb_car', 'Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb', 'Robotis_rb_car'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 
@@ -4708,7 +4708,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 VALUE: 2,
             },
             class: 'robotis_rb100_custom',
-            isNotFor: ['Robotis_rb_H', 'Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_H'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
