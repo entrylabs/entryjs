@@ -75,7 +75,6 @@ Entry.Robotis_rb_P_Assembly = {
 Entry.Robotis_rb_P_Assembly.blockMenuBlocks = [
     // 주행 제어
     'robotis_Practice_drive_simple',
-    'robotis_Practice_drive_stop',
     'robotis_Practice_drive_advanced',
     'robotis_Practice_drive_seperate',
     'robotis_Practice_drive_angle',
@@ -83,6 +82,7 @@ Entry.Robotis_rb_P_Assembly.blockMenuBlocks = [
     'robotis_Practice_turn_angle',
     'robotis_Practice_follow_line',
     'robotis_Practice_turn_at_line',
+    'robotis_Practice_drive_stop',
     //'robotis_Practice_follow_line_stop',
     /*
     'robotis_practice_robot_go',
@@ -92,21 +92,19 @@ Entry.Robotis_rb_P_Assembly.blockMenuBlocks = [
 
     // 값 블록
     'robotis_Practice_cm_ir_value',
-    'robotis_Practice_cm_ir_compare',
     'robotis_Practice_detectFrontObj',
+    'robotis_Practice_cm_ir_compare',
     'robotis_Practice_cm_btn_value',
     'robotis_Practice_cm_joystick_value',
     'robotis_Practice_mic',
     'robotis_Practice_detectSound_compare',
     'robotis_Practice_imu',
     'robotis_Practice_roll_pitch', 
-    'robotis_Practice_line_cross_compare',
-    /*
+    //'robotis_Practice_distance_value',
     'robotis_Practice_environment_value',
+    'robotis_Practice_line_cross_compare',
+    //'robotis_Practice_distance_compare',
     'robotis_Practice_environment_compare',
-    */
-    'robotis_Practice_distance_value',
-    'robotis_Practice_distance_compare',
     'robotis_Practice_dxl_value',
 
     // 소리
@@ -171,16 +169,16 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
         ko: {
             template: {
                 // 주행 제어
-                robotis_Practice_drive_simple: " %1 속도로 %2 %3",
-                robotis_Practice_drive_stop: "정지 %1",
-                robotis_Practice_drive_advanced: "왼쪽바퀴 %1 속도로 %2 회전, 오른쪽바퀴 %3 속도로 %4 회전 %5",
+                robotis_Practice_drive_simple: "속도 %1 로 %2 %3",
+                robotis_Practice_drive_stop: "정지하기 %1",
+                robotis_Practice_drive_advanced: "왼쪽바퀴 %1 속도로 %2, 오른쪽바퀴 %3 속도로 %4 %5",
                 robotis_Practice_drive_seperate: "%1 바퀴 %2 속도로 %3 으로 회전하기 %4",
                 robotis_Practice_drive_angle: "%1 바퀴 %2 도만큼 %3 으로 회전하기 %4",
-                robotis_Practice_go_distance:"%1 cm %2 하기 %3",
+                robotis_Practice_go_distance:"%1 cm %2 %3",
                 robotis_Practice_turn_angle:"%1 도 %2 하기%3",
                 robotis_Practice_follow_line: "%1 속도로 라인 따라가기 %2",
                 robotis_Practice_follow_line_stop: "라인 따라가기 종료 %1",
-                robotis_Practice_turn_at_line: "라인에서 %1 하기 %2",
+                robotis_Practice_turn_at_line: "교차로에서 %1 하기 %2",
 
 
                 // 값 블록
@@ -196,6 +194,8 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_Practice_line_cross_compare: "교차로 모양이 %1이면",
                 robotis_Practice_distance_value: "%1 값",
                 robotis_Practice_distance_compare: "%1 값이 %2보다 %3",
+                robotis_Practice_environment_value: "%1 값",
+                robotis_Practice_environment_compare: "%1 값이 %2보다 %3이면",
                 robotis_Practice_dxl_value: "%1의 %2값",
 
 
@@ -205,21 +205,21 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_Practice_rest_simple: "%1 %2",
                 robotis_Practice_rest_advanced: "쉼표 %1 박자 %2",
                 robotis_Practice_beat_per_minute: "연주 빠르기를 %1 (으)로 정하기 %2",
-                robotis_Practice_Hello: "%1 말하기 %2",
-                robotis_Practice_effectSound: "효과음 %1 재생하기 %2",
-                robotis_Practice_record: "소리 %1번에 녹음하기 %2",
-                robotis_Practice_playRecord: "소리 %1번을 재생하기 %2",
+                robotis_Practice_Hello: "로봇이 스피커로 %1 말하기 %2",
+                robotis_Practice_effectSound: "로봇이 효과음 %1 재생하기 %2",
+                robotis_Practice_record: "로봇이 소리 %1번에 녹음하기 %2",
+                robotis_Practice_playRecord: "로봇이 소리 %1번을 재생하기 %2",
 
                 
                 // LCD 제어
-                robotis_Practice_screen: "화면 표정을 %1 %2 (으)로 선택 %3",
-                robotis_Practice_anim_screen: "화면 애니메이션을 %1 %2 (으)로 선택 %3",
+                robotis_Practice_screen: "화면 표정을 %1 %2 (으)로 정하기 %3",
+                robotis_Practice_anim_screen: "화면 애니메이션을 %1 %2 (으)로 정하기 %3",
                 robotis_Practice_icon_screen_food_plant: "화면에 [음식/식물]중 %1를 (%2, %3)위치에 %4 크기로 표시 %5",
                 robotis_Practice_icon_screen_animal_human: "화면에 [동물/사람]중 %1를 (%2, %3)위치에 %4 크기로 표시 %5",
                 robotis_Practice_icon_screen_object_tool: "화면에 [물건/도구]중 %1를 (%2, %3)위치에 %4 크기로 표시 %5",
                 robotis_Practice_icon_screen_vehicle_number: "화면에 [탈것/숫자]중 %1를 (%2, %3)위치에 %4 크기로 표시 %5",
                 robotis_Practice_text_screen: "화면에 %1를 (%2, %3)위치에 %4 로 %5으로 표시 %6",
-                robotis_Practice_pixel: "화면에 (%1, %2)위치에 %3 색 점 표시 %4",
+                robotis_Practice_pixel: "화면 (%1, %2)위치에 %3 색 점 표시 %4",
                 robotis_Practice_text_screen_redraw: "화면에 %1를 (%2, %3)위치에 %4으로 새로 표시 %5",
                 robotis_Practice_LCDColor: "화면 색상을 %1 (으)로 정하기 %2",
                 robotis_Practice_LCDBright: "화면 밝기를 %1 (으)로 정하기 %2",
@@ -447,10 +447,11 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_flashing7: "깜박임7",
                 robotis_flashing8: "깜박임8",
                 robotis_flashing9: "깜박임9",
-                robotis_moveF: "전진",
-                robotis_moveB: "후진",
+                robotis_moveF: "전진하기",
+                robotis_moveB: "후진하기",
                 robotis_moveL: "좌회전",
                 robotis_moveR: "우회전",
+                robotis_moveU: "U턴",
                 robotis_moveL_in_place: "제자리 좌회전",
                 robotis_moveR_in_place: "제자리 우회전",
                 robotis_moveU_in_place: "제자리 U턴",
@@ -1139,8 +1140,8 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.robotis_direction_forward, '1'],
-                        [Lang.Blocks.robotis_direction_backward, '2'],
+                        [Lang.Blocks.robotis_moveF, '1'],
+                        [Lang.Blocks.robotis_moveB, '2'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -1154,8 +1155,8 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.robotis_direction_forward, '1'],
-                        [Lang.Blocks.robotis_direction_backward, '2'],
+                        [Lang.Blocks.robotis_moveF, '1'],
+                        [Lang.Blocks.robotis_moveB, '2'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -1262,8 +1263,8 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.robotis_direction_forward, '1'],
-                        [Lang.Blocks.robotis_direction_backward, '2'],
+                        [Lang.Blocks.robotis_moveF, '1'],
+                        [Lang.Blocks.robotis_moveB, '2'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -1370,8 +1371,8 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.robotis_direction_forward, '1'],
-                        [Lang.Blocks.robotis_direction_backward, '2'],
+                        [Lang.Blocks.robotis_moveF, '1'],
+                        [Lang.Blocks.robotis_moveB, '2'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -1699,8 +1700,8 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.robotis_moveL_in_place, '0'],
-                        [Lang.Blocks.robotis_moveR_in_place, '1'],
+                        [Lang.Blocks.robotis_moveL, '0'],
+                        [Lang.Blocks.robotis_moveR, '1'],
                         [Lang.Blocks.robotis_moveU_in_place, '2'],
 
                     ],
@@ -3142,6 +3143,261 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 py: ['Robotis.robotis_RB_cm_distance_compare(%1)'],
             },
         },
+        robotis_Practice_environment_value: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.robotis_sensing_temperature, '28'],
+                        [Lang.Blocks.robotis_sensing_humidity, '29'],
+                        [Lang.Blocks.robotis_sensing_brightness, '30'],
+                        [Lang.Blocks.robotis_sensing_motion, '27'],
+                    ],
+                    value: '28',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null
+                ],
+                type: 'robotis_Practice_environment_value',
+            },
+            paramsKeyMap: {
+                ADDR: 0,
+            },
+            class: 'robotis_rb100_custom',
+            isNotFor: ['Robotis_rb_P_Assembly'],
+            func: function (sprite, script) {
+                var scope = script.executor.scope;
+
+                // instruction / address / length / value / default length
+                var data_instruction = Entry.Robotis_rb.INSTRUCTION.BYPASS_READ;
+                var data_address = 0;
+                var data_length = 1;
+                var data_value = 100;
+
+                var data_default_address = 0;
+                var data_default_length = 0;
+
+                
+                data_address = script.getNumberValue('ADDR');
+
+                data_default_address = data_address;
+                data_default_length = data_length;
+
+                if (
+                    Entry.hw.sendQueue.prevAddress &&
+                    Entry.hw.sendQueue.prevAddress == data_default_address
+                ) {
+                    if (
+                        Entry.hw.sendQueue.prevTime &&
+                        new Date() - Entry.hw.sendQueue.prevTime < Entry.Robotis_openCM70.readDelay
+                    ) {
+                        //throw new Entry.Utils.AsyncError();
+                        if(typeof Entry.hw.sendQueue.prevResult == 'undefined') {
+                            return 0;
+                        }
+                        return Entry.hw.sendQueue.prevResult;
+                    }
+                }
+
+                Entry.Robotis_carCont.setRobotisData([
+                    [
+                        data_instruction,
+                        data_address,
+                        data_length,
+                        data_value,
+                        data_default_length,
+                    ],
+                ]);
+                // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
+                Entry.Robotis_carCont.update();
+
+                // 통합센서의 컨트롤 테이블 주소는 RB-100블록에서 사용하지 않는 주소를 사용
+                // 주소 겹침 방지
+                var result = Entry.hw.portData[data_default_address];
+                if (result == undefined)
+                {
+                    result = rb100_last_valid_value[data_default_address];
+                }
+                else
+                {
+                    rb100_last_valid_value[data_default_address] = result;
+                }
+                Entry.hw.sendQueue.prevAddress = data_default_address;
+                Entry.hw.sendQueue.prevTime = new Date();
+                Entry.hw.sendQueue.prevResult = result;
+
+                if(typeof result == 'undefined') {
+
+                    return 0;
+                }
+                return result;
+            },
+            syntax: {
+                js: [],
+                py: ['Robotis.opencm70_cm_environment_value(%1)'],
+            },
+        },
+        robotis_Practice_environment_compare: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.robotis_sensing_temperature, '28'],
+                        [Lang.Blocks.robotis_sensing_humidity, '29'],
+                        [Lang.Blocks.robotis_sensing_brightness, '30'],
+                        [Lang.Blocks.robotis_sensing_motion, '27'],
+                    ],
+                    value: '28',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    value: 'asdfasdf',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.robotis_if_greater, '0'],
+                        [Lang.Blocks.robotis_if_smaller, '1'],
+                        [Lang.Blocks.robotis_if_equal, '2'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                    {
+                        type: 'number',
+                        params: [0]
+                    },
+                    null,
+                ],
+                type: 'robotis_Practice_environment_compare',
+            },
+            paramsKeyMap: {
+                ADDR: 0,
+                COMPARE_VAL: 1,
+                COMPARE_OP: 2,
+            },
+            class: 'robotis_rb100_custom',
+            isNotFor: ['Robotis_rb_P_Assembly'],
+            func: function (sprite, script) {
+                var scope = script.executor.scope;
+
+                // instruction / address / length / value / default length
+                var data_instruction = Entry.Robotis_rb.INSTRUCTION.BYPASS_READ;
+                var data_address = 0;
+                var data_length = 1;
+                var data_id = 100;
+
+                var data_default_address = 0;
+                var data_default_length = 0;
+                var compareValue = script.getNumberValue('COMPARE_VAL');
+                var compareOP = script.getNumberValue('COMPARE_OP');
+
+                data_address = script.getNumberValue('ADDR');
+
+                data_default_address = data_address;
+                data_default_length = data_length;
+
+                if (
+                    Entry.hw.sendQueue.prevAddress &&
+                    Entry.hw.sendQueue.prevAddress == data_default_address
+                ) {
+                    if (
+                        Entry.hw.sendQueue.prevTime &&
+                        new Date() - Entry.hw.sendQueue.prevTime < 200//Entry.Robotis_openCM70.readDelay//200
+                    ) {
+                        //throw new Entry.Utils.AsyncError();
+                
+                        //  return false;
+                        switch(compareOP) {
+                            case 0:
+                                return Entry.hw.sendQueue.prevResult > compareValue;
+                            case 1:
+                                return Entry.hw.sendQueue.prevResult < compareValue;
+                            case 2:
+                                return Entry.hw.sendQueue.prevResult == compareValue;
+                            default:
+                                return false;
+                        }
+                    }
+                }
+
+                Entry.Robotis_carCont.setRobotisData([
+                    [
+                        data_instruction,
+                        data_address,
+                        data_length,
+                        data_id,
+                        data_default_length,
+                    ],
+                ]);
+                
+                
+                Entry.Robotis_carCont.update();
+
+                
+                // 통합센서의 컨트롤 테이블 주소는 RB-100블록에서 사용하지 않는 주소를 사용
+                // 주소 겹침 방지
+                var result = Entry.hw.portData[data_default_address];
+                if (result == undefined)
+                {
+                    result = rb100_last_valid_value[data_default_address];
+                }
+                else
+                {
+                    rb100_last_valid_value[data_default_address] = result;
+                }
+                Entry.hw.sendQueue.prevAddress = data_default_address;
+                Entry.hw.sendQueue.prevTime = new Date();
+                Entry.hw.sendQueue.prevResult = result;
+
+                if(result == undefined) {
+                    return false;
+                }
+
+                switch(compareOP) {
+                    case 0:
+                        return result > compareValue;
+                    case 1:
+                        return result < compareValue;
+                    case 2:
+                        return result == compareValue;
+                    default:
+                        return false;
+                }
+               
+            },
+            syntax: {
+                js: [],
+                py: ['Robotis.robotis_RB_cm_environment_compare(%1)'],
+            },
+        },
         robotis_Practice_dxl_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -3285,16 +3541,12 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.robotis_line_cross_type_0, '0'],
                         [Lang.Blocks.robotis_line_cross_type_5, '5'],
                         [Lang.Blocks.robotis_line_cross_type_6, '6'],
                         [Lang.Blocks.robotis_line_cross_type_7, '7'],
                         [Lang.Blocks.robotis_line_cross_type_8, '8'],
                         [Lang.Blocks.robotis_line_cross_type_9, '9'],
                         [Lang.Blocks.robotis_line_cross_type_10, '10`'],
-                        [Lang.Blocks.robotis_line_cross_type_11, '11'],
-                        [Lang.Blocks.robotis_line_cross_type_12, '12'],
-                        [Lang.Blocks.robotis_line_cross_type_1, '1'],
                     ],
                     value: '5',
                     fontSize: 11,
