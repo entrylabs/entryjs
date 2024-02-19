@@ -846,7 +846,7 @@ Entry.Robotis_rb.getBlocks = function () {
             events: {},
             def: {
                 params: [
-                    Lang.Blocks.robotis_korean1,
+                    " ",
                     {
                         type: 'number',
                         params: ['0'],
@@ -2638,6 +2638,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 py: ['Robotis.robotis_RB_roll_pitch(%1)'],
             },
         },
+        /*
         robotis_RB_environment_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2686,7 +2687,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 ADDR: 1,
             },
             class: 'robotis_rb100_custom',
-            isNotFor: ['Robotis_rb_H', 'Robotis_rb_car'],
+            isNotFor: [],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
 
@@ -2831,7 +2832,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 COMPARE_VAL: 3,
             },
             class: 'robotis_rb100_custom',
-            isNotFor: ['Robotis_rb_H', 'Robotis_rb_car'],
+            isNotFor: [],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
 
@@ -2973,7 +2974,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 ADDR: 1,
             },
             class: 'robotis_rb100_custom',
-            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car'],
+            isNotFor: [],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
 
@@ -3119,7 +3120,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 COMPARE_VAL: 3,
             },
             class: 'robotis_rb100_custom',
-            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car'],
+            isNotFor: [],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
 
@@ -3214,7 +3215,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 js: [],
                 py: ['Robotis.robotis_RB_cm_distance_compare(%1)'],
             },
-        },
+        },*/
         robotis_RB_cm_joystick_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,

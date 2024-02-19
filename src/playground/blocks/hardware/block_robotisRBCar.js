@@ -78,10 +78,10 @@ Entry.Robotis_rb_car.blockMenuBlocks = [
     'robotis_RB_detectSound_compare',
     'robotis_RB_imu',
     'robotis_RB_roll_pitch', 
-    'robotis_RB_environment_value',
-    'robotis_RB_environment_compare',
-    'robotis_RB_distance_value',
-    'robotis_RB_distance_compare',
+    //'robotis_RB_environment_value',
+    //'robotis_RB_environment_compare',
+    //'robotis_RB_distance_value',
+    //'robotis_RB_distance_compare',
 
     'robotis_RB_cm_buzzer_index',
 

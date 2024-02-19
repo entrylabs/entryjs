@@ -135,6 +135,13 @@ Entry.Robotis_rb_P_Assembly.blockMenuBlocks = [
     // LED 제어
     'robotis_Practice_cm_led',
 
+    // 다이나믹셀 제어
+    'robotis_Practice_dxl_set_mode',
+    'robotis_Practice_dxl_each_control',
+    'robotis_Practice_dxl_set_position',
+    'robotis_Practice_dxl_set_rotate',
+    'robotis_Practice_dxl_set_multiturn_round',
+
     // Huskylens 값 블록
     'robotis_Practice_huskylens_connection_status',
     'robotis_Practice_huskylens_if_detected',
@@ -184,7 +191,8 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 // 값 블록
                 robotis_Practice_cm_ir_value: "%1 적외선센서 값",
                 robotis_Practice_cm_ir_compare: "%1 적외선센서 값이 %2 보다 %3",
-                robotis_Practice_detectFrontObj: "%1의 %2에 물체가 있으면",
+                //robotis_Practice_detectFrontObj: "%1의 %2에 물체가 있으면",  // 거리센서도 사용할 경우
+                robotis_Practice_detectFrontObj: "적외선센서의 %2에 물체가 있으면",  // 거리센서를 사용하지 않을 경우
                 robotis_Practice_cm_btn_value: "제어기의 %1 버튼이 %2 이면",
                 robotis_Practice_cm_joystick_value: "제어기의 노랑 조이스틱 위치가 %1 이면",
                 robotis_Practice_mic: "소리의 크기(dB)",
@@ -227,6 +235,16 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 
                 // LED 제어
                 robotis_Practice_cm_led: "%1 LED %2 %3",
+                
+
+                // DXL 제어
+
+                robotis_Practice_dxl_set_mode: "%1 번 모터 %2 모드로 설정 %3",
+                robotis_Practice_dxl_each_control: "%1 번 모터 %2°로 %3 초 동안 움직이기 %4",
+                robotis_Practice_dxl_set_position: "%1 번 모터 %2 속도로 %3° 위치로 회전 %4",
+                robotis_Practice_dxl_set_rotate: "%1 번 모터 %2 속도로 %3 으로 %4 %5",
+                robotis_Practice_dxl_set_multiturn_round: "%1 번 모터 %2 속도로 %3 바퀴 %4으로 회전 %5",
+                
 
                 
                 // Huskylens 값 블록
@@ -672,7 +690,7 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
 
                 robotis_dxl_mode_joint: "관절",
                 robotis_dxl_mode_wheel: "바퀴",
-                robotis_dxl_mode_multi_turn: "멀티턴",
+                robotis_dxl_mode_multi_turn: "여러바퀴회전",
                 robotis_dxl_move_rotate: "회전",
                 robotis_dxl_move_stop: "정지",
                 robotis_dxl_rotate_cw: "시계방향",
@@ -5179,6 +5197,627 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 );
             },
             syntax: { js: [], py: ['Robotis.opencm70_cm_led(%1, %2)'] },
+        },
+
+
+        
+        robotis_Practice_dxl_set_mode: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ["1", '1'],
+                        ["2", '2'], //Lang.Blocks.robotis_common_green_color
+                        ["3", '3'],
+                        ["4", '4'],
+                        ["5", '5'],
+                        ["6", '6'],
+                        ["7", '7'],
+                        ["8", '8'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.robotis_dxl_mode_joint, '3'],
+                        [Lang.Blocks.robotis_dxl_mode_wheel, '1'],
+                        [Lang.Blocks.robotis_dxl_mode_multi_turn, '4'],
+                    ],
+                    value: '3',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    '1',
+                    null,
+                    null,
+                ],
+                type: 'robotis_Practice_dxl_set_mode',
+            },
+            paramsKeyMap: {
+                DXL_ID: 0,
+                DXL_MODE: 1,
+            },
+            class: 'robotis_openCM70_cm',
+            isNotFor: ['Robotis_rb_H', 'Robotis_rb_P_Assembly'],
+            func: function (sprite, script) {
+                // instruction / address / length / value / default length
+                var dxl_id = script.getNumberValue('DXL_ID', script);
+                var dxl_mode = script.getField('DXL_MODE', script);
+
+                var data_instruction = Entry.Robotis_rb.INSTRUCTION.BYPASS_WRITE;
+                var data_address = 0;
+                var data_length = 0;
+                var data_value = 0;
+
+                data_address =
+                    Entry.Robotis_rb.CONTROL_TABLE.DXL_OPERATING_MODE[0];
+                data_length =
+                    Entry.Robotis_rb.CONTROL_TABLE.DXL_OPERATING_MODE[1];
+
+                data_value = dxl_mode;
+
+                var data_sendqueue = [
+                    [
+                        data_instruction,
+                        Entry.Robotis_rb.CONTROL_TABLE.DXL_TORQUE_ENABLE[0],
+                        Entry.Robotis_rb.CONTROL_TABLE.DXL_TORQUE_ENABLE[1],
+                        dxl_id,
+                        0
+                    ],
+                    [
+                        data_instruction,
+                        data_address,
+                        data_length,
+                        dxl_id,
+                        data_value
+                    ],
+                    [
+                        data_instruction,
+                        Entry.Robotis_rb.CONTROL_TABLE.DXL_TORQUE_ENABLE[0],
+                        Entry.Robotis_rb.CONTROL_TABLE.DXL_TORQUE_ENABLE[1],
+                        dxl_id,
+                        1
+                    ],
+                ];
+
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    Entry.Robotis_openCM70.delay
+                );
+            },
+            syntax: {
+                js: [],
+                py: ['Robotis.set_dxl_mode(%1, %2)'],
+            },
+        },
+        robotis_Practice_dxl_each_control: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ["1", '1'],
+                        ["2", '2'], //Lang.Blocks.robotis_common_green_color
+                        ["3", '3'],
+                        ["4", '4'],
+                        ["5", '5'],
+                        ["6", '6'],
+                        ["7", '7'],
+                        ["8", '8'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                ],
+                type: 'robotis_Practice_dxl_each_control',
+            },
+
+            paramsKeyMap: {
+                DXLNUM: 0,
+                ANGLE: 1,
+                TIME: 2,
+            },
+            class: 'robotis_openCM70_cm',
+            isNotFor: ['Robotis_rb_P_Assembly'],
+            func(entity, script) {
+                var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                var data_address = 19;
+                var data_length = 1;
+                var data_value = 1;
+
+                var data_sendqueue = [
+                    [data_instruction, data_address, data_length, data_value],
+                    [Entry.Robotis_rb.INSTRUCTION.REGWRITE, 64, 1, 1, [1]],
+                    [Entry.Robotis_rb.INSTRUCTION.REGWRITE, 64, 1, 1, [2]],
+                    [Entry.Robotis_rb.INSTRUCTION.REGWRITE, 64, 1, 1, [3]],
+                    [Entry.Robotis_rb.INSTRUCTION.REGWRITE, 64, 1, 1, [4]],
+                    [Entry.Robotis_rb.INSTRUCTION.REGWRITE, 64, 1, 1, [5]],
+                    [Entry.Robotis_rb.INSTRUCTION.REGWRITE, 64, 1, 1, [6]],
+                    [Entry.Robotis_rb.INSTRUCTION.REGWRITE, 64, 1, 1, [7]],
+                    [Entry.Robotis_rb.INSTRUCTION.REGWRITE, 64, 1, 1, [8]],
+                    [Entry.Robotis_rb.INSTRUCTION.ACTION, 0, 0, 0],
+
+
+                ]
+
+                var dxlID = script.getField('DXLNUM', script);
+                var angle = script.getNumberValue('ANGLE', script);
+                var time = script.getNumberValue('TIME', script) * 1000;
+
+                var engValue = 2048;
+                engValue = Math.floor(2048 - Math.round(angle * 4096) / 360);
+                var velocity = 0;
+
+                if (time == 0) {
+                    velocity = 0;
+                } else {
+                    velocity = Math.round(Math.floor(60 * Math.abs(angle - Entry.Robotis_rb.DXL_POSITION.values[dxlID - 1]) * 1000 / 360 / time) / 0.229);
+                }
+
+                Entry.Robotis_rb.DXL_POSITION.values[dxlID - 1] = angle;
+                data_sendqueue.push([Entry.Robotis_rb.INSTRUCTION.REGWRITE, 112, 8, velocity * 4294967296 + engValue, [dxlID]]);
+
+                data_sendqueue.push([Entry.Robotis_rb.INSTRUCTION.ACTION, 0, 0, 0]);
+
+                for (let j = 1; j < 9; j++) {
+                    data_sendqueue.push([Entry.Robotis_rb.INSTRUCTION.REGWRITE, 112, 4, 0, [j]]);
+
+                }
+                data_sendqueue.push([Entry.Robotis_rb.INSTRUCTION.ACTION, 0, 0, 0]);
+
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    time + Entry.Robotis_openCM70.delay
+                    //Entry.Robotis_openCM70.delay
+                );
+            },
+            syntax: { js: [], py: ['Robotis.robotis_dxl_each_control(%1)'] },
+        },
+        robotis_Practice_dxl_set_position: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ["1", '1'],
+                        ["2", '2'], //Lang.Blocks.robotis_common_green_color
+                        ["3", '3'],
+                        ["4", '4'],
+                        ["5", '5'],
+                        ["6", '6'],
+                        ["7", '7'],
+                        ["8", '8'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    '1',
+                    '50',
+                    '0',
+                    null,
+                ],
+                type: 'robotis_Practice_dxl_set_position',
+            },
+            paramsKeyMap: {
+                DXL_ID: 0,
+                DXL_SPEED: 1,
+                DXL_ANGLE: 2,
+            },
+            class: 'robotis_openCM70_cm',
+            isNotFor: ['Robotis_rb_H', 'Robotis_rb_P_Assembly'],
+            func: function (sprite, script) {
+                // instruction / address / length / value / default length
+                var dxl_id = script.getNumberValue('DXL_ID', script);
+                var dxl_speed = script.getNumberValue('DXL_SPEED', script);
+                var dxl_angle = script.getNumberValue('DXL_ANGLE', script);
+
+                var data_instruction = Entry.Robotis_rb.INSTRUCTION.BYPASS_WRITE;
+                var data_address_1 = 0;
+                var data_length_1 = 0;
+                var data_value_1 = 0;
+                var data_address_2 = 0;
+                var data_length_2 = 0;
+                var data_value_2 = 0;
+
+                data_address_1 =
+                    Entry.Robotis_rb.CONTROL_TABLE.DXL_PROFILE_VELOCITY[0];
+                data_length_1 =
+                    Entry.Robotis_rb.CONTROL_TABLE.DXL_PROFILE_VELOCITY[1];
+
+                if (dxl_speed < 0) dxl_speed = 0;
+                else if (dxl_speed > 100) dxl_speed = 100;
+
+                data_value_1 = dxl_speed * 10;
+
+                data_address_2 =
+                    Entry.Robotis_rb.CONTROL_TABLE.DXL_GOAL_POSITION[0];
+                data_length_2 =
+                    Entry.Robotis_rb.CONTROL_TABLE.DXL_GOAL_POSITION[1];
+
+                if (dxl_angle < -179) dxl_angle = -179;
+                else if (dxl_angle > 180) dxl_angle = 180;
+
+                dxl_angle = 180 - dxl_angle;
+
+                data_value_2 = Math.floor(dxl_angle * 4096 / 360);
+
+                var data_sendqueue = [
+                    [
+                        data_instruction,
+                        data_address_1,
+                        data_length_1,
+                        dxl_id,
+                        data_value_1
+                    ],
+                    [
+                        data_instruction,
+                        data_address_2,
+                        data_length_2,
+                        dxl_id,
+                        data_value_2
+                    ],
+                ];
+
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    Entry.Robotis_openCM70.delay
+                );
+            },
+            syntax: {
+                js: [],
+                py: ['Robotis.set_dxl_position(%1, %2, %3)'],
+            },
+        },
+        robotis_Practice_dxl_set_rotate: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ["1", '1'],
+                        ["2", '2'], //Lang.Blocks.robotis_common_green_color
+                        ["3", '3'],
+                        ["4", '4'],
+                        ["5", '5'],
+                        ["6", '6'],
+                        ["7", '7'],
+                        ["8", '8'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.robotis_dxl_rotate_cw, '1'],
+                        [Lang.Blocks.robotis_dxl_rotate_ccw, '2'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.robotis_dxl_move_rotate, '1'],
+                        [Lang.Blocks.robotis_dxl_move_stop, '0'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    '1',
+                    '50',
+                    null,
+                    null,
+                    null,
+                ],
+                type: 'robotis_Practice_dxl_set_rotate',
+            },
+            paramsKeyMap: {
+                DXL_ID: 0,
+                DXL_SPEED: 1,
+                DXL_DIRECTION: 2,
+                DXL_MOVE: 3,
+            },
+            class: 'robotis_openCM70_cm',
+            isNotFor: ['Robotis_rb_H', 'Robotis_rb_P_Assembly'],
+            func: function (sprite, script) {
+                // instruction / address / length / value / default length
+                var dxl_id = script.getNumberValue('DXL_ID', script);
+                var dxl_speed = script.getNumberValue('DXL_SPEED', script);
+                var dxl_direction = script.getNumberValue('DXL_DIRECTION', script);
+                var dxl_move = script.getNumberValue('DXL_MOVE', script);
+
+                var data_instruction = Entry.Robotis_rb.INSTRUCTION.BYPASS_WRITE;
+                var data_address = 0;
+                var data_length = 0;
+                var data_value = 0;
+
+                data_address =
+                    Entry.Robotis_rb.CONTROL_TABLE.DXL_GOAL_VELOCITY[0];
+                data_length =
+                    Entry.Robotis_rb.CONTROL_TABLE.DXL_GOAL_VELOCITY[1];
+
+                if (dxl_speed < 0) dxl_speed = 0;
+                else if (dxl_speed > 100) dxl_speed = 100;
+
+                data_value = dxl_speed * 10;
+
+                // cw일 경우 음수처리
+                if (dxl_direction == 1) data_value = -data_value;
+
+                // 알쥐나 알라 우측 바퀴인 경우 reverse mode이므로 방향 반대
+                if (dxl_id == 33 || dxl_id == 35) data_value = -data_value;
+
+                data_value = data_value * dxl_move;
+
+                var data_sendqueue = [
+                    [
+                        data_instruction,
+                        data_address,
+                        data_length,
+                        dxl_id,
+                        data_value
+                    ],
+                ];
+
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    Entry.Robotis_openCM70.delay
+                );
+            },
+            syntax: {
+                js: [],
+                py: ['Robotis.set_dxl_rotate(%1, %2, %3)'],
+            },
+        },
+        robotis_Practice_dxl_set_multiturn_round: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ["1", '1'],
+                        ["2", '2'], //Lang.Blocks.robotis_common_green_color
+                        ["3", '3'],
+                        ["4", '4'],
+                        ["5", '5'],
+                        ["6", '6'],
+                        ["7", '7'],
+                        ["8", '8'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.robotis_dxl_rotate_cw, '1'],
+                        [Lang.Blocks.robotis_dxl_rotate_ccw, '2'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    '1',
+                    '50',
+                    '1',
+                    null,
+                    null,
+                ],
+                type: 'robotis_Practice_dxl_set_multiturn_round',
+            },
+            paramsKeyMap: {
+                DXL_ID: 0,
+                DXL_SPEED: 1,
+                DXL_ROUND: 2,
+                DXL_DIRECTION: 3,
+            },
+            class: 'robotis_openCM70_cm',
+            isNotFor: ['Robotis_rb_H', 'Robotis_rb_P_Assembly'],
+            func: function (sprite, script) {
+                // instruction / address / length / value / default length
+                var dxl_id = script.getNumberValue('DXL_ID', script);
+                var dxl_speed = script.getNumberValue('DXL_SPEED', script);
+                var dxl_round = script.getNumberValue('DXL_ROUND', script);
+                var dxl_direction = script.getNumberValue('DXL_DIRECTION', script);
+
+
+                var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                var data_address_1 = 0;
+                var data_length_1 = 0;
+                var data_value_1 = 0;
+                var data_address_2 = 0;
+                var data_length_2 = 0;
+                var data_value_2 = 0;
+                var data_address_3 = 0;
+                var data_length_3 = 0;
+                var data_value_3 = 0;
+
+                var data_sendqueue = [];
+                var result = undefined;
+
+                if (dxl_id == 0 || dxl_speed == 0 || dxl_round == 0) {
+                    return;
+                }
+
+                data_address_1 =
+                    Entry.Robotis_rb.CONTROL_TABLE.CM_DXL_MULTITURN_ID[0];
+                data_length_1 =
+                    Entry.Robotis_rb.CONTROL_TABLE.CM_DXL_MULTITURN_ID[1];
+
+                data_address_2 =
+                    Entry.Robotis_rb.CONTROL_TABLE.CM_DXL_MULTITURN_SPEED[0];
+                data_length_2 =
+                    Entry.Robotis_rb.CONTROL_TABLE.CM_DXL_MULTITURN_SPEED[1];
+
+                if (dxl_speed < 0) dxl_speed = 0;
+                else if (dxl_speed > 100) dxl_speed = 100;
+
+                data_value_2 = dxl_speed * 10;
+
+                data_address_3 =
+                    Entry.Robotis_rb.CONTROL_TABLE.CM_DXL_MULTITURN_DISTANCE[0];
+                data_length_3 =
+                    Entry.Robotis_rb.CONTROL_TABLE.CM_DXL_MULTITURN_DISTANCE[1];
+
+                if (dxl_round < 0) dxl_round = 0;
+                else if (dxl_round > 100) dxl_round = 100;
+
+                data_value_3 = dxl_round * 4096;
+
+                if (dxl_direction == 1) data_value_3 = -data_value_3;
+
+                data_sendqueue = [
+                    [
+                        data_instruction,
+                        data_address_1,
+                        data_length_1,
+                        dxl_id,
+                    ],
+                    [
+                        data_instruction,
+                        data_address_2,
+                        data_length_2,
+                        data_value_2,
+                    ],
+                    [
+                        data_instruction,
+                        data_address_3,
+                        data_length_3,
+                        data_value_3,
+                    ],
+                ];
+
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    Entry.Robotis_openCM70.delay
+                );
+            },
+            syntax: {
+                js: [],
+                py: ['Robotis.set_dxl_rotate(%1, %2, %3)'],
+            },
         },
 
 
