@@ -176,12 +176,12 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
         ko: {
             template: {
                 // 주행 제어
-                robotis_Practice_drive_simple: "속도 %1 로 %2 %3",
+                robotis_Practice_drive_simple: "속도 %1 로 %2 하기 %3",
                 robotis_Practice_drive_stop: "정지하기 %1",
-                robotis_Practice_drive_advanced: "왼쪽바퀴 %1 속도로 %2, 오른쪽바퀴 %3 속도로 %4 %5",
+                robotis_Practice_drive_advanced: "왼쪽바퀴 %1 속도로 %2 하기, 오른쪽바퀴 %3 속도로 %4 하기 %5",
                 robotis_Practice_drive_seperate: "%1 바퀴 %2 속도로 %3 으로 회전하기 %4",
                 robotis_Practice_drive_angle: "%1 바퀴 %2 도만큼 %3 으로 회전하기 %4",
-                robotis_Practice_go_distance:"%1 cm %2 %3",
+                robotis_Practice_go_distance:"%1 cm %2 하기 %3",
                 robotis_Practice_turn_angle:"%1 도 %2 하기%3",
                 robotis_Practice_follow_line: "%1 속도로 라인 따라가기 %2",
                 robotis_Practice_follow_line_stop: "라인 따라가기 종료 %1",
@@ -465,8 +465,8 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_flashing7: "깜박임7",
                 robotis_flashing8: "깜박임8",
                 robotis_flashing9: "깜박임9",
-                robotis_moveF: "전진하기",
-                robotis_moveB: "후진하기",
+                robotis_moveF: "전진",
+                robotis_moveB: "후진",
                 robotis_moveL: "좌회전",
                 robotis_moveR: "우회전",
                 robotis_moveU: "U턴",
@@ -1281,8 +1281,8 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.robotis_moveF, '1'],
-                        [Lang.Blocks.robotis_moveB, '2'],
+                        [Lang.Blocks.robotis_direction_forward, '1'],
+                        [Lang.Blocks.robotis_direction_backward, '2'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -1389,8 +1389,8 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.robotis_moveF, '1'],
-                        [Lang.Blocks.robotis_moveB, '2'],
+                        [Lang.Blocks.robotis_direction_forward, '1'],
+                        [Lang.Blocks.robotis_direction_backward, '2'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -1718,8 +1718,8 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.robotis_moveL, '0'],
-                        [Lang.Blocks.robotis_moveR, '1'],
+                        [Lang.Blocks.robotis_moveL_in_place, '0'],
+                        [Lang.Blocks.robotis_moveR_in_place, '1'],
                         [Lang.Blocks.robotis_moveU_in_place, '2'],
 
                     ],
