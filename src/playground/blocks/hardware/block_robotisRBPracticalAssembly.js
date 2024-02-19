@@ -127,8 +127,8 @@ Entry.Robotis_rb_P_Assembly.blockMenuBlocks = [
     'robotis_Practice_icon_screen_object_tool',
     'robotis_Practice_icon_screen_vehicle_number',
     'robotis_Practice_text_screen',
-    'robotis_Practice_pixel',
     'robotis_Practice_text_screen_redraw',
+    'robotis_Practice_pixel',
     'robotis_Practice_LCDColor',
     'robotis_Practice_LCDBright',
 
@@ -213,10 +213,10 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_Practice_rest_simple: "%1 %2",
                 robotis_Practice_rest_advanced: "쉼표 %1 박자 %2",
                 robotis_Practice_beat_per_minute: "연주 빠르기를 %1 (으)로 정하기 %2",
-                robotis_Practice_Hello: "로봇이 스피커로 %1 말하기 %2",
-                robotis_Practice_effectSound: "로봇이 효과음 %1 재생하기 %2",
-                robotis_Practice_record: "로봇이 소리 %1번에 녹음하기 %2",
-                robotis_Practice_playRecord: "로봇이 소리 %1번을 재생하기 %2",
+                robotis_Practice_Hello: "제어기가 스피커로 %1 말하기 %2",
+                robotis_Practice_effectSound: "제어기가 효과음 %1 재생하기 %2",
+                robotis_Practice_record: "제어기가 소리 %1번에 녹음하기 %2",
+                robotis_Practice_playRecord: "제어기가 소리 %1번을 재생하기 %2",
 
                 
                 // LCD 제어
