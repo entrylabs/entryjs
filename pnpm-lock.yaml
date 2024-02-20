@@ -49,7 +49,7 @@ dependencies:
     version: 3.6.4
   crypto-js:
     specifier: ^4.0.0
-    version: 4.0.0
+    version: 4.2.0
   cuid:
     specifier: ^2.1.6
     version: 2.1.6
@@ -3565,8 +3565,8 @@ packages:
       shebang-command: 2.0.0
       which: 2.0.2
 
-  /crypto-js@4.0.0:
-    resolution: {integrity: sha512-bzHZN8Pn+gS7DQA6n+iUmBfl0hO5DJq++QP3U6uTucDtk/0iGpXd/Gg7CGR0p8tJhofJyaKoWBuJI4eAO00BBg==}
+  /crypto-js@4.2.0:
+    resolution: {integrity: sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==}
     dev: false
 
   /css-color-names@0.0.4:
