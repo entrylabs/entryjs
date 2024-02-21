@@ -53,6 +53,7 @@ Entry.Robotis_rb_P_Assembly = {
             [Entry.Robotis_rb.INSTRUCTION.WRITE, 66, 2, 0],
             [Entry.Robotis_rb.INSTRUCTION.WRITE, 710, 2, 0],
             [Entry.Robotis_rb.INSTRUCTION.WRITE, 19, 1, 1], // bypass 모드 켜기
+            [Entry.Robotis_rb.INSTRUCTION.WRITE, 4250, 1, 1], // huskylens 텍스트 지우기
             [Entry.Robotis_rb.INSTRUCTION.BYPASS_WRITE, 64, 1, 0xFE, 0], // torque off
             // [Entry.Robotis_rb.INSTRUCTION.WRITE, 163, 2, 30759],
             // [Entry.Robotis_rb.INSTRUCTION.WRITE, 162, 1, 1],
@@ -65,8 +66,8 @@ Entry.Robotis_rb_P_Assembly = {
     url: 'http://www.robotis.com/index/product.php?cate_code=111310',
     imageName: 'robotis_RB100_Practical_Assembly.png',
     title: {
-        "ko": "로보티즈 실과 2025",
-        "en": "ROBOTIS Practical Course 2025"
+        "ko": "로봇아이(AI)",
+        "en": "Robot AI"
     },
     delay: 30,
     readDelay: 30,
@@ -121,7 +122,6 @@ Entry.Robotis_rb_P_Assembly.blockMenuBlocks = [
     // LCD 제어
     'robotis_Practice_screen',
     'robotis_Practice_anim_screen',
-    //'robotis_Practice_rsp_screen',
     'robotis_Practice_icon_screen_food_plant',
     'robotis_Practice_icon_screen_animal_human',
     'robotis_Practice_icon_screen_object_tool',
@@ -185,7 +185,7 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_Practice_turn_angle:"%1 도 %2 하기%3",
                 robotis_Practice_follow_line: "%1 속도로 라인 따라가기 %2",
                 robotis_Practice_follow_line_stop: "라인 따라가기 종료 %1",
-                robotis_Practice_turn_at_line: "교차로에서 %1 하기 %2",
+                robotis_Practice_turn_at_line: "교차로에서 %1 하고 멈추기 %2",
 
 
                 // 값 블록
@@ -1578,7 +1578,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     type: 'Dropdown',
                     options: [
                         [Lang.Blocks.robotis_moveL_in_place, '1'],
-                        [Lang.Blocks.robotis_moveR_in_place, '2'],
+                        [Lang.Blocks.robotis_moveR_in_place, '-1'],
 
                     ],
                     value: '1',
@@ -1606,22 +1606,26 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             
             paramsKeyMap: {
                 ANGLE: 0,
+                DIRECTION: 1,
             },
             class: 'robotis_rb100_move',
             isNotFor: ['Robotis_rb_P_Assembly'],
             func(entity, script) {
                 var angle = script.getNumberValue('ANGLE', script);
+                var direction = script.getNumberValue('DIRECTION', script);
 
-                if(angle > 180) {
-                    angle = 180;
-                } else if(angle < -180) {
-                    angle = -180;
+                angle *= direction;
+
+                if(angle > 720) {
+                    angle = 720;
+                } else if(angle < -720) {
+                    angle = -720;
                 }
 
                 var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
                 var data_address = 270;
                 var data_length = 4;
-                var data_value = Math.floor(-angle);
+                var data_value = Math.floor(angle);
         
                 var data_sendqueue = [
                     [
@@ -1638,7 +1642,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
                     data_sendqueue,
-                    Entry.Robotis_openCM70.delay + 2000*(Math.abs(angle) / 90) + 1000
+                    Entry.Robotis_openCM70.delay + Math.abs(angle) * 2500 / 360 + 500
                     //Entry.Robotis_openCM70.delay
                 );
             },
@@ -1894,7 +1898,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                         if(typeof Entry.hw.sendQueue.prevResult == 'undefined') {
                             return 0;
                         }
-                        return Entry.hw.sendQueue.prevResult;
+                        return Math.round((Entry.hw.sendQueue.prevResult % 65536) / 4);
                     }
                 }
 
@@ -1917,7 +1921,6 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 }
                 else
                 {
-                    result = Math.round(result / 4);
                     rb100_last_valid_value[data_default_address] = result;
                 }
                 Entry.hw.sendQueue.prevAddress = data_default_address;
@@ -1928,7 +1931,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
 
                     return 0;
                 }
-                return result;
+                return Math.round((result % 65536) / 4);
             },
             syntax: {
                 js: [],
@@ -2017,15 +2020,16 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                         new Date() - Entry.hw.sendQueue.prevTime < 200//Entry.Robotis_openCM70.readDelay//200
                     ) {
                         //throw new Entry.Utils.AsyncError();
+                        let prevResult = Math.round((Entry.hw.sendQueue.prevResult % 65536) / 4);
                 
                         //  return false;
                         switch(compareOP) {
                             case 0:
-                                return Entry.hw.sendQueue.prevResult > compareValue;
+                                return prevResult > compareValue;
                             case 1:
-                                return Entry.hw.sendQueue.prevResult < compareValue;
+                                return prevResult < compareValue;
                             case 2:
-                                return Entry.hw.sendQueue.prevResult == compareValue;
+                                return prevResult == compareValue;
                             default:
                                 return false;
                         }
@@ -2053,7 +2057,6 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 }
                 else
                 {
-                    result = Math.round(result / 4);
                     rb100_last_valid_value[data_default_address] = result;
                 }
                 Entry.hw.sendQueue.prevAddress = data_default_address;
@@ -2063,6 +2066,8 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 if(result == undefined) {
                     return false;
                 }
+
+                result = Math.round((result % 65536) / 4);
 
                 switch(compareOP) {
                     case 0:
@@ -3522,6 +3527,16 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     result = dxl_last_valid_value[data_default_address];
                 }
                 else {
+                    if (data_type == 1) {
+                        result = 180 - Math.floor(result * 360 / 4096);
+                        while (result < 0) result += 360;
+                        while (result >= 360) result -= 360;
+                    }
+                    else if (data_type == 2) {
+                        if (result < -1000) result = -1000;
+                        else if (result > 1000) result = 1000;
+                        result = Math.round(result / 10);
+                    }
                     dxl_last_valid_value[data_default_address] = result;
                 }
                 Entry.hw.sendQueue.prevAddress = data_default_address;
@@ -3531,15 +3546,6 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 if (typeof result == 'undefined') {
 
                     return 0;
-                }
-
-                if (data_type == 1) {
-                    result = 180 - Math.floor(result * 360 / 4096);
-                }
-                else if (data_type == 2) {
-                    if (result < -1000) result = -1000;
-                    else if (result > 1000) result = 1000;
-                    result = Math.round(result / 10);
                 }
 
                 return result;
@@ -3563,8 +3569,6 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                         [Lang.Blocks.robotis_line_cross_type_6, '6'],
                         [Lang.Blocks.robotis_line_cross_type_7, '7'],
                         [Lang.Blocks.robotis_line_cross_type_8, '8'],
-                        [Lang.Blocks.robotis_line_cross_type_9, '9'],
-                        [Lang.Blocks.robotis_line_cross_type_10, '10`'],
                     ],
                     value: '5',
                     fontSize: 11,
@@ -3666,11 +3670,11 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.robotis_rla, '1'],
+                        [Lang.Blocks.robotis_rla, '2'],
                         [Lang.Blocks.robotis_rgee, '0'],
-                        [Lang.Blocks.robotis_kkokdu, '2'],
+                        [Lang.Blocks.robotis_kkokdu, '3'],
                     ],
-                    value: '1',
+                    value: '2',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -3678,30 +3682,30 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.robotis_car_anim01, '3329'],
-                        [Lang.Blocks.robotis_car_anim02, '3330'],
-                        //[Lang.Blocks.robotis_car_anim03, '3331'],
-                        [Lang.Blocks.robotis_car_anim04, '3332'],
-                        [Lang.Blocks.robotis_car_anim05, '3333'],
+                        [Lang.Blocks.robotis_car_anim01, '2817'],
+                        [Lang.Blocks.robotis_car_anim02, '2818'],
+                        [Lang.Blocks.robotis_car_anim03, '2819'],
+                        [Lang.Blocks.robotis_car_anim04, '2820'],
+                        [Lang.Blocks.robotis_car_anim05, '2821'],
 
-                        [Lang.Blocks.robotis_car_anim06, '3334'],
-                        [Lang.Blocks.robotis_car_anim07, '3335'], 
-                        [Lang.Blocks.robotis_car_anim08, '3336'],
-                        [Lang.Blocks.robotis_car_anim09, '3337'],
-                        [Lang.Blocks.robotis_car_anim10, '3338'],
+                        [Lang.Blocks.robotis_car_anim06, '2822'],
+                        //[Lang.Blocks.robotis_car_anim07, '2823'], 
+                        [Lang.Blocks.robotis_car_anim08, '2824'],
+                        [Lang.Blocks.robotis_car_anim09, '2825'],
+                        [Lang.Blocks.robotis_car_anim10, '2826'],
 
-                        [Lang.Blocks.robotis_car_anim11, '3339'],
-                        [Lang.Blocks.robotis_car_anim12, '3340'], 
-                        //[Lang.Blocks.robotis_car_anim13, '3341'],
-                        [Lang.Blocks.robotis_car_anim14, '3342'],
-                        [Lang.Blocks.robotis_car_anim15, '3343'],
+                        [Lang.Blocks.robotis_car_anim11, '2827'],
+                        [Lang.Blocks.robotis_car_anim12, '2828'], 
+                        //[Lang.Blocks.robotis_car_anim13, '2829'],
+                        [Lang.Blocks.robotis_car_anim14, '2830'],
+                        [Lang.Blocks.robotis_car_anim15, '2831'],
 
-                        [Lang.Blocks.robotis_car_anim16, '3344'],
-                        [Lang.Blocks.robotis_car_anim17, '3345'], 
-                        [Lang.Blocks.robotis_car_anim18, '3346'],
-                        [Lang.Blocks.robotis_car_anim19, '3347'],
+                        [Lang.Blocks.robotis_car_anim16, '2832'],
+                        [Lang.Blocks.robotis_car_anim17, '2833'], 
+                        [Lang.Blocks.robotis_car_anim18, '2834'],
+                        [Lang.Blocks.robotis_car_anim19, '2835'],
                     ],
-                    value: '3329',
+                    value: '2817',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -3728,12 +3732,95 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             isNotFor: ['Robotis_rb_P_Assembly'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
+                var robotType = script.getNumberValue('ROBOT_TYPE', script);
                 var screenValue = script.getNumberValue('BACKGROUND', script);
                 
                 var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
                 var data_address = 163;
                 var data_length = 2;
-                var data_value = screenValue;
+                var data_value = screenValue + robotType * 256;
+
+                if (robotType == 0) {
+                    switch (screenValue) {
+                        case 2817:
+                            data_value = 2841;
+                            break;
+                        
+                        case 2818:
+                            data_value = 2842;
+                            break;
+                        
+                        case 2819:
+                            data_value = 2820;
+                            break;
+                            
+                        case 2820:
+                            data_value = 2817;
+                            break;
+                        
+                        case 2821:
+                            data_value = 2819;
+                            break;
+                        
+                        case 2822:
+                            data_value = 2818;
+                            break;
+                        
+                        //case 2823:
+                        //    break;
+                        
+                        case 2824:
+                            data_value = 2826;
+                            break;
+                        
+                        case 2825:
+                            data_value = 2836;
+                            break;
+                        
+                        case 2826:
+                            data_value = 2837;
+                            break;
+                        
+                        case 2827:
+                            data_value = 2843;
+                            break;
+                        
+                        case 2828:
+                            data_value = 2831;
+                            break;
+                        
+                        //case 2829:
+                        //    break;
+                        
+                        case 2830:
+                            data_value = 2833;
+                            break;
+                            
+                        case 2831:
+                            data_value = 2834;
+                            break;
+                            
+                        case 2832:
+                            data_value = 2828;
+                            break;
+                            
+                        case 2833:
+                            data_value = 2827;
+                            break;
+                            
+                        case 2834:
+                            data_value = 2829;
+                            break;
+                            
+                        case 2835:
+                            data_value = 2840;
+                            break;
+                        
+                        default:
+                            data_value = 2841;
+                            break;
+                    }
+                }
 
                 var data_sendqueue = [
                     [data_instruction, data_address, data_length, data_value],
@@ -3745,7 +3832,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
                     data_sendqueue,
-                    Entry.Robotis_openCM70.delay + 200,
+                    Entry.Robotis_openCM70.delay + 200
                 );
             },
             syntax: { js: [], py: ['Robotis.opencm70_cm_screen(%1)'] },
@@ -3760,11 +3847,11 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.robotis_rla, '1'],
-                        [Lang.Blocks.robotis_rgee, '0'],
-                        [Lang.Blocks.robotis_kkokdu, '2'],
+                        [Lang.Blocks.robotis_rla, '0'],
+                        [Lang.Blocks.robotis_rgee, '-1'],
+                        [Lang.Blocks.robotis_kkokdu, '1'],
                     ],
-                    value: '1',
+                    value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -3822,12 +3909,96 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             isNotFor: ['Robotis_rb_P_Assembly'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
+                var robotType = script.getNumberValue('ROBOT_TYPE', script);
                 var screenValue = script.getNumberValue('BACKGROUND', script);
                 
                 var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
                 var data_address = 163;
                 var data_length = 2;
                 var data_value = screenValue;
+
+                if (robotType >= 0) {
+                    data_value += 256 * robotType;
+                } else {
+                    switch (screenValue) {
+                        case 30978:
+                            data_value = 30724;
+                            break;
+                        
+                        case 30981:
+                            data_value = 30761;
+                            break;
+                        
+                        //case 30982:
+                        //    break;
+                            
+                        case 30983:
+                            data_value = 30748;
+                            break;
+                        
+                        case 30984:
+                            data_value = 30750;
+                            break;
+                        
+                        case 30985:
+                            data_value = 30749;
+                            break;
+                        
+                        //case 30986:
+                        //    break;
+                        
+                        case 30987:
+                            data_value = 30739;
+                            break;
+                        
+                        case 30988:
+                            data_value = 30751;
+                            break;
+                        
+                        case 30989:
+                            data_value = 30752;
+                            break;
+                        
+                        case 30990:
+                            data_value = 30762;
+                            break;
+                        
+                        case 30991:
+                            data_value = 30736;
+                            break;
+                        
+                        //case 30992:
+                        //    break;
+                        
+                        case 30993:
+                            data_value = 30742;
+                            break;
+                            
+                        case 30994:
+                            data_value = 30743;
+                            break;
+                            
+                        case 30995:
+                            data_value = 30734;
+                            break;
+                            
+                        case 30996:
+                            data_value = 30733;
+                            break;
+                            
+                        case 30997:
+                            data_value = 30732;
+                            break;
+                            
+                        case 30998:
+                            data_value = 30760;
+                            break;
+                        
+                        default:
+                            data_value = 30724;
+                            break;
+                    }
+                }
 
                 var data_sendqueue = [
                     [data_instruction, data_address, data_length, data_value],
@@ -3843,139 +4014,6 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 );
             },
             syntax: { js: [], py: ['Robotis.opencm70_cm_screen(%1)'] },
-        },
-        robotis_Practice_rsp_screen: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.robotis_screen1, '11545'],
-                        [Lang.Blocks.robotis_screen2, '11546'],
-                        [Lang.Blocks.robotis_screen3, '11547'],
-                        ['0', '11283'],
-                        ['1', '11284'],
-                        ['2', '11285'],
-                        ['3', '11286'],
-                        ['4', '11287'],
-                        ['5', '11288'],
-                        ['6', '11289'],
-                        ['7', '11290'],
-                        ['8', '11291'],
-                        ['9', '11292'],
-                        ['10', '11293'],
-                    ],
-                    value: '11545',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    null,
-                    {
-                        type: 'number',
-                        params: ['0'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['0'],
-                    },
-                    50,
-                    null,
-                ],
-                type: 'robotis_Practice_rsp_screen',
-            },
-            paramsKeyMap: {
-                ICON: 0,
-                X: 1,
-                Y: 2,
-                SIZE: 3,
-            },
-            class: 'robotis_rb100_lcd',
-            isNotFor: ['Robotis_rb_P_Assembly'],
-            func: function (sprite, script) {
-                // instruction / address / length / value / default length
-                var iconNum = script.getField('ICON', script);
-                var x = script.getNumberValue('X', script);
-                var y = script.getNumberValue('Y', script);
-                var size = script.getNumberValue('SIZE', script) * 2;
-                
-                var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
-                var data_address = 166;
-                var data_length = 2;
-                var data_value = 10496;
-            
-                if (x < -160) x = -160;
-                else if (x > 160) x = 160;
-                
-                if (y < -120) y = -120;
-                else if (y > 120) y = 120;
-                
-                if (size < 0) size = 0;
-                else if (size > 400) size = 400;
-               
-                data_value = iconNum;
-
-                var data_sendqueue = [
-                    // [
-                    //     Entry.Robotis_rb.INSTRUCTION.WRITE, 163, 2, 2817
-                    // ],
-                    [
-                        Entry.Robotis_rb.INSTRUCTION.WRITE, 163, 2, 255
-                    ],
-                    [
-                        Entry.Robotis_rb.INSTRUCTION.WRITE, 130, 2, x
-                    ],
-                    [
-                        Entry.Robotis_rb.INSTRUCTION.WRITE, 132, 2, y
-                    ],
-                    [
-                        Entry.Robotis_rb.INSTRUCTION.WRITE, 149, 2, size
-                    ],
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        data_value,
-                    ],
-                    [
-                        Entry.Robotis_rb.INSTRUCTION.WRITE, 162, 1, 1
-                    ]
-                ];
-                
-                return Entry.Robotis_carCont.postCallReturn(
-                    script,
-                    data_sendqueue,
-                    Entry.Robotis_openCM70.delay + 200
-                );
-            },
-            syntax: {
-                js: [],
-                py: ['Robotis.RB_rsp_screen(%1,%2,%3,%4)'],
-            },
         },
         robotis_Practice_icon_screen_food_plant: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -4083,12 +4121,6 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 data_value = iconNum;
 
                 var data_sendqueue = [
-                    // [
-                    //     Entry.Robotis_rb.INSTRUCTION.WRITE, 163, 2, 2817
-                    // ],
-                    // [
-                    //     Entry.Robotis_rb.INSTRUCTION.WRITE, 163, 2, 255
-                    // ],
                     [
                         Entry.Robotis_rb.INSTRUCTION.WRITE, 130, 2, x
                     ],
@@ -4236,12 +4268,6 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 data_value = iconNum;
 
                 var data_sendqueue = [
-                    // [
-                    //     Entry.Robotis_rb.INSTRUCTION.WRITE, 163, 2, 2817
-                    // ],
-                    [
-                        Entry.Robotis_rb.INSTRUCTION.WRITE, 163, 2, 255
-                    ],
                     [
                         Entry.Robotis_rb.INSTRUCTION.WRITE, 130, 2, x
                     ],
@@ -4391,12 +4417,6 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 data_value = iconNum;
 
                 var data_sendqueue = [
-                    // [
-                    //     Entry.Robotis_rb.INSTRUCTION.WRITE, 163, 2, 2817
-                    // ],
-                    [
-                        Entry.Robotis_rb.INSTRUCTION.WRITE, 163, 2, 255
-                    ],
                     [
                         Entry.Robotis_rb.INSTRUCTION.WRITE, 130, 2, x
                     ],
@@ -4548,12 +4568,6 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 data_value = iconNum;
 
                 var data_sendqueue = [
-                    // [
-                    //     Entry.Robotis_rb.INSTRUCTION.WRITE, 163, 2, 2817
-                    // ],
-                    [
-                        Entry.Robotis_rb.INSTRUCTION.WRITE, 163, 2, 255
-                    ],
                     [
                         Entry.Robotis_rb.INSTRUCTION.WRITE, 130, 2, x
                     ],
@@ -4676,9 +4690,8 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 var i = 0;
                 
                 var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
-                var data_address = 166;
+                var data_address = 900;
                 var data_length = 2;
-                var data_value = 10496;
             
                 if (x < -160) x = -160;
                 else if (x > 160) x = 160;
@@ -4694,15 +4707,15 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 data_buf.push(y % 256);
                 data_buf.push(Math.floor(y/256));
                 data_buf.push(font);
+                data_buf.push(0);
+                data_buf.push(0);
                 data_buf.push(color);
                 data_buf.push(byteArray.length);
                 for (i = 0; i < byteArray.length; i++) {
                     data_buf.push(byteArray[i]);
                 }
                
-                var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
-                var data_address = 900;
-                var data_length = 7 + byteArray.length;
+                data_length = 9 + byteArray.length;
 
                 var data_sendqueue = [
                     [
