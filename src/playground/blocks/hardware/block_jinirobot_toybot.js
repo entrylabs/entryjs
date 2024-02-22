@@ -228,6 +228,7 @@ Entry.toybot.blockMenuBlocks = [
     'dropdown_beat',
     'dropdown_octave',
     'dropdown_pitch',
+    'dropdown_effect',
     'dropdown_melody',
     'dropdown_servo',
     'dropdown_servo_all',
@@ -454,8 +455,8 @@ Entry.toybot.getBlocks = function() {
             func: function(sprite, script) {
                 return script.getField('INDEX');
             }
-        },        
-        dropdown_melody: {
+        },
+        dropdown_effect: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -470,7 +471,45 @@ Entry.toybot.getBlocks = function() {
                         ['3', 3],
                         ['4', 4],
                         ['5', 5],
-                        ['6', 6]
+                        ['6', 6],
+                        ['7', 7],
+                        ['8', 8],
+                        ['9', 9],
+                        ['10', 10],
+                        ['11', 11],
+                        ['12', 12]
+                    ],
+                    value: 1,
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE
+                }
+            ],
+            def: {
+                params: [null]
+            },
+            paramsKeyMap: {
+                INDEX: 0
+            },
+            events: {},
+            func: function(sprite, script) {
+                return script.getField('INDEX');
+            }
+        },
+        dropdown_melody: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['1', 1],
+                        ['2', 2],
+                        ['3', 3],
+                        ['4', 4]
                     ],
                     value: 1,
                     fontSize: 11,
@@ -1155,7 +1194,7 @@ Entry.toybot.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'dropdown_melody'
+                        type: 'dropdown_effect'
                     },
                     null
                 ],
@@ -1172,7 +1211,7 @@ Entry.toybot.getBlocks = function() {
                     Entry.hw.sendQueue['setblock1'] = {
                         id: Math.random(),
                         playList: {
-                            list: Entry.toybot.checkRangeInteger(list, 1, 6) + 9,
+                            list: Entry.toybot.checkRangeInteger(list, 1, 12),
                             play: 1
                         }
                     };
@@ -1215,11 +1254,11 @@ Entry.toybot.getBlocks = function() {
             isNotFor: ['toybot'],
             func: function(sprite, script) {
                 return Entry.toybot.setProcessor(script, Entry.toybot.delayTime, function() {
-                    const list = Entry.toybot.convert(script.getValue('LIST', script));
+                    const list = Entry.toybot.convert(script.getValue('LIST', script)) + 12;
                     Entry.hw.sendQueue['setblock1'] = {
                         id: Math.random(),
                         playList: {
-                            list: Entry.toybot.checkRangeInteger(list, 1, 6) - 1,
+                            list: Entry.toybot.checkRangeInteger(list, 13, 16),
                             play: 1
                         }
                     };
@@ -1489,7 +1528,7 @@ Entry.toybot.getBlocks = function() {
                     Entry.hw.sendQueue['setblock1'] = {
                         id: Math.random(),
                         pwmControl: {
-                            pwm: Entry.toybot.checkRangeInteger(pwm * 2.55, 0, 255)
+                            pwm: Entry.toybot.checkRangeInteger(pwm * 10.23, 0, 1023)
                         }
                     };
                 });
