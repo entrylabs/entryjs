@@ -9,7 +9,17 @@ const HAND_TYPE = {
     SCISSORS: 2,
     THUMBSUP: 3,
     PEACE: 4,
+    PROMISE: 5,
+    V: 6
 };
+
+function Lerp(a, b, t) {
+    return (1 - t) * a + b * t;
+}
+
+function sleep(ms) {
+    return new Promise((r) => setTimeout(r, ms));
+  }
 
 function setFinger(idx, angle)
 {
@@ -64,6 +74,22 @@ function setHandType(type)
                 setFinger(2, HAND_MIN_ANGLE);
                 setFinger(3, HAND_MIN_ANGLE);
                 setFinger(4, HAND_MAX_ANGLE);
+            }break;
+        case HAND_TYPE.PROMISE:
+            {
+                setFinger(0, HAND_MIN_ANGLE);
+                setFinger(1, HAND_MIN_ANGLE);
+                setFinger(2, HAND_MIN_ANGLE);
+                setFinger(3, HAND_MIN_ANGLE);
+                setFinger(4, HAND_MAX_ANGLE);
+            }break;
+        case HAND_TYPE.V:
+            {
+                setFinger(0, HAND_MIN_ANGLE);
+                setFinger(1, HAND_MAX_ANGLE);
+                setFinger(2, HAND_MAX_ANGLE);
+                setFinger(3, HAND_MIN_ANGLE);
+                setFinger(4, HAND_MIN_ANGLE);
             }break;
     }
 }
@@ -140,7 +166,8 @@ Entry.ArduinoZin.setLanguage = function() {
                 arduino_ext_set_servo_hand_count: '숫자 세기 %1 %2',
                 arduino_ext_set_servo_hand_gesture: '손 제스처 %1 %2',
                 arduino_ext_set_servo_hand_finger_updown: '%1번째 손가락 %2 %3',
-                arduino_ext_set_servo_hand_play_scissors: '가위바위보 하기 %1 %2',
+                arduino_ext_set_servo_hand_play_scissors: '랜덤 가위보기하기 %1 %2',
+                arduino_ext_set_servo_hand_finger_updown_same_time: '%1번째 %2번째 %3번째 %4번째 %5번째 손가락 %6 %7 %8',
             },
         },
         en: {
@@ -150,6 +177,7 @@ Entry.ArduinoZin.setLanguage = function() {
                 arduino_ext_set_servo_hand_gesture: 'hand gestur %1 %2',
                 arduino_ext_set_servo_hand_finger_updown: '%1 finger %2 %3',
                 arduino_ext_set_servo_hand_play_scissors: 'play rock paper scissors %1 %2',
+                arduino_ext_set_servo_hand_finger_updown_same_time: '%1st %2ed %3rd %4rd %5rd finger %6 %7 %8',
             },
         },
     };
@@ -161,6 +189,7 @@ Entry.ArduinoZin.blockMenuBlocks = [
     'arduino_ext_set_servo_hand_gesture',
     'arduino_ext_set_servo_hand_finger_updown',
     'arduino_ext_set_servo_hand_play_scissors',
+    'arduino_ext_set_servo_hand_finger_updown_same_time',
 ];
 
 //region ArduinoZin 아두이노 확장모드
@@ -175,10 +204,9 @@ Entry.ArduinoZin.getBlocks = function() {
                 {
                     type: "Dropdown",
                     options: [
-                        [ "r", 0 ],
-                        [ "p", 1 ],
-                        [ "s", 2 ],
-                        [ "n", 3 ]
+                        [ "바위", 0 ],
+                        [ "보", 1 ],
+                        [ "가위", 2 ]
                     ],
                     fontSize: 11
                 },
@@ -211,6 +239,7 @@ Entry.ArduinoZin.getBlocks = function() {
                         if (!sq.SET) {
                             sq.SET = {};
                         }
+                        
                         switch(handType) {
                             case 0:
                                 {           
@@ -225,11 +254,6 @@ Entry.ArduinoZin.getBlocks = function() {
                             case 2:
                                 {
                                     setHandType(HAND_TYPE.SCISSORS);
-                                }
-                                break;
-                            case 3:
-                                {
-                                    setHandType(HAND_TYPE.ROCK);
                                 }
                                 break;
                         }     
@@ -329,6 +353,8 @@ Entry.ArduinoZin.getBlocks = function() {
                     options: [
                         [ "따봉", HAND_TYPE.THUMBSUP ],
                         [ "피스", HAND_TYPE.PEACE ],
+                        [ "약속", HAND_TYPE.PROMISE ],
+                        [ "브이", HAND_TYPE.V ],
                     ],
                     fontSize: 11
                 },        
@@ -386,8 +412,14 @@ Entry.ArduinoZin.getBlocks = function() {
                 {
                     type: "Dropdown",
                     options: [
-                        [ "접기", 0 ],
-                        [ "펴기", 1 ]
+                        [ "매우 천천히 접기", 0 ],
+                        [ "매우 천천히 펴기", 1 ],
+                        [ "천천히 접기", 2 ],
+                        [ "천천히 펴기", 3 ],
+                        [ "보통 접기", 4 ],
+                        [ "보통 펴기", 5 ],
+                        [ "빠르게 접기", 6 ],
+                        [ "빠르게 펴기", 7 ]
                     ],
                     fontSize: 11
                 },
@@ -413,20 +445,40 @@ Entry.ArduinoZin.getBlocks = function() {
             class: 'ArduinoZin',
             isNotFor: ['ArduinoZin'],
             func(sprite, script) {                
-                
+                const fingerType = script.getNumberValue('FINGER_TYPE', script);
+                const fingerUpDown = script.getNumberValue('FINGER_UPDOWN', script);
+                let delayTimes = [100, 50, 25, 1];
+                let startAngle = HAND_MIN_ANGLE;
+                let targetAngle = HAND_MAX_ANGLE;
+                if (fingerUpDown % 2 == 0)
+                {
+                    startAngle = HAND_MAX_ANGLE;
+                    targetAngle = HAND_MIN_ANGLE;
+                }
+                else if (fingerUpDown % 2 == 1)
+                {
+                    startAngle = HAND_MIN_ANGLE;
+                    targetAngle = HAND_MAX_ANGLE;                    
+                }
+                let delayTime = delayTimes[parseInt(fingerUpDown/2)];
                 const sq = Entry.hw.sendQueue;
-                return delayScriptCallReturn(script, HAND_DELAY, 
-                    ()=>{
-                        const fingerType = script.getNumberValue('FINGER_TYPE', script);
-                        const fingerUpDown = script.getNumberValue('FINGER_UPDOWN', script);
+                return delayScriptCallReturn(script, HAND_DELAY+delayTime*delayTime, 
+                    ()=>{                        
         
                         if (!sq.SET) {
                             sq.SET = {};
                         }
-        
-                        let angle = fingerUpDown == 0 ? HAND_MIN_ANGLE : HAND_MAX_ANGLE;
-                        console.log('asdfasfd', fingerType, angle);
-                        setFinger(fingerType, angle);
+                        
+                        let func = (idx, maxIdx) => {
+                            sleep(idx*delayTime).then(() => {
+                                setFinger(fingerType, Lerp(startAngle, targetAngle, idx/maxIdx));                                
+                            });
+                        };
+                        
+                        for (var i = 0; i <= delayTime; i++)
+                        {
+                            func(i, delayTime);
+                        }
                     }
                 );
 
@@ -441,9 +493,9 @@ Entry.ArduinoZin.getBlocks = function() {
                 {
                     type: "Dropdown",
                     options: [
-                        [ "r", "0" ],
-                        [ "p", "1" ],
-                        [ "s", "2" ]
+                        [ "바위", "0" ],
+                        [ "보", "1" ],
+                        [ "가위", "2" ]
                     ],
                     fontSize: 11
                 },                
@@ -479,6 +531,161 @@ Entry.ArduinoZin.getBlocks = function() {
         
                         let h = getRandomArbitraryInt(0, handList.length);
                         setHandType(handList[h]);
+                    }
+                );
+
+            },
+        },
+        arduino_ext_set_servo_hand_finger_updown_same_time: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: "Dropdown",
+                    options: [
+                        [ "1", 1 ],
+                        [ "-", 0 ],
+                    ],
+                    fontSize: 11
+                },
+                {
+                    type: "Dropdown",
+                    options: [
+                        [ "2", 1 ],
+                        [ "-", 0 ],
+                    ],
+                    fontSize: 11
+                },
+                {
+                    type: "Dropdown",
+                    options: [
+                        [ "3", 1 ],
+                        [ "-", 0 ],
+                    ],
+                    fontSize: 11
+                },
+                {
+                    type: "Dropdown",
+                    options: [
+                        [ "4", 1 ],
+                        [ "-", 0 ],
+                    ],
+                    fontSize: 11
+                },
+                {
+                    type: "Dropdown",
+                    options: [
+                        [ "5", 1 ],
+                        [ "-", 0 ],
+                    ],
+                    fontSize: 11
+                },
+                {
+                    type: "Dropdown",
+                    options: [
+                        [ "동시에", 0 ],
+                        [ "하나씩", 1 ]
+                    ],
+                    fontSize: 11
+                },
+                {
+                    type: "Dropdown",
+                    options: [
+                        [ "접기", 0 ],
+                        [ "펴기", 1 ]
+                    ],
+                    fontSize: 11
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {     
+                params: [
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    0,
+                    0,
+                    null,
+                ],           
+                type: 'arduino_ext_set_servo_hand_finger_updown_same_time',
+            },
+            paramsKeyMap: {
+                FINGER_NUMBER1:0,
+                FINGER_NUMBER2:1,
+                FINGER_NUMBER3:2,
+                FINGER_NUMBER4:3,
+                FINGER_NUMBER5:4,
+                TIME_TYPE: 5,
+                FINGER_UPDOWN: 6
+            },
+            class: 'ArduinoZin',
+            isNotFor: ['ArduinoZin'],
+            func(sprite, script) {                
+                const fingerNumbers = [
+                    script.getNumberValue('FINGER_NUMBER1', script),
+                    script.getNumberValue('FINGER_NUMBER2', script),
+                    script.getNumberValue('FINGER_NUMBER3', script),
+                    script.getNumberValue('FINGER_NUMBER4', script),
+                    script.getNumberValue('FINGER_NUMBER5', script)
+                ];
+                
+                const fingerUpDown = script.getNumberValue('FINGER_UPDOWN', script);
+                let targetAngle = fingerUpDown == 0 ? HAND_MIN_ANGLE :HAND_MAX_ANGLE;
+                let delayTime = 0;
+                const timeType = script.getNumberValue('TIME_TYPE', script);
+                if (timeType == 1)
+                {
+                    for (var i = 0; i < fingerNumbers.length; i++)
+                    {
+                        if (fingerNumbers[i] == 1)
+                            delayTime += HAND_DELAY;
+                    }
+                }
+                
+                const sq = Entry.hw.sendQueue;
+                return delayScriptCallReturn(script, HAND_DELAY+delayTime, 
+                    ()=>{                        
+        
+                        if (!sq.SET) {
+                            sq.SET = {};
+                        }
+
+                        if (timeType == 0)
+                        {
+                            for (var i = 0; i < fingerNumbers.length; i++)
+                            {
+                                if (fingerNumbers[i] == 1)
+                                    setFinger(i, targetAngle);  
+                            }
+                        }
+                        else
+                        {
+                            let func = (idx, t) => {
+                                sleep(t).then(() => {
+                                    setFinger(idx, targetAngle);                                
+                                });
+                            };
+                            
+                            var c = 0;
+                            for (var i = 0; i < fingerNumbers.length; i++)
+                            {
+                                if (fingerNumbers[i] == 1)
+                                {
+                                    func(i, c*HAND_DELAY);
+                                    c++;
+                                }
+                            }
+                        }
+                        
                     }
                 );
 
