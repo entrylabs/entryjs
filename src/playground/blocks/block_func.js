@@ -383,7 +383,6 @@ module.exports = {
                         this.funcExecutor.parentExecutor = this.executor;
                         this.funcExecutor.isFuncExecutor = true;
                         this.funcExecutor.localVariables = _cloneDeep(func.localVariables);
-                        func.funcExecutor = this.funcExecutor;
                     }
 
                     const { promises } = this.funcExecutor.execute();
@@ -399,6 +398,8 @@ module.exports = {
                             this.funcCode.removeExecutor(this.funcExecutor);
                             return Entry.STATIC.BREAK;
                         }
+                    } else {
+                        this.funcCode.removeExecutor(this.funcExecutor);
                     }
 
                     Entry.callStackLength--;
@@ -455,7 +456,6 @@ module.exports = {
                         this.funcExecutor.parentExecutor = this.executor;
                         this.funcExecutor.isFuncExecutor = true;
                         this.funcExecutor.localVariables = _cloneDeep(func.localVariables);
-                        func.funcExecutor = this.funcExecutor;
                     }
 
                     const { promises } = this.funcExecutor.execute();
@@ -473,6 +473,8 @@ module.exports = {
                                 this.funcExecutor
                             );
                         }
+                    } else {
+                        this.funcCode.removeExecutor(this.funcExecutor);
                     }
 
                     Entry.callStackLength--;
