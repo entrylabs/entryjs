@@ -378,7 +378,7 @@ module.exports = {
                         const func = Entry.variableContainer.getFunction(this.block.getFuncId());
                         this.funcCode = func.content;
                         this.funcExecutor = this.funcCode.raiseEvent('funcDef', entity)[0];
-                        this.funcExecutor.register.params = this.getParams();
+                        this.funcExecutor.register.params = this.values;
                         this.funcExecutor.register.paramMap = func.paramMap;
                         this.funcExecutor.parentExecutor = this.executor;
                         this.funcExecutor.isFuncExecutor = true;
@@ -395,8 +395,7 @@ module.exports = {
                                 promises
                             );
                         } else {
-                            this.funcCode.removeExecutor(this.funcExecutor);
-                            return Entry.STATIC.BREAK;
+                            return Entry.Code.funcRestExecute(this.funcCode, this.funcExecutor);
                         }
                     } else {
                         this.funcCode.removeExecutor(this.funcExecutor);
@@ -451,7 +450,7 @@ module.exports = {
                         const func = Entry.variableContainer.getFunction(this.block.getFuncId());
                         this.funcCode = func.content;
                         this.funcExecutor = this.funcCode.raiseEvent('funcDef', entity)[0];
-                        this.funcExecutor.register.params = this.getParams();
+                        this.funcExecutor.register.params = this.values;
                         this.funcExecutor.register.paramMap = func.paramMap;
                         this.funcExecutor.parentExecutor = this.executor;
                         this.funcExecutor.isFuncExecutor = true;
@@ -468,10 +467,7 @@ module.exports = {
                                 promises
                             );
                         } else {
-                            return Entry.Code.funcValueRestExecute(
-                                this.funcCode,
-                                this.funcExecutor
-                            );
+                            return Entry.Code.funcRestExecute(this.funcCode, this.funcExecutor);
                         }
                     } else {
                         this.funcCode.removeExecutor(this.funcExecutor);
