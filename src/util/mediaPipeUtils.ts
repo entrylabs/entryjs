@@ -202,9 +202,9 @@ class MediaPipeUtils {
     private objectDetector: ObjectDetector;
 
     public totalMotions: MotionElement = { total: 0, direction: { x: 0, y: 0 } };
-    public motions: Pixel[][] = [
-        ...Array(Math.ceil(this.STAGE_HEIGHT / this.SAMPLE_SIZE)),
-    ].map((e) => Array(this.STAGE_WIDTH / this.SAMPLE_SIZE));
+    public motions: Pixel[][] = [...Array(Math.ceil(this.STAGE_HEIGHT / this.SAMPLE_SIZE))].map(
+        (e) => Array(this.STAGE_WIDTH / this.SAMPLE_SIZE)
+    );
     public motionWorker: Worker = new VideoMotionWorker();
 
     constructor() {
@@ -454,9 +454,10 @@ class MediaPipeUtils {
                     return;
                 }
 
+                const id = Entry.generateHash();
                 if (sprite) {
                     const returnMessage = ({ data }: MessageEvent) => {
-                        if (data.action === 'sprite_return') {
+                        if (data.action === 'sprite_return' && data.id === id) {
                             this.motionWorker.removeEventListener('message', returnMessage);
                             resolve(data.result);
                         }
@@ -484,6 +485,8 @@ class MediaPipeUtils {
                         maxY,
                     },
                     imageBitmap,
+                    flipState: this.flipState,
+                    id,
                 });
 
                 if (!sprite) {
