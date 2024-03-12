@@ -131,6 +131,7 @@ Entry.Robotis_rb_P_Assembly.blockMenuBlocks = [
     'robotis_Practice_text_screen_redraw',
     'robotis_Practice_pixel',
     'robotis_Practice_LCDColor',
+    'robotis_Practice_LCD_Flash',
     'robotis_Practice_LCDBright',
 
     // LED 제어
@@ -231,6 +232,7 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_Practice_pixel: "화면 (%1, %2)위치에 %3 색 점 표시 %4",
                 robotis_Practice_text_screen_redraw: "화면에 %1를 (%2, %3)위치에 %4으로 새로 표시 %5",
                 robotis_Practice_LCDColor: "화면 색상을 %1 (으)로 정하기 %2",
+                robotis_Practice_LCD_Flash: "화면을 %1과 %2으로 %3초 간격으로 깜박이기 %4",
                 robotis_Practice_LCDBright: "화면 밝기를 %1 (으)로 정하기 %2",
                 
                 
@@ -5114,6 +5116,128 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             syntax: {
                 js: [],
                 py: ['Robotis.RB_LCDColor(%1)'],
+            },
+        },
+        robotis_Practice_LCD_Flash: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.robotis_red, '224'],
+                        [Lang.Blocks.robotis_orange, '244'],
+                        [Lang.Blocks.robotis_yellow, '252'],
+                        [Lang.Blocks.robotis_green, '28'],
+                        [Lang.Blocks.robotis_blue, '3'],
+                        [Lang.Blocks.robotis_darkblue, '2'],
+                        [Lang.Blocks.robotis_purple, '130'],
+                        [Lang.Blocks.robotis_brown, '173'],
+                        [Lang.Blocks.robotis_black, '0'],
+                        [Lang.Blocks.robotis_white, '255'],
+                    ],
+                    value: '224',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.robotis_red, '224'],
+                        [Lang.Blocks.robotis_orange, '244'],
+                        [Lang.Blocks.robotis_yellow, '252'],
+                        [Lang.Blocks.robotis_green, '28'],
+                        [Lang.Blocks.robotis_blue, '3'],
+                        [Lang.Blocks.robotis_darkblue, '2'],
+                        [Lang.Blocks.robotis_purple, '130'],
+                        [Lang.Blocks.robotis_brown, '173'],
+                        [Lang.Blocks.robotis_black, '0'],
+                        [Lang.Blocks.robotis_white, '255'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [0.3, '3'],
+                        [0.4, '4'],
+                        [0.5, '5'],
+                        [0.6, '6'],
+                        [0.7, '7'],
+                        [0.8, '8'],
+                        [0.9, '9'],
+                        [1.0, '10'],
+                        [1.1, '11'],
+                        [1.2, '12'],
+                        [1.3, '13'],
+                        [1.4, '14'],
+                        [1.5, '15'],
+                        [1.6, '16'],
+                        [1.7, '17'],
+                        [1.8, '18'],
+                        [1.9, '19'],
+                        [2.0, '20'],
+                    ],
+                    value: '5',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                ],
+                type: 'robotis_Practice_LCD_Flash',
+            },
+            paramsKeyMap: {
+                COLOR_ON: 0,
+                COLOR_OFF: 1,
+                PERIOD: 2,
+            },
+            class: 'robotis_rb100_lcd',
+            isNotFor: ['Robotis_rb_P_Assembly'],
+            func: function (sprite, script) {
+                // instruction / address / length / value / default length
+                const color_on = script.getNumberValue('COLOR_ON', script);
+                const color_off = script.getNumberValue('COLOR_OFF', script);
+                const period = script.getNumberValue('PERIOD', script);
+                const colors = color_on + (color_off << 8);
+
+                // 0x8000: use flashing mode, 
+                // (period << 8): on time (0.1 sec)
+                // period: off time (0.1 sec)
+                const time_parameter = 0x8000 + (period << 8) + period; 
+                
+                var data_sendqueue = [
+                    [
+                        Entry.Robotis_rb.INSTRUCTION.WRITE, 158, 2, colors
+                    ],
+                    [
+                        Entry.Robotis_rb.INSTRUCTION.WRITE, 163, 2, time_parameter
+                    ],
+                ];
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    Entry.Robotis_openCM70.delay + 100
+                );
+            },
+            syntax: {
+                js: [],
+                py: ['Robotis.RB_LCD_Flash(%1, %2, %3)'],
             },
         },
 
