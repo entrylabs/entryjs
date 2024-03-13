@@ -11,7 +11,7 @@ Entry.toybot = {
     },
     delayTime: 0.01,
     timeouts: [],
-    saveBlockId: 0,
+    scoreFlag: false,
     removeAllTimeouts: function() {
         var timeouts = this.timeouts;
         for (var i in timeouts) {
@@ -20,7 +20,12 @@ Entry.toybot = {
         this.timeouts = [];
     },    
     setZero: function() {
-        this.setCount = 0;        
+        Entry.hw.sendQueue['setblock'] = {
+            id: Math.random(),
+            setZero: 1
+        };
+        Entry.hw.update();
+        this.setCount = 0;
     },
     removeTimeout: function(id) {
         clearTimeout(id);
@@ -52,51 +57,35 @@ Entry.toybot = {
             script.timeFlag = 1;
             const fps = Entry.FPS || 60;
             const timeValue = (60 / fps) * second * 1000;
-            const blockId = Math.random();
             Entry.TimeWaitManager.add(
-                blockId,
+                Math.random(),
                 () => {
                     script.timeFlag = 0;
                 },
                 timeValue
             );
-            code();
+            Entry.toybot.scoreFlag = code();
             return script;
         } else if (script.timeFlag == 1) {
             return script;
         } else {
+            if (Entry.toybot.scoreFlag === true) {
+                Entry.hw.sendQueue['setblock'] = {
+                    id: Math.random(),
+                    playScore: {
+                        note: 0x0B,
+                        pitch: 0,
+                    }
+                };
+                Entry.hw.update();
+            }
+
             delete script.timeFlag;
             delete script.isStart;
             Entry.engine.isContinue = false;
             return script.callReturn();
         }
     },
-    setMelodyProcessor: function(script, second, code1, code2) {
-        if (!script.isStart) {
-            script.isStart = true;
-            script.timeFlag = 1;
-            const fps = Entry.FPS || 60;
-            const timeValue = (60 / fps) * second * 1000;
-            const blockId = Math.random();
-            Entry.TimeWaitManager.add(
-                blockId,
-                () => {
-                    script.timeFlag = 0;
-                },
-                timeValue
-            );
-            Entry.toybot.saveBlockId = code1();
-            return script;
-        } else if (script.timeFlag == 1) {
-            return script;
-        } else {
-            delete script.timeFlag;
-            delete script.isStart;
-            Entry.engine.isContinue = false;
-            code2(Entry.toybot.saveBlockId);
-            return script.callReturn();
-        }
-    }
 };
 
 Entry.toybot.setLanguage = function() {
@@ -122,8 +111,10 @@ Entry.toybot.setLanguage = function() {
                 list_beat_onefour: '1/4박',
                 list_beat_onetwo: '1/2박',
                 list_beat_one: '1박',
-                list_beat_onepointfive: '1.5박',
+                list_beat_onehalf: '1.5박',
                 list_beat_two: '2박',
+                list_beat_three: '3박',
+                list_beat_four: '4박',
                 list_octave_low: '낮은',
                 list_octave_middle: '보통',
                 list_octave_high: '높은',
@@ -134,6 +125,7 @@ Entry.toybot.setLanguage = function() {
                 list_pitch_g: '솔',
                 list_pitch_a: '라',
                 list_pitch_b: '시',
+                list_pitch_r: '쉼표',
                 list_rotation_forward: '정회전',
                 list_rotation_reverse: '역회전',
                 list_rotation_stop: '정지',
@@ -148,7 +140,7 @@ Entry.toybot.setLanguage = function() {
                 set_play_melody: '%1번 멜로디 연주하기 %2',
                 set_servo_each: '서보모터 %1을(를) 속도 %2, 각도 %3으로 회전하기 %4',
                 set_servo_all: '모든 서보모터를 속도 %1, 각도 %2, %3, %4, %5, %6(으)로 회전하기 %7',
-                set_servo_home: '모든 서보모터를 속도 %1, 기본위치로 제어하기',
+                set_servo_home: '모든 서보모터를 속도 %1, 기본위치로 제어하기 %2',
                 set_analog_output: '아날로그 출력값을 %1(으)로 정하기 %2',
                 set_dc_run: 'DC 모터 %1을(를) 속도 %2(으)로 %3 하기 %4 ',                
                 set_servo_offset: '서보모터 %1 의 각도 90°를 현재 위치로 정하기%2',
@@ -181,8 +173,10 @@ Entry.toybot.setLanguage = function() {
                 list_beat_onefour: '1/4 of a beats',
                 list_beat_onetwo: '1/2 of a beats',
                 list_beat_one: '1 beat',
-                list_beat_onepointfive: '1.5 beats',
+                list_beat_onehalf: '1.5 beats',
                 list_beat_two: '2 beats',
+                list_beat_three: '3 beats',
+                list_beat_four: '4 beats',
                 list_octave_low: 'Low',
                 list_octave_middle: 'Middle',
                 list_octave_high: 'High',
@@ -193,6 +187,7 @@ Entry.toybot.setLanguage = function() {
                 list_pitch_g: 'G',
                 list_pitch_a: 'A',
                 list_pitch_b: 'B',
+                list_pitch_r: 'rest',
                 list_rotation_forward: 'Forward rotation',
                 list_rotation_reverse: 'Reverse rotation',
                 list_rotation_stop: 'Stop',
@@ -207,7 +202,7 @@ Entry.toybot.setLanguage = function() {
                 set_play_melody: 'Play No.%1 melody %2',
                 set_servo_each: 'Rotate %1 servo motor to speed %2, angle %3 %4',
                 set_servo_all: 'Rotate all servo motor to speed %1, angle %2, %3, %4, %5, %6 %7',
-                set_servo_home: 'Control all servo motor to speed %1, home position',
+                set_servo_home: 'Control all servo motor to speed %1, home position %2',
                 set_analog_output: 'Set analog output to %1 %2',
                 set_dc_run: '%3 DC motor %1 to speed %2 %4',
                 set_servo_offset: 'Set angle 90° of servo motor %1 to current position %2',
@@ -370,8 +365,10 @@ Entry.toybot.getBlocks = function() {
                         [Lang.template.list_beat_onefour, 2],
                         [Lang.template.list_beat_onetwo, 3],
                         [Lang.template.list_beat_one, 4],
-                        [Lang.template.list_beat_onepointfive, 5],
-                        [Lang.template.list_beat_two, 6]
+                        [Lang.template.list_beat_onehalf, 5],
+                        [Lang.template.list_beat_two, 6],
+                        [Lang.template.list_beat_three, 7],
+                        [Lang.template.list_beat_four, 8]
                     ],
                     value: 4,
                     fontSize: 11,
@@ -437,7 +434,8 @@ Entry.toybot.getBlocks = function() {
                         [Lang.template.list_pitch_f, 4],
                         [Lang.template.list_pitch_g, 5],
                         [Lang.template.list_pitch_a, 6],
-                        [Lang.template.list_pitch_b, 7]
+                        [Lang.template.list_pitch_b, 7],
+                        [Lang.template.list_pitch_r, 0]
                     ],
                     value: 1,
                     fontSize: 11,
@@ -470,14 +468,7 @@ Entry.toybot.getBlocks = function() {
                         ['2', 2],
                         ['3', 3],
                         ['4', 4],
-                        ['5', 5],
-                        ['6', 6],
-                        ['7', 7],
-                        ['8', 8],
-                        ['9', 9],
-                        ['10', 10],
-                        ['11', 11],
-                        ['12', 12]
+                        ['5', 5]
                     ],
                     value: 1,
                     fontSize: 11,
@@ -775,7 +766,7 @@ Entry.toybot.getBlocks = function() {
             isNotFor: ['toybot'],
             func: function(sprite, script) {
                 const datas = Entry.hw.portData['getblock'];
-                return datas['analog'];
+                return Math.round((datas['analog'] / 1023) * 100);
             }
         },
         get_servo_angle: {
@@ -809,6 +800,7 @@ Entry.toybot.getBlocks = function() {
             func: function(sprite, script) {
                 const servo = Entry.toybot.convert(script.getValue('SERVO', script));
                 const datas = Entry.hw.portData['getblock'];
+                this.servoPosition = datas['servo'];
                 switch (servo) {
                     case 0:
                         return Math.round(datas['servo'][0] / 10);
@@ -860,7 +852,7 @@ Entry.toybot.getBlocks = function() {
             paramsKeyMap: {
                 COLOR: 0
             },
-            class: 'setblock1',
+            class: 'setblock',
             isNotFor: ['toybot'],
             func: function(sprite, script) {
                 return Entry.toybot.setProcessor(script, Entry.toybot.delayTime, function() {
@@ -904,7 +896,7 @@ Entry.toybot.getBlocks = function() {
                             rgb = [ 0x7F, 0x00, 0xFF ];
                             break;
                     }
-                    Entry.hw.sendQueue['setblock1'] = {
+                    Entry.hw.sendQueue['setblock'] = {
                         id: Math.random(),
                         ledControl: {
                             r: rgb[0],
@@ -912,6 +904,8 @@ Entry.toybot.getBlocks = function() {
                             b: rgb[2]
                         }
                     };
+
+                    return false;
                 });
             }
         },
@@ -968,7 +962,7 @@ Entry.toybot.getBlocks = function() {
                 GREEN: 1,
                 BLUE: 2
             },
-            class: 'setblock1',
+            class: 'setblock',
             isNotFor: ['toybot'],
             func: function(sprite, script) {
                 return Entry.toybot.setProcessor(script, Entry.toybot.delayTime, function() {
@@ -977,7 +971,7 @@ Entry.toybot.getBlocks = function() {
                         Entry.toybot.checkRangeInteger(script.getValue('GREEN', script) * 2.55, 0, 255),
                         Entry.toybot.checkRangeInteger(script.getValue('BLUE', script) * 2.55, 0, 255)
                     ];
-                    Entry.hw.sendQueue['setblock1'] = {
+                    Entry.hw.sendQueue['setblock'] = {
                         id: Math.random(),
                         ledControl: {
                             r: rgb[0],
@@ -985,6 +979,8 @@ Entry.toybot.getBlocks = function() {
                             b: rgb[2]
                         }
                     };
+
+                    return false;
                 });
             }
         },
@@ -1047,7 +1043,7 @@ Entry.toybot.getBlocks = function() {
                 ACCIDENTAL: 2,
                 BEAT: 3
             },
-            class: 'setblock1',
+            class: 'setblock',
             isNotFor: ['toybot'],
             func: function(sprite, script) {
                 let beat = Entry.toybot.convert(script.getValue('BEAT', script));
@@ -1070,19 +1066,27 @@ Entry.toybot.getBlocks = function() {
                         delayTime = 0.5;
                         break;
                     case 5:
-                    case Lang.template.list_beat_onepointfive:
+                    case Lang.template.list_beat_onehalf:
                         delayTime = 0.75;
                         break;
                     case 6:
                     case Lang.template.list_beat_two:
                         delayTime = 1;
                         break;
+                    case 7:
+                    case Lang.template.list_beat_three:
+                        delayTime = 2;
+                        break;
+                    case 8:
+                    case Lang.template.list_beat_four:
+                        delayTime = 4;
+                        break;
                 }
-                return Entry.toybot.setMelodyProcessor(script, delayTime, function() {
+                return Entry.toybot.setProcessor(script, delayTime, function() {
                     let octave = Entry.toybot.convert(script.getValue('OCTAVE', script));
                     let pitch = Entry.toybot.convert(script.getValue('PITCH', script));
                     let accidental = Entry.toybot.convert(script.getValue('ACCIDENTAL', script));
-                    const blockId = Math.random();
+                    let temp = -1;
                     switch (octave) {
                         case 4:
                         case Lang.template.list_octave_low:
@@ -1112,62 +1116,59 @@ Entry.toybot.getBlocks = function() {
                             break;
                     }
                     switch (pitch) {
+                        case 0:
+                        case Lang.template.list_pitch_r:
+                            temp = -1;
+                            break;
                         case 1:
                         case Lang.template.list_pitch_c:
-                            pitch = 1 + accidental;
+                            temp = 1 + accidental;
                             break;
                         case 2:
                         case Lang.template.list_pitch_d:
-                            pitch = 3 + accidental;
+                            temp = 3 + accidental;
                             break;
                         case 3:
                         case Lang.template.list_pitch_e:
-                            pitch = 5 + accidental;
+                            temp = 5 + accidental;
                             break;
                         case 4:
                         case Lang.template.list_pitch_f:
-                            pitch = 6 + accidental;
+                            temp = 6 + accidental;
                             break;
                         case 5:
                         case Lang.template.list_pitch_g:
-                            pitch = 8 + accidental;
+                            temp = 8 + accidental;
                             break;
                         case 6:
                         case Lang.template.list_pitch_a:
-                            pitch = 10 + accidental;
+                            temp = 10 + accidental;
                             break;
                         case 7:
                         case Lang.template.list_pitch_b:
-                            pitch = 12 + accidental;
+                            temp = 12 + accidental;
                             break;
                     }
-                    if (pitch === 0) {
+                    if (temp === -1) {
+                        pitch = 0;
+                    } else if (temp === 0) {
                         octave = octave - 0x10;
                         pitch = Entry.toybot.checkRangeInteger(octave | 12, 0x31, 0x7C);
-                    } else if (pitch === 13) {
+                    } else if (temp === 13) {
                         octave = octave + 0x10;
                         pitch = Entry.toybot.checkRangeInteger(octave | 1, 0x31, 0x7C);
                     } else {
-                        pitch = Entry.toybot.checkRangeInteger(octave | pitch, 0x31, 0x7C);
+                        pitch = Entry.toybot.checkRangeInteger(octave | temp, 0x00, 0x7C);
                     }
-                    Entry.hw.sendQueue['setblock1'] = {
-                        id: blockId,
+                    Entry.hw.sendQueue['setblock'] = {
+                        id: Math.random(),
                         playScore: {
                             note: 0,
                             pitch: pitch,
                         }
                     };
 
-                    return blockId
-                },
-                function(blockId) {
-                    Entry.hw.sendQueue['setblock2'] = {
-                        id: blockId,
-                        playScore: {
-                            note: 0x0B,
-                            pitch: 0,
-                        }
-                    };
+                    return true;
                 });
             }
         },
@@ -1203,18 +1204,20 @@ Entry.toybot.getBlocks = function() {
             paramsKeyMap: {
                 LIST: 0
             },
-            class: 'setblock1',
+            class: 'setblock',
             isNotFor: ['toybot'],
             func: function(sprite, script) {
                 return Entry.toybot.setProcessor(script, Entry.toybot.delayTime, function() {
                     const list = Entry.toybot.convert(script.getValue('LIST', script));
-                    Entry.hw.sendQueue['setblock1'] = {
+                    Entry.hw.sendQueue['setblock'] = {
                         id: Math.random(),
                         playList: {
                             list: Entry.toybot.checkRangeInteger(list, 1, 12),
                             play: 1
                         }
                     };
+
+                    return false;
                 });
             }
         },
@@ -1250,18 +1253,20 @@ Entry.toybot.getBlocks = function() {
             paramsKeyMap: {
                 LIST: 0
             },
-            class: 'setblock1',
+            class: 'setblock',
             isNotFor: ['toybot'],
             func: function(sprite, script) {
                 return Entry.toybot.setProcessor(script, Entry.toybot.delayTime, function() {
                     const list = Entry.toybot.convert(script.getValue('LIST', script)) + 12;
-                    Entry.hw.sendQueue['setblock1'] = {
+                    Entry.hw.sendQueue['setblock'] = {
                         id: Math.random(),
                         playList: {
                             list: Entry.toybot.checkRangeInteger(list, 13, 16),
                             play: 1
                         }
                     };
+
+                    return false;
                 });
             }
         },
@@ -1316,14 +1321,14 @@ Entry.toybot.getBlocks = function() {
                 SPEED: 1,
                 POSITION: 2
             },
-            class: 'setblock1',
+            class: 'setblock',
             isNotFor: ['toybot'],
             func: function(sprite, script) {
                 return Entry.toybot.setProcessor(script, Entry.toybot.delayTime, function() {
                     const servo = Entry.toybot.convert(script.getValue('SERVO', script));
                     const speed = Entry.toybot.convert(script.getValue('SPEED', script));
                     const position = Entry.toybot.convert(script.getValue('POSITION', script));
-                    Entry.hw.sendQueue['setblock1'] = {
+                    Entry.hw.sendQueue['setblock'] = {
                         id: Math.random(),
                         servoControl: {
                             id: [Entry.toybot.checkRangeInteger(servo, 0, 4)],
@@ -1331,6 +1336,8 @@ Entry.toybot.getBlocks = function() {
                             position: [Entry.toybot.checkRangeInteger(position * 10, 0, 1800)]
                         }
                     };
+
+                    return false;
                 });
             }
         },
@@ -1416,7 +1423,7 @@ Entry.toybot.getBlocks = function() {
                 POSITION3: 4,
                 POSITION4: 5,
             },
-            class: 'setblock1',
+            class: 'setblock',
             isNotFor: ['toybot'],
             func: function(sprite, script) {
                 return Entry.toybot.setProcessor(script, Entry.toybot.delayTime, function() {
@@ -1427,7 +1434,7 @@ Entry.toybot.getBlocks = function() {
                     const position2 = Entry.toybot.checkRangeInteger(script.getValue('POSITION2', script) * 10, 0, 1800);
                     const position3 = Entry.toybot.checkRangeInteger(script.getValue('POSITION3', script) * 10, 0, 1800);
                     const position4 = Entry.toybot.checkRangeInteger(script.getValue('POSITION4', script) * 10, 0, 1800);
-                    Entry.hw.sendQueue['setblock1'] = {
+                    Entry.hw.sendQueue['setblock'] = {
                         id: Math.random(),
                         servoControl: {
                             id: [0, 1, 2, 3, 4],
@@ -1435,6 +1442,8 @@ Entry.toybot.getBlocks = function() {
                             position: [position0, position1, position2, position3, position4] 
                         }
                     };
+
+                    return false;
                 });
             }
         },
@@ -1470,13 +1479,13 @@ Entry.toybot.getBlocks = function() {
             paramsKeyMap: {
                 SPEED: 0
             },
-            class: 'setblock1',
+            class: 'setblock',
             isNotFor: ['toybot'],
             func: function(sprite, script) {
                 return Entry.toybot.setProcessor(script, Entry.toybot.delayTime, function() {
                     const nSpeed =  Entry.toybot.convert(script.getValue('SPEED', script));
                     const speed = Entry.toybot.checkRangeInteger(nSpeed, 1, 5);
-                    Entry.hw.sendQueue['setblock1'] = {
+                    Entry.hw.sendQueue['setblock'] = {
                         id: Math.random(),
                         servoControl: {
                             id: [0, 1, 2, 3, 4],
@@ -1484,6 +1493,8 @@ Entry.toybot.getBlocks = function() {
                             position: [900, 900, 900, 900, 900]
                         }
                     };
+
+                    return false;
                 });
             }
         },
@@ -1520,17 +1531,19 @@ Entry.toybot.getBlocks = function() {
             paramsKeyMap: {
                 PWM: 0
             },
-            class: 'setblock1',
+            class: 'setblock',
             isNotFor: ['toybot'],
             func: function(sprite, script) {
                 return Entry.toybot.setProcessor(script, Entry.toybot.delayTime, function() {
                     const pwm = script.getValue('PWM', script);
-                    Entry.hw.sendQueue['setblock1'] = {
+                    Entry.hw.sendQueue['setblock'] = {
                         id: Math.random(),
                         pwmControl: {
                             pwm: Entry.toybot.checkRangeInteger(pwm * 10.23, 0, 1023)
                         }
                     };
+
+                    return false;
                 });
             }
         },
@@ -1584,7 +1597,7 @@ Entry.toybot.getBlocks = function() {
                 SPEED: 1,
                 DIRECTION: 2
             },
-            class: 'setblock1',
+            class: 'setblock',
             isNotFor: ['toybot'],
             func: function(sprite, script) {
                 return Entry.toybot.setProcessor(script, Entry.toybot.delayTime, function() {
@@ -1604,7 +1617,7 @@ Entry.toybot.getBlocks = function() {
                     }
                     if (dc === 3 || dc ===  Lang.template.list_all) {
                         const speed = Entry.toybot.checkRangeInteger((pwm * 51) * direction, -255, 255);
-                        Entry.hw.sendQueue['setblock1'] = {
+                        Entry.hw.sendQueue['setblock'] = {
                             id: Math.random(),
                             dcControl: {
                                 id: [0, 1],
@@ -1614,7 +1627,7 @@ Entry.toybot.getBlocks = function() {
                     } else {
                         const id = Entry.toybot.checkRangeInteger(dc-1, 0, 1);
                         const speed = Entry.toybot.checkRangeInteger((pwm * 51) * direction, -255, 255);
-                        Entry.hw.sendQueue['setblock1'] = {
+                        Entry.hw.sendQueue['setblock'] = {
                             id: Math.random(),
                             dcControl: {
                                 id: [id],
@@ -1622,6 +1635,8 @@ Entry.toybot.getBlocks = function() {
                             }
                         };
                     }
+
+                    return false;
                 });
             }
         },
@@ -1657,7 +1672,7 @@ Entry.toybot.getBlocks = function() {
             paramsKeyMap: {
                 SERVO: 0
             },
-            class: 'setblock1',
+            class: 'setblock',
             isNotFor: ['toybot'],
             func: function(sprite, script) {
                 return Entry.toybot.setProcessor(script, Entry.toybot.delayTime, function() {
@@ -1670,7 +1685,7 @@ Entry.toybot.getBlocks = function() {
                             const calibration = datas['servo'][i] - 900 + offset;
                             result[i] = Entry.toybot.checkRangeInteger(calibration, -900, 900);
                         }
-                        Entry.hw.sendQueue['setblock1'] = {
+                        Entry.hw.sendQueue['setblock'] = {
                             id: Math.random(),
                             servoOffset: {
                                 id: [0, 1, 2, 3, 4],
@@ -1683,7 +1698,7 @@ Entry.toybot.getBlocks = function() {
                         const offset = datas['offset'][servo];
                         const calibration = datas['servo'][servo] - 900 + offset;
                         const result = Entry.toybot.checkRangeInteger(calibration, -900, 900);
-                        Entry.hw.sendQueue['setblock1'] = {
+                        Entry.hw.sendQueue['setblock'] = {
                             id: Math.random(),
                             servoOffset: {
                                 id: [id],
@@ -1691,6 +1706,8 @@ Entry.toybot.getBlocks = function() {
                             }
                         };
                     }
+
+                    return false;
                 });
             }
         },
@@ -1713,17 +1730,19 @@ Entry.toybot.getBlocks = function() {
                 type: 'set_servo_reset'
             },
             paramsKeyMap: {},
-            class: 'setblock1',
+            class: 'setblock',
             isNotFor: ['toybot'],
             func: function(sprite, script) {
                 return Entry.toybot.setProcessor(script, Entry.toybot.delayTime, function() {
-                    Entry.hw.sendQueue['setblock1'] = {
+                    Entry.hw.sendQueue['setblock'] = {
                         id: Math.random(),
                         servoOffset: {
                             id: [0, 1, 2, 3, 4],
                             offset: [0, 0, 0, 0, 0],
                         }
                     };
+
+                    return false;
                 });
             }
         },
