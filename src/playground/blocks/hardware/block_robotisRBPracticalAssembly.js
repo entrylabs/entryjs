@@ -55,6 +55,7 @@ Entry.Robotis_rb_P_Assembly = {
             [Entry.Robotis_rb.INSTRUCTION.WRITE, 19, 1, 1], // bypass 모드 켜기
             [Entry.Robotis_rb.INSTRUCTION.WRITE, 4250, 1, 1], // huskylens 텍스트 지우기
             [Entry.Robotis_rb.INSTRUCTION.BYPASS_WRITE, 64, 1, 0xFE, 0], // torque off
+            [Entry.Robotis_rb.INSTRUCTION.WRITE, 23, 1, 1], // auto report 모드 켜기
             [Entry.Robotis_rb.INSTRUCTION.WRITE, 163, 2, 3329], // 얼굴 알라로 바꾸기
             // [Entry.Robotis_rb.INSTRUCTION.WRITE, 163, 2, 30759],
             [Entry.Robotis_rb.INSTRUCTION.WRITE, 162, 1, 1],
@@ -996,6 +997,9 @@ let dxl_last_valid_value = [];
 let rb100_last_valid_value = [];
 let bg_color = 0;
 let beat_per_minute = 75;
+
+const _doevent = ms => new Promise(res => setTimeout(res, ms));
+async function wait(nTime) { await _doevent(nTime); }
 
 Entry.Robotis_rb_P_Assembly.getBlocks = function () {
     return {
@@ -2528,7 +2532,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             class: 'robotis_rb100_custom',
             isNotFor: ['Robotis_rb_P_Assembly'],
-            func: function (sprite, script) {
+            func: async function (sprite, script) {
                 var scope = script.executor.scope;
 
                 // instruction / address / length / value / default length
@@ -2583,6 +2587,13 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 {
                     rb100_last_valid_value[data_default_address] = result;
                 }
+                console.log("start!");
+                for (let i = 0; i < 100; i++) {
+                    await wait(100);
+                    console.log(Entry.hw.portData[55]);
+                }
+                console.log("complete!");
+                result = Entry.hw.portData[55];
                 Entry.hw.sendQueue.prevAddress = data_default_address;
                 Entry.hw.sendQueue.prevTime = new Date();
                 Entry.hw.sendQueue.prevResult = result;
