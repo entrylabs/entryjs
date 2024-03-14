@@ -1878,48 +1878,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             func: function (sprite, script) {
                 var scope = script.executor.scope;
 
-                // instruction / address / length / value / default length
-                var data_instruction = Entry.Robotis_rb.INSTRUCTION.READ;
-                var data_address = 0;
-                var data_length = 2;
-                var data_value = 0;
-
-                var data_default_address = 0;
-                var data_default_length = 0;
-
-                
-                data_address = script.getNumberValue('VALUE');
-
-                data_default_address = data_address;
-                data_default_length = data_length;
-
-                if (
-                    Entry.hw.sendQueue.prevAddress &&
-                    Entry.hw.sendQueue.prevAddress == data_default_address
-                ) {
-                    if (
-                        Entry.hw.sendQueue.prevTime &&
-                        new Date() - Entry.hw.sendQueue.prevTime < Entry.Robotis_openCM70.readDelay
-                    ) {
-                        //throw new Entry.Utils.AsyncError();
-                        if(typeof Entry.hw.sendQueue.prevResult == 'undefined') {
-                            return 0;
-                        }
-                        return Math.round((Entry.hw.sendQueue.prevResult % 65536) / 4);
-                    }
-                }
-
-                Entry.Robotis_carCont.setRobotisData([
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        data_value,
-                        data_default_length,
-                    ],
-                ]);
-                // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-                Entry.Robotis_carCont.update();
+                var data_default_address = script.getNumberValue('VALUE');
 
                 var result = Entry.hw.portData[data_default_address];
                 if (result == undefined)
@@ -1930,12 +1889,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 {
                     rb100_last_valid_value[data_default_address] = result;
                 }
-                Entry.hw.sendQueue.prevAddress = data_default_address;
-                Entry.hw.sendQueue.prevTime = new Date();
-                Entry.hw.sendQueue.prevResult = result;
-
                 if(typeof result == 'undefined') {
-
                     return 0;
                 }
                 return Math.round((result % 65536) / 4);
@@ -2001,74 +1955,11 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             isNotFor: ['Robotis_rb_P_Assembly'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
-
-                // instruction / address / length / value / default length
-                var data_instruction = Entry.Robotis_rb.INSTRUCTION.READ;
-                var data_address = 0;
-                var data_length = 2;
-                var data_value = 0;
-
-                var data_default_address = 0;
-                var data_default_length = 0;
+                var data_address = script.getNumberValue('VALUE');
                 var compareValue = script.getNumberValue('COMPARE_VAL');
                 var compareOP = script.getNumberValue('COMPARE_OP');
-
-                data_address = script.getNumberValue('VALUE');
-
-                data_default_address = data_address;
-                data_default_length = data_length;
-
-                if (
-                    Entry.hw.sendQueue.prevAddress &&
-                    Entry.hw.sendQueue.prevAddress == data_default_address
-                ) {
-                    if (
-                        Entry.hw.sendQueue.prevTime &&
-                        new Date() - Entry.hw.sendQueue.prevTime < 200//Entry.Robotis_openCM70.readDelay//200
-                    ) {
-                        //throw new Entry.Utils.AsyncError();
-                        let prevResult = Math.round((Entry.hw.sendQueue.prevResult % 65536) / 4);
                 
-                        //  return false;
-                        switch(compareOP) {
-                            case 0:
-                                return prevResult > compareValue;
-                            case 1:
-                                return prevResult < compareValue;
-                            case 2:
-                                return prevResult == compareValue;
-                            default:
-                                return false;
-                        }
-                    }
-                }
-
-                Entry.Robotis_carCont.setRobotisData([
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        data_value,
-                        data_default_length,
-                    ],
-                ]);
-                
-                
-                Entry.Robotis_carCont.update();
-
-                
-                var result = Entry.hw.portData[data_default_address];
-                if (result == undefined)
-                {
-                    result = rb100_last_valid_value[data_default_address];
-                }
-                else
-                {
-                    rb100_last_valid_value[data_default_address] = result;
-                }
-                Entry.hw.sendQueue.prevAddress = data_default_address;
-                Entry.hw.sendQueue.prevTime = new Date();
-                Entry.hw.sendQueue.prevResult = result;
+                var result = Entry.hw.portData[data_address];
 
                 if(result == undefined) {
                     return false;
@@ -2155,77 +2046,18 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 if (sensorType == 0)
                 {
                     if (direction == 0) {
-                        data_address = 360;
-                        data_length = 4;
+                        ir_1 = Entry.hw.portData[360];
+                        ir_2 = Entry.hw.portData[362];
+                        if (ir_1 == undefined) ir_1 = 0;
+                        if (ir_2 == undefined) ir_2 = 0;
+                        return ir_1 > 100 || ir_2 > 100;
                     } else if (direction == 1) {
-                        data_address = 368;
-                        data_length = 2;
+                        ir_1 = Entry.hw.portData[368];
+                        if (ir_1 == undefined) ir_1 = 0;
+                        return ir_1 > 100;
                     } else if (direction == 2) {
-                        data_address = 370;
-                        data_length = 2;
-                    }
-
-                    data_default_address = data_address;
-                    data_default_length = data_length;
-    
-                    if (
-                        Entry.hw.sendQueue.prevAddress &&
-                        Entry.hw.sendQueue.prevAddress == data_default_address
-                    ) {
-                        if (
-                            Entry.hw.sendQueue.prevTime &&
-                            new Date() - Entry.hw.sendQueue.prevTime < Entry.Robotis_openCM70.readDelay//200
-                        ) {
-                            // return false;
-                            if (data_length == 4) {
-                                ir_1 = Entry.hw.sendQueue.prevResult & 0xffff;
-                                ir_2 =  Entry.hw.sendQueue.prevResult >> 16;
-                                
-                                return ir_1 > 100 || ir_2 > 100;
-                            } else {
-                                ir_1 = Entry.hw.sendQueue.prevResult;
-    
-                                return ir_1 > 100;
-                            }
-                        }
-                    }
-    
-                    Entry.Robotis_carCont.setRobotisData([
-                        [
-                            data_instruction,
-                            data_address,
-                            data_length,
-                            data_value,
-                            data_default_length,
-                        ],
-                    ]);
-                    Entry.Robotis_carCont.update();
-    
-                    var result = Entry.hw.portData[data_default_address];
-                    if (result == undefined)
-                    {
-                        result = rb100_last_valid_value[data_default_address];
-                    }
-                    else
-                    {
-                        rb100_last_valid_value[data_default_address] = result;
-                    }
-                    Entry.hw.sendQueue.prevAddress = data_default_address;
-                    Entry.hw.sendQueue.prevTime = new Date();
-                    Entry.hw.sendQueue.prevResult = result;
-    
-                    if(result == undefined) {
-                        return false;
-                    }
-    
-                    if (data_length == 4) {
-                        ir_1 = Entry.hw.sendQueue.prevResult & 0xffff;
-                        ir_2 =  Entry.hw.sendQueue.prevResult >> 16;
-                        
-                        return ir_1 > 100 || ir_2 > 100
-                    } else {
-                        ir_1 = Entry.hw.sendQueue.prevResult;
-                        
+                        ir_1 = Entry.hw.portData[370];
+                        if (ir_1 == undefined) ir_1 = 0;
                         return ir_1 > 100;
                     }
                 } else if (sensorType == 1) {
@@ -2339,61 +2171,10 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             isNotFor: ['Robotis_rb_P_Assembly'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
-
-                // instruction / address / length / value / default length
-                var data_instruction = Entry.Robotis_rb.INSTRUCTION.READ;
-                var data_address = 0;
-                var data_length = 1;
-                var data_value = 0;
-
-                var data_default_address = 0;
-                var data_default_length = 0;
-
-                
-                data_address = script.getNumberValue('VALUE');
-
-                data_default_address = data_address;
-                data_default_length = data_length;
-
+                var data_address = script.getNumberValue('VALUE');
                 var compareValue = script.getNumberValue('COMPARE_VAL');
-                if (
-                    Entry.hw.sendQueue.prevAddress &&
-                    Entry.hw.sendQueue.prevAddress == data_default_address
-                ) {
-                    if (
-                        Entry.hw.sendQueue.prevTime &&
-                        new Date() - Entry.hw.sendQueue.prevTime < 200
-                    ) {
-                        
-                        //throw new Entry.Utils.AsyncError();
-                        return (Entry.hw.sendQueue.prevResult == compareValue);
-                    }
-                }
 
-                Entry.Robotis_carCont.setRobotisData([
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        data_value,
-                        data_default_length,
-                    ],
-                ]);
-                // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-                Entry.Robotis_carCont.update();
-
-                var result = Entry.hw.portData[data_default_address];
-                if (result == undefined)
-                {
-                    result = rb100_last_valid_value[data_default_address];
-                }
-                else
-                {
-                    rb100_last_valid_value[data_default_address] = result;
-                }
-                Entry.hw.sendQueue.prevAddress = data_default_address;
-                Entry.hw.sendQueue.prevTime = new Date();
-                Entry.hw.sendQueue.prevResult = result;
+                var result = Entry.hw.portData[data_address];
                 if(result == undefined) {
                     return false;
                 }
@@ -2445,63 +2226,10 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             isNotFor: ['Robotis_rb_P_Assembly'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
-
-                // instruction / address / length / value / default length
-                var data_instruction = Entry.Robotis_rb.INSTRUCTION.READ;
-                var data_address = 0;
-                var data_length = 1;
-                var data_value = 0;
-
-                var data_default_address = 0;
-                var data_default_length = 0;
-
-                
-                data_address = 50;
-
-                data_default_address = data_address;
-                data_default_length = data_length;
-
+                var data_address = 50;
                 var compareValue = script.getNumberValue('COMPARE_VAL', script);
 
-                if (
-                    Entry.hw.sendQueue.prevAddress &&
-                    Entry.hw.sendQueue.prevAddress == data_default_address
-                ) {
-                    if (
-                        Entry.hw.sendQueue.prevTime &&
-                        new Date() - Entry.hw.sendQueue.prevTime < 200
-                    ) {
-                        //throw new Entry.Utils.AsyncError();
-                         
-                        return (Entry.hw.sendQueue.prevResult == compareValue);
-                    }
-                }
-
-                Entry.Robotis_carCont.setRobotisData([
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        data_value,
-                        data_default_length,
-                    ],
-                ]);
-                // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-                Entry.Robotis_carCont.update();
-
-                var result = Entry.hw.portData[data_default_address];
-                if (result == undefined)
-                {
-                    result = rb100_last_valid_value[data_default_address];
-                }
-                else
-                {
-                    rb100_last_valid_value[data_default_address] = result;
-                }
-                Entry.hw.sendQueue.prevAddress = data_default_address;
-                Entry.hw.sendQueue.prevTime = new Date();
-                Entry.hw.sendQueue.prevResult = result;
-                
+                var result = Entry.hw.portData[data_address];
                 if(result == undefined) {
                     return false;
                 }
@@ -2534,72 +2262,11 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             isNotFor: ['Robotis_rb_P_Assembly'],
             func: async function (sprite, script) {
                 var scope = script.executor.scope;
+                var data_address = 119;
 
-                // instruction / address / length / value / default length
-                var data_instruction = Entry.Robotis_rb.INSTRUCTION.READ;
-                var data_address = 0;
-                var data_length = 1;
-                var data_value = 0;
-
-                var data_default_address = 0;
-                var data_default_length = 0;
-
-                
-                data_address = 119;
-
-                data_default_address = data_address;
-                data_default_length = data_length;
-
-                if (
-                    Entry.hw.sendQueue.prevAddress &&
-                    Entry.hw.sendQueue.prevAddress == data_default_address
-                ) {
-                    if (
-                        Entry.hw.sendQueue.prevTime &&
-                        new Date() - Entry.hw.sendQueue.prevTime < Entry.Robotis_openCM70.readDelay
-                    ) {
-                        //throw new Entry.Utils.AsyncError();
-                        if(typeof Entry.hw.sendQueue.prevResult == 'undefined') {
-                            return 0;
-                        }
-                        return Entry.hw.sendQueue.prevResult;
-                    }
-                }
-
-                Entry.Robotis_carCont.setRobotisData([
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        data_value,
-                        data_default_length,
-                    ],
-                ]);
-                // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-                Entry.Robotis_carCont.update();
-
-                var result = Entry.hw.portData[data_default_address];
-                if (result == undefined)
-                {
-                    result = rb100_last_valid_value[data_default_address];
-                }
-                else
-                {
-                    rb100_last_valid_value[data_default_address] = result;
-                }
-                console.log("start!");
-                for (let i = 0; i < 100; i++) {
-                    await wait(100);
-                    console.log(Entry.hw.portData[55]);
-                }
-                console.log("complete!");
-                result = Entry.hw.portData[55];
-                Entry.hw.sendQueue.prevAddress = data_default_address;
-                Entry.hw.sendQueue.prevTime = new Date();
-                Entry.hw.sendQueue.prevResult = result;
+                var result = Entry.hw.portData[data_address];
 
                 if(typeof result == 'undefined') {
-
                     return 0;
                 }
                 return result;
@@ -2643,65 +2310,14 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             isNotFor: ['Robotis_rb_P_Assembly'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
-
-                // instruction / address / length / value / default length
-                var data_instruction = Entry.Robotis_rb.INSTRUCTION.READ;
                 var data_address = 5031;
-                var data_length = 1;
-                var data_value = 0;
-
-                var data_default_address = 0;
-                var data_default_length = 0;
                 var compareValue = script.getNumberValue('VALUE');
 
 
-                data_default_address = data_address;
-                data_default_length = data_length;
-
-                if (
-                    Entry.hw.sendQueue.prevAddress &&
-                    Entry.hw.sendQueue.prevAddress == data_default_address
-                ) {
-                    if (
-                        Entry.hw.sendQueue.prevTime &&
-                        new Date() - Entry.hw.sendQueue.prevTime < Entry.Robotis_openCM70.readDelay//200
-                    ) {
-                        //throw new Entry.Utils.AsyncError();
-
-                        // return false;
-                        return Entry.hw.sendQueue.prevResult == compareValue;
-                    }
-                }
-
-                Entry.Robotis_carCont.setRobotisData([
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        data_value,
-                        data_default_length,
-                    ],
-                ]);
-                // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-                Entry.Robotis_carCont.update();
-
-                var result = Entry.hw.portData[data_default_address];
-                if (result == undefined)
-                {
-                    result = rb100_last_valid_value[data_default_address];
-                }
-                else
-                {
-                    rb100_last_valid_value[data_default_address] = result;
-                }
-                Entry.hw.sendQueue.prevAddress = data_default_address;
-                Entry.hw.sendQueue.prevTime = new Date();
-                Entry.hw.sendQueue.prevResult = result;
-
+                var result = Entry.hw.portData[data_address];
                 if(result == undefined) {
                     return false;
                 }
-
 
                 return result == compareValue;
             },
@@ -2757,65 +2373,11 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             isNotFor: ['Robotis_rb_P_Assembly'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
+                var data_address = script.getField('AXIS', script) - script.getField('MODE', script);
 
-                // instruction / address / length / value / default length
-                var data_instruction = Entry.Robotis_rb.INSTRUCTION.READ;
-                var data_address = 0;
-                var data_length = 2;
-                var data_value = 0;
-
-                var data_default_address = 0;
-                var data_default_length = 0;
-
-                
-                data_address = script.getField('AXIS', script) - script.getField('MODE', script);
-                
-                data_default_address = data_address;
-                data_default_length = data_length;
-
-                if (
-                    Entry.hw.sendQueue.prevAddress &&
-                    Entry.hw.sendQueue.prevAddress == data_default_address
-                ) {
-                    if (
-                        Entry.hw.sendQueue.prevTime &&
-                        new Date() - Entry.hw.sendQueue.prevTime < Entry.Robotis_openCM70.readDelay
-                    ) {
-                        //throw new Entry.Utils.AsyncError();
-                        if(typeof Entry.hw.sendQueue.prevResult == 'undefined') {
-                            return 0;
-                        }
-                        return Entry.hw.sendQueue.prevResult;
-                    }
-                }
-
-                Entry.Robotis_carCont.setRobotisData([
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        data_value,
-                        data_default_length,
-                    ],
-                ]);
-                // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-                Entry.Robotis_carCont.update();
-
-                var result = Entry.hw.portData[data_default_address];
-                if (result == undefined)
-                {
-                    result = rb100_last_valid_value[data_default_address];
-                }
-                else
-                {
-                    rb100_last_valid_value[data_default_address] = result;
-                }
-                Entry.hw.sendQueue.prevAddress = data_default_address;
-                Entry.hw.sendQueue.prevTime = new Date();
-                Entry.hw.sendQueue.prevResult = result;
+                var result = Entry.hw.portData[data_address];
 
                 if(typeof result == 'undefined') {
-                    
                     return 0;
                 }
                 return result;
@@ -2858,65 +2420,11 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             isNotFor: ['Robotis_rb_P_Assembly'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
+                var data_address = script.getNumberValue('AXIS');
 
-                // instruction / address / length / value / default length
-                var data_instruction = Entry.Robotis_rb.INSTRUCTION.READ;
-                var data_address = 0;
-                var data_length = 2;
-                var data_value = 0;
-
-                var data_default_address = 0;
-                var data_default_length = 0;
-
-                
-                data_address = script.getNumberValue('AXIS');
-                
-                data_default_address = data_address;
-                data_default_length = data_length;
-
-                if (
-                    Entry.hw.sendQueue.prevAddress &&
-                    Entry.hw.sendQueue.prevAddress == data_default_address
-                ) {
-                    if (
-                        Entry.hw.sendQueue.prevTime &&
-                        new Date() - Entry.hw.sendQueue.prevTime < Entry.Robotis_openCM70.readDelay
-                    ) {
-                        //throw new Entry.Utils.AsyncError();
-                        if(typeof Entry.hw.sendQueue.prevResult == 'undefined') {
-                            return 0;
-                        }
-                        return Entry.hw.sendQueue.prevResult;
-                    }
-                }
-
-                Entry.Robotis_carCont.setRobotisData([
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        data_value,
-                        data_default_length,
-                    ],
-                ]);
-                // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-                Entry.Robotis_carCont.update();
-
-                var result = Entry.hw.portData[data_default_address];
-                if (result == undefined)
-                {
-                    result = rb100_last_valid_value[data_default_address];
-                }
-                else
-                {
-                    rb100_last_valid_value[data_default_address] = result;
-                }
-                Entry.hw.sendQueue.prevAddress = data_default_address;
-                Entry.hw.sendQueue.prevTime = new Date();
-                Entry.hw.sendQueue.prevResult = result;
+                var result = Entry.hw.portData[data_address];
 
                 if(typeof result == 'undefined') {
-
                     return 0;
                 }
                 return result;
