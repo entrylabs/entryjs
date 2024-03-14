@@ -6386,65 +6386,11 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             isNotFor: ['Robotis_rb_P_Assembly'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
-
-                // instruction / address / length / value / default length
-                var data_instruction = Entry.Robotis_rb.INSTRUCTION.READ;
                 var data_address = 4009;
-                var data_length = 2;
                 var data_type = script.getNumberValue('DATA_TYPE');
-                var data_value = 0;
-
-                var data_default_address = 0;
-                var data_default_length = 0;
-
                 data_address += data_type * 2;
-
-                data_default_address = data_address;
-                data_default_length = data_length;
-
-                if (
-                    Entry.hw.sendQueue.prevAddress &&
-                    Entry.hw.sendQueue.prevAddress == data_default_address
-                ) {
-                    if (
-                        Entry.hw.sendQueue.prevTime &&
-                        new Date() - Entry.hw.sendQueue.prevTime < Entry.Robotis_openCM70.readDelay
-                    ) {
-                        //throw new Entry.Utils.AsyncError();
-                        if (typeof Entry.hw.sendQueue.prevResult == 'undefined') {
-                            return 0;
-                        }
-                        return Entry.hw.sendQueue.prevResult;
-                    }
-                }
-
-                Entry.Robotis_carCont.setRobotisData([
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        data_value,
-                        data_default_length,
-                    ],
-                ]);
-                // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-                Entry.Robotis_carCont.update();
-
-                // 통합센서의 컨트롤 테이블 주소는 RB-100블록에서 사용하지 않는 주소를 사용
-                // 주소 겹침 방지
-                var result = Entry.hw.portData[data_default_address];
-                if (result == undefined) {
-                    result = dxl_last_valid_value[data_default_address];
-                }
-                else {
-                    dxl_last_valid_value[data_default_address] = result;
-                }
-                Entry.hw.sendQueue.prevAddress = data_default_address;
-                Entry.hw.sendQueue.prevTime = new Date();
-                Entry.hw.sendQueue.prevResult = result;
-
+                var result = Entry.hw.portData[data_address];
                 if (typeof result == 'undefined') {
-
                     return 0;
                 }
 
@@ -6491,65 +6437,12 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             isNotFor: ['Robotis_rb_P_Assembly'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
-
-                // instruction / address / length / value / default length
-                var data_instruction = Entry.Robotis_rb.INSTRUCTION.READ;
                 var data_address = 4019;
-                var data_length = 2;
                 var data_type = script.getNumberValue('DATA_TYPE');
-                var data_value = 0;
-
-                var data_default_address = 0;
-                var data_default_length = 0;
-
                 data_address += data_type * 2;
-
-                data_default_address = data_address;
-                data_default_length = data_length;
-
-                if (
-                    Entry.hw.sendQueue.prevAddress &&
-                    Entry.hw.sendQueue.prevAddress == data_default_address
-                ) {
-                    if (
-                        Entry.hw.sendQueue.prevTime &&
-                        new Date() - Entry.hw.sendQueue.prevTime < Entry.Robotis_openCM70.readDelay
-                    ) {
-                        //throw new Entry.Utils.AsyncError();
-                        if (typeof Entry.hw.sendQueue.prevResult == 'undefined') {
-                            return 0;
-                        }
-                        return Entry.hw.sendQueue.prevResult;
-                    }
-                }
-
-                Entry.Robotis_carCont.setRobotisData([
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        data_value,
-                        data_default_length,
-                    ],
-                ]);
-                // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-                Entry.Robotis_carCont.update();
-
-                // 통합센서의 컨트롤 테이블 주소는 RB-100블록에서 사용하지 않는 주소를 사용
-                // 주소 겹침 방지
-                var result = Entry.hw.portData[data_default_address];
-                if (result == undefined) {
-                    result = dxl_last_valid_value[data_default_address];
-                }
-                else {
-                    dxl_last_valid_value[data_default_address] = result;
-                }
-                Entry.hw.sendQueue.prevAddress = data_default_address;
-                Entry.hw.sendQueue.prevTime = new Date();
-                Entry.hw.sendQueue.prevResult = result;
+                var result = Entry.hw.portData[data_address];
 
                 if (typeof result == 'undefined') {
-
                     return 0;
                 }
 
@@ -6580,62 +6473,9 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             isNotFor: ['Robotis_rb_P_Assembly'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
-
-                // instruction / address / length / value / default length
-                var data_instruction = Entry.Robotis_rb.INSTRUCTION.READ;
                 var data_address = 4003;
-                var data_length = 2;
-                var data_value = 0;
-
-                var data_default_address = 0;
-                var data_default_length = 0;
-
-                data_default_address = data_address;
-                data_default_length = data_length;
-
-                if (
-                    Entry.hw.sendQueue.prevAddress &&
-                    Entry.hw.sendQueue.prevAddress == data_default_address
-                ) {
-                    if (
-                        Entry.hw.sendQueue.prevTime &&
-                        new Date() - Entry.hw.sendQueue.prevTime < Entry.Robotis_openCM70.readDelay
-                    ) {
-                        //throw new Entry.Utils.AsyncError();
-                        if (typeof Entry.hw.sendQueue.prevResult == 'undefined') {
-                            return 0;
-                        }
-                        return Entry.hw.sendQueue.prevResult;
-                    }
-                }
-
-                Entry.Robotis_carCont.setRobotisData([
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        data_value,
-                        data_default_length,
-                    ],
-                ]);
-                // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-                Entry.Robotis_carCont.update();
-
-                // 통합센서의 컨트롤 테이블 주소는 RB-100블록에서 사용하지 않는 주소를 사용
-                // 주소 겹침 방지
-                var result = Entry.hw.portData[data_default_address];
-                if (result == undefined) {
-                    result = dxl_last_valid_value[data_default_address];
-                }
-                else {
-                    dxl_last_valid_value[data_default_address] = result;
-                }
-                Entry.hw.sendQueue.prevAddress = data_default_address;
-                Entry.hw.sendQueue.prevTime = new Date();
-                Entry.hw.sendQueue.prevResult = result;
-
+                var result = Entry.hw.portData[data_address];
                 if (typeof result == 'undefined') {
-
                     return 0;
                 }
 
@@ -6722,61 +6562,13 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     Entry.Robotis_openCM70.delay
                 );
 
-                data_instruction = Entry.Robotis_rb.INSTRUCTION.READ;
                 data_address = 4036; // BLOCK_RESULT_BY_ID_X_CENTER
-                data_length = 2;
 
                 data_address += script.getNumberValue('TYPE') * 2;
 
-                var data_default_address = 0;
-                var data_default_length = 0;
-
-                data_default_address = data_address;
-                data_default_length = data_length;
-
-                if (
-                    Entry.hw.sendQueue.prevAddress &&
-                    Entry.hw.sendQueue.prevAddress == data_default_address
-                ) {
-                    if (
-                        Entry.hw.sendQueue.prevTime &&
-                        new Date() - Entry.hw.sendQueue.prevTime < Entry.Robotis_openCM70.readDelay
-                    ) {
-                        //throw new Entry.Utils.AsyncError();
-                        if (typeof Entry.hw.sendQueue.prevResult == 'undefined') {
-                            return 0;
-                        }
-                        return Entry.hw.sendQueue.prevResult;
-                    }
-                }
-
-                Entry.Robotis_carCont.setRobotisData([
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        data_value,
-                        data_default_length,
-                    ],
-                ]);
-                // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-                Entry.Robotis_carCont.update();
-
-                // 통합센서의 컨트롤 테이블 주소는 RB-100블록에서 사용하지 않는 주소를 사용
-                // 주소 겹침 방지
-                var result = Entry.hw.portData[data_default_address];
-                if (result == undefined) {
-                    result = dxl_last_valid_value[data_default_address];
-                }
-                else {
-                    dxl_last_valid_value[data_default_address] = result;
-                }
-                Entry.hw.sendQueue.prevAddress = data_default_address;
-                Entry.hw.sendQueue.prevTime = new Date();
-                Entry.hw.sendQueue.prevResult = result;
+                var result = Entry.hw.portData[data_address];
 
                 if (typeof result == 'undefined') {
-
                     return 0;
                 }
 
@@ -6863,61 +6655,12 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     Entry.Robotis_openCM70.delay
                 );
 
-                data_instruction = Entry.Robotis_rb.INSTRUCTION.READ;
                 data_address = 4044; // ARROW_RESULT_BY_ID_X_ORIGIN
-                data_length = 2;
 
                 data_address += script.getNumberValue('TYPE') * 2;
-
-                var data_default_address = 0;
-                var data_default_length = 0;
-
-                data_default_address = data_address;
-                data_default_length = data_length;
-
-                if (
-                    Entry.hw.sendQueue.prevAddress &&
-                    Entry.hw.sendQueue.prevAddress == data_default_address
-                ) {
-                    if (
-                        Entry.hw.sendQueue.prevTime &&
-                        new Date() - Entry.hw.sendQueue.prevTime < Entry.Robotis_openCM70.readDelay
-                    ) {
-                        //throw new Entry.Utils.AsyncError();
-                        if (typeof Entry.hw.sendQueue.prevResult == 'undefined') {
-                            return 0;
-                        }
-                        return Entry.hw.sendQueue.prevResult;
-                    }
-                }
-
-                Entry.Robotis_carCont.setRobotisData([
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        data_value,
-                        data_default_length,
-                    ],
-                ]);
-                // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-                Entry.Robotis_carCont.update();
-
-                // 통합센서의 컨트롤 테이블 주소는 RB-100블록에서 사용하지 않는 주소를 사용
-                // 주소 겹침 방지
-                var result = Entry.hw.portData[data_default_address];
-                if (result == undefined) {
-                    result = dxl_last_valid_value[data_default_address];
-                }
-                else {
-                    dxl_last_valid_value[data_default_address] = result;
-                }
-                Entry.hw.sendQueue.prevAddress = data_default_address;
-                Entry.hw.sendQueue.prevTime = new Date();
-                Entry.hw.sendQueue.prevResult = result;
+                var result = Entry.hw.portData[data_address];
 
                 if (typeof result == 'undefined') {
-
                     return 0;
                 }
 
@@ -6961,67 +6704,15 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             isNotFor: ['Robotis_rb_P_Assembly'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
-
-                // instruction / address / length / value / default length
-                var data_instruction = Entry.Robotis_rb.INSTRUCTION.READ;
                 var data_address = 4000;
-                var data_length = 1;
-                var data_value = 0;
-
-                var data_default_address = 0;
-                var data_default_length = 0;
                 var compareValue = script.getNumberValue('STATUS');
-
-                data_default_address = data_address;
-                data_default_length = data_length;
-
-                if (
-                    Entry.hw.sendQueue.prevAddress &&
-                    Entry.hw.sendQueue.prevAddress == data_default_address
-                ) {
-                    if (
-                        Entry.hw.sendQueue.prevTime &&
-                        new Date() - Entry.hw.sendQueue.prevTime < 200//Entry.Robotis_openCM70.readDelay//200
-                    ) {
-                        //throw new Entry.Utils.AsyncError();
-                
-                        //  return false;
-                        return (Entry.hw.sendQueue.prevResult == compareValue);
-                    }
-                }
-
-                Entry.Robotis_carCont.setRobotisData([
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        data_value,
-                        data_default_length,
-                    ],
-                ]);
-                
-                
-                Entry.Robotis_carCont.update();
-
-                
-                var result = Entry.hw.portData[data_default_address];
-                if (result == undefined)
-                {
-                    result = rb100_last_valid_value[data_default_address];
-                }
-                else
-                {
-                    rb100_last_valid_value[data_default_address] = result;
-                }
-                Entry.hw.sendQueue.prevAddress = data_default_address;
-                Entry.hw.sendQueue.prevTime = new Date();
-                Entry.hw.sendQueue.prevResult = result;
+                var result = Entry.hw.portData[data_address];
 
                 if(result == undefined) {
                     return false;
                 }
 
-                return (Entry.hw.sendQueue.prevResult == compareValue);
+                return (result == compareValue);
                
             },
             syntax: {
@@ -7062,69 +6753,18 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             isNotFor: ['Robotis_rb_P_Assembly'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
-
-                // instruction / address / length / value / default length
-                var data_instruction = Entry.Robotis_rb.INSTRUCTION.READ;
                 var data_address = 4005; // block
-                var data_length = 1;
-                var data_value = 0;
-
-                var data_default_address = 0;
-                var data_default_length = 0;
                 var detect_type = script.getNumberValue('DETECT_TYPE');
 
                 if (detect_type == 1) data_address = 4006; // arrow
 
-                data_default_address = data_address;
-                data_default_length = data_length;
-
-                if (
-                    Entry.hw.sendQueue.prevAddress &&
-                    Entry.hw.sendQueue.prevAddress == data_default_address
-                ) {
-                    if (
-                        Entry.hw.sendQueue.prevTime &&
-                        new Date() - Entry.hw.sendQueue.prevTime < 200//Entry.Robotis_openCM70.readDelay//200
-                    ) {
-                        //throw new Entry.Utils.AsyncError();
-                
-                        //  return false;
-                        return (Entry.hw.sendQueue.prevResult == 1);
-                    }
-                }
-
-                Entry.Robotis_carCont.setRobotisData([
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        data_value,
-                        data_default_length,
-                    ],
-                ]);
-                
-                
-                Entry.Robotis_carCont.update();
-
-                
-                var result = Entry.hw.portData[data_default_address];
-                if (result == undefined)
-                {
-                    result = rb100_last_valid_value[data_default_address];
-                }
-                else
-                {
-                    rb100_last_valid_value[data_default_address] = result;
-                }
-                Entry.hw.sendQueue.prevAddress = data_default_address;
-                Entry.hw.sendQueue.prevTime = new Date();
-                Entry.hw.sendQueue.prevResult = result;
+                var result = Entry.hw.portData[data_address];
 
                 if(result == undefined) {
                     return false;
                 }
 
-                return (Entry.hw.sendQueue.prevResult == 1);
+                return (result == 1);
                
             },
             syntax: {
