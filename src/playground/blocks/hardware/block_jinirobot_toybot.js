@@ -1192,7 +1192,6 @@ Entry.toybot.getBlocks = function() {
                     } else {
                         pitch = 0;
                     }
-                    note.beat = Entry.toybot.checkRangeInteger(beat, 0x00, 0x0B);
                     note.pitch = Entry.toybot.checkRangeInteger(octave | pitch, 0x00, 0x7C);
                     Entry.hw.sendQueue['setblock'] = {
                         id: Math.random(),
