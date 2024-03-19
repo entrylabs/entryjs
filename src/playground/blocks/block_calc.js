@@ -2534,7 +2534,7 @@ module.exports = {
                 },
                 class: 'color',
                 isNotFor: [],
-                async func(sprite, script) {
+                func(sprite, script) {
                     const red = script.getNumberValue('RED', script);
                     const greeb = script.getNumberValue('GREEN', script);
                     const blue = script.getNumberValue('BLUE', script);
@@ -2580,7 +2580,7 @@ module.exports = {
                 },
                 class: 'color',
                 isNotFor: [],
-                async func(sprite, script) {
+                func(sprite, script) {
                     const color = script.getField('COLOR', script);
                     const value = script.getValue('HEX', script);
                     return Entry.hex2rgb(value)[color];
