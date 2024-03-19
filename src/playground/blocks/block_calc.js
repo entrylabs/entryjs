@@ -16,7 +16,12 @@ module.exports = {
                     },
                     {
                         type: 'Dropdown',
-                        options: [['+', 'PLUS'], ['-', 'MINUS'], ['x', 'MULTI'], ['/', 'DIVIDE']],
+                        options: [
+                            ['+', 'PLUS'],
+                            ['-', 'MINUS'],
+                            ['x', 'MULTI'],
+                            ['/', 'DIVIDE'],
+                        ],
                         value: 'PLUS',
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.CALC,
