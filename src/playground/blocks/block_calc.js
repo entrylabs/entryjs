@@ -383,7 +383,10 @@ module.exports = {
                                 },
                                 {
                                     type: 'Dropdown',
-                                    options: [['x', 'x'], ['y', 'y']],
+                                    options: [
+                                        ['x', 'x'],
+                                        ['y', 'y'],
+                                    ],
                                     value: 'x',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.colorSet.arrow.default.CALC,
