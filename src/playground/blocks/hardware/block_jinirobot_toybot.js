@@ -51,12 +51,12 @@ Entry.toybot = {
             return temp;
         }
     },
-    setProcessor: function(script, second, code) {
+    setProcessor: function(script, delayTime, code) {
         if (!script.isStart) {
             script.isStart = true;
             script.timeFlag = 1;
             const fps = Entry.FPS || 60;
-            const timeValue = (60 / fps) * second * 1000;
+            const timeValue = (60 / fps) * delayTime * 1000;
             Entry.TimeWaitManager.add(
                 Math.random(),
                 () => {
@@ -73,7 +73,7 @@ Entry.toybot = {
                 Entry.hw.sendQueue['setblock'] = {
                     id: Math.random(),
                     playScore: {
-                        note: 0x0B,
+                        beat: 0x0B,
                         pitch: 0,
                     }
                 };
@@ -187,7 +187,7 @@ Entry.toybot.setLanguage = function() {
                 list_pitch_g: 'G',
                 list_pitch_a: 'A',
                 list_pitch_b: 'B',
-                list_pitch_r: 'rest',
+                list_pitch_r: 'Rest',
                 list_rotation_forward: 'Forward rotation',
                 list_rotation_reverse: 'Reverse rotation',
                 list_rotation_stop: 'Stop',
@@ -196,7 +196,7 @@ Entry.toybot.setLanguage = function() {
                 get_analog_input: 'Analog input value',
                 get_servo_angle: 'No.%1 servo motor angle value',
                 set_led_color_name: 'Set LED color to %1 %2',                
-                set_led_rgb: 'Change the LED color to red %1, green %2, blue %3 %4',
+                set_led_rgb: 'Set LED color to red %1, green %2, blue %3 %4',
                 set_play_score: 'Play note to %1 %2 %3 %4 %5',
                 set_play_sound_effect: 'Play No.%1 sound effect %2',
                 set_play_melody: 'Play No.%1 melody %2',
@@ -396,7 +396,7 @@ Entry.toybot.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [                        
+                    options: [
                         [Lang.template.list_octave_low, 4],
                         [Lang.template.list_octave_middle, 5],
                         [Lang.template.list_octave_high, 6]
@@ -857,52 +857,70 @@ Entry.toybot.getBlocks = function() {
             func: function(sprite, script) {
                 return Entry.toybot.setProcessor(script, Entry.toybot.delayTime, function() {
                     const colorName = Entry.toybot.convert(script.getValue('COLOR', script));
-                    let rgb = [NaN, NaN, NaN];
+                    const color = {
+                        r: 0x00,
+                        g: 0x00,
+                        b: 0x00
+                    };
                     switch (colorName) {
                         case 0:
                         case Lang.template.list_color_off:
-                            rgb = [ 0x00, 0x00, 0x00 ]; 
+                            color.r = 0x00;
+                            color.g = 0x00;
+                            color.b = 0x00;
                             break;
                         case 1:
                         case Lang.template.list_color_white:
-                            rgb = [ 0xFF, 0xFF, 0xFF ];
+                            color.r = 0xFF;
+                            color.g = 0xFF;
+                            color.b = 0xFF;
                             break;
                         case 2:
                         case Lang.template.list_color_red:
-                            rgb = [ 0xFF, 0x00, 0x00 ];
+                            color.r = 0xFF;
+                            color.g = 0x00;
+                            color.b = 0x00;
                             break;
                         case 3:
                         case Lang.template.list_color_orange:
-                            rgb = [ 0xFF, 0xA5,  0x00 ];
+                            color.r = 0xFF;
+                            color.g = 0x80;
+                            color.b = 0x00;
                             break;
                         case 4:
                         case Lang.template.list_color_yellow:
-                            rgb = [ 0xFF, 0xFF, 0x00 ];
+                            color.r = 0xFF;
+                            color.g = 0xFF;
+                            color.b = 0x00;
                             break;
                         case 5:
                         case Lang.template.list_color_green:
-                            rgb = [ 0x00, 0xFF, 0x00 ];
+                            color.r = 0x00;
+                            color.g = 0x80;
+                            color.b = 0x00;
                             break;
                         case 6:
                         case Lang.template.list_color_blue:
-                            rgb = [ 0x00, 0x00, 0xFF ];
+                            color.r = 0x00;
+                            color.g = 0x00;
+                            color.b = 0xFF;
                             break;
                         case 7:
                         case Lang.template.list_color_navy:
-                            rgb = [ 0x00,  0x00, 0x80 ];
+                            color.r = 0x00;
+                            color.g = 0x00;
+                            color.b = 0x80;
                             break;
                         case 8:
                         case Lang.template.list_color_violet:
-                            rgb = [ 0x7F, 0x00, 0xFF ];
+                            color.r = 0x7F;
+                            color.g = 0x00;
+                            color.b = 0xFF;
                             break;
                     }
                     Entry.hw.sendQueue['setblock'] = {
                         id: Math.random(),
-                        ledControl: {
-                            r: rgb[0],
-                            g: rgb[1],
-                            b: rgb[2]
-                        }
+                        ledControl: color
                     };
 
                     return false;
@@ -966,18 +984,17 @@ Entry.toybot.getBlocks = function() {
             isNotFor: ['toybot'],
             func: function(sprite, script) {
                 return Entry.toybot.setProcessor(script, Entry.toybot.delayTime, function() {
-                    const rgb = [
-                        Entry.toybot.checkRangeInteger(script.getValue('RED', script) * 2.55, 0, 255),
-                        Entry.toybot.checkRangeInteger(script.getValue('GREEN', script) * 2.55, 0, 255),
-                        Entry.toybot.checkRangeInteger(script.getValue('BLUE', script) * 2.55, 0, 255)
-                    ];
+                    const red = Entry.toybot.convert(script.getValue('RED', script));
+                    const green = Entry.toybot.convert(script.getValue('GREEN', script));
+                    const blue = Entry.toybot.convert(script.getValue('BLUE', script));
+                    const color = {
+                        r: Entry.toybot.checkRangeInteger(red * 2.55, 0, 255),
+                        g: Entry.toybot.checkRangeInteger(green * 2.55, 0, 255),
+                        b: Entry.toybot.checkRangeInteger(blue * 2.55, 0, 255)
+                    };
                     Entry.hw.sendQueue['setblock'] = {
                         id: Math.random(),
-                        ledControl: {
-                            r: rgb[0],
-                            g: rgb[1],
-                            b: rgb[2]
-                        }
+                        ledControl: color
                     };
 
                     return false;
@@ -1047,46 +1064,57 @@ Entry.toybot.getBlocks = function() {
             isNotFor: ['toybot'],
             func: function(sprite, script) {
                 let beat = Entry.toybot.convert(script.getValue('BEAT', script));
+                let octave = Entry.toybot.convert(script.getValue('OCTAVE', script));
+                let accidental = Entry.toybot.convert(script.getValue('ACCIDENTAL', script));
+                let pitch = Entry.toybot.convert(script.getValue('PITCH', script));
                 let delayTime = 0;
+                const note = {
+                    beat: 0,
+                    pitch: 0
+                };
                 switch (beat) {
                     case 1:
                     case Lang.template.list_beat_oneeight:
-                        delayTime = 0.063;
+                        beat = 11;
+                        delayTime = 0.0625;
                         break;                            
                     case 2:
                     case Lang.template.list_beat_onefour:
+                        beat = 9;
                         delayTime = 0.125;
                         break;
                     case 3:
                     case Lang.template.list_beat_onetwo:
+                        beat = 7;
                         delayTime = 0.25;
                         break;
                     case 4:
                     case Lang.template.list_beat_one:
+                        beat = 5;
                         delayTime = 0.5;
                         break;
                     case 5:
                     case Lang.template.list_beat_onehalf:
+                        beat = 4;
                         delayTime = 0.75;
                         break;
                     case 6:
                     case Lang.template.list_beat_two:
+                        beat = 3;
                         delayTime = 1;
                         break;
                     case 7:
                     case Lang.template.list_beat_three:
-                        delayTime = 2;
+                        beat = 2;
+                        delayTime = 1.5;
                         break;
                     case 8:
                     case Lang.template.list_beat_four:
-                        delayTime = 4;
+                        beat = 1;
+                        delayTime = 2;
                         break;
                 }
-                return Entry.toybot.setProcessor(script, delayTime, function() {
-                    let octave = Entry.toybot.convert(script.getValue('OCTAVE', script));
-                    let pitch = Entry.toybot.convert(script.getValue('PITCH', script));
-                    let accidental = Entry.toybot.convert(script.getValue('ACCIDENTAL', script));
-                    let temp = -1;
+                return Entry.toybot.setProcessor(script, delayTime, function() {                    
                     switch (octave) {
                         case 4:
                         case Lang.template.list_octave_low:
@@ -1118,54 +1146,57 @@ Entry.toybot.getBlocks = function() {
                     switch (pitch) {
                         case 0:
                         case Lang.template.list_pitch_r:
-                            temp = -1;
+                            pitch = -1;
                             break;
                         case 1:
                         case Lang.template.list_pitch_c:
-                            temp = 1 + accidental;
+                            pitch = 1;
                             break;
                         case 2:
                         case Lang.template.list_pitch_d:
-                            temp = 3 + accidental;
+                            pitch = 3;
                             break;
                         case 3:
                         case Lang.template.list_pitch_e:
-                            temp = 5 + accidental;
+                            pitch = 5;
                             break;
                         case 4:
                         case Lang.template.list_pitch_f:
-                            temp = 6 + accidental;
+                            pitch = 6;
                             break;
                         case 5:
                         case Lang.template.list_pitch_g:
-                            temp = 8 + accidental;
+                            pitch = 8;
                             break;
                         case 6:
                         case Lang.template.list_pitch_a:
-                            temp = 10 + accidental;
+                            pitch = 10;
                             break;
                         case 7:
                         case Lang.template.list_pitch_b:
-                            temp = 12 + accidental;
+                            pitch = 12;
                             break;
                     }
-                    if (temp === -1) {
-                        pitch = 0;
-                    } else if (temp === 0) {
-                        octave = octave - 0x10;
-                        pitch = Entry.toybot.checkRangeInteger(octave | 12, 0x31, 0x7C);
-                    } else if (temp === 13) {
-                        octave = octave + 0x10;
-                        pitch = Entry.toybot.checkRangeInteger(octave | 1, 0x31, 0x7C);
+                    if (pitch > -1) {
+                        pitch = pitch + accidental;
+                        switch (pitch) {
+                            case 0:
+                                octave = octave - 0x10;
+                                pitch = 12;
+                                break;
+                            case 13:
+                                octave = octave + 0x10;
+                                pitch = 1;
+                                break;
+                        }
                     } else {
-                        pitch = Entry.toybot.checkRangeInteger(octave | temp, 0x00, 0x7C);
+                        pitch = 0;
                     }
+                    note.beat = Entry.toybot.checkRangeInteger(beat, 0x00, 0x0B);
+                    note.pitch = Entry.toybot.checkRangeInteger(octave | pitch, 0x00, 0x7C);
                     Entry.hw.sendQueue['setblock'] = {
                         id: Math.random(),
-                        playScore: {
-                            note: 0,
-                            pitch: pitch,
-                        }
+                        playScore: note
                     };
 
                     return true;
@@ -1212,7 +1243,7 @@ Entry.toybot.getBlocks = function() {
                     Entry.hw.sendQueue['setblock'] = {
                         id: Math.random(),
                         playList: {
-                            list: Entry.toybot.checkRangeInteger(list, 1, 12),
+                            name: Entry.toybot.checkRangeInteger(list, 1, 12),
                             play: 1
                         }
                     };
@@ -1261,7 +1292,7 @@ Entry.toybot.getBlocks = function() {
                     Entry.hw.sendQueue['setblock'] = {
                         id: Math.random(),
                         playList: {
-                            list: Entry.toybot.checkRangeInteger(list, 13, 16),
+                            name: Entry.toybot.checkRangeInteger(list, 13, 16),
                             play: 1
                         }
                     };
@@ -1325,16 +1356,19 @@ Entry.toybot.getBlocks = function() {
             isNotFor: ['toybot'],
             func: function(sprite, script) {
                 return Entry.toybot.setProcessor(script, Entry.toybot.delayTime, function() {
-                    const servo = Entry.toybot.convert(script.getValue('SERVO', script));
+                    const id = Entry.toybot.convert(script.getValue('SERVO', script));
                     const speed = Entry.toybot.convert(script.getValue('SPEED', script));
-                    const position = Entry.toybot.convert(script.getValue('POSITION', script));
+                    const position =  Entry.toybot.convert(script.getValue('POSITION', script)) * 10;
+                    const servo = [
+                        {
+                            id: Entry.toybot.checkRangeInteger(id, 0, 4),
+                            speed: Entry.toybot.checkRangeInteger(speed, 1, 5),
+                            position: Entry.toybot.checkRangeInteger(position, 0, 1800)
+                        }
+                    ]
                     Entry.hw.sendQueue['setblock'] = {
                         id: Math.random(),
-                        servoControl: {
-                            id: [Entry.toybot.checkRangeInteger(servo, 0, 4)],
-                            speed: [Entry.toybot.checkRangeInteger(speed, 1, 5)],
-                            position: [Entry.toybot.checkRangeInteger(position * 10, 0, 1800)]
-                        }
+                        servoControl: servo
                     };
 
                     return false;
@@ -1428,19 +1462,51 @@ Entry.toybot.getBlocks = function() {
             func: function(sprite, script) {
                 return Entry.toybot.setProcessor(script, Entry.toybot.delayTime, function() {
                     const nSpeed =  Entry.toybot.convert(script.getValue('SPEED', script));
+                    const nPosition = [
+                        Entry.toybot.convert(script.getValue('POSITION0', script)),
+                        Entry.toybot.convert(script.getValue('POSITION1', script)),
+                        Entry.toybot.convert(script.getValue('POSITION2', script)),
+                        Entry.toybot.convert(script.getValue('POSITION3', script)),
+                        Entry.toybot.convert(script.getValue('POSITION4', script)),
+                    ];
                     const speed = Entry.toybot.checkRangeInteger(nSpeed, 1, 5);
-                    const position0 = Entry.toybot.checkRangeInteger(script.getValue('POSITION0', script) * 10, 0, 1800);
-                    const position1 = Entry.toybot.checkRangeInteger(script.getValue('POSITION1', script) * 10, 0, 1800);
-                    const position2 = Entry.toybot.checkRangeInteger(script.getValue('POSITION2', script) * 10, 0, 1800);
-                    const position3 = Entry.toybot.checkRangeInteger(script.getValue('POSITION3', script) * 10, 0, 1800);
-                    const position4 = Entry.toybot.checkRangeInteger(script.getValue('POSITION4', script) * 10, 0, 1800);
+                    const position = [
+                        Entry.toybot.checkRangeInteger(nPosition[0] * 10, 0, 1800),
+                        Entry.toybot.checkRangeInteger(nPosition[1] * 10, 0, 1800),
+                        Entry.toybot.checkRangeInteger(nPosition[2] * 10, 0, 1800),
+                        Entry.toybot.checkRangeInteger(nPosition[3] * 10, 0, 1800),
+                        Entry.toybot.checkRangeInteger(nPosition[4] * 10, 0, 1800)
+                    ];
+                    const servo = [
+                        {
+                            id: 0,
+                            speed: speed,
+                            position: position[0]
+                        },
+                        {
+                            id: 1,
+                            speed: speed,
+                            position: position[1]
+                        },
+                        {
+                            id: 2,
+                            speed: speed,
+                            position: position[2]
+                        },
+                        {
+                            id: 3,
+                            speed: speed,
+                            position: position[3]
+                        },
+                        {
+                            id: 4,
+                            speed: speed,
+                            position: position[4]
+                        },
+                    ]
                     Entry.hw.sendQueue['setblock'] = {
                         id: Math.random(),
-                        servoControl: {
-                            id: [0, 1, 2, 3, 4],
-                            speed: [speed, speed, speed, speed, speed],
-                            position: [position0, position1, position2, position3, position4] 
-                        }
+                        servoControl: servo
                     };
 
                     return false;
@@ -1484,14 +1550,37 @@ Entry.toybot.getBlocks = function() {
             func: function(sprite, script) {
                 return Entry.toybot.setProcessor(script, Entry.toybot.delayTime, function() {
                     const nSpeed =  Entry.toybot.convert(script.getValue('SPEED', script));
-                    const speed = Entry.toybot.checkRangeInteger(nSpeed, 1, 5);
+                    const speed = Entry.toybot.checkRangeInteger(nSpeed, 1, 5);                    
+                    const servo = [
+                        {
+                            id: 0,
+                            speed: speed,
+                            position: 900
+                        },
+                        {
+                            id: 1,
+                            speed: speed,
+                            position: 900
+                        },
+                        {
+                            id: 2,
+                            speed: speed,
+                            position: 900
+                        },
+                        {
+                            id: 3,
+                            speed: speed,
+                            position: 900
+                        },
+                        {
+                            id: 4,
+                            speed: speed,
+                            position: 900
+                        },
+                    ]
                     Entry.hw.sendQueue['setblock'] = {
                         id: Math.random(),
-                        servoControl: {
-                            id: [0, 1, 2, 3, 4],
-                            speed: [speed, speed, speed, speed, speed],
-                            position: [900, 900, 900, 900, 900]
-                        }
+                        servoControl: servo
                     };
 
                     return false;
@@ -1538,9 +1627,7 @@ Entry.toybot.getBlocks = function() {
                     const pwm = script.getValue('PWM', script);
                     Entry.hw.sendQueue['setblock'] = {
                         id: Math.random(),
-                        pwmControl: {
-                            pwm: Entry.toybot.checkRangeInteger(pwm * 10.23, 0, 1023)
-                        }
+                        pwmControl: Entry.toybot.checkRangeInteger(pwm * 10.23, 0, 1023)
                     };
 
                     return false;
@@ -1601,8 +1688,8 @@ Entry.toybot.getBlocks = function() {
             isNotFor: ['toybot'],
             func: function(sprite, script) {
                 return Entry.toybot.setProcessor(script, Entry.toybot.delayTime, function() {
-                    let dc = Entry.toybot.convert(script.getValue('DC', script));
-                    let pwm = Entry.toybot.convert(script.getValue('SPEED', script));
+                    const id = Entry.toybot.convert(script.getValue('DC', script));
+                    const pwm = Entry.toybot.convert(script.getValue('SPEED', script));
                     let direction = Entry.toybot.convert(script.getValue('DIRECTION', script));
                     switch (direction) {
                         case Lang.template.list_rotation_forward:
@@ -1615,25 +1702,32 @@ Entry.toybot.getBlocks = function() {
                             direction = 0;
                             break;
                     }
-                    if (dc === 3 || dc ===  Lang.template.list_all) {
-                        const speed = Entry.toybot.checkRangeInteger((pwm * 51) * direction, -255, 255);
-                        Entry.hw.sendQueue['setblock'] = {
-                            id: Math.random(),
-                            dcControl: {
-                                id: [0, 1],
-                                speed: [speed, speed],
-                            }
-                        };
-                    } else {
-                        const id = Entry.toybot.checkRangeInteger(dc-1, 0, 1);
-                        const speed = Entry.toybot.checkRangeInteger((pwm * 51) * direction, -255, 255);
-                        Entry.hw.sendQueue['setblock'] = {
-                            id: Math.random(),
-                            dcControl: {
-                                id: [id],
-                                speed: [speed],
-                            }
-                        };
+                    const speed = Entry.toybot.checkRangeInteger((pwm * 51) * direction, -255, 255);
+                    const dc = [
+                        {
+                            id: 0,
+                            speed: speed
+                        },
+                        {
+                            id: 1,
+                            speed: speed
+                        }
+                    ];
+                    switch (id) {
+                        case 1:
+                        case 2:
+                            Entry.hw.sendQueue['setblock'] = {
+                                id: Math.random(),
+                                dcControl: [dc[id-1]]
+                            };
+                            break;
+                        case 3:
+                        case Lang.template.list_all:                            
+                            Entry.hw.sendQueue['setblock'] = {
+                                id: Math.random(),
+                                dcControl: dc
+                            };
+                            break;
                     }
 
                     return false;
@@ -1676,35 +1770,52 @@ Entry.toybot.getBlocks = function() {
             isNotFor: ['toybot'],
             func: function(sprite, script) {
                 return Entry.toybot.setProcessor(script, Entry.toybot.delayTime, function() {
-                    let servo = Entry.toybot.convert(script.getValue('SERVO', script));
+                    let id = Entry.toybot.convert(script.getValue('SERVO', script));
                     const datas = Entry.hw.portData['getblock'];
-                    if (servo === 5 || servo === Lang.template.list_all) {
-                        const result = [ 0, 0, 0, 0, 0 ];
-                        for (let i = 0; i < 5; i++) {
-                            const offset = datas['offset'][i];
-                            const calibration = datas['servo'][i] - 900 + offset;
-                            result[i] = Entry.toybot.checkRangeInteger(calibration, -900, 900);
+                    const servoOffset = [
+                        {
+                            id:0,
+                            offset: 0
+                        },
+                        {
+                            id:1,
+                            offset: 0
+                        },
+                        {
+                            id:2,
+                            offset: 0
+                        },
+                        {
+                            id:3,
+                            offset: 0
+                        },
+                        {
+                            id:4,
+                            offset: 0
                         }
-                        Entry.hw.sendQueue['setblock'] = {
-                            id: Math.random(),
-                            servoOffset: {
-                                id: [0, 1, 2, 3, 4],
-                                offset: result,
-                            }
-                        };
+                    ];
+                    for (let i = 0; i < 5; i++) {
+                        const offset = datas['offset'][i];
+                        const calibration = datas['servo'][i] - 900 + offset;
+                        servoOffset[i].offset = Entry.toybot.checkRangeInteger(calibration, -900, 900);
                     }
-                    else {
-                        const id = Entry.toybot.checkRangeInteger(servo, 0, 4);
-                        const offset = datas['offset'][servo];
-                        const calibration = datas['servo'][servo] - 900 + offset;
-                        const result = Entry.toybot.checkRangeInteger(calibration, -900, 900);
-                        Entry.hw.sendQueue['setblock'] = {
-                            id: Math.random(),
-                            servoOffset: {
-                                id: [id],
-                                offset: [result],
-                            }
-                        };
+                    switch (id) {
+                        case 0:
+                        case 1:
+                        case 2:
+                        case 3:
+                        case 4:
+                            Entry.hw.sendQueue['setblock'] = {
+                                id: Math.random(),
+                                servoOffset: [servoOffset[id]]
+                            };
+                            break;
+                        case 5:
+                            Entry.hw.sendQueue['setblock'] = {
+                                id: Math.random(),
+                                servoOffset: servoOffset
+                            };
+                            break;
                     }
 
                     return false;
@@ -1734,12 +1845,31 @@ Entry.toybot.getBlocks = function() {
             isNotFor: ['toybot'],
             func: function(sprite, script) {
                 return Entry.toybot.setProcessor(script, Entry.toybot.delayTime, function() {
+                    const servoOffset = [
+                        {
+                            id:0,
+                            offset: 0
+                        },
+                        {
+                            id:1,
+                            offset: 0
+                        },
+                        {
+                            id:2,
+                            offset: 0
+                        },
+                        {
+                            id:3,
+                            offset: 0
+                        },
+                        {
+                            id:4,
+                            offset: 0
+                        }
+                    ];  
                     Entry.hw.sendQueue['setblock'] = {
                         id: Math.random(),
-                        servoOffset: {
-                            id: [0, 1, 2, 3, 4],
-                            offset: [0, 0, 0, 0, 0],
-                        }
+                        servoOffset: servoOffset
                     };
 
                     return false;
