@@ -41,13 +41,13 @@ Entry.toybot = {
     },
     checkRangeInteger: function(value, min, max) {
         if (isNaN(value)) {
-            return NaN;
+            return 0;
         } else {
             let temp = parseInt(Math.round(value));
             if (temp < min)
-                temp = NaN;
+                temp = min;
             else if (temp > max)
-                temp = NaN;
+                temp = max;
             return temp;
         }
     },
