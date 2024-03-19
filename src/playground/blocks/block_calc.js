@@ -16,12 +16,7 @@ module.exports = {
                     },
                     {
                         type: 'Dropdown',
-                        options: [
-                            ['+', 'PLUS'],
-                            ['-', 'MINUS'],
-                            ['x', 'MULTI'],
-                            ['/', 'DIVIDE'],
-                        ],
+                        options: [['+', 'PLUS'], ['-', 'MINUS'], ['x', 'MULTI'], ['/', 'DIVIDE']],
                         value: 'PLUS',
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.CALC,
@@ -335,10 +330,7 @@ module.exports = {
                     },
                     {
                         type: 'Dropdown',
-                        options: [
-                            ['x', 'x'],
-                            ['y', 'y'],
-                        ],
+                        options: [['x', 'x'], ['y', 'y']],
                         value: 'x',
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.CALC,
@@ -386,10 +378,7 @@ module.exports = {
                                 },
                                 {
                                     type: 'Dropdown',
-                                    options: [
-                                        ['x', 'x'],
-                                        ['y', 'y'],
-                                    ],
+                                    options: [['x', 'x'], ['y', 'y']],
                                     value: 'x',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.colorSet.arrow.default.CALC,
@@ -2534,7 +2523,7 @@ module.exports = {
                 },
                 class: 'color',
                 isNotFor: [],
-                async func(sprite, script) {
+                func(sprite, script) {
                     const red = script.getNumberValue('RED', script);
                     const greeb = script.getNumberValue('GREEN', script);
                     const blue = script.getNumberValue('BLUE', script);
@@ -2553,11 +2542,7 @@ module.exports = {
                     },
                     {
                         type: 'Dropdown',
-                        options: [
-                            ['R', 'r'],
-                            ['G', 'g'],
-                            ['B', 'b'],
-                        ],
+                        options: [['R', 'r'], ['G', 'g'], ['B', 'b']],
                         value: 'RED',
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.CALC,
@@ -2580,7 +2565,7 @@ module.exports = {
                 },
                 class: 'color',
                 isNotFor: [],
-                async func(sprite, script) {
+                func(sprite, script) {
                     const color = script.getField('COLOR', script);
                     const value = script.getValue('HEX', script);
                     return Entry.hex2rgb(value)[color];
