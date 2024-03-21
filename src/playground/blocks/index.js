@@ -144,7 +144,7 @@ function registerHardwareBlockToStatic(hardwareModules) {
             } else {
                 EntryStatic.DynamicHardwareBlocks = _union(
                     hardware.blockMenuBlocks || [],
-                    EntryStatic.DynamicHardwareBlocks
+                    EntryStatic.DynamicHardwareBlocks || []
                 );
             }
         } catch (err) {
