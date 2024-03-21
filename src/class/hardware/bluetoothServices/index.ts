@@ -17,16 +17,16 @@ export const getServiceClassesByModuleId = (moduleId: string) => {
             {
                 // INFO : entryjs minify 과정에서 function.name 값이 uglify되는 이슈 대응
                 return [
-                    { ...DeviceInformationService, name: 'DeviceInformationService' },
-                    { ...ButtonService, name: 'ButtonService' },
-                    { ...LedService, name: 'LedService' },
-                    { ...TemperatureService, name: 'TemperatureService' },
-                    { ...AccelerometerService, name: 'AccelerometerService' },
-                    { ...MagnetometerService, name: 'MagnetometerService' },
-                    { ...UartService, name: 'UartService' },
-                    { ...EventService, name: 'EventService' },
-                    { ...DfuControlService, name: 'DfuControlService' },
-                    { ...IoPinService, name: 'IoPinService' },
+                    DeviceInformationService,
+                    ButtonService,
+                    LedService,
+                    TemperatureService,
+                    AccelerometerService,
+                    MagnetometerService,
+                    UartService,
+                    EventService,
+                    DfuControlService,
+                    IoPinService,
                 ];
             }
             break;

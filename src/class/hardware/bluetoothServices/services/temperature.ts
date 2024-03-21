@@ -58,6 +58,7 @@ export interface TemperatureEvents {
 export class TemperatureService extends (EventDispatcher as new () => TypedDispatcher<
     TemperatureEvents
 >) {
+    public static serviceName = 'TemperatureService';
     /**
      * @hidden
      */

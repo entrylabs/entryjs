@@ -36,6 +36,7 @@ export enum DfuCharacteristic {
  * @hidden
  */
 export class DfuControlService {
+    public static serviceName = 'DfuControlService';
     /**
      * @hidden
      */

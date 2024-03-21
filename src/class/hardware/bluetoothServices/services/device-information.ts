@@ -66,6 +66,7 @@ export interface DeviceInformation {
  * Device Information Service
  */
 export class DeviceInformationService {
+    public static serviceName = 'DeviceInformationService';
     /**
      * @hidden
      */
