@@ -5684,7 +5684,7 @@ Lang.Helper = {
     calc_operation:
         'Reports calculated values of a variety of equations relating to input numbers.',
     get_date:
-        'Reports the values regarding the current year, month, day, day of the week and time.',
+        'Reports the values regarding the current year, month, day, day of the week and time.\n- Year: Returns the current year.\n- Month: Returns the current month.\n- Day: Returns the current day.\n- Day of the week: Returns the current day of the week as a number.\nReturns Sunday, Monday, Tuesdays, Wednesdays, Thursdays, Fridays, Saturdays as 0, 1, 2, 3, 4, 5, 6 in turn.\n- Time: Returns the current time in hours, minutes, and seconds, respectively.',
     distance_something: 'Reports the distance between the object and the selected object.',
     get_sound_duration: 'Reports the time length of the selected sound.',
     get_user_name: 'Reports the username who runs the project.',
