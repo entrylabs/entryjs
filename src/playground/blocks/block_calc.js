@@ -2551,7 +2551,11 @@ module.exports = {
                     },
                     {
                         type: 'Dropdown',
-                        options: [['R', 'r'], ['G', 'g'], ['B', 'b']],
+                        options: [
+                            ['R', 'r'],
+                            ['G', 'g'],
+                            ['B', 'b'],
+                        ],
                         value: 'RED',
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.CALC,
