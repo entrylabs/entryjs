@@ -1403,9 +1403,7 @@ module.exports = {
                     } else if (operator === 'MINUTE') {
                         return dateTime.getMinutes();
                     } else if (operator === 'DAY_OF_WEEK') {
-                        const daysLang = ['일', '월', '화', '수', '목', '금', '토'];
-                        const dayNum = dateTime.getDay();
-                        return daysLang[dayNum];
+                        return dateTime.getDay();
                     } else {
                         return dateTime.getSeconds();
                     }
