@@ -130,7 +130,11 @@ import WebUsbFlasher from '../../class/hardware/webUsbFlasher';
                 sound.id = hashId;
                 delete c[COMMAND_TYPES.objectAddSound].hashId;
             }
-            Entry.container.getObject(objectId).addSound(sound);
+            const object = Entry.container.getObject(objectId);
+            if (!object.selectedSound) {
+                object.selectedSound = sound;
+            }
+            object.addSound(sound);
             Entry.playground.injectSound(isSelect);
             isSelect && Entry.playground.selectSound(sound);
             Entry.dispatchEvent('dismissModal');
