@@ -153,7 +153,7 @@ Entry.Dalgona_basic = {
     },
     BlockState: {},
 };
-Entry.Dalgona.setLanguage = function() {
+Entry.Dalgona_basic.setLanguage = function() {
     return {
         ko: {
             template: {
@@ -420,9 +420,9 @@ Entry.Dalgona_basic.blockMenuBlocks = [
     // 'dalgona_basic_is_rfid_tapped',
     // 'dalgona_basic_get_rfid_value',
 
-    // 'dalgona_basic_motor_title',
-    // 'dalgona_basic_set_digital_dcmotor',
-    // 'dalgona_basic_set_analog_dcmotor',
+    'dalgona_basic_motor_title',
+    'dalgona_basic_set_digital_dcmotor',
+    'dalgona_basic_set_analog_dcmotor',
     // 'dalgona_basic_set_digital_servo',
     // 'dalgona_basic_set_digital_servo2',
 
