@@ -81,6 +81,7 @@ export interface AccelerometerEvents {
 export class AccelerometerService extends (EventDispatcher as new () => TypedDispatcher<
     AccelerometerEvents
 >) {
+    public static serviceName = 'AccelerometerService';
     /**
      * @hidden
      */
