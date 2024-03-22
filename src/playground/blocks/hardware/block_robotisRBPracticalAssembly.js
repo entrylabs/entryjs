@@ -2817,76 +2817,32 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             func: function (sprite, script) {
                 var scope = script.executor.scope;
 
-                // instruction / address / length / value / default length
-                var data_instruction = Entry.Robotis_rb.INSTRUCTION.BYPASS_READ;
-                var data_address = 0;
-                var data_length = 1;
-                var data_id = 100;
-
-                var data_default_address = 0;
-                var data_default_length = 0;
+                var data_address = script.getNumberValue('ADDR');
                 var compareValue = script.getNumberValue('COMPARE_VAL');
                 var compareOP = script.getNumberValue('COMPARE_OP');
 
-                data_address = script.getNumberValue('ADDR');
+                let device_id_name = "";
 
-                data_default_address = data_address;
-                data_default_length = data_length;
+                switch (data_address) {
+                    case 28:
+                        device_id_name = "PIR_100_TEMPERATURE";
+                        break;
+                    
+                    case 29:
+                        device_id_name = "PIR_100_HUMIDITY";
+                        break;
+                        
+                    case 30:
+                        device_id_name = "PIR_100_BRIGHTNESS";
+                        break;
 
-                if (
-                    Entry.hw.sendQueue.prevAddress &&
-                    Entry.hw.sendQueue.prevAddress == data_default_address
-                ) {
-                    if (
-                        Entry.hw.sendQueue.prevTime &&
-                        new Date() - Entry.hw.sendQueue.prevTime < 200//Entry.Robotis_openCM70.readDelay//200
-                    ) {
-                        //throw new Entry.Utils.AsyncError();
-                
-                        //  return false;
-                        switch(compareOP) {
-                            case 0:
-                                return Entry.hw.sendQueue.prevResult > compareValue;
-                            case 1:
-                                return Entry.hw.sendQueue.prevResult < compareValue;
-                            case 2:
-                                return Entry.hw.sendQueue.prevResult == compareValue;
-                            default:
-                                return false;
-                        }
-                    }
+                    case 27:
+                        device_id_name = "PIR_100_PIR";
+                        break;
                 }
 
-                Entry.Robotis_carCont.setRobotisData([
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        data_id,
-                        data_default_length,
-                    ],
-                ]);
-                
-                
-                Entry.Robotis_carCont.update();
-
-                
-                // 통합센서의 컨트롤 테이블 주소는 RB-100블록에서 사용하지 않는 주소를 사용
-                // 주소 겹침 방지
-                var result = Entry.hw.portData[data_default_address];
-                if (result == undefined)
-                {
-                    result = rb100_last_valid_value[data_default_address];
-                }
-                else
-                {
-                    rb100_last_valid_value[data_default_address] = result;
-                }
-                Entry.hw.sendQueue.prevAddress = data_default_address;
-                Entry.hw.sendQueue.prevTime = new Date();
-                Entry.hw.sendQueue.prevResult = result;
-
-                if(result == undefined) {
+                var result = Entry.hw.portData[device_id_name];
+                if (typeof result == 'undefined') {
                     return false;
                 }
 
@@ -2917,10 +2873,14 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.robotis_left_wheel, '34'],
-                        [Lang.Blocks.robotis_right_wheel, '33'],
+                        [Lang.Blocks.robotis_left_wheel, '52'],
+                        [Lang.Blocks.robotis_right_wheel, '51'],
+                        ["ID 1", '1'],
+                        ["ID 2", '2'],
+                        ["ID 3", '3'],
+                        ["ID 4", '4'],
                     ],
-                    value: '34',
+                    value: '52',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -2940,7 +2900,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             events: {},
             def: {
                 params: [
-                    34,
+                    52,
                     null,
                 ],
                 type: 'robotis_Practice_dxl_value',
@@ -2954,91 +2914,24 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             func: function (sprite, script) {
                 var scope = script.executor.scope;
 
-                // instruction / address / length / value / default length
-                var data_instruction = Entry.Robotis_rb.INSTRUCTION.BYPASS_READ;
-                var data_address = 0;
-                var data_length = 1;
                 var dxl_id = script.getNumberValue('ID');
-                var data_type = script.getNumberValue('TYPE');
+                //var data_type = script.getNumberValue('TYPE');
+                let device_id_name = `DXL_POS_${dxl_id}`;
 
-                var data_default_address = 0;
-                var data_default_length = 0;
-
-                if (data_type == 1) {
-                    data_address = Entry.Robotis_rb.CONTROL_TABLE.DXL_PRESENT_POSITION[0];
-                    data_length = Entry.Robotis_rb.CONTROL_TABLE.DXL_PRESENT_POSITION[1];
-                } else if (data_type == 2) {
-                    data_address = Entry.Robotis_rb.CONTROL_TABLE.DXL_PRESENT_VELOCITY[0];
-                    data_length = Entry.Robotis_rb.CONTROL_TABLE.DXL_PRESENT_VELOCITY[1];
-                } else if (data_type == 3) {
-                    data_address = Entry.Robotis_rb.CONTROL_TABLE.DXL_IS_MOVING[0];
-                    data_length = Entry.Robotis_rb.CONTROL_TABLE.DXL_IS_MOVING[1];
-                }
-
-                data_default_address = data_address;
-                data_default_length = data_length;
-
-                if (
-                    Entry.hw.sendQueue.prevAddress &&
-                    Entry.hw.sendQueue.prevAddress == data_default_address
-                ) {
-                    if (
-                        Entry.hw.sendQueue.prevTime &&
-                        new Date() - Entry.hw.sendQueue.prevTime < Entry.Robotis_openCM70.readDelay
-                    ) {
-                        //throw new Entry.Utils.AsyncError();
-                        if (typeof Entry.hw.sendQueue.prevResult == 'undefined') {
-                            return 0;
-                        }
-                        return Entry.hw.sendQueue.prevResult;
-                    }
-                }
-
-                Entry.Robotis_carCont.setRobotisData([
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        dxl_id,
-                        data_default_length,
-                    ],
-                ]);
-                // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-                Entry.Robotis_carCont.update();
-
-                // 통합센서의 컨트롤 테이블 주소는 RB-100블록에서 사용하지 않는 주소를 사용
-                // 주소 겹침 방지
-                var result = Entry.hw.portData[data_default_address];
-                if (result == undefined) {
-                    result = dxl_last_valid_value[data_default_address];
-                }
-                else {
-                    if (data_type == 1) {
-                        result = 180 - Math.floor(result * 360 / 4096);
-                        while (result < 0) result += 360;
-                        while (result >= 360) result -= 360;
-                    }
-                    else if (data_type == 2) {
-                        if (result < -1000) result = -1000;
-                        else if (result > 1000) result = 1000;
-                        result = Math.round(result / 10);
-                    }
-                    dxl_last_valid_value[data_default_address] = result;
-                }
-                Entry.hw.sendQueue.prevAddress = data_default_address;
-                Entry.hw.sendQueue.prevTime = new Date();
-                Entry.hw.sendQueue.prevResult = result;
+                var result = Entry.hw.portData[device_id_name];
 
                 if (typeof result == 'undefined') {
-
                     return 0;
                 }
+                result = 180 - Math.round(result * 360 / 4096);
+                while (result < -180) result += 360;
+                while (result > 180) result -= 360;
 
                 return result;
             },
             syntax: {
                 js: [],
-                py: ['Robotis.get_dxl_value(%1, %2)'],
+                py: ['Robotis.get_dxl_value(%1)'],
             },
         },
         robotis_Practice_line_cross_compare:{
