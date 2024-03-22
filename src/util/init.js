@@ -247,6 +247,8 @@ Entry.initialize_ = function() {
 };
 
 Entry.disposeContainer = function() {
+    this._destroyer = this._destroyer || new Destroyer();
+    this._destroyer.destroy();
     while (this.view_.firstChild) {
         this.view_.removeChild(this.view_.firstChild);
     }
