@@ -46,6 +46,10 @@ Entry.EntryObject = class {
                     : this.getPicture(model.selectedPictureId);
             }
 
+            if (this.sounds?.length) {
+                this.selectedSound = this.sounds[0];
+            }
+
             this.scene = Entry.scene.getSceneById(model.scene) || Entry.scene.selectedScene;
 
             this.setRotateMethod(model.rotateMethod);
@@ -410,6 +414,14 @@ Entry.EntryObject = class {
         this.updateThumbnailView();
     }
 
+    selectSound(soundId) {
+        const sound = this.getSound(soundId);
+        if (!sound) {
+            throw new Error(`No sound with soundId : ${soundId}`);
+        }
+        this.selectedSound = sound;
+    }
+
     /**
      * Add sound to object
      * @param {sound model} sound
@@ -426,7 +438,8 @@ Entry.EntryObject = class {
         } else {
             this.sounds.splice(index, 0, sound);
         }
-        Entry.playground.injectSound();
+
+        Entry.playground.injectSound(this);
     }
 
     /**
@@ -434,10 +447,21 @@ Entry.EntryObject = class {
      * @param {string} soundId
      */
     removeSound(soundId) {
+        const playground = Entry.playground;
+        const sound = this.getSound(soundId);
+
         const index = _findIndex(this.sounds, (sound) => sound.id === soundId);
         this.sounds.splice(index, 1);
-        Entry.playground.reloadPlayground();
+        if (sound === this.selectedSound) {
+            if (this.sounds?.length) {
+                playground.selectSound(this.sounds[0], true);
+            } else {
+                this.selectedSound = undefined;
+            }
+        }
+
         Entry.playground.injectSound();
+        Entry.playground.reloadPlayground();
     }
 
     /**
@@ -607,6 +631,10 @@ Entry.EntryObject = class {
         //1. soundId
         //2. soundName
         //3. index
+        if (!value) {
+            return this.selectedSound;
+        }
+
         value = String(value).trim();
         const sounds = this.sounds;
         const len = sounds.length;

@@ -536,43 +536,6 @@ module.exports = {
                     ],
                 },
             },
-            get_sound_volume: {
-                color: EntryStatic.colorSet.block.default.CALC,
-                outerLine: EntryStatic.colorSet.block.darken.CALC,
-                skeleton: 'basic_string_field',
-                statements: [],
-                params: [
-                    {
-                        type: 'Text',
-                        text: Lang.Blocks.CALC_get_sound_volume,
-                        color: '#FFF',
-                    },
-                    {
-                        type: 'Text',
-                        text: '',
-                        color: '#FFF',
-                    },
-                ],
-                events: {},
-                def: {
-                    params: [null, null],
-                    type: 'get_sound_volume',
-                },
-                class: 'calc',
-                isNotFor: [],
-                func() {
-                    return Entry.Utils.getVolume() * 100;
-                },
-                syntax: {
-                    js: [],
-                    py: [
-                        {
-                            syntax: 'Entry.value_of_sound_volume()',
-                            blockType: 'param',
-                        },
-                    ],
-                },
-            },
             quotient_and_mod: {
                 color: EntryStatic.colorSet.block.default.CALC,
                 outerLine: EntryStatic.colorSet.block.darken.CALC,
@@ -1440,9 +1403,7 @@ module.exports = {
                     } else if (operator === 'MINUTE') {
                         return dateTime.getMinutes();
                     } else if (operator === 'DAY_OF_WEEK') {
-                        const daysLang = ['일', '월', '화', '수', '목', '금', '토'];
-                        const dayNum = dateTime.getDay();
-                        return daysLang[dayNum];
+                        return dateTime.getDay();
                     } else {
                         return dateTime.getSeconds();
                     }
@@ -1548,76 +1509,6 @@ module.exports = {
                                     arrowColor: EntryStatic.colorSet.arrow.default.CALC,
                                     converter: Entry.block.converters.returnStringKey,
                                     codeMap: 'Entry.CodeMap.Entry.distance_something[1]',
-                                },
-                            ],
-                        },
-                    ],
-                },
-            },
-            get_sound_duration: {
-                color: EntryStatic.colorSet.block.default.CALC,
-                outerLine: EntryStatic.colorSet.block.darken.CALC,
-                skeleton: 'basic_string_field',
-                statements: [],
-                params: [
-                    {
-                        type: 'Text',
-                        text: Lang.Blocks.CALC_get_sound_duration_1,
-                        color: '#FFF',
-                    },
-                    {
-                        type: 'DropdownDynamic',
-                        value: null,
-                        menuName: 'sounds',
-                        fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.CALC,
-                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
-                    },
-                    {
-                        type: 'Text',
-                        text: Lang.Blocks.CALC_get_sound_duration_2,
-                        color: '#FFF',
-                    },
-                ],
-                events: {},
-                def: {
-                    params: [null, null, null],
-                    type: 'get_sound_duration',
-                },
-                pyHelpDef: {
-                    params: [null, 'A&value', null],
-                    type: 'get_sound_duration',
-                },
-                paramsKeyMap: {
-                    VALUE: 1,
-                },
-                class: 'calc_duration',
-                isNotFor: [],
-                func(sprite, script) {
-                    const soundId = script.getField('VALUE', script);
-                    const soundsArr = sprite.parent.sounds;
-
-                    for (let i = 0; i < soundsArr.length; i++) {
-                        if (soundsArr[i].id === soundId) {
-                            return soundsArr[i].duration;
-                        }
-                    }
-                },
-                syntax: {
-                    js: [],
-                    py: [
-                        {
-                            syntax: 'Entry.value_of_sound_length_of(%2)',
-                            blockType: 'param',
-                            textParams: [
-                                undefined,
-                                {
-                                    type: 'DropdownDynamic',
-                                    value: null,
-                                    menuName: 'sounds',
-                                    fontSize: 11,
-                                    arrowColor: EntryStatic.colorSet.arrow.default.CALC,
-                                    converter: Entry.block.converters.returnStringKey,
                                 },
                             ],
                         },
@@ -2641,7 +2532,7 @@ module.exports = {
                 },
                 class: 'color',
                 isNotFor: [],
-                async func(sprite, script) {
+                func(sprite, script) {
                     const red = script.getNumberValue('RED', script);
                     const greeb = script.getNumberValue('GREEN', script);
                     const blue = script.getNumberValue('BLUE', script);
@@ -2687,7 +2578,7 @@ module.exports = {
                 },
                 class: 'color',
                 isNotFor: [],
-                async func(sprite, script) {
+                func(sprite, script) {
                     const color = script.getField('COLOR', script);
                     const value = script.getValue('HEX', script);
                     return Entry.hex2rgb(value)[color];

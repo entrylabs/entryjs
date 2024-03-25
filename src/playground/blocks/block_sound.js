@@ -52,7 +52,7 @@ module.exports = {
 
                     if (sound) {
                         const instance = Entry.Utils.playSound(sound.id);
-                        Entry.Utils.addSoundInstances(instance);
+                        Entry.Utils.addSoundInstances(instance, sprite);
                     }
 
                     return script.callReturn();
@@ -134,7 +134,7 @@ module.exports = {
                             startTime: 0,
                             duration: timeValue * 1000,
                         });
-                        Entry.Utils.addSoundInstances(instance);
+                        Entry.Utils.addSoundInstances(instance, sprite);
                     }
                     return script.callReturn();
                 },
@@ -229,7 +229,7 @@ module.exports = {
                             startTime: Math.min(start, end),
                             duration: Math.max(start, end) - Math.min(start, end),
                         });
-                        Entry.Utils.addSoundInstances(instance);
+                        Entry.Utils.addSoundInstances(instance, sprite);
                     }
                     return script.callReturn();
                 },
@@ -292,7 +292,7 @@ module.exports = {
                         if (sound) {
                             script.playState = 1;
                             const instance = Entry.Utils.playSound(sound.id);
-                            Entry.Utils.addSoundInstances(instance);
+                            Entry.Utils.addSoundInstances(instance, sprite);
                             setTimeout(() => {
                                 script.playState = 0;
                             }, sound.duration * 1000);
@@ -379,7 +379,7 @@ module.exports = {
                         if (sound) {
                             script.playState = 1;
                             const instance = Entry.Utils.playSound(sound.id);
-                            Entry.Utils.addSoundInstances(instance);
+                            Entry.Utils.addSoundInstances(instance, sprite);
                             const timeValue = script.getNumberValue('SECOND', script);
                             setTimeout(() => {
                                 instance.stop();
@@ -493,7 +493,7 @@ module.exports = {
                                 startTime: startValue,
                                 duration,
                             });
-                            Entry.Utils.addSoundInstances(instance);
+                            Entry.Utils.addSoundInstances(instance, sprite);
 
                             setTimeout(() => {
                                 script.playState = 0;
@@ -625,6 +625,27 @@ module.exports = {
                     return script.callReturn();
                 },
                 syntax: { js: [], py: ['Entry.set_sound_volume(%1)'] },
+            },
+            get_sound_speed: {
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
+                skeleton: 'basic_string_field',
+                statements: [],
+                params: [],
+                events: {},
+                def: {
+                    params: [null],
+                    type: 'get_sound_speed',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                class: 'sound_speed',
+                isNotFor: [],
+                func() {
+                    return Entry.playbackRateValue;
+                },
+                syntax: { js: [], py: ['Entry.stop_sound()'] },
             },
             sound_speed_change: {
                 color: EntryStatic.colorSet.block.default.SOUND,
@@ -766,7 +787,7 @@ module.exports = {
                             Entry.Utils.forceStopSounds();
                             return script.callReturn();
                         case 'thisOnly': {
-                            const instances = Entry.soundInstances.getAll(sprite);
+                            const instances = [...Entry.soundInstances.getAll(sprite)];
                             instances.forEach((instance) => {
                                 instance?.dispatchEvent?.('complete');
                                 instance.stop();
@@ -774,7 +795,7 @@ module.exports = {
                             return script.callReturn();
                         }
                         case 'other_objects': {
-                            const instances = Entry.soundInstances.getAllExcept(sprite);
+                            const instances = [...Entry.soundInstances.getAllExcept(sprite)];
                             instances.forEach((instance) => {
                                 instance?.dispatchEvent?.('complete');
                                 instance.stop();
@@ -785,6 +806,180 @@ module.exports = {
                     return script.callReturn();
                 },
                 syntax: { js: [], py: ['Entry.stop_sound()'] },
+            },
+            play_bgm: {
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/sound_icon.svg',
+                        size: 11,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [
+                        {
+                            type: 'get_sounds',
+                        },
+                        null,
+                    ],
+                    type: 'play_bgm',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                class: 'bgm',
+                isNotFor: [],
+                func(sprite, script) {
+                    const soundId = script.getStringValue('VALUE', script);
+                    const sound = sprite.parent.getSound(soundId);
+
+                    if (sound) {
+                        Entry.Utils.forceStopBGM();
+                        const instance = Entry.Utils.playBGM(sound.id);
+                        Entry.Utils.addBGMInstances(instance);
+                    }
+                    return script.callReturn();
+                },
+                syntax: { js: [], py: ['Entry.stop_sound()'] },
+            },
+            stop_bgm: {
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/sound_icon.svg',
+                        size: 11,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null],
+                    type: 'stop_bgm',
+                },
+                paramsKeyMap: {
+                    TARGET: 0,
+                },
+                class: 'bgm',
+                isNotFor: [],
+                func(sprite, script) {
+                    Entry.Utils.forceStopBGM();
+                    return script.callReturn();
+                },
+                syntax: { js: [], py: ['Entry.stop_sound()'] },
+            },
+            get_sound_volume: {
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
+                skeleton: 'basic_string_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'Text',
+                        text: Lang.Blocks.CALC_get_sound_volume,
+                        color: '#FFF',
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null],
+                    type: 'get_sound_volume',
+                },
+                class: 'sound_volume',
+                isNotFor: [],
+                func() {
+                    return Entry.Utils.getVolume() * 100;
+                },
+                syntax: {
+                    js: [],
+                    py: [
+                        {
+                            syntax: 'Entry.value_of_sound_volume()',
+                            blockType: 'param',
+                        },
+                    ],
+                },
+            },
+            get_sound_duration: {
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
+                skeleton: 'basic_string_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'Text',
+                        text: Lang.Blocks.CALC_get_sound_duration_1,
+                        color: '#FFF',
+                    },
+                    {
+                        type: 'DropdownDynamic',
+                        value: null,
+                        menuName: 'sounds',
+                        fontSize: 10,
+                        bgColor: EntryStatic.colorSet.block.darken.SOUND,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                    },
+                    {
+                        type: 'Text',
+                        text: Lang.Blocks.CALC_get_sound_duration_2,
+                        color: '#FFF',
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null, null, null],
+                    type: 'get_sound_duration',
+                },
+                pyHelpDef: {
+                    params: [null, 'A&value', null],
+                    type: 'get_sound_duration',
+                },
+                paramsKeyMap: {
+                    VALUE: 1,
+                },
+                class: 'sound_duration',
+                isNotFor: [],
+                func(sprite, script) {
+                    const soundId = script.getField('VALUE', script);
+                    const soundsArr = sprite.parent.sounds;
+
+                    for (let i = 0; i < soundsArr.length; i++) {
+                        if (soundsArr[i].id === soundId) {
+                            return soundsArr[i].duration;
+                        }
+                    }
+                },
+                syntax: {
+                    js: [],
+                    py: [
+                        {
+                            syntax: 'Entry.value_of_sound_length_of(%2)',
+                            blockType: 'param',
+                            textParams: [
+                                undefined,
+                                {
+                                    type: 'DropdownDynamic',
+                                    value: null,
+                                    menuName: 'sounds',
+                                    fontSize: 11,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.SOUND,
+                                    converter: Entry.block.converters.returnStringKey,
+                                },
+                            ],
+                        },
+                    ],
+                },
             },
         };
     },

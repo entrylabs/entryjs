@@ -28,15 +28,19 @@ function initHardwareLiteList() {
 
     metaDataListReq.keys().forEach((fileName) => {
         const metaData = metaDataListReq(fileName);
-        const moduleId = `${metaData.moduleId.substring(0, 2).replace(/(^0+)/, "")}.${metaData.moduleId.substring(2, 4).replace(/(^0+)/, "")}`;
+        // const moduleId = `${metaData.moduleId.substring(0, 2).replace(/(^0+)/, "")}.${metaData.moduleId.substring(2, 4).replace(/(^0+)/, "")}`;
+        const moduleId = metaData.moduleId;
 
         if (Entry.HARDWARE_LITE_LIST[moduleId]) {
             Entry.HARDWARE_LITE_LIST[moduleId].title = { ko: metaData.title };
             Entry.HARDWARE_LITE_LIST[moduleId].description = metaData.description;
-            Entry.HARDWARE_LITE_LIST[moduleId].linkBox = { desc: '고객센터', url: Entry.HARDWARE_LITE_LIST[moduleId].url }
+            Entry.HARDWARE_LITE_LIST[moduleId].linkBox = {
+                desc: '고객센터',
+                url: Entry.HARDWARE_LITE_LIST[moduleId].url,
+            };
         } else {
             console.error(`Error, HardwareLiteID ${moduleId} not contain module`);
-        };
+        }
     });
 }
 

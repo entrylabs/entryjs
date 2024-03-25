@@ -529,12 +529,10 @@ Entry.Code = class Code {
         const isPromise = values.some((value) => value instanceof Promise);
         if (!isPromise) {
             scope.values = values;
-            return scope.getValue('VALUE', scope);
         } else {
-            const aValues = await Promise.all(values);
-            scope.values = aValues;
-            return scope.getValue('VALUE', scope);
+            scope.values = await Promise.all(values);
         }
+        return scope.getValue('VALUE', scope);
     };
 
     static funcValueAsyncExecute = async (funcCode, funcExecutor, _promises = []) => {
@@ -578,7 +576,7 @@ Entry.Code = class Code {
         });
     };
 
-    static funcValueRestExecute = async (funcCode, funcExecutor) => {
+    static funcRestExecute = async (funcCode, funcExecutor) => {
         if (!Entry.engine.isState('run')) {
             funcCode.removeExecutor(funcExecutor);
             return await this.getAsyncParamsData(funcExecutor.result);
@@ -603,10 +601,11 @@ Entry.Code = class Code {
                                 return reject(e);
                             }
                         } else {
-                            return resolve(await this.funcValueRestExecute(funcCode, funcExecutor));
+                            return resolve(await this.funcRestExecute(funcCode, funcExecutor));
                         }
                     }
                     resolve(await this.getAsyncParamsData(funcExecutor.result));
+                    funcCode.removeExecutor(funcExecutor);
                 } catch (e) {
                     reject(e);
                 }

@@ -1126,11 +1126,12 @@ class Cube extends ArduinoBase {
     }
 
     is_tilted_in_direction (sprite, script) {
+        const reference = 35;
         switch (script.getStringValue('DIRECTION')) {
-            case 'forward': return this.state.rx.gyro.angle.y >= 30;
-            case 'right': return this.state.rx.gyro.angle.x >= 30;
-            case 'backward': return this.state.rx.gyro.angle.y <= -30;
-            case 'left': return this.state.rx.gyro.angle.x <= -30;
+            case 'forward': return this.state.rx.gyro.angle.y >= reference;
+            case 'right': return this.state.rx.gyro.angle.x >= reference;
+            case 'backward': return this.state.rx.gyro.angle.y <= -reference;
+            case 'left': return this.state.rx.gyro.angle.x <= -reference;
             default: return false;
         }
     }

@@ -1897,6 +1897,10 @@ Lang.Buttons = {
     lecture_view_hints: 'View hints',
     default_hint_title: 'How do you make it?',
     show_only_vector: 'Only Vector',
+    sound_menu_trim: 'Trim',
+    sound_menu_adjust: 'Adjust',
+    sound_button_reset: 'Reset',
+    sound_button_save: 'Save',
 };
 Lang.Menus = {
     nothing_to_import: 'There is no content to upload.',
@@ -4712,7 +4716,7 @@ Lang.Menus = {
         'Venture into the forest, and fight against the bad monsters to save the good monsters!',
     solve_elnath_desc_1:
         'Passing through the snow mountain occupied by bad monsters, go find another portal to start a new adventure!',
-    save_modified_shape: 'Do you want to save the modified shape?',
+    save_modified_shape: 'You have unsaved changes.\nDo you want to save?',
     save_modified_table: 'Do you want to save the modified table?',
     attach_file: 'File',
     enter_discuss_title: 'Please enter the title(in 40 characters or less)',
@@ -4925,7 +4929,7 @@ Lang.Msgs = {
         'It is a collection of blocks that can read text in a variety of voice using the Clova.',
     hardware_need_update_title: 'Entry HW update',
     hardware_need_update_content:
-        "Please update to the latest version,\nif you are using below version.\nEntry website only supported v1.9.0 or later.\nPlease remove the web browser cache,\nif any block doesn't appear after updating.",
+        "Please update to the latest version,\nif you are using below version.\nEntry website only supported v1.9.51 or later.\nPlease remove the web browser cache,\nif any block doesn't appear after updating.",
     ai_utilize_audio_description:
         'It is a collection of blocks related to speech to text functionalities.',
     ai_utilize_video_description:
@@ -4937,13 +4941,20 @@ Lang.Msgs = {
     warning_function_aleady_being_edited:
         "To add a new function,\nclick 'Save' or 'Cancel' to exit\nthe Add function screen.",
     ai_utilize_pose_landmarker_description:
-        '카메라를 이용하여 사람의 신체를 인식하는 블록들의 모음입니다.',
+        'It is a collection of blocks that detect human bodies using camera.',
     ai_utilize_face_landmarker_description:
-        '카메라를 이용하여 얼굴을 인식하는 블록들의 모음입니다.',
+        'It is a collection of blocks that detect human faces using camera.',
     ai_utilize_object_detector_description:
-        '카메라를 이용하여 사물을 인식하는 블록들의 모음입니다.',
+        'It is a collection of blocks that detect objects using camera.',
     ai_utilize_gesture_recognition_description:
-        '카메라를 이용하여 손을 인식하는 블록들의 모음입니다.',
+        'It is a collection of blocks that detect human hands using camera.',
+    sound_empty1: 'Click [Add Sound] to add sound.',
+    sound_empty2: 'How to add sound',
+    sound_empty3: "On the 'Select sound' tab, select the default sound provided by the Entry.",
+    sound_empty4: "On the 'Upload files' tab, upload the MP3 file directly.",
+    sound_empty5:
+        "You can cut only the parts you need in the 'Trim' mode, or adjust the volume, speed and pitch in the 'Adjust' mode.",
+    sound_loading: 'Loading sound',
 };
 Lang.Users = {
     auth_failed: 'Authentication failed',
@@ -5021,6 +5032,12 @@ Lang.Workspace = {
     face_landmarker_title_text: 'Face Detection',
     object_detector_title_text: 'Object detection',
     gesture_recognition_title_text: 'Hand detection',
+    sound_start_point: 'Start point',
+    sound_end_point: 'End point',
+    sound_selection: 'Selection',
+    sound_volume: 'Volume',
+    sound_speed: 'Speed',
+    sound_pitch: 'Pitch',
     SelectShape: 'Move',
     SelectCut: 'Cut',
     Pencil: 'Pen',
@@ -5623,9 +5640,12 @@ Lang.Helper = {
         "Plays object's selected sound for the input seconds and then runs the next block.",
     sound_volume_change: 'Changes the volume of all sounds by the input value.',
     sound_volume_set: 'Sets the volume of all sounds to the input value.',
+    get_sound_speed: 'Reports the sound speed.',
     sound_speed_change: 'Changes the speed of all sounds by the input value.',
     sound_speed_set: 'Sets the speed of all sounds to the input value.',
     sound_silent_all: 'Stops the selected sound.',
+    play_bgm: 'Plays selected sound as background music while the next block runs.',
+    stop_bgm: 'Stops background music',
     is_clicked: 'Checks whether mouse is clicked.',
     is_object_clicked: 'Checks whether object is clicked.',
     is_press_some_key: 'Checks whether an selected key is pressed.',
@@ -5664,7 +5684,7 @@ Lang.Helper = {
     calc_operation:
         'Reports calculated values of a variety of equations relating to input numbers.',
     get_date:
-        'Reports the values regarding the current year, month, day, day of the week and time.',
+        'Reports the values regarding the current year, month, day, day of the week and time.\n- Year: Returns the current year.\n- Month: Returns the current month.\n- Day: Returns the current day.\n- Day of the week: Returns the current day of the week as a number.\nReturns Sunday, Monday, Tuesdays, Wednesdays, Thursdays, Fridays, Saturdays as 0, 1, 2, 3, 4, 5, 6 in turn.\n- Time: Returns the current time in hours, minutes, and seconds, respectively.',
     distance_something: 'Reports the distance between the object and the selected object.',
     get_sound_duration: 'Reports the time length of the selected sound.',
     get_user_name: 'Reports the username who runs the project.',
@@ -6930,9 +6950,12 @@ Lang.template = {
     sound_something_second_wait: 'Play %1 Sound for %2 secs and wait %3',
     sound_volume_change: 'Change volume by %1 %2',
     sound_volume_set: 'Set volume to %1 % %2',
+    get_sound_speed: 'Speed',
     sound_speed_change: 'Change speed by %1 %2',
     sound_speed_set: 'Set speed at %1 times %2',
     sound_silent_all: 'Stop sound of %1 %2',
+    play_bgm: 'Play %1 as background music %2',
+    stop_bgm: 'Stop background music %1',
     get_sounds: '%1  ',
     sound_something_with_block: 'Play %1 sound %2',
     sound_something_second_with_block: 'Play %1 sound for %2 secs %3',

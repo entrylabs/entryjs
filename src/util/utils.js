@@ -2720,8 +2720,28 @@ Entry.Utils.getVolume = function() {
     return 1;
 };
 
+Entry.Utils.playBGM = function(id, option = {}) {
+    const instance = createjs.Sound.play(id, Object.assign({ volume: 1 }, option));
+    return instance;
+};
+
+Entry.Utils.addBGMInstances = function(instance, sprite = 'global') {
+    Entry.bgmInstances.add(sprite, instance);
+    instance.on('complete', () => {
+        Entry.bgmInstances.deleteItemByKeyAndValue(sprite, instance);
+    });
+};
+
+Entry.Utils.forceStopBGM = function() {
+    _.each([...Entry.bgmInstances.getAllValues()], (instance) => {
+        instance?.dispatchEvent?.('complete');
+        instance?.stop?.();
+    });
+    Entry.bgmInstances.clear();
+};
+
 Entry.Utils.forceStopSounds = function() {
-    _.each(Entry.soundInstances.getAllValues(), (instance) => {
+    _.each([...Entry.soundInstances.getAllValues()], (instance) => {
         instance?.dispatchEvent?.('complete');
         instance?.stop?.();
     });
@@ -2747,10 +2767,17 @@ Entry.Utils.pauseSoundInstances = function() {
     Entry.soundInstances.getAllValues().forEach((instance) => {
         instance.paused = true;
     });
+    Entry.bgmInstances.getAllValues().forEach((instance) => {
+        instance.paused = true;
+    });
 };
 
 Entry.Utils.recoverSoundInstances = function() {
     Entry.soundInstances.getAllValues().forEach((instance) => {
+        instance.paused = false;
+        instance.sourceNode.playbackRate.value = Entry.playbackRateValue;
+    });
+    Entry.bgmInstances.getAllValues().forEach((instance) => {
         instance.paused = false;
     });
 };
@@ -3085,3 +3112,8 @@ Entry.Utils.extractTextFromHTML = (htmlString) => {
     const dom = parser.parseFromString(htmlString, 'text/html');
     return dom.body.textContent || '';
 };
+
+Entry.Utils.getEntryjsPath = () =>
+    window.navigator.userAgent.indexOf('Electron') > -1
+        ? `file://${window.getEntryjsPath()}`
+        : `${window.location.origin}/lib/entry-js`;

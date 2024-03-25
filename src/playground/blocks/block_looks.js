@@ -892,8 +892,8 @@ module.exports = {
                                 1 +
                                 (sprite.shapes.length ? 1 : 0) +
                                 (sprite.paintShapes.length ? 1 : 0);
-                            targetIndex -= offsetCount + sprite.stamps.length;
-                            let backEntity = selectedObjectContainer.getChildAt(targetIndex);
+                            const backIndex = targetIndex - offsetCount + sprite.stamps.length;
+                            let backEntity = selectedObjectContainer.getChildAt(backIndex);
                             if (!backEntity) {
                                 targetIndex = 0;
                                 break;

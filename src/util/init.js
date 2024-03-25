@@ -247,6 +247,8 @@ Entry.initialize_ = function() {
 };
 
 Entry.disposeContainer = function() {
+    this._destroyer = this._destroyer || new Destroyer();
+    this._destroyer.destroy();
     while (this.view_.firstChild) {
         this.view_.removeChild(this.view_.firstChild);
     }
@@ -256,6 +258,7 @@ Entry.initSoundQueue_ = function() {
     Entry.soundQueue = new createjs.LoadQueue();
     Entry.soundQueue.installPlugin(createjs.Sound);
     Entry.soundInstances = new DataSource();
+    Entry.bgmInstances = new DataSource();
     Entry.soundQueue.urls = new Set();
     Entry.soundQueue.total = 0;
     Entry.soundQueue.loadCallback = (src) => {
@@ -602,6 +605,13 @@ Entry.Utils.initEntryEvent_ = function() {
         Entry.events_ = [];
     }
 };
+
+Entry.getSoundPath = (sound) =>
+    sound.fileurl ||
+    `${Entry.defaultPath}/uploads/${sound.filename.substring(0, 2)}/${sound.filename.substring(
+        2,
+        4
+    )}/${Entry.soundPath}${sound.filename}${sound.ext || '.mp3'}`;
 
 /**
  * initialize sound

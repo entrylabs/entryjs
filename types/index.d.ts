@@ -201,7 +201,7 @@ export declare interface EntryHardwareBlockModule extends EntryBlockModule {
     dataHandler?: (data: HardwareMessageData) => void;
 }
 
-export declare interface EntryHardwareLiteBlockModule extends EntryBlockModule {
+export declare interface EntryHWLiteBaseModule extends EntryBlockModule {
     getMonitorPort(): Object;
     duration: number;
     // 홍보용
@@ -209,23 +209,14 @@ export declare interface EntryHardwareLiteBlockModule extends EntryBlockModule {
     url: string;
 
     // 모듈 정의용
-    id: string | string[];
+    id: string;
     monitorTemplate?: UnknownAny;
-    portData: {
-        baudRate: Number;
-        dataBits: Number;
-        parity: 'none' | 'even' | 'odd';
-        stopBits: 1 | 2;
-        bufferSize: Number;
-        connectionType?: 'bytestream' | 'ascii';
-        constantServing?: boolean | 'ReadOnly';
-        constantRead?: boolean;
-        writeAscii?: boolean;
-        readAscii?: boolean;
-        flowControl?: 'hardware';
-    };
+    portData?: HWLiteSerialInfo;
+    bluetoothInfo?: HWLiteBluetoothInfo;
     type?: 'master' | 'slave';
     delimeter?: string | number;
+    webapiType?: 'ble' | 'usb' | 'serial';
+    firmwareFlash?: boolean;
 
     // 필수 함수 목록
     setZero: () => void;
@@ -237,3 +228,28 @@ export declare interface EntryHardwareLiteBlockModule extends EntryBlockModule {
     initialHandshake: () => any;
     requestLocalData: () => string;
 }
+
+export declare interface HWLiteSerialInfo {
+    baudRate: number;
+    dataBits: number;
+    parity: 'none' | 'even' | 'odd';
+    stopBits: 1 | 2;
+    bufferSize: number;
+    connectionType?: 'bytestream' | 'ascii';
+    constantServing?: boolean | 'ReadOnly';
+    constantRead?: boolean;
+    writeAscii?: boolean;
+    readAscii?: boolean;
+    flowControl?: 'hardware';
+}
+
+export declare interface HWLiteBluetoothInfo {
+    filters: BluetoothLEScanFilter[];
+    optionalServices: string[];
+}
+
+export declare type HWLiteStatus =
+    | 'disconnected'
+    | 'connected'
+    | 'willDisconnect'
+    | 'connectFailed';

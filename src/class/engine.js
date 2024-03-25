@@ -747,12 +747,13 @@ Entry.Engine = class Engine {
         Entry.scene.loadStartSceneSnapshot();
         Entry.Func.clearThreads();
         Entry.Utils.setVolume(1);
-        if (Entry.hwLite.status === Entry.hwLite.HardwareStatement.connected) {
+        if (Entry.hwLite.getStatus() === 'connected') {
             Entry.hwLite.setZero();
         }
         createjs.Sound.setVolume(1);
         createjs.Sound.stop();
         Entry.soundInstances.clear();
+        Entry.bgmInstances.clear();
         Entry.playbackRateValue = 1;
         Entry.targetChecker && Entry.targetChecker.clearListener();
 

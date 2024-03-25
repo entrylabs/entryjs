@@ -10,7 +10,7 @@ import _range from 'lodash/range';
 (function() {
     Entry.ArduinoLite = new (class ArduinoLite {
         constructor() {
-            this.id = ['1.1', '4.2', '8.1'];
+            this.id = '010101';
             this.name = 'ArduinoLite';
             this.url = 'http://www.arduino.cc/';
             this.imageName = 'arduinolite.png';
@@ -48,8 +48,8 @@ import _range from 'lodash/range';
             this.analogValue = new Array(6).fill(0);
             this.readablePorts = _range(0, 19);
 
-            if (Entry.hwLite) {
-                Entry.hwLite.update();
+            if (Entry.hwLite && Entry.hwLite.serial) {
+                Entry.hwLite.serial.update();
             }
         }
 
