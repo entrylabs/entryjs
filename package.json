@@ -22,9 +22,9 @@
     },
     "scripts": {
         "lint": "cross-env NODE_ENV=lint webpack -w",
-        "serve:webgl": "cross-env NODE_ENV=serve webpack-dev-server --open  --hot --host 127.0.0.1 --webgl=true",
-        "serve": "cross-env NODE_ENV=serve webpack-dev-server --open --hot --host 127.0.0.1",
-        "serve:mini": "cross-env NODE_ENV=serve-mini webpack-dev-server --open --hot --host 127.0.0.1",
+        "serve:webgl": "cross-env NODE_ENV=serve webpack-dev-server --open  --hot --host localhost  --webgl=true",
+        "serve": "cross-env NODE_ENV=serve webpack-dev-server --open --hot --host localhost",
+        "serve:mini": "cross-env NODE_ENV=serve-mini webpack-dev-server --open --hot --host localhost",
         "prod": "cross-env NODE_ENV=production webpack",
         "dev": "webpack -w",
         "test": "jest --colors",
