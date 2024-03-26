@@ -6246,7 +6246,6 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 var data_address = 4009;
                 var data_type = script.getNumberValue('DATA_TYPE');
                 data_address += data_type * 2;
-                Entry.Utils.sleep(200);
                 var result = Entry.hw.portData[data_address];
                 if (typeof result == 'undefined') {
                     return 0;
