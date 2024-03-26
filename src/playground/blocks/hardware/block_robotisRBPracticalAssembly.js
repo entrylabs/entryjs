@@ -4999,49 +4999,40 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 var dxl_angle = script.getNumberValue('DXL_ANGLE', script);
 
                 var data_instruction = Entry.Robotis_rb.INSTRUCTION.BYPASS_WRITE;
-                var data_address_1 = 0;
-                var data_length_1 = 0;
-                var data_value_1 = 0;
-                var data_address_2 = 0;
-                var data_length_2 = 0;
-                var data_value_2 = 0;
+                var data_address = 0;
+                var data_length = 0;
+                var data_buf = [];
 
-                data_address_1 =
+                data_address =
                     Entry.Robotis_rb.CONTROL_TABLE.DXL_PROFILE_VELOCITY[0];
-                data_length_1 =
-                    Entry.Robotis_rb.CONTROL_TABLE.DXL_PROFILE_VELOCITY[1];
+                data_length =
+                    Entry.Robotis_rb.CONTROL_TABLE.DXL_PROFILE_VELOCITY[1] + Entry.Robotis_rb.CONTROL_TABLE.DXL_GOAL_POSITION[1];
 
                 if (dxl_speed < 0) dxl_speed = 0;
                 else if (dxl_speed > 100) dxl_speed = 100;
 
-                data_value_1 = dxl_speed * 10;
-
-                data_address_2 =
-                    Entry.Robotis_rb.CONTROL_TABLE.DXL_GOAL_POSITION[0];
-                data_length_2 =
-                    Entry.Robotis_rb.CONTROL_TABLE.DXL_GOAL_POSITION[1];
+                data_buf.push((dxl_speed*10)%256);
+                data_buf.push(Math.floor(dxl_speed*10/256));
+                data_buf.push(0);
+                data_buf.push(0);
 
                 if (dxl_angle < -179) dxl_angle = -179;
                 else if (dxl_angle > 180) dxl_angle = 180;
 
                 dxl_angle = 180 - dxl_angle;
 
-                data_value_2 = Math.floor(dxl_angle * 4096 / 360);
+                data_buf.push((dxl_angle*4096/360)%256);
+                data_buf.push(Math.floor(dxl_angle*4096/360/256));
+                data_buf.push(0);
+                data_buf.push(0);
 
                 var data_sendqueue = [
                     [
                         data_instruction,
-                        data_address_1,
-                        data_length_1,
+                        data_address,
+                        data_length,
                         dxl_id,
-                        data_value_1
-                    ],
-                    [
-                        data_instruction,
-                        data_address_2,
-                        data_length_2,
-                        dxl_id,
-                        data_value_2
+                        data_buf
                     ],
                 ];
 
