@@ -454,9 +454,10 @@ class MediaPipeUtils {
                     return;
                 }
 
+                const id = Entry.generateHash();
                 if (sprite) {
                     const returnMessage = ({ data }: MessageEvent) => {
-                        if (data.action === 'sprite_return') {
+                        if (data.action === 'sprite_return' && data.id === id) {
                             this.motionWorker.removeEventListener('message', returnMessage);
                             resolve(data.result);
                         }
@@ -484,6 +485,8 @@ class MediaPipeUtils {
                         maxY,
                     },
                     imageBitmap,
+                    flipState: this.flipState,
+                    id,
                 });
 
                 if (!sprite) {

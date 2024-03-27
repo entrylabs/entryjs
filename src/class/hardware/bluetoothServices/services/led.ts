@@ -49,6 +49,7 @@ export type LedMatrix = [
  * LED Service
  */
 export class LedService {
+    public static serviceName = 'LedService';
     /**
      * @hidden
      */
