@@ -395,7 +395,8 @@ module.exports = {
                                 promises
                             );
                         } else {
-                            return Entry.Code.funcRestExecute(this.funcCode, this.funcExecutor);
+                            this.funcCode.removeExecutor(this.funcExecutor);
+                            return Entry.STATIC.BREAK;
                         }
                     } else {
                         this.funcCode.removeExecutor(this.funcExecutor);
