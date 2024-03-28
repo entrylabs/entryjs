@@ -76,6 +76,7 @@ export interface MicrobitEvents {
  * Event Service
  */
 export class EventService extends (EventDispatcher as new () => TypedDispatcher<MicrobitEvents>) {
+    public static serviceName = 'EventService';
     /**
      * @hidden
      */

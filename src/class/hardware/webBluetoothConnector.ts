@@ -62,7 +62,7 @@ export default class WebBluetoothConnector extends WebApiConnector {
         for (const primaryService of primaryServices) {
             for (const serviceClass of this.serviceClasses) {
                 if (primaryService.uuid === serviceClass.uuid) {
-                    this.services[serviceClass.name] = await serviceClass.create(primaryService);
+                    this.services[serviceClass.serviceName] = await serviceClass.create(primaryService);
                 }
             }
         }

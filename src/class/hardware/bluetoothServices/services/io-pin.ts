@@ -108,6 +108,7 @@ export interface IoPinEvents {
  * @hidden
  */
 export class IoPinService extends (EventDispatcher as new () => TypedDispatcher<IoPinEvents>) {
+    public static serviceName = 'IoPinService';
     /**
      * @hidden
      */
