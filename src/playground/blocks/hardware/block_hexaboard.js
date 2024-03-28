@@ -24,11 +24,13 @@ Entry.HEXABOARD = {
     DISPLAY_OLED: 0x10, // OLED 값 정의
     UPDATE_ALL_NEOPIXEL: 0x11, //모든 네오픽셀 켜기
     DISPLAY_INIT_OLED: 0x12, // OLED 값 정의
+    CLEAR_DISPLAY_OLED: 0x25, // OLED값 리셋
     CONNECT_WIFI: 0x21, //WIFI 연결
     CONNECT_BLYNK: 0x21, //BLYNK서버 연결
     BLYNK_VIRTUAL_WRITE: 0x22, //BLYNK 가상의 핀 데이터 전송
     BLYNK_WRITE: 0x23, //BLYNK 상태값 바뀌었을때
     CONNECTED_BLYNK: 0x24, //BLYNK서버 연결
+    HEXA_INIT: 0x30,
   },
   // 자이로 센서에 대한 추가적인 세부 명령 정의
   gyro_command : {
@@ -72,7 +74,18 @@ Entry.HEXABOARD = {
     // for(let i = 2 ; i <= 13 ; i++) {
     //   Entry.hw.sendQueue.PORT[i] = 0;
     // }
+    if (!Entry.hw.sendQueue.SET) {
+      Entry.hw.sendQueue.SET = {};
+    }
+    Entry.hw.sendQueue.SET = {
+      type: Entry.HEXABOARD.command.WRITE,
+      data: {
+        command : Entry.HEXABOARD.sensorTypes.HEXA_INIT,
+      },
+    };
+    // console.log("Reset");
     Entry.hw.update(); // 하드웨어에 명시적으로 정보를 보냄.
+    delete Entry.hw.sendQueue.SET;
   },
 
 };
@@ -520,7 +533,7 @@ Entry.HEXABOARD.getBlocks = function () {
             [ "5", "5" ],
             [ "6", "6" ],
           ],
-          "value": "1",
+          "value": "3",
           "fontSize": 11,
           bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
           arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1565,6 +1578,21 @@ Entry.HEXABOARD.getBlocks = function () {
       class: 'oled_hexa',
       func: function (sprite, script) {
         //TODO : 이 곳에 통신 코드 작성하기
+
+        //하드웨어 큐에 데이터 추가
+        if (!Entry.hw.sendQueue.SET) {
+          Entry.hw.sendQueue.SET = {};
+        }
+
+        Entry.hw.sendQueue.SET = {
+          type: Entry.HEXABOARD.command.WRITE,
+          data: {
+            command : Entry.HEXABOARD.sensorTypes.CLEAR_DISPLAY_OLED,
+          },
+        };
+        Entry.hw.update();
+        delete Entry.hw.sendQueue.SET;
+        return script.callReturn();
       },
     },
 
@@ -1592,7 +1620,7 @@ Entry.HEXABOARD.getBlocks = function () {
       class : 'wireless_hexa',
     },
 
-    
+
     makeitnow_wireless_wifiConnect_hexa : {
       color: EntryStatic.colorSet.block.default.HARDWARE,
       outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1618,7 +1646,7 @@ Entry.HEXABOARD.getBlocks = function () {
       def: {
         // def의 params의 경우는 초기값을 지정할수 있습니다.
         // params: ["SSID", "PASSWORD", "AUTH_TOKEN"],
-        params: ["KT_GiGA_2G_makeitnow", "makeitnow1", "kSpy0al0nPmop9KGT5yRhbqyRl57Hj2X"],
+        params: ["WIFI이름", "비밀번호", "AUTH_TOKEN"],
         type: "makeitnow_wireless_wifiConnect_hexa",
       },
       isNotFor: ['HEXABOARD'],
