@@ -51,6 +51,7 @@ Entry.Robotis_rb_P_Assembly = {
             [Entry.Robotis_rb.INSTRUCTION.WRITE, 21, 2, 20],
             [Entry.Robotis_rb.INSTRUCTION.WRITE, 40, 2, 0],
             [Entry.Robotis_rb.INSTRUCTION.WRITE, 66, 2, 0],
+            [Entry.Robotis_rb.INSTRUCTION.WRITE, 5200, 1, 0],
             [Entry.Robotis_rb.INSTRUCTION.WRITE, 710, 2, 0],
             [Entry.Robotis_rb.INSTRUCTION.WRITE, 19, 1, 1], // bypass 모드 켜기
             [Entry.Robotis_rb.INSTRUCTION.WRITE, 4250, 1, 1], // huskylens 텍스트 지우기
