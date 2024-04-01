@@ -1386,7 +1386,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
                     data_sendqueue,
-                    Entry.Robotis_openCM70.delay
+                    25, //Entry.Robotis_openCM70.delay
                 );
             },
             syntax: {
