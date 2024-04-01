@@ -42,9 +42,30 @@ Entry.Robotis_rb_P_Assembly = {
     },
     setZero: function () {
         // instruction / address / length / value / default length
-        Entry.hw.sendQueue['setZero'] = [1];
+        Entry.Robotis_carCont.setRobotisData([
+            [Entry.Robotis_rb.INSTRUCTION.WRITE, 21, 2, 20],
+            [Entry.Robotis_rb.INSTRUCTION.WRITE, 40, 2, 0],
+            [Entry.Robotis_rb.INSTRUCTION.WRITE, 66, 2, 0],
+            [Entry.Robotis_rb.INSTRUCTION.WRITE, 5200, 1, 0],
+            [Entry.Robotis_rb.INSTRUCTION.WRITE, 710, 2, 0],
+            [Entry.Robotis_rb.INSTRUCTION.WRITE, 19, 1, 1], // bypass 모드 켜기
+            [Entry.Robotis_rb.INSTRUCTION.WRITE, 4250, 1, 1], // huskylens 텍스트 지우기
+            [Entry.Robotis_rb.INSTRUCTION.BYPASS_WRITE, 64, 1, 0xFE, 0], // torque off
+            [Entry.Robotis_rb.INSTRUCTION.WRITE, 23, 1, 1], // auto report 모드 켜기
+            [Entry.Robotis_rb.INSTRUCTION.WRITE, 163, 2, 3329], // 얼굴 알라로 바꾸기
+            // [Entry.Robotis_rb.INSTRUCTION.WRITE, 163, 2, 30759],
+            [Entry.Robotis_rb.INSTRUCTION.WRITE, 162, 1, 1],
+        ]);
         Entry.Robotis_carCont.update();
+        Entry.hw.sendQueue['setZero'] = [1];
         Entry.Robotis_carCont.setRobotisData(null);
+        Entry.Robotis_carCont.update();
+        const start = new Date().getTime();
+        while (true) {
+            if (new Date().getTime() - start > 1000) {
+                break;
+            }
+        }
         Entry.hw.sendQueue['setZero'] = null;
         Entry.Robotis_carCont.update();
         Entry.Robotis_carCont.setRobotisData([
