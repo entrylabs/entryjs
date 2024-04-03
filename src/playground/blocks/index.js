@@ -63,19 +63,6 @@ Entry.ALL_AI_UTILIZE_BLOCK_LIST = {
     video: Entry.AI_UTILIZE_BLOCK.video,
 };
 
-Entry.EXPANSION_BLOCK = {};
-require('./block_expansion_weather');
-require('./block_expansion_festival');
-require('./block_expansion_behaviorconduct_disaster');
-require('./block_expansion_behaviorconduct_lifesafety');
-
-Entry.EXPANSION_BLOCK_LIST = {
-    weather: Entry.Expansion_Weather,
-    festival: Entry.EXPANSION_BLOCK.festival,
-    behaviorConductDisaster: Entry.EXPANSION_BLOCK.behaviorConductDisaster,
-    behaviorConductLifeSafety: Entry.EXPANSION_BLOCK.behaviorConductLifeSafety,
-};
-
 const destroyBlockList = [];
 
 function getBlockObject(items) {
@@ -159,10 +146,9 @@ module.exports = {
         const hardwareLiteModules = hardwareLite.getHardwareLiteModuleList();
         registerHardwareBlockToStatic(hardwareModules);
         registerHardwareBlockToStatic(hardwareLiteModules);
+
         const basicAndExpansionBlockObjectList = getBlockObject(
-            basicBlockList
-                .concat(Object.values(Entry.EXPANSION_BLOCK_LIST))
-                .concat(Object.values(Entry.ALL_AI_UTILIZE_BLOCK_LIST))
+            basicBlockList.concat(Object.values(Entry.ALL_AI_UTILIZE_BLOCK_LIST))
         );
         const hardwareBlockObjectList = getHardwareBlockObject(hardwareModules);
         const hardwareLiteBlockObjectList = getHardwareBlockObject(hardwareLiteModules);

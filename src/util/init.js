@@ -17,7 +17,8 @@ import './utils';
  * @param {HTMLElement} container for entry workspace or others.
  * @param {Object} options for initialize.
  */
-Entry.init = function(container, options) {
+Entry.init = async function(container, options) {
+    console.log('Entry.init');
     Entry.assert(typeof options === 'object', 'Init option is not object');
     Entry.assert(!!container, 'root container must be provided');
 
@@ -43,7 +44,7 @@ Entry.init = function(container, options) {
     if (this.type === 'workspace' && this.isPhone()) {
         this.type = 'phone';
     }
-    this.initialize_();
+    await this.initialize_();
     this.initSoundQueue_();
     /** @type {!Element} */
     this.view_ = container;
@@ -171,7 +172,7 @@ Entry.loadAudio_ = function(filenames, name) {
  * Initialize function for Entry.
  * @private
  */
-Entry.initialize_ = function() {
+Entry.initialize_ = async function() {
     /** @type {Destroyer} */
     this._destroyer = this._destroyer || new Destroyer();
     this._destroyer.destroy();
@@ -218,7 +219,9 @@ Entry.initialize_ = function() {
 
     if (this.options.expansionDisable === false || this.options.expansionDisable === undefined) {
         this.expansion = new Expansion(this.playground);
+        await this.expansion.init();
         this._destroyer.add(this.expansion);
+    } else {
     }
 
     if (this.options.aiUtilizeDisable === false || this.options.aiUtilizeDisable === undefined) {

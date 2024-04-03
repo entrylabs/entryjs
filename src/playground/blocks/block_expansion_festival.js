@@ -294,6 +294,8 @@ function getLocationMap() {
     };
 }
 
+console.log(2);
+
 Entry.EXPANSION_BLOCK.festival = {
     name: 'festival',
     imageName: 'festival.png',
