@@ -3,6 +3,7 @@ import showConsoleBanner from './util/functions/showConsoleBanner';
 import 'simplebar/dist/simplebar.css';
 
 const Entry = {};
+Entry.EXPANSION_BLOCK = {};
 
 module.exports = Entry;
 global.Entry = Entry;
