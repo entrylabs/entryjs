@@ -202,9 +202,9 @@ class MediaPipeUtils {
     private objectDetector: ObjectDetector;
 
     public totalMotions: MotionElement = { total: 0, direction: { x: 0, y: 0 } };
-    public motions: Pixel[][] = [
-        ...Array(Math.ceil(this.STAGE_HEIGHT / this.SAMPLE_SIZE)),
-    ].map((e) => Array(this.STAGE_WIDTH / this.SAMPLE_SIZE));
+    public motions: Pixel[][] = [...Array(Math.ceil(this.STAGE_HEIGHT / this.SAMPLE_SIZE))].map(
+        (e) => Array(this.STAGE_WIDTH / this.SAMPLE_SIZE)
+    );
     public motionWorker: Worker = new VideoMotionWorker();
 
     constructor() {
@@ -1596,7 +1596,6 @@ class MediaPipeUtils {
 
     destroy() {
         this.isInitialized = false;
-        console.log('destroy');
     }
 }
 
