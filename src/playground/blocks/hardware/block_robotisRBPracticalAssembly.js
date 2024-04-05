@@ -4846,7 +4846,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     },
                     {
                         type: 'number',
-                        params: ['0'],
+                        params: ['1'],
                     },
                 ],
                 type: 'robotis_Practice_dxl_each_control',
@@ -4860,29 +4860,20 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             class: 'robotis_openCM70_cm',
             isNotFor: ['Robotis_rb_P_Assembly'],
             func(entity, script) {
-                var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
-                var data_address = 19;
-                var data_length = 1;
-                var data_value = 1;
+                var data_instruction = Entry.Robotis_rb.INSTRUCTION.BYPASS_WRITE;
+                var data_address = 0;
+                var data_length = 0;
 
-                var data_sendqueue = [
-                    [data_instruction, data_address, data_length, data_value],
-                    [Entry.Robotis_rb.INSTRUCTION.REGWRITE, 64, 1, 1, [1]],
-                    [Entry.Robotis_rb.INSTRUCTION.REGWRITE, 64, 1, 1, [2]],
-                    [Entry.Robotis_rb.INSTRUCTION.REGWRITE, 64, 1, 1, [3]],
-                    [Entry.Robotis_rb.INSTRUCTION.REGWRITE, 64, 1, 1, [4]],
-                    [Entry.Robotis_rb.INSTRUCTION.REGWRITE, 64, 1, 1, [5]],
-                    [Entry.Robotis_rb.INSTRUCTION.REGWRITE, 64, 1, 1, [6]],
-                    [Entry.Robotis_rb.INSTRUCTION.REGWRITE, 64, 1, 1, [7]],
-                    [Entry.Robotis_rb.INSTRUCTION.REGWRITE, 64, 1, 1, [8]],
-                    [Entry.Robotis_rb.INSTRUCTION.ACTION, 0, 0, 0],
+                data_address =
+                    Entry.Robotis_rb.CONTROL_TABLE.DXL_PROFILE_VELOCITY[0];
+                data_length =
+                    Entry.Robotis_rb.CONTROL_TABLE.DXL_PROFILE_VELOCITY[1] + Entry.Robotis_rb.CONTROL_TABLE.DXL_GOAL_POSITION[1];
 
-
-                ]
 
                 var dxlID = script.getField('DXLNUM', script);
                 var angle = script.getNumberValue('ANGLE', script);
                 var time = script.getNumberValue('TIME', script) * 1000;
+                var data_buf = [];
 
                 var engValue = 2048;
                 engValue = Math.floor(2048 - Math.round(angle * 4096) / 360);
@@ -4893,17 +4884,27 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 } else {
                     velocity = Math.round(Math.floor(60 * Math.abs(angle - Entry.Robotis_rb.DXL_POSITION.values[dxlID - 1]) * 1000 / 360 / time) / 0.229);
                 }
-
                 Entry.Robotis_rb.DXL_POSITION.values[dxlID - 1] = angle;
-                data_sendqueue.push([Entry.Robotis_rb.INSTRUCTION.REGWRITE, 112, 8, velocity * 4294967296 + engValue, [dxlID]]);
 
-                data_sendqueue.push([Entry.Robotis_rb.INSTRUCTION.ACTION, 0, 0, 0]);
+                data_buf.push(velocity%256);
+                data_buf.push(Math.floor(velocity/256));
+                data_buf.push(0);
+                data_buf.push(0);
 
-                for (let j = 1; j < 9; j++) {
-                    data_sendqueue.push([Entry.Robotis_rb.INSTRUCTION.REGWRITE, 112, 4, 0, [j]]);
+                data_buf.push(engValue%256);
+                data_buf.push(Math.floor(engValue/256));
+                data_buf.push(0);
+                data_buf.push(0);
 
-                }
-                data_sendqueue.push([Entry.Robotis_rb.INSTRUCTION.ACTION, 0, 0, 0]);
+                var data_sendqueue = [
+                    [
+                        data_instruction,
+                        data_address,
+                        data_length,
+                        dxlID,
+                        data_buf
+                    ],
+                ];
 
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
