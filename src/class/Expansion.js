@@ -10,21 +10,11 @@ export default class Expansion {
     }
 
     async init() {
-        Entry.EXPANSION_BLOCK_LIST = {
-            weather: Entry.Expansion_Weather,
-            festival: Entry.EXPANSION_BLOCK.festival,
-            behaviorConductDisaster: Entry.EXPANSION_BLOCK.behaviorConductDisaster,
-            behaviorConductLifeSafety: Entry.EXPANSION_BLOCK.behaviorConductLifeSafety,
-        };
-        const items = Object.values(Entry.EXPANSION_BLOCK_LIST);
         const blockObject = {};
-        items.forEach((item) => {
-            try {
-                if ('getBlocks' in item) {
-                    Object.assign(blockObject, item.getBlocks());
-                }
-            } catch (err) {
-                console.log(err, item);
+        Object.entries(Entry.EXPANSION_BLOCK).forEach(([key, value]) => {
+            Entry.EXPANSION_BLOCK_LIST[key] = value;
+            if ('getBlocks' in value) {
+                Object.assign(blockObject, value.getBlocks());
             }
         });
         Entry.block = Object.assign(Entry.block, blockObject);

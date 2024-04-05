@@ -4,6 +4,7 @@ import 'simplebar/dist/simplebar.css';
 
 const Entry = {};
 Entry.EXPANSION_BLOCK = {};
+Entry.EXPANSION_BLOCK_LIST = {};
 
 module.exports = Entry;
 global.Entry = Entry;
@@ -105,7 +106,6 @@ require('./util/htmlElementPatcher');
 require('./util/eventHandler');
 require('./util/utils');
 require('./util/youtube');
-require('./util/weather_forecast');
 require('./util/modal');
 require('./command/commands/block');
 require('./command/commands/comment');
