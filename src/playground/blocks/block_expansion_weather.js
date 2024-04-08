@@ -108,7 +108,7 @@ Entry.EXPANSION_BLOCK.weather = {
             very_bad: { min: 150, max: 9999 },
         };
 
-        for (let key in fineDustMap) {
+        for (const key in fineDustMap) {
             if (fineDustMap[key].min <= pm10 && pm10 <= fineDustMap[key].max) {
                 return key === finedust;
             }
