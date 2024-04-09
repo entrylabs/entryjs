@@ -223,7 +223,7 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_Practice_distance_compare: "%1 값이 %2보다 %3",
                 robotis_Practice_environment_value: "%1 값",
                 robotis_Practice_environment_compare: "%1 값이 %2보다 %3",
-                robotis_Practice_dxl_value: "%1의 %2값",
+                robotis_Practice_dxl_value: "%1의 각도값",
 
 
                 // 소리
