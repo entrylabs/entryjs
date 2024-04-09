@@ -52,9 +52,6 @@ Entry.Robotis_rb_P_Assembly = {
             [Entry.Robotis_rb.INSTRUCTION.WRITE, 4250, 1, 1], // huskylens 텍스트 지우기
             [Entry.Robotis_rb.INSTRUCTION.BYPASS_WRITE, 64, 1, 0xFE, 0], // torque off
             [Entry.Robotis_rb.INSTRUCTION.WRITE, 23, 1, 1], // auto report 모드 켜기
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 163, 2, 3329], // 얼굴 알라로 바꾸기
-            // [Entry.Robotis_rb.INSTRUCTION.WRITE, 163, 2, 30759],
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 162, 1, 1],
         ]);
         Entry.Robotis_carCont.update();
         Entry.hw.sendQueue['setZero'] = [1];
@@ -78,9 +75,6 @@ Entry.Robotis_rb_P_Assembly = {
             [Entry.Robotis_rb.INSTRUCTION.WRITE, 4250, 1, 1], // huskylens 텍스트 지우기
             [Entry.Robotis_rb.INSTRUCTION.BYPASS_WRITE, 64, 1, 0xFE, 0], // torque off
             [Entry.Robotis_rb.INSTRUCTION.WRITE, 23, 1, 1], // auto report 모드 켜기
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 163, 2, 3329], // 얼굴 알라로 바꾸기
-            // [Entry.Robotis_rb.INSTRUCTION.WRITE, 163, 2, 30759],
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 162, 1, 1],
         ]);
 
         Entry.Robotis_carCont.update();
