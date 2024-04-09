@@ -1563,8 +1563,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
                 var data_address = 270;
                 var data_length = 4;
-                // 실과로봇은 알쥐의 1.17배 만큼 더 이동하므로 1.17로 나누어야 한다.
-                var data_value = Math.floor(10 * distance * direction / 1.17); 
+                var data_value = Math.floor(10 * distance * direction); 
         
                 var data_sendqueue = [
                     [
