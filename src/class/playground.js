@@ -1873,8 +1873,19 @@ Entry.Playground = class Playground {
             'entryPlaygroundPictureThumbnail'
         );
 
+        let mouseDownCoordinate;
+        const moveThreshold = 5;
+        thumbnailView.addEventListener('touchstart', (e) => {
+            const event = Entry.Utils.convertMouseEvent(e);
+            mouseDownCoordinate = { y: event.clientY };
+        });
+
         thumbnailView.addEventListener('touchmove', (e) => {
             e.preventDefault();
+            const event = Entry.Utils.convertMouseEvent(e);
+            if (Math.abs(event.clientY - mouseDownCoordinate.y) > moveThreshold) {
+                Entry.ContextMenu.hide();
+            }
         });
 
         if (picture.fileurl) {
@@ -2016,8 +2027,19 @@ Entry.Playground = class Playground {
             }
         });
 
+        let mouseDownCoordinate;
+        const moveThreshold = 5;
+        thumbnailView.addEventListener('touchstart', (e) => {
+            const event = Entry.Utils.convertMouseEvent(e);
+            mouseDownCoordinate = { y: event.clientY };
+        });
+
         thumbnailView.addEventListener('touchmove', (e) => {
             e.preventDefault();
+            const event = Entry.Utils.convertMouseEvent(e);
+            if (Math.abs(event.clientY - mouseDownCoordinate.y) > moveThreshold) {
+                Entry.ContextMenu.hide();
+            }
         });
 
         thumbnailView.bindOnClick(() => {

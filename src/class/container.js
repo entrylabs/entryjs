@@ -196,6 +196,7 @@ Entry.Container = class Container {
                         border: 'solid 1px #728997',
                     },
                     onDragActionChange: (isDragging, key) => {
+                        Entry.ContextMenu.hide();
                         if (isDragging) {
                             this.selectedObject.setObjectFold(isDragging, true);
                         } else {
