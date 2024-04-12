@@ -136,6 +136,7 @@ module.exports = {
         react: 'React',
         'react-dom': 'ReactDOM',
         '@entrylabs/tool': 'EntryTool',
+        '@entrylabs/ml': 'Entryml',
         'entry-paint': 'EntryPaint',
         '@entrylabs/sound-editor': 'EntrySoundEditor',
     },

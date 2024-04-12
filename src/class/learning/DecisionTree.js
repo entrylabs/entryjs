@@ -9,7 +9,6 @@ import LearningBase from './LearningBase';
 import { DecisionTreeClassifier as DTClassifier } from 'ml-cart';
 import Utils from './Utils';
 import Chart from './Chart';
-const { callApi } = require('../../util/common');
 
 export const classes = [
     'ai_learning_train',
@@ -25,11 +24,12 @@ export const classes = [
 class DecisionTree extends LearningBase {
     type = 'decisiontree';
 
-    init({ name, url, result, table, trainParam }) {
+    init({ name, url, result, table, trainParam, modelId, loadModel }) {
         this.name = name;
         this.trainParam = trainParam;
         this.result = result;
         this.table = table;
+        this.loadModel = loadModel;
         this.trainCallback = (value) => {
             this.view.setValue(value);
         };
@@ -38,7 +38,7 @@ class DecisionTree extends LearningBase {
 
         this.fields = table?.select?.[0]?.map((index) => table?.fields[index]);
         this.predictFields = table?.select?.[1]?.map((index) => table?.fields[index]);
-        this.load(`/uploads/${url}/model.json`);
+        this.load(url, modelId);
         if (!Utils.isWebGlSupport()) {
             tf.setBackend('cpu');
         }
@@ -121,8 +121,8 @@ class DecisionTree extends LearningBase {
         };
     }
 
-    async load(url) {
-        const { data } = await callApi(url, { url });
+    async load(url, modelId) {
+        const data = await this.loadModel({ url, modelId });
         const { model, result } = data;
         this.model = DTClassifier.load(model);
         this.valueMap = result?.valueMap;

@@ -12,6 +12,7 @@ import LogisticRegression, {
 } from './learning/LogisticRegression';
 import Svm, { classes as SvmClasses } from './learning/Svm';
 import DataTable from './DataTable';
+import { MlDataApi }from '@entrylabs/ml';
 
 import blockAiLearning from '../playground/blocks/block_ai_learning';
 import blockAiLearningKnn from '../playground/blocks/block_ai_learning_knn';
@@ -61,10 +62,12 @@ export default class AILearning {
     #recordTime = 2000;
     #module = null;
     #tableData = null;
+    #dataApi = undefined;
 
     constructor(playground, isEnable = true) {
         this.#playground = playground;
         this.isEnable = isEnable;
+        this.#dataApi = new MlDataApi();
     }
 
     get labels() {
@@ -79,6 +82,10 @@ export default class AILearning {
             }
         });
         Entry.block = Object.assign(Entry.block, blockObject);
+    }
+
+    setDataApi(api) {
+        this.#dataApi = api;
     }
 
     removeAllBlocks() {
@@ -120,9 +127,8 @@ export default class AILearning {
         this.destroy();
     }
 
-    load(modelInfo) {
+    async load(modelInfo) {
         const {
-            url,
             labels,
             type,
             classes = [],
@@ -136,7 +142,7 @@ export default class AILearning {
             tableData,
             result,
         } = modelInfo || {};
-
+        const url = await this.#dataApi?.getUploadUrl(modelInfo?.url);
         if (!url || !this.isEnable || !isActive) {
             return;
         }
@@ -160,7 +166,8 @@ export default class AILearning {
                 url,
                 labels: this.#labels,
                 type,
-                recordTime,
+                modelId: this.#modelId,
+                loadModel: this.#dataApi?.loadModel,
             });
         } else if (type === 'number') {
             this.#tableData = tableData || createDataTable(classes, name);
@@ -170,6 +177,8 @@ export default class AILearning {
                 url,
                 trainParam,
                 table: this.#tableData,
+                modelId: this.#modelId,
+                loadModel: this.#dataApi?.loadModel,
             });
             this.#labels = this.#module.getLabels();
         } else if (type === 'cluster') {
@@ -219,6 +228,8 @@ export default class AILearning {
                 url,
                 trainParam,
                 table: this.#tableData,
+                modelId: this.#modelId,
+                loadModel: this.#dataApi?.loadModel,
             });
         } else if (type === 'svm') {
             this.#tableData = tableData || createDataTable(classes, name);
@@ -228,12 +239,17 @@ export default class AILearning {
                 url,
                 trainParam,
                 table: this.#tableData,
+                modelId: this.#modelId,
+                loadModel: this.#dataApi?.loadModel,
             });
         }
 
         if (this.#module) {
             this.unbanBlocks();
             this.isLoaded = true;
+            console.log('loaded');
+        } else {
+            console.log('not loaded');
         }
     }
 

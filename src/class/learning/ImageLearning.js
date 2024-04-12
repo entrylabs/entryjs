@@ -22,7 +22,7 @@ class ImageLearning {
         this.#type = type;
         this.#url = url;
         this.#labels = labels;
-        this.load(`/uploads/${url}/model.json`);
+        this.load(url);
         Entry.addEventListener('stop', () => {
             this.#result = [];
             this.#isPredicting = false;

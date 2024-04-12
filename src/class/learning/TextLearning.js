@@ -14,13 +14,15 @@ class TextNaiveBaye {
     #labels = [];
     #popup = null;
     #result = [];
-    constructor({ url, labels }) {
+    #loadModel;
+    constructor({ url, labels, modelId, loadModel }) {
         this.#url = url;
         this.#labels = labels;
+        this.#loadModel = loadModel;
         this.classifier = new Bayes({
             tokenizer: this.tokenizer,
         });
-        this.load(`/uploads/${url}/model.json`);
+        this.load(url, modelId);
     }
 
     unbanBlocks(blockMenu) {
@@ -73,8 +75,8 @@ class TextNaiveBaye {
         return this.#result;
     }
 
-    async load(url) {
-        const { data } = await callApi(url, { url });
+    async load(url, modelId) {
+        const data = await this.#loadModel({ url, modelId });
         this.classifier = fromJson(JSON.stringify(data));
         this.classifier.tokenizer = this.tokenizer;
         this.isLoaded = true;
