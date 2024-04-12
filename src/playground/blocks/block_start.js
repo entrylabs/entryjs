@@ -3,6 +3,29 @@ import { keyInputList } from './inputs/keyboard';
 module.exports = {
     getBlocks() {
         return {
+            messageAddButton: {
+                skeleton: 'basic_button',
+                color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
+                params: [
+                    {
+                        type: 'Text',
+                        text: Lang.Workspace.message_create,
+                        color: EntryStatic.colorSet.common.BUTTON,
+                        align: 'center',
+                    },
+                ],
+                def: {
+                    type: 'messageAddButton',
+                },
+                events: {
+                    mousedown: [
+                        function() {
+                            Entry.variableContainer.openVariableAddPanel('message');
+                        },
+                    ],
+                },
+                syntax: { js: [], py: [''] },
+            },
             when_run_button_click: {
                 color: EntryStatic.colorSet.block.default.START,
                 outerLine: EntryStatic.colorSet.block.darken.START,
@@ -729,10 +752,7 @@ module.exports = {
                     },
                     {
                         type: 'Dropdown',
-                        options: [
-                            ['언젠가', 0],
-                            ['지금', 1],
-                        ],
+                        options: [['언젠가', 0], ['지금', 1]],
                         value: '0',
                         fontSize: 11,
                     },
@@ -835,10 +855,7 @@ module.exports = {
                     },
                     {
                         type: 'Dropdown',
-                        options: [
-                            ['비슷하게', 0],
-                            ['똑같이', 1],
-                        ],
+                        options: [['비슷하게', 0], ['똑같이', 1]],
                         value: '16',
                         fontSize: 11,
                     },
@@ -992,18 +1009,12 @@ module.exports = {
                     },
                     {
                         type: 'Dropdown',
-                        options: [
-                            ['달성', 1],
-                            ['실패', 0],
-                        ],
+                        options: [['달성', 1], ['실패', 0]],
                         fontSize: 11,
                     },
                     {
                         type: 'Dropdown',
-                        options: [
-                            ['공식', 1],
-                            ['비공식', 0],
-                        ],
+                        options: [['공식', 1], ['비공식', 0]],
                         value: 1,
                         fontSize: 11,
                     },
