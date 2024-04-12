@@ -960,7 +960,6 @@ Entry.EXPANSION_BLOCK.weather.getBlocks = function() {
 
                 const type =
                     Entry.EXPANSION_BLOCK.weather.propertyMap[script.getField('TYPE', script)];
-                console.log(apiResult, type);
                 return apiResult[type];
             },
             syntax: {
