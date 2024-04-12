@@ -1015,7 +1015,10 @@ module.exports = {
                     },
                     {
                         type: 'Dropdown',
-                        options: [['달성', 1], ['실패', 0]],
+                        options: [
+                            ['달성', 1],
+                            ['실패', 0],
+                        ],
                         fontSize: 11,
                     },
                     {
