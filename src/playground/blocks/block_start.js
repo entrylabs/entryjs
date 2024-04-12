@@ -1023,7 +1023,10 @@ module.exports = {
                     },
                     {
                         type: 'Dropdown',
-                        options: [['공식', 1], ['비공식', 0]],
+                        options: [
+                            ['공식', 1],
+                            ['비공식', 0],
+                        ],
                         value: 1,
                         fontSize: 11,
                     },
