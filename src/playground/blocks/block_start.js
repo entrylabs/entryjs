@@ -752,7 +752,10 @@ module.exports = {
                     },
                     {
                         type: 'Dropdown',
-                        options: [['언젠가', 0], ['지금', 1]],
+                        options: [
+                            ['언젠가', 0],
+                            ['지금', 1],
+                        ],
                         value: '0',
                         fontSize: 11,
                     },
