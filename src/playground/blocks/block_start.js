@@ -858,7 +858,10 @@ module.exports = {
                     },
                     {
                         type: 'Dropdown',
-                        options: [['비슷하게', 0], ['똑같이', 1]],
+                        options: [
+                            ['비슷하게', 0],
+                            ['똑같이', 1],
+                        ],
                         value: '16',
                         fontSize: 11,
                     },
