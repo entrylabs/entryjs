@@ -145,6 +145,9 @@ class Svm extends LearningBase {
 
     async load(url, modelId) {
         const data = await this.loadModel({ url, modelId });
+        if (!data) {
+            return;
+        }
         const { serializeModel, result } = data;
         this.model = SVM.load(serializeModel);
         this.valueMap = result?.valueMap;

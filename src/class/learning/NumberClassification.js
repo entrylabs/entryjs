@@ -188,6 +188,9 @@ class NumberClassification {
 
     async load(url, modelId) {
         const savedData = await this.#loadModel({ url, modelId });
+        if (!savedData) {
+            return;
+        }
         this.#trainParam = {
             ...this.#trainParam,
             trainData: savedData.data,

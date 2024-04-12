@@ -123,6 +123,9 @@ class DecisionTree extends LearningBase {
 
     async load(url, modelId) {
         const data = await this.loadModel({ url, modelId });
+        if (!data) {
+            return;
+        }
         const { model, result } = data;
         this.model = DTClassifier.load(model);
         this.valueMap = result?.valueMap;

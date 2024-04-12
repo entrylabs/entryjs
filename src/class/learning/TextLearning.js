@@ -77,6 +77,9 @@ class TextNaiveBaye {
 
     async load(url, modelId) {
         const data = await this.#loadModel({ url, modelId });
+        if (!data) {
+            return;
+        }
         this.classifier = fromJson(JSON.stringify(data));
         this.classifier.tokenizer = this.tokenizer;
         this.isLoaded = true;

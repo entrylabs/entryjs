@@ -12,7 +12,6 @@ import LogisticRegression, {
 } from './learning/LogisticRegression';
 import Svm, { classes as SvmClasses } from './learning/Svm';
 import DataTable from './DataTable';
-import { MlDataApi }from '@entrylabs/ml';
 
 import blockAiLearning from '../playground/blocks/block_ai_learning';
 import blockAiLearningKnn from '../playground/blocks/block_ai_learning_knn';
@@ -67,7 +66,6 @@ export default class AILearning {
     constructor(playground, isEnable = true) {
         this.#playground = playground;
         this.isEnable = isEnable;
-        this.#dataApi = new MlDataApi();
     }
 
     get labels() {
@@ -134,6 +132,7 @@ export default class AILearning {
             classes = [],
             model,
             id,
+            url,
             _id,
             isActive = true,
             name,
@@ -142,8 +141,12 @@ export default class AILearning {
             tableData,
             result,
         } = modelInfo || {};
-        const url = await this.#dataApi?.getUploadUrl(modelInfo?.url);
-        if (!url || !this.isEnable || !isActive) {
+        if (!this.#dataApi) {
+            console.log("there is no dataApi");
+            return;
+        }
+        const modelPath = await this.#dataApi?.getUploadUrl(url);
+        if (!modelPath || !this.isEnable || !isActive) {
             return;
         }
         this.destroy();
@@ -163,7 +166,7 @@ export default class AILearning {
 
         if (type === 'text') {
             this.#module = new TextLearning({
-                url,
+                url: modelPath,
                 labels: this.#labels,
                 type,
                 modelId: this.#modelId,
@@ -174,7 +177,7 @@ export default class AILearning {
             this.#module = new NumberClassification({
                 name,
                 result,
-                url,
+                url: modelPath,
                 trainParam,
                 table: this.#tableData,
                 modelId: this.#modelId,
@@ -194,19 +197,19 @@ export default class AILearning {
             this.#module = new Regression({
                 name,
                 result,
-                url,
+                url: modelPath,
                 trainParam,
                 table: this.#tableData,
             });
         } else if (type === 'image') {
             this.#module = new ImageLearning({
-                url,
+                url: modelPath,
                 labels: this.#labels,
                 type,
             });
         } else if (type === 'speech') {
             this.#module = new Classification({
-                url,
+                url: modelPath,
                 labels: this.#labels,
                 type,
                 recordTime,
@@ -216,7 +219,7 @@ export default class AILearning {
             this.#module = new LogisticRegression({
                 name,
                 result,
-                url,
+                url: modelPath,
                 trainParam,
                 table: this.#tableData,
             });
@@ -225,7 +228,7 @@ export default class AILearning {
             this.#module = new DecisionTree({
                 name,
                 result,
-                url,
+                url: modelPath,
                 trainParam,
                 table: this.#tableData,
                 modelId: this.#modelId,
@@ -236,7 +239,7 @@ export default class AILearning {
             this.#module = new Svm({
                 name,
                 result,
-                url,
+                url: modelPath,
                 trainParam,
                 table: this.#tableData,
                 modelId: this.#modelId,
@@ -247,9 +250,6 @@ export default class AILearning {
         if (this.#module) {
             this.unbanBlocks();
             this.isLoaded = true;
-            console.log('loaded');
-        } else {
-            console.log('not loaded');
         }
     }
 
