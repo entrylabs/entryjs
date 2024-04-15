@@ -1228,7 +1228,7 @@ class BlockMenu extends ModelClass<Schema> {
             const bBox = this.svgGroup.getBBox();
             const adjust = this.hasCategory() ? 64 : 0;
             const expandWidth = bBox.width + bBox.x + adjust + 2;
-            const menuWidth = 319
+            const menuWidth = 319;
             if (expandWidth > menuWidth) {
                 this.widthBackup = menuWidth - adjust - 2;
                 $(this.blockMenuWrapper).css('width', expandWidth - adjust);
