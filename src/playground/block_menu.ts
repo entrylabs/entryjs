@@ -694,7 +694,6 @@ class BlockMenu extends ModelClass<Schema> {
             oldView.addClass(className2);
         }
 
-
         if (elem === oldView && !(doNotFold || !this.hasCategory())) {
             boardView.addClass('folding');
             handle.addClass('folding');
