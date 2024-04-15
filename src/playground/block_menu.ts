@@ -620,7 +620,6 @@ class BlockMenu extends ModelClass<Schema> {
             boardView.addClass('folding');
             Entry.playground.resizeHandle_.addClass('folding');
             Entry.playground.resizeHandle_.removeClass('unfolding');
-            this._selectedCategoryView = null;
             if (elem) {
                 elem.removeClass(className);
                 elem.addClass(className2);
@@ -628,7 +627,6 @@ class BlockMenu extends ModelClass<Schema> {
             Entry.playground.hideTabs();
             this.visible = false;
         } else {
-
             if (!this.visible) {
                 boardView.addClass('foldOut');
                 Entry.playground.showTabs();
@@ -697,8 +695,10 @@ class BlockMenu extends ModelClass<Schema> {
         }
 
 
-        if (elem == oldView && !(doNotFold || !this.hasCategory())) {
+        if (elem === oldView && !(doNotFold || !this.hasCategory())) {
             boardView.addClass('folding');
+            handle.addClass('folding');
+            handle.removeClass('unfolding');
             this._selectedCategoryView = null;
             if (elem) {
                 elem.removeClass(className);
@@ -707,13 +707,15 @@ class BlockMenu extends ModelClass<Schema> {
             Entry.playground.hideTabs();
             animate = true;
             this.visible = false;
-        } else if (!oldView && this.hasCategory() && !handle.hasClass('folding')) {
+        } else if (elem !== oldView && this.hasCategory() && handle.hasClass('folding')) {
             if (!this.visible) {
                 animate = true;
                 boardView.addClass('foldOut');
                 Entry.playground.showTabs();
             }
             boardView.removeClass('folding');
+            handle.addClass('unfolding');
+            handle.removeClass('folding');
             this.visible = true;
         } else if (!name) {
             this._selectedCategoryView = null;
@@ -1226,7 +1228,7 @@ class BlockMenu extends ModelClass<Schema> {
             const bBox = this.svgGroup.getBBox();
             const adjust = this.hasCategory() ? 64 : 0;
             const expandWidth = bBox.width + bBox.x + adjust + 2;
-            const { menuWidth } = Entry.interfaceState;
+            const menuWidth = 319
             if (expandWidth > menuWidth) {
                 this.widthBackup = menuWidth - adjust - 2;
                 $(this.blockMenuWrapper).css('width', expandWidth - adjust);
