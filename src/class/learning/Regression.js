@@ -129,7 +129,31 @@ class Regression extends LearningBase {
     }
 
     async load(url) {
-        this.model = await tf.loadLayersModel(url);
+        const model = await tf.loadLayersModel(url);
+        const modelData = new Promise((resolve) =>
+            model.save({
+                save: (data) => {
+                    const layers = data?.modelTopology?.config?.layers;
+                    if (Array.isArray(layers)) {
+                        data.modelTopology.config.layers.forEach((layer) => {
+                            if (layer?.config?.name) {
+                                layer.config.name = `${layer.config.name}_ws`;
+                            }
+                        });
+                    }
+                    if (Array.isArray(data.weightSpecs)) {
+                        data.weightSpecs.forEach((spec) => {
+                            const splits = spec.name.split('/');
+                            splits[0] = `${splits[0]}_ws`;
+                            spec.name = splits.join('/');
+                        });
+                    }
+                    resolve(data);
+                },
+            })
+        );
+        this.model = await tf.loadLayersModel({ load: () => modelData });
+        model.dispose();
     }
 
     convertNomalResult() {
@@ -277,7 +301,7 @@ function convertToTensor(inputs, outputs) {
 
 function createModel(inputShape) {
     const model = tf.sequential();
-    model.add(tf.layers.dense({ inputShape: [inputShape], units: 1 }));
+    model.add(tf.layers.dense({ inputShape: [inputShape], units: 1, name: 'reg_dense_ws' }));
     return model;
 }
 async function trainModel(model, inputs, outputs, trainParam, onBatchEnd, onEpochEnd) {
