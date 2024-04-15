@@ -227,6 +227,8 @@ Entry.initialize_ = function() {
         this._destroyer.add(this.aiUtilize);
         this.aiLearning = new AILearning(this.playground, this.aiLearningEnable);
         this._destroyer.add(this.aiLearning);
+        this.aiUtilize.init();
+        this.aiLearning.init();
     }
 
     this.intro = new Entry.Intro();

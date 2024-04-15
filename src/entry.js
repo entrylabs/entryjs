@@ -5,6 +5,10 @@ import 'simplebar/dist/simplebar.css';
 const Entry = {};
 Entry.EXPANSION_BLOCK = {};
 Entry.EXPANSION_BLOCK_LIST = {};
+Entry.AI_UTILIZE_BLOCK = {};
+Entry.AI_UTILIZE_BLOCK_LIST = {};
+Entry.AI_UTILIZE_BLOCK_LIST_DEPRECATED = {};
+Entry.ALL_AI_UTILIZE_BLOCK_LIST = {};
 
 module.exports = Entry;
 global.Entry = Entry;
