@@ -616,7 +616,7 @@ class BlockMenu extends ModelClass<Schema> {
         const className = 'entrySelectedCategory';
         const className2 = 'entryUnSelectedCategory';
 
-        if(!boardView.hasClass('folding')) {
+        if (!boardView.hasClass('folding')) {
             boardView.addClass('folding');
             Entry.playground.resizeHandle_.addClass('folding');
             Entry.playground.resizeHandle_.removeClass('unfolding');
