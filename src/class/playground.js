@@ -618,6 +618,12 @@ Entry.Playground = class Playground {
         if (Entry.hwLite) {
             Entry.hwLite.refreshHardwareLiteBlockMenu();
         }
+        if (Entry.options.expansionDisable) {
+            Entry.playground.blockMenu.banCategory('expansion');
+        }
+        if (Entry.options.aiUtilizeDisable) {
+            Entry.playground.blockMenu.banCategory('ai_utilize');
+        }
     }
 
     /**

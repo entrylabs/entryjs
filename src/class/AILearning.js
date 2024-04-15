@@ -13,6 +13,27 @@ import LogisticRegression, {
 import Svm, { classes as SvmClasses } from './learning/Svm';
 import DataTable from './DataTable';
 
+import blockAiLearning from '../playground/blocks/block_ai_learning';
+import blockAiLearningKnn from '../playground/blocks/block_ai_learning_knn';
+import blockAiLearningCluster from '../playground/blocks/block_ai_learning_cluster';
+import blockAiLearningRegression from '../playground/blocks/block_ai_learning_regression';
+// eslint-disable-next-line max-len
+import blockAiLearningLogisticRegression from '../playground/blocks/block_ai_learning_logistic_regression';
+import blockAiLearningDecisiontree from '../playground/blocks/block_ai_learning_decisiontree';
+import blockAiLearningSvm from '../playground/blocks/block_ai_learning_svm';
+import blockAiUtilizeMediaPipe from '../playground/blocks/block_ai_utilize_media_pipe';
+
+const basicBlockList = [
+    blockAiLearning,
+    blockAiLearningKnn,
+    blockAiLearningCluster,
+    blockAiLearningRegression,
+    blockAiLearningLogisticRegression,
+    blockAiLearningDecisiontree,
+    blockAiLearningSvm,
+    blockAiUtilizeMediaPipe,
+];
+
 const banClasses = [
     ...ClusterClasses,
     ...RegressionClasses,
@@ -48,6 +69,16 @@ export default class AILearning {
 
     get labels() {
         return this.#labels;
+    }
+
+    init() {
+        const blockObject = {};
+        basicBlockList.forEach((value) => {
+            if ('getBlocks' in value) {
+                Object.assign(blockObject, value.getBlocks());
+            }
+        });
+        Entry.block = Object.assign(Entry.block, blockObject);
     }
 
     removeAllBlocks() {

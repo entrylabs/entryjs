@@ -219,6 +219,7 @@ Entry.initialize_ = function() {
     if (this.options.expansionDisable === false || this.options.expansionDisable === undefined) {
         this.expansion = new Expansion(this.playground);
         this._destroyer.add(this.expansion);
+        this.expansion.init();
     }
 
     if (this.options.aiUtilizeDisable === false || this.options.aiUtilizeDisable === undefined) {
@@ -226,6 +227,8 @@ Entry.initialize_ = function() {
         this._destroyer.add(this.aiUtilize);
         this.aiLearning = new AILearning(this.playground, this.aiLearningEnable);
         this._destroyer.add(this.aiLearning);
+        this.aiUtilize.init();
+        this.aiLearning.init();
     }
 
     this.intro = new Entry.Intro();
