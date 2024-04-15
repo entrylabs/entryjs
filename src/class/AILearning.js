@@ -78,7 +78,6 @@ export default class AILearning {
                 Object.assign(blockObject, value.getBlocks());
             }
         });
-        console.log('blockObject', blockObject);
         Entry.block = Object.assign(Entry.block, blockObject);
     }
 
