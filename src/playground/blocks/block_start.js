@@ -3,6 +3,29 @@ import { keyInputList } from './inputs/keyboard';
 module.exports = {
     getBlocks() {
         return {
+            messageAddButton: {
+                skeleton: 'basic_button',
+                color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
+                params: [
+                    {
+                        type: 'Text',
+                        text: Lang.Workspace.message_create,
+                        color: EntryStatic.colorSet.common.BUTTON,
+                        align: 'center',
+                    },
+                ],
+                def: {
+                    type: 'messageAddButton',
+                },
+                events: {
+                    mousedown: [
+                        function() {
+                            Entry.variableContainer.openVariableAddPanel('message');
+                        },
+                    ],
+                },
+                syntax: { js: [], py: [''] },
+            },
             when_run_button_click: {
                 color: EntryStatic.colorSet.block.default.START,
                 outerLine: EntryStatic.colorSet.block.darken.START,
