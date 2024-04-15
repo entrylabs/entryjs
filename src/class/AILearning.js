@@ -2,7 +2,7 @@ import TextLearning, { classes as TextClasses } from './learning/TextLearning';
 import Cluster, { classes as ClusterClasses } from './learning/Cluster';
 import Regression, { classes as RegressionClasses } from './learning/Regression';
 import ImageLearning, { classes as ImageClasses } from './learning/ImageLearning';
-import Classification, { classes as ClassificationClasses } from './learning/Classification';
+import SpeechClassification, { classes as SpeechClasses } from './learning/SpeechClassification';
 import NumberClassification, {
     classes as NumberClassificationClasses,
 } from './learning/NumberClassification';
@@ -39,7 +39,7 @@ const banClasses = [
     ...RegressionClasses,
     ...TextClasses,
     ...ImageClasses,
-    ...ClassificationClasses,
+    ...SpeechClasses,
     ...NumberClassificationClasses,
     ...DecisionTreeClasses,
     ...LogisticRegressionClasses,
@@ -142,7 +142,7 @@ export default class AILearning {
             result,
         } = modelInfo || {};
         if (!this.#dataApi) {
-            console.log("there is no dataApi");
+            console.log('there is no dataApi');
             return;
         }
         const modelPath = await this.#dataApi?.getUploadUrl(url);
@@ -208,7 +208,7 @@ export default class AILearning {
                 type,
             });
         } else if (type === 'speech') {
-            this.#module = new Classification({
+            this.#module = new SpeechClassification({
                 url: modelPath,
                 labels: this.#labels,
                 type,

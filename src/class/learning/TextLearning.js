@@ -25,6 +25,10 @@ class TextNaiveBaye {
         this.load(url, modelId);
     }
 
+    get labels() {
+        return this.#labels;
+    }
+
     unbanBlocks(blockMenu) {
         blockMenu.unbanClass(`ai_learning_classification`);
         blockMenu.unbanClass(`ai_learning_text`);
@@ -52,12 +56,12 @@ class TextNaiveBaye {
             return;
         }
         this.#result = [];
-        this.#popup = new InputPopup({
-            url: this.#url, 
-            labels: this.#labels,
-            type: this.#type
+        Entry.dispatchEvent('openMLInputPopup', {
+            type: 'text',
+            predict: async (text) => {
+                this.#result = await this.predict(text);
+            },
         });
-        this.#popup.open();
     }
 
     async tokenizer(text) {
