@@ -38,7 +38,11 @@ class DecisionTree extends LearningBase {
 
         this.fields = table?.select?.[0]?.map((index) => table?.fields[index]);
         this.predictFields = table?.select?.[1]?.map((index) => table?.fields[index]);
-        this.load(url, modelId);
+        if (this.url !== url || this.modelId !== modelId) {
+            this.load(url, modelId);
+            this.url = url;
+            this.modelId = modelId;
+        }
         if (!Utils.isWebGlSupport()) {
             tf.setBackend('cpu');
         }

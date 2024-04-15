@@ -36,7 +36,10 @@ class LogisticRegression extends LearningBase {
         if (this.attrLength === 1) {
             this.chartEnable = true;
         }
-        this.load(url);
+        if (this.url !== url) {
+            this.load(url);
+            this.url = url;
+        }
 
         this.fields = table?.select?.[0]?.map((index) => table?.fields[index]);
         this.predictFields = table?.select?.[1]?.map((index) => table?.fields[index]);

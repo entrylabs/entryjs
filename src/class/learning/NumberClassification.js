@@ -58,7 +58,11 @@ class NumberClassification {
         if (this.#attrLength === 2) {
             this.#chartEnable = true;
         }
-        this.load(url, modelId);
+        if (this.url !== url || this.modelId !== modelId) {
+            this.load(url, modelId);
+            this.url = url;
+            this.modelId = modelId;
+        }
     }
 
     setTable() {
