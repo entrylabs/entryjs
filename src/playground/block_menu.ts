@@ -685,7 +685,7 @@ class BlockMenu extends ModelClass<Schema> {
         let animate = false;
         const board = this.workspace.board;
         const boardView = board.view;
-        const handle = Entry.playground.resizeHandle_
+        const handle = Entry.playground.resizeHandle_;
         const className = 'entrySelectedCategory';
         const className2 = 'entryUnSelectedCategory';
 
