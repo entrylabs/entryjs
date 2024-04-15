@@ -150,6 +150,7 @@ class BlockMenu extends ModelClass<Schema> {
         this._dSelectMenu = debounce(this.selectMenu, 0);
 
         this._align = align || 'CENTER';
+        this._svgWidth = 254;
         this._scroll = scroll !== undefined ? scroll : false;
         this._bannedClass = [];
         this._categories = [];
@@ -177,7 +178,6 @@ class BlockMenu extends ModelClass<Schema> {
         this._generateView(this._categoryData);
 
         this._splitters = [];
-        this.setWidth();
 
         this.svg = Entry.SVG(this._svgId);
         Entry.Utils.addFilters(this.svg, this.suffix);
@@ -573,11 +573,6 @@ class BlockMenu extends ModelClass<Schema> {
         });
     }
 
-    setWidth() {
-        this._svgWidth = this.blockMenuContainer.width();
-        this.updateSplitters();
-    }
-
     setMenu(doNotAlign?: boolean) {
         if (!this.hasCategory()) {
             return;
@@ -614,6 +609,51 @@ class BlockMenu extends ModelClass<Schema> {
         });
     }
 
+    toggleBlockMenu() {
+        const board = this.workspace.board;
+        const boardView = board.view;
+        const elem = this._categoryElems[this.lastSelector];
+        const className = 'entrySelectedCategory';
+        const className2 = 'entryUnSelectedCategory';
+
+        if(!boardView.hasClass('folding')) {
+            boardView.addClass('folding');
+            Entry.playground.resizeHandle_.addClass('folding');
+            Entry.playground.resizeHandle_.removeClass('unfolding');
+            this._selectedCategoryView = null;
+            if (elem) {
+                elem.removeClass(className);
+                elem.addClass(className2);
+            }
+            Entry.playground.hideTabs();
+            this.visible = false;
+        } else {
+
+            if (!this.visible) {
+                boardView.addClass('foldOut');
+                Entry.playground.showTabs();
+            }
+            boardView.removeClass('folding');
+            Entry.playground.resizeHandle_.addClass('unfolding');
+            Entry.playground.resizeHandle_.removeClass('folding');
+            this.visible = true;
+        }
+        Entry.bindAnimationCallbackOnce(boardView, () => {
+            board.scroller.resizeScrollBar.call(board.scroller);
+            boardView.removeClass('foldOut');
+            Entry.windowResized.notify();
+        });
+
+        if (this.visible) {
+            if (elem) {
+                elem.removeClass(className2);
+                elem.addClass(className);
+            }
+        }
+
+        this.align();
+    }
+
     selectMenu(selector: number | string, doNotFold: boolean, doNotAlign?: boolean) {
         if (Entry.disposeEvent) {
             Entry.disposeEvent.notify();
@@ -647,6 +687,7 @@ class BlockMenu extends ModelClass<Schema> {
         let animate = false;
         const board = this.workspace.board;
         const boardView = board.view;
+        const handle = Entry.playground.resizeHandle_
         const className = 'entrySelectedCategory';
         const className2 = 'entryUnSelectedCategory';
 
@@ -654,6 +695,7 @@ class BlockMenu extends ModelClass<Schema> {
             oldView.removeClass(className);
             oldView.addClass(className2);
         }
+
 
         if (elem == oldView && !(doNotFold || !this.hasCategory())) {
             boardView.addClass('folding');
@@ -665,7 +707,7 @@ class BlockMenu extends ModelClass<Schema> {
             Entry.playground.hideTabs();
             animate = true;
             this.visible = false;
-        } else if (!oldView && this.hasCategory()) {
+        } else if (!oldView && this.hasCategory() && !handle.hasClass('folding')) {
             if (!this.visible) {
                 animate = true;
                 boardView.addClass('foldOut');

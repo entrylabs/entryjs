@@ -357,9 +357,6 @@ Entry.resizeElement = function(interfaceModel) {
         if (!interfaceModel.canvasWidth && interfaceState.canvasWidth) {
             interfaceModel.canvasWidth = interfaceState.canvasWidth;
         }
-        if (!interfaceModel.menuWidth && this.interfaceState.menuWidth) {
-            interfaceModel.menuWidth = interfaceState.menuWidth;
-        }
 
         if (Entry.engine.speedPanelOn) {
             Entry.engine.toggleSpeedPanel();
@@ -386,25 +383,8 @@ Entry.resizeElement = function(interfaceModel) {
 
         toggleEngineContainer(isEngineContainerVisible);
 
-        let menuWidth = interfaceModel.menuWidth;
-        if (!menuWidth) {
-            menuWidth = 258;
-        } else if (menuWidth < 258) {
-            menuWidth = 258;
-        } else if (menuWidth > 516) {
-            menuWidth = 516;
-        }
-        interfaceModel.menuWidth = menuWidth;
-
         const blockMenu = mainWorkspace.blockMenu;
         const adjust = blockMenu.hasCategory() ? -64 : 0;
-
-        $('.blockMenuContainer').css({ width: `${menuWidth + adjust}px` });
-        $('.blockMenuContainer>div').css({ width: `${menuWidth + adjust - 2}px` });
-        blockMenu.setWidth();
-        $('.entryWorkspaceBoard').css({ left: `${menuWidth - 4}px` });
-        Entry.playground.resizeHandle_.style.left = `${menuWidth - 4}px`;
-        Entry.playground.variableViewWrapper_.style.width = `${menuWidth - 4}px`;
 
         this.interfaceState = interfaceModel;
     }
