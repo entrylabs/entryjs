@@ -145,7 +145,7 @@ export default class AILearning {
             console.log('there is no dataApi');
             return;
         }
-        const modelPath = await this.#dataApi?.getUploadUrl(url);
+        const modelPath = await this.#dataApi?.getModelDownloadUrl(url);
         if (!modelPath || !this.isEnable || !isActive) {
             return;
         }
