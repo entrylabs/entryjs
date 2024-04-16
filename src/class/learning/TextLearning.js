@@ -1,5 +1,4 @@
 import Bayes, { fromJson } from './bayes';
-import InputPopup from './InputPopup';
 
 const { callApi } = require('../../util/common');
 
@@ -43,9 +42,11 @@ class TextNaiveBaye {
 
     getResult(index) {
         const result = this.#result.length ? this.#result : this.#popup?.result || [];
-        const defaultResult = {probability: 0, className: ''};
-        if(index !== undefined && index > -1) {
-            return result.find(({className}) => className === this.#labels[index]) || defaultResult;
+        const defaultResult = { probability: 0, className: '' };
+        if (index !== undefined && index > -1) {
+            return (
+                result.find(({ className }) => className === this.#labels[index]) || defaultResult
+            );
         }
         return result[0] || defaultResult;
     }
@@ -60,6 +61,11 @@ class TextNaiveBaye {
             type: 'text',
             predict: async (text) => {
                 this.#result = await this.predict(text);
+            },
+            url: this.#url,
+            labels: this.#labels,
+            setResult: (result) => {
+                this.#result = result;
             },
         });
     }

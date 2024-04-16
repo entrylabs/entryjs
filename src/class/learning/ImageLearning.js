@@ -59,6 +59,11 @@ class ImageLearning {
             predict: async (canvas) => {
                 this.#result = await this.predict(canvas);
             },
+            url: this.#url,
+            labels: this.#labels,
+            setResult: (result) => {
+                this.#result = result;
+            },
         });
     }
 

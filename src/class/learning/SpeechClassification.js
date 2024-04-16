@@ -45,6 +45,11 @@ class Classification {
             predict: async (data) => {
                 this.#result = await this.predict(data);
             },
+            url: this.#url,
+            labels: this.#labels,
+            setResult: (result) => {
+                this.#result = result;
+            },
         });
     }
 
