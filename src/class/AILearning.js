@@ -2,7 +2,7 @@ import TextLearning, { classes as TextClasses } from './learning/TextLearning';
 import Cluster, { classes as ClusterClasses } from './learning/Cluster';
 import Regression, { classes as RegressionClasses } from './learning/Regression';
 import ImageLearning, { classes as ImageClasses } from './learning/ImageLearning';
-import Classification, { classes as ClassificationClasses } from './learning/Classification';
+import SpeechClassification, { classes as SpeechClasses } from './learning/SpeechClassification';
 import NumberClassification, {
     classes as NumberClassificationClasses,
 } from './learning/NumberClassification';
@@ -39,7 +39,7 @@ const banClasses = [
     ...RegressionClasses,
     ...TextClasses,
     ...ImageClasses,
-    ...ClassificationClasses,
+    ...SpeechClasses,
     ...NumberClassificationClasses,
     ...DecisionTreeClasses,
     ...LogisticRegressionClasses,
@@ -61,6 +61,7 @@ export default class AILearning {
     #recordTime = 2000;
     #module = null;
     #tableData = null;
+    #dataApi = undefined;
 
     constructor(playground, isEnable = true) {
         this.#playground = playground;
@@ -79,6 +80,10 @@ export default class AILearning {
             }
         });
         Entry.block = Object.assign(Entry.block, blockObject);
+    }
+
+    setDataApi(api) {
+        this.#dataApi = api;
     }
 
     removeAllBlocks() {
@@ -120,14 +125,14 @@ export default class AILearning {
         this.destroy();
     }
 
-    load(modelInfo) {
+    async load(modelInfo) {
         const {
-            url,
             labels,
             type,
             classes = [],
             model,
             id,
+            url,
             _id,
             isActive = true,
             name,
@@ -136,8 +141,12 @@ export default class AILearning {
             tableData,
             result,
         } = modelInfo || {};
-
-        if (!url || !this.isEnable || !isActive) {
+        if (!this.#dataApi) {
+            console.log('there is no dataApi');
+            return;
+        }
+        const modelPath = await this.#dataApi?.getModelDownloadUrl(url);
+        if (!modelPath || !this.isEnable || !isActive) {
             return;
         }
         this.destroy();
@@ -157,19 +166,22 @@ export default class AILearning {
 
         if (type === 'text') {
             this.#module = new TextLearning({
-                url,
+                url: modelPath,
                 labels: this.#labels,
                 type,
-                recordTime,
+                modelId: this.#modelId,
+                loadModel: this.#dataApi?.loadModel,
             });
         } else if (type === 'number') {
             this.#tableData = tableData || createDataTable(classes, name);
             this.#module = new NumberClassification({
                 name,
                 result,
-                url,
+                url: modelPath,
                 trainParam,
                 table: this.#tableData,
+                modelId: this.#modelId,
+                loadModel: this.#dataApi?.loadModel,
             });
             this.#labels = this.#module.getLabels();
         } else if (type === 'cluster') {
@@ -185,19 +197,19 @@ export default class AILearning {
             this.#module = new Regression({
                 name,
                 result,
-                url,
+                url: modelPath,
                 trainParam,
                 table: this.#tableData,
             });
         } else if (type === 'image') {
             this.#module = new ImageLearning({
-                url,
+                url: modelPath,
                 labels: this.#labels,
                 type,
             });
         } else if (type === 'speech') {
-            this.#module = new Classification({
-                url,
+            this.#module = new SpeechClassification({
+                url: modelPath,
                 labels: this.#labels,
                 type,
                 recordTime,
@@ -207,7 +219,7 @@ export default class AILearning {
             this.#module = new LogisticRegression({
                 name,
                 result,
-                url,
+                url: modelPath,
                 trainParam,
                 table: this.#tableData,
             });
@@ -216,18 +228,22 @@ export default class AILearning {
             this.#module = new DecisionTree({
                 name,
                 result,
-                url,
+                url: modelPath,
                 trainParam,
                 table: this.#tableData,
+                modelId: this.#modelId,
+                loadModel: this.#dataApi?.loadModel,
             });
         } else if (type === 'svm') {
             this.#tableData = tableData || createDataTable(classes, name);
             this.#module = new Svm({
                 name,
                 result,
-                url,
+                url: modelPath,
                 trainParam,
                 table: this.#tableData,
+                modelId: this.#modelId,
+                loadModel: this.#dataApi?.loadModel,
             });
         }
 
