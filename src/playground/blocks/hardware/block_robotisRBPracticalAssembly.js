@@ -5402,7 +5402,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 var data_address_2 = 0;
                 var data_length_2 = 0;
                 var data_value_2 = 0;
-                var interval = 60;
+                var interval = 0;
 
                 switch (cmBuzzerNote) {
                     case 3:
@@ -5565,7 +5565,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 var data_address_2 = 0;
                 var data_length_2 = 0;
                 var data_value_2 = 0;
-                var interval = 60;
+                var interval = 0;
 
                 cmBuzzerTime = Math.round(60 * 1000 / beat_per_minute * cmBuzzerBeat);
 
@@ -5655,7 +5655,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 var cmBuzzerNote = script.getNumberValue('CM_BUZZER_NOTE', script);
                 let cmBuzzerTime = 0;
 
-                var interval = 60;
+                var interval = 0;
 
                 switch (cmBuzzerNote) {
                     case 3:
@@ -5723,7 +5723,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 var cmBuzzerBeat = script.getNumberValue('CM_BUZZER_BEAT', script);
                 let cmBuzzerTime = 0;
 
-                var interval = 60;
+                var interval = 0;
                 
                 cmBuzzerBeat = Math.min(Math.max(cmBuzzerBeat, 0), 100);
 
