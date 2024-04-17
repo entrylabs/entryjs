@@ -1052,7 +1052,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             events: {},
             def: {
                 params: [
-                    15,
+                    5,
                     null,
                     null,
                 ],
@@ -1215,12 +1215,12 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 params: [
                     {
                         type: 'number',
-                        params: ['15'],
+                        params: ['5'],
                     },
                     null,
                     {
                         type: 'number',
-                        params: ['15'],
+                        params: ['5'],
                     },
                     null,
                 ],
@@ -1324,7 +1324,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     null,
                     {
                         type: 'number',
-                        params: ['15'],
+                        params: ['5'],
                     },
                     null,
                 ],
@@ -3014,11 +3014,11 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
+                        [Lang.Blocks.robotis_kkokdu, '3'],
                         [Lang.Blocks.robotis_rla, '2'],
                         [Lang.Blocks.robotis_rgee, '0'],
-                        [Lang.Blocks.robotis_kkokdu, '3'],
                     ],
-                    value: '2',
+                    value: '3',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -3191,11 +3191,11 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
+                        [Lang.Blocks.robotis_kkokdu, '1'],
                         [Lang.Blocks.robotis_rla, '0'],
                         [Lang.Blocks.robotis_rgee, '-1'],
-                        [Lang.Blocks.robotis_kkokdu, '1'],
                     ],
-                    value: '0',
+                    value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
