@@ -1579,7 +1579,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
                     data_sendqueue,
-                    Entry.Robotis_openCM70.delay + 500 * Math.abs(distance)
+                    Entry.Robotis_openCM70.delay + 150 * Math.abs(distance) + 1200
                     //Entry.Robotis_openCM70.delay
                 );
             },
@@ -1664,7 +1664,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
                     data_sendqueue,
-                    Entry.Robotis_openCM70.delay + Math.abs(angle) * 2500 / 360 + 500
+                    Entry.Robotis_openCM70.delay + Math.abs(angle) * 16 + 1500
                     //Entry.Robotis_openCM70.delay
                 );
             },
