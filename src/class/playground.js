@@ -128,9 +128,11 @@ Entry.Playground = class Playground {
 
             const resizeHandle = Entry.createElement('div')
                 .addClass('entryPlaygroundResizeWorkspace', 'entryRemove')
+                .bindOnClick(() => {
+                    this.mainWorkspace.blockMenu.toggleBlockMenu();
+                })
                 .appendTo(codeView);
             this.resizeHandle_ = resizeHandle;
-            this.initializeResizeHandle(resizeHandle);
 
             /** @type {!Element} */
             this.codeView_ = codeView;
@@ -1684,40 +1686,6 @@ Entry.Playground = class Playground {
             this.tabViewElements[item].addClass('showTab');
             this.tabViewElements[item].removeClass('hideTab');
         }
-    }
-
-    /**
-     * Handle is resizing playground handle.
-     * This add mouse move and mouse up event to document.
-     * @param {!Element} handle
-     */
-    initializeResizeHandle(handle) {
-        let listener;
-        const that = this;
-        $(handle).bind('mousedown touchstart', function(e) {
-            e.preventDefault();
-            if (Entry.disposeEvent) {
-                Entry.disposeEvent.notify();
-            }
-            that.resizing = true;
-            if (Entry.documentMousemove) {
-                listener = Entry.documentMousemove.attach(this, ({ clientX }) => {
-                    if (that.resizing) {
-                        Entry.resizeElement({
-                            menuWidth: clientX - Entry.interfaceState.canvasWidth,
-                        });
-                    }
-                });
-            }
-            $(document).bind('mouseup.resizeHandle touchend.resizeHandle', () => {
-                $(document).unbind('.resizeHandle');
-                if (listener) {
-                    that.resizing = false;
-                    listener.destroy();
-                    listener = undefined;
-                }
-            });
-        });
     }
 
     /**
