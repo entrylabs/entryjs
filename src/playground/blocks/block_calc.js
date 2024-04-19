@@ -617,7 +617,7 @@ module.exports = {
                     if (operator === 'QUOTIENT') {
                         return Math.floor(left / right);
                     } else {
-                        return left % right;
+                        return left - right * Math.floor(left / right);
                     }
                 },
                 syntax: {
