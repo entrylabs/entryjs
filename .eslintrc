@@ -7,8 +7,8 @@
             "files": ["*.ts"],
             "parser": "@typescript-eslint/parser",
             "rules": {
-                "no-unused-vars": "off"
-            }
+                "no-unused-vars": "off",
+            },
         },
         {
             "files": ["*.d.ts"],
@@ -16,21 +16,21 @@
             "rules": {
                 "no-unused-vars": "off",
                 "no-var": "off",
-                "no-useless-constructor": "off"
-            }
-        }
+                "no-useless-constructor": "off",
+            },
+        },
     ],
     "env": {
         "es6": true,
         "browser": true,
-        "jquery": true
+        "jquery": true,
     },
     "parserOptions": {
         "ecmaVersion": 2020,
         "sourceType": "module",
         "ecmaFeatures": {
-            "jsx": true
-        }
+            "jsx": true,
+        },
     },
     "rules": {
         "prefer-const": "warn",
@@ -50,10 +50,10 @@
         "space-before-function-paren": [
             "warn",
             {
-                "anonymous": "never",
+                "anonymous": "always",
                 "named": "never",
-                "asyncArrow": "always"
-            }
+                "asyncArrow": "never",
+            },
         ],
         "prefer-arrow-callback": "warn",
         "template-curly-spacing": "warn",
@@ -74,7 +74,7 @@
         "brace-style": "warn",
         "space-before-blocks": [
             "warn",
-            { "functions": "always", "keywords": "always", "classes": "always" }
+            { "functions": "always", "keywords": "always", "classes": "always" },
         ],
         "space-infix-ops": "warn",
         "eol-last": ["warn", "always"],
@@ -90,7 +90,7 @@
         "camelcase": ["warn", { "properties": "never" }],
         "new-cap": ["warn", { "capIsNewExceptionPattern": "^Entry." }],
         "curly": "warn",
-        "keyword-spacing": "warn"
+        "keyword-spacing": "warn",
     },
     "globals": {
         "$": true,
@@ -123,6 +123,6 @@
         "require": true,
         "module": true,
         "Symbol": true,
-        "process": true
-    }
+        "process": true,
+    },
 }
