@@ -178,6 +178,7 @@ Entry.Neo = new (class Neo {
             'neo_line_tracer_start',
             'neo_line_cross_move',
             'neo_line_cross_turn',
+            'neo_line_cross_reached',
 
             // motor
             'neo_motor_title',
@@ -308,14 +309,15 @@ Entry.Neo = new (class Neo {
                     neo_auto_driving_stop: '자율주행 멈추기 %1',
 
                     // auto parking
-                    neo_auto_parking_title: '자율주차',
+                    neo_auto_parking_title: '자율주차 | 아이블(AiBle) 전용',
                     neo_auto_parking_start: '주차하기 %1 %2 %3',
 
                     // line tracer
-                    neo_line_tracer_title: '라인트레이서',
-                    neo_line_tracer_start: '검은색 선 따라가기 %1 %2 %3',
+                    neo_line_tracer_title: '라인트레이서 | 아이온(AION) 전용',
+                    neo_line_tracer_start: '검은색 길 따라가기 %1 %2 %3',
                     neo_line_cross_move: '%1 교차로까지 직진하기 %2',
-                    neo_line_cross_turn: '%1 교차로에서 방향바꾸기 %2 %3',
+                    neo_line_cross_turn: '방향바꾸기 %1 %2',
+                    neo_line_cross_reached: '교차로에 도착하였는가?',
 
                     // motor
                     neo_motor_title: '회전모터',
@@ -351,13 +353,14 @@ Entry.Neo = new (class Neo {
                     // sensor
                     neo_sensor_title: '센서',
                     neo_sensor_in: '%1',
+                    neo_sensor_in_2: '%1',
                     neo_sensor_digital_in: '%1 의 %2',
                     neo_sensor_convert: '%1 : %2 %3 → %4 %5',
                     neo_sensor_compare: '%1 %2 %3',
                     neo_sensor_between: '%1 %2 %3 %4 %5',
                     neo_sensor_digital_compare: '%1 의 %2 %3 %4',
                     neo_sensor_color_compare: '%1 = %2',
-                    neo_sensor_color_sequence_compare: '%1 = %2',
+                    neo_sensor_color_sequence_compare: '%1 = %2 %3 %4',
                     neo_sensor_button_pressed: '%1 %2',
 
                     // buzzer
@@ -570,16 +573,16 @@ Entry.Neo = new (class Neo {
                     neo_servo_direction_f: '앞으로',
                     neo_servo_direction_b: '뒤로',
 
-                    neo_line_cross_move_1: '1번째',
-                    neo_line_cross_move_2: '2번째',
-                    neo_line_cross_move_3: '3번째',
-                    neo_line_cross_move_4: '4번째',
-                    neo_line_cross_move_5: '5번째',
-                    neo_line_cross_move_6: '6번째',
-                    neo_line_cross_move_7: '7번째',
-                    neo_line_cross_move_8: '8번째',
-                    neo_line_cross_move_9: '9번째',
-                    neo_line_cross_move_10: '10번째',
+                    neo_line_cross_move_1: '첫번째',
+                    neo_line_cross_move_2: '두번째',
+                    neo_line_cross_move_3: '세번째',
+                    neo_line_cross_move_4: '네번째',
+                    neo_line_cross_move_5: '다섯번째',
+                    neo_line_cross_move_6: '여섯번째',
+                    neo_line_cross_move_7: '일곱번째',
+                    neo_line_cross_move_8: '여덟번째',
+                    neo_line_cross_move_9: '아홉번째',
+                    neo_line_cross_move_10: '열번째',
 
                     neo_line_cross_turn_direction_l: '좌회전',
                     neo_line_cross_turn_direction_r: '우회전',
@@ -689,27 +692,6 @@ Entry.Neo = new (class Neo {
                     neo_color_green: '녹색',
                     neo_color_blue: '파랑',
 
-                    neo_color_seq_ryg: '빨노녹',
-                    neo_color_seq_ryb: '빨노파',
-                    neo_color_seq_rgy: '빨녹노',
-                    neo_color_seq_rgb: '빨녹파',
-                    neo_color_seq_rby: '빨파노',
-                    neo_color_seq_rbg: '빨파녹',
-                    neo_color_seq_yrb: '노빨파',
-                    neo_color_seq_ygr: '노녹빨',
-                    neo_color_seq_ygb: '노녹파',
-                    neo_color_seq_ybr: '노파빨',
-                    neo_color_seq_grb: '녹빨파',
-                    neo_color_seq_gyr: '녹노빨',
-                    neo_color_seq_gyb: '녹노파',
-                    neo_color_seq_gbr: '녹파빨',
-                    neo_color_seq_bry: '파빨노',
-                    neo_color_seq_brg: '파빨녹',
-                    neo_color_seq_byr: '파노빨',
-                    neo_color_seq_byg: '파노녹',
-                    neo_color_seq_bgr: '파녹빨',
-                    neo_color_seq_bgy: '파녹노',
-
                     neo_button_1: '버튼1',
                     neo_button_2: '버튼2',
                     neo_button_3: '버튼3',
@@ -773,14 +755,15 @@ Entry.Neo = new (class Neo {
                     neo_auto_driving_stop: 'Stop self-driving %1',
 
                     // auto parking
-                    neo_auto_parking_title: 'Auto parking',
+                    neo_auto_parking_title: 'Auto parking | AiBle-only',
                     neo_auto_parking_start: 'Start auto parking %1 %2 %3',
 
                     // line tracer
-                    neo_line_tracer_title: 'Line tracer',
+                    neo_line_tracer_title: 'Line tracer | AION-only',
                     neo_line_tracer_start: 'Start line tracer with black line %1 %2 %3',
                     neo_line_cross_move: 'Keep moving to the %1 intersection %2',
-                    neo_line_cross_turn: 'Turn %2 at the %1 intersection %3',
+                    neo_line_cross_turn: 'Turn %1 %2',
+                    neo_line_cross_reached: 'Reached an intersection?',
 
                     // motor
                     neo_motor_title: 'Motor',
@@ -817,13 +800,14 @@ Entry.Neo = new (class Neo {
                     // sensor
                     neo_sensor_title: 'Sensor',
                     neo_sensor_in: '%1',
+                    neo_sensor_in_2: '%1',
                     neo_sensor_digital_in: '%1 %2',
                     neo_sensor_convert: '%1 : %2 %3 → %4 %5',
                     neo_sensor_compare: '%1 %2 %3',
                     neo_sensor_between: '%1 %2 %3 %4 %5',
                     neo_sensor_digital_compare: '%1 %2 %3 %4',
                     neo_sensor_color_compare: '%1 = %2',
-                    neo_sensor_color_sequence_compare: '%1 = %2',
+                    neo_sensor_color_sequence_compare: '%1 = %2 %3 %4',
                     neo_sensor_button_pressed: '%1 %2',
 
                     // buzzer
@@ -1084,11 +1068,11 @@ Entry.Neo = new (class Neo {
                     neo_led_brightness_95: '95%',
                     neo_led_brightness_100: '100%',
 
-                    neo_led_blink_speed_1: '1 step',
-                    neo_led_blink_speed_2: '2 steps',
-                    neo_led_blink_speed_3: '3 steps',
-                    neo_led_blink_speed_4: '4 steps',
-                    neo_led_blink_speed_5: '5 steps',
+                    neo_led_blink_speed_1: 'stage 1',
+                    neo_led_blink_speed_2: 'stage 2',
+                    neo_led_blink_speed_3: 'stage 3',
+                    neo_led_blink_speed_4: 'stage 4',
+                    neo_led_blink_speed_5: 'stage 5',
 
                     neo_set_output_value_0: '0',
                     neo_set_output_value_5: '5',
@@ -1154,27 +1138,6 @@ Entry.Neo = new (class Neo {
                     neo_color_yellow: 'yellow',
                     neo_color_green: 'green',
                     neo_color_blue: 'blue',
-
-                    neo_color_seq_ryg: 'RYG',
-                    neo_color_seq_ryb: 'RYB',
-                    neo_color_seq_rgy: 'RGY',
-                    neo_color_seq_rgb: 'RGB',
-                    neo_color_seq_rby: 'RBY',
-                    neo_color_seq_rbg: 'RBG',
-                    neo_color_seq_yrb: 'YRB',
-                    neo_color_seq_ygr: 'YGR',
-                    neo_color_seq_ygb: 'YGB',
-                    neo_color_seq_ybr: 'YBR',
-                    neo_color_seq_grb: 'GRB',
-                    neo_color_seq_gyr: 'GYR',
-                    neo_color_seq_gyb: 'GYB',
-                    neo_color_seq_gbr: 'GBR',
-                    neo_color_seq_bry: 'BRY',
-                    neo_color_seq_brg: 'BRG',
-                    neo_color_seq_byr: 'BYR',
-                    neo_color_seq_byg: 'BYG',
-                    neo_color_seq_bgr: 'BGR',
-                    neo_color_seq_bgy: 'BGY',
 
                     neo_button_1: 'button 1',
                     neo_button_2: 'button 2',
@@ -1342,8 +1305,8 @@ Entry.Neo = new (class Neo {
                 isNotFor: ['neo'],
                 func: (sprite, script) => {
                     if (!script.exec_phase) {
-                        const direction = script.getNumberField('DIRECTION', script);
-                        const speed = script.getStringField('SPEED', script);
+                        const direction = script.getNumberField('DIRECTION');
+                        const speed = script.getStringField('SPEED');
                         const duration = script.getStringValue('DURATION', script);
                         const blockId = this.generateBlockId();
                         if (speed.indexOf('IN') >= 0) {
@@ -1487,7 +1450,7 @@ Entry.Neo = new (class Neo {
                             [Lang.Blocks.neo_input_2, 'IN2'],
                             [Lang.Blocks.neo_input_3, 'IN3'],
                         ],
-                        value: '100',
+                        value: '60',
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1522,7 +1485,7 @@ Entry.Neo = new (class Neo {
                 isNotFor: ['neo'],
                 func: (sprite, script) => {
                     if (!script.exec_phase) {
-                        const speed = script.getStringField('SPEED', script);
+                        const speed = script.getStringField('SPEED');
                         const duration = script.getStringValue('DURATION', script);
                         const blockId = this.generateBlockId();
                         if (speed.indexOf('IN') >= 0) {
@@ -1637,8 +1600,8 @@ Entry.Neo = new (class Neo {
                 func: (sprite, script) => {
                     if (!script.exec_phase) {
                         script.exec_phase = ExecPhase.PENDING_RESPONSE;
-                        const sensor = script.getNumberField('SENSOR', script);
-                        const speed = script.getStringField('SPEED', script);
+                        const sensor = script.getNumberField('SENSOR');
+                        const speed = script.getStringField('SPEED');
                         const blockId = this.generateBlockId();
                         script.block_id = blockId;
                         if (speed.indexOf('IN') >= 0) {
@@ -1814,19 +1777,29 @@ Entry.Neo = new (class Neo {
                         type: 'Dropdown',
                         options: [
                             [Lang.Blocks.neo_motor_speed_100, '100'],
+                            [Lang.Blocks.neo_motor_speed_95, '95'],
                             [Lang.Blocks.neo_motor_speed_90, '90'],
+                            [Lang.Blocks.neo_motor_speed_85, '85'],
                             [Lang.Blocks.neo_motor_speed_80, '80'],
+                            [Lang.Blocks.neo_motor_speed_75, '75'],
                             [Lang.Blocks.neo_motor_speed_70, '70'],
+                            [Lang.Blocks.neo_motor_speed_65, '65'],
                             [Lang.Blocks.neo_motor_speed_60, '60'],
+                            [Lang.Blocks.neo_motor_speed_55, '55'],
                             [Lang.Blocks.neo_motor_speed_50, '50'],
+                            [Lang.Blocks.neo_motor_speed_45, '45'],
                             [Lang.Blocks.neo_motor_speed_40, '40'],
+                            [Lang.Blocks.neo_motor_speed_35, '35'],
                             [Lang.Blocks.neo_motor_speed_30, '30'],
+                            [Lang.Blocks.neo_motor_speed_25, '25'],
                             [Lang.Blocks.neo_motor_speed_20, '20'],
+                            [Lang.Blocks.neo_motor_speed_15, '15'],
                             [Lang.Blocks.neo_motor_speed_10, '10'],
+                            [Lang.Blocks.neo_motor_speed_5, '5'],
                             [Lang.Blocks.neo_motor_speed_0, '0'],
                             [Lang.Blocks.neo_input_3, 'IN3'],
                         ],
-                        value: '100',
+                        value: '60',
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1861,7 +1834,7 @@ Entry.Neo = new (class Neo {
                 isNotFor: ['neo'],
                 func: (sprite, script) => {
                     if (!script.exec_phase) {
-                        const speed = script.getStringField('SPEED', script);
+                        const speed = script.getStringField('SPEED');
                         const blockId = this.generateBlockId();
                         const duration = script.getStringValue('DURATION', script);
                         if (speed.indexOf('IN') >= 0) {
@@ -1945,7 +1918,7 @@ Entry.Neo = new (class Neo {
                 func: (sprite, script) => {
                     if (!script.exec_phase) {
                         script.exec_phase = ExecPhase.PENDING_RESPONSE;
-                        const count = script.getStringValue('COUNT', script);
+                        const count = script.getStringField('COUNT');
                         const blockId = this.generateBlockId();
                         script.block_id = blockId;
                         this.requestCommand(blockId, NeoBlockType.LINE_CROSS_MOVE, [count]);
@@ -1968,22 +1941,10 @@ Entry.Neo = new (class Neo {
                     {
                         type: 'Dropdown',
                         options: [
-                            [Lang.Blocks.neo_line_cross_turn_which_next, 1],
-                            [Lang.Blocks.neo_line_cross_turn_which_current, 2],
+                            [Lang.Blocks.neo_turn_direction_l, 30],
+                            [Lang.Blocks.neo_turn_direction_r, 31],
                         ],
-                        value: 10,
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    },
-                    {
-                        type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.neo_turn_direction_l, 10],
-                            [Lang.Blocks.neo_turn_direction_r, 11],
-                            [Lang.Blocks.neo_turn_direction_u, 12],
-                        ],
-                        value: 10,
+                        value: 30,
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1996,21 +1957,18 @@ Entry.Neo = new (class Neo {
                 ],
                 events: {},
                 def: {
-                    params: [null, null, null],
+                    params: [null, null],
                     type: 'neo_line_cross_turn',
                 },
                 paramsKeyMap: {
-                    WHICH: 0,
-                    DIRECTION: 1,
+                    DIRECTION: 0,
                 },
                 class: 'neo_line_tracer',
                 isNotFor: ['neo'],
                 func: (sprite, script) => {
                     if (!script.exec_phase) {
                         script.exec_phase = ExecPhase.PENDING_RESPONSE;
-                        const which = script.getStringValue('WHICH', script);
-                        let direction = script.getStringValue('DIRECTION', script);
-                        if (which === 1) direction += 20;
+                        const direction = script.getStringField('DIRECTION');
                         const blockId = this.generateBlockId();
                         script.block_id = blockId;
                         this.requestCommand(blockId, NeoBlockType.LINE_CROSS_TURN, [direction]);
@@ -2022,6 +1980,28 @@ Entry.Neo = new (class Neo {
                         }
                     }
                     return script;
+                },
+            },
+            neo_line_cross_reached: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic_boolean_field',
+                fontColor: '#fff',
+                statements: [],
+                params: [],
+                events: {},
+                def: {
+                    params: [],
+                    type: 'neo_line_cross_reached',
+                },
+                paramsKeyMap: {},
+                class: 'neo_line_tracer',
+                isNotFor: ['neo'],
+                func: (sprite, script) => {
+                    const sensorData = Entry.hw.portData['sensor'];
+                    const leftValue = sensorData['in1Values'][0];
+                    const rightValue = sensorData['in1Values'][1];
+                    return 0 <= leftValue && leftValue <= 50 && 0 <= rightValue && rightValue <= 50;
                 },
             },
 
@@ -2155,8 +2135,8 @@ Entry.Neo = new (class Neo {
                 isNotFor: ['neo'],
                 func: (sprite, script) => {
                     if (!script.exec_phase) {
-                        const dc = script.getNumberField('DC', script);
-                        const speed = script.getStringField('SPEED', script);
+                        const dc = script.getNumberField('DC');
+                        const speed = script.getStringField('SPEED');
                         const duration = script.getStringValue('DURATION', script);
                         const blockId = this.generateBlockId();
                         if (speed.indexOf('IN') >= 0) {
@@ -2293,7 +2273,7 @@ Entry.Neo = new (class Neo {
                 isNotFor: ['neo'],
                 func: (sprite, script) => {
                     if (!script.exec_phase) {
-                        const dc = script.getStringValue('DC', script);
+                        const dc = script.getStringField('DC');
                         const blockId = this.generateBlockId();
                         script.block_id = blockId;
                         script.exec_phase = ExecPhase.PENDING_RESPONSE;
@@ -2375,7 +2355,7 @@ Entry.Neo = new (class Neo {
                 func: (sprite, script) => {
                     if (!script.exec_phase) {
                         script.exec_phase = ExecPhase.PENDING_RESPONSE;
-                        const output = script.getStringValue('OUTPUT', script);
+                        const output = script.getStringField('OUTPUT');
                         const blockId = this.generateBlockId();
                         script.block_id = blockId;
                         this.requestCommand(blockId, NeoBlockType.SERVO_RESET, [output]);
@@ -2538,9 +2518,9 @@ Entry.Neo = new (class Neo {
                 func: (sprite, script) => {
                     if (!script.exec_phase) {
                         script.exec_phase = ExecPhase.PENDING_RESPONSE;
-                        const output = script.getStringField('OUTPUT', script);
-                        const angle = script.getStringField('ANGLE', script);
-                        const speed = script.getStringField('SPEED', script);
+                        const output = script.getStringField('OUTPUT');
+                        const angle = script.getStringField('ANGLE');
+                        const speed = script.getStringField('SPEED');
                         const blockId = this.generateBlockId();
                         script.block_id = blockId;
                         const isExt2 = angle.indexOf('IN') >= 0 && speed.indexOf('IN') >= 0;
@@ -2652,9 +2632,9 @@ Entry.Neo = new (class Neo {
                 func: (sprite, script) => {
                     if (!script.exec_phase) {
                         script.exec_phase = ExecPhase.PENDING_RESPONSE;
-                        const output = script.getStringField('OUTPUT', script);
+                        const output = script.getStringField('OUTPUT');
                         const angle = script.getNumberValue('ANGLE', script);
-                        const speed = script.getStringField('SPEED', script);
+                        const speed = script.getStringField('SPEED');
                         const blockId = this.generateBlockId();
                         script.block_id = blockId;
                         this.requestCommand(blockId, NeoBlockType.SERVO_ANGLE, [
@@ -2818,9 +2798,9 @@ Entry.Neo = new (class Neo {
                 func: (sprite, script) => {
                     if (!script.exec_phase) {
                         script.exec_phase = ExecPhase.PENDING_RESPONSE;
-                        const output = script.getStringField('OUTPUT', script);
-                        const angle = script.getStringField('ANGLE', script);
-                        const speed = script.getStringField('SPEED', script);
+                        const output = script.getStringField('OUTPUT');
+                        const angle = script.getStringField('ANGLE');
+                        const speed = script.getStringField('SPEED');
                         const blockId = this.generateBlockId();
                         script.block_id = blockId;
                         const isExt2 = angle.indexOf('IN') >= 0 && speed.indexOf('IN') >= 0;
@@ -2931,9 +2911,9 @@ Entry.Neo = new (class Neo {
                 func: (sprite, script) => {
                     if (!script.exec_phase) {
                         script.exec_phase = ExecPhase.PENDING_RESPONSE;
-                        const output = script.getStringField('OUTPUT', script);
-                        const direction = script.getStringField('DIRECTION', script);
-                        const speed = script.getStringField('SPEED', script);
+                        const output = script.getStringField('OUTPUT');
+                        const direction = script.getStringField('DIRECTION');
+                        const speed = script.getStringField('SPEED');
                         const blockId = this.generateBlockId();
                         script.block_id = blockId;
                         if (speed.indexOf('IN') >= 0) {
@@ -2998,7 +2978,7 @@ Entry.Neo = new (class Neo {
                 func: (sprite, script) => {
                     if (!script.exec_phase) {
                         script.exec_phase = ExecPhase.PENDING_RESPONSE;
-                        const output = script.getStringValue('OUTPUT', script);
+                        const output = script.getStringField('OUTPUT');
                         const blockId = this.generateBlockId();
                         script.block_id = blockId;
                         this.requestCommand(blockId, NeoBlockType.SERVO_STOP, [output]);
@@ -3115,8 +3095,8 @@ Entry.Neo = new (class Neo {
                 isNotFor: ['neo'],
                 func: (sprite, script) => {
                     if (!script.exec_phase) {
-                        const output = script.getStringValue('OUTPUT', script);
-                        const brightness = script.getStringValue('BRIGHTNESS', script);
+                        const output = script.getStringField('OUTPUT');
+                        const brightness = script.getStringField('BRIGHTNESS');
                         const duration = script.getStringValue('DURATION', script);
                         const blockId = this.generateBlockId();
                         if (brightness.indexOf('IN') >= 0) {
@@ -3144,7 +3124,7 @@ Entry.Neo = new (class Neo {
                         return script;
                     } else if (script.exec_phase === ExecPhase.STOP) {
                         script.exec_phase = ExecPhase.PENDING_STOP;
-                        const output = script.getStringField('OUTPUT', script);
+                        const output = script.getStringField('OUTPUT');
                         const blockId = this.generateBlockId();
                         script.block_id = blockId;
                         this.requestCommand(blockId, NeoBlockType.LED_ON, [output, 0]);
@@ -3187,7 +3167,7 @@ Entry.Neo = new (class Neo {
                             [Lang.Blocks.neo_led_blink_speed_4, 200],
                             [Lang.Blocks.neo_led_blink_speed_5, 100],
                         ],
-                        value: 500,
+                        value: 100,
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -3224,8 +3204,8 @@ Entry.Neo = new (class Neo {
                 isNotFor: ['neo'],
                 func: (sprite, script) => {
                     if (!script.exec_phase) {
-                        const output = script.getStringValue('OUTPUT', script);
-                        const speed = script.getStringValue('SPEED', script);
+                        const output = script.getStringField('OUTPUT');
+                        const speed = script.getStringField('SPEED');
                         const duration = script.getStringValue('DURATION', script);
                         const blockId = this.generateBlockId();
                         this.requestCommand(blockId, NeoBlockType.LED_BLINK, [output, speed, 100]);
@@ -3246,7 +3226,7 @@ Entry.Neo = new (class Neo {
                         return script;
                     } else if (script.exec_phase === ExecPhase.STOP) {
                         script.exec_phase = ExecPhase.PENDING_STOP;
-                        const output = script.getStringValue('OUTPUT', script);
+                        const output = script.getStringField('OUTPUT');
                         const blockId = this.generateBlockId();
                         script.block_id = blockId;
                         this.requestCommand(blockId, NeoBlockType.LED_BLINK, [output, 0, 0]);
@@ -3299,7 +3279,7 @@ Entry.Neo = new (class Neo {
                 func: (sprite, script) => {
                     if (!script.exec_phase) {
                         script.exec_phase = ExecPhase.PENDING_RESPONSE;
-                        const output = script.getStringValue('OUTPUT', script);
+                        const output = script.getStringField('OUTPUT');
                         const blockId = this.generateBlockId();
                         script.block_id = blockId;
                         this.requestCommand(blockId, NeoBlockType.LED_OFF, [output]);
@@ -3395,7 +3375,7 @@ Entry.Neo = new (class Neo {
                 isNotFor: ['neo'],
                 func: (sprite, script) => {
                     if (!script.exec_phase) {
-                        const output = script.getStringValue('OUTPUT', script);
+                        const output = script.getStringField('OUTPUT');
                         const color = script.getStringValue('COLOR', script);
                         const duration = script.getStringValue('DURATION', script);
                         const blockId = this.generateBlockId();
@@ -3417,7 +3397,7 @@ Entry.Neo = new (class Neo {
                         return script;
                     } else if (script.exec_phase === ExecPhase.STOP) {
                         script.exec_phase = ExecPhase.PENDING_STOP;
-                        const output = script.getStringValue('OUTPUT', script);
+                        const output = script.getStringField('OUTPUT');
                         const blockId = this.generateBlockId();
                         script.block_id = blockId;
                         this.requestCommand(blockId, NeoBlockType.COLOR_LED_ON, [output, 0]);
@@ -3470,7 +3450,7 @@ Entry.Neo = new (class Neo {
                 func: (sprite, script) => {
                     if (!script.exec_phase) {
                         script.exec_phase = ExecPhase.PENDING_RESPONSE;
-                        const output = script.getStringValue('OUTPUT', script);
+                        const output = script.getStringField('OUTPUT');
                         const blockId = this.generateBlockId();
                         script.block_id = blockId;
                         this.requestCommand(blockId, NeoBlockType.COLOR_LED_OFF, [output]);
@@ -3536,8 +3516,8 @@ Entry.Neo = new (class Neo {
                 func: (sprite, script) => {
                     if (!script.exec_phase) {
                         script.exec_phase = ExecPhase.PENDING_RESPONSE;
-                        const output = script.getStringValue('OUTPUT', script);
-                        const input = script.getStringValue('INPUT', script);
+                        const output = script.getStringField('OUTPUT');
+                        const input = script.getStringField('INPUT');
                         const blockId = this.generateBlockId();
                         script.block_id = blockId;
                         this.requestExtCommand(blockId, NeoBlockType.COLOR_LED_ON_SENSOR, [
@@ -3660,7 +3640,7 @@ Entry.Neo = new (class Neo {
                             [Lang.Blocks.neo_input_2, 'IN2'],
                             [Lang.Blocks.neo_input_3, 'IN3'],
                         ],
-                        value: '255',
+                        value: '100',
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -3697,8 +3677,8 @@ Entry.Neo = new (class Neo {
                 isNotFor: ['neo'],
                 func: (sprite, script) => {
                     if (!script.exec_phase) {
-                        const output = script.getStringValue('OUTPUT', script);
-                        const value = script.getStringValue('VALUE', script);
+                        const output = script.getStringField('OUTPUT');
+                        const value = script.getStringField('VALUE');
                         const duration = script.getStringValue('DURATION', script);
                         const blockId = this.generateBlockId();
                         if (value.indexOf('IN') >= 0) {
@@ -3726,7 +3706,7 @@ Entry.Neo = new (class Neo {
                         return script;
                     } else if (script.exec_phase === ExecPhase.STOP) {
                         script.exec_phase = ExecPhase.PENDING_STOP;
-                        const output = script.getStringValue('OUTPUT', script);
+                        const output = script.getStringField('OUTPUT');
                         const blockId = this.generateBlockId();
                         script.block_id = blockId;
                         this.requestCommand(blockId, NeoBlockType.SET_OUTPUT, [output, 0]);
@@ -3791,6 +3771,50 @@ Entry.Neo = new (class Neo {
                 def: {
                     params: [null],
                     type: 'neo_sensor_in',
+                },
+                paramsKeyMap: {
+                    INPUT: 0,
+                },
+                class: 'neo_sensor',
+                isNotFor: ['neo'],
+                func: (sprite, script) => {
+                    const input = script.getStringField('INPUT');
+                    const sensorData = Entry.hw.portData['sensor'];
+                    switch (input) {
+                        case 'IN1':
+                            return sensorData['in1Values'][0];
+                        case 'IN2':
+                            return sensorData['in2Values'][0];
+                        case 'IN3':
+                            return sensorData['in3Values'][0];
+                    }
+                    return 0;
+                },
+            },
+            neo_sensor_in_2: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic_string_field',
+                fontColor: '#fff',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            ['IN1', 'IN1'],
+                            ['IN2', 'IN2'],
+                            ['IN3', 'IN3'],
+                        ],
+                        value: 'IN2',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null],
+                    type: 'neo_sensor_in_2',
                 },
                 paramsKeyMap: {
                     INPUT: 0,
@@ -3934,8 +3958,7 @@ Entry.Neo = new (class Neo {
                 class: 'neo_sensor',
                 isNotFor: ['neo'],
                 func: (sprite, script) => {
-                    const input = script.getNumberValue('INPUT', script);
-                    let value = input;
+                    let value = script.getNumberValue('INPUT', script);
                     let fromMin = script.getNumberValue('FROM_MIN', script);
                     let fromMax = script.getNumberValue('FROM_MAX', script);
                     let toMin = script.getNumberValue('TO_MIN', script);
@@ -4013,9 +4036,8 @@ Entry.Neo = new (class Neo {
                 isNotFor: ['neo'],
                 func: (sprite, script) => {
                     const input = script.getNumberValue('INPUT', script);
-                    const sensorData = Entry.hw.portData['sensor'];
                     const symbol = script.getStringField('SYMBOL');
-                    const value = Entry.parseNumber(script.getStringValue('VALUE'));
+                    const value = script.getNumberValue('VALUE', script);
 
                     let sensorValue = input;
                     if (symbol === '=') {
@@ -4107,9 +4129,9 @@ Entry.Neo = new (class Neo {
                 func: (sprite, script) => {
                     const input = script.getNumberValue('INPUT', script);
                     const lSymbol = script.getStringField('L_SYMBOL');
-                    const lValue = Entry.parseNumber(script.getStringValue('L_VALUE'));
+                    const lValue = script.getNumberValue('L_VALUE', script);
                     const rSymbol = script.getStringField('R_SYMBOL');
-                    const rValue = Entry.parseNumber(script.getStringValue('R_VALUE'));
+                    const rValue = script.getNumberValue('R_VALUE', script);
 
                     let sensorValue = input;
                     let lResult = false;
@@ -4137,6 +4159,110 @@ Entry.Neo = new (class Neo {
                         rResult = sensorValue <= rValue;
                     }
                     return lResult && rResult;
+                },
+            },
+            neo_sensor_digital_compare: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                fontColor: '#ffffff',
+                skeleton: 'basic_boolean_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            ['IN1', 'IN1'],
+                            ['IN2', 'IN2'],
+                            ['IN3', 'IN3'],
+                        ],
+                        value: 'IN1',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.neo_sensor_in_digital_1, 0],
+                            [Lang.Blocks.neo_sensor_in_digital_2, 1],
+                            [Lang.Blocks.neo_sensor_in_digital_3, 2],
+                            [Lang.Blocks.neo_sensor_in_digital_4, 3],
+                        ],
+                        value: '0',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.neo_compare_gt, '>='],
+                            [Lang.Blocks.neo_compare_g, '>'],
+                            [Lang.Blocks.neo_compare_e, '='],
+                            [Lang.Blocks.neo_compare_l, '<'],
+                            [Lang.Blocks.neo_compare_lt, '<='],
+                        ],
+                        value: '>',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [
+                        null,
+                        null,
+                        null,
+                        10,
+                    ],
+                    type: 'neo_sensor_digital_compare',
+                },
+                paramsKeyMap: {
+                    INPUT: 0,
+                    INDEX: 1,
+                    SYMBOL: 2,
+                    VALUE: 3,
+                },
+                class: 'neo_sensor',
+                isNotFor: ['neo'],
+                func: (sprite, script) => {
+                    const input = script.getStringField('INPUT');
+                    const index = script.getNumberField('INDEX');
+                    const sensorData = Entry.hw.portData['sensor'];
+                    const symbol = script.getStringField('SYMBOL');
+                    const value = script.getNumberValue('VALUE', script);
+
+                    let sensorValue = 0;
+                    switch (input) {
+                        case 'IN1':
+                            sensorValue = sensorData['in1Values'][index];
+                            break;
+                        case 'IN2':
+                            sensorValue = sensorData['in2Values'][index];
+                            break;
+                        case 'IN3':
+                            sensorValue = sensorData['in3Values'][index];
+                            break;
+                    }
+
+                    if (symbol === '=') {
+                        return sensorValue === value;
+                    } else if (symbol === '>') {
+                        return sensorValue > value;
+                    } else if (symbol === '<') {
+                        return sensorValue < value;
+                    } else if (symbol === '>=') {
+                        return sensorValue >= value;
+                    } else if (symbol === '<=') {
+                        return sensorValue <= value;
+                    }
+
+                    return false;
                 },
             },
             neo_sensor_color_compare: {
@@ -4171,7 +4297,7 @@ Entry.Neo = new (class Neo {
                 def: {
                     params: [
                         {
-                            type: 'neo_sensor_in',
+                            type: 'neo_sensor_in_2',
                         },
                         null,
                     ],
@@ -4226,28 +4352,39 @@ Entry.Neo = new (class Neo {
                     {
                         type: 'Dropdown',
                         options: [
-                            [Lang.Blocks.neo_color_seq_ryg, 1],
-                            [Lang.Blocks.neo_color_seq_ryb, 2],
-                            [Lang.Blocks.neo_color_seq_rgy, 3],
-                            [Lang.Blocks.neo_color_seq_rgb, 4],
-                            [Lang.Blocks.neo_color_seq_rby, 5],
-                            [Lang.Blocks.neo_color_seq_rbg, 6],
-                            [Lang.Blocks.neo_color_seq_yrb, 7],
-                            [Lang.Blocks.neo_color_seq_ygr, 8],
-                            [Lang.Blocks.neo_color_seq_ygb, 9],
-                            [Lang.Blocks.neo_color_seq_ybr, 10],
-                            [Lang.Blocks.neo_color_seq_grb, 11],
-                            [Lang.Blocks.neo_color_seq_gyr, 12],
-                            [Lang.Blocks.neo_color_seq_gyb, 13],
-                            [Lang.Blocks.neo_color_seq_gbr, 14],
-                            [Lang.Blocks.neo_color_seq_bry, 15],
-                            [Lang.Blocks.neo_color_seq_brg, 16],
-                            [Lang.Blocks.neo_color_seq_byr, 17],
-                            [Lang.Blocks.neo_color_seq_byg, 18],
-                            [Lang.Blocks.neo_color_seq_bgr, 19],
-                            [Lang.Blocks.neo_color_seq_bgy, 20],
+                            [Lang.Blocks.neo_color_red, 3],
+                            [Lang.Blocks.neo_color_yellow, 4],
+                            [Lang.Blocks.neo_color_green, 5],
+                            [Lang.Blocks.neo_color_blue, 6],
                         ],
-                        value: '2',
+                        value: '3',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.neo_color_red, 3],
+                            [Lang.Blocks.neo_color_yellow, 4],
+                            [Lang.Blocks.neo_color_green, 5],
+                            [Lang.Blocks.neo_color_blue, 6],
+                        ],
+                        value: '4',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.neo_color_black, 1],
+                            [Lang.Blocks.neo_color_red, 3],
+                            [Lang.Blocks.neo_color_yellow, 4],
+                            [Lang.Blocks.neo_color_green, 5],
+                            [Lang.Blocks.neo_color_blue, 6],
+                        ],
+                        value: '1',
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -4255,18 +4392,22 @@ Entry.Neo = new (class Neo {
                 ],
                 events: {},
                 def: {
-                    params: [null, null],
+                    params: [null, null, null, null],
                     type: 'neo_sensor_color_sequence_compare',
                 },
                 paramsKeyMap: {
                     INPUT: 0,
-                    COLOR: 1,
+                    COLOR1: 1,
+                    COLOR2: 2,
+                    COLOR3: 3,
                 },
                 class: 'neo_sensor',
                 isNotFor: ['neo'],
                 func: (sprite, script) => {
-                    const input = script.getNumberField('INPUT');
-                    const color = script.getNumberField('COLOR');
+                    const input = script.getStringField('INPUT');
+                    const color1 = script.getNumberField('COLOR1');
+                    const color2 = script.getNumberField('COLOR2');
+                    const color3 = script.getNumberField('COLOR3');
                     const sensorData = Entry.hw.portData['sensor'];
                     let seq1 = 0;
                     let seq2 = 0;
@@ -4288,50 +4429,27 @@ Entry.Neo = new (class Neo {
                             seq3 = sensorData['in3Values'][3];
                             break;
                     }
-                    switch (color) {
-                        case 1:
-                            return seq1 === 80 && seq2 === 120 && seq3 === 160;
-                        case 2:
-                            return seq1 === 80 && seq2 === 120 && seq3 === 200;
-                        case 3:
-                            return seq1 === 80 && seq2 === 160 && seq3 === 120;
-                        case 4:
-                            return seq1 === 80 && seq2 === 160 && seq3 === 200;
-                        case 5:
-                            return seq1 === 80 && seq2 === 200 && seq3 === 120;
-                        case 6:
-                            return seq1 === 80 && seq2 === 200 && seq3 === 160;
-                        case 7:
-                            return seq1 === 120 && seq2 === 80 && seq3 === 200;
-                        case 8:
-                            return seq1 === 120 && seq2 === 160 && seq3 === 80;
-                        case 9:
-                            return seq1 === 120 && seq2 === 160 && seq3 === 200;
-                        case 10:
-                            return seq1 === 120 && seq2 === 200 && seq3 === 80;
-                        case 11:
-                            return seq1 === 160 && seq2 === 80 && seq3 === 200;
-                        case 12:
-                            return seq1 === 160 && seq2 === 120 && seq3 === 80;
-                        case 13:
-                            return seq1 === 160 && seq2 === 120 && seq3 === 200;
-                        case 14:
-                            return seq1 === 160 && seq2 === 200 && seq3 === 80;
-                        case 15:
-                            return seq1 === 200 && seq2 === 80 && seq3 === 120;
-                        case 16:
-                            return seq1 === 200 && seq2 === 80 && seq3 === 160;
-                        case 17:
-                            return seq1 === 200 && seq2 === 120 && seq3 === 80;
-                        case 18:
-                            return seq1 === 200 && seq2 === 120 && seq3 === 160;
-                        case 19:
-                            return seq1 === 200 && seq2 === 160 && seq3 === 80;
-                        case 20:
-                            return seq1 === 200 && seq2 === 160 && seq3 === 120;
-                    }
+                    let compare1 = false;
+                    let compare2 = false;
+                    let compare3 = false;
 
-                    return false;
+                    if (color1 === 3) compare1 = 61 <= seq1 && seq1 <= 99;
+                    else if (color1 === 4) compare1 = 101 <= seq1 && seq1 <= 139;
+                    else if (color1 === 5) compare1 = 141 <= seq1 && seq1 <= 179;
+                    else if (color1 === 6) compare1 = 181 <= seq1 && seq1 <= 219;
+
+                    if (color2 === 3) compare2 = 61 <= seq2 && seq2 <= 99;
+                    else if (color2 === 4) compare2 = 101 <= seq2 && seq2 <= 139;
+                    else if (color2 === 5) compare2 = 141 <= seq2 && seq2 <= 179;
+                    else if (color2 === 6) compare2 = 181 <= seq2 && seq2 <= 219;
+
+                    if (color3 === 1) compare3 = 0 <= seq3 && seq3 <= 10;
+                    else if (color3 === 3) compare3 = 61 <= seq3 && seq3 <= 99;
+                    else if (color3 === 4) compare3 = 101 <= seq3 && seq3 <= 139;
+                    else if (color3 === 5) compare3 = 141 <= seq3 && seq3 <= 179;
+                    else if (color3 === 6) compare3 = 181 <= seq3 && seq3 <= 219;
+
+                    return compare1 && compare2 && compare3;
                 },
             },
             neo_sensor_button_pressed: {
@@ -4360,7 +4478,7 @@ Entry.Neo = new (class Neo {
                             [Lang.Blocks.neo_button_on, 'ON'],
                             [Lang.Blocks.neo_button_off, 'OFF'],
                         ],
-                        value: 'on',
+                        value: 'ON',
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -4500,8 +4618,8 @@ Entry.Neo = new (class Neo {
                 isNotFor: ['neo'],
                 func: (sprite, script) => {
                     if (!script.exec_phase) {
-                        const octave = script.getNumberField('OCTAVE', script);
-                        const note = script.getNumberField('NOTE', script);
+                        const octave = script.getNumberField('OCTAVE');
+                        const note = script.getNumberField('NOTE');
                         const value = Math.min(note + 12 * octave, 72);
                         const duration = script.getStringValue('DURATION', script);
                         const blockId = this.generateBlockId();
@@ -4565,7 +4683,7 @@ Entry.Neo = new (class Neo {
                 func: (sprite, script) => {
                     if (!script.exec_phase) {
                         script.exec_phase = ExecPhase.PENDING_STOP;
-                        const input = script.getStringValue('INPUT', script);
+                        const input = script.getStringField('INPUT');
                         const blockId = this.generateBlockId();
                         script.block_id = blockId;
                         this.requestExtCommand(blockId, NeoBlockType.BUZZER_WITH_SENSOR, [input]);
@@ -4703,8 +4821,8 @@ Entry.Neo = new (class Neo {
                 func: (sprite, script) => {
                     if (!script.exec_phase) {
                         script.exec_phase = ExecPhase.PENDING_RESPONSE;
-                        const output = script.getStringValue('OUTPUT', script);
-                        const image = script.getStringValue('IMAGE', script);
+                        const output = script.getStringField('OUTPUT');
+                        const image = script.getStringField('IMAGE');
                         const blockId = this.generateBlockId();
                         script.block_id = blockId;
                         this.requestCommand(blockId, NeoBlockType.LCD_IMAGE, [output, image]);
@@ -4761,7 +4879,7 @@ Entry.Neo = new (class Neo {
                 func: (sprite, script) => {
                     if (!script.exec_phase) {
                         script.exec_phase = ExecPhase.PENDING_RESPONSE;
-                        const output = script.getStringValue('OUTPUT', script);
+                        const output = script.getStringField('OUTPUT');
                         const text = script.getStringValue('TEXT', script);
                         const blockId = this.generateBlockId();
                         script.block_id = blockId;
@@ -4972,7 +5090,7 @@ Entry.Neo = new (class Neo {
                             [Lang.Blocks.neo_servo_angle_n350, '-350'],
                             [Lang.Blocks.neo_servo_angle_n360, '-360'],
                         ],
-                        value: '90',
+                        value: '100',
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
