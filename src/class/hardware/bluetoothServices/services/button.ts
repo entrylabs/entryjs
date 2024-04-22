@@ -78,6 +78,7 @@ export interface ButtonEvents {
  * Button Service
  */
 export class ButtonService extends (EventDispatcher as new () => TypedDispatcher<ButtonEvents>) {
+    public static serviceName = 'ButtonService';
     /**
      * @hidden
      */

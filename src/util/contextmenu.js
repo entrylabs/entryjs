@@ -84,6 +84,9 @@ Entry.ContextMenu = {};
     ctx.hide = function() {
         this.visible = false;
         const dom = this.dom;
+        if (!dom) {
+            return;
+        }
         dom.addClass('entryRemove');
 
         if (this._className) {

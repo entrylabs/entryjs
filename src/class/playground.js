@@ -128,9 +128,11 @@ Entry.Playground = class Playground {
 
             const resizeHandle = Entry.createElement('div')
                 .addClass('entryPlaygroundResizeWorkspace', 'entryRemove')
+                .bindOnClick(() => {
+                    this.mainWorkspace.blockMenu.toggleBlockMenu();
+                })
                 .appendTo(codeView);
             this.resizeHandle_ = resizeHandle;
-            this.initializeResizeHandle(resizeHandle);
 
             /** @type {!Element} */
             this.codeView_ = codeView;
@@ -617,6 +619,12 @@ Entry.Playground = class Playground {
         }
         if (Entry.hwLite) {
             Entry.hwLite.refreshHardwareLiteBlockMenu();
+        }
+        if (Entry.options.expansionDisable) {
+            Entry.playground.blockMenu.banCategory('expansion');
+        }
+        if (Entry.options.aiUtilizeDisable) {
+            Entry.playground.blockMenu.banCategory('ai_utilize');
         }
     }
 
@@ -1480,9 +1488,9 @@ Entry.Playground = class Playground {
         Entry.aiUtilize.banAIUtilizeBlocks(items.map(({ name }) => name));
     }
 
-    setAiLearningBlock(url, info) {
+    setAiLearningBlock(data) {
         Entry.aiLearning.removeLearningBlocks();
-        Entry.aiLearning.load({ url, ...info });
+        Entry.aiLearning.load({ ...data });
     }
 
     /**
@@ -1681,40 +1689,6 @@ Entry.Playground = class Playground {
     }
 
     /**
-     * Handle is resizing playground handle.
-     * This add mouse move and mouse up event to document.
-     * @param {!Element} handle
-     */
-    initializeResizeHandle(handle) {
-        let listener;
-        const that = this;
-        $(handle).bind('mousedown touchstart', function(e) {
-            e.preventDefault();
-            if (Entry.disposeEvent) {
-                Entry.disposeEvent.notify();
-            }
-            that.resizing = true;
-            if (Entry.documentMousemove) {
-                listener = Entry.documentMousemove.attach(this, ({ clientX }) => {
-                    if (that.resizing) {
-                        Entry.resizeElement({
-                            menuWidth: clientX - Entry.interfaceState.canvasWidth,
-                        });
-                    }
-                });
-            }
-            $(document).bind('mouseup.resizeHandle touchend.resizeHandle', () => {
-                $(document).unbind('.resizeHandle');
-                if (listener) {
-                    that.resizing = false;
-                    listener.destroy();
-                    listener = undefined;
-                }
-            });
-        });
-    }
-
-    /**
      * Reload playground
      */
     reloadPlayground() {
@@ -1873,8 +1847,19 @@ Entry.Playground = class Playground {
             'entryPlaygroundPictureThumbnail'
         );
 
+        let mouseDownCoordinate;
+        const moveThreshold = 5;
+        thumbnailView.addEventListener('touchstart', (e) => {
+            const event = Entry.Utils.convertMouseEvent(e);
+            mouseDownCoordinate = { y: event.clientY };
+        });
+
         thumbnailView.addEventListener('touchmove', (e) => {
             e.preventDefault();
+            const event = Entry.Utils.convertMouseEvent(e);
+            if (Math.abs(event.clientY - mouseDownCoordinate.y) > moveThreshold) {
+                Entry.ContextMenu.hide();
+            }
         });
 
         if (picture.fileurl) {
@@ -2016,8 +2001,19 @@ Entry.Playground = class Playground {
             }
         });
 
+        let mouseDownCoordinate;
+        const moveThreshold = 5;
+        thumbnailView.addEventListener('touchstart', (e) => {
+            const event = Entry.Utils.convertMouseEvent(e);
+            mouseDownCoordinate = { y: event.clientY };
+        });
+
         thumbnailView.addEventListener('touchmove', (e) => {
             e.preventDefault();
+            const event = Entry.Utils.convertMouseEvent(e);
+            if (Math.abs(event.clientY - mouseDownCoordinate.y) > moveThreshold) {
+                Entry.ContextMenu.hide();
+            }
         });
 
         thumbnailView.bindOnClick(() => {

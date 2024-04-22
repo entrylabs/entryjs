@@ -41,11 +41,12 @@ export const OPTION_DEFAULT_VALUE = {
 class Svm extends LearningBase {
     type = 'svm';
 
-    init({ name, url, result, table, trainParam }) {
+    init({ name, url, result, table, trainParam, modelId, loadModel }) {
         this.name = name;
         this.trainParam = trainParam;
         this.result = result;
         this.table = table;
+        this.loadModel = loadModel;
         this.trainCallback = (value) => {
             this.view.setValue(value);
         };
@@ -56,7 +57,11 @@ class Svm extends LearningBase {
 
         this.fields = table?.select?.[0]?.map((index) => table?.fields[index]);
         this.predictFields = table?.select?.[1]?.map((index) => table?.fields[index]);
-        this.load(`/uploads/${url}/model.json`);
+        if (this.url !== url || this.modelId !== modelId) {
+            this.load(url, modelId);
+            this.url = url;
+            this.modelId = modelId;
+        }
     }
 
     checkTrainOptionValidation() {
@@ -142,8 +147,11 @@ class Svm extends LearningBase {
         };
     }
 
-    async load(url) {
-        const { data } = await callApi(url, { url });
+    async load(url, modelId) {
+        const data = await this.loadModel({ url, modelId });
+        if (!data) {
+            return;
+        }
         const { serializeModel, result } = data;
         this.model = SVM.load(serializeModel);
         this.valueMap = result?.valueMap;

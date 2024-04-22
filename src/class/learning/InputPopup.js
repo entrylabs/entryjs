@@ -1,8 +1,7 @@
 import PopupHelper from '../popup_helper';
 
-export default class InputPopup {
+Entry.MlPopup = class InputPopup {
     #popupKey = 'ai_learning';
-    result = [];
 
     constructor(source) {
         this.generatePopupView(source);
@@ -12,11 +11,7 @@ export default class InputPopup {
         this.popupHelper.show(this.#popupKey);
     }
 
-    getResult() {
-        return this.result;
-    }
-
-    generatePopupView({ url, labels, type, recordTime }) {
+    generatePopupView({ url, labels, type, recordTime, setResult }) {
         if (!this.popupHelper) {
             if (window.popupHelper) {
                 this.popupHelper = window.popupHelper;
@@ -36,7 +31,7 @@ export default class InputPopup {
                     JSON.stringify({ url, labels, type, recordTime })
                 );
                 this.isLoading = true;
-                this.result = [];
+                setResult && setResult([]);
                 if (Entry.engine.state == 'run') {
                     Entry.engine.togglePause({ visible: false });
                 }
@@ -64,7 +59,7 @@ export default class InputPopup {
                             }
                             const { key, data } = JSON.parse(eventData);
                             if (key === 'predict') {
-                                this.result = data;
+                                setResult && setResult(data);
                                 this.popupHelper.hide();
                             }
                             if (key === 'stop') {
