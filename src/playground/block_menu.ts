@@ -612,18 +612,11 @@ class BlockMenu extends ModelClass<Schema> {
     toggleBlockMenu() {
         const board = this.workspace.board;
         const boardView = board.view;
-        const elem = this._categoryElems[this.lastSelector];
-        const className = 'entrySelectedCategory';
-        const className2 = 'entryUnSelectedCategory';
 
         if (!boardView.hasClass('folding')) {
             boardView.addClass('folding');
             Entry.playground.resizeHandle_.addClass('folding');
             Entry.playground.resizeHandle_.removeClass('unfolding');
-            if (elem) {
-                elem.removeClass(className);
-                elem.addClass(className2);
-            }
             Entry.playground.hideTabs();
             this.visible = false;
         } else {
@@ -641,13 +634,6 @@ class BlockMenu extends ModelClass<Schema> {
             boardView.removeClass('foldOut');
             Entry.windowResized.notify();
         });
-
-        if (this.visible) {
-            if (elem) {
-                elem.removeClass(className2);
-                elem.addClass(className);
-            }
-        }
 
         this.align();
     }
@@ -694,12 +680,15 @@ class BlockMenu extends ModelClass<Schema> {
             oldView.addClass(className2);
         }
 
-        if (this.visible) {
-            this._selectedCategoryView = elem;
-            if (elem) {
-                elem.removeClass(className2);
-                elem.addClass(className);
-            }
+        if (elem === oldView && !(doNotFold || !this.hasCategory())) {
+            elem.removeClass(className);
+            elem.addClass(className2);
+        }
+
+        this._selectedCategoryView = elem;
+        if (elem) {
+            elem.removeClass(className2);
+            elem.addClass(className);
         }
 
         doNotAlign !== true && this.align();
