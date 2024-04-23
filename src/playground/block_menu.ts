@@ -217,7 +217,7 @@ class BlockMenu extends ModelClass<Schema> {
 
         Entry.addEventListener(
             'setBlockMenuDynamic',
-            function() {
+            function () {
                 this._setDynamicTimer = this._setDynamic.apply(this, arguments);
             }.bind(this)
         );
@@ -694,40 +694,6 @@ class BlockMenu extends ModelClass<Schema> {
             oldView.addClass(className2);
         }
 
-        if (elem === oldView && !(doNotFold || !this.hasCategory())) {
-            boardView.addClass('folding');
-            handle.addClass('folding');
-            handle.removeClass('unfolding');
-            this._selectedCategoryView = null;
-            if (elem) {
-                elem.removeClass(className);
-                elem.addClass(className2);
-            }
-            Entry.playground.hideTabs();
-            animate = true;
-            this.visible = false;
-        } else if (elem !== oldView && this.hasCategory() && handle.hasClass('folding')) {
-            if (!this.visible) {
-                animate = true;
-                boardView.addClass('foldOut');
-                Entry.playground.showTabs();
-            }
-            boardView.removeClass('folding');
-            handle.addClass('unfolding');
-            handle.removeClass('folding');
-            this.visible = true;
-        } else if (!name) {
-            this._selectedCategoryView = null;
-        }
-
-        if (animate) {
-            Entry.bindAnimationCallbackOnce(boardView, () => {
-                board.scroller.resizeScrollBar.call(board.scroller);
-                boardView.removeClass('foldOut');
-                Entry.windowResized.notify();
-            });
-        }
-
         if (this.visible) {
             this._selectedCategoryView = elem;
             if (elem) {
@@ -1185,9 +1151,7 @@ class BlockMenu extends ModelClass<Schema> {
     }
 
     changeTypeThreadByBlockKey(key: string) {
-        this.getThreadByBlockKey(key)
-            ?.getFirstBlock()
-            .changeType();
+        this.getThreadByBlockKey(key)?.getFirstBlock().changeType();
     }
 
     private _generateView(categoryData: CategoryData[]) {
