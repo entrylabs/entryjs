@@ -152,16 +152,39 @@
 .entryPlaygroundResizeWorkspace {
     position: absolute;
     top: 50%;
-    height: 40px;
-    width: 16px;
-    left: 254px;
+    height: 62px;
+    width: 36px;
+    left: 311px;
     margin-top: -20px;
-    cursor: ew-resize;
+    cursor: pointer;
     border-left: none;
-    z-index: 1;
-    .backgroundImage('entry_scroll_02.png');
-    background-size: 16px auto;
+    z-index: 300;
+    .backgroundImage('entry_scroll_02.svg');
+    background-size: 36px auto;
+    &.folding {
+        .animation-duration(0.7s);
+        .animation-name(foldBlockly);
+        .animation-fill-mode(forwards);
+        .backgroundImage('entry_scroll_03.svg');
+    }
+    &.unfolding {
+        .animation-duration(0.7s);
+        .animation-name(unfoldBlockly);
+        .animation-fill-mode(forwards);
+        .backgroundImage('entry_scroll_02.svg');
+    }
 }
+
+@keyframes unfoldBlockly {
+    from {left: 58px;}
+    to {left: 311px;}
+}
+
+@keyframes foldBlockly {
+    from {}
+    to {left: 58px;}
+}
+
 
 .entryPlaygroundTabWorkspace {
     position: absolute;
@@ -406,7 +429,7 @@
     right: 0;
     bottom: 8px;
     opacity: 0.5;
-    z-index: 255;
+    z-index: 500;
     cursor: pointer;
     white-space: pre-line;
 }
@@ -664,6 +687,8 @@
     background-size: contain;
     background-repeat: no-repeat;
     background-position: 50% 50%;
+    user-select: none;
+    -webkit-touch-callout: none;
 }
 
 .entryPlaygroundPictureName {
@@ -1222,6 +1247,8 @@
     background-size: 28px auto;
     background-repeat: no-repeat;
     background-position: 50% 50%;
+    user-select: none;
+    -webkit-touch-callout: none;
 
     &.entryPlaygroundSoundPlay {
         .backgroundImage('workspace_sound_play.svg');
@@ -1399,9 +1426,9 @@
 
 .tablet {
     .entryPlaygroundResizeWorkspace {
-        .backgroundImage('entry_scroll_02_big_2.png');
-        width: 15px;
-        height: 42px;
+        .backgroundImage('entry_scroll_02.svg');
+        width: 36px;
+        height: 62px;
         border-top: none;
     }
 }

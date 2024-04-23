@@ -9,140 +9,135 @@ Lang.en = 'English';
 Lang.jp = '日本語';
 Lang.vn = 'tiếng Việt';
 Lang.Command = {
-    '1': '장면 추가하기',
-    '2': '장면 삭제하기',
-    '3': '장면 이름 수정',
-    '4': '장면 순서 변경',
-    '5': '장면 선택',
-    '101': '블록 쓰레드 추가하기',
-    '102': '블록 쓰레드 삭제하기',
-    '103': '블록 삭제하기',
-    '104': '블록 복구하기',
-    '105': '블록 끼워넣기',
-    '106': '블록 분리하기',
-    '107': '블록 이동하기',
-    '108': '블록 복제하기',
-    '109': '블록 복제 취소하기',
-    '110': '스크롤',
-    '111': '블록 필드값 수정',
-    '117': '블록 쓰레드 추가하기',
-    '118': '블록 끼워넣기',
-    '119': '블록 이동하기',
-    '120': '블록 분리하기',
-    '121': '블록 이동하기',
-    '122': '블록 끼워넣기',
-    '123': '블록 끼워넣기',
-    '201': '오브젝트 선택하기',
-    '202': '오브젝트 수정 버튼 클릭',
-    '203': '오브젝트 그림 추가',
-    '204': '오브젝트 그림 삭제',
-    '205': '오브젝트 소리 추가',
-    '206': '오브젝트 소리 삭제',
-    '207': '오브젝트 이름 수정',
-    '208': '오브젝트 추가',
-    '209': '오브젝트 삭제',
-    '210': '오브젝트 추가 버튼 클릭',
-    '211': '오브젝트 x 수정',
-    '212': '오브젝트 y 수정',
-    '213': '오브젝트 size 수정',
-    '214': '오브젝트 방향 수정',
-    '215': '오브젝트 이동 방향 수정',
-    '216': '오브젝트 회전방식 수정',
-    '217': '엔터티 모델 동기화',
-    '301': 'do',
-    '302': 'undo',
-    '303': 'redo',
-    '401': '그림 수정하기',
-    '402': '그림 수정 취소하기',
-    '403': '그림 수정하기',
-    '404': '그림 수정 취소하기',
-    '405': '글상자 수정',
-    '501': '시작하기',
-    '502': '정지하기',
-    '601': '컨테이너 오브젝트 선택하기',
-    '701': '모드 바꾸기',
-    '702': '모양 추가 버튼 클릭',
-    '703': '소리 추가 버튼 클릭',
-    '801': '속성 필터 선택하기',
-    '802': '변수 추가하기 버튼 클릭',
-    '803': '변수 추가하기',
-    '804': '변수 삭제하기',
-    '805': '변수 이름 설정',
-    '806': '신호 이름 설정',
-    '807': '신호 추가',
-    '808': '신호 삭제',
-    '809': '변수 스코프 정하기',
-    '810': '변수 글로벌 체크',
-    '811': '변수 보이기 체크',
-    '812': '변수 기본값 설정',
-    '813': '변수 슬라이드로 체크',
-    '814': '변수 최솟값 정하기',
-    '815': '변수 최댓값 정하기',
-    '816': '리스트 추가 버튼 클릭',
-    '817': '리스트 추가',
-    '818': '리스트 삭제',
-    '819': '리스트 이름 정하기',
-    '820': '리스트 스코프 정하기',
-    '821': '리스트 글로벌 체크',
-    '822': '리스트 보이기 체크',
-    '823': '리스트 길이 변경',
-    '824': '리스트 기본값 설정',
-    '825': '메세지 수정 enable',
-    '826': '변수 수정 enable',
-    '827': '리스트 수정 enable',
-    '828': '변수 이름 정하기',
-    '829': '리스트 이름 정하기',
-    '900': '모달 닫기',
-    '1001': '함수 생성 시작',
-    '1002': '함수 수정 시작',
-    '1003': '함수 수정 취소',
-    '1004': '함수 생성',
-    '1005': '함수 업데이트',
+    1: '장면 추가하기',
+    2: '장면 삭제하기',
+    3: '장면 이름 수정',
+    4: '장면 순서 변경',
+    5: '장면 선택',
+    101: '블록 쓰레드 추가하기',
+    102: '블록 쓰레드 삭제하기',
+    103: '블록 삭제하기',
+    104: '블록 복구하기',
+    105: '블록 끼워넣기',
+    106: '블록 분리하기',
+    107: '블록 이동하기',
+    108: '블록 복제하기',
+    109: '블록 복제 취소하기',
+    110: '스크롤',
+    111: '블록 필드값 수정',
+    117: '블록 쓰레드 추가하기',
+    118: '블록 끼워넣기',
+    119: '블록 이동하기',
+    120: '블록 분리하기',
+    121: '블록 이동하기',
+    122: '블록 끼워넣기',
+    123: '블록 끼워넣기',
+    201: '오브젝트 선택하기',
+    202: '오브젝트 수정 버튼 클릭',
+    203: '오브젝트 그림 추가',
+    204: '오브젝트 그림 삭제',
+    205: '오브젝트 소리 추가',
+    206: '오브젝트 소리 삭제',
+    207: '오브젝트 이름 수정',
+    208: '오브젝트 추가',
+    209: '오브젝트 삭제',
+    210: '오브젝트 추가 버튼 클릭',
+    211: '오브젝트 x 수정',
+    212: '오브젝트 y 수정',
+    213: '오브젝트 size 수정',
+    214: '오브젝트 방향 수정',
+    215: '오브젝트 이동 방향 수정',
+    216: '오브젝트 회전방식 수정',
+    217: '엔터티 모델 동기화',
+    301: 'do',
+    302: 'undo',
+    303: 'redo',
+    401: '그림 수정하기',
+    402: '그림 수정 취소하기',
+    403: '그림 수정하기',
+    404: '그림 수정 취소하기',
+    405: '글상자 수정',
+    501: '시작하기',
+    502: '정지하기',
+    601: '컨테이너 오브젝트 선택하기',
+    701: '모드 바꾸기',
+    702: '모양 추가 버튼 클릭',
+    703: '소리 추가 버튼 클릭',
+    801: '속성 필터 선택하기',
+    802: '변수 추가하기 버튼 클릭',
+    803: '변수 추가하기',
+    804: '변수 삭제하기',
+    805: '변수 이름 설정',
+    806: '신호 이름 설정',
+    807: '신호 추가',
+    808: '신호 삭제',
+    809: '변수 스코프 정하기',
+    810: '변수 글로벌 체크',
+    811: '변수 보이기 체크',
+    812: '변수 기본값 설정',
+    813: '변수 슬라이드로 체크',
+    814: '변수 최솟값 정하기',
+    815: '변수 최댓값 정하기',
+    816: '리스트 추가 버튼 클릭',
+    817: '리스트 추가',
+    818: '리스트 삭제',
+    819: '리스트 이름 정하기',
+    820: '리스트 스코프 정하기',
+    821: '리스트 글로벌 체크',
+    822: '리스트 보이기 체크',
+    823: '리스트 길이 변경',
+    824: '리스트 기본값 설정',
+    825: '메세지 수정 enable',
+    826: '변수 수정 enable',
+    827: '리스트 수정 enable',
+    828: '변수 이름 정하기',
+    829: '리스트 이름 정하기',
+    900: '모달 닫기',
+    1001: '함수 생성 시작',
+    1002: '함수 수정 시작',
+    1003: '함수 수정 취소',
+    1004: '함수 생성',
+    1005: '함수 업데이트',
 };
 Lang.CommandTooltip = {
-    '101': '블록 쓰레드 추가하기',
-    '102': '블록 쓰레드 삭제하기',
-    '103': '블록 삭제하기',
-    '104': '블록 복구하기',
-    '105':
-        '코드 분리하기$$코드 연결하기@@이 코드의 가장 위에 있는 블록을 잡고 분리하여 끌어옵니다.$$이 곳에 코드를 연결합니다.$$이 곳에 블록의 왼쪽 끝을 끼워 넣습니다.',
-    '106': '블록 분리하기',
-    '107': '블록 이동하기',
-    '108': '블록 복제하기',
-    '109': '블록 복제 취소하기',
-    '110': '스크롤',
-    '111':
-        '블록 필드값 수정@@값을 입력하기 위해 이곳을 클릭합니다.$$선택지를 클릭합니다.$$선택지를 클릭합니다.$$&value&을 입력합니다.$$&value&를 선택합니다.$$키보드 &value&를 누릅니다.',
-    '117': '블록 쓰레드 추가하기',
-    '118': '블록 연결하기@@이 곳에 블록을 연결합니다.$$이 곳에 블록의 왼쪽 끝을 끼워 넣습니다.',
-    '119': '블록 가져오기@@빈 곳에 블록을 끌어다 놓습니다.',
-    '120':
-        '블록 분리하기$$블록 삭제하기@@필요 없는 코드를 <b>휴지통</b>으로 끌어옵니다.$$이 곳에 코드를 버립니다.',
-    '121':
-        '블록 이동하기$$블록 삭제하기@@필요 없는 코드를 <b>휴지통</b>으로 끌어옵니다.$$이 곳에 코드를 버립니다.',
-    '122': '블록 연결하기@@이 곳에 블록을 연결합니다.$$이 곳에 블록의 왼쪽 끝을 끼워 넣습니다.',
-    '123':
-        '코드 분리하기$$코드 연결하기@@이 코드의 가장 위에 있는 블록을 잡고 분리하여 끌어옵니다.$$이 곳에 코드를 연결합니다.$$이 곳에 블록의 왼쪽 끝을 끼워 넣습니다.',
-    '201': '오브젝트 선택하기',
-    '301': 'do',
-    '302': 'undo',
-    '303': 'redo',
-    '401': '그림 수정하기',
-    '402': '그림 수정 취소하기',
-    '403': '그림 수정하기',
-    '404': '그림 수정 취소하기',
-    '501': '실행하기@@<b>[시작하기]</b>를 누릅니다.',
-    '502': '정지하기@@<b>[정지하기]</b>를 누릅니다.',
-    '601': '컨테이너 오브젝트 선택하기',
-    '701': '모드 바꾸기',
-    '702': '모양 추가하기@@<b>모양추가</b>를 클릭합니다.',
-    '703': '소리 추가하기@@<b>소리추가</b>를 클릭합니다.',
-    '801': '변수 속성창 필터 선택하기',
-    '802': '변수 추가하기@@<b>[변수 추가]</b>를 클릭합니다.',
-    '803': '변수 추가하기@@<b>[확인]</b>을 클릭합니다.',
-    '804': '변수 삭제하기@@이 버튼을 눌러 변수를 삭제합니다.',
-    '805': '변수 이름 설정',
-    '1101': '확장 블록 추가하기@@<b>확장 블록 블러오기</b>를 클릭합니다.',
+    101: '블록 쓰레드 추가하기',
+    102: '블록 쓰레드 삭제하기',
+    103: '블록 삭제하기',
+    104: '블록 복구하기',
+    105: '코드 분리하기$$코드 연결하기@@이 코드의 가장 위에 있는 블록을 잡고 분리하여 끌어옵니다.$$이 곳에 코드를 연결합니다.$$이 곳에 블록의 왼쪽 끝을 끼워 넣습니다.',
+    106: '블록 분리하기',
+    107: '블록 이동하기',
+    108: '블록 복제하기',
+    109: '블록 복제 취소하기',
+    110: '스크롤',
+    111: '블록 필드값 수정@@값을 입력하기 위해 이곳을 클릭합니다.$$선택지를 클릭합니다.$$선택지를 클릭합니다.$$&value&을 입력합니다.$$&value&를 선택합니다.$$키보드 &value&를 누릅니다.',
+    117: '블록 쓰레드 추가하기',
+    118: '블록 연결하기@@이 곳에 블록을 연결합니다.$$이 곳에 블록의 왼쪽 끝을 끼워 넣습니다.',
+    119: '블록 가져오기@@빈 곳에 블록을 끌어다 놓습니다.',
+    120: '블록 분리하기$$블록 삭제하기@@필요 없는 코드를 <b>휴지통</b>으로 끌어옵니다.$$이 곳에 코드를 버립니다.',
+    121: '블록 이동하기$$블록 삭제하기@@필요 없는 코드를 <b>휴지통</b>으로 끌어옵니다.$$이 곳에 코드를 버립니다.',
+    122: '블록 연결하기@@이 곳에 블록을 연결합니다.$$이 곳에 블록의 왼쪽 끝을 끼워 넣습니다.',
+    123: '코드 분리하기$$코드 연결하기@@이 코드의 가장 위에 있는 블록을 잡고 분리하여 끌어옵니다.$$이 곳에 코드를 연결합니다.$$이 곳에 블록의 왼쪽 끝을 끼워 넣습니다.',
+    201: '오브젝트 선택하기',
+    301: 'do',
+    302: 'undo',
+    303: 'redo',
+    401: '그림 수정하기',
+    402: '그림 수정 취소하기',
+    403: '그림 수정하기',
+    404: '그림 수정 취소하기',
+    501: '실행하기@@<b>[시작하기]</b>를 누릅니다.',
+    502: '정지하기@@<b>[정지하기]</b>를 누릅니다.',
+    601: '컨테이너 오브젝트 선택하기',
+    701: '모드 바꾸기',
+    702: '모양 추가하기@@<b>모양추가</b>를 클릭합니다.',
+    703: '소리 추가하기@@<b>소리추가</b>를 클릭합니다.',
+    801: '변수 속성창 필터 선택하기',
+    802: '변수 추가하기@@<b>[변수 추가]</b>를 클릭합니다.',
+    803: '변수 추가하기@@<b>[확인]</b>을 클릭합니다.',
+    804: '변수 삭제하기@@이 버튼을 눌러 변수를 삭제합니다.',
+    805: '변수 이름 설정',
+    1101: '확장 블록 추가하기@@<b>확장 블록 블러오기</b>를 클릭합니다.',
 };
 Lang.Blocks = {
     START_when_object_click: 'When object clicked',
@@ -917,7 +912,6 @@ Lang.Blocks = {
     CALC_picture_index: 'index of picture',
     CALC_picture_name: 'name of picture',
     CALC_get_sound_volume: 'Volume',
-    CALC_quotient_and_mod_1: '',
     CALC_quotient_and_mod_2: 'of',
     CALC_quotient_and_mod_3: '/',
     CALC_quotient_and_mod_sub_1: 'Quotient',
@@ -941,7 +935,6 @@ Lang.Blocks = {
     CALC_calc_operation_factorial: 'factorial value',
     CALC_calc_operation_abs: 'absolute value',
     CALC_get_timer_value: 'Timer value',
-    CALC_choose_project_timer_action_1: '',
     CALC_choose_project_timer_action_sub_1: 'Start',
     CALC_choose_project_timer_action_sub_2: 'Stop',
     CALC_choose_project_timer_action_sub_3: 'Reset',
@@ -960,33 +953,24 @@ Lang.Blocks = {
     CALC_get_sound_duration_1: 'Length of',
     CALC_get_sound_duration_2: 'sound',
     CALC_length_of_string_1: 'length of',
-    CALC_length_of_string_2: '',
     CALC_reverse_of_string_1: 'Reverse',
-    CALC_reverse_of_string_2: '',
     VARIABLE_combine_something_1: 'join',
-    VARIABLE_combine_something_2: '',
-    VARIABLE_combine_something_3: '',
     CALC_char_at_1: 'letter',
     CALC_char_at_2: 'of',
-    CALC_char_at_3: '',
     hi_entry: 'Hello Entry!',
     hi_entry_en: 'Hello Entry!',
     CALC_substring_1: 'substring of',
     CALC_substring_2: 'from',
     CALC_substring_3: 'to',
-    CALC_substring_4: '',
     CALC_count_match_string_1: 'count of',
     CALC_count_match_string_2: 'in',
     CALC_index_of_string_1: 'index of',
     CALC_index_of_string_2: 'in',
-    CALC_index_of_string_3: '',
     CALC_replace_string_1: 'replace',
     CALC_replace_string_2: 'in',
     CALC_replace_string_3: 'with',
-    CALC_replace_string_4: '',
     hello: 'Hello',
     nice: 'nice to meet you',
-    CALC_change_string_case_1: '',
     CALC_change_string_case_2: 'of',
     CALC_change_string_case_sub_1: 'uppercase',
     CALC_change_string_case_sub_2: 'lowercase',
@@ -994,13 +978,10 @@ Lang.Blocks = {
     VARIABLE_get_canvas_input_value: 'response',
     VARIABLE_get_variable_1: 'Value of',
     VARIABLE_value_of_index_from_list_1: 'value of',
-    VARIABLE_value_of_index_from_list_2: '',
     VARIABLE_value_of_index_from_list_3: 'th element',
     VARIABLE_length_of_list_1: 'length of',
-    VARIABLE_length_of_list_2: '',
     VARIABLE_is_included_in_list_1: 'is included in',
     VARIABLE_is_included_in_list_2: 'value',
-    VARIABLE_is_included_in_list_3: '',
     table_row: 'row',
     table_col: 'column',
     table_sum: 'sum',
@@ -1667,33 +1648,17 @@ Lang.Blocks = {
     VARIABLE_set_variable: 'Set variable',
     VARIABLE_show_variable: 'Show variable',
     VARIABLE_hide_variable: 'Hide variable',
-    VARIABLE_value_of_index_from_list: '',
-    VARIABLE_add_value_to_list: '',
     VARIABLE_add_value_to_list_1: 'add',
     VARIABLE_add_value_to_list_2: 'to the list',
-    VARIABLE_add_value_to_list_3: '',
-    VARIABLE_remove_value_from_list: '',
     VARIABLE_remove_value_from_list_1: 'remove',
     VARIABLE_remove_value_from_list_2: 'th element from',
-    VARIABLE_remove_value_from_list_3: '',
-    VARIABLE_insert_value_to_list: '',
     VARIABLE_insert_value_to_list_1: 'insert',
     VARIABLE_insert_value_to_list_2: 'to',
-    VARIABLE_insert_value_to_list_3: '',
     VARIABLE_insert_value_to_list_4: 'th position',
-    VARIABLE_change_value_list_index: '',
     VARIABLE_change_value_list_index_1: 'change',
     VARIABLE_change_value_list_index_3: 'th element to',
-    VARIABLE_change_value_list_index_2: '',
-    VARIABLE_change_value_list_index_4: '',
-    VARIABLE_length_of_list: '',
-    VARIABLE_is_included_in_list: '',
-    VARIABLE_show_list: '',
     VARIABLE_show_list_1: 'Show list',
-    VARIABLE_show_list_2: '',
-    VARIABLE_hide_list: '',
     VARIABLE_hide_list_1: 'Hide list',
-    VARIABLE_hide_list_2: '',
     START_when_message_cast: 'When message received',
     START_when_message_cast_1: 'When',
     START_when_message_cast_2: 'message received',
@@ -1728,17 +1693,19 @@ Lang.Blocks = {
     object_detector_title_text: 'Object Detection',
     hand_detection_title_text: 'Hand Detection',
     unknown: 'Unknown',
+    is_type_en: 'alphabet',
+    is_type_ko: 'hangeul',
 };
 Lang.video_body_coord_params = {
-    left_eye: 'Left Eye',
-    right_eye: 'Right Eye',
-    nose: 'Nose',
+    left_eye: 'left eye',
+    right_eye: 'right eye',
+    nose: 'nose',
     left_mouth: 'left corner of lips',
     right_mouth: 'right corner of lips',
-    upper_lip: 'Upper Lip',
-    lower_lip: 'Lower Lip',
+    upper_lip: 'upper lip',
+    lower_lip: 'lower lip',
     face: 'face',
-    neck: 'face',
+    neck: 'neck',
     left_ear: 'left ear',
     right_ear: 'right ear',
     left_shoulder: 'left shoulder',
@@ -1863,13 +1830,13 @@ Lang.Buttons = {
     get_started: 'Get Started',
     next_lesson: 'Next lesson',
     course_submit: 'Submit',
-    course_done: 'Done',
+    course_done: 'OK',
     mission: 'Introduction ',
     basic_guide: 'User Guide',
     apply: 'Apply',
     add: 'Add',
     cancel: 'Cancel',
-    save: 'OK',
+    save: 'Save',
     start: 'Start',
     confirm: 'OK',
     delete: 'Delete',
@@ -1891,7 +1858,7 @@ Lang.Buttons = {
     duplication: 'Copy',
     export_to_excel: 'Download',
     single_line: 'Single line',
-    multi_line: 'Multiline',
+    multi_line: 'Multi line',
     lecture_finish_popup_reset_lecture: 'Do it again',
     lecture_finish_popup_show_output: 'See the exercised',
     lecture_view_hints: 'View hints',
@@ -1901,16 +1868,24 @@ Lang.Buttons = {
     sound_menu_adjust: 'Adjust',
     sound_button_reset: 'Reset',
     sound_button_save: 'Save',
+    back: 'Go back',
+    add2: 'Add',
+    load: 'Load',
+    move: 'Move',
+    create_new_table: 'Create',
+    add_variable: 'Add variable',
+    add_list: 'Add list',
+    add_message: 'Add Message',
 };
 Lang.Menus = {
     nothing_to_import: 'There is no content to upload.',
     nothing_to_export: 'There is no content to download.',
     content_copied: 'The data is copied.',
     list_import_title: 'Import',
-    list_import_placeholder: 'Example)\nData1\nData2\nData3\nData4\nData5\nData6\nData7\nData8',
+    list_import_placeholder: 'Example)\nData1\nData2\nData3',
     verifying_email: 'Verifying email',
-    list_import_notice_1: 'You can upload the data in the list.',
-    list_import_notice_2: 'The original data will be changed into the newly uploaded data.',
+    list_import_notice_1: 'You can enter items and default values in a list at once.',
+    list_import_notice_2: 'The items and default values entered here are saved as a list.',
     list_export_title: 'Export',
     list_export_notice: 'You can copy or download the data in the list.',
     robotis_opencm70: 'Robotis Open CM70',
@@ -1969,7 +1944,7 @@ Lang.Menus = {
         "Hello. This is EntryLabs.<br> We are very grateful to you who are using 'Entry'. <br>Recently we have agreed to transfer the ownership of Entry web site, which has been operated for public interest purposes, to the 'Connect Foundation'.<br>Connect Foundation is a non-profit foundation founded by Naver. 'Entry' will be continuously operated under public interest purpose by 'Connect Foundation'. Therefore, All of “Entry” users will be guaranteed to use the entry exactly as same as before.<br>Since the website provider has changed from the 'EntryLabs' to the 'Connect Foundation', there is a transfer of personal information as below. However, this doesn’t mean that your information will be physically moved.<br>",
     textcoding_numberError_f:
         "You can't convert into the text mode if there is function names start with a number.",
-    textcoding_bookedError_1f: "You can't convert into the text mode if there is function named",
+    textcoding_bookedError_1f: "You can't convert into the text mode if there is function named ",
     textcoding_bookedError_2f: '.',
     textcoding_specialCharError_f:
         "You can't convert into the text mode if there is function names include special character except for underscore.",
@@ -2282,7 +2257,7 @@ Lang.Menus = {
     see_other_missions: 'See other missions',
     project: 'Project',
     marked: 'favorite',
-    group: 'group',
+    group: 'Group',
     lecture: 'Lessons',
     Lecture: 'Lessons',
     curriculum: 'Courseware',
@@ -2295,21 +2270,21 @@ Lang.Menus = {
     apply_original_image: 'Save original image',
     draw_new_ques: "Are you sure you want to go to \n'Draw new object' page?",
     draw_new_ques_1: 'You can draw an object and save it.',
-    draw_new_ques_2: 'do you want to move to draw?',
+    draw_new_ques_2: 'Do you want to move to draw?',
     draw_new_go: 'Move',
     draw_new_stay: 'No, Stay',
     file_upload_warn_title_image:
         'The following pictures are subject to the Terms of Use and related laws.',
     file_upload_warn_desc_image:
-        'Violent and brutal picture<br>Sacred body exposure picture<br>Offensive or disgusting picture<br>Picture of copyright prohibited from unauthorized use',
+        'Violent and brutal picture, Sacred body exposure picture, Offensive or disgusting picture, Picture of copyright prohibited from unauthorized use',
     file_upload_warn_title_sound:
         'The following sounds are subject to the Terms of Use and related laws.',
     file_upload_warn_desc_sound:
-        'Violent and cruel sound<br>Suggestive sound<br>Offensive or disgusting sound<br>Sound of copyright prohibited from unauthorized use',
+        'Violent and cruel sound, Suggestive sound, Offensive or disgusting sound, Sound of copyright prohibited from unauthorized use',
     file_upload_warn_title_table:
         'The following datas are subject to the Terms of Use and related laws.',
     file_upload_warn_desc_table:
-        'Violent and brutal data<br>Sacred body exposure data<br>Offensive or disgusting data<br>Data of copyright prohibited from unauthorized use',
+        'Violent and brutal data, Sacred body exposure data, Offensive or disgusting data, Data of copyright prohibited from unauthorized use',
     file_upload_warn_link: 'Learn about copyright',
     file_upload_desc_1: "Make sure you don't upload",
     file_upload_desc_2: 'Violent and brutal picture',
@@ -2321,12 +2296,12 @@ Lang.Menus = {
     sprite_upload_warn_old:
         'You can only upload images in jpg, png, bmp format or objects in eo format that are less than 10MB.',
     picture_upload_warn_1:
-        'You can only upload jpg, png, bmp, svg files that are less than 10MB.\nThe jpg, png, and bmp images are edited in bitmap mode and the svg image is in vector mode.',
+        'You can only upload jpg, png, bmp, svg files that are less than 5MB.\nThe jpg, png, and bmp images are edited in bitmap mode and the svg image is in vector mode.',
     table_upload_warn_1: 'You can only upload csv, xls(x) files that are less than 10MB.',
     sprite_upload_warn:
-        'You can only upload images in jpg, png, bmp, svg format or objects in eo format that are less than 10MB.',
+        'You can only upload images in jpg, png, bmp, svg format or objects in eo format that are less than 5MB.',
     sound_upload_warn_1: 'You can only upload mp3 files that are less than 10MB.',
-    sound_edit_warn: "Please wait!<br>We're working on the Sound Editing function.",
+    sound_edit_warn: "Please wait!\nWe're working on the Sound Editing function.",
     file_upload_loading: 'Loading',
     lesson_by_teacher: 'Teacher created lesson',
     delete_group_art: 'from the list?',
@@ -2415,7 +2390,7 @@ Lang.Menus = {
     lecture_help_5: 'Select blocks needed to create project. Unselected blocks will be hidden.',
     lecture_help_6:
         'choose between block Coding and Entry Python to organize your learning environment.',
-    lecture_finish_popup_title: 're-learn',
+    lecture_finish_popup_title: 'Re-learn',
     lecture_finish_popup_content_1:
         'Practice Completion Do you want to practice one step from the beginning?',
     lecture_finish_popup_content_2: '* The practice completion status is maintained',
@@ -2620,7 +2595,7 @@ Lang.Menus = {
     repeat: 'repeat',
     choice: 'selection',
     repeat_advanced: 'repeat(sequence+condition)',
-    function: 'function',
+    function: 'Function',
     compare_operation: 'comparison',
     arithmetic: '산술연산',
     entry_recommended_mission: 'Entry Recommended Mission',
@@ -2715,7 +2690,7 @@ Lang.Menus = {
     basicproject: 'basic',
     hw: 'hardware',
     object: 'object',
-    console: 'console',
+    console: 'Console',
     download_info: 'Click on the title to download resource',
     entry_materials_all: 'Entry Educational Materials',
     entry_material: 'Learning Entry',
@@ -2815,7 +2790,7 @@ Lang.Menus = {
     driving_elec_car: 'Driving Electric Car',
     age_13: 'Age 13+',
     travel_space: 'Traveling Space',
-    people: 'People',
+    people: 'Person',
     all: 'All',
     life: 'Life',
     nature: 'Nature',
@@ -3024,7 +2999,7 @@ Lang.Menus = {
     korean: 'Korean',
     english: 'English',
     viet: 'Vietnamese',
-    japan: 'japan',
+    japan: 'Japanese',
     russia: 'russia',
     korean_s: 'korean',
     english_s: 'english',
@@ -3138,8 +3113,7 @@ Lang.Menus = {
     teacher_grade_6: '교원 (초등학교 6학년)',
     ct_text_6_content:
         '실생활의 문제를 해결하자는 테마로 준비된 총 8개의 학습콘텐츠가 담긴 교사용 지도안입니다. 각 콘텐츠는 개정된 교육과정을 반영한 타교과와의 연계를 통해 다양한 문제를 만나고 해결해볼 수 있도록 설계되었습니다.  아이들이 컴퓨팅 사고력을 갖춘 융합형 인재가 될 수 있도록 지금 적용해보세요!',
-    sw_use:
-        'All textbooks are for non-commercial use only, and can be used freely so long as the author is credited. ',
+    sw_use: 'All textbooks are for non-commercial use only, and can be used freely so long as the author is credited. ',
     title: 'Title',
     writer: 'By',
     view: 'View',
@@ -3219,7 +3193,7 @@ Lang.Menus = {
     basic_image: 'Basic Image',
     profile_condition: 'Enter something about yourself. (in 50 characters)',
     profile_back: 'Go back',
-    make_project: 'Create Project',
+    make_project: 'Create project',
     exhibit_project: 'Exhibit Project',
     art_list_shared: 'Shared',
     art_list_group_shared: 'Group',
@@ -3433,7 +3407,7 @@ Lang.Menus = {
     close_project: 'Close',
     category_media_art: 'Media Art',
     go_further: 'Go further',
-    marked_project: 'Favorite Project',
+    marked_project: 'Bookmark Project',
     marked_group_project: 'Favorite group project',
     basic: 'Basic',
     application: 'Application',
@@ -3989,7 +3963,7 @@ Lang.Menus = {
     email_correnctly_please: 'Please enter a valid email',
     remove_project: 'Are you sure to remove this project?',
     study_lesson: 'Class Lessons',
-    open_project: 'Open Project',
+    open_project: 'Open projects',
     make_group: 'Create Class',
     project_share: 'Project share',
     group_project_share: 'Class Share',
@@ -4788,10 +4762,26 @@ Lang.Menus = {
     data_table_modifidate: 'modify',
     draw_new_table_ques_1: 'You can enter data and save to table.',
     draw_new_table_ques_2: 'Do you want to move to enter data?',
+    file_upload: 'Upload file',
+    no_marked_project: 'There are no projects to show.',
+    temp_save_project_study: 'Temporary save',
+    in_progress2: 'Studying',
+    file_upload_table_title: 'Add new table',
+    file_upload_table_sub_title: 'You can create a table by entering data directly.',
+    file_upload_warn_desc_table_1:
+        'Violent and brutal data, Sacred body exposure data, Offensive or disgusting data,',
+    file_upload_warn_desc_table_2: 'Data of copyright prohibited from unauthorized use',
+    table_drag_upload_title: 'Drag-and-drop or click to upload a file',
+    table_drag_upload_desc: 'You can drag and drop CSV, XLS(X) files here or click to upload them.',
+    upload_select_file: 'Select file',
+    file_upload_add: 'Add',
+    file_upload_max_size_image: 'You can only upload less than 5MB in file size.',
+    realtime: 'Realtime',
+    cloud: 'Cloud',
 };
 Lang.Msgs = {
     microbit_led_erase_all: 'Reset',
-    loading_plz_wait: 'Now Loading. Please Wait',
+    loading_plz_wait: 'Now Loading. Please Wait.',
     ai_utilize_audio_listening: 'Listening',
     ai_utilize_audio_progress: 'Recognizing',
     upload_error_title: 'File rejected',
@@ -4931,9 +4921,9 @@ Lang.Msgs = {
     hardware_need_update_content:
         "Please update to the latest version,\nif you are using below version.\nEntry website only supported v1.9.51 or later.\nPlease remove the web browser cache,\nif any block doesn't appear after updating.",
     ai_utilize_audio_description:
-        'It is a collection of blocks related to speech to text functionalities.',
+        'It is a collection of blocks that recognize speech using microphone.',
     ai_utilize_video_description:
-        'It is a collection of blocks that can recognize movement, direction and object to be shot by using camera.',
+        'It is a collection of blocks that can recognize movement, direction and object to be shot by using camera. (IE / iOS Not Supported)',
     cannot_delete_function:
         'Function already in use.\nTo change the return value setting,\nthere must be no object with a function block.',
     local_variable_deletion_warning:
@@ -4955,6 +4945,11 @@ Lang.Msgs = {
     sound_empty5:
         "You can cut only the parts you need in the 'Trim' mode, or adjust the volume, speed and pitch in the 'Adjust' mode.",
     sound_loading: 'Loading sound',
+    parameter_can_not_space: "Value can't be blank.",
+    ai_utilize_train_pop_error: 'The model applied to the project has been deactivated or deleted.',
+    video_model_load_success: 'Load Success',
+    video_model_load_completed: 'Video sensing enabled',
+    ai_utilize_video_loading: 'video sensing block is now loading.<br/> It takes up to 1 minute',
 };
 Lang.Users = {
     auth_failed: 'Authentication failed',
@@ -5062,10 +5057,11 @@ Lang.Workspace = {
     cannot_add_picture: 'Cannot add picture while running a project.',
     cannot_add_sound: 'Cannot add sound while running a project.',
     cannot_add_expansion_block: 'Cannot add expansion block while running a project.',
-    add_object_before_edit: 'Add object firstly,<br>to edit the shape.',
+    add_object_before_edit: 'Add object firstly,\nto edit the shape.',
     add_table_before_edit: 'Add table.',
-    cannot_edit_click_to_stop: 'Can not modify a project.<br>Click to stop',
-    cannot_open_private_project: 'Can not load private project. Move to home.',
+    cannot_edit_click_to_stop: 'Can not modify a project.\nClick to stop',
+    cannot_open_private_project:
+        "You cannot view the code of the unshared projects. Click 'OK' to move to the previous page.",
     cannot_save_running_project: 'Can not save while running a project.',
     character_gen: 'Make an avarta',
     check_runtime_error: 'Please check the block marked with red.',
@@ -5078,7 +5074,7 @@ Lang.Workspace = {
     context_rename: 'Rename',
     coordinate: 'Coord',
     create_function: 'Create Function',
-    direction: 'Direction(°)',
+    direction: 'Direction',
     drawing: 'Paint',
     enter_list_name: '',
     enter_name: 'Enter a new name',
@@ -5108,15 +5104,15 @@ Lang.Workspace = {
     list_add_ok_msg: '',
     list_create: 'Add list',
     list_create_placeholder: 'Input the name of the list.',
-    list_dup: '',
+    list_dup: 'The name has been changed automatically.',
     list_newname: 'New name',
     list_export: 'Export',
     list_import: 'Import',
     list_remove: 'Remove list',
     list_rename: 'Rename list',
-    list_rename_failed: '',
-    list_rename_ok: '',
-    list_too_long: '',
+    list_rename_failed: 'Rename list failed',
+    list_rename_ok: 'The name has been changed successfully.',
+    list_too_long: 'The name cannot exceed 10 characters.',
     message: 'Signal',
     message_add_cancel: 'Canceled',
     message_add_cancel_msg: 'Add a message was canceled.',
@@ -5125,6 +5121,7 @@ Lang.Workspace = {
     message_add_ok: 'Message added',
     message_add_ok_msg: 'was successfully added.',
     message_create: 'Add Signal',
+    message_add: 'Add Signal',
     message_create_placeholder: 'Input the name of the signal',
     message_dup: 'Message name conflicted.',
     message_remove: 'Remove a message',
@@ -5132,9 +5129,8 @@ Lang.Workspace = {
     message_rename: 'Rename a message',
     message_rename_failed: 'Rename message failed',
     message_rename_ok: 'Successfully rename message.',
-    message_too_long: 'Message name too long.',
     no_message_to_remove: 'There is no message to remove.',
-    no_use: 'No use',
+    no_use: 'Not assembled on object.',
     no_variable_to_remove: '',
     no_variable_to_rename: 'There is no varibale to remove',
     object_not_found: 'No object is specified in the block.',
@@ -5151,12 +5147,12 @@ Lang.Workspace = {
     remove_object_msg: 'remove was successfully completed.',
     removed_msg: 'was successfully removed',
     rotate_method: 'Rotate',
-    rotation: 'Rotation(°)',
+    rotation: 'Rotation',
     run: 'Run',
     saved: 'Saved',
     saved_msg: 'was successfully saved.',
     save_failed: 'Problem occurred while saving a project. Please try again.',
-    select_library: 'Select Object',
+    select_library: 'Select object',
     select_sprite: 'Please select at least one sprite to apply.',
     shape_remove_fail: 'Remove a shape was failed.',
     shape_remove_fail_msg: 'At least one or more shapes required.',
@@ -5167,9 +5163,9 @@ Lang.Workspace = {
     load_ai_utilize_train_block: 'Train Model',
     select_expansion_block: 'Select block',
     deselect_expansion_block_warning:
-        'The selected block cannot be deleted. \nThe specified block is currently in use.',
+        "The extension block can't be deselected because it is assembled to the project.",
     deselect_ai_utilize_block_warning:
-        'The selected block cannot be deleted. \nThe specified block is currently in use.',
+        "The AI block can't be deselected because it is assembled to the project.",
     sound_add: 'Add Sound',
     sound_remove_fail: 'Remove a sound was failed.',
     sound_remove_ok: 'Sound Removed',
@@ -5213,12 +5209,12 @@ Lang.Workspace = {
     variable_rename_ok: 'Rename variabled was successfully completed.',
     variable_select: 'Select a variable',
     variable_too_long: 'Variable name too long.',
-    open_analizy_data_import: 'Open Data Import',
+    open_analizy_data_import: 'Load Data Table',
     vehicle: 'Vehicles',
-    add_object_alert_msg: 'Add object firstly',
+    add_object_alert_msg: 'Object does not exist. Please add object and try again.',
     add_object_alert: 'Alert',
     create_variable_block: 'Create variable',
-    create_list_block: 'Create list',
+    create_list_block: 'Add list',
     Variable_Timer: 'timer',
     Variable_placeholder_name: 'variable name',
     Message_placeholder_name: 'Signal name',
@@ -5236,11 +5232,11 @@ Lang.Workspace = {
     draw_new_ebs: 'Draw new',
     painter_file: 'File ▼',
     painter_file_save: 'Save',
-    painter_file_saveas: 'Save as a new picture',
-    new_picture: 'New Picture',
+    painter_file_saveas: 'Save as a new shape',
+    new_picture: 'New shape',
     painter_edit: 'Edit ▼',
     get_file: 'get',
-    copy_file: 'copy',
+    copy_file: 'Copy',
     cut_picture: 'cut',
     paste_picture: 'paste',
     remove_all: 'remove all',
@@ -5253,7 +5249,7 @@ Lang.Workspace = {
     font_cancel: 'cancel',
     font_color: 'font color',
     font_fill: 'Fill',
-    font_family: 'font',
+    font_family: 'Font',
     align_left: 'left align ',
     align_center: 'center align',
     align_right: 'right align',
@@ -5264,7 +5260,7 @@ Lang.Workspace = {
     select_table: 'Select Table',
     select_sound: 'Select sound',
     Size: 'Size',
-    show_variable: ' show variable',
+    show_variable: ' Show variable',
     default_value: 'default',
     slide: 'slide',
     min_value: 'min',
@@ -5284,7 +5280,7 @@ Lang.Workspace = {
         'Deleting scene can not be restored.\nAre you sure you want to delete scene?',
     will_you_delete_function:
         'Deleting function can not be restored.\nAre you sure you want to delete function?',
-    duplicate_scene: 'duplicate',
+    duplicate_scene: 'Duplicate',
     block_explain: 'Block description ',
     block_intro: 'Clicking on the block comes the description of the block . ',
     blocks_reference: 'Blocks Reference',
@@ -5299,7 +5295,7 @@ Lang.Workspace = {
     confirm_load_temporary: 'You have unsaved project. Do you want to open it?',
     login_to_save: 'Try to save after login.',
     cannot_save_in_edit_func: 'Can not save while editing function.',
-    new_object: 'New Object',
+    new_object: 'New object',
     arduino_connect: '',
     arduino_connect_success: '',
     confirm_load_header: 'Project Recovery',
@@ -5367,7 +5363,7 @@ Lang.Workspace = {
     container_object_drop: 'Add the object in my storage\nto object list',
     my_storage_block_drop: 'Add\nthe blocks\nto my storage',
     my_storage_object_drop: 'Add\nthe object\nto my storage',
-    my_storage: 'my storage',
+    my_storage: 'My storage',
     my_block: 'My Block',
     red: 'Red',
     green: 'Green',
@@ -5383,8 +5379,29 @@ Lang.Workspace = {
         'If the center point is far from the object and goes out of the canvas, it returns to its original position.',
     blocks_comming_soon: "I'm working hard.\nPlease wait a little longer!",
     data_table: 'table',
-    select_all: '모두',
+    select_all: 'Select all',
     now_loading_msg: 'Now Loading.\nPlease Wait.',
+    font_textblock_strikethrough: 'Strikethrough',
+    font_textblock_underline: 'Underline',
+    font_textblock_italic: 'Italic',
+    font_textblock_bold: 'Bold',
+    function_attribute: 'Attribute',
+    variable_default_value: 'Default value',
+    list_default_value: 'Default value',
+    func_property: 'Attribute of the function',
+    bring_forward: 'Bring Forward',
+    send_backward: 'Send Backward',
+    upload_error_msg: 'Unable to upload as image is suspected of violating usage policy.',
+    confirm_firmware_hwlite_block_title: 'Verify firmware Installation',
+    confirm_firmware_hwlite_block_msg:
+        'The firmware must be installed\n to connect the %1\n to the Entry wirelessly.',
+    confirm_firmware_hwlite_block_pass: 'Already installed',
+    confirm_firmware_hwlite_block_download: 'Install firmware',
+    select_flash_firmware_hwlite_title: 'Select firmware to install',
+    select_flash_firmware_hwlite_content:
+        'Please select the version of\n the Microbit you want to connect to.\n When the installation is complete,\n a message is displayed.',
+    flash_firmware_success: 'Firmware installation is complete.',
+    flash_firmware_failed: 'Firmware installation failed. Please try again.',
 };
 Lang.code = 'view code';
 Lang.EntryStatic = {
@@ -5398,7 +5415,7 @@ Lang.EntryStatic = {
     privateCurriculum: 'only owner',
     publicCurriculum: 'curriculum share',
     publicProject: 'project share',
-    group: 'open group',
+    group: 'share to group',
     groupCurriculum: 'open group',
     private: 'only owner',
     public: 'open lessons',
@@ -5515,7 +5532,7 @@ Lang.EntryStatic = {
     free: 'Discussions',
     report: 'Suggestions',
     art_category_all: 'All projects',
-    art_category_game: 'Game',
+    art_category_game: 'Games',
     art_category_animation: 'Animation',
     art_category_physical: 'Physical',
     art_category_etc: 'etc',
@@ -5541,6 +5558,12 @@ Lang.EntryStatic = {
     discuss_period_week: 'Recent week',
     discuss_period_month: 'Recent month',
     discuss_period_three_month: 'Recent three month',
+    art_category_living: 'Living Supplies',
+    art_category_storytelling: 'Storytelling',
+    art_category_arts: 'Arts',
+    art_category_knowledge: 'Knowledges',
+    art_period_today: 'Today',
+    art_period_quarter: 'Recent 3 months',
 };
 Lang.Helper = {
     when_run_button_click: 'When the Start button is clicked, the connected blocks below will run.',
@@ -5561,7 +5584,8 @@ Lang.Helper = {
     repeat_basic: 'Repeats the blocks inside for the entered number of times.',
     repeat_inf: 'Repeats the blocks inside infinitely.',
     repeat_while_true: 'Repeats the blocks inside until/while the condition is True/False. ',
-    stop_repeat: 'Stops repeat of the closest block that encloses this block.',
+    stop_repeat:
+        "Stops the closest block that encloses this block.\n It works with various C-shaped blocks like 'repeat' block.",
     _if: 'If the condition is True/False, run the blocks inside.',
     if_else:
         "If the condition is True/False, run the blocks inside the 'if' section.\nIf not, run the blocks inside the 'else' section.",
@@ -5599,7 +5623,7 @@ Lang.Helper = {
     dialog_time:
         'Runs the next block after the object speaks the input content for the input seconds.',
     dialog: 'Runs the next block after the object speaks the input content.',
-    remove_dialog: 'Removes the dialog box spoken by the object.',
+    remove_dialog: 'Removes the speech bubble spoken and thought by the object.',
     change_to_some_shape: 'Changes the object into the selected shape.',
     change_to_next_shape: 'Changes the object into the next shape.',
     set_effect_volume: 'Applies the selected effect to the object by the input value.',
@@ -5651,10 +5675,10 @@ Lang.Helper = {
     is_press_some_key: 'Checks whether an selected key is pressed.',
     reach_something: 'Checks whether the object reaches the selected point.',
     is_type:
-        'Checks whether the input text is a number. If the input text is a number, it is judged as ’True’.',
+        'Checks whether the input text consists of the selected characters. If the input text consists of the selected characters, it is judged as `True`.',
     is_included_in_list: 'Checks whether selected list contains the input value.',
     boolean_basic_operator:
-        'Checks whether the value on the left is the same as the value on the right.',
+        "Compare the two values entered.\n= : If the value on the left and the value on the right are the same, it is judged as 'true'.\n!= : If the value on the left and the value on the right are not the same, it is judged as 'true'.\n> : If the value on the left is more than the value on the right, it is judged as 'true'.\n< : If the value on the left is less than the value on the right, it is judged as 'true'.\n≥ : If the value on the left is more than or equal to the value on the right, it is judged as 'true'\n.≤ : If the value on the left is less than or equal to the value on the right, it is judged as 'true'.",
     function_create:
         'Define a function by placing frequently used sets of blocks under this block. Place [name] next to [Define function] to give function a name. Pass on number of text values by placing [numeric/text value] block. Pass on boolean value of true or false by placing the [boolean value] block.',
     function_field_label: 'Place inside the [Define function] block and gives function a name.',
@@ -5687,8 +5711,8 @@ Lang.Helper = {
         'Reports the values regarding the current year, month, day, day of the week and time.\n- Year: Returns the current year.\n- Month: Returns the current month.\n- Day: Returns the current day.\n- Day of the week: Returns the current day of the week as a number.\nReturns Sunday, Monday, Tuesdays, Wednesdays, Thursdays, Fridays, Saturdays as 0, 1, 2, 3, 4, 5, 6 in turn.\n- Time: Returns the current time in hours, minutes, and seconds, respectively.',
     distance_something: 'Reports the distance between the object and the selected object.',
     get_sound_duration: 'Reports the time length of the selected sound.',
-    get_user_name: 'Reports the username who runs the project.',
-    get_nickname: 'a value of the user nickname running the project.',
+    get_user_name: 'Reports the user ID who runs the project.\nThe value is masked for privacy.',
+    get_nickname: 'Reports the user nickname who runs the project.',
     get_project_timer_value: 'Reports how many seconds have passed since the project started.',
     choose_project_timer_action:
         'Start : The timer starts.\nStop : The timer stops.\nReset : The timer resets to 0.\n(If this block is on workspace, the project will show the timer window when it runs.)',
@@ -6034,16 +6058,16 @@ Lang.Helper = {
     chocopi_touch_value:
         "The value will be smaller if the capacitance of the obeject is larger.<br/>If many people hold each other's hand and touch, the value will be smaller<br/>'Capacitance' means how many electric particles the object can hold.<br/><br/><br/>Port number(P1~P8) is automatically selected internally<br>It is needed only when multiple modules with the same kind are used",
     boolean_and_or:
-        'AND : Checks whether both conditions are true.<br>OR : Checks whether at least one of the two conditions is true.',
+        'AND : Checks whether both conditions are true.\nOR : Checks whether at least one of the two conditions is true.',
     check_weather:
-        '<br>Checks whether the weather information of the selected date and region matches the actual weather conditions.',
+        '\nChecks whether the weather information of the selected date and region matches the actual weather conditions.',
     check_finedust:
-        '<br>Checks whether the current fine dust information of the selected region matches the actual fine dust grade.',
+        '\nChecks whether the current fine dust information of the selected region matches the actual fine dust grade.',
     get_weather_data:
-        '<br>Reports various weather information values (the lowest temperature, the highest temperature, humidity, precipitation, precipitation probability, wind speed) of the selected date and region.',
+        '\nReports various weather information values (the lowest temperature, the highest temperature, humidity, precipitation, precipitation probability, wind speed) of the selected date and region.',
     get_current_weather_data:
-        '<br>Reports the current weather information (temperature, fine dust grade) of the selected region.',
-    get_today_temperature: '<br>Reports the today temperature of selected area and time zone.',
+        '\nReports the current weather information (temperature, fine dust grade) of the selected region.',
+    get_today_temperature: '\nReports the today temperature of selected area and time zone.',
     check_city_weather:
         'Checks whether the weather information of the selected date and region matches the actual weather conditions.',
     check_city_finedust:
@@ -6060,16 +6084,16 @@ Lang.Helper = {
     check_language:
         'Reports the information(Title, area, start date, end date, address, overview, homepage) about events held on the selected date and region.',
     count_disaster_behavior:
-        "<br>The number of behavior-guideline's when selected natural disaster occurs.",
+        "\nThe number of behavior-guideline's when selected natural disaster occurs.",
     get_disaster_behavior:
-        '<br>Reports the information about behavior-guidelines when selected natural disaster occurs.',
+        '\nReports the information about behavior-guidelines when selected natural disaster occurs.',
     count_lifeSafety_behavior:
-        "<br>The number of behavior-guideline's when selected life problem occurs.",
+        "\nThe number of behavior-guideline's when selected life problem occurs.",
     get_lifeSafety_behavior:
-        '<br>Reports the information about behavior-guidelines when selected life problem occurs.',
+        '\nReports the information about behavior-guidelines when selected life problem occurs.',
     read_text: 'Read the entered text in setted voice.',
     set_tts_property:
-        'Set the selected voice to selected speed and selected pitch. <br> The selected voice will be set up to selected speed and selected pitch.',
+        'Set the selected voice to selected speed and selected pitch. \n The selected voice will be set up to selected speed and selected pitch.',
     read_text_wait_with_block:
         'Read the entered text in setted voice then the next block runs after the reading finished.',
     check_microphone: "If the microphone is connected to the computer, it is judged as 'True'.",
@@ -6080,23 +6104,26 @@ Lang.Helper = {
     speech_to_text_get_value:
         "Reports the value of the person's speech to text. If no speech is input or an error occurs during recognition, it will report null values.",
     get_microphone_volume: 'Reports the volume of sound input through microphone.',
-    video_draw_webcam: 'Show or hide the video screen.',
-    video_check_webcam: 'Check whether video is connected with the computer.',
+    video_draw_webcam: 'Show or hide the video screen. (IE / iOS Not Supported)',
+    video_check_webcam:
+        'Check whether video is connected with the computer. (IE / iOS Not Supported)',
     video_set_camera_option: 'Set the selected effect to the video screen by the input value.',
-    video_flip_camera: 'Flips the video screen horizontally or vertically.',
+    video_flip_camera:
+        'Flips the video screen horizontally or vertically. (IE / iOS Not Supported)',
     video_toggle_model:
-        "Start or stop the selected recognition model. Face Recognition: Recognizes a person's face to know where the eyes, nose, mouth, and ear are located, or the expected gender, age, and emotion. Human Recognition: Recognizes a person's body to know where each part is located Object Recognition: Shows the recognized object type. (Person or thing)",
+        "Start or stop the selected recognition model. Face Recognition: Recognizes a person's face to know where the eyes, nose, mouth, and ear are located, or the expected gender, age, and emotion. Human Recognition: Recognizes a person's body to know where each part is located Object Recognition: Shows the recognized object type. (Person or thing) (IE / iOS Not Supported)",
     video_toggle_ind:
-        'Show location and index of the detected humans / faces / objects on the screen.',
-    video_number_detect: 'Reports number of people / faces /objects detected on the video screen.',
+        'Show location and index of the detected humans/faces/objects on the screen. (IE / iOS Not Supported)',
+    video_number_detect:
+        'Reports number of humans/faces/objects detected on the video screen. (IE / iOS Not Supported)',
     video_detected_face_info:
-        'Reports the estimated value of the selected face area among the faces in the input order. If it is not recognized, it is outputted as 0 unconditionally. (Gender, Age, Emotion)',
+        'Reports the estimated value of the selected face area among the faces in the input order. If it is not recognized, it is outputted as 0 unconditionally. (Gender, Age, Emotion)  (IE / iOS Not Supported)',
     video_motion_value:
-        'Reports the motion or direction value detected on the selected object or screen.',
+        'Reports the motion or direction value detected on the selected object or screen.  (IE / iOS Not Supported)',
     video_face_part_coord:
-        'Reports the position value of the selected face area among the faces in the input order. If it is not recognized, it is outputted as 0 unconditionally. (Left eye, Right eye, Nose, Left mouse, Right mouse, Upper Lip, Lower Lip)',
+        'Reports the position value of the selected face area among the faces in the input order. If it is not recognized, it is outputted as 0 unconditionally. (Left eye, Right eye, Nose, Left mouse, Right mouse, Top Lip, Bottom Lip)  (IE / iOS Not Supported)',
     video_body_part_coord:
-        'Reports number of human detected on the video screen. (Face, Right shoulder, Right elbow, Right wrist, Left shoulder, Left elbow, Left wrist, Right hip, Right knee, Right ankle, Left hip, Left knee, Left ankle)',
+        'Reports number of human detected on the video screen. (Face, Right shoulder, Right elbow, Right wrist, Left shoulder, Left elbow, Left wrist, Right hip, Right knee, Right ankle, Left hip, Left knee, Left ankle)  (IE / iOS Not Supported)',
     append_row_to_table: 'Adds a row(col) to the end location of the selected table.',
     insert_row_to_table:
         'Inserts a row(col) to the location of the input value on the selected table.',
@@ -6179,6 +6206,111 @@ Lang.Helper = {
     is_which_gesture:
         "If the hand in the order you entered is the gesture you selected, it is judged as 'True'.",
     get_which_gesture: 'Reports the gesture of the hand in the order you entered.',
+    text_change_effect: 'Applies the selected text effect in the text box.',
+    text_change_font: 'Changes the text of the box to the selected font.',
+    text_change_font_color: 'Changes the text in the box to the selected color.',
+    text_change_bg_color: 'Changes the text box to the selected background color.',
+    get_value_from_last_row:
+        'The selected attribute value of the last row in the selected table. Instead of an attribute value block, you can also combine a value block (meaning a row).',
+    insert_data_for_test: 'Enter data and recognize it as a trained model.',
+    video_capture_for_image_test:
+        'Classifies or stops image data taken through the camera to the model you learned.',
+    insert_text_block_for_test: 'Enter data and recognize it as a trained model.',
+    test_result:
+        'The value of the result that the model recognizes the data entered. The value is expressed by the class name (text) of the model.',
+    accuracy_of_result:
+        'The reliability value for the selected class of the data entered. The value is expressed as a probability (number).',
+    is_group:
+        "Determine 'True' if the recognition result of the data entered is the selected class.",
+    model_is_trained:
+        "If the model has trained, it is determined as 'True'. If the model is being trained or hasn't trained, it is determined as 'False'.",
+    set_train_visible: 'Shows or hides the window displaying the state of the model on the screen.',
+    set_train_chart:
+        'Opens or closes a chart window showing the entered data and clusters of learned models in a two-dimensional coordinate plane.',
+    set_regression_option:
+        "Change the learning conditions of the model. The changed learning conditions take effect when the model is re-learned with the 'Re-learn Model' block.",
+    get_regression_predict_1:
+        'Returns the value predicted by the model with the key properties entered.',
+    get_regression_predict_2:
+        'Returns the value predicted by the model with the key properties entered.',
+    get_regression_predict_3:
+        'Returns the value predicted by the model with the key properties entered.',
+    get_regression_predict_4:
+        'Returns the value predicted by the model with the key properties entered.',
+    get_regression_predict_5:
+        'Returns the value predicted by the model with the key properties entered.',
+    get_regression_predict_6:
+        'Returns the value predicted by the model with the key properties entered.',
+    get_regression_accuracy: "Returns the model's coefficient of determination as a value.",
+    set_cluster_option_k:
+        "Sets the number of clusters to the entered value. The number of clusters changed will take effect when the model is re-learned with the 'Re-learn Model' block.",
+    set_cluster_option_centroids:
+        "Replace the cluster's initial center point criteria with the selected criteria. The center point criteria that you changed will take effect when you re-learn the model with the 'Re-learn Model' block.",
+    get_cluster_centriod_count: 'Returns the number of clusters in the model as values.',
+    get_cluster_centriod_value:
+        'Returns the core properties for the center point of the specified cluster. If you have multiple core properties, you can select them from the list box.',
+    get_cluster_centriod_index_1:
+        'Returns which cluster the model belongs to, if any, to, the core property entered. Values are represented by text (cluster name).',
+    get_cluster_centriod_index_2:
+        'Returns which cluster the model belongs to, if any, to, the core property entered. Values are represented by text (cluster name).',
+    get_cluster_centriod_index_3:
+        'Returns which cluster the model belongs to, if any, to, the core property entered. Values are represented by text (cluster name).',
+    get_cluster_centriod_index_4:
+        'Returns which cluster the model belongs to, if any, to, the core property entered. Values are represented by text (cluster name).',
+    get_cluster_centriod_index_5:
+        'Returns which cluster the model belongs to, if any, to, the core property entered. Values are represented by text (cluster name).',
+    get_cluster_centriod_index_6:
+        'Returns which cluster the model belongs to, if any, to, the core property entered. Values are represented by text (cluster name).',
+    set_number_learning_option_k:
+        "Sets the number of neighbors to the entered value. The number of neighbors changed will take effect when the model is re-learned with the 'Re-learn Model' block.",
+    get_number_learning_predict_1:
+        'The value that classifies the entered data in the model. The value is represented by the class name (text) of the model.',
+    get_number_learning_predict_2:
+        'The value that classifies the entered data in the model. The value is represented by the class name (text) of the model.',
+    get_number_learning_predict_3:
+        'The value that classifies the entered data in the model. The value is represented by the class name (text) of the model.',
+    get_number_learning_predict_4:
+        'The value that classifies the entered data in the model. The value is represented by the class name (text) of the model.',
+    get_number_learning_predict_5:
+        'The value that classifies the entered data in the model. The value is represented by the class name (text) of the model.',
+    get_number_learning_predict_6:
+        'The value that classifies the entered data in the model. The value is represented by the class name (text) of the model.',
+    get_number_learning_predict_param_1:
+        'The classification confidence value for the selected class of data entered. Values are expressed numerically.',
+    get_number_learning_predict_param_2:
+        'The classification confidence value for the selected class of data entered. Values are expressed numerically.',
+    get_number_learning_predict_param_3:
+        'The classification confidence value for the selected class of data entered. Values are expressed numerically.',
+    get_number_learning_predict_param_4:
+        'The classification confidence value for the selected class of data entered. Values are expressed numerically.',
+    get_number_learning_predict_param_5:
+        'The classification confidence value for the selected class of data entered. Values are expressed numerically.',
+    get_number_learning_predict_param_6:
+        'The classification confidence value for the selected class of data entered. Values are expressed numerically.',
+    is_number_learning_group_1:
+        'If the classification result of the entered data is a class of your choice, determine True.',
+    is_number_learning_group_2:
+        'If the classification result of the entered data is a class of your choice, determine True.',
+    is_number_learning_group_3:
+        'If the classification result of the entered data is a class of your choice, determine True.',
+    is_number_learning_group_4:
+        'If the classification result of the entered data is a class of your choice, determine True.',
+    is_number_learning_group_5:
+        'If the classification result of the entered data is a class of your choice, determine True.',
+    is_number_learning_group_6:
+        'If the classification result of the entered data is a class of your choice, determine True.',
+    video_change_cam: 'Change the camera you are filming.',
+    video_set_camera_opacity_option:
+        'Set the transparency effect to the video screen by the input value.(IE / iOS Not Supported)',
+    video_is_model_loaded: 'Check whether human/face/object is detected. (IE / iOS Not Supported)',
+    video_object_detected: 'Check whether selected object is recognized. (IE / iOS Not Supported)',
+    target_project: 'Target project',
+    study_goal: 'Learning objectives',
+    show_hint: 'Hints',
+    save_current_table:
+        'Keep the table as it is. Even if you stop the project, your changes in the table are maintained.',
+    open_table: 'Open the window of the selected table.',
+    open_table_wait: 'Open the window of the selected table for the seconds entered.',
 };
 Lang.AiLearning = {
     equation: 'Equation',
@@ -6279,7 +6411,7 @@ Lang.Device = {
     smartBoard: 'smartBoard',
     chocopi: 'ChocoPi',
     rokoboard: 'rokoboard',
-    altino: '알티노',
+    altino: 'altino',
     mechatro: 'mechatro',
 };
 Lang.General = {
@@ -6318,17 +6450,19 @@ Lang.General = {
     recent_download2: 'Download the latest version',
     latest_version: 'You are running the latest version.',
     dont_show_again: 'Do not show this again',
+    apply: 'Apply',
+    clear: 'Clear',
 };
 Lang.Fonts = {
-    jeju_hallasan: 'Jeju Hallasan',
-    gothic_coding: 'Gothic Coding',
+    jeju_hallasan: 'Hallasan',
+    gothic_coding: 'GothicCoding',
     batang: 'Batang',
-    gothic: 'Nanum Gothic',
-    myeongjo: 'Nanum Myeongjo',
-    pen_script: 'Nanum Pen Script',
-    square_round: 'Nanum SquareRound',
-    jalnan: 'jalnan',
-    designhouse: 'designhouse',
+    gothic: 'NanumGothic',
+    myeongjo: 'NanumMyeongjo',
+    pen_script: 'NanumPenScript',
+    square_round: 'NanumSquareRound',
+    jalnan: 'Jalnan',
+    designhouse: 'Designhouse',
     malssami815: 'Malssami815',
     dunggeunmo: 'DungGeunMo',
     hs_bombaram: 'HS Bombaram',
@@ -6336,13 +6470,17 @@ Lang.Fonts = {
     goyang: 'Goyang',
     flower_road: 'SangSangFlowerRoad',
     uhbeemysen: 'UhBeemysen',
-    sd_comic_stencil: 'Sandoll Comicstencil',
-    sd_childfundkorea: 'Sandoll Childfundkorea',
-    sd_cinema_theater: 'Sandoll Cinema Theater',
-    sd_mapssi: 'Sandoll Mapssi',
-    sd_shabang: 'Sandoll Shabang',
-    sd_woodcarving: 'Sandoll Woodcarving',
-    sd_yongbi: 'Sandoll Yongbi',
+    sd_comic_stencil: 'SD Comicstencil',
+    sd_childfundkorea: 'SD Childfundkorea',
+    sd_cinema_theater: 'SD CinemaTheater',
+    sd_mapssi: 'SD Mapssi',
+    sd_shabang: 'SD Shabang',
+    sd_woodcarving: 'SD Woodcarving',
+    sd_yongbi: 'SD Yongbi',
+    maruburi: 'MaruBuri',
+    nanumbarunpen: 'NanumBarunpen.',
+    notosans: 'NotoSans',
+    d2coding: 'D2Coding',
 };
 Lang.Hw = {
     note: 'note',
@@ -6654,17 +6792,17 @@ Lang.template = {
     read_text: 'read %1 %2',
     set_tts_property: 'set in a %1 voice at %2 speed and %3 pitch %4',
     read_text_wait_with_block: 'read %1 and wait %2',
-    load_expansion_block: 'add',
+    load_expansion_block: 'Add extention',
     load_ai_utilize_block: 'Load AI Block',
-    load_ai_utilize_train_block: 'Train Model',
+    load_ai_utilize_train_block: 'Training Model',
     expansion_block_descriptions:
         'The expansion block works normally when the Internet is connected.',
     aiUtilize_block_descriptions:
         'The A.I. Utilization block works normally when the Internet is connected.',
-    weather_title_text: 'weather',
-    translate_title_text: 'translate',
-    festival_title_text: 'festival',
-    audio_title_text: 'Audio Sensing',
+    weather_title_text: 'Weather',
+    translate_title_text: 'Translate',
+    festival_title_text: 'Festival',
+    audio_title_text: 'Audio sensing',
     voice_title_text: 'Speech recognition',
     check_microphone: 'connected to microphone?',
     get_microphone_volume: 'microphone volume value',
@@ -6673,21 +6811,21 @@ Lang.template = {
     timed_speech_to_text_convert: 'For %1 secs recognize %2 speech %3',
     set_visible_speech_to_text: '%1 recognized speech %2',
     speech_to_text_get_value: 'speech-to-text value',
-    video_title_text: 'Video Detection',
-    video_draw_webcam: '%1 the video screen',
+    video_title_text: 'Video detection',
+    video_draw_webcam: '%1 the camera screen',
     video_check_webcam: 'connected with video?',
     video_set_camera_opacity_option: 'Set video transparency effect to %1 %2',
-    video_flip_camera: 'Flip video screen %1 %2',
+    video_flip_camera: 'Flip camera screen %1 %2',
     video_toggle_model: '%1 recognition %2 %3',
     video_toggle_ind: '%2 detected %1 %3',
     video_number_detect: 'Number of detected %1',
     video_detected_face_info: '%2 of %1 th face',
-    video_motion_value: 'Video %2 value on %1',
+    video_motion_value: 'Camera %2 value on %1',
     video_face_part_coord: '%3 coordinate of %2 in %1 th face',
     video_body_part_coord: "%3 coordinate of %1 th human's %2",
-    behaviorConductDisaster_title_text: 'desaster',
-    behaviorConductLifeSafety_title_text: 'lifeSafety',
-    tts_title_text: 'read',
+    behaviorConductDisaster_title_text: 'Disaster',
+    behaviorConductLifeSafety_title_text: 'LifeSafety',
+    tts_title_text: 'Read',
     hamster_hand_found: 'hand found?',
     hamster_value: '%1',
     hamster_move_forward_once: 'move forward once on board %1',
@@ -6836,7 +6974,7 @@ Lang.template = {
     hide: 'hide %1',
     dialog_time: 'Say %1 for %2 secs %3 %4',
     dialog: 'Say %1 %2 %3',
-    remove_dialog: 'Remove speech %1',
+    remove_dialog: 'Remove speech bubble %1',
     change_to_nth_shape: 'Change shape to %1 %2',
     change_to_next_shape: 'Change to %1 shape %2',
     set_effect_volume: 'Change %1 effect by %2 %3',
@@ -6855,7 +6993,7 @@ Lang.template = {
     change_effect_amount: 'Set %1 effect to %2 %3',
     set_effect_amount: 'Change %1 effect by %2 %3',
     set_entity_effect: 'Set %1 effect to %2 %3',
-    change_object_index: 'bring to %1 %2',
+    change_object_index: 'Bring to %1 %2',
     move_direction: 'Move %1 forward %2',
     move_x: 'Change X by %1 %2',
     move_y: 'Change Y by %1 %2',
@@ -6963,6 +7101,7 @@ Lang.template = {
     sound_something_second_wait_with_block: 'Play %1 sound for %2 secs and wait %3',
     sound_from_to: 'Play %1 sound from %2 to %3 secs %4',
     sound_from_to_and_wait: 'Play %1 sound from %2 to %3 secs and wait %4',
+    messageAddButton: '%1',
     when_run_button_click: '%1 When run',
     press_some_key: '%1 When key %2 pressed %3',
     when_some_key_pressed: '%1 When key %2 pressed',
@@ -7091,7 +7230,7 @@ Lang.template = {
     maze_cony_flower_throw: 'Throw flower %1',
     maze_brown_punch: 'Punch %1',
     maze_iron_switch: 'Control obstacles %1',
-    maze_james_heart: 'Send hearts %1',
+    maze_james_heart: 'Toss cakes %1',
     maze_step_if_5: 'If there is no road in front %2',
     maze_step_if_6: "If %1 isn't in front %2",
     maze_step_if_7: 'If %1 is in front %2',
@@ -7342,9 +7481,6 @@ Lang.template = {
     locate_time_to_pose: 'For %1 secs go to %3 of %2 th human %4',
     axis_detected_pose: "%3 coordinate of %1 th human's %2",
     face_landmarker_title: '%1',
-    locate_to_pose: 'Go to %2 of %1 human %3',
-    locate_time_to_pose: 'For %1 secs go to %3 of %2 human %4',
-    axis_detected_pose: '%3 coordinate of %1 th human`s %2',
     when_face_landmarker: '%1 When face detected',
     face_landmarker: '%1 face detection %2',
     draw_detected_face: '%1 detected face %2',
@@ -7377,6 +7513,81 @@ Lang.template = {
     is_which_gesture: 'Is the gesture of %1 th hand %2 ?',
     get_which_hand: '%1 th hand',
     get_which_gesture: 'The gesture of %1 th hand',
+    function_create_value: 'Define function %1 %2 %3 Return %4',
+    learning_title_image_str: 'Trained image classification model',
+    learning_title_speech_str: 'Trained speech classification model',
+    learning_title_text_str: 'Trained text classification model',
+    learning_title_number_str: 'Trained number classification model',
+    learning_title_regression_str: 'Trained regression model',
+    learning_title_cluster_str: 'Trained clustering model',
+    text_change_effect: '%2 %1 effect to text box %3',
+    text_change_font: 'Change font to %1 %2',
+    text_change_font_color: 'Change text color to %1 %2',
+    text_change_bg_color: 'Change background color to %1 %2',
+    save_current_table: 'Keep the table %1 as it is %2',
+    get_value_from_last_row: 'value of the %2 in last row of the %1',
+    open_table: 'Open table %1 window %2',
+    open_table_wait: 'Open table %1 window for %2 second(s) %3',
+    learning_title_image: '%1',
+    learning_title_speech: '%1',
+    learning_title_text: '%1',
+    learning_title_number: '%1',
+    learning_title_regression: '%1',
+    learning_title_cluster: '%1',
+    insert_data_for_test: 'Classify with the trained model %1',
+    video_capture_for_image_test: '%1 classifying camera screen with the trained model ',
+    insert_text_block_for_test: 'Classify %1 with trained model %2',
+    test_result: 'Classification result',
+    accuracy_of_result: 'Reliability of %1',
+    is_group: 'Is the classification result %1?',
+    retrain_model: 'Retrain model %1',
+    model_is_trained: 'Has the model trained?',
+    set_train_visible: '%1 model %2',
+    set_train_chart: '%1 model chart window %2',
+    set_regression_option: 'Change %1 training condition to %2 %3',
+    get_regression_predict_1: 'Predicted value of %1 %2',
+    get_regression_predict_2: 'Predicted value of %1 %2 %3 %4',
+    get_regression_predict_3: 'Predicted value of %1 %2 %3 %4 %5 %6',
+    get_regression_predict_4: 'Predicted value of %1 %2 %3 %4 %5 %6 %7 %8',
+    get_regression_predict_5: 'Predicted value of %1 %2 %3 %4 %5 %6 %7 %8 %9 %10',
+    get_regression_predict_6: 'Predicted value of %1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12',
+    get_regression_accuracy: 'Coefficient of determination',
+    set_cluster_option_k: 'Change the number of clusters to %1 %2',
+    set_cluster_option_centroids: 'Change centroid standard to %1 %2',
+    get_cluster_centriod_count: 'Number of clusters',
+    get_cluster_centriod_value: 'Value of %2 of cluster %1 centroid',
+    get_cluster_centriod_index_1: 'Cluster of %1 %2',
+    get_cluster_centriod_index_2: 'Cluster of %1 %2 %3 %4',
+    get_cluster_centriod_index_3: 'Cluster of %1 %2 %3 %4 %5 %6',
+    get_cluster_centriod_index_4: 'Cluster of %1 %2 %3 %4 %5 %6 %7 %8',
+    get_cluster_centriod_index_5: 'Cluster of %1 %2 %3 %4 %5 %6 %7 %8 %9 %10',
+    get_cluster_centriod_index_6: 'Cluster of %1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12',
+    set_number_learning_option_k: 'Change the number of neighbors to %1 %2',
+    get_number_learning_predict_1: 'Classification result of %1 %2',
+    get_number_learning_predict_2: 'Classification result of %1 %2 %3 %4',
+    get_number_learning_predict_3: 'Classification result of %1 %2 %3 %4 %5 %6',
+    get_number_learning_predict_4: 'Classification result of %1 %2 %3 %4 %5 %6 %7 %8',
+    get_number_learning_predict_5: 'Classification result of %1 %2 %3 %4 %5 %6 %7 %8 %9 %10',
+    get_number_learning_predict_6:
+        'Classification result of %1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12',
+    get_number_learning_predict_param_1: '%4 for %3 of %1 %2',
+    get_number_learning_predict_param_2: '%6 for %5 of %1 %2 %3 %4',
+    get_number_learning_predict_param_3: '%8 for %5 of %1 %2 %3 %4 %5 %6',
+    get_number_learning_predict_param_4: '%8 for %5 of %1 %2 %3 %4 %5 %6 %7 %8',
+    get_number_learning_predict_param_5: '%8 for %5 of %1 %2 %3 %4 %5 %6 %7 %8 %9 %10',
+    get_number_learning_predict_param_6: '%8 for %5 of %1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12',
+    is_number_learning_group_1: 'Is the classification result of %1 %2 %3?',
+    is_number_learning_group_2: 'Is the classification result of %1 %2 %3 %4 %5?',
+    is_number_learning_group_3: 'Is the classification result of %1 %2 %3 %4 %5 %6 %7?',
+    is_number_learning_group_4: 'Is the classification result of %1 %2 %3 %4 %5 %6 %7 %8 %9?',
+    is_number_learning_group_5:
+        'Is the classification result of %1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11?',
+    is_number_learning_group_6:
+        'Is the classification result of %1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 %13?',
+    video_change_cam: 'Switch to %1 camera %2',
+    video_is_model_loaded: 'detected %1?',
+    video_object_detected: 'Is %1 recognized among objects?',
+    function_value: 'Function',
 };
 Lang.TextCoding = {
     block_name: 'Block Name',
@@ -7451,64 +7662,64 @@ Lang.TextCoding = {
 };
 Lang.PythonHelper = {
     when_run_button_click_desc:
-        '[시작하기]버튼을 클릭하면 아래 명령어들을 실행합니다.<br>아래 명령어는 [Tab]키를 통해 들여쓰기합니다.',
+        '[시작하기]버튼을 클릭하면 아래 명령어들을 실행합니다.\n아래 명령어는 [Tab]키를 통해 들여쓰기합니다.',
     when_run_button_click_exampleCode: 'def when_start():\n    Entry.print("안녕!")',
     when_run_button_click_exampleDesc: '[시작하기]버튼을 클릭하면 오브젝트가 "안녕!"이라 말합니다.',
     when_some_key_pressed_desc:
-        'A키를 누르면 아래 명령어들을 실행합니다.<br>아래 명령어는 [Tab]키를 통해 들여쓰기합니다.',
+        'A키를 누르면 아래 명령어들을 실행합니다.\n아래 명령어는 [Tab]키를 통해 들여쓰기합니다.',
     when_some_key_pressed_elements:
-        'A-- 아래 선택지 중 하나<br>① 알파벳 : "A", "B" ~ "Z" 등(소문자 가능)<br>② 숫자 : 1, 2, 3, 4 ~ 9, 0<br>③ 특수키 : "space", "enter"<br>④ 방향키 : "up", "down", "right", "left"',
+        'A-- 아래 선택지 중 하나\n① 알파벳 : "A", "B" ~ "Z" 등(소문자 가능)\n② 숫자 : 1, 2, 3, 4 ~ 9, 0\n③ 특수키 : "space", "enter"\n④ 방향키 : "up", "down", "right", "left"',
     when_some_key_pressed_exampleCode:
         'def when_press_key("W"):\n    Entry.move_to_direction(10)\n\ndef when_press_key(1):\n    Entry.add_size(10)',
     when_some_key_pressed_exampleDesc:
         'W키를 누르면 오브젝트가 이동방향으로 10만큼 이동하고, 1키를 누르면 오브젝트의 크기가 10만큼 커집니다.',
     mouse_clicked_desc:
-        '마우스를 클릭했을 때 아래 명령어들을 실행합니다.<br>아래 명령어는 [Tab]키를 통해 들여쓰기합니다.',
+        '마우스를 클릭했을 때 아래 명령어들을 실행합니다.\n아래 명령어는 [Tab]키를 통해 들여쓰기합니다.',
     mouse_clicked_exampleCode:
         'def when_click_mouse_on():\n    Entry.add_size(10)\n    Entry.move_to_direction(10)',
     mouse_clicked_exampleDesc:
         '마우스를 클릭하면 오브젝트의 크기가 10만큼 커지면서 이동방향으로 10만큼 이동합니다.',
     mouse_click_cancled_desc:
-        '마우스 클릭을 해제했을 때 아래 명령어들을 실행합니다.<br>아래 명령어는 [Tab]키를 통해 들여쓰기합니다.',
+        '마우스 클릭을 해제했을 때 아래 명령어들을 실행합니다.\n아래 명령어는 [Tab]키를 통해 들여쓰기합니다.',
     mouse_click_cancled_exampleCode:
         'def when_click_mouse_off():\n    Entry.move_to_direction(-10)\n\ndef when_click_mouse_on():\n    Entry.move_to_direction(10)',
     mouse_click_cancled_exampleDesc:
         '마우스를 클릭하면 오브젝트가 이동방향으로 10만큼 이동하고, 마우스 클릭을 해제하면 오브젝트가 이동방향으로 -10만큼 이동합니다.',
     when_object_click_desc:
-        '해당 오브젝트를 클릭했을 때 아래 명령어들을 실행합니다.<br>아래 명령어는 [Tab]키를 통해 들여쓰기합니다.',
+        '해당 오브젝트를 클릭했을 때 아래 명령어들을 실행합니다.\n아래 명령어는 [Tab]키를 통해 들여쓰기합니다.',
     when_object_click_exampleCode:
         'def when_click_object_on():\n    Entry.print_for_sec("회전!", 0.5)\n    Entry.add_rotation(90)',
     when_object_click_exampleDesc:
         '오브젝트를 클릭하면 오브젝트가 "회전!"이라 말하고, 90도 만큼 회전합니다.',
     when_object_click_canceled_desc:
-        '해당 오브젝트 클릭을 해제했을 때 아래 명령어들을 실행합니다.<br>아래 명령어는 [Tab]키를 통해 들여쓰기합니다.',
+        '해당 오브젝트 클릭을 해제했을 때 아래 명령어들을 실행합니다.\n아래 명령어는 [Tab]키를 통해 들여쓰기합니다.',
     when_object_click_canceled_exampleCode:
         'def when_click_object_on():\n    Entry.add_rotation(90)\n\ndef when_click_object_off():\n    Entry.add_rotation(-90)',
     when_object_click_canceled_exampleDesc:
         '오브젝트를 클릭하면 오브젝트가 90도 만큼 회전하고, 오브젝트 클릭을 해제하면 오브젝트가 -90도 만큼 회전합니다.',
     when_message_cast_desc:
-        'A 신호를 받으면 아래 명령어들을 실행합니다.<br>아래 명령어는 [Tab]키를 통해 들여쓰기합니다.<br>만약 A 신호가 없으면  [속성] 탭에 A 신호가 자동 생성됩니다.',
+        'A 신호를 받으면 아래 명령어들을 실행합니다.\n아래 명령어는 [Tab]키를 통해 들여쓰기합니다.\n만약 A 신호가 없으면  [속성] 탭에 A 신호가 자동 생성됩니다.',
     when_message_cast_elements: 'A-- "신호 이름"',
     when_message_cast_exampleCode:
         'def when_click_mouse_on():\n    Entry.send_signal("신호")\n\ndef when_get_signal("신호"):\n    Entry.print_for_sec("안녕! 반가워", 0.5)',
     when_message_cast_exampleDesc:
         '마우스를 클릭하면 "신호"를 보내고, "신호"를 받았을때 "안녕! 반가워"라고 0.5초간 말합니다.',
     message_cast_desc:
-        'A에 입력된 신호를 보냅니다.<br>만약 A 신호가 없으면  [속성] 탭에 A 신호가 자동 생성됩니다.',
+        'A에 입력된 신호를 보냅니다.\n만약 A 신호가 없으면  [속성] 탭에 A 신호가 자동 생성됩니다.',
     message_cast_elements: 'A-- "신호 이름"',
     message_cast_exampleCode:
         '#"오브젝트1"의 파이선 코드\ndef when_start():\n    Entry.print_for_sec("안녕! 넌 몇살이니?", 2)\n    Entry.send_signal("신호")\n\n#"오브젝트2"의 파이선 코드\ndef when_get_signal("신호"):\n    Entry.print_for_sec("안녕? 난 세 살이야.", 2)',
     message_cast_exampleDesc:
         '[시작하기]버튼을 클릭하면 "오브젝트1"이 "안녕! 넌 몇살이니?"라고 2초간 말하고 "신호를 보냅니다., "오브젝트2"가 "신호"를 받았을때 "안녕? 난 세 살이야."라고 2초간 말합니다.',
     message_cast_wait_desc:
-        'A에 입력된 신호를 보내고, 해당 신호를 받는 명령어들의 실행이 끝날 때까지 기다립니다.<br>만약 A 신호가 없으면  [속성] 탭에 A 신호가 자동 생성됩니다.',
+        'A에 입력된 신호를 보내고, 해당 신호를 받는 명령어들의 실행이 끝날 때까지 기다립니다.\n만약 A 신호가 없으면  [속성] 탭에 A 신호가 자동 생성됩니다.',
     message_cast_wait_elements: 'A-- "신호 이름"',
     message_cast_wait_exampleCode:
         '#"오브젝트1"의 파이선 코드\ndef when_start():\n    Entry.print_for_sec("숨바꼭질하자!", 2)\n    Entry.send_signal_wait("신호")\n    Entry.hide()\n\n#"오브젝트2"의 파이선 코드\ndef when_get_signal("신호"):\n    Entry.print_for_sec("그래!", 2)',
     message_cast_wait_exampleDesc:
         '[시작하기]버튼을 클릭하면 "오브젝트1"이 "숨바꼭질하자!"라고 2초 동안 말하고 "신호"를 보낸 후 기다립니다. "오브젝트2"가 "신호"를 받으면 "그래!"를 2초 동안 말합니다. "오브젝트1"이 그 후에 모양을 숨깁니다.',
     when_scene_start_desc:
-        '장면이 시작되면 아래 명령어들을 실행합니다.<br>아래 명령어는 [Tab]키를 통해 들여쓰기합니다.',
+        '장면이 시작되면 아래 명령어들을 실행합니다.\n아래 명령어는 [Tab]키를 통해 들여쓰기합니다.',
     when_scene_start_exampleCode:
         '#"장면 1"의 파이선 코드\ndef when_start():\n    Entry.print_for_sec("다른 곳으로 가볼까?", 2)\n    Entry.start_scene("장면 2")\n\n#"장면 2"의 파이선 코드\ndef when_start_scene():\n    Entry.print("여기가 어디지?")',
     when_scene_start_exampleDesc:
@@ -7520,7 +7731,7 @@ Lang.PythonHelper = {
     start_scene_exampleDesc: '"장면 1"에서 해당 오브젝트를 클릭하면 "장면 2"가 시작됩니다.',
     start_neighbor_scene_desc: 'A에 입력한 다음 또는 이전 장면을 시작합니다.',
     start_neighbor_scene_elements:
-        'A-- 아래 선택지 중 하나<br>① 다음 장면: "next" 또는 "다음"<br>② 이전 장면: "prev" 또는 "이전"',
+        'A-- 아래 선택지 중 하나\n① 다음 장면: "next" 또는 "다음"\n② 이전 장면: "prev" 또는 "이전"',
     start_neighbor_scene_exampleCode:
         '#"장면 1"의 파이선 코드\ndef when_press_key("right"):\n    Entry.start_scene_of("next")\n\n#"장면 2"의 파이선 코드\ndef when_press_key("left"):\n    Entry.start_scene_of("prev")',
     start_neighbor_scene_exampleDesc:
@@ -7532,59 +7743,60 @@ Lang.PythonHelper = {
     wait_second_exampleDesc:
         '[시작하기]버튼을 클릭하면 오브젝트에 색깔효과를 10만큼 주고, 2초동안 기다린 다음 크기를 10만큼 커지게 합니다.',
     repeat_basic_desc:
-        '아래 명령어들을 A번 반복하여 실행합니다.<br>아래 명령어는 [Tab]키를 통해 들여쓰기합니다.',
+        '아래 명령어들을 A번 반복하여 실행합니다.\n아래 명령어는 [Tab]키를 통해 들여쓰기합니다.',
     repeat_basic_elements: 'A-- 반복할 횟수 입력',
     repeat_basic_exampleCode:
         'def when_start():\n    for i in range(10):\n        Entry.move_to_direction(10)\n        Entry.stamp()',
     repeat_basic_exampleDesc:
         '[시작하기]버튼을 클릭하면 오브젝트가 이동방향으로 10만큼 이동하고, 도장찍는 행동을 10번 반복합니다.',
     repeat_inf_desc:
-        'A 판단이 True인 동안 아래 명령어들을 반복 실행합니다. A에 True를 입력하면 계속 반복됩니다. <br>아래 명령어는 [Tab]키를 통해 들여쓰기합니다.',
+        'A 판단이 True인 동안 아래 명령어들을 반복 실행합니다. A에 True를 입력하면 계속 반복됩니다. \n아래 명령어는 [Tab]키를 통해 들여쓰기합니다.',
     repeat_inf_elements:
-        'A-- True 또는 False로 판단할 수 있는 명령어 입력(판단 카테고리의 명령어)<br>① True, False<br>② 10 == 10 , 10 > 10 , 10 <= 10 등<br>③ Entry.is_mouse_clicked(), Entry.is_key_pressed("Q") 등',
+        'A-- True 또는 False로 판단할 수 있는 명령어 입력(판단 카테고리의 명령어)\n① True, False\n② 10 == 10 , 10 > 10 , 10 <= 10 등\n③ Entry.is_mouse_clicked(), Entry.is_key_pressed("Q") 등',
     repeat_inf_exampleCode:
         'def when_start():\n    while True:\n        Entry.move_to_direction(10)\n        Entry.bounce_on_edge()',
     repeat_inf_exampleDesc:
         '[시작하기]버튼을 클릭하면 오브젝트가 계속해서 이동방향으로 10만큼 이동하고, 벽에 닿으면 튕깁니다.',
     repeat_while_true_desc:
-        'A 판단이 True가 될 때까지 아래 명령어들을 반복 실행합니다.<br>아래 명령어는 [Tab]키를 통해 들여쓰기합니다.',
+        'A 판단이 True가 될 때까지 아래 명령어들을 반복 실행합니다.\n아래 명령어는 [Tab]키를 통해 들여쓰기합니다.',
     repeat_while_true_elements:
-        'A-- True 또는 False로 판단할 수 있는 명령어 입력(판단 카테고리의 명령어)<br>① True, False<br>② 10 == 10 , 10 > 10 , 10 <= 10 등<br>③ Entry.is_mouse_clicked(), Entry.is_key_pressed("Q") 등',
+        'A-- True 또는 False로 판단할 수 있는 명령어 입력(판단 카테고리의 명령어)\n① True, False\n② 10 == 10 , 10 > 10 , 10 <= 10 등\n③ Entry.is_mouse_clicked(), Entry.is_key_pressed("Q") 등',
     repeat_while_true_exampleCode:
         'def when_start():\n    while not Entry.is_key_pressed("space"):\n        Entry.add_rotation(90)',
     repeat_while_true_exampleDesc:
         '[시작하기]버튼을 클릭하면 스페이스키를 누를때까지 오브젝트가 90도 만큼 회전합니다.',
-    stop_repeat_desc: '이 명령어와 가장 가까운 반복 명령어의 반복을 중단합니다.',
+    stop_repeat_desc:
+        "Stops the closest block that encloses this block.\n         It works with various C-shaped blocks like 'repeat' block.",
     stop_repeat_exampleCode:
         'def when_start():\n    while True:\n        Entry.move_to_direction(10)\n        if Entry.is_key_pressed("enter"):\n            break',
     stop_repeat_exampleDesc:
         '[시작하기]버튼을 클릭하면 오브젝트가 이동방향으로 10만큼 계속 이동합니다. 엔터키를 누르면 반복이 중단됩니다.',
     _if_desc:
-        'A 부분의 판단이 True이면 if A:아래 명령어들을 실행하고, False이면 실행하지 않습니다.<br>아래 명령어는 [Tab]키를 통해 들여쓰기합니다.',
+        'A 부분의 판단이 True이면 if A:아래 명령어들을 실행하고, False이면 실행하지 않습니다.\n아래 명령어는 [Tab]키를 통해 들여쓰기합니다.',
     _if_elements:
-        'A-- True 또는 False로 판단할 수 있는 명령어 입력(판단 카테고리의 명령어)<br>① True, False<br>② 10 == 10 , 10 > 10 , 10 <= 10 등<br>③ Entry.is_mouse_clicked(), Entry.is_key_pressed("Q") 등',
+        'A-- True 또는 False로 판단할 수 있는 명령어 입력(판단 카테고리의 명령어)\n① True, False\n② 10 == 10 , 10 > 10 , 10 <= 10 등\n③ Entry.is_mouse_clicked(), Entry.is_key_pressed("Q") 등',
     _if_exampleCode:
         'def when_click_mouse_on():\n    if (Entry.value_of_mouse_pointer("x") > 0):\n        Entry.print_for_sec("오른쪽!", 0.5)',
     _if_exampleDesc:
         '마우스를 클릭했을 때 마우스 x좌표가 0보다 크면 오브젝트가 "오른쪽!"이라고 0.5초 동안 말합니다.',
     if_else_desc:
-        'A 부분의 판단이 True이면 if A: 아래 명령어들을 실행하고, False이면 else: 아래 명령어들을 실행합니다.<br>아래 명령어는 [Tab]키를 통해 들여쓰기합니다.',
+        'A 부분의 판단이 True이면 if A: 아래 명령어들을 실행하고, False이면 else: 아래 명령어들을 실행합니다.\n아래 명령어는 [Tab]키를 통해 들여쓰기합니다.',
     if_else_elements:
-        'A-- True 또는 False로 판단할 수 있는 명령어 입력(판단 카테고리의 명령어)<br>① True, False<br>② 10 == 10 , 10 > 10 , 10 <= 10 등<br>③ Entry.is_mouse_clicked(), Entry.is_key_pressed("Q") 등',
+        'A-- True 또는 False로 판단할 수 있는 명령어 입력(판단 카테고리의 명령어)\n① True, False\n② 10 == 10 , 10 > 10 , 10 <= 10 등\n③ Entry.is_mouse_clicked(), Entry.is_key_pressed("Q") 등',
     if_else_exampleCode:
         'def when_click_mouse_on():\n    if Entry.is_touched("mouse_pointer"):\n        Entry.print("닿았다!")\n    else:\n        Entry.print("안 닿았다!")',
     if_else_exampleDesc:
         '마우스를 클릭했을 때 마우스포인터가 오브젝트에 닿았으면 "닿았다!"를 그렇지 않으면 "안 닿았다!"를 말합니다.',
     wait_until_true_desc: 'A 부분의 판단이 True가 될 때까지 코드의 실행을 멈추고 기다립니다.',
     wait_until_true_elements:
-        'A-- True 또는 False로 판단할 수 있는 명령어 입력(판단 카테고리의 명령어)<br>① True, False<br>② 10 == 10 , 10 > 10 , 10 <= 10 등<br>③ Entry.is_mouse_clicked(), Entry.is_key_pressed("Q") 등',
+        'A-- True 또는 False로 판단할 수 있는 명령어 입력(판단 카테고리의 명령어)\n① True, False\n② 10 == 10 , 10 > 10 , 10 <= 10 등\n③ Entry.is_mouse_clicked(), Entry.is_key_pressed("Q") 등',
     wait_until_true_exampleCode:
         'def when_start():\n    Entry.print("엔터를 눌러봐!")\n    Entry.wait_until(Entry.is_key_pressed("enter"))\n    Entry.print("잘했어!")',
     wait_until_true_exampleDesc:
         '[시작하기]버튼을 클릭하면 오브젝트가 "엔터를 눌러봐!"라 말하고, 엔터키를 누를 때까지 기다립니다. 엔터키를 누르면 "잘했어!"라 말합니다.',
     stop_object_desc: 'A코드의 실행을 중지합니다.',
     stop_object_elements:
-        'A-- 아래 선택지 중 하나<br>① "all":  모든 오브젝트의 모든 코드<br>② "self" : 해당 오브젝트의 모든 코드<br>③ "this": 이 명령어가 포함된 코드<br>④ "others" : 해당 오브젝트의 코드 중 이 명령어가 포함된 코드를 제외한 모든 코드<br/>⑤ "ohter_objects" : 이 오브젝트를 제외한 다른 모든 오브젝트의 코드',
+        'A-- 아래 선택지 중 하나\n① "all":  모든 오브젝트의 모든 코드\n② "self" : 해당 오브젝트의 모든 코드\n③ "this": 이 명령어가 포함된 코드\n④ "others" : 해당 오브젝트의 코드 중 이 명령어가 포함된 코드를 제외한 모든 코드\n⑤ "ohter_objects" : 이 오브젝트를 제외한 다른 모든 오브젝트의 코드',
     stop_object_exampleCode:
         'def when_start():\n    while True:\n        Entry.move_to("mouse_pointer")\n\ndef when_press_key("space"):\n    Entry.stop_code("all")\n',
     stop_object_exampleDesc:
@@ -7595,13 +7807,13 @@ Lang.PythonHelper = {
     restart_project_exampleDesc:
         '[시작하기]버튼을 클릭하면 계속해서 오브젝트의 크기가 커집니다. 엔터키를 누르면 작품을 처음부터 다시 실행합니다.',
     when_clone_start_desc:
-        '해당 오브젝트의 복제본이 새로 생성되었을 때 아래 명령어들을 실행합니다.<br>아래 명령어는 [Tab]키를 통해 들여쓰기합니다.',
+        '해당 오브젝트의 복제본이 새로 생성되었을 때 아래 명령어들을 실행합니다.\n아래 명령어는 [Tab]키를 통해 들여쓰기합니다.',
     when_clone_start_exampleCode:
         'def when_start():\n    for i in range(5):\n        Entry.make_clone_of("self")\n\ndef when_make_clone():\n    Entry.set_x(random.randint(-200, 200))',
     when_clone_start_exampleDesc:
         '[시작하기]버튼을 클릭하면 자신의 복제본 5개를 만듭니다. 복제본이 새로 생성되었을때 복제본의 x좌표를 -200에서 200사이의 무작위수로 정합니다.',
     create_clone_desc: 'A 오브젝트의 복제본을 생성합니다.',
-    create_clone_elements: 'A-- 아래 선택지 중 하나<br>① "오브젝트 이름"<br>② "self" 또는 "자신"',
+    create_clone_elements: 'A-- 아래 선택지 중 하나\n① "오브젝트 이름"\n② "self" 또는 "자신"',
     create_clone_exampleCode:
         'def when_start():\n    for i in range(5):\n        Entry.make_clone_of("self")\n\ndef when_make_clone():\n    Entry.set_x(random.randint(-200, 200))',
     create_clone_exampleDesc:
@@ -7628,21 +7840,21 @@ Lang.PythonHelper = {
         '[시작하기]버튼을 클릭하면 오브젝트가 계속해서 이동방향으로 10만큼 이동하고, 벽에 닿으면 튕깁니다.',
     move_x_desc: '오브젝트의 x좌표를 A만큼 바꿉니다.',
     move_x_elements:
-        'A-- x좌표의 변화 값<br>① 양수: 오브젝트가 오른쪽으로 이동합니다.<br>② 음수: 오브젝트가 왼쪽으로 이동합니다.',
+        'A-- x좌표의 변화 값\n① 양수: 오브젝트가 오른쪽으로 이동합니다.\n② 음수: 오브젝트가 왼쪽으로 이동합니다.',
     move_x_exampleCode:
         'def when_start():\n    Entry.add_x(10)\n    Entry.wait_for_sec(2)\n    Entry.add_x(-10)',
     move_x_exampleDesc:
         '[시작하기]버튼을 클릭하면 오브젝트가 오른쪽으로 10만큼 이동하고 2초 동안 기다린 후 왼쪽으로 10만큼 이동합니다.',
     move_y_desc: '오브젝트의 y좌표를 A만큼 바꿉니다.',
     move_y_elements:
-        'A-- y좌표의 변화 값<br>① 양수: 오브젝트가 위쪽으로 이동합니다.<br>② 음수: 오브젝트가 아래쪽으로 이동합니다.',
+        'A-- y좌표의 변화 값\n① 양수: 오브젝트가 위쪽으로 이동합니다.\n② 음수: 오브젝트가 아래쪽으로 이동합니다.',
     move_y_exampleCode:
         'def when_start():\n    Entry.add_y(10)\n    Entry.wait_for_sec(2)\n    Entry.add_y(-10)',
     move_y_exampleDesc:
         '[시작하기]버튼을 클릭하면 오브젝트가 위쪽으로 10만큼 이동하고 2초 동안 기다린 후 아래쪽으로 10만큼 이동합니다.',
     move_xy_time_desc: '오브젝트가 x와 y좌표를 각각 A와 B만큼 C초에 걸쳐 서서히 바꿉니다.',
     move_xy_time_elements:
-        'A-- x좌표의 변화 값<br>① 양수: 오브젝트가 오른쪽으로 이동합니다.<br>② 음수: 오브젝트가 왼쪽으로 이동합니다.%nextB-- y좌표의 변화 값<br>① 양수: 오브젝트가 위쪽으로 이동합니다.<br>② 음수: 오브젝트가 아래쪽으로 이동합니다.%nextC-- 이동하는 시간(초)',
+        'A-- x좌표의 변화 값\n① 양수: 오브젝트가 오른쪽으로 이동합니다.\n② 음수: 오브젝트가 왼쪽으로 이동합니다.%nextB-- y좌표의 변화 값\n① 양수: 오브젝트가 위쪽으로 이동합니다.\n② 음수: 오브젝트가 아래쪽으로 이동합니다.%nextC-- 이동하는 시간(초)',
     move_xy_time_exampleCode:
         'def when_start():\n    Entry.add_xy_for_sec(100, 100, 2)\n    Entry.add_xy_for_sec(-100, -100, 2)',
     move_xy_time_exampleDesc:
@@ -7674,15 +7886,15 @@ Lang.PythonHelper = {
         '오른쪽화살표키를 누르면 오브젝트의 x좌표를 10만큼 바꾸고, 위쪽화살표키를 누르면 오브젝트의 y좌표를 10만큼 바꿉니다. 마우스를 클릭하면 2초 동안 오브젝트를 x,y 좌표 0으로 이동시킵니다.',
     locate_desc: '오브젝트가 A의 위치로 이동합니다. (오브젝트의 중심점이 기준이 됩니다.)',
     locate_elements:
-        'A-- 아래 선택지 중 하나<br>① "오브젝트 이름"<br>② "mouse_pointer" 또는 "마우스포인터"',
+        'A-- 아래 선택지 중 하나\n① "오브젝트 이름"\n② "mouse_pointer" 또는 "마우스포인터"',
     locate_exampleCode:
         'def when_click_mouse_on():\n    Entry.move_to("mouse_pointer")\n\ndef when_press_key("space"):\n    Entry.move_to("오브젝트")',
     locate_exampleDesc:
-        '마우스를 클릭하면 오브젝트가 마우스포인터 위치로 이동합니다.<br>스페이스키를 누르면 오브젝트가 "오브젝트" 위치로 이동합니다.',
+        '마우스를 클릭하면 오브젝트가 마우스포인터 위치로 이동합니다.\n스페이스키를 누르면 오브젝트가 "오브젝트" 위치로 이동합니다.',
     locate_object_time_desc:
         '오브젝트가 A의 위치로 B초에 걸쳐 서서히 이동합니다. (오브젝트의 중심점이 기준이 됩니다.)',
     locate_object_time_elements:
-        'A-- 아래 선택지 중 하나<br>① "오브젝트 이름"<br>② "mouse_pointer" 또는 "마우스포인터" %nextB-- 이동하는 시간(초)',
+        'A-- 아래 선택지 중 하나\n① "오브젝트 이름"\n② "mouse_pointer" 또는 "마우스포인터" %nextB-- 이동하는 시간(초)',
     locate_object_time_exampleCode:
         'def when_click_mouse_on():\n    Entry.move_to_for_sec("mouse_pointer", 2)',
     locate_object_time_exampleDesc:
@@ -7729,7 +7941,7 @@ Lang.PythonHelper = {
     see_angle_object_desc:
         '오브젝트가 A쪽을 바라봅니다. (이동방향이 A를 향하도록 오브젝트의 방향을 회전해줍니다.)',
     see_angle_object_elements:
-        'A-- 아래 선택지 중 하나<br>① "오브젝트 이름"<br>② "mouse_pointer" 또는 "마우스포인터"',
+        'A-- 아래 선택지 중 하나\n① "오브젝트 이름"\n② "mouse_pointer" 또는 "마우스포인터"',
     see_angle_object_exampleCode:
         'def when_click_mouse_on():\n    Entry.look_at("mouse_pointer")\n\ndef when_press_key("space"):\n    Entry.look_at("오브젝트")',
     see_angle_object_exampleDesc:
@@ -7754,13 +7966,13 @@ Lang.PythonHelper = {
     dialog_time_desc:
         '오브젝트가 A를 B초 동안 말풍선으로 말한 후 다음 명령어가 실행됩니다. 콘솔창에서도 실행 결과를 볼 수 있습니다.',
     dialog_time_elements:
-        'A-- 말할 내용<br>① 문자 : "안녕!", "엔트리" 등 <br>② 숫자 : 0, 10, 35 등%nextB-- 말하는 시간(초)',
+        'A-- 말할 내용\n① 문자 : "안녕!", "엔트리" 등 \n② 숫자 : 0, 10, 35 등%nextB-- 말하는 시간(초)',
     dialog_time_exampleCode:
         'def when_start():\n    Entry.print_for_sec("안녕! 나는", 2)\n    Entry.print_for_sec(16, 2)\n    Entry.print_for_sec("살이야", 2)',
     dialog_time_exampleDesc:
         '[시작하기]버튼을 클릭하면 "안녕! 나는", 16, "살이야"를 각각 2초 동안 차례대로 말합니다.',
     dialog_desc: '오브젝트가 A를 말풍선으로 말합니다. 콘솔창에서도 실행 결과를 볼 수 있습니다.',
-    dialog_elements: 'A-- 말할 내용<br>① 문자 : "안녕!", "엔트리" 등 <br>② 숫자 : 0, 10, 35 등',
+    dialog_elements: 'A-- 말할 내용\n① 문자 : "안녕!", "엔트리" 등 \n② 숫자 : 0, 10, 35 등',
     dialog_exampleCode:
         'def when_start():\n    Entry.print("키보드로 숫자 1,2 를 누르면 숫자를 말해볼게")\n\ndef when_press_key(1):\n    Entry.print(1)\n\ndef when_press_key(2):\n    Entry.print(2)\n',
     dialog_exampleDesc:
@@ -7772,28 +7984,28 @@ Lang.PythonHelper = {
         '[시작하기]버튼을 클릭하면 "말풍선을 지우려면 엔터를 눌러!"라 말하고, 엔터키를 누르면 말풍선이 사라집니다.',
     change_to_some_shape_desc: '오브젝트를 A 모양으로 바꿉니다.',
     change_to_some_shape_elements:
-        'A-- 아래 선택지 중 하나<br>① 모양 이름 : [속성] 탭의 "모양 이름"을 적음<br>② 모양 번호 : [속성] 탭의 모양 번호를 적음',
+        'A-- 아래 선택지 중 하나\n① 모양 이름 : [속성] 탭의 "모양 이름"을 적음\n② 모양 번호 : [속성] 탭의 모양 번호를 적음',
     change_to_some_shape_exampleCode:
         'def when_start():\n    Entry.wait_for_sec(0.3)\n    Entry.change_shape("오브젝트모양")\n    Entry.wait_for_sec(0.3)\n    Entry.change_shape("오브젝트모양")',
     change_to_some_shape_exampleDesc:
         '[시작하기]버튼을 클릭하면 0.3초간 기다린 다음 "오브젝트모양"으로 모양을 바꾸고 0.3초간 기다린 다음 "오브젝트모양"모양으로 모양을 바꿉니다.',
     change_to_next_shape_desc: '오브젝트의 모양을 다음 또는 이전 모양으로 바꿉니다.',
     change_to_next_shape_elements:
-        'A-- 아래 선택지 중 하나<br>① 다음 모양 : "next" 또는 "다음" <br>② 이전 모양 : "pre" 또는 "이전"',
+        'A-- 아래 선택지 중 하나\n① 다음 모양 : "next" 또는 "다음" \n② 이전 모양 : "pre" 또는 "이전"',
     change_to_next_shape_exampleCode:
         'def when_start():\n    Entry.wait_for_sec(0.3)\n    Entry.change_shape_to("next")\n    Entry.wait_for_sec(0.3)\n    Entry.change_shape_to("pre")',
     change_to_next_shape_exampleDesc:
         '[시작하기]버튼을 클릭하면 0.3초간 기다린 다음 모양으로 오브젝트 모양을 바꾸고 0.3초간 기다린 다음 이전 모양으로 오브젝트 모양을 바꿉니다.',
     add_effect_amount_desc: '오브젝트에 A 효과를 B만큼 줍니다.',
     add_effect_amount_elements:
-        'A -- 아래 선택지 중 하나<br>① “color” 또는 “색깔“                 <br>② “brightness” 또는 “밝기”                <br>③ “transparency” 또는 “투명도”%nextB-- 효과의 변화 정도',
+        'A -- 아래 선택지 중 하나\n① “color” 또는 “색깔“                 \n② “brightness” 또는 “밝기”                \n③ “transparency” 또는 “투명도”%nextB-- 효과의 변화 정도',
     add_effect_amount_exampleCode:
         'def when_click_mouse_on():\n    Entry.add_effect("color", 50)\n    Entry.wait_for_sec(1)\n    Entry.add_effect("brightness", -50)\n    Entry.wait_for_sec(1)\n    Entry.add_effect("transparency", 50)',
     add_effect_amount_exampleDesc:
         '마우스를 클릭하면 오브젝트에 색깔 효과를 50만큼 주고 1초간 기다리고, 밝기 효과를 -50만큼 주고 1초간 기다립니다. 그 후 투명도 효과를 50만큼 줍니다.',
     change_effect_amount_desc: '오브젝트의 A 효과를 B로 정합니다.',
     change_effect_amount_elements:
-        'A-- 아래 선택지 중 하나<br>① “color” 또는 “색깔“                 <br>② “brightness” 또는 “밝기”                <br>③ “transparency” 또는 “투명도”%nextB-- 효과의 값<br>① color: 0~100 범위의 수, 100을 주기로 반복됨<br>② brightness: -100~100 사이 범위의 수, -100이하는 -100 으로 100 이상은 100 으로 처리 됨<br>③ transparency: 0~100 사이 범위의 수, 0 이하는 0으로, 100이상은 100으로 처리 됨',
+        'A-- 아래 선택지 중 하나\n① “color” 또는 “색깔“                 \n② “brightness” 또는 “밝기”                \n③ “transparency” 또는 “투명도”%nextB-- 효과의 값\n① color: 0~100 범위의 수, 100을 주기로 반복됨\n② brightness: -100~100 사이 범위의 수, -100이하는 -100 으로 100 이상은 100 으로 처리 됨\n③ transparency: 0~100 사이 범위의 수, 0 이하는 0으로, 100이상은 100으로 처리 됨',
     change_effect_amount_exampleCode:
         'def when_click_mouse_on():\n    Entry.set_effect("color", 50)\n    Entry.set_effect("brightness", 50)\n    Entry.set_effect("transparency", 50)\n\ndef when_click_mouse_off():\n    Entry.set_effect("color", 0)\n    Entry.set_effect("brightness", 0)\n    Entry.set_effect("transparency", 0)',
     change_effect_amount_exampleDesc:
@@ -7827,7 +8039,7 @@ Lang.PythonHelper = {
         '위쪽화살표키를 누르면 오브젝트의 상하 모양을 뒤집고, 오른쪽화살표키를 누르면 오브젝트의 좌우 모양을 뒤집습니다.',
     change_object_index_desc: '오브젝트의 레이어를 A로 가져옵니다.',
     change_object_index_elements:
-        'A-- 아래 선택지 중 하나<br>① “front" 또는 “맨 앞“                 <br>② “forward” 또는 “앞”                <br>③ “backward” 또는 “뒤”<br>④ “back” 또는 “맨 뒤”',
+        'A-- 아래 선택지 중 하나\n① “front" 또는 “맨 앞“                 \n② “forward” 또는 “앞”                \n③ “backward” 또는 “뒤”\n④ “back” 또는 “맨 뒤”',
     change_object_index_exampleCode:
         'def when_start():\n    Entry.send_layer_to("front")\n    Entry.wait_for_sec(2)\n    Entry.send_layer_to("backward")',
     change_object_index_exampleDesc:
@@ -7850,7 +8062,7 @@ Lang.PythonHelper = {
         '[시작하기]버튼을 클릭하면 그리기가 시작되고 계속해서 오브젝트가 이동방향으로 10만큼 이동합니다. 마우스를 클릭하면 그리는것을 멈춥니다.',
     set_color_desc: '오브젝트가 그리는 선의 색을 A로 정합니다.',
     set_color_elements:
-        'A-- 아래 선택지 중 하나<br>① 색상 코드 : "#FF0000", "#FFCC00", "#3333FF", "#000000" 등<br>② 색깔명 : "red", "orange", "yellow", "green", "blue", "navy", "purple", "black", "white", "brown"',
+        'A-- 아래 선택지 중 하나\n① 색상 코드 : "#FF0000", "#FFCC00", "#3333FF", "#000000" 등\n② 색깔명 : "red", "orange", "yellow", "green", "blue", "navy", "purple", "black", "white", "brown"',
     set_color_exampleCode:
         'def when_start():\n    Entry.start_drawing()\n    Entry.set_brush_color_to("#000099")\n    while True:\n        Entry.move_to_direction(1)',
     set_color_exampleDesc:
@@ -7890,25 +8102,24 @@ Lang.PythonHelper = {
     brush_erase_all_exampleDesc:
         '[시작하기]버튼을 클릭하면 그리기가 시작됩니다. 오브젝트는 계속해서 이동방향으로 10만큼 움직이고, 오브젝트의 이동경로를 따라 선이 그려집니다. 마우스를 클릭하면 오브젝트가 그린 선을 모두 지웁니다.',
     text_read_desc:
-        '글상자 A의 내용입니다.<br />(내용 안에 개행이 있는 경우, 띄어쓰기하여 반환됩니다.)',
-    text_read_elements: 'A-- 아래 선택지 중 하나<br />① "오브젝트(글상자) 이름" <br />② 자기 자신',
+        '글상자 A의 내용입니다.\n(내용 안에 개행이 있는 경우, 띄어쓰기하여 반환됩니다.)',
+    text_read_elements: 'A-- 아래 선택지 중 하나\n① "오브젝트(글상자) 이름" \n② 자기 자신',
     text_read_exampleCode: 'def when_start():\n    Entry.print(Entry.contents_of_textbox("A"))',
     text_read_exampleDesc: '[시작하기]버튼을 클릭하면 오브젝트가 글상자 "A"의 내용을 말합니다.​',
     text_write_desc: '글상자의 내용을 A로 고쳐씁니다.',
-    text_write_elements:
-        'A-- 글상자의 내용<br>① 문자 : "안녕!", "엔트리" 등 <br>② 숫자 : 0, 10, 35 등',
+    text_write_elements: 'A-- 글상자의 내용\n① 문자 : "안녕!", "엔트리" 등 \n② 숫자 : 0, 10, 35 등',
     text_write_exampleCode: 'def when_start():\n    Entry.write_text("엔트리")',
     text_write_exampleDesc: '[시작하기]버튼을 클릭하면 글상자의 내용을 "엔트리"로 바꿉니다.',
     text_append_desc: '글상자의 내용 뒤에 A를 추가합니다.',
     text_append_elements:
-        'A-- 글상자의 내용<br>① 문자 : "안녕!", "엔트리" 등 <br>② 숫자 : 0, 10, 35 등',
+        'A-- 글상자의 내용\n① 문자 : "안녕!", "엔트리" 등 \n② 숫자 : 0, 10, 35 등',
     text_append_exampleCode:
         'def when_start():\n    Entry.write_text("안녕?")\n    Entry.wait_for_sec(1)\n    Entry.append_text("엔트리!")',
     text_append_exampleDesc:
         '[시작하기]버튼을 클릭하면 글상자의 내용이 "안녕?"이 되었다가 1초 뒤에 "엔트리!"가 추가되어 "안녕?엔트리!"가 됩니다.',
     text_prepend_desc: '글상자의 내용 앞에 A를 추가합니다.',
     text_prepend_elements:
-        'A-- 글상자의 내용<br>① 문자 : "안녕!", "엔트리" 등 <br>② 숫자 : 0, 10, 35 등',
+        'A-- 글상자의 내용\n① 문자 : "안녕!", "엔트리" 등 \n② 숫자 : 0, 10, 35 등',
     text_prepend_exampleCode:
         'def when_start():\n    Entry.write_text("반가워!")\n    Entry.wait_for_sec(1)\n    Entry.prepend_text("엔트리!")',
     text_prepend_exampleDesc:
@@ -7920,21 +8131,21 @@ Lang.PythonHelper = {
         '[시작하기]버튼을 클릭하면 글상자의 내용이 "엔트리"가 되었다가 1초 뒤에 모든 내용이 사라집니다.',
     sound_something_with_block_desc: '오브젝트가 A 소리를 재생합니다.',
     sound_something_with_block_elements:
-        'A-- 아래 선택지 중 하나<br>① 소리 이름 : [속성] 탭의 "소리 이름"을 적음<br>② 소리 번호: [속성] 탭의 소리 번호를 적음',
+        'A-- 아래 선택지 중 하나\n① 소리 이름 : [속성] 탭의 "소리 이름"을 적음\n② 소리 번호: [속성] 탭의 소리 번호를 적음',
     sound_something_with_block_exampleCode:
         'def when_start():\n    Entry.play_sound("소리")\n    Entry.add_size(50)',
     sound_something_with_block_exampleDesc:
         '[시작하기]버튼을 클릭하면 "소리"를 재생하면서 오브젝트의 크기가 50만큼 커집니다.',
     sound_something_second_with_block_desc: '오브젝트가 A소리를 B초 만큼 재생합니다.',
     sound_something_second_with_block_elements:
-        'A-- 아래 선택지 중 하나<br>① 소리 이름 : [속성] 탭의 "소리 이름"을 적음<br>② 소리 번호: [속성] 탭의 소리 번호를 적음',
+        'A-- 아래 선택지 중 하나\n① 소리 이름 : [속성] 탭의 "소리 이름"을 적음\n② 소리 번호: [속성] 탭의 소리 번호를 적음',
     sound_something_second_with_block_exampleCode:
         'def when_start():\n    Entry.play_sound_for_sec("소리", 1)\n    Entry.add_size(50)',
     sound_something_second_with_block_exampleDesc:
         '[시작하기]버튼을 클릭하면 "소리"를 1초 동안 재생하면서, 오브젝트의 크기가 50만큼 커집니다.',
     sound_from_to_desc: '오브젝트가 A소리를 B초부터 C초까지 재생합니다.',
     sound_from_to_elements:
-        'A-- 아래 선택지 중 하나<br>① 소리 이름 : [속성] 탭의 "소리 이름"을 적음<br>② 소리 번호: [속성] 탭의 소리 번호를 적음',
+        'A-- 아래 선택지 중 하나\n① 소리 이름 : [속성] 탭의 "소리 이름"을 적음\n② 소리 번호: [속성] 탭의 소리 번호를 적음',
     sound_from_to_exampleCode:
         'def when_start():\n    Entry.play_sound_from_to("소리", 0.5, 1)\n    Entry.add_size(50)',
     sound_from_to_exampleDesc:
@@ -7942,7 +8153,7 @@ Lang.PythonHelper = {
     sound_something_wait_with_block_desc:
         '오브젝트가 A 소리를 재생하고, 재생이 끝나면 다음 명령을 실행합니다.',
     sound_something_wait_with_block_elements:
-        'A-- 아래 선택지 중 하나<br>① 소리 이름 : [속성] 탭의 "소리 이름"을 적음<br>② 소리 번호: [속성] 탭의 소리 번호를 적음',
+        'A-- 아래 선택지 중 하나\n① 소리 이름 : [속성] 탭의 "소리 이름"을 적음\n② 소리 번호: [속성] 탭의 소리 번호를 적음',
     sound_something_wait_with_block_exampleCode:
         'def when_start():\n    Entry.play_sound_and_wait("소리")\n    Entry.add_size(50)',
     sound_something_wait_with_block_exampleDesc:
@@ -7950,7 +8161,7 @@ Lang.PythonHelper = {
     sound_something_second_wait_with_block_desc:
         '오브젝트가 A소리를 B초 만큼 재생하고, 재생이 끝나면 다음 명령을 실행합니다.',
     sound_something_second_wait_with_block_elements:
-        'A-- 아래 선택지 중 하나<br>① 소리 이름 : [속성] 탭의 "소리 이름"을 적음<br>② 소리 번호: [속성] 탭의 소리 번호를 적음',
+        'A-- 아래 선택지 중 하나\n① 소리 이름 : [속성] 탭의 "소리 이름"을 적음\n② 소리 번호: [속성] 탭의 소리 번호를 적음',
     sound_something_second_wait_with_block_exampleCode:
         'def when_start():\n    Entry.play_sound_for_sec_and_wait("소리", 1)\n    Entry.add_size(50)',
     sound_something_second_wait_with_block_exampleDesc:
@@ -7958,7 +8169,7 @@ Lang.PythonHelper = {
     sound_from_to_and_wait_desc:
         '오브젝트가 A소리를 B초부터 C초까지 재생하고, 재생이 끝나면 다음 명령을 실행합니다.',
     sound_from_to_and_wait_elements:
-        'A-- 아래 선택지 중 하나<br>① 소리 이름 : [속성] 탭의 "소리 이름"을 적음<br>② 소리 번호: [속성] 탭의 소리 번호를 적음',
+        'A-- 아래 선택지 중 하나\n① 소리 이름 : [속성] 탭의 "소리 이름"을 적음\n② 소리 번호: [속성] 탭의 소리 번호를 적음',
     sound_from_to_and_wait_exampleCode:
         'def when_start():\n    Entry.play_sound_from_to_and_wait("소리", 0.5, 1)\n    Entry.add_size(50)',
     sound_from_to_and_wait_exampleDesc:
@@ -7987,49 +8198,49 @@ Lang.PythonHelper = {
         '[시작하기]버튼을 클릭하면 계속해서 마우스를 클릭했는지 확인합니다. 만약 마우스를 클릭하면 오브젝트가 "반가워!"라고 0.5초간 말합니다.',
     is_press_some_key_desc: 'A 키가 눌려져 있는 경우 True로 판단합니다.',
     is_press_some_key_elements:
-        'A-- 아래 선택지 중 하나<br>① 알파벳 : "A", "B" ~ "Z" 등(소문자 가능)<br>② 숫자: 1, 2, 3, 4 ~ 9, 0<br>③ 특수키: "space", "enter"<br>④ 방향키 : "up", "down", "right", "left"',
+        'A-- 아래 선택지 중 하나\n① 알파벳 : "A", "B" ~ "Z" 등(소문자 가능)\n② 숫자: 1, 2, 3, 4 ~ 9, 0\n③ 특수키: "space", "enter"\n④ 방향키 : "up", "down", "right", "left"',
     is_press_some_key_exampleCode:
         'def when_start():\n    while True:\n        if Entry.is_key_pressed("space"):\n            Entry.move_to_direction(10)',
     is_press_some_key_exampleDesc:
         '[시작하기]버튼을 클릭하면 계속해서 선택한 키를 눌렀는지 확인합니다. 만약 스페이스 키를 누르면 오브젝트가 이동방향으로 10만큼 이동합니다.',
     reach_something_desc: '오브젝트가 A와 닿은 경우 True으로 판단합니다.',
     reach_something_elements:
-        'A-- 아래 선택지 중 하나<br>① "오브젝트 이름"<br>② "mouse_pointer" 또는 "마우스포인터"<br>③ "edge", "edge_up", "edge_down", "edge_right", "edge_left"',
+        'A-- 아래 선택지 중 하나\n① "오브젝트 이름"\n② "mouse_pointer" 또는 "마우스포인터"\n③ "edge", "edge_up", "edge_down", "edge_right", "edge_left"',
     reach_something_exampleCode:
         'def when_start():\n    while True:\n        Entry.move_to_direction(10)\n        if Entry.is_touched("edge"):\n            Entry.add_rotation(150)',
     reach_something_exampleDesc:
         '[시작하기]버튼을 클릭하면 계속해서 오브젝트가 이동방향으로 10만큼 이동합니다. 만약 오브젝트가 벽에 닿으면 150만큼 회전하게 됩니다.',
     boolean_basic_operator_desc: 'A와 B를 비교하여 True 또는 False로 판단합니다.',
     boolean_basic_operator_elements:
-        'A, B-- 비교하고자 하는 숫자값<br>① == : A와 B의 값이 같으면 True, 아니면 False<br>② > : A의 값이 B의 값보다 크면 true, 아니면 False<br>③ < : A의 값이 B의 값보다 작으면 true, 아니면 False<br>④ >= : A의 값이 B의 값보다 크거나 같으면 true, 아니면 False<br>⑤ <= : A의 값이 B의 값보다 작거나 같으면 true, 아니면 False',
+        'A, B 비교하고자 하는 숫자값\n① == : A와 B의 값이 같으면 True, 아니면 False\n② != : A와 B의 값이 다르면 True, 아니면 False\n③ > : A의 값이 B의 값보다 크면 true, 아니면 False\n④ < : A의 값이 B의 값보다 작으면 true, 아니면 False\n⑤ >= : A의 값이 B의 값보다 크거나 같으면 true, 아니면 False\n⑥ <= : A의 값이 B의 값보다 작거나 같으면 true, 아니면 False',
     boolean_basic_operator_exampleCode:
         'def when_start():\n    while True:\n        Entry.add_x(10)\n        if Entry.value_of_object("오브젝트", "x") > 240:\n            Entry.set_x(0)',
     boolean_basic_operator_exampleDesc:
         '[시작하기]버튼을 클릭하면 계속해서 오브젝트 x좌표를 10만큼 바꿉니다. 만약 오브젝트 x좌표가 240보다 크면 오브젝트 x좌표를 0으로 정합니다.',
     boolean_and_desc: 'A와 B의 판단이 모두 True인 경우 True, 아닌 경우 False로 판단합니다.',
     boolean_and_elements:
-        'A, B-- True 또는 False로 판단할 수 있는 명령어 입력(판단 카테고리의 명령어)<br>① True, False<br>② 10 == 10 , 10 > 10 , 10 <= 10 등<br>③ Entry.is_mouse_clicked(), Entry.is_key_pressed("Q") 등',
+        'A, B-- True 또는 False로 판단할 수 있는 명령어 입력(판단 카테고리의 명령어)\n① True, False\n② 10 == 10 , 10 > 10 , 10 <= 10 등\n③ Entry.is_mouse_clicked(), Entry.is_key_pressed("Q") 등',
     boolean_and_exampleCode:
         'def when_start():\n    while True:\n        if Entry.is_key_pressed("a") and Entry.is_key_pressed("s"):\n            Entry.add_effect("color", 10)',
     boolean_and_exampleDesc:
         '[시작하기]버튼을 클릭하고 키보드의 "a" 와 "s"키를 동시에 눌렀을 때, 색깔 효과를 10만큼 줍니다.',
     boolean_or_desc: 'A와 B의 판단 중 하나라도 True인 경우 True, 아닌 경우 False로 판단합니다.',
     boolean_or_elements:
-        'A, B-- True 또는 False로 판단할 수 있는 명령어 입력(판단 카테고리의 명령어)<br>① True, False<br>② 10 == 10 , 10 > 10 , 10 <= 10 등<br>③ Entry.is_mouse_clicked(), Entry.is_key_pressed("Q") 등',
+        'A, B-- True 또는 False로 판단할 수 있는 명령어 입력(판단 카테고리의 명령어)\n① True, False\n② 10 == 10 , 10 > 10 , 10 <= 10 등\n③ Entry.is_mouse_clicked(), Entry.is_key_pressed("Q") 등',
     boolean_or_exampleCode:
         'def when_start():\n    while True:\n        if Entry.is_key_pressed("a") or Entry.is_key_pressed("s"):\n            Entry.add_effect("color", 10)',
     boolean_or_exampleDesc:
         '[시작하기]버튼을 클릭하면 키보드의 "a"나 "s"키 중 무엇이든 하나를 누르면 오브젝트에 색깔 효과를 10만큼 줍니다.',
     boolean_not_desc: 'A 판단이 True이면 False, False이면 True로 판단합니다.',
     boolean_not_elements:
-        'A-- True 또는 False로 판단할 수 있는 명령어 입력(판단 카테고리의 명령어)<br>① True, False<br>② 10 == 10 , 10 > 10 , 10 <= 10 등<br>③ Entry.is_mouse_clicked(), Entry.is_key_pressed("Q") 등',
+        'A-- True 또는 False로 판단할 수 있는 명령어 입력(판단 카테고리의 명령어)\n① True, False\n② 10 == 10 , 10 > 10 , 10 <= 10 등\n③ Entry.is_mouse_clicked(), Entry.is_key_pressed("Q") 등',
     boolean_not_exampleCode:
         'def when_start():\n    while True:\n        if not Entry.is_mouse_clicked():\n            Entry.add_size(1)',
     boolean_not_exampleDesc:
         '[시작하기]버튼을 클릭하면 마우스를 클릭하지 않은 동안 크기가 1씩 커집니다.',
     calc_basic_desc: 'A와 B의 연산값입니다.',
     calc_basic_elements:
-        'A, B-- 연산하고자 하는 숫자값<br>① + : A와 B를 더한 값<br>② - : A와 B를 뺀 값<br>③ x : A와 B를 곱한 값<br>④ / : A와 B를 나눈 값',
+        'A, B-- 연산하고자 하는 숫자값\n① + : A와 B를 더한 값\n② - : A와 B를 뺀 값\n③ x : A와 B를 곱한 값\n④ / : A와 B를 나눈 값',
     calc_basic_exampleCode:
         'def when_start():\n    Entry.print_for_sec(10 + 10, 2)\n    Entry.print_for_sec(10 - 10, 2)\n    Entry.print_for_sec(10 * 10, 2)\n    Entry.print_for_sec(10 / 10, 2)',
     calc_basic_exampleDesc:
@@ -8037,20 +8248,20 @@ Lang.PythonHelper = {
     calc_rand_desc:
         'A와 B 사이에서 선택된 무작위 수의 값입니다. (두 수 모두 정수를 입력한 경우 정수로,두 수 중 하나라도 소수를 입력한 경우 소수로 무작위 수가 선택됩니다.)',
     calc_rand_elements:
-        'A, B-- 무작위 수를 추출할 범위<br>① random.randint(A, B) : A, B를 정수로 입력하면 정수 범위에서 무작위 수를 추출<br>② random.uniform(A, B) : A, B를 실수로 입력하면 실수 범위에서 무작위 수를 추출',
+        'A, B-- 무작위 수를 추출할 범위\n① random.randint(A, B) : A, B를 정수로 입력하면 정수 범위에서 무작위 수를 추출\n② random.uniform(A, B) : A, B를 실수로 입력하면 실수 범위에서 무작위 수를 추출',
     calc_rand_exampleCode:
         'def when_start():\n    Entry.print_for_sec(random.randint(1, 10), 2)\n    Entry.print_for_sec(random.uniform(0.1, 2), 2)',
     calc_rand_exampleDesc:
         '[시작하기]버튼을 클릭하면 1부터 10사이의 정수중 무작위 수를 뽑아 2초간 말합니다. 그 후 0.1부터 2사이의 실수중 무작위 수를 뽑아 2초간 말합니다.',
     coordinate_mouse_desc: '마우스 포인터의 A 좌표 값을 의미합니다.',
-    coordinate_mouse_elements: 'A-- 아래 선택지 중 하나<br>① "x" 또는 "X"<br>② "y" 또는 "Y"',
+    coordinate_mouse_elements: 'A-- 아래 선택지 중 하나\n① "x" 또는 "X"\n② "y" 또는 "Y"',
     coordinate_mouse_exampleCode:
         'def when_start():\n    while True:\n        Entry.print(Entry.value_of_mouse_pointer("x"))',
     coordinate_mouse_exampleDesc:
         '[시작하기]버튼을 클릭하면 오브젝트가 마우스 포인터의 x좌표를 계속해서 말합니다.',
     coordinate_object_desc: 'A에 대한 B정보값입니다.',
     coordinate_object_elements:
-        'A-- 아래 선택지 중 하나<br>① "오브젝트 이름"<br>② "self" 또는 "자신"%nextB-- 아래 선택지 중 하나<br>① "x" 또는 "X"<br>② "y" 또는 "Y"<br>③ "rotation" 또는 "방향"<br>④ "direction" 또는 "이동 방향"<br>⑤ "size"  또는 "크기"<br>⑥ "shape_number" 또는 "모양 번호"<br>⑦ "shape_name" 또는 "모양 이름"',
+        'A-- 아래 선택지 중 하나\n① "오브젝트 이름"\n② "self" 또는 "자신"%nextB-- 아래 선택지 중 하나\n① "x" 또는 "X"\n② "y" 또는 "Y"\n③ "rotation" 또는 "방향"\n④ "direction" 또는 "이동 방향"\n⑤ "size"  또는 "크기"\n⑥ "shape_number" 또는 "모양 번호"\n⑦ "shape_name" 또는 "모양 이름"',
     coordinate_object_exampleCode:
         'def when_start():\n    while True:\n        Entry.add_x(1)\n        Entry.print(Entry.value_of_object("오브젝트", "x"))\n',
     coordinate_object_exampleDesc:
@@ -8062,14 +8273,14 @@ Lang.PythonHelper = {
         '[시작하기]버튼을 클릭하면 오브젝트가 소리의 크기값을 계속해서 말합니다.',
     quotient_and_mod_desc: 'A와 B의 연산값입니다.',
     quotient_and_mod_elements:
-        'A, B-- 연산하고자 하는 숫자값<br>① // : A / B의 몫에 해당하는 값<br>② % : A / B의 나머지에 해당하는 값',
+        'A, B-- 연산하고자 하는 숫자값\n① // : A / B의 몫에 해당하는 값\n② % : A / B의 나머지에 해당하는 값',
     quotient_and_mod_exampleCode:
         'def when_start():\n    Entry.print_for_sec(10 // 3, 2)\n    Entry.print_for_sec(10 % 3, 2)',
     quotient_and_mod_exampleDesc:
         '[시작하기]버튼을 클릭하면 10 / 3의 몫인 3을 2초 동안 말하고, 나머지인 1을 2초 동안 말합니다.',
     calc_operation_desc: 'A의 연산값입니다.',
     calc_operation_elements:
-        'A, B-- 연산하고자 하는 숫자값<br>① A ** 2 : A를 제곱한 값<br>② math.sqrt(A): A의 루트값<br>③ math.sin(A): A의 사인값<br>④ math.cos(A): A의 코사인 값<br>⑤ math.tan(A):  A의 탄젠트값 <br>⑥ math.asin(A): A의 아크사인값<br>⑦ math.acos(A): A의 아크코사인값<br>⑧ math.atan(): A의 아크탄젠트값<br>⑨ math.log10(A): A의 로그값<br>⑩ math.log(A): A의 자연로그값<br>⑪ A - math.floor(A): A의 소수점 부분<br>⑫ math.floor(A): A의 소수점 버림값<br>⑬ math.ceil(A): A의 소수점 올림값<br>⑭ math.round(A): A의 소수점 반올림값<br>⑮ math.factorial(A): A의 팩토리얼 값<br>⑯ math.fabs(A): A의 절댓값',
+        'A, B-- 연산하고자 하는 숫자값\n① A ** 2 : A를 제곱한 값\n② math.sqrt(A): A의 루트값\n③ math.sin(A): A의 사인값\n④ math.cos(A): A의 코사인 값\n⑤ math.tan(A):  A의 탄젠트값 \n⑥ math.asin(A): A의 아크사인값\n⑦ math.acos(A): A의 아크코사인값\n⑧ math.atan(): A의 아크탄젠트값\n⑨ math.log10(A): A의 로그값\n⑩ math.log(A): A의 자연로그값\n⑪ A - math.floor(A): A의 소수점 부분\n⑫ math.floor(A): A의 소수점 버림값\n⑬ math.ceil(A): A의 소수점 올림값\n⑭ math.round(A): A의 소수점 반올림값\n⑮ math.factorial(A): A의 팩토리얼 값\n⑯ math.fabs(A): A의 절댓값',
     calc_operation_exampleCode:
         'def when_start():\n    Entry.print_for_sec(10 ** 2, 2)\n    Entry.print_for_sec(math.sqrt(9), 2)\n    Entry.print_for_sec(math.sin(90), 2)\n    Entry.print_for_sec(math.fabs(-10), 2)',
     calc_operation_exampleDesc:
@@ -8080,29 +8291,29 @@ Lang.PythonHelper = {
     get_project_timer_value_exampleDesc:
         '[시작하기]버튼을 클릭하면 초시계를 시작합니다. 3초 뒤에는 초시계를 정지하고 초시계창을 숨깁니다. 그 후 초시계값을 말합니다.',
     choose_project_timer_action_desc:
-        '초시계의 동작을 A로 정합니다.<br>(이 명령어를 사용하면 실행화면에 ‘초시계 창’이 생성됩니다.)',
+        '초시계의 동작을 A로 정합니다.\n(이 명령어를 사용하면 실행화면에 ‘초시계 창’이 생성됩니다.)',
     choose_project_timer_action_elements:
-        'A-- 아래 선택지 중 하나<br>① "start" : 초시계를 시작<br>② "stop" : 초시계를 정지<br>③ "reset" : 초시계를 초기화',
+        'A-- 아래 선택지 중 하나\n① "start" : 초시계를 시작\n② "stop" : 초시계를 정지\n③ "reset" : 초시계를 초기화',
     choose_project_timer_action_exampleCode:
         'def when_start():\n    Entry.timer("start")\n    Entry.wait_for_sec(3)\n    Entry.timer("stop")\n    Entry.timer_view("hide")\n    Entry.print(Entry.value_of_timer())',
     choose_project_timer_action_exampleDesc:
         '[시작하기]버튼을 클릭하면 초시계를 시작합니다. 3초 뒤에는 초시계를 정지하고 초시계창을 숨깁니다. 그 후 초시계값을 말합니다.',
     set_visible_project_timer_desc: '실행화면의 초시계 창을 A로 설정합니다.',
     set_visible_project_timer_elements:
-        'A-- 아래 선택지 중 하나<br>① "hide" : 초시계창을 숨김<br>② "show" : 초시계창을 보임',
+        'A-- 아래 선택지 중 하나\n① "hide" : 초시계창을 숨김\n② "show" : 초시계창을 보임',
     set_visible_project_timer_exampleCode:
         'def when_start():\n    Entry.timer("start")\n    Entry.wait_for_sec(3)\n    Entry.timer("stop")\n    Entry.timer_view("hide")\n    Entry.print(Entry.value_of_timer())',
     set_visible_project_timer_exampleDesc:
         '[시작하기]버튼을 클릭하면 초시계를 시작합니다. 3초 뒤에는 초시계를 정지하고 초시계창을 숨깁니다. 그 후 초시계값을 말합니다.',
     get_date_desc: '현재 A에 대한 값입니다.',
     get_date_elements:
-        'A-- 아래 선택지 중 하나<br>① "year" : 현재 연도 값<br>② "month" : 현재 월 값<br>③ "day" : 현재 일 값<br>④ "hour" : 현재 시간 값<br>⑤ "minute" : 현재 분 값<br>⑥ "second" : 현재 초 값',
+        'A-- 아래 선택지 중 하나\n① "year" : 현재 연도 값\n② "month" : 현재 월 값\n③ "day" : 현재 일 값\n④ "hour" : 현재 시간 값\n⑤ "minute" : 현재 분 값\n⑥ "second" : 현재 초 값',
     get_date_exampleCode:
         'def when_start():\n    Entry.print(Entry.value_of_current_time("year") + "년" + Entry.value_of_current_time("month") + "월")',
     get_date_exampleDesc: '[시작하기]버튼을 클릭하면 오브젝트가 현재년도와 월을 말합니다.',
     distance_something_desc: '자신과 A까지의 거리 값입니다.',
     distance_something_elements:
-        'A-- 아래 선택지 중 하나<br>① "오브젝트 이름"<br>② "mouse_pointer" 또는 "마우스포인터"',
+        'A-- 아래 선택지 중 하나\n① "오브젝트 이름"\n② "mouse_pointer" 또는 "마우스포인터"',
     distance_something_exampleCode:
         'def when_start():\n    while True:\n        Entry.print(Entry.value_of_distance_to("mouse_pointer"))',
     distance_something_exampleDesc:
@@ -8113,10 +8324,11 @@ Lang.PythonHelper = {
         'def when_start():\n    Entry.print(Entry.value_of_sound_length_of("소리"))',
     get_sound_duration_exampleDesc:
         '[시작하기]버튼을 클릭하면 오브젝트가 "소리"의 길이를 말합니다.',
-    get_user_name_desc: '작품을 실행하고 있는 사용자의 아이디 값입니다.',
+    get_user_name_desc:
+        'Reports the user ID who runs the project.\nThe value is masked for privacy.',
     get_user_name_exampleCode: 'def when_start():\n    Entry.print(Entry.value_of_username())',
     get_user_name_exampleDesc:
-        '[시작하기]버튼을 클릭하면 작품을 실행하고 있는 사용자의 아이디 값을 말합니다.',
+        '[시작하기]버튼을 클릭하면 작품을 실행하고 있는 사용자의 이름 값을 말합니다.',
     get_nickname_desc: '작품을 실행하고 있는 사용자의 닉네임 값입니다.',
     get_nickname_exampleCode: 'def when_start():\n    Entry.print(Entry.value_of_nickname())',
     get_nickname_exampleDesc:
@@ -8141,7 +8353,7 @@ Lang.PythonHelper = {
     substring_desc:
         'A 문자열의 B위치부터 C-1위치까지의 값입니다. (첫 번째 글자의 위치는 0부터 시작합니다.)',
     substring_elements:
-        'A-- "문자열"%nextB-- 포함할 문자열의 시작 위치<br>첫 번째 글자는 0부터 시작%nextC-- 문자열을 포함하지 않는 위치',
+        'A-- "문자열"%nextB-- 포함할 문자열의 시작 위치\n첫 번째 글자는 0부터 시작%nextC-- 문자열을 포함하지 않는 위치',
     substring_exampleCode: 'def when_start():\n    Entry.print("안녕 엔트리!"[1:5])',
     substring_exampleDesc:
         '[시작하기]버튼을 클릭하면 오브젝트가 "안녕 엔트리!"의 1에서 4번째 글자인 "녕 엔트"를 말합니다.',
@@ -8153,7 +8365,7 @@ Lang.PythonHelper = {
     index_of_string_exampleDesc:
         '[시작하기]버튼을 클릭하면 오브젝트가 "안녕 엔트리!"에서 "엔트리"가 처음으로 등장하는 위치인 3을 말합니다.',
     replace_string_desc:
-        'A 문자열에서 B문자열을 모두 찾아 C문자열로 바꾼 값입니다.<br>(영문 입력시 대소문자를 구분합니다.)',
+        'A 문자열에서 B문자열을 모두 찾아 C문자열로 바꾼 값입니다.\n(영문 입력시 대소문자를 구분합니다.)',
     replace_string_elements: 'A, B, C-- "문자열"',
     replace_string_exampleCode:
         'def when_start():\n    Entry.print("안녕 엔트리!".replace( "안녕", "반가워"))',
@@ -8161,13 +8373,13 @@ Lang.PythonHelper = {
         '[시작하기]버튼을 클릭하면 오브젝트가 "안녕 엔트리!"에서 "안녕"을 "반가워"로 바꾼 "반가워 엔트리!"를 말합니다.',
     change_string_case_desc: 'A의 모든 알파벳을 대문자 또는 소문자로 바꾼 문자값입니다.',
     change_string_case_elements:
-        'A-- "문자열"<br>① A.upper(): A의 모든 알파벳을 대문자로 바꾼 값<br>② A.lower() : A의 모든 알파벳을 소문자로 바꾼 값',
+        'A-- "문자열"\n① A.upper(): A의 모든 알파벳을 대문자로 바꾼 값\n② A.lower() : A의 모든 알파벳을 소문자로 바꾼 값',
     change_string_case_exampleCode:
         'def when_start():\n    Entry.print_for_sec("Hello Entry!".upper(), 2)\n    Entry.print_for_sec("Hello Entry!".lower(), 2)',
     change_string_case_exampleDesc:
         '[시작하기]버튼을 클릭하면 오브젝트가 "Hello Entry!"를 모두 대문자로 바꾼 "HELLO ENTRY!"를 2초간 말한 다음 모두 소문자로 바꾼 "hello entry!"를 2초간 말합니다.',
     ask_and_wait_desc:
-        "오브젝트가 A 내용을 말풍선으로 묻고, 대답을 입력받습니다. 대답은 실행화면 또는 콘솔창에서 입력할 수 있으며 입력된 값은 'Entry.answer()'에 저장됩니다. <br>(이 명령어를 사용하면 실행화면에 ‘대답 창’이 생성됩니다.)",
+        "오브젝트가 A 내용을 말풍선으로 묻고, 대답을 입력받습니다. 대답은 실행화면 또는 콘솔창에서 입력할 수 있으며 입력된 값은 'Entry.answer()'에 저장됩니다. \n(이 명령어를 사용하면 실행화면에 ‘대답 창’이 생성됩니다.)",
     ask_and_wait_elements: 'A-- "문자열"',
     ask_and_wait_exampleCode:
         'def when_start():\n    Entry.input("이름을 입력해보세요.")\n    Entry.print(Entry.answer() + " 반가워!")',
@@ -8181,20 +8393,20 @@ Lang.PythonHelper = {
         '[시작하기]버튼을 클릭하면 오브젝트가 "이름을 입력해보세요."라고 말풍선으로 묻습니다. 이름을 입력하면 "(입력한 이름) 반가워!"라 말합니다.',
     set_visible_answer_desc: '실행화면의 대답 창을 A로 설정합니다.',
     set_visible_answer_elements:
-        'A-- 아래 선택지 중 하나<br>① "hide" : 대답 창을 숨김<br>② "show" : 대답 창을 보임',
+        'A-- 아래 선택지 중 하나\n① "hide" : 대답 창을 숨김\n② "show" : 대답 창을 보임',
     set_visible_answer_exampleCode:
         'def when_start():\n    Entry.answer_view("hide")\n    Entry.input("나이를 입력하세요.")\n    Entry.print(Entry.answer())',
     set_visible_answer_exampleDesc:
         '[시작하기]버튼을 클릭하면 대답창이 숨겨지고, 오브젝트가 "나이를 입력하세요."라고 말풍선으로 묻습니다. 나이를 입력하면 오브젝트가 입력한 나이를 말합니다.',
     get_variable_desc: 'A 변수에 저장된 값입니다.',
     get_variable_elements:
-        'A-- 변수명<br>① 모든 오브젝트에서 사용: A<br>② 이 오브젝트에서 사용: self.A',
+        'A-- 변수명\n① 모든 오브젝트에서 사용: A\n② 이 오브젝트에서 사용: self.A',
     get_variable_exampleCode: 'age = 16\n\ndef when_start():\n    Entry.print(age)',
     get_variable_exampleDesc:
         'age라는 변수를 만들고 그 값을 16으로 정합니다. [시작하기]버튼을 클릭하면 오브젝트가 age 변수에 들어 가 있는 값인 "16"을 말합니다.',
     change_variable_desc: 'A 변수에 B만큼 더합니다.',
     change_variable_elements:
-        'A-- 변수명<br>① 모든 오브젝트에서 사용: A<br>② 이 오브젝트에서 사용: self.A%nextB-- 숫자값',
+        'A-- 변수명\n① 모든 오브젝트에서 사용: A\n② 이 오브젝트에서 사용: self.A%nextB-- 숫자값',
     change_variable_exampleCode:
         'age = 16\n\ndef when_start():\n    Entry.print_for_sec(age, 2)\n    age += 2\n    Entry.print_for_sec(age, 2)',
     change_variable_exampleDesc:
@@ -8202,87 +8414,87 @@ Lang.PythonHelper = {
     set_variable_desc:
         'A 변수의 값을 B로 정합니다. 만약 A 변수가 없으면  [속성] 탭에 A 변수가 자동 생성됩니다.',
     set_variable_elements:
-        'A-- 변수명<br>① 모든 오브젝트에서 사용: A<br>② 이 오브젝트에서 사용: self.A%nextB-- 변수에 넣을 값<br>① 문자 : "안녕!", "엔트리" 등 <br>② 숫자 : 0, 10, 35 등',
+        'A-- 변수명\n① 모든 오브젝트에서 사용: A\n② 이 오브젝트에서 사용: self.A%nextB-- 변수에 넣을 값\n① 문자 : "안녕!", "엔트리" 등 \n② 숫자 : 0, 10, 35 등',
     set_variable_exampleCode: 'age = 16\n\ndef when_start():\n    Entry.print(age)',
     set_variable_exampleDesc:
         'age라는 변수를 만들고 그 값을 16으로 정합니다. [시작하기]버튼을 클릭하면 오브젝트가 age 변수에 들어 가 있는 값인 "16"을 말합니다.',
     show_variable_desc: 'A 변수 창을 실행화면에 보이게 합니다.',
     show_variable_elements:
-        'A-- "변수명"<br>① 모든 오브젝트에서 사용: "A"<br>② 이 오브젝트에서 사용: "self.A"',
+        'A-- "변수명"\n① 모든 오브젝트에서 사용: "A"\n② 이 오브젝트에서 사용: "self.A"',
     show_variable_exampleCode:
         'age = 16\n\ndef when_start():\n    Entry.hide_variable("age")\n    Entry.wait_for_sec(2)\n    age = 20\n    Entry.show_variable("age")',
     show_variable_exampleDesc:
         'age라는 변수를 만들고 그 값을 16으로 정합니다. [시작하기]버튼을 클릭하면 age변수창을 실행화면에서 숨깁니다. 2초 후 변수값을 17로 바꾸고 age변수창을 실행화면에 보이게 합니다.',
     hide_variable_desc: 'A 변수 창을 실행화면에서 숨깁니다.',
     hide_variable_elements:
-        'A-- "변수명"<br>① 모든 오브젝트에서 사용: "A"<br>② 이 오브젝트에서 사용: "self.A"',
+        'A-- "변수명"\n① 모든 오브젝트에서 사용: "A"\n② 이 오브젝트에서 사용: "self.A"',
     hide_variable_exampleCode:
         'age = 16\n\ndef when_start():\n    Entry.hide_variable("age")\n    Entry.print_for_sec(age, 2)',
     hide_variable_exampleDesc:
         'age라는 변수를 만들고 그 값을 16으로 정합니다. [시작하기]버튼을 클릭하면 age변수창을 실행화면에서 숨기고, 오브젝트가 age 변수에 들어 가 있는 값인 "16"을 2초 동안 말합니다.',
     value_of_index_from_list_desc:
-        'A 리스트에서 B위치의 항목 값을 의미합니다. <br>(첫 번째 항목의 위치는 0부터 시작합니다.)',
+        'A 리스트에서 B위치의 항목 값을 의미합니다. \n(첫 번째 항목의 위치는 0부터 시작합니다.)',
     value_of_index_from_list_elements:
-        'A-- 리스트명<br>① 모든 오브젝트에서 사용: A<br>② 이 오브젝트에서 사용: self.A%nextB-- 리스트 항목의 위치',
+        'A-- 리스트명\n① 모든 오브젝트에서 사용: A\n② 이 오브젝트에서 사용: self.A%nextB-- 리스트 항목의 위치',
     value_of_index_from_list_exampleCode:
         'basket = ["apple", "orange", "pear", "grape"]\n\ndef when_start():\n    Entry.print(basket[1])\n',
     value_of_index_from_list_exampleDesc:
         'basket이라는 리스트를 만들고 4개의 항목을 넣습니다. [시작하기]버튼을 클릭하면 오브젝트가 basket 리스트의 1번째 항목인 orange를 말합니다.',
     add_value_to_list_desc: 'A 리스트의 마지막 항목으로 B값이 추가됩니다.',
     add_value_to_list_elements:
-        'A-- 리스트명<br>① 모든 오브젝트에서 사용: A<br>② 이 오브젝트에서 사용: self.A%nextB-- 리스트에 넣을 항목 값<br>① 문자 : "안녕!", "엔트리" 등 <br>② 숫자 : 0, 10, 35 등',
+        'A-- 리스트명\n① 모든 오브젝트에서 사용: A\n② 이 오브젝트에서 사용: self.A%nextB-- 리스트에 넣을 항목 값\n① 문자 : "안녕!", "엔트리" 등 \n② 숫자 : 0, 10, 35 등',
     add_value_to_list_exampleCode:
         'basket = ["apple", "orange", "pear", "grape"]\n\ndef when_start():\n    basket.append("juice")\n    Entry.print(basket[4])',
     add_value_to_list_exampleDesc:
         'basket이라는 리스트를 만들고 4개의 항목을 넣습니다. [시작하기]버튼을 클릭하면 "juice"를 basket의 마지막 항목으로 추가합니다. 오브젝트는 basket의 4번째 항목인 "juice"를 말합니다.',
     remove_value_from_list_desc:
-        'A 리스트의 B위치에 있는 항목을 삭제합니다.<br>(첫 번째 항목의 위치는 0부터 시작합니다.)',
+        'A 리스트의 B위치에 있는 항목을 삭제합니다.\n(첫 번째 항목의 위치는 0부터 시작합니다.)',
     remove_value_from_list_elements:
-        'A-- 리스트명<br>① 모든 오브젝트에서 사용: A<br>② 이 오브젝트에서 사용: self.A%nextB-- 리스트 항목의 위치값',
+        'A-- 리스트명\n① 모든 오브젝트에서 사용: A\n② 이 오브젝트에서 사용: self.A%nextB-- 리스트 항목의 위치값',
     remove_value_from_list_exampleCode:
         'basket = ["apple", "orange", "pear", "grape"]\ndef when_start():\n    basket.pop(0)\n    Entry.print(basket[0])',
     remove_value_from_list_exampleDesc:
         'basket이라는 리스트를 만들고 4개의 항목을 넣습니다. [시작하기]버튼을 클릭하면 basket의 0번째 항목인 apple을 삭제합니다. 오브젝트는 새롭게 basket의 0번째 항목이 된 "orange"를 말합니다.',
     insert_value_to_list_desc:
-        'A 리스트의 B위치에 C항목을 끼워 넣습니다. <br>(첫 번째 항목의 위치는 0부터 시작합니다. B위치보다 뒤에 있는 항목들은 순서가 하나씩 밀려납니다.)',
+        'A 리스트의 B위치에 C항목을 끼워 넣습니다. \n(첫 번째 항목의 위치는 0부터 시작합니다. B위치보다 뒤에 있는 항목들은 순서가 하나씩 밀려납니다.)',
     insert_value_to_list_elements:
-        'A-- 리스트명<br>① 모든 오브젝트에서 사용: A<br>② 이 오브젝트에서 사용: self.A%nextB-- 리스트 항목의 위치%nextC-- 리스트에 넣을 항목 값<br>① 문자 : "안녕!", "엔트리" 등 <br>② 숫자 : 0, 10, 35 등',
+        'A-- 리스트명\n① 모든 오브젝트에서 사용: A\n② 이 오브젝트에서 사용: self.A%nextB-- 리스트 항목의 위치%nextC-- 리스트에 넣을 항목 값\n① 문자 : "안녕!", "엔트리" 등 \n② 숫자 : 0, 10, 35 등',
     insert_value_to_list_exampleCode:
         'basket = ["apple", "orange", "pear", "grape"]\n\ndef when_start():\n    basket.insert(1, "juice")\n    Entry.print(basket[2])',
     insert_value_to_list_exampleDesc:
         'basket이라는 리스트를 만들고 4개의 항목을 넣습니다. [시작하기]버튼을 클릭하면 basket의 1번째 위치에 항목 "juice"를 끼워 넣습니다. 오브젝트는 새롭게 basket의 2번째 항목이 된 "orange"를 말합니다.',
     change_value_list_index_desc:
-        'A 리스트에서 B위치에 있는 항목의 값을 C 값으로 바꿉니다.<br>(첫 번째 항목의 위치는 0부터 시작합니다.)',
+        'A 리스트에서 B위치에 있는 항목의 값을 C 값으로 바꿉니다.\n(첫 번째 항목의 위치는 0부터 시작합니다.)',
     change_value_list_index_elements:
-        'A-- 리스트명<br>① 모든 오브젝트에서 사용: A<br>② 이 오브젝트에서 사용: self.A%nextB-- 리스트 항목의 위치%nextC-- 리스트에 넣을 항목 값<br>① 문자 : "안녕!", "엔트리" 등 <br>② 숫자 : 0, 10, 35 등',
+        'A-- 리스트명\n① 모든 오브젝트에서 사용: A\n② 이 오브젝트에서 사용: self.A%nextB-- 리스트 항목의 위치%nextC-- 리스트에 넣을 항목 값\n① 문자 : "안녕!", "엔트리" 등 \n② 숫자 : 0, 10, 35 등',
     change_value_list_index_exampleCode:
         'basket = ["apple", "orange", "pear", "grape"]\n\ndef when_start():\n    basket[0] = "juice"\n    Entry.print(basket[0])',
     change_value_list_index_exampleDesc:
         'basket이라는 리스트를 만들고 4개의 항목을 넣습니다. [시작하기]버튼을 클릭하면 basket의 0번째 위치의 항목 "apple"을 "juice"로 바꿉니다. 오브젝트는 바뀐 basket의 0번째 항목 "juice"를 말합니다.',
     length_of_list_desc: 'A 리스트가 보유한 항목 개수 값입니다.',
     length_of_list_elements:
-        'A-- 리스트명<br>① 모든 오브젝트에서 사용: A<br>② 이 오브젝트에서 사용: self.A',
+        'A-- 리스트명\n① 모든 오브젝트에서 사용: A\n② 이 오브젝트에서 사용: self.A',
     length_of_list_exampleCode:
         'basket = ["apple", "orange", "pear", "grape"]\n\ndef when_start():\n    Entry.print(len(basket))',
     length_of_list_exampleDesc:
         'basket이라는 리스트를 만들고 4개의 항목을 넣습니다. [시작하기]버튼을 클릭하면 오브젝트는  basket의 항목 개수인 4를 말합니다.',
     is_included_in_list_desc: 'A값을 가진 항목이 B리스트에 포함되어 있는지 확인합니다.',
     is_included_in_list_elements:
-        'A-- 리스트의 항목 값<br>① 문자 : "안녕!", "엔트리" 등 <br>② 숫자 : 0, 10, 35 등%nextB-- 리스트명<br>① 모든 오브젝트에서 사용: A<br>② 이 오브젝트에서 사용: self.A',
+        'A-- 리스트의 항목 값\n① 문자 : "안녕!", "엔트리" 등 \n② 숫자 : 0, 10, 35 등%nextB-- 리스트명\n① 모든 오브젝트에서 사용: A\n② 이 오브젝트에서 사용: self.A',
     is_included_in_list_exampleCode:
         'basket = ["apple", "orange", "pear", "grape"]\n\ndef when_start():\n    if "apple" in basket:\n        Entry.print("사과가 있어!")',
     is_included_in_list_exampleDesc:
         'basket이라는 리스트를 만들고 4개의 항목을 넣습니다. [시작하기]버튼을 클릭하면 basket 리스트에 "apple"항목이 있는지 확인합니다. "apple"항목이 있기 때문에 오브젝트는 "사과가 있어!"라 말합니다.',
     show_list_desc: '선택한 리스트 창을 실행화면에 보이게 합니다.',
     show_list_elements:
-        'A-- "리스트명"<br>① 모든 오브젝트에서 사용: "A"<br>② 이 오브젝트에서 사용: "self.A"',
+        'A-- "리스트명"\n① 모든 오브젝트에서 사용: "A"\n② 이 오브젝트에서 사용: "self.A"',
     show_list_exampleCode:
         'basket = ["apple", "orange", "pear", "grape"]\n\ndef when_start():\n    Entry.hide_list("basket")\n    Entry.wait_for_sec(2)\n    Entry.show_list("basket")',
     show_list_exampleDesc:
         'basket이라는 리스트를 만들고 4개의 항목을 넣습니다. [시작하기]버튼을 클릭하면 basket 리스트를 2초간 숨긴 다음 보여줍니다.',
     hide_list_desc: '선택한 리스트 창을 실행화면에서 숨깁니다.',
     hide_list_elements:
-        'A-- "리스트명"<br>① 모든 오브젝트에서 사용: "A"<br>② 이 오브젝트에서 사용: "self.A"',
+        'A-- "리스트명"\n① 모든 오브젝트에서 사용: "A"\n② 이 오브젝트에서 사용: "self.A"',
     hide_list_exampleCode:
         'basket = ["apple", "orange", "pear", "grape"]\n\ndef when_start():\n    Entry.hide_list("basket")\n    Entry.wait_for_sec(2)\n    Entry.show_list("basket")',
     hide_list_exampleDesc:
@@ -8293,80 +8505,80 @@ Lang.PythonHelper = {
         'def when_start():\n    while True:\n        if Entry.is_key_pressed("a") and Entry.is_key_pressed("s"):\n            Entry.add_effect("color", 10)',
     boolean_and_or_exampleDesc:
         '[시작하기]버튼을 클릭하고 키보드의 "a" 와 "s"키를 동시에 눌렀을 때, 색깔 효과를 10만큼 줍니다.',
-    check_weather_desc: 'B날짜에 C지역의 날씨가 A인 경우 True로 판단합니다.',
+    check_weather_desc: 'B날짜에 C지역의 날씨가 A인 경우 True로 판단합니다.',
     check_weather_elements:
-        'A-- 아래 선택지 중 하나<br>①    "sunny" : 맑음<br>②    "partly cloudy" : 구름조금<br>③    "mostly cloudy" : 구름많음<br>④    "cloudy" : 흐림<br>⑤    "rainy" : 비<br>⑥    "sleet" : 진눈깨비<br>⑦    "snowy" : 눈%nextB-- 아래 선택지 중 하나<br>①    "yesterday" : 어제<br>②    "today" : 오늘<br>③    "tomorrow" : 내일<br>④    "After 2 days" : 모레<br>⑤    "After 3 days" : 3일 후<br>⑥    "After 4 days" : 4일 후<br>⑦    "After 5 days" : 5일 후<br>⑧    "After 6 days" : 6일 후%nextC-- 아래 선택지 중 하나<br>①    "Seoul" : 서울<br>②    "Gangwon-do" : 강원<br>③    "Gyeonggi-do" : 경기<br>④    "Gyeongsangnam-do" : 경남<br>⑤    "Gyeongsangbuk-do" : 경북<br>⑥    "Gwangju" : 광주<br>⑦    "Daegu" : 대구<br>⑧    "Daejeon" : 대전<br>⑨    "Busan" : 부산<br>⑩    "Sejong" : 세종<br>⑪    "Ulsan" : 울산<br>⑫    "Incheon" : 인천<br>⑬    "Jeollanam-do" : 전남<br>⑭    "Jeollabuk-do" : 전북<br>⑮    "Jeju" : 제주<br>Ⓐ "Chungcheongnam-do" : 충남<br>Ⓑ "Chungcheongbuk-do": 충북',
+        'A-- 아래 선택지 중 하나\n①    "sunny" : 맑음\n②    "partly cloudy" : 구름조금\n③    "mostly cloudy" : 구름많음\n④    "cloudy" : 흐림\n⑤    "rainy" : 비\n⑥    "sleet" : 진눈깨비\n⑦    "snowy" : 눈%nextB-- 아래 선택지 중 하나\n①    "yesterday" : 어제\n②    "today" : 오늘\n③    "tomorrow" : 내일\n④    "After 2 days" : 모레\n⑤    "After 3 days" : 3일 후\n⑥    "After 4 days" : 4일 후\n⑦    "After 5 days" : 5일 후\n⑧    "After 6 days" : 6일 후%nextC-- 아래 선택지 중 하나\n①    "Seoul" : 서울\n②    "Gangwon-do" : 강원\n③    "Gyeonggi-do" : 경기\n④    "Gyeongsangnam-do" : 경남\n⑤    "Gyeongsangbuk-do" : 경북\n⑥    "Gwangju" : 광주\n⑦    "Daegu" : 대구\n⑧    "Daejeon" : 대전\n⑨    "Busan" : 부산\n⑩    "Sejong" : 세종\n⑪    "Ulsan" : 울산\n⑫    "Incheon" : 인천\n⑬    "Jeollanam-do" : 전남\n⑭    "Jeollabuk-do" : 전북\n⑮    "Jeju" : 제주\nⒶ "Chungcheongnam-do" : 충남\nⒷ "Chungcheongbuk-do": 충북',
     check_weather_exampleCode:
-        'def when_start():\n    if Weather.is_condition_sunny("today", "Seoul"):\n        Entry.print("오늘 서울의 날씨는 맑습니다.")',
+        'def when_start():\n    if Weather.is_condition_sunny("today", "Seoul"):\n        Entry.print("오늘 서울의 날씨는 맑습니다.")',
     check_weather_exampleDesc:
-        '[시작하기]버튼을 클릭하면 오늘 서울의 날씨가 맑은지 확인합니다. 만약 서울의 날씨가 맑다면 오브젝트가 "오늘 서울의 날씨는 맑습니다."라고 말합니다.​',
+        '[시작하기]버튼을 클릭하면 오늘 서울의 날씨가 맑은지 확인합니다. 만약 서울의 날씨가 맑다면 오브젝트가 "오늘 서울의 날씨는 맑습니다."라고 말합니다.​',
     check_finedust_desc:
-        '선택한 지역의 현재 미세먼지 정보를 실제 미세먼지 등급과 비교하여 일치하는 경우 ‘참’으로 판단합니다.',
+        '선택한 지역의 현재 미세먼지 정보를 실제 미세먼지 등급과 비교하여 일치하는 경우 ‘참’으로 판단합니다.',
     check_finedust_elements:
-        'A-- 아래 선택지 중 하나<br>①    "good" : 좋음<br>②    "normal" : 보통<br>③    "bad" : 나쁨<br>④    "very bad" : 매우나쁨%nextB-- 아래 선택지 중 하나<br>①    "Seoul" : 서울<br>②    "Gangwon-do" : 강원<br>③    "Gyeonggi-do" : 경기<br>④    "Gyeongsangnam-do" : 경남<br>⑤    "Gyeongsangbuk-do" : 경북<br>⑥    "Gwangju" : 광주<br>⑦    "Daegu" : 대구<br>⑧    "Daejeon" : 대전<br>⑨    "Busan" : 부산<br>⑩    "Sejong" : 세종<br>⑪    "Ulsan" : 울산<br>⑫    "Incheon" : 인천<br>⑬    "Jeollanam-do" : 전남<br>⑭    "Jeollabuk-do" : 전북<br>⑮    "Jeju" : 제주<br>Ⓐ "Chungcheongnam-do" : 충남<br>Ⓑ "Chungcheongbuk-do": 충북',
+        'A-- 아래 선택지 중 하나\n①    "good" : 좋음\n②    "normal" : 보통\n③    "bad" : 나쁨\n④    "very bad" : 매우나쁨%nextB-- 아래 선택지 중 하나\n①    "Seoul" : 서울\n②    "Gangwon-do" : 강원\n③    "Gyeonggi-do" : 경기\n④    "Gyeongsangnam-do" : 경남\n⑤    "Gyeongsangbuk-do" : 경북\n⑥    "Gwangju" : 광주\n⑦    "Daegu" : 대구\n⑧    "Daejeon" : 대전\n⑨    "Busan" : 부산\n⑩    "Sejong" : 세종\n⑪    "Ulsan" : 울산\n⑫    "Incheon" : 인천\n⑬    "Jeollanam-do" : 전남\n⑭    "Jeollabuk-do" : 전북\n⑮    "Jeju" : 제주\nⒶ "Chungcheongnam-do" : 충남\nⒷ "Chungcheongbuk-do": 충북',
     check_finedust_exampleCode:
-        'def when_start():\n    if Weather.is_current_finedust_grade_good("Seoul"):\n        Entry.print("현재 서울의 미세먼지 등급은 좋음입니다.")',
+        'def when_start():\n    if Weather.is_current_finedust_grade_good("Seoul"):\n        Entry.print("현재 서울의 미세먼지 등급은 좋음입니다.")',
     check_finedust_exampleDesc:
-        '[시작하기]버튼을 클릭하면 현재 서울의 미세먼지 등급이 좋음인지 확인합니다. 만약 서울의 날씨가 맑다면 오브젝트가 “오늘 서울의 미세먼지 등급은 좋음입니다.”라고 말합니다.​',
+        '[시작하기]버튼을 클릭하면 현재 서울의 미세먼지 등급이 좋음인지 확인합니다. 만약 서울의 날씨가 맑다면 오브젝트가 “오늘 서울의 미세먼지 등급은 좋음입니다.”라고 말합니다.​',
     get_weather_data_desc:
         '선택한 날짜와 지역의 각종 날씨 정보값(최저기온, 최고기온, 습도, 강수량, 강수확률, 풍속)입니다.',
     get_weather_data_elements:
-        'A-- 아래 선택지 중 하나<br>①    "the lowest temperature" : 최저기온<br>②    "the highest temperature" : 최고기온<br>③    "humidity" : 습도<br>④    "precipitation" : 강수량<br>⑤    "precipitation probability" : 강수확률<br>⑥    "wind speed" : 풍속%nextB-- 아래 선택지 중 하나<br>①    "yesterday" : 어제<br>②    "today" : 오늘<br>③    "tomorrow" : 내일<br>④    "After 2 days" : 모레<br>⑤    "After 3 days" : 3일 후<br>⑥    "After 4 days" : 4일 후<br>⑦    "After 5 days" : 5일 후<br>⑧    "After 6 days" : 6일 후%nextC-- 아래 선택지 중 하나<br>①    "Seoul" : 서울<br>②    "Gangwon-do" : 강원<br>③    "Gyeonggi-do" : 경기<br>④    "Gyeongsangnam-do" : 경남<br>⑤    "Gyeongsangbuk-do" : 경북<br>⑥    "Gwangju" : 광주<br>⑦    "Daegu" : 대구<br>⑧    "Daejeon" : 대전<br>⑨    "Busan" : 부산<br>⑩    "Sejong" : 세종<br>⑪    "Ulsan" : 울산<br>⑫    "Incheon" : 인천<br>⑬    "Jeollanam-do" : 전남<br>⑭    "Jeollabuk-do" : 전북<br>⑮    "Jeju" : 제주<br>Ⓐ "Chungcheongnam-do" : 충남<br>Ⓑ "Chungcheongbuk-do": 충북',
+        'A-- 아래 선택지 중 하나\n①    "the lowest temperature" : 최저기온\n②    "the highest temperature" : 최고기온\n③    "humidity" : 습도\n④    "precipitation" : 강수량\n⑤    "precipitation probability" : 강수확률\n⑥    "wind speed" : 풍속%nextB-- 아래 선택지 중 하나\n①    "yesterday" : 어제\n②    "today" : 오늘\n③    "tomorrow" : 내일\n④    "After 2 days" : 모레\n⑤    "After 3 days" : 3일 후\n⑥    "After 4 days" : 4일 후\n⑦    "After 5 days" : 5일 후\n⑧    "After 6 days" : 6일 후%nextC-- 아래 선택지 중 하나\n①    "Seoul" : 서울\n②    "Gangwon-do" : 강원\n③    "Gyeonggi-do" : 경기\n④    "Gyeongsangnam-do" : 경남\n⑤    "Gyeongsangbuk-do" : 경북\n⑥    "Gwangju" : 광주\n⑦    "Daegu" : 대구\n⑧    "Daejeon" : 대전\n⑨    "Busan" : 부산\n⑩    "Sejong" : 세종\n⑪    "Ulsan" : 울산\n⑫    "Incheon" : 인천\n⑬    "Jeollanam-do" : 전남\n⑭    "Jeollabuk-do" : 전북\n⑮    "Jeju" : 제주\nⒶ "Chungcheongnam-do" : 충남\nⒷ "Chungcheongbuk-do": 충북',
     get_weather_data_exampleCode:
         'def when_start():\n    Entry.print(Weather.get_lowest_temperature("today", "Seoul"))',
     get_weather_data_exampleDesc:
-        '[시작하기]버튼을 클릭하면 오브젝트가 오늘 서울의 최저기온을 말합니다.​',
-    get_current_weather_data_desc: '현재 B지역의 A 날씨 정보값을 의미합니다.',
+        '[시작하기]버튼을 클릭하면 오브젝트가 오늘 서울의 최저기온을 말합니다.​',
+    get_current_weather_data_desc: '현재 B지역의 A 날씨 정보값을 의미합니다.',
     get_current_weather_data_elements:
-        'A-- 아래 선택지 중 하나<br>①    "Seoul" : 서울<br>②    "Gangwon-do" : 강원<br>③    "Gyeonggi-do" : 경기<br>④    "Gyeongsangnam-do" : 경남<br>⑤    "Gyeongsangbuk-do" : 경북<br>⑥    "Gwangju" : 광주<br>⑦    "Daegu" : 대구<br>⑧    "Daejeon" : 대전<br>⑨    "Busan" : 부산<br>⑩    "Sejong" : 세종<br>⑪    "Ulsan" : 울산<br>⑫    "Incheon" : 인천<br>⑬    "Jeollanam-do" : 전남<br>⑭    "Jeollabuk-do" : 전북<br>⑮    "Jeju" : 제주<br>Ⓐ "Chungcheongnam-do" : 충남<br>Ⓑ "Chungcheongbuk-do": 충북%nextB-- 아래 선택지 중 하나<br>①    "temperature" : 기온<br>②    "concentration of fine dust" : 미세먼지농도',
+        'A-- 아래 선택지 중 하나\n①    "Seoul" : 서울\n②    "Gangwon-do" : 강원\n③    "Gyeonggi-do" : 경기\n④    "Gyeongsangnam-do" : 경남\n⑤    "Gyeongsangbuk-do" : 경북\n⑥    "Gwangju" : 광주\n⑦    "Daegu" : 대구\n⑧    "Daejeon" : 대전\n⑨    "Busan" : 부산\n⑩    "Sejong" : 세종\n⑪    "Ulsan" : 울산\n⑫    "Incheon" : 인천\n⑬    "Jeollanam-do" : 전남\n⑭    "Jeollabuk-do" : 전북\n⑮    "Jeju" : 제주\nⒶ "Chungcheongnam-do" : 충남\nⒷ "Chungcheongbuk-do": 충북%nextB-- 아래 선택지 중 하나\n①    "temperature" : 기온\n②    "concentration of fine dust" : 미세먼지농도',
     get_current_weather_data_exampleCode:
         'def when_start():\n    Entry.print(Weather.get_current_temperature("Seoul"))',
     get_current_weather_data_exampleDesc:
-        '[시작하기]버튼을 클릭하면 오브젝트가 현재 서울의 기온을 말합니다.',
-    get_today_temperature_desc: '오늘 A지역의 B 시간대 기온 정보값을 의미합니다.',
+        '[시작하기]버튼을 클릭하면 오브젝트가 현재 서울의 기온을 말합니다.',
+    get_today_temperature_desc: '오늘 A지역의 B 시간대 기온 정보값을 의미합니다.',
     get_today_temperature_elements:
-        'A-- 아래 선택지 중 하나<br>①    "Seoul" : 서울<br>②    "Gangwon-do" : 강원<br>③    "Gyeonggi-do" : 경기<br>④    "Gyeongsangnam-do" : 경남<br>⑤    "Gyeongsangbuk-do" : 경북<br>⑥    "Gwangju" : 광주<br>⑦    "Daegu" : 대구<br>⑧    "Daejeon" : 대전<br>⑨    "Busan" : 부산<br>⑩    "Sejong" : 세종<br>⑪    "Ulsan" : 울산<br>⑫    "Incheon" : 인천<br>⑬    "Jeollanam-do" : 전남<br>⑭    "Jeollabuk-do" : 전북<br>⑮    "Jeju" : 제주<br>Ⓐ "Chungcheongnam-do" : 충남<br>Ⓑ "Chungcheongbuk-do": 충북%nextB-- 아래 선택지 중 하나<br>①    "00" : 당일 00시 측정된 기온값<br>②    "03" : 당일 03시 측정된 기온값<br>③    "06" : 당일 06시 측정된 기온값<br>④    "09" : 당일 09시 측정된 기온값<br>⑤    "12" : 당일 12시 측정된 기온값<br>⑥    "15" : 당일 15시 측정된 기온값<br>⑦    "18" : 당일 18시 측정된 기온값<br>⑧    "21" : 당일 21시 측정된 기온값',
+        'A-- 아래 선택지 중 하나\n①    "Seoul" : 서울\n②    "Gangwon-do" : 강원\n③    "Gyeonggi-do" : 경기\n④    "Gyeongsangnam-do" : 경남\n⑤    "Gyeongsangbuk-do" : 경북\n⑥    "Gwangju" : 광주\n⑦    "Daegu" : 대구\n⑧    "Daejeon" : 대전\n⑨    "Busan" : 부산\n⑩    "Sejong" : 세종\n⑪    "Ulsan" : 울산\n⑫    "Incheon" : 인천\n⑬    "Jeollanam-do" : 전남\n⑭    "Jeollabuk-do" : 전북\n⑮    "Jeju" : 제주\nⒶ "Chungcheongnam-do" : 충남\nⒷ "Chungcheongbuk-do": 충북%nextB-- 아래 선택지 중 하나\n①    "00" : 당일 00시 측정된 기온값\n②    "03" : 당일 03시 측정된 기온값\n③    "06" : 당일 06시 측정된 기온값\n④    "09" : 당일 09시 측정된 기온값\n⑤    "12" : 당일 12시 측정된 기온값\n⑥    "15" : 당일 15시 측정된 기온값\n⑦    "18" : 당일 18시 측정된 기온값\n⑧    "21" : 당일 21시 측정된 기온값',
     get_today_temperature_exampleCode:
         'def when_start():\n    Entry.print(Weather.get_today_temperature("Seoul", 00))',
     get_today_temperature_exampleDesc:
-        '[시작하기]버튼을 클릭하면 오브젝트가 오늘 서울의 00시 기온을 말합니다.​',
-    check_city_weather_desc: 'B날짜에 C지역의 날씨가 A인 경우 True로 판단합니다.',
+        '[시작하기]버튼을 클릭하면 오브젝트가 오늘 서울의 00시 기온을 말합니다.​',
+    check_city_weather_desc: 'B날짜에 C지역의 날씨가 A인 경우 True로 판단합니다.',
     check_city_weather_elements:
-        'A-- 아래 선택지 중 하나<br>①    "sunny" : 맑음<br>②    "partly cloudy" : 구름조금<br>③    "mostly cloudy" : 구름많음<br>④    "cloudy" : 흐림<br>⑤    "rainy" : 비<br>⑥    "sleet" : 진눈깨비<br>⑦    "snowy" : 눈%nextB-- 아래 선택지 중 하나<br>①    "yesterday" : 어제<br>②    "today" : 오늘<br>③    "tomorrow" : 내일<br>④    "After 2 days" : 모레<br>⑤    "After 3 days" : 3일 후<br>⑥    "After 4 days" : 4일 후<br>⑦    "After 5 days" : 5일 후<br>⑧    "After 6 days" : 6일 후%nextC-- 아래 선택지 중 하나<br>①    "Seoul" : 서울<br>②    "Gangwon-do" : 강원<br>③    "Gyeonggi-do" : 경기<br>④    "Gyeongsangnam-do" : 경남<br>⑤    "Gyeongsangbuk-do" : 경북<br>⑥    "Gwangju" : 광주<br>⑦    "Daegu" : 대구<br>⑧    "Daejeon" : 대전<br>⑨    "Busan" : 부산<br>⑩    "Sejong" : 세종<br>⑪    "Ulsan" : 울산<br>⑫    "Incheon" : 인천<br>⑬    "Jeollanam-do" : 전남<br>⑭    "Jeollabuk-do" : 전북<br>⑮    "Jeju" : 제주<br>Ⓐ "Chungcheongnam-do" : 충남<br>Ⓑ "Chungcheongbuk-do": 충북',
+        'A-- 아래 선택지 중 하나\n①    "sunny" : 맑음\n②    "partly cloudy" : 구름조금\n③    "mostly cloudy" : 구름많음\n④    "cloudy" : 흐림\n⑤    "rainy" : 비\n⑥    "sleet" : 진눈깨비\n⑦    "snowy" : 눈%nextB-- 아래 선택지 중 하나\n①    "yesterday" : 어제\n②    "today" : 오늘\n③    "tomorrow" : 내일\n④    "After 2 days" : 모레\n⑤    "After 3 days" : 3일 후\n⑥    "After 4 days" : 4일 후\n⑦    "After 5 days" : 5일 후\n⑧    "After 6 days" : 6일 후%nextC-- 아래 선택지 중 하나\n①    "Seoul" : 서울\n②    "Gangwon-do" : 강원\n③    "Gyeonggi-do" : 경기\n④    "Gyeongsangnam-do" : 경남\n⑤    "Gyeongsangbuk-do" : 경북\n⑥    "Gwangju" : 광주\n⑦    "Daegu" : 대구\n⑧    "Daejeon" : 대전\n⑨    "Busan" : 부산\n⑩    "Sejong" : 세종\n⑪    "Ulsan" : 울산\n⑫    "Incheon" : 인천\n⑬    "Jeollanam-do" : 전남\n⑭    "Jeollabuk-do" : 전북\n⑮    "Jeju" : 제주\nⒶ "Chungcheongnam-do" : 충남\nⒷ "Chungcheongbuk-do": 충북',
     check_city_weather_exampleCode:
-        'def when_start():\n    if Weather.is_condition_sunny("today", "Seoul"):\n        Entry.print("오늘 서울의 날씨는 맑습니다.")',
+        'def when_start():\n    if Weather.is_condition_sunny("today", "Seoul"):\n        Entry.print("오늘 서울의 날씨는 맑습니다.")',
     check_city_weather_exampleDesc:
-        '[시작하기]버튼을 클릭하면 오늘 서울의 날씨가 맑은지 확인합니다. 만약 서울의 날씨가 맑다면 오브젝트가 "오늘 서울의 날씨는 맑습니다."라고 말합니다.​',
+        '[시작하기]버튼을 클릭하면 오늘 서울의 날씨가 맑은지 확인합니다. 만약 서울의 날씨가 맑다면 오브젝트가 "오늘 서울의 날씨는 맑습니다."라고 말합니다.​',
     check_city_finedust_desc:
-        '선택한 지역의 현재 미세먼지 정보를 실제 미세먼지 등급과 비교하여 일치하는 경우 ‘참’으로 판단합니다.',
+        '선택한 지역의 현재 미세먼지 정보를 실제 미세먼지 등급과 비교하여 일치하는 경우 ‘참’으로 판단합니다.',
     check_city_finedust_elements:
-        'A-- 아래 선택지 중 하나<br>①    "good" : 좋음<br>②    "normal" : 보통<br>③    "bad" : 나쁨<br>④    "very bad" : 매우나쁨%nextB-- 아래 선택지 중 하나<br>①    "Seoul" : 서울<br>②    "Gangwon-do" : 강원<br>③    "Gyeonggi-do" : 경기<br>④    "Gyeongsangnam-do" : 경남<br>⑤    "Gyeongsangbuk-do" : 경북<br>⑥    "Gwangju" : 광주<br>⑦    "Daegu" : 대구<br>⑧    "Daejeon" : 대전<br>⑨    "Busan" : 부산<br>⑩    "Sejong" : 세종<br>⑪    "Ulsan" : 울산<br>⑫    "Incheon" : 인천<br>⑬    "Jeollanam-do" : 전남<br>⑭    "Jeollabuk-do" : 전북<br>⑮    "Jeju" : 제주<br>Ⓐ "Chungcheongnam-do" : 충남<br>Ⓑ "Chungcheongbuk-do": 충북',
+        'A-- 아래 선택지 중 하나\n①    "good" : 좋음\n②    "normal" : 보통\n③    "bad" : 나쁨\n④    "very bad" : 매우나쁨%nextB-- 아래 선택지 중 하나\n①    "Seoul" : 서울\n②    "Gangwon-do" : 강원\n③    "Gyeonggi-do" : 경기\n④    "Gyeongsangnam-do" : 경남\n⑤    "Gyeongsangbuk-do" : 경북\n⑥    "Gwangju" : 광주\n⑦    "Daegu" : 대구\n⑧    "Daejeon" : 대전\n⑨    "Busan" : 부산\n⑩    "Sejong" : 세종\n⑪    "Ulsan" : 울산\n⑫    "Incheon" : 인천\n⑬    "Jeollanam-do" : 전남\n⑭    "Jeollabuk-do" : 전북\n⑮    "Jeju" : 제주\nⒶ "Chungcheongnam-do" : 충남\nⒷ "Chungcheongbuk-do": 충북',
     check_city_finedust_exampleCode:
-        'def when_start():\n    if Weather.is_current_finedust_grade_good("Seoul"):\n        Entry.print("현재 서울의 미세먼지 등급은 좋음입니다.")',
+        'def when_start():\n    if Weather.is_current_finedust_grade_good("Seoul"):\n        Entry.print("현재 서울의 미세먼지 등급은 좋음입니다.")',
     check_city_finedust_exampleDesc:
-        '[시작하기]버튼을 클릭하면 현재 서울의 미세먼지 등급이 좋음인지 확인합니다. 만약 서울의 날씨가 맑다면 오브젝트가 “오늘 서울의 미세먼지 등급은 좋음입니다.”라고 말합니다.​',
+        '[시작하기]버튼을 클릭하면 현재 서울의 미세먼지 등급이 좋음인지 확인합니다. 만약 서울의 날씨가 맑다면 오브젝트가 “오늘 서울의 미세먼지 등급은 좋음입니다.”라고 말합니다.​',
     get_city_weather_data_desc:
         '선택한 날짜와 지역의 각종 날씨 정보값(최저기온, 최고기온, 습도, 강수량, 강수확률, 풍속)입니다.',
     get_city_weather_data_elements:
-        'A-- 아래 선택지 중 하나<br>①    "the lowest temperature" : 최저기온<br>②    "the highest temperature" : 최고기온<br>③    "humidity" : 습도<br>④    "precipitation" : 강수량<br>⑤    "precipitation probability" : 강수확률<br>⑥    "wind speed" : 풍속%nextB-- 아래 선택지 중 하나<br>①    "yesterday" : 어제<br>②    "today" : 오늘<br>③    "tomorrow" : 내일<br>④    "After 2 days" : 모레<br>⑤    "After 3 days" : 3일 후<br>⑥    "After 4 days" : 4일 후<br>⑦    "After 5 days" : 5일 후<br>⑧    "After 6 days" : 6일 후%nextC-- 아래 선택지 중 하나<br>①    "Seoul" : 서울<br>②    "Gangwon-do" : 강원<br>③    "Gyeonggi-do" : 경기<br>④    "Gyeongsangnam-do" : 경남<br>⑤    "Gyeongsangbuk-do" : 경북<br>⑥    "Gwangju" : 광주<br>⑦    "Daegu" : 대구<br>⑧    "Daejeon" : 대전<br>⑨    "Busan" : 부산<br>⑩    "Sejong" : 세종<br>⑪    "Ulsan" : 울산<br>⑫    "Incheon" : 인천<br>⑬    "Jeollanam-do" : 전남<br>⑭    "Jeollabuk-do" : 전북<br>⑮    "Jeju" : 제주<br>Ⓐ "Chungcheongnam-do" : 충남<br>Ⓑ "Chungcheongbuk-do": 충북',
+        'A-- 아래 선택지 중 하나\n①    "the lowest temperature" : 최저기온\n②    "the highest temperature" : 최고기온\n③    "humidity" : 습도\n④    "precipitation" : 강수량\n⑤    "precipitation probability" : 강수확률\n⑥    "wind speed" : 풍속%nextB-- 아래 선택지 중 하나\n①    "yesterday" : 어제\n②    "today" : 오늘\n③    "tomorrow" : 내일\n④    "After 2 days" : 모레\n⑤    "After 3 days" : 3일 후\n⑥    "After 4 days" : 4일 후\n⑦    "After 5 days" : 5일 후\n⑧    "After 6 days" : 6일 후%nextC-- 아래 선택지 중 하나\n①    "Seoul" : 서울\n②    "Gangwon-do" : 강원\n③    "Gyeonggi-do" : 경기\n④    "Gyeongsangnam-do" : 경남\n⑤    "Gyeongsangbuk-do" : 경북\n⑥    "Gwangju" : 광주\n⑦    "Daegu" : 대구\n⑧    "Daejeon" : 대전\n⑨    "Busan" : 부산\n⑩    "Sejong" : 세종\n⑪    "Ulsan" : 울산\n⑫    "Incheon" : 인천\n⑬    "Jeollanam-do" : 전남\n⑭    "Jeollabuk-do" : 전북\n⑮    "Jeju" : 제주\nⒶ "Chungcheongnam-do" : 충남\nⒷ "Chungcheongbuk-do": 충북',
     get_city_weather_data_exampleCode:
         'def when_start():\n    Entry.print(Weather.get_lowest_temperature("today", "Seoul"))',
     get_city_weather_data_exampleDesc:
-        '[시작하기]버튼을 클릭하면 오브젝트가 오늘 서울의 최저기온을 말합니다.​',
-    get_current_city_weather_data_desc: '현재 B지역의 A 날씨 정보값을 의미합니다.',
+        '[시작하기]버튼을 클릭하면 오브젝트가 오늘 서울의 최저기온을 말합니다.​',
+    get_current_city_weather_data_desc: '현재 B지역의 A 날씨 정보값을 의미합니다.',
     get_current_city_weather_data_elements:
-        'A-- 아래 선택지 중 하나<br>①    "Seoul" : 서울<br>②    "Gangwon-do" : 강원<br>③    "Gyeonggi-do" : 경기<br>④    "Gyeongsangnam-do" : 경남<br>⑤    "Gyeongsangbuk-do" : 경북<br>⑥    "Gwangju" : 광주<br>⑦    "Daegu" : 대구<br>⑧    "Daejeon" : 대전<br>⑨    "Busan" : 부산<br>⑩    "Sejong" : 세종<br>⑪    "Ulsan" : 울산<br>⑫    "Incheon" : 인천<br>⑬    "Jeollanam-do" : 전남<br>⑭    "Jeollabuk-do" : 전북<br>⑮    "Jeju" : 제주<br>Ⓐ "Chungcheongnam-do" : 충남<br>Ⓑ "Chungcheongbuk-do": 충북%nextB-- 아래 선택지 중 하나<br>①    "temperature" : 기온<br>②    "concentration of fine dust" : 미세먼지농도',
+        'A-- 아래 선택지 중 하나\n①    "Seoul" : 서울\n②    "Gangwon-do" : 강원\n③    "Gyeonggi-do" : 경기\n④    "Gyeongsangnam-do" : 경남\n⑤    "Gyeongsangbuk-do" : 경북\n⑥    "Gwangju" : 광주\n⑦    "Daegu" : 대구\n⑧    "Daejeon" : 대전\n⑨    "Busan" : 부산\n⑩    "Sejong" : 세종\n⑪    "Ulsan" : 울산\n⑫    "Incheon" : 인천\n⑬    "Jeollanam-do" : 전남\n⑭    "Jeollabuk-do" : 전북\n⑮    "Jeju" : 제주\nⒶ "Chungcheongnam-do" : 충남\nⒷ "Chungcheongbuk-do": 충북%nextB-- 아래 선택지 중 하나\n①    "temperature" : 기온\n②    "concentration of fine dust" : 미세먼지농도',
     get_current_city_weather_data_exampleCode:
         'def when_start():\n    Entry.print(Weather.get_current_temperature("Seoul"))',
     get_current_city_weather_data_exampleDesc:
-        '[시작하기]버튼을 클릭하면 오브젝트가 현재 서울의 기온을 말합니다.',
-    get_today_city_temperature_desc: '오늘 A지역의 B 시간대 기온 정보값을 의미합니다.',
+        '[시작하기]버튼을 클릭하면 오브젝트가 현재 서울의 기온을 말합니다.',
+    get_today_city_temperature_desc: '오늘 A지역의 B 시간대 기온 정보값을 의미합니다.',
     get_today_city_temperature_elements:
-        'A-- 아래 선택지 중 하나<br>①    "Seoul" : 서울<br>②    "Gangwon-do" : 강원<br>③    "Gyeonggi-do" : 경기<br>④    "Gyeongsangnam-do" : 경남<br>⑤    "Gyeongsangbuk-do" : 경북<br>⑥    "Gwangju" : 광주<br>⑦    "Daegu" : 대구<br>⑧    "Daejeon" : 대전<br>⑨    "Busan" : 부산<br>⑩    "Sejong" : 세종<br>⑪    "Ulsan" : 울산<br>⑫    "Incheon" : 인천<br>⑬    "Jeollanam-do" : 전남<br>⑭    "Jeollabuk-do" : 전북<br>⑮    "Jeju" : 제주<br>Ⓐ "Chungcheongnam-do" : 충남<br>Ⓑ "Chungcheongbuk-do": 충북%nextB-- 아래 선택지 중 하나<br>①    "00" : 당일 00시 측정된 기온값<br>②    "03" : 당일 03시 측정된 기온값<br>③    "06" : 당일 06시 측정된 기온값<br>④    "09" : 당일 09시 측정된 기온값<br>⑤    "12" : 당일 12시 측정된 기온값<br>⑥    "15" : 당일 15시 측정된 기온값<br>⑦    "18" : 당일 18시 측정된 기온값<br>⑧    "21" : 당일 21시 측정된 기온값',
+        'A-- 아래 선택지 중 하나\n①    "Seoul" : 서울\n②    "Gangwon-do" : 강원\n③    "Gyeonggi-do" : 경기\n④    "Gyeongsangnam-do" : 경남\n⑤    "Gyeongsangbuk-do" : 경북\n⑥    "Gwangju" : 광주\n⑦    "Daegu" : 대구\n⑧    "Daejeon" : 대전\n⑨    "Busan" : 부산\n⑩    "Sejong" : 세종\n⑪    "Ulsan" : 울산\n⑫    "Incheon" : 인천\n⑬    "Jeollanam-do" : 전남\n⑭    "Jeollabuk-do" : 전북\n⑮    "Jeju" : 제주\nⒶ "Chungcheongnam-do" : 충남\nⒷ "Chungcheongbuk-do": 충북%nextB-- 아래 선택지 중 하나\n①    "00" : 당일 00시 측정된 기온값\n②    "03" : 당일 03시 측정된 기온값\n③    "06" : 당일 06시 측정된 기온값\n④    "09" : 당일 09시 측정된 기온값\n⑤    "12" : 당일 12시 측정된 기온값\n⑥    "15" : 당일 15시 측정된 기온값\n⑦    "18" : 당일 18시 측정된 기온값\n⑧    "21" : 당일 21시 측정된 기온값',
     get_today_city_temperature_exampleCode:
         'def when_start():\n    Entry.print(Weather.get_today_city_temperature("Seoul", 00))',
     get_today_city_temperature_exampleDesc:
-        '[시작하기]버튼을 클릭하면 오브젝트가 오늘 서울의 00시 기온을 말합니다.​',
+        '[시작하기]버튼을 클릭하면 오브젝트가 오늘 서울의 00시 기온을 말합니다.​',
 };
 Lang.Painter = {
     select_cut: 'You can cut with a square dotted line.',
@@ -8381,8 +8593,8 @@ Lang.Painter = {
     font_family: 'Font family',
     fullscreen: 'Full screen',
     exit_fullscreen: 'Exit full screen',
-    picture_import: 'Import a picture',
-    edit_way: 'Edit way',
+    picture_import: 'Import a shape',
+    edit_way: 'Convert',
     line: 'Line',
     vertex: 'Vertex',
     bitmap: 'Bitmap',
@@ -8398,14 +8610,14 @@ Lang.Painter = {
     cut_picture: 'cut',
     paste_picture: 'paste',
     remove_all: 'clear',
-    new_picture: 'New Picture',
+    new_picture: 'New shape',
     edit: 'Edit',
     picture_size: 'Size',
     picture_rotation: 'Rotation',
     thickness: 'thickness',
     font_fill: 'Fill',
     painter_file_save: 'Save',
-    painter_file_saveas: 'Save as a new picture',
+    painter_file_saveas: 'Save as a new shape',
     file: 'File',
     Pencil: 'Pen',
     Line: 'Line',
@@ -8414,7 +8626,7 @@ Lang.Painter = {
     Select: 'Select',
     Rectangle: 'Rectangle',
     Ellipse: 'Ellipse',
-    Text: 'Text Box',
+    Text: 'Text box',
     Fill: 'Fill',
     Eraser: 'Eraser',
     get_file: 'get',
@@ -8465,15 +8677,15 @@ Lang.DataAnalytics = {
     chart_title: 'Chart title',
     remove_chart: 'Delete chart',
     add_chart_first: 'No chart in table. \nAdd table.',
-    bar: 'bar',
-    line: 'line',
-    pie: 'pie',
-    scatter: 'scatter',
-    select_x_axis: 'Select the horizontal axis.',
-    x_axis: 'Horiz. axis',
-    y_axis: 'Ver. axis',
-    select_y_axis: 'Select the vertical axis.',
-    select_y_axis_or_legend: 'Select the vertical axis or legends.',
+    bar: 'Bar',
+    line: 'Line',
+    pie: 'Pie',
+    scatter: 'Scatter',
+    select_x_axis: 'Select the x-axis.',
+    x_axis: 'x-axis',
+    y_axis: 'y-axis',
+    select_y_axis: 'Select the y-axis.',
+    select_y_axis_or_legend: 'Select the y-axis or legends.',
     select_legend: 'Select the legends.',
     cell: 'Cell',
     unable_to_express_chart: 'This cannot be expressed in charts.',
@@ -8532,9 +8744,16 @@ Lang.DataAnalytics = {
     provider: 'Source',
     description: 'Description',
     field_info: 'Field Info',
-    show_all_points: 'show_all_points',
+    show_all_points: 'Show All Points',
     coefficient: 'Coefficient',
     scatter_matrix: 'Scatter Matrix',
+    show_table: 'Show Table',
+    value: 'Value',
+    summary: 'Summary',
+    column_name: 'Column Name',
+    total: 'Total',
+    histogram: 'Histogram',
+    select_legend2: 'Select at least 2 legends.',
 };
 
 Lang.SharePolicy = {

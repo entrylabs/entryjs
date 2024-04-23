@@ -1,9 +1,7 @@
- 
-
 const toFixed = (num: number) => parseFloat(num.toFixed(2));
 
 export const CommonUtil = {
-    isWebGlSupport:() => {
+    isWebGlSupport: () => {
         try {
             const currentCanvas = document.createElement('canvas');
             return !!currentCanvas.getContext('webgl', { premultipliedalpha: false });
@@ -40,7 +38,9 @@ export const CommonUtil = {
         return tempMap[i][value];
     },
     shuffle: (arr: Array<any>) => {
-        let j; let x; let i;
+        let j;
+        let x;
+        let i;
         for (i = arr.length; i; i -= 1) {
             j = Math.floor(Math.random() * i);
             x = arr[i - 1];
@@ -78,10 +78,8 @@ export const CommonUtil = {
     arrayToMatrix(array: Array<number>, columns: number) {
         return Array(Math.ceil(array.length / columns))
             .fill('')
-            .reduce((acc, cur, index) => (
-                [...acc, [...array].splice(index * columns, columns)]
-            ), []);
-    }
+            .reduce((acc, cur, index) => [...acc, [...array].splice(index * columns, columns)], []);
+    },
 };
 
 export default CommonUtil;
