@@ -576,6 +576,7 @@ Entry.Playground = class Playground {
             id: 'entryWorkspaceBoard',
             class: 'entryWorkspaceBoard',
         });
+        this.boardView_ = boardView;
 
         const blockMenuView = Entry.Dom('div', {
             parent: codeView,
@@ -729,9 +730,7 @@ Entry.Playground = class Playground {
      */
     generateTextView(textView) {
         const that = this;
-        const wrap = Entry.createElement('div')
-            .addClass('write_box')
-            .appendTo(textView);
+        const wrap = Entry.createElement('div').addClass('write_box').appendTo(textView);
         const writeSet = Entry.createElement('div').addClass('write_set');
         const inputArea = Entry.createElement('div').addClass('input_box');
         wrap.appendChild(writeSet);
@@ -963,7 +962,7 @@ Entry.Playground = class Playground {
         );
         textEditInput.type = 'text';
         textEditInput.placeholder = Lang.Workspace.textbox_input;
-        const textChangeApply = function() {
+        const textChangeApply = function () {
             const object = Entry.playground.object;
             const entity = object.entity;
             const selected = $('#entryTextBoxAttrFontName').data('font');
@@ -990,7 +989,7 @@ Entry.Playground = class Playground {
         textEditInput.addEventListener('focusin', () => {
             textEditInput.prevText = textEditInput.value;
         });
-        textEditInput.onblur = function() {
+        textEditInput.onblur = function () {
             if (textEditInput.value !== textEditInput.prevText) {
                 Entry.do('editText', textEditInput.value, textEditInput.prevText);
             }
@@ -1009,7 +1008,7 @@ Entry.Playground = class Playground {
         textEditArea.addEventListener('focusin', () => {
             textEditArea.prevText = textEditArea.value;
         });
-        textEditArea.onblur = function() {
+        textEditArea.onblur = function () {
             if (textEditArea.value !== textEditArea.prevText) {
                 Entry.do('editText', textEditArea.value, textEditArea.prevText);
             }
@@ -1528,6 +1527,7 @@ Entry.Playground = class Playground {
         if (!this.tabViewElements) {
             return;
         }
+
         for (const i in this.tabViewElements) {
             this.tabViewElements[i].removeClass('entryTabSelected');
         }
@@ -1538,7 +1538,14 @@ Entry.Playground = class Playground {
             Entry.playground.toggleOnVariableView();
             this.tabViewElements.code.removeClass('entryTabSelected');
             this.tabViewElements[viewType].addClass('entryTabSelected');
+            this.resizeHandle_.addClass('entryRemove');
+            this.boardView_.addClass('wideView');
+            Entry.windowResized.notify();
             return;
+        } else {
+            this.resizeHandle_.removeClass('entryRemove');
+            this.boardView_.removeClass('wideView');
+            Entry.windowResized.notify();
         }
         const views = this.view_.children;
         for (let i = 0; i < views.length; i++) {
@@ -1802,7 +1809,7 @@ Entry.Playground = class Playground {
     generatePictureElement(picture) {
         const element = Entry.createElement('li', picture.id)
             .addClass('entryPlaygroundPictureElement')
-            .bindOnClick(function() {
+            .bindOnClick(function () {
                 Entry.playground.selectPicture(this.picture);
             });
         picture.view = element;
@@ -1890,9 +1897,8 @@ Entry.Playground = class Playground {
         element.appendChild(nameView);
         Entry.createElement('div', `s_${picture.id}`)
             .addClass('entryPlaygroundPictureSize')
-            .appendTo(
-                element
-            ).textContent = `${picture.dimension.width} X ${picture.dimension.height}`;
+            .appendTo(element).textContent =
+            `${picture.dimension.width} X ${picture.dimension.height}`;
 
         const removeButton = Entry.createElement('div').addClass('entryPlayground_del');
         const { Buttons = {} } = Lang || {};
@@ -2327,18 +2333,14 @@ Entry.Playground = class Playground {
         if (isLineBreak) {
             entity.setLineBreak(true);
             $('.input_inner').height('228px');
-            $('.write_type_box a')
-                .eq(1)
-                .addClass('on');
+            $('.write_type_box a').eq(1).addClass('on');
             $('.input_box .single').hide();
             $('.input_box .multi').show();
             this._setFontFontUI();
         } else {
             entity.setLineBreak(false);
             $('.input_inner').height('40px');
-            $('.write_type_box a')
-                .eq(0)
-                .addClass('on');
+            $('.write_type_box a').eq(0).addClass('on');
             $('.input_box .multi').hide();
             $('.input_box .single').show();
         }
