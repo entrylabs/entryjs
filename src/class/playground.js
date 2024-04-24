@@ -1538,6 +1538,7 @@ Entry.Playground = class Playground {
             Entry.playground.toggleOnVariableView();
             this.tabViewElements.code.removeClass('entryTabSelected');
             this.tabViewElements[viewType].addClass('entryTabSelected');
+            this.resizeHandle_.removeClass('unfolding');
             this.resizeHandle_.addClass('entryRemove');
             this.boardView_.addClass('wideView');
             Entry.windowResized.notify();
