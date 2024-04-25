@@ -615,6 +615,7 @@ class BlockMenu extends ModelClass<Schema> {
 
         if (!boardView.hasClass('folding')) {
             boardView.addClass('folding');
+            Entry.playground.resizeHandle_.addClass('highIndex');
             Entry.playground.resizeHandle_.addClass('folding');
             Entry.playground.resizeHandle_.removeClass('unfolding');
             Entry.playground.hideTabs();
@@ -625,6 +626,7 @@ class BlockMenu extends ModelClass<Schema> {
                 Entry.playground.showTabs();
             }
             boardView.removeClass('folding');
+            Entry.playground.resizeHandle_.addClass('highIndex');
             Entry.playground.resizeHandle_.addClass('unfolding');
             Entry.playground.resizeHandle_.removeClass('folding');
             this.visible = true;
@@ -632,6 +634,7 @@ class BlockMenu extends ModelClass<Schema> {
         Entry.bindAnimationCallbackOnce(boardView, () => {
             board.scroller.resizeScrollBar.call(board.scroller);
             boardView.removeClass('foldOut');
+            Entry.playground.resizeHandle_.removeClass('highIndex');
             Entry.windowResized.notify();
         });
 

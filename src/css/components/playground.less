@@ -158,10 +158,14 @@
     margin-top: -20px;
     cursor: pointer;
     border-left: none;
-    z-index: 300;
+    z-index: 1;
     .backgroundImage('entry_scroll_02.svg');
     background-size: 36px auto;
+    &.highIndex {
+        z-index: 300;
+    }
     &.folding {
+        z-index: 253;
         .animation-duration(0.7s);
         .animation-name(foldBlockly);
         .animation-fill-mode(forwards);
