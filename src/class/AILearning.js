@@ -24,6 +24,7 @@ import blockAiLearningSvm from '../playground/blocks/block_ai_learning_svm';
 import blockAiUtilizeMediaPipe from '../playground/blocks/block_ai_utilize_media_pipe';
 import InputPopup from './learning/InputPopup';
 
+Entry.MlPopup = InputPopup;
 const basicBlockList = [
     blockAiLearning,
     blockAiLearningKnn,

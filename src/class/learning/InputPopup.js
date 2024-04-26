@@ -92,5 +92,4 @@ const MlPopup = class InputPopup {
     }
 }
 
-Entry.MlPopup = MlPopup;
 export default MlPopup;
