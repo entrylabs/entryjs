@@ -785,6 +785,20 @@ EntryStatic.getDefaultFontFamily = function() {
     }
 };
 
+EntryStatic.getCategoryByBlock = function(blockName) {
+    if (!blockName) {
+        return false;
+    }
+    const allBlocks = EntryStatic.getAllBlocks();
+    for (let i = 0, len = allBlocks.length; i < len; i++) {
+        const blocks = allBlocks[i].blocks;
+        if (blocks.indexOf(blockName) > -1) {
+            return allBlocks[i].category;
+        }
+    }
+    return false;
+};
+
 // for server node js code
 if (typeof exports === 'object') {
     exports.blockInfo = EntryStatic.blockInfo;
