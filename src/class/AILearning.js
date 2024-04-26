@@ -22,7 +22,9 @@ import blockAiLearningLogisticRegression from '../playground/blocks/block_ai_lea
 import blockAiLearningDecisiontree from '../playground/blocks/block_ai_learning_decisiontree';
 import blockAiLearningSvm from '../playground/blocks/block_ai_learning_svm';
 import blockAiUtilizeMediaPipe from '../playground/blocks/block_ai_utilize_media_pipe';
+import InputPopup from './learning/InputPopup';
 
+Entry.MlPopup = InputPopup;
 const basicBlockList = [
     blockAiLearning,
     blockAiLearningKnn,
