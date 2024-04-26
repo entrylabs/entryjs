@@ -1,6 +1,6 @@
 import PopupHelper from '../popup_helper';
 
-Entry.MlPopup = class InputPopup {
+const MlPopup = class InputPopup {
     #popupKey = 'ai_learning';
 
     constructor(source) {
@@ -90,4 +90,6 @@ Entry.MlPopup = class InputPopup {
     toastError() {
         Entry.toast.alert(Lang.Msgs.warn, Lang.Msgs.ai_utilize_train_pop_error, true);
     }
-}
+};
+
+export default MlPopup;
