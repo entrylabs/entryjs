@@ -1887,6 +1887,8 @@ Lang.Menus = {
     list_import_notice_1: 'You can enter items and default values in a list at once.',
     list_import_notice_2: 'The items and default values entered here are saved as a list.',
     list_export_title: 'Export',
+    list_export_notice1: 'You can copy the items in the list directly or',
+    list_export_notice2: 'export them to a file or table.',
     list_export_notice: 'You can copy or download the data in the list.',
     robotis_opencm70: 'Robotis Open CM70',
     cannnot_mark_favorite: 'Private project cannot be marked as a favorite.',
