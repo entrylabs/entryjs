@@ -1857,6 +1857,7 @@ Lang.Buttons = {
     list_save: 'Upload',
     duplication: 'Copy',
     export_to_excel: 'Download',
+    convert_table: 'Export to table',
     single_line: 'Single line',
     multi_line: 'Multi line',
     lecture_finish_popup_reset_lecture: 'Do it again',

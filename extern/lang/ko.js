@@ -2146,6 +2146,7 @@ Lang.Buttons = {
     list_save: '저장하기',
     duplication: '복사하기',
     export_to_excel: '엑셀로 내려받기',
+    convert_table: '테이블로 만들기',
     single_line: '한 줄 쓰기',
     multi_line: '여러 줄 쓰기',
     lecture_finish_popup_reset_lecture: '처음부터 다시하기',
