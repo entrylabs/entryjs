@@ -138,6 +138,7 @@ module.exports = {
         '@entrylabs/tool': 'EntryTool',
         'entry-paint': 'EntryPaint',
         '@entrylabs/sound-editor': 'EntrySoundEditor',
+        '@entrylabs/legacy-video': 'EntryVideoLegacy',
     },
     plugins: [
         new CleanWebpackPlugin(['dist'], {
