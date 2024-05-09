@@ -1,4 +1,4 @@
-(self["webpackChunkentry_js"] = self["webpackChunkentry_js"] || []).push([[522],{
+(self["webpackChunk_entrylabs_entry"] = self["webpackChunk_entrylabs_entry"] || []).push([[522],{
 
 /***/ 66522:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
