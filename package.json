@@ -135,6 +135,9 @@
     "resolutions": {
         "pixi.js": "5.3.7"
     },
+    "publishConfig": {
+        "access": "public"
+    },
     "files": [
         "dist/",
         "extern/",
