@@ -134,5 +134,20 @@
     },
     "resolutions": {
         "pixi.js": "5.3.7"
-    }
+    },
+    "files": [
+        "dist/",
+        "extern/",
+        "images/",
+        "weights/",
+        "src/playground/blocks/",
+        "src/playground/block_entry.js",
+        "src/playground/block_entry_mini.js",
+        "package.json",
+        "LICENSE",
+        "NOTICE",
+        "COPYING",
+        "README.md",
+        "README-en.md"
+    ]
 }
