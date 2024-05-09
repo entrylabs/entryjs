@@ -135,10 +135,9 @@ async function poseDetect(force: boolean) {
         imageData,
         {
             flipHorizontal: currentFlipStatus,
-            // maxDetections: 4,
-            maxPoses: 1,
+            maxPoses: 4,
             scoreThreshold: 0.75,
-            // nmsRadius: 10,
+            nmsRadius: 10,
         }
     )).map((pose) => ({
         keypoints: pose.keypoints.map((keypoint) => ({

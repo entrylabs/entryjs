@@ -494,12 +494,9 @@ class VideoUtils implements MediaUtilsInterface {
             this.inMemoryCanvas,
             {
                 flipHorizontal: this.flipStatus.horizontal,
-                // maxDetections: 4,
-                maxPoses: 1,
+                maxPoses: 4,
                 scoreThreshold: 0.75,
-                // nmsRadius: 10,
-                // multiplier: 0.5,
-                // quantBytes: 1,
+                nmsRadius: 10,
             }
         )).map(({ keypoints, score}) => ({
             keypoints: keypoints.map((keypoint) => ({
