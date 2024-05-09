@@ -2,17 +2,21 @@
  * nt11576 Lee.Jaewon
  * commented area with "motion test" is for the motion detection testing canvas to test the computer vision, uncomment all codes labeled "motion test"
  */
+import '@tensorflow/tfjs-backend-cpu';
+import '@tensorflow/tfjs-backend-webgl';
 import { MediaUtilsInterface } from '../../types/index';
 
 import { GEHelper } from '../graphicEngine/GEHelper';
 import VideoWorker from './workers/video.worker.ts';
 import VideoMotionWorker from './workers/motion.worker.ts';
 // type을 위해서 import
-import * as posenet from '@tensorflow-models/posenet';
+import * as poseDetection from '@tensorflow-models/pose-detection';
 import * as cocoSsd from '@tensorflow-models/coco-ssd';
-import * as faceapi from 'face-api.js';
+// import * as faceapi from 'face-api.js';
+import * as tf from '@tensorflow/tfjs';
 
 import clamp from 'lodash/clamp';
+const poseModel = poseDetection.SupportedModels.PoseNet;
 
 type FlipStatus = {
     horizontal: boolean;
@@ -48,6 +52,20 @@ type DetectedObject = {
     bbox: Array<number>;
     class: String;
 };
+type PoseDetection = {
+    keypoints: PosKeyPoint[];
+    score: number;
+};
+
+type PosKeyPoint = {
+    part: string;
+    position: {
+        x: number;
+        y: number;
+    };
+    score: number;
+};
+
 type IndicatorType = 'pose' | 'face' | 'object';
 
 const { Entry, Lang } = window;
@@ -68,7 +86,7 @@ class VideoUtils implements MediaUtilsInterface {
     private _VIDEO_WIDTH: number = 640;
     private _VIDEO_HEIGHT: number = 360;
 
-    private tinyFaceDetectOption = new faceapi.TinyFaceDetectorOptions({ inputSize: 160 });
+    // private tinyFaceDetectOption = new faceapi.TinyFaceDetectorOptions({ inputSize: 160 });
 
     // 움직임 감지에 쓰이는 상수
     private _SAMPLE_SIZE: number = 15;
@@ -114,15 +132,15 @@ class VideoUtils implements MediaUtilsInterface {
     public totalMotions: MotionElement = { total: 0, direction: { x: 0, y: 0 } };
     public objects: DetectedObject[] = [];
     public poses: {
-        predictions: posenet.Pose[];
-        adjacents: posenet.Keypoint[][][];
+        predictions: PoseDetection[];
+        adjacents: PosKeyPoint[][][];
     };
     public faces: any = [];
 
     public isRunning = false;
     public isModelInitiated = false;
-    public mobileNet: posenet.MobileNet;
-    public coco: any;
+    public poseDetector: poseDetection.PoseDetector;
+    public coco: cocoSsd.ObjectDetection;
     /**
      * 아래는 faces 의 type, 너무 길고, 라이브러리에서 typed 되어 나오는 값이므로 any로 지정하였음.
      */
@@ -197,7 +215,6 @@ class VideoUtils implements MediaUtilsInterface {
             this.inMemoryCanvas.width = this.CANVAS_WIDTH;
             this.inMemoryCanvas.height = this.CANVAS_HEIGHT;
         }
-
         // //motion test
         // this.tempCanvas = document.createElement('canvas');
         // this.tempCanvas.width = this.CANVAS_WIDTH;
@@ -224,7 +241,6 @@ class VideoUtils implements MediaUtilsInterface {
                 Lang.Workspace.check_webcam_error,
             ]);
         }
-
         try {
             if (!this.motionWorker) {
                 this.motionWorker = new VideoMotionWorker();
@@ -249,7 +265,6 @@ class VideoUtils implements MediaUtilsInterface {
                     setTimeout(this.motionDetect.bind(this), 20);
                 }
             };
-
             Entry.addEventListener('beforeStop', this.reset.bind(this));
             Entry.addEventListener('run', this.initialSetup.bind(this));
             this.motionWorker.postMessage({
@@ -269,7 +284,6 @@ class VideoUtils implements MediaUtilsInterface {
                     }
                     const name: 'pose' | 'face' | 'object' | 'warmup' = message;
                     const modelLang = Lang.Blocks[`video_${name}_model`];
-
                     switch (type) {
                         case 'init':
                             if (message === 'warmup') {
@@ -311,24 +325,26 @@ class VideoUtils implements MediaUtilsInterface {
             } else {
                 const weightsUrl = `${window.location.origin}/lib/entry-js/weights`;
                 Entry.dispatchEvent('showVideoLoadingScreen');
+                await tf.ready();
                 Promise.all([
-                    Promise.all([
-                        faceapi.nets.tinyFaceDetector.loadFromUri(weightsUrl),
-                        faceapi.nets.faceLandmark68Net.loadFromUri(weightsUrl),
-                        faceapi.nets.ageGenderNet.loadFromUri(weightsUrl),
-                        faceapi.nets.faceExpressionNet.loadFromUri(weightsUrl),
-                    ]).then(() => {
-                        Entry.toast.success(
-                            Lang.Msgs.video_model_load_success,
-                            `${Lang.Blocks.video_face_model} ${Lang.Msgs.video_model_load_success}`,
-                            false
-                        );
-                    }),
+                    // tf.ready(),
+                    // Promise.all([
+                    //     faceapi.nets.tinyFaceDetector.loadFromUri(weightsUrl),
+                    //     faceapi.nets.faceLandmark68Net.loadFromUri(weightsUrl),
+                    //     faceapi.nets.ageGenderNet.loadFromUri(weightsUrl),
+                    //     faceapi.nets.faceExpressionNet.loadFromUri(weightsUrl),
+                    // ]).then(() => {
+                    //     Entry.toast.success(
+                    //         Lang.Msgs.video_model_load_success,
+                    //         `${Lang.Blocks.video_face_model} ${Lang.Msgs.video_model_load_success}`,
+                    //         false
+                    //     );
+                    // }),
                     cocoSsd
                         .load({
                             base: 'lite_mobilenet_v2',
                         })
-                        .then((cocoLoaded: any) => {
+                        .then((cocoLoaded: cocoSsd.ObjectDetection) => {
                             this.coco = cocoLoaded;
                             Entry.toast.success(
                                 Lang.Msgs.video_model_load_success,
@@ -338,18 +354,11 @@ class VideoUtils implements MediaUtilsInterface {
                             );
                             console.timeEnd('test');
                         }),
-                    posenet
-                        .load({
-                            architecture: 'MobileNetV1',
-                            outputStride: 16,
-                            inputResolution: {
-                                width: this.CANVAS_WIDTH,
-                                height: this.CANVAS_HEIGHT,
-                            },
-                            multiplier: 0.5,
-                        })
-                        .then((mobileNetLoaded: any) => {
-                            this.mobileNet = mobileNetLoaded;
+                    poseDetection
+                        .createDetector(
+                            poseModel
+                        ).then((detector) => {
+                            this.poseDetector = detector;
                             Entry.toast.success(
                                 Lang.Msgs.video_model_load_success,
                                 // eslint-disable-next-line
@@ -461,12 +470,12 @@ class VideoUtils implements MediaUtilsInterface {
         if (!this.modelRunningStatus.face) {
             return;
         }
-        const predictions = await faceapi
-            .detectAllFaces(this.inMemoryCanvas, this.tinyFaceDetectOption)
-            .withFaceLandmarks()
-            .withAgeAndGender()
-            .withFaceExpressions();
-        this.faces = predictions;
+        // const predictions = await faceapi
+        //     .detectAllFaces(this.inMemoryCanvas, this.tinyFaceDetectOption)
+        //     .withFaceLandmarks()
+        //     .withAgeAndGender()
+        //     .withFaceExpressions();
+        // this.faces = predictions;
     }
 
     async cocoDetect() {
@@ -478,19 +487,34 @@ class VideoUtils implements MediaUtilsInterface {
     }
 
     async poseDetect() {
-        if (!this.modelRunningStatus.pose) {
+        if (!this.modelRunningStatus.pose || !this.poseDetector) {
             return;
         }
-        const predictions = await this.mobileNet.estimateMultiplePoses(this.inMemoryCanvas, {
-            flipHorizontal: this.flipStatus.horizontal,
-            maxDetections: 4,
-            scoreThreshold: 0.75,
-            nmsRadius: 10,
-            multiplier: 0.5,
-            quantBytes: 1,
-        });
-        const adjacents: posenet.Keypoint[][][] = [];
-        predictions.forEach((pose: posenet.Pose) => {
+        const predictions = (await this.poseDetector?.estimatePoses(
+            this.inMemoryCanvas,
+            {
+                flipHorizontal: this.flipStatus.horizontal,
+                // maxDetections: 4,
+                maxPoses: 1,
+                scoreThreshold: 0.75,
+                // nmsRadius: 10,
+                // multiplier: 0.5,
+                // quantBytes: 1,
+            }
+        )).map(({ keypoints, score}) => ({
+            keypoints: keypoints.map((keypoint) => ({
+                part: keypoint.name,
+                position: {
+                    x: keypoint.x,
+                    y: keypoint.y,
+                },
+                score: keypoint.score
+            })),
+            score: score
+        }));
+
+        const adjacents: PosKeyPoint[][][] = [];
+        predictions.forEach((pose) => {
             // 어깨 위치와 코 위치를 기반으로 한 목 위치 계산
             const leftShoulder = pose.keypoints[5];
             const rightShoulder = pose.keypoints[6];
@@ -502,9 +526,22 @@ class VideoUtils implements MediaUtilsInterface {
                         nose.position.y * 0.5) /
                     2,
             };
-            pose.keypoints[21] = { part: 'neck', position: neckPos, score: -1 };
+            pose.keypoints[21] = { part: 'neck', position: neckPos, score: 0.5 };
             //---------------------------------------
-            const adjacentMap = posenet.getAdjacentKeyPoints(pose.keypoints, 0.02);
+            const adjacentParis = poseDetection.util.getAdjacentPairs(poseModel);
+            const adjacentMap = adjacentParis.map((pair) => {
+                const [i, j] = pair;
+                const kp1 = pose.keypoints[i];
+                const kp2 = pose.keypoints[j];
+                const score1 = kp1.score != null ? kp1.score : 1;
+                const score2 = kp2.score != null ? kp2.score : 1;
+                const scoreThreshold = 0.05;
+    
+                if (score1 >= scoreThreshold && score2 >= scoreThreshold) {
+                    return [kp1, kp2];
+                }
+                return undefined;
+            }).filter(x => x);
             adjacents.push(adjacentMap);
         });
         this.poses = { predictions, adjacents };

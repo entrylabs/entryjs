@@ -210,7 +210,6 @@ class _GEHelper extends GEHelperBase {
 
     // this function returns corresponding VideoElement,
     getVideoElement(video: HTMLVideoElement): any {
-        console.log('getVideoElement');
         let videoElement: any = null;
         const { WIDTH, X, Y, SCALE_X, SCALE_Y, ALPHA } = INITIAL_VIDEO_PARAMS;
         let HEIGHT = INITIAL_VIDEO_PARAMS.HEIGHT;
@@ -442,7 +441,7 @@ class _GEHelper extends GEHelperBase {
         }
         handler.clear();
 
-        poses.map((pose: any, index: Number) => {
+        poses.forEach((pose: any, index: number) => {
             const { x, y } = pose.keypoints[3].position;
             if (this._isWebGL) {
                 const text = PIXIHelper.text(
@@ -452,8 +451,9 @@ class _GEHelper extends GEHelperBase {
                     'middle',
                     'center'
                 );
-                text.x = x - 20;
-                text.y = y - 20;
+                
+                text.style.x = x - 20;
+                text.style.y = y - 20;
                 handler.addChild(text);
             } else {
                 handler.append({
@@ -464,10 +464,13 @@ class _GEHelper extends GEHelperBase {
                     },
                 });
             }
-            pose.keypoints.map((item: any) => {
+            pose.keypoints.forEach((item: any) => {
+                const score = item.score != null ? item.score : 1;
+                if (score < 0.02) {
+                    return;
+                }
                 const { x, y } = item.position;
                 const recalculatedY = flipStatus.vertical ? INITIAL_VIDEO_PARAMS.HEIGHT - y : y;
-
                 handler.beginFill(0x0000ff);
                 handler.drawCircle(x, recalculatedY, R);
                 handler.endFill();
