@@ -2,7 +2,7 @@
     "name": "entry-js",
     "title": "EntryJS",
     "description": "JavaScript library for visual programming",
-    "version": "0.1.1",
+    "version": "2.0.0",
     "main": "dist/entry.js",
     "homepage": "https://playentry.org",
     "author": {
