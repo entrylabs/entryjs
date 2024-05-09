@@ -1,9 +1,9 @@
 {
-    "name": "entry-js",
+    "name": "@entrylabs/entry",
     "title": "EntryJS",
     "description": "JavaScript library for visual programming",
     "version": "4.0.0",
-    "main": "dist/entry.js",
+    "main": "dist/entry.min.js",
     "homepage": "https://playentry.org",
     "author": {
         "name": "Entry Korea corp and other contributors"
