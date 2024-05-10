@@ -12,7 +12,7 @@ import VideoMotionWorker from './workers/motion.worker.ts';
 // type을 위해서 import
 import * as poseDetection from '@tensorflow-models/pose-detection';
 import * as cocoSsd from '@tensorflow-models/coco-ssd';
-// import * as faceapi from 'face-api.js';
+import * as faceapi from '@vladmandic/face-api';
 import * as tf from '@tensorflow/tfjs';
 
 import clamp from 'lodash/clamp';
@@ -86,7 +86,7 @@ class VideoUtils implements MediaUtilsInterface {
     private _VIDEO_WIDTH: number = 640;
     private _VIDEO_HEIGHT: number = 360;
 
-    // private tinyFaceDetectOption = new faceapi.TinyFaceDetectorOptions({ inputSize: 160 });
+    private tinyFaceDetectOption = new faceapi.TinyFaceDetectorOptions({ inputSize: 160 });
 
     // 움직임 감지에 쓰이는 상수
     private _SAMPLE_SIZE: number = 15;
@@ -327,19 +327,19 @@ class VideoUtils implements MediaUtilsInterface {
                 Entry.dispatchEvent('showVideoLoadingScreen');
                 await tf.ready();
                 Promise.all([
-                    // tf.ready(),
-                    // Promise.all([
-                    //     faceapi.nets.tinyFaceDetector.loadFromUri(weightsUrl),
-                    //     faceapi.nets.faceLandmark68Net.loadFromUri(weightsUrl),
-                    //     faceapi.nets.ageGenderNet.loadFromUri(weightsUrl),
-                    //     faceapi.nets.faceExpressionNet.loadFromUri(weightsUrl),
-                    // ]).then(() => {
-                    //     Entry.toast.success(
-                    //         Lang.Msgs.video_model_load_success,
-                    //         `${Lang.Blocks.video_face_model} ${Lang.Msgs.video_model_load_success}`,
-                    //         false
-                    //     );
-                    // }),
+                    tf.ready(),
+                    Promise.all([
+                        faceapi.nets.tinyFaceDetector.loadFromUri(weightsUrl),
+                        faceapi.nets.faceLandmark68Net.loadFromUri(weightsUrl),
+                        faceapi.nets.ageGenderNet.loadFromUri(weightsUrl),
+                        faceapi.nets.faceExpressionNet.loadFromUri(weightsUrl),
+                    ]).then(() => {
+                        Entry.toast.success(
+                            Lang.Msgs.video_model_load_success,
+                            `${Lang.Blocks.video_face_model} ${Lang.Msgs.video_model_load_success}`,
+                            false
+                        );
+                    }),
                     cocoSsd
                         .load({
                             base: 'lite_mobilenet_v2',
@@ -470,12 +470,12 @@ class VideoUtils implements MediaUtilsInterface {
         if (!this.modelRunningStatus.face) {
             return;
         }
-        // const predictions = await faceapi
-        //     .detectAllFaces(this.inMemoryCanvas, this.tinyFaceDetectOption)
-        //     .withFaceLandmarks()
-        //     .withAgeAndGender()
-        //     .withFaceExpressions();
-        // this.faces = predictions;
+        const predictions = await faceapi
+            .detectAllFaces(this.inMemoryCanvas, this.tinyFaceDetectOption)
+            .withFaceLandmarks()
+            .withAgeAndGender()
+            .withFaceExpressions();
+        this.faces = predictions;
     }
 
     async cocoDetect() {
