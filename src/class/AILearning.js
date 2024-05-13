@@ -127,45 +127,14 @@ export default class AILearning {
         this.destroy();
     }
 
-    async load(modelInfo) {
-        const {
-            labels,
-            type,
-            classes = [],
-            model,
-            id,
-            url,
-            _id,
-            isActive = true,
-            name,
-            recordTime,
-            trainParam,
-            tableData,
-            result,
-        } = modelInfo || {};
-        if (!this.#dataApi) {
-            console.log('there is no dataApi');
-            return;
-        }
+    async loadModel({ url, trainParam, tableData, isActive, classes }) {
         const modelPath = await this.#dataApi?.getModelDownloadUrl(url);
         if (!modelPath || !this.isEnable || !isActive) {
             return;
         }
-        this.destroy();
-
-        this.#labels = labels || classes.map(({ name }) => name);
-        this.#type = type;
-        this.#url = url;
-        this.#oid = _id;
-        this.name = name;
-        this.#modelId = model || id;
-        this.#recordTime = recordTime;
-        this.result = result;
-
-        if (this.#playground) {
-            this.#playground.reloadPlayground();
-        }
-
+        const type = this.#type;
+        const name = this.name;
+        const recordTime = this.#recordTime;
         if (type === 'text') {
             this.#module = new TextLearning({
                 url: modelPath,
@@ -253,6 +222,43 @@ export default class AILearning {
             this.unbanBlocks();
             this.isLoaded = true;
         }
+    }
+    load(modelInfo) {
+        const {
+            labels,
+            type,
+            classes = [],
+            model,
+            id,
+            url,
+            _id,
+            isActive = true,
+            name,
+            recordTime,
+            trainParam,
+            tableData,
+            result,
+        } = modelInfo || {};
+        if (!this.#dataApi) {
+            console.log('there is no dataApi');
+            return;
+        }
+       
+        this.destroy();
+
+        this.#labels = labels || classes.map(({ name }) => name);
+        this.#type = type;
+        this.#url = url;
+        this.#oid = _id;
+        this.name = name;
+        this.#modelId = model || id;
+        this.#recordTime = recordTime;
+        this.result = result;
+
+        if (this.#playground) {
+            this.#playground.reloadPlayground();
+        }
+        this.loadModel({ url, trainParam, tableData, isActive, classes });
     }
 
     openInputPopup() {
