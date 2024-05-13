@@ -12,7 +12,7 @@ import '@tensorflow/tfjs-backend-webgl';
 import * as poseDetection from '@tensorflow-models/pose-detection';
 import * as cocoSsd from '@tensorflow-models/coco-ssd';
 import * as tf from '@tensorflow/tfjs';
-// import * as faceapi from 'face-api.js';
+import * as faceapi from '@vladmandic/face-api';
 const poseModel = poseDetection.SupportedModels.PoseNet;
 const ctx: Worker = self as any;
 
@@ -40,7 +40,7 @@ let faceLoaded: boolean = false;
 let offCanvas: OffscreenCanvas = null;
 
 // 얼굴 인식 모델 옵션
-// const tinyFaceDetectOption = new faceapi.TinyFaceDetectorOptions({ inputSize: 160 });
+const tinyFaceDetectOption = new faceapi.TinyFaceDetectorOptions({ inputSize: 160 });
 
 // flags if selected model(s) should estimate
 let modelStatus = {
@@ -63,6 +63,7 @@ async function processImage(repeat: boolean) {
         if (!repeat) {
             await objectDetect(true);
             await poseDetect(true);
+            await faceDetect(true);
             return;
         } else if (isRunning) {
             if (modelStatus.object) {
@@ -71,9 +72,9 @@ async function processImage(repeat: boolean) {
             if (modelStatus.pose) {
                 poseDetect(false);
             }
-            // if (modelStatus.face) {
-            //     faceDetect(false);
-            // }
+            if (modelStatus.face) {
+                faceDetect(false);
+            }
         } else {
             return;
         }
@@ -111,15 +112,18 @@ async function faceDetect(force: boolean) {
     if ((!faceLoaded || !modelStatus.face) && !force) {
         return;
     }
-
-    // const predictions = await faceapi
-    //     .detectAllFaces(offCanvas, tinyFaceDetectOption)
-    //     .withFaceLandmarks()
-    //     .withAgeAndGender()
-    //     .withFaceExpressions();
-    // if (!force) {
-    //     ctx.postMessage({ type: 'face', message: predictions });
-    // }
+    const offCanvasCtx = offCanvas.getContext('2d');
+    const imageData = offCanvasCtx.getImageData(0, 0, offCanvas.width, offCanvas.height);
+    const tensor3d = tf.browser.fromPixels(imageData) as any;
+    //convert to tensor 
+    const predictions = await faceapi
+        .detectAllFaces(tensor3d, tinyFaceDetectOption)
+        .withFaceLandmarks()
+        .withAgeAndGender()
+        .withFaceExpressions();
+    if (!force) {
+        ctx.postMessage({ type: 'face', message: predictions });
+    }
 }
 
 async function poseDetect(force: boolean) {
@@ -204,8 +208,8 @@ ctx.onmessage = async function(e: {
             dimension.width = e.data.width;
             dimension.height = e.data.height;
 
-            // faceapi.env.setEnv(faceapi.env.createNodejsEnv());
-            // // MonkeyPatch때문에 생기는 TypeError, 의도된 방향이므로 수정 하지 말것
+            faceapi.env.setEnv(faceapi.env.createNodejsEnv());
+            // MonkeyPatch때문에 생기는 TypeError, 의도된 방향이므로 수정 하지 말것
             // faceapi.env.monkeyPatch({
             //     Canvas: OffscreenCanvas,
             //     createCanvasElement: () => new OffscreenCanvas(dimension.width, dimension.height),
@@ -228,18 +232,17 @@ ctx.onmessage = async function(e: {
                     })
                     .then((cocoLoaded: cocoSsd.ObjectDetection) => {
                         coco = cocoLoaded;
-                        // console.log('coco model loaded');
                         this.postMessage({ type: 'init', message: 'object' });
                     }),
-                // Promise.all([
-                //     faceapi.nets.tinyFaceDetector.loadFromUri(weightsUrl),
-                //     faceapi.nets.faceLandmark68Net.loadFromUri(weightsUrl),
-                //     faceapi.nets.ageGenderNet.loadFromUri(weightsUrl),
-                //     faceapi.nets.faceExpressionNet.loadFromUri(weightsUrl),
-                // ]).then(() => {
-                //     faceLoaded = true;
-                //     this.postMessage({ type: 'init', message: 'face' });
-                // }),
+                Promise.all([
+                    faceapi.nets.tinyFaceDetector.loadFromUri(weightsUrl),
+                    faceapi.nets.faceLandmark68Net.loadFromUri(weightsUrl),
+                    faceapi.nets.ageGenderNet.loadFromUri(weightsUrl),
+                    faceapi.nets.faceExpressionNet.loadFromUri(weightsUrl),
+                ]).then(() => {
+                    faceLoaded = true;
+                    this.postMessage({ type: 'init', message: 'face' });
+                }),
             ]);
             await warmup();
             this.postMessage({ type: 'init', message: 'warmup' });
