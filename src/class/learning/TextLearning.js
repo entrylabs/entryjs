@@ -56,7 +56,7 @@ class TextNaiveBaye {
     }
 
     getResult(index) {
-        const result = this.#result.length ? this.#result : this.#popup?.result || [];
+        const result = this.#result?.length ? this.#result : this.#popup?.result || [];
         const defaultResult = { probability: 0, className: '' };
         if (index !== undefined && index > -1) {
             return (
@@ -109,6 +109,7 @@ class TextNaiveBaye {
     async predict(textData) {
         await KhaiiModule.load();
         this.#result = await this.classifier.categorize(textData);
+        return this.#result;
     }
 
     async load(url, modelId) {
