@@ -1,11 +1,25 @@
 import Bayes, { fromJson } from './bayes';
-
-const { callApi } = require('../../util/common');
+import * as Khaiii from 'khaiii';
 
 export const classes = [
     'ai_learning_classification',
     'ai_learning_text'
 ];
+
+const KhaiiModule = {
+    isInitialized: false,
+    module: undefined,
+    async load(resourceRoot = `${Entry.Utils.getEntryjsPath()}/extern/khaiii`) {
+        if (this.isInitialized) {
+            return;
+        }
+        this.module = await Khaiii.initialize({
+            resourceProvider: 'webfs',
+            resourceRoot,
+        });
+        this.isInitialized = true;
+    },
+};
 
 class TextNaiveBaye {
     #type = 'text';
@@ -14,6 +28,7 @@ class TextNaiveBaye {
     #popup = null;
     #result = [];
     #loadModel;
+
     constructor({ url, labels, modelId, loadModel }) {
         this.#url = url;
         this.#labels = labels;
@@ -70,19 +85,30 @@ class TextNaiveBaye {
         });
     }
 
-    async tokenizer(text) {
-        const params = { q: text };
-        try {
-            const { data } = await callApi(text, { url: '/learning/mecab', params });
-            return data;
-        } catch (e) {
-            return text.split(/[^A-Za-zㄱ-힣0-9]+/);
+    tokenizer = async (text) => {
+        if (!KhaiiModule.module) {
+            throw new Error('module not loaded');
         }
-    }
+        if (!text) {
+            return [];
+        }
+        const analized = KhaiiModule.module.analyze(text); // 형태소 분석 진행
+        const filtered = analized
+            .map((wordInfo) =>
+                wordInfo.morphs
+                    .filter((morph) => {
+                        const category = morph.tag.charAt(0);
+                        return category === 'V' || category === 'N' || category === 'S';
+                    })
+                    .map((morph) => morph.lex)
+            )
+            .flat();
+        return filtered;
+    };
 
-    async predict(text) {
-        this.#result = await this.classifier.categorize(text);
-        return this.#result;
+    async predict(textData) {
+        await KhaiiModule.load();
+        this.#result = await this.classifier.categorize(textData);
     }
 
     async load(url, modelId) {
