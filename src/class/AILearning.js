@@ -243,7 +243,6 @@ export default class AILearning {
             console.log('there is no dataApi');
             return;
         }
-       
         this.destroy();
 
         this.#labels = labels || classes.map(({ name }) => name);
