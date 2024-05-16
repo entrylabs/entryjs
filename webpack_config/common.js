@@ -6,6 +6,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 const webpack = require('webpack');
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
     entry: {
@@ -140,6 +141,22 @@ module.exports = {
         new MiniCssExtractPlugin({
             filename: '[name].css',
             chunkFilename: '[id].css',
+        }),
+        new CopyPlugin({
+            patterns: [
+                {
+                    from: path.join(
+                        __dirname,
+                        '..',
+                        'node_modules',
+                        'khaiii',
+                        'dist',
+                        'libkhaiii.wasm'
+                    ),
+                    to: path.join(__dirname, '..', 'dist', 'libkhaiii.wasm'),
+                    toType: 'file',
+                },
+            ],
         }),
     ],
 };
