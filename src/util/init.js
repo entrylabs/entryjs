@@ -116,6 +116,7 @@ Entry.init = function(container, options) {
 const setDefaultPathsFromOptions = function(options) {
     const {
         libDir = '/lib',
+        entryDir = '/@entrylabs/entry',
         defaultDir = '',
         soundDir = '',
         blockInjectDir = '',
@@ -123,7 +124,7 @@ const setDefaultPathsFromOptions = function(options) {
         offlineModulePath,
     } = options;
 
-    Entry.mediaFilePath = `${libDir}/entry-js/images/`;
+    Entry.mediaFilePath = `${libDir}${entryDir}/images/`;
     Entry.painterBaseUrl = `${libDir}/literallycanvas-mobile/lib/img`;
     Entry.defaultPath = defaultDir;
     Entry.soundPath = soundDir;
