@@ -310,9 +310,6 @@ Entry.createDom = function (container, type) {
             container.appendChild(engineView);
             this.engineView = engineView;
             this.engine.generateView(this.engineView, type);
-            Entry.addEventListener('dispatchEventDidTogglePause', () =>
-                Entry.engine.view_.classList.toggle('paused')
-            );
             break;
         }
         case 'phone': {
