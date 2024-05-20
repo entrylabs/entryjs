@@ -642,16 +642,19 @@ Entry.initSound = function(sound) {
     }, 3000);
 };
 
-Entry.loadAllBlocks = function (options = {}) {
+Entry.loadAllBlocks = function (options = {}, destroyer) {
     if (options.aiUtilizeDisable === false || options.aiUtilizeDisable === undefined) {
         this.aiUtilize = new AIUtilize();
+        destroyer && destroyer.add(this.aiUtilize);
         this.aiLearning = new AILearning();
+        destroyer && destroyer.add(this.aiLearning);
         this.aiUtilize.init();
         this.aiLearning.init();
     }
 
     if (options.expansionDisable === false || options.expansionDisable === undefined) {
         this.expansion = new Expansion(this.playground);
+        destroyer && destroyer.add(this.expansion);
         this.expansion.init();
     }
 };
