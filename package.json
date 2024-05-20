@@ -2,7 +2,7 @@
     "name": "@entrylabs/entryjs",
     "title": "EntryJS",
     "description": "JavaScript library for visual programming",
-    "version": "4.0.1",
+    "version": "4.0.2",
     "main": "dist/entry.min.js",
     "homepage": "https://playentry.org",
     "author": {
