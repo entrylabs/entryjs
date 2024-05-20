@@ -640,3 +640,17 @@ Entry.initSound = function(sound) {
         Entry.soundQueue.loadCallback(sound.path);
     }, 3000);
 };
+
+Entry.loadAllBlocks = function (options = {}) {
+    if (options.aiUtilizeDisable === false || options.aiUtilizeDisable === undefined) {
+        this.aiUtilize = new AIUtilize();
+        this.aiLearning = new AILearning();
+        this.aiUtilize.init();
+        this.aiLearning.init();
+    }
+
+    if (options.expansionDisable === false || options.expansionDisable === undefined) {
+        this.expansion = new Expansion(this.playground);
+        this.expansion.init();
+    }
+};
