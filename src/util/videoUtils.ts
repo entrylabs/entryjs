@@ -878,7 +878,6 @@ class VideoUtils implements MediaUtilsInterface {
                 Lang.Workspace.check_browser_error_video,
             ]);
         }
-
         if (!this.stream && this.videoInputList.length == 0) {
             throw new Entry.Utils.IncompatibleError('IncompatibleError', [
                 Lang.Workspace.check_webcam_error,
