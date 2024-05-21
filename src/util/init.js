@@ -563,6 +563,16 @@ Entry.parseOptions = function (options) {
         this.doCommandAll = false;
     }
 
+    this.backpackDisable = options.backpackDisable;
+    if (this.backpackDisable === undefined) {
+        this.backpackDisable = false;
+    }
+
+    this.exportObjectEnable = options.exportObjectEnable;
+    if (this.exportObjectEnable === undefined) {
+        this.exportObjectEnable = true;
+    }
+
     this.hasVariableManager = options.hasvariablemanager;
     if (!(this.variableEnable || this.messageEnable || this.listEnable || this.functionEnable)) {
         this.hasVariableManager = false;

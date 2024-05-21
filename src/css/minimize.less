@@ -1,22 +1,58 @@
+body,
+html {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .entryMinimizeWrapper {
-    border-radius: 6px;
-    border: solid 1px #f2f2f2;
-    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    height: 100vh;
     overflow: hidden;
 
     .entry.minimize {
-        min-width: unset;
-        display: -webkit-flex;
-        display: -ms-flexbox;
         display: flex;
-        -webkit-flex-direction: column;
-        -ms-flex-direction: column;
         flex-direction: column;
-        -webkit-box-pack: center;
-        -ms-flex-pack: center;
-        -webkit-justify-content: center;
         justify-content: center;
+        background: #fff;
+        height: 0;
+        padding-top: 56.25%;
 
+        #entryCanvas {
+            position: absolute;
+        }
+
+        .entryEngineMinimize {
+            margin-top: 48px;
+        }
+    }
+}
+
+@media (min-aspect-ratio: 16/9) {
+    .entry.minimize {
+        min-width: calc((100vh - 48px) * 16 / 9);
+        padding-top: calc(100vh - 48px);
+    }
+}
+
+@media (max-aspect-ratio: 16/9) {
+    .entry.minimize {
+        min-width: unset;
+        max-height: 100vw * 9 / 16;
+        width: 100vw;
+        padding-top: calc(100vh + 48px);
+    }
+}
+
+.entryMinimizeWrapper,
+.entryPopup {
+    .entry.minimize,
+    .entryPopupWindow {
         #entryCanvasWrapper {
             background-color: #000;
             overflow: hidden;
@@ -40,6 +76,12 @@
         &.fsView {
             .entryMaximizeButtonMinimize {
                 .backgroundImage('minimize/reduce.svg');
+            }
+        }
+
+        &.fullscreen {
+            .entryRunButtonBigMinimizeCurtain {
+                background-color: unset;
             }
         }
 
@@ -129,11 +171,12 @@
                 opacity: 1;
             }
         }
+
         .entryRunButtonBigMinimizeCurtain {
             position: absolute;
             top: 0%;
             width: 100%;
-            height: calc(100% - 48px);
+            height: 100%;
             border: none;
             background-color: rgba(0, 0, 0, 0.5);
             cursor: pointer;
@@ -146,7 +189,6 @@
             background-color: #ffffff;
             border-top: solid 1px #f2f2f2;
             padding-left: 30px;
-            margin-top: -5px;
             .entryEngineButtonMinimize {
                 border: none;
                 background-color: white;
@@ -306,6 +348,22 @@
             position: absolute;
             left: 18%;
             top: 18%;
+        }
+    }
+}
+
+.entryPopup {
+    .entryPopupWindow {
+        .entryRunButtonBigMinimize {
+            position: absolute;
+            top: 0%;
+            left: 0%;
+            width: 100%;
+            height: calc(100% - 48px);
+            border: none;
+            background-repeat: no-repeat;
+            background-position: 50% center;
+            background-color: rgba(0, 0, 0, 0.5);
         }
     }
 }
