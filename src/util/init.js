@@ -573,6 +573,12 @@ Entry.parseOptions = function (options) {
         this.exportObjectEnable = true;
     }
 
+    this.iframeDomAccess = options.iframeDomAccess;
+    if (this.iframeDomAccess === undefined) {
+        //direct, message, none
+        this.iframeDomAccess = 'direct';
+    }
+
     this.hasVariableManager = options.hasvariablemanager;
     if (!(this.variableEnable || this.messageEnable || this.listEnable || this.functionEnable)) {
         this.hasVariableManager = false;
