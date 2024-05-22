@@ -249,7 +249,7 @@ Entry.Robotis_openCM70 = {
         ko: '로보티즈 IoT',
         en: 'Robotis Open CM70',
     },
-    delay: 15,
+    delay: 50, // 20240401 15ms -> 50ms 동글 또는 제어기에서 buffer overflow 발생 
     readDelay: 30
 };
 

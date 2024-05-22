@@ -171,7 +171,7 @@ Entry.Stage = class Stage {
             Entry.requestUpdate = false;
             return;
         }
-        this._app.render();
+        this.updateForce();
 
         if (Entry.engine.isState('stop') && this.objectUpdated) {
             this.objectUpdated = false;

@@ -166,6 +166,7 @@ const contextFlip = (context, axis) => {
     }
 };
 
+let lastDetect;
 const predictFaceLandmarker = async (imageBitmap) => {
     try {
         if (!workerContext || !human) {
@@ -177,7 +178,9 @@ const predictFaceLandmarker = async (imageBitmap) => {
         if (!isRun || !isFirstIdle) {
             return;
         }
-        const results = await human.detect(imageBitmap);
+        lastDetect = human.detect(imageBitmap);
+        const results = await lastDetect;
+
         workerContext.save();
         workerContext.clearRect(0, 0, 640, 360);
 
@@ -225,11 +228,13 @@ const predictFaceLandmarker = async (imageBitmap) => {
     }
 };
 
-const clearPredictFaceLandmarker = () => {
-    console.log('clearPredictFaceLandmarker');
+const clearPredictFaceLandmarker = async () => {
     isRun = false;
-    self.postMessage({ action: 'run_stop_face_landmarker' });
-    isPrevFaceLandmarker = false;
-    countDetectedFace = 0;
-    workerContext.clearRect(0, 0, 640, 360);
+    await lastDetect;
+    requestAnimationFrame(() => {
+        self.postMessage({ action: 'run_stop_face_landmarker' });
+        isPrevFaceLandmarker = false;
+        countDetectedFace = 0;
+        workerContext.clearRect(0, 0, 640, 360);
+    });
 };

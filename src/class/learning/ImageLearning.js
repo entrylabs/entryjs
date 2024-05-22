@@ -1,4 +1,3 @@
-import InputPopup from './InputPopup';
 import * as tf from '@tensorflow/tfjs';
 import VideoUtils from '../../util/videoUtils';
 import MediaPipeUtils from '../../util/mediaPipeUtils';
@@ -22,7 +21,7 @@ class ImageLearning {
         this.#type = type;
         this.#url = url;
         this.#labels = labels;
-        this.load(`/uploads/${url}/model.json`);
+        this.load(url);
         Entry.addEventListener('stop', () => {
             this.#result = [];
             this.#isPredicting = false;
@@ -30,6 +29,10 @@ class ImageLearning {
         if (!isWebGlSupport()) {
             tf.setBackend('cpu');
         }
+    }
+
+    get labels() {
+        return this.#labels;
     }
 
     getResult(index) {
@@ -51,12 +54,17 @@ class ImageLearning {
     }
 
     openInputPopup() {
-        this.#popup = new InputPopup({
+        Entry.dispatchEvent('openMLInputPopup', {
+            type: 'image',
+            predict: async (canvas) => {
+                this.#result = await this.predict(canvas);
+            },
             url: this.#url,
             labels: this.#labels,
-            type: this.#type,
+            setResult: (result) => {
+                this.#result = result;
+            },
         });
-        this.#popup.open();
     }
 
     getVideo() {
@@ -88,15 +96,20 @@ class ImageLearning {
             const context = this.#captureCanvas.getContext('2d');
             context.drawImage(video, 0, 0, SIZE, SIZE);
 
-            tf.engine().startScope();
-            const tensor = await this.preprocess(this.#captureCanvas);
-            const logits = this.model.predict(tensor);
-            this.#result = await this.namePredictions(logits);
-            logits.dispose();
-            tf.engine().endScope();
+            this.#result = await this.predict(this.#captureCanvas);
         });
 
         return this.#result;
+    }
+
+    async predict(canvas) {
+        tf.engine().startScope();
+        const tensor = await this.preprocess(canvas);
+        const logits = this.model.predict(tensor);
+        const result = await this.namePredictions(logits);
+        logits.dispose();
+        tf.engine().endScope();
+        return result;
     }
 
     stopPredict() {
