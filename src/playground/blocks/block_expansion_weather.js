@@ -237,6 +237,7 @@ Entry.EXPANSION_BLOCK.weather = {
                 suseong_gu: '2726000000',
                 dalseo_gu: '2729000000',
                 dalseong: '2771000000',
+                gunwi: '2772000000',
             },
         },
         Incheon: {
@@ -444,7 +445,6 @@ Entry.EXPANSION_BLOCK.weather = {
                 sangju_si: '4725000000',
                 mungyeong_si: '4728000000',
                 gyeongsan_si: '4729000000',
-                gunwi: '4772000000',
                 uiseong: '4773000000',
                 cheongsong: '4775000000',
                 goryong: '4776000000',
