@@ -310,6 +310,9 @@ Entry.createDom = function (container, type) {
             container.appendChild(engineView);
             this.engineView = engineView;
             this.engine.generateView(this.engineView, type);
+            Entry.addEventListener('dispatchEventDidTogglePause', () =>
+                Entry.engine.view_.classList.toggle('paused')
+            );
             break;
         }
         case 'phone': {
@@ -558,6 +561,22 @@ Entry.parseOptions = function (options) {
     this.doCommandAll = options.doCommandAll;
     if (this.doCommandAll === undefined) {
         this.doCommandAll = false;
+    }
+
+    this.backpackDisable = options.backpackDisable;
+    if (this.backpackDisable === undefined) {
+        this.backpackDisable = false;
+    }
+
+    this.exportObjectEnable = options.exportObjectEnable;
+    if (this.exportObjectEnable === undefined) {
+        this.exportObjectEnable = true;
+    }
+
+    this.iframeDomAccess = options.iframeDomAccess;
+    if (this.iframeDomAccess === undefined) {
+        //direct, message, none
+        this.iframeDomAccess = 'direct';
     }
 
     this.hasVariableManager = options.hasvariablemanager;
