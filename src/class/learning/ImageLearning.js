@@ -1,5 +1,5 @@
 import * as tf from '@tensorflow/tfjs';
-import VideoUtils from '../../util/videoUtils';
+import VideoUtils from '@entrylabs/legacy-video';
 import MediaPipeUtils from '../../util/mediaPipeUtils';
 const mediaPipeUtils = MediaPipeUtils.getInstance();
 export const classes = [

@@ -1,6 +1,7 @@
 'use strict';
 
 import DataTable from '../class/DataTable';
+const { getStateOptions, getCityOptions, locationData } = require('../util/location');
 
 if (typeof global.Entry !== 'object') {
     global.Entry = {};
@@ -1881,6 +1882,97 @@ function getBlocks() {
                                 converter: Entry.block.converters.returnStringKey,
                             },
                         ],
+                    },
+                ],
+            },
+        },
+
+        get_korea_area_code: {
+            color: EntryStatic.colorSet.block.default.EXPANSION,
+            outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
+            template: '%1 %2 ',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: getStateOptions(),
+                    value: 'Seoul',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                    dropdownSync: 'weather',
+                },
+                {
+                    type: 'DropdownDynamic',
+                    value: null,
+                    menuName() {
+                        const value = this.getTargetValue('weather');
+                        if (!value) {
+                            return [[Lang.Blocks.no_target, 'null']];
+                        }
+                        return getCityOptions(value);
+                    },
+                    needDeepCopy: true,
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                    defaultValue: (value, options) => {
+                        if (options.length) {
+                            return options[0][1];
+                        }
+                        return null;
+                    },
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                STATE: 0,
+                SUB_LOC: 1,
+            },
+            func(sprite, script) {
+                return Entry.EXPANSION_BLOCK.weather.getCityCode({
+                    parent: script.getField('STATE'),
+                    sub: script.getField('SUB_LOC'),
+                });
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        type: 'Dropdown',
+                        options: getStateOptions(),
+                        value: 'Seoul',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
+                        arrowColor: EntryStatic.colorSet.common.WHITE,
+                        dropdownSync: 'weather',
+                        converter: Entry.block.converters.returnStringValue,
+                    },
+                    {
+                        type: 'DropdownDynamic',
+                        value: null,
+                        menuName() {
+                            const value = this.getTargetValue('weather');
+                            if (!value) {
+                                return [[Lang.Blocks.no_target, 'null']];
+                            }
+                            return getCityOptions(value);
+                        },
+                        needDeepCopy: true,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
+                        arrowColor: EntryStatic.colorSet.common.WHITE,
+                        defaultValue: (value, options) => {
+                            if (options.length) {
+                                return options[0][1];
+                            }
+                            return null;
+                        },
+                        converter: Entry.block.converters.returnStringValue,
                     },
                 ],
             },

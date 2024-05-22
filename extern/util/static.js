@@ -447,6 +447,18 @@ EntryStatic.getAllBlocks = function() {
             blocks: [
                 'expansionBlockAddButton',
                 'weather_title',
+                'get_cur_weather',
+                'get_cur_wind',
+                'get_cur_weather_data',
+                'check_cur_weather',
+                'check_cur_finddust',
+                'get_day_weather',
+                'get_day_weather_data',
+                'check_day_weather',
+                'get_time_weather',
+                'get_time_weather_data',
+                'check_time_weather',
+
                 'check_weather',
                 'check_finedust',
                 'get_weather_data',
