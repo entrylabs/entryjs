@@ -1344,6 +1344,7 @@ Entry.computeInputWidth = (function () {
     let elem;
     const _cache = {};
     return function (value) {
+        // eslint-disable-next-line no-param-reassign
         value = value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
         const cached = _cache[value];
@@ -2210,6 +2211,7 @@ Entry.Utils.mobileAgentParser = function (userAgent) {
     const androidTablet = /Android/i;
     const amazonPhone = /(?=.*\bAndroid\b)(?=.*\bSD4930UR\b)/i;
     const amazonTablet =
+        // eslint-disable-next-line max-len
         /(?=.*\bAndroid\b)(?=.*\b(?:KFOT|KFTT|KFJWI|KFJWA|KFSOWI|KFTHWI|KFTHWA|KFAPWI|KFAPWA|KFARWI|KFASWI|KFSAWI|KFSAWA)\b)/i;
     const windowsPhone = /Windows Phone/i;
     const windowsTablet = /(?=.*\bWindows\b)(?=.*\bARM\b)/i; // Match 'Windows' AND 'ARM'
