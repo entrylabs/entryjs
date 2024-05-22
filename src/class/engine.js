@@ -1046,23 +1046,31 @@ Entry.Engine = class Engine {
             }
 
             if (window.top !== window.self) {
-                window.top.addEventListener('pointermove', this.copyEvent);
-                window.top.addEventListener('pointerdown', this.copyEvent);
-                window.top.addEventListener('pointerup', this.copyEvent);
-                window.top.addEventListener('pointerupoutside', this.copyEvent);
-                window.top.addEventListener('pointercancel', this.copyEvent);
-                window.top.addEventListener('mouseup', this.copyEvent);
-                window.top.addEventListener('mousemove', this.copyEvent);
+                if (Entry.iframeDomAccess === 'direct') {
+                    window.top.addEventListener('pointermove', this.copyEvent);
+                    window.top.addEventListener('pointerdown', this.copyEvent);
+                    window.top.addEventListener('pointerup', this.copyEvent);
+                    window.top.addEventListener('pointerupoutside', this.copyEvent);
+                    window.top.addEventListener('pointercancel', this.copyEvent);
+                    window.top.addEventListener('mouseup', this.copyEvent);
+                    window.top.addEventListener('mousemove', this.copyEvent);
+                } else if (Entry.iframeDomAccess === 'message') {
+                    window.top.postMessage({ type: 'toggleFullScreen', value: 'addEvent' }, '*');
+                }
             }
         } else {
             if (window.top !== window.self) {
-                window.top.removeEventListener('pointermove', this.copyEvent);
-                window.top.removeEventListener('pointerdown', this.copyEvent);
-                window.top.removeEventListener('pointerup', this.copyEvent);
-                window.top.removeEventListener('pointerupoutside', this.copyEvent);
-                window.top.removeEventListener('pointercancel', this.copyEvent);
-                window.top.removeEventListener('mouseup', this.copyEvent);
-                window.top.removeEventListener('mousemove', this.copyEvent);
+                if (Entry.iframeDomAccess === 'direct') {
+                    window.top.removeEventListener('pointermove', this.copyEvent);
+                    window.top.removeEventListener('pointerdown', this.copyEvent);
+                    window.top.removeEventListener('pointerup', this.copyEvent);
+                    window.top.removeEventListener('pointerupoutside', this.copyEvent);
+                    window.top.removeEventListener('pointercancel', this.copyEvent);
+                    window.top.removeEventListener('mouseup', this.copyEvent);
+                    window.top.removeEventListener('mousemove', this.copyEvent);
+                } else if (Entry.iframeDomAccess === 'message') {
+                    window.top.postMessage({ type: 'toggleFullScreen', value: 'removeEvent' }, '*');
+                }
             }
             this.popup.remove();
             this.popup = null;
