@@ -579,6 +579,11 @@ Entry.parseOptions = function (options) {
         this.iframeDomAccess = 'direct';
     }
 
+    this.blockSaveImageEnable = options.blockSaveImageEnable;
+    if (this.blockSaveImageEnable === undefined) {
+        this.blockSaveImageEnable = true;
+    }
+
     this.hasVariableManager = options.hasvariablemanager;
     if (!(this.variableEnable || this.messageEnable || this.listEnable || this.functionEnable)) {
         this.hasVariableManager = false;
