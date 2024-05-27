@@ -1984,7 +1984,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 if(typeof result == 'undefined') {
                     return 0;
                 }
-                return Math.round((result % 65536) / 4);
+                return Math.round((result % 65536) / 2);
             },
             syntax: {
                 js: [],
@@ -2057,7 +2057,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     return false;
                 }
 
-                result = Math.round((result % 65536) / 4);
+                result = Math.round((result % 65536) / 2);
 
                 switch(compareOP) {
                     case 0:
