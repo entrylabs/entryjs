@@ -100,6 +100,7 @@ Entry.Robotis_rb_P_Assembly.blockMenuBlocks = [
     'robotis_Practice_go_distance',
     'robotis_Practice_turn_angle',
     'robotis_Practice_follow_line',
+    'robotis_Practice_stop_at_cross',
     'robotis_Practice_turn_at_line',
     'robotis_Practice_drive_stop',
     //'robotis_Practice_follow_line_stop',
@@ -203,6 +204,7 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_Practice_go_distance:"%1 cm %2 하기 %3",
                 robotis_Practice_turn_angle:"%1 도 %2 하기%3",
                 robotis_Practice_follow_line: "%1 속도로 라인 따라가기 %2",
+                robotis_Practice_stop_at_cross: "교차로 %1 에서 멈추기 %2",
                 robotis_Practice_follow_line_stop: "라인 따라가기 종료 %1",
                 robotis_Practice_turn_at_line: "교차로에서 %1 하고 멈추기 %2",
 
@@ -1733,6 +1735,81 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             syntax: {
                 js: [],
                 py: ['Robotis.rb100_follow_line(%1)'],
+            },
+        },
+        robotis_Practice_stop_at_cross: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.robotis_line_cross_type_5, '5'],
+                        [Lang.Blocks.robotis_line_cross_type_6, '6'],
+                        [Lang.Blocks.robotis_line_cross_type_7, '7'],
+                        [Lang.Blocks.robotis_line_cross_type_8, '8'],
+                    ],
+                    value: '5',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                    null,
+                ],
+                type: 'robotis_Practice_stop_at_cross',
+            },
+            paramsKeyMap: {
+                CROSS: 0,
+            },
+            class: 'robotis_rb100_move',
+            isNotFor: ['Robotis_rb_P_Assembly'],
+            func: async function (sprite, script) {
+                // instruction / address / length / value / default length
+                var corss_type = script.getNumberValue('CROSS', script);
+                var data_address = 5201;
+
+                // max 10 seconds
+                for (let i = 0; i < 100; i++) {
+                    await Entry.Utils.sleep(100);
+                    console.log(Entry.hw.portData[data_address]);
+                    if (Entry.hw.portData[data_address] == corss_type) {
+                        break;
+                    }
+                    if (Entry.engine.isState('stop') == true) {
+                        break;
+                    }
+                }
+
+                var data_sendqueue = [
+                    [
+                        Entry.Robotis_rb.INSTRUCTION.WRITE,
+                        5200,
+                        1,
+                        0,
+                    ],
+                ];
+
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    Entry.Robotis_openCM70.delay
+                );
+            },
+            syntax: {
+                js: [],
+                py: ['Robotis.rb100_stop_at_cross(%1)'],
             },
         },
         robotis_Practice_turn_at_line: {
