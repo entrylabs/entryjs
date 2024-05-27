@@ -1830,7 +1830,7 @@ Entry.EXPANSION_BLOCK.weather.getBlocks = function() {
         get_day_weather: {
             color: EntryStatic.colorSet.block.default.EXPANSION,
             outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
-            skeleton: 'basic_boolean_field',
+            skeleton: 'basic_string_field',
             statements: [],
             params: [
                 params.getDate(),
@@ -1877,7 +1877,7 @@ Entry.EXPANSION_BLOCK.weather.getBlocks = function() {
         get_day_weather_data: {
             color: EntryStatic.colorSet.block.default.EXPANSION,
             outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
-            skeleton: 'basic_boolean_field',
+            skeleton: 'basic_string_field',
             statements: [],
             params: [
                 params.getDate(),
