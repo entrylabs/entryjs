@@ -195,7 +195,7 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
         ko: {
             template: {
                 // 주행 제어
-                robotis_Practice_drive_simple: "속도 %1 로 %2 하기 %3",
+                robotis_Practice_drive_simple: "속도 %1 (으)로 %2 하기 %3",
                 robotis_Practice_drive_stop: "정지하기 %1",
                 robotis_Practice_drive_advanced: "왼쪽바퀴 %1 속도로 %2 하기, 오른쪽바퀴 %3 속도로 %4 하기 %5",
                 robotis_Practice_drive_seperate: "%1 바퀴 %2 속도로 %3 으로 회전하기 %4",
@@ -2894,6 +2894,10 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                         ["ID 2", '2'],
                         ["ID 3", '3'],
                         ["ID 4", '4'],
+                        ["ID 5", '5'],
+                        ["ID 6", '6'],
+                        ["ID 7", '7'],
+                        ["ID 8", '8'],
                     ],
                     value: '52',
                     fontSize: 11,
@@ -4993,7 +4997,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
 
                 dxl_angle = 180 - dxl_angle;
 
-                data_buf.push((dxl_angle*4096/360)%256);
+                data_buf.push(Math.floor(dxl_angle*4096/360)%256);
                 data_buf.push(Math.floor(dxl_angle*4096/360/256));
                 data_buf.push(0);
                 data_buf.push(0);
