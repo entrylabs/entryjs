@@ -162,7 +162,7 @@ Entry.Robotis_rb_P_Assembly.blockMenuBlocks = [
     'robotis_Practice_dxl_set_rotate',
     'robotis_Practice_dxl_set_multiturn_round',
 
-    // Huskylens 값 블록
+    // AI 카메라 값 블록
     'robotis_Practice_huskylens_connection_status',
     'robotis_Practice_huskylens_if_detected',
 
@@ -175,9 +175,9 @@ Entry.Robotis_rb_P_Assembly.blockMenuBlocks = [
     'robotis_Practice_huskylens_if_learned_id',
     'robotis_Practice_huskylens_if_detected_id_type',
 
-    // 허스키렌즈 제어
+    // AI Camera 제어
     'robotis_Practice_huskylens_set_mode',
-    'robotis_Practice_huskylens_save_result',
+    //'robotis_Practice_huskylens_save_result',
     'robotis_Practice_huskylens_print_custom_text',
     'robotis_Practice_huskylens_clear_custom_text',
 ];
@@ -270,24 +270,24 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
 
                 
                 // Huskylens 값 블록
-                robotis_Practice_huskylens_connection_status: "허스키렌즈: %1이면",
-                robotis_Practice_huskylens_if_detected: "허스키렌즈: %1 이/가 표시되면",
+                robotis_Practice_huskylens_connection_status: "AI 카메라: %1이면",
+                robotis_Practice_huskylens_if_detected: "AI 카메라: %1 이/가 표시되면",
 
-                robotis_Practice_huskylens_block_value_closest_to_center: "허스키렌즈: 화면 중앙과 가장 가까운 사각형의 %1",
-                robotis_Practice_huskylens_arrow_value_closest_to_center: "허스키렌즈: 화면 중앙과 가장 가까운 화살표의 %1",
-                robotis_Practice_huskylens_number_of_learned_id: "허스키렌즈: 학습한 ID의 갯수",
-                robotis_Practice_huskylens_block_value_of_id: "허스키렌즈: 감지된 ID가 %1인 사각형의 %2",
-                robotis_Practice_huskylens_arrow_value_of_id: "허스키렌즈: 감지된 ID가 %1인 화살표의 %2",
+                robotis_Practice_huskylens_block_value_closest_to_center: "AI 카메라: 화면 중앙과 가장 가까운 사각형의 %1",
+                robotis_Practice_huskylens_arrow_value_closest_to_center: "AI 카메라: 화면 중앙과 가장 가까운 화살표의 %1",
+                robotis_Practice_huskylens_number_of_learned_id: "AI 카메라: 학습한 ID의 갯수",
+                robotis_Practice_huskylens_block_value_of_id: "AI 카메라: 감지된 ID가 %1인 사각형의 %2",
+                robotis_Practice_huskylens_arrow_value_of_id: "AI 카메라: 감지된 ID가 %1인 화살표의 %2",
 
-                robotis_Practice_huskylens_if_learned_id: "허스키렌즈: ID가 %1인 데이터를 학습하였으면",
-                robotis_Practice_huskylens_if_detected_id_type: "허스키렌즈: ID가 %1인 %2데이터를 인식하였으면",
+                robotis_Practice_huskylens_if_learned_id: "AI 카메라: ID가 %1인 데이터를 학습하였으면",
+                robotis_Practice_huskylens_if_detected_id_type: "AI 카메라: ID가 %1인 %2데이터를 인식하였으면",
                 
 
-                // 허스키렌즈 제어
-                robotis_Practice_huskylens_set_mode: "허스키렌즈: 모드를 %1(으)로 설정 %2",
-                robotis_Practice_huskylens_save_result: "허스키렌즈: 감지결과 요청 (반복호출필요) %1",
-                robotis_Practice_huskylens_print_custom_text: "허스키렌즈: 화면 위치 (%1,%2)에 %3를 보여주기%4",
-                robotis_Practice_huskylens_clear_custom_text: "허스키렌즈: 화면의 글 지우기 %1",
+                // AI 카메라 제어
+                robotis_Practice_huskylens_set_mode: "AI 카메라: 모드를 %1(으)로 설정 %2",
+                robotis_Practice_huskylens_save_result: "AI 카메라: 감지결과 요청 (반복호출필요) %1",
+                robotis_Practice_huskylens_print_custom_text: "AI 카메라: 화면 위치 (%1,%2)에 %3를 보여주기%4",
+                robotis_Practice_huskylens_clear_custom_text: "AI 카메라: 화면의 글 지우기 %1",
             },
             Helper: {
                 robotis_RB_cm_ir_value: "지정한 번호의 IR 센서 값(범위: 0 ~ 400)",
