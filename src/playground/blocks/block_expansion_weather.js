@@ -327,26 +327,26 @@ Entry.EXPANSION_BLOCK.weather = {
             },
         },
         Gangwon: {
-            code: '4200000000',
+            code: '5100000000',
             sub: {
-                chuncheon: '4211000000',
-                wonju: '4213000000',
-                gangneung_si: '4215000000',
-                donghae: '4217000000',
-                taebaek_si: '4219000000',
-                'sokcho city': '4221000000',
-                samcheok_si: '4223000000',
-                hongcheon: '4272000000',
-                hoengseong_gun: '4273000000',
-                yeongwol_gun: '4275000000',
-                pyeongchang: '4276000000',
-                jeongseon: '4277000000',
-                cheolwon: '4278000000',
-                hwacheon: '4279000000',
-                yanggu: '4280000000',
-                inje: '4281000000',
-                goseong: '4282000000',
-                yangyang: '4283000000',
+                chuncheon: '5111000000',
+                wonju: '5113000000',
+                gangneung_si: '5115000000',
+                donghae: '5117000000',
+                taebaek_si: '5119000000',
+                'sokcho city': '5121000000',
+                samcheok_si: '5123000000',
+                hongcheon: '5172000000',
+                hoengseong_gun: '5173000000',
+                yeongwol_gun: '5175000000',
+                pyeongchang: '5176000000',
+                jeongseon: '5177000000',
+                cheolwon: '5178000000',
+                hwacheon: '5179000000',
+                yanggu: '5180000000',
+                inje: '5181000000',
+                goseong: '5182000000',
+                yangyang: '5183000000',
             },
         },
         'Chungcheongbuk-do': {
@@ -387,22 +387,22 @@ Entry.EXPANSION_BLOCK.weather = {
         },
 
         'Jeollabuk-do': {
-            code: '4500000000',
+            code: '5200000000',
             sub: {
-                jeonju: '4511000000',
-                gunsan_si: '4513000000',
-                iksan: '4514000000',
-                jeongeup: '4518000000',
-                namwon: '4519000000',
-                gimje_si: '4521000000',
-                wanju: '4571000000',
-                jinan: '4572000000',
-                muju: '4573000000',
-                jangsu: '4574000000',
-                imsil: '4575000000',
-                sunchang: '4577000000',
-                gochang: '4579000000',
-                buan: '4580000000',
+                jeonju: '5211000000',
+                gunsan_si: '5213000000',
+                iksan: '5214000000',
+                jeongeup: '5218000000',
+                namwon: '5219000000',
+                gimje_si: '5221000000',
+                wanju: '5271000000',
+                jinan: '5272000000',
+                muju: '5273000000',
+                jangsu: '5274000000',
+                imsil: '5275000000',
+                sunchang: '5277000000',
+                gochang: '5279000000',
+                buan: '5280000000',
             },
         },
         'Jeollanam-do': {
@@ -1858,7 +1858,7 @@ Entry.EXPANSION_BLOCK.weather.getBlocks = function() {
                 DATE: 0,
                 LOCATION: 1,
             },
-            class: 'weather',
+            class: 'weather_day',
             isNotFor: ['weather'],
             async func(sprite, script) {
                 const location = script.getValue('LOCATION', script);
@@ -1908,7 +1908,7 @@ Entry.EXPANSION_BLOCK.weather.getBlocks = function() {
                 LOCATION: 1,
                 TYPE: 2,
             },
-            class: 'weather',
+            class: 'weather_day',
             isNotFor: ['weather'],
             async func(sprite, script) {
                 const location = script.getValue('LOCATION', script);
@@ -1960,7 +1960,7 @@ Entry.EXPANSION_BLOCK.weather.getBlocks = function() {
                 LOCATION: 1,
                 WEATHER: 2,
             },
-            class: 'weather',
+            class: 'weather_day',
             isNotFor: ['weather'],
             async func(sprite, script) {
                 const location = script.getValue('LOCATION', script);
@@ -2010,7 +2010,7 @@ Entry.EXPANSION_BLOCK.weather.getBlocks = function() {
                 LOCATION: 0,
                 TIME: 1,
             },
-            class: 'weather',
+            class: 'weather_time',
             isNotFor: ['weather'],
             async func(sprite, script) {
                 const location = script.getValue('LOCATION', script);
@@ -2069,7 +2069,7 @@ Entry.EXPANSION_BLOCK.weather.getBlocks = function() {
                 TIME: 1,
                 TYPE: 2,
             },
-            class: 'weather',
+            class: 'weather_time',
             isNotFor: ['weather'],
             async func(sprite, script) {
                 const location = script.getValue('LOCATION', script);
@@ -2130,7 +2130,7 @@ Entry.EXPANSION_BLOCK.weather.getBlocks = function() {
                 TIME: 1,
                 WEATHER: 2,
             },
-            class: 'weather',
+            class: 'weather_time',
             isNotFor: ['weather'],
             async func(sprite, script) {
                 const location = script.getValue('LOCATION', script);
