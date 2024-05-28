@@ -6713,13 +6713,13 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 type: 'robotis_Practice_huskylens_set_mode',
             },
             paramsKeyMap: {
-                HUSKYLENS_MODE: 0,
+                AI_CAMERA_MODE: 0,
             },
             class: 'robotis_openCM70_cm',
             isNotFor: ['Robotis_rb_P_Assembly'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
-                var huskylens_mode = script.getField('HUSKYLENS_MODE', script);
+                var huskylens_mode = script.getField('AI_CAMERA_MODE', script);
 
                 var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
                 var data_address = 4001;
