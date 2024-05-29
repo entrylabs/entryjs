@@ -20,6 +20,7 @@ interface ISound {
     id: string;
     filename: string;
     fileurl: string;
+    thumbUrl: string;
     name: string;
     path: string;
     objectId?: string;
