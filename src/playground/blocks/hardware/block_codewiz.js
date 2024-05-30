@@ -27,14 +27,18 @@ Entry.CodeWiz = {
         // }
         // return Entry.generateHash(6)+opcode;
         // Symbol을 쓰면 hw로 넘길수있나 -> 있으면 지금과 비교해서 속도는?
-        return Date.now().toString().substring(6)+opcode;
+        return (
+            Date.now()
+                .toString()
+                .substring(6) + opcode
+        );
     },
     sendOrder(order) {
         const sq = Entry.hw.sendQueue;
-        Entry.CodeWiz.intervalId=true;
+        Entry.CodeWiz.intervalId = true;
         if (!sq.ORDER) {
             sq.ORDER = {};
-        }//order.value.opcodescript.key
+        } //order.value.opcodescript.key
         const id = this.getHashKey(order.value.opcode);
         sq.ORDER[id] = order;
         Entry.hw.update();
@@ -43,17 +47,20 @@ Entry.CodeWiz = {
 
         return id;
     },
-    HUSKY:{
+    HUSKY: {
         CENT_X: 160,
         CENT_Y: 120,
         getDist: function(x, y) {
-            return Math.sqrt(Math.pow(this.CENT_X-x, 2)+Math.pow(this.CENT_Y-y, 2));
+            return Math.sqrt(Math.pow(this.CENT_X - x, 2) + Math.pow(this.CENT_Y - y, 2));
         },
     },
     deleteOrder(id) {
         // Entry.hw.portData.runOK = false;
         /** */
-        Entry.hw.portData[id]={value:null}
+        // console.log('portData', Entry.hw.portData);
+        // console.log('deleteOrder:', id);
+
+        Entry.hw.portData[id] = { value: null };
         /** */
         delete Entry.hw.sendQueue.ORDER[id];
         Entry.hw.update();
@@ -62,7 +69,7 @@ Entry.CodeWiz = {
         return this.getByteLength(str) * 1.5 - 18;
     },
     getByteLength(s, b, i, c) {
-        if(!s){
+        if (!s) {
             return;
         }
         for (b = i = 0; (c = s.charCodeAt(i++)); b += c >> 11 ? 3 : c >> 7 ? 2 : 1);
@@ -107,13 +114,15 @@ Entry.CodeWiz.setLanguage = function() {
                 CodeWiz_neopixel_setColor_all: '네오픽셀 %1(으)로 모두 켜기%2',
                 CodeWiz_neopixel_setColor_all2: '네오픽셀 빨강%1초록%2파랑%3(으)로 모두 켜기%4',
                 CodeWiz_neopixel_off_all: '네오픽셀 모두 끄기%1',
-                CodeWiz_neopixel_OnPixelRandomColor:'네오픽셀 %1번 LED 무작위 색으로 켜기%2',
-                CodeWiz_neopixel_fillRandom:'네오픽셀 무작위 색으로 채우기%1',
-                CodeWiz_neopixel_rotate:'네오픽셀 LED %1으로 회전시키기%2',
-                CodeWiz_neopixel_shift:'네오픽셀 LED %1으로 밀기%2',
-                CodeWiz_neopixel_gradationRGB:'네오픽셀 %1번부터 %2번까지 RGB그라데이션(%3,%4)으로 켜기%5',
-                CodeWiz_neopixel_gradationHSL:'네오픽셀 %1번부터 %2번까지 HSL그라데이션(%3,%4)으로 켜기%5',
-                CodeWiz_neopixel_wheeeeeeel:'네오픽셀 휠%1',
+                CodeWiz_neopixel_OnPixelRandomColor: '네오픽셀 %1번 LED 무작위 색으로 켜기%2',
+                CodeWiz_neopixel_fillRandom: '네오픽셀 무작위 색으로 채우기%1',
+                CodeWiz_neopixel_rotate: '네오픽셀 LED %1으로 회전시키기%2',
+                CodeWiz_neopixel_shift: '네오픽셀 LED %1으로 밀기%2',
+                CodeWiz_neopixel_gradationRGB:
+                    '네오픽셀 %1번부터 %2번까지 RGB그라데이션(%3,%4)으로 켜기%5',
+                CodeWiz_neopixel_gradationHSL:
+                    '네오픽셀 %1번부터 %2번까지 HSL그라데이션(%3,%4)으로 켜기%5',
+                CodeWiz_neopixel_wheeeeeeel: '네오픽셀 휠%1',
 
                 CodeWiz_OLED_title: 'OLED',
                 CodeWiz_OLED_clear: 'OLED 지우기%1',
@@ -133,11 +142,28 @@ Entry.CodeWiz.setLanguage = function() {
                 CodeWiz_OLED_drawRect: 'OLED 직사각형 시작(%1,%2) 가로%3세로%4%5%6%7',
                 CodeWiz_OLED_drawCircle: 'OLED 원 중심(%1,%2) 반지름%3%4%5%6',
                 CodeWiz_OLED_drawPoligon: 'OLED 삼각형 점1(%1,%2)점2(%3,%4)점3(%5,%6)%7%8%9',
-                CodeWiz_OLED_printHG:'OLED에 한글포함%1 출력, 줄바꿈%2%3',
+                CodeWiz_OLED_printHG: 'OLED에 한글포함%1 출력, 줄바꿈%2%3',
 
                 CodeWiz_DIGITAL_OUTPUT_title: '기본 출력',
                 CodeWiz_DIGITAL_OUTPUT_digitalWrite: 'PIN%1(으)로 %2내보내기%3',
                 CodeWiz_DIGITAL_OUTPUT_pwmWrite: 'PIN%1(으)로 PWM %2내보내기(0~1023)%3',
+
+                CodeWiz_OzEye_title: '오즈아이',
+                CodeWiz_OzEye_initOzEye: '오즈아이 시작설정%1',
+                CodeWiz_OzEye_setModeOfOzEye: '오즈아이 %1알고리즘으로 설정%2',
+                CodeWiz_OzEye_readOzEye: '오즈아이 데이터 요청시작%1',
+                CodeWiz_OzEye_isLearnedOzEye: '오즈아이 ID가%1인 데이터를 학습했는가?%2',
+                CodeWiz_OzEye_getCountLearnedOzEye: '오즈아이가 감지한 학습데이터 수%1',
+                CodeWiz_OzEye_isContainOzEye: '오즈아이 ID:%1로 인식한 %2데이터가 있는가?%3',
+                CodeWiz_OzEye_hasTypeOzEye: '오즈아이가 읽은 데이터 타입이%1인가?%2',
+                CodeWiz_OzEye_getArrowInfoOzEye: '오즈아이가 읽은 ID%1인 화살표정보%2%3',
+                CodeWiz_OzEye_getBoxInfoOzEye2: '오즈아이가 읽은 ID%1인 사각형정보%2%3',
+                CodeWiz_OzEye_getBoxInfoOzEye:
+                    '오즈아이가 읽은 사각형정보%1(중심좌표가 중앙에 가장 가까운 것)%2',
+                // CodeWiz_OzEye_writeTextOzEye: '오즈아이 (%1,%2)에 %3출력%4',
+                // CodeWiz_OzEye_clearTextOzEye: '오즈아이 텍스트 지우기%1',
+                CodeWiz_OzEye_setLightLevel: '오즈아이 라이트 밝기를 %1 단계로 설정(1~7)%2',
+                CodeWiz_OzEye_LightOff: '오즈아이 라이트 끄기%1',
 
                 CodeWiz_HuskyLens_title: '허스키렌즈',
                 CodeWiz_HuskyLens_initHuskyLens: '허스키렌즈 시작설정%1',
@@ -148,10 +174,8 @@ Entry.CodeWiz.setLanguage = function() {
                 CodeWiz_HuskyLens_isContainHuskyLens:
                     '허스키렌즈 ID:%1로 인식한 %2데이터가 있는가?%3',
                 CodeWiz_HuskyLens_hasTypeHuskyLens: '허스키렌즈가 읽은 데이터 타입이%1인가?%2',
-                CodeWiz_HuskyLens_getArrowInfoHuskyLens:
-                    '허스키렌즈가 읽은 ID%1인 화살표정보%2%3',                    
-                CodeWiz_HuskyLens_getBoxInfoHuskyLens2:
-                '허스키렌즈가 읽은 ID%1인 사각형정보%2%3',
+                CodeWiz_HuskyLens_getArrowInfoHuskyLens: '허스키렌즈가 읽은 ID%1인 화살표정보%2%3',
+                CodeWiz_HuskyLens_getBoxInfoHuskyLens2: '허스키렌즈가 읽은 ID%1인 사각형정보%2%3',
                 CodeWiz_HuskyLens_getBoxInfoHuskyLens:
                     '허스키렌즈가 읽은 사각형정보%1(중심좌표가 중앙에 가장 가까운 것)%2',
                 CodeWiz_HuskyLens_writeTextHuskyLens: '허스키렌즈 (%1,%2)에 %3출력%4',
@@ -183,10 +207,10 @@ Entry.CodeWiz.setLanguage = function() {
                 CodeWiz_DHT_init: '디지털 온습도 pin%1에 설정%2',
                 CodeWiz_DHT_getValue: '디지털 온습도 %1값%2',
 
-                CodeWiz_Joystick_title:'조이스틱',
-                CodeWiz_Joystick_setPin:'조이스틱 설정하기(X축%1, Y축%2, 버튼%3, 범위%4)%5',
-                CodeWiz_Joystick_readAxis:'조이스틱 %1의 값%2',
-                CodeWiz_Joystick_readButton:'조이스틱 버튼 값%1',
+                CodeWiz_Joystick_title: '조이스틱',
+                CodeWiz_Joystick_setPin: '조이스틱 설정하기(X축%1, Y축%2, 버튼%3, 범위%4)%5',
+                CodeWiz_Joystick_readAxis: '조이스틱 %1의 값%2',
+                CodeWiz_Joystick_readButton: '조이스틱 버튼 값%1',
 
                 CodeWiz_etcReadSensor_title: '기타 입력센서',
                 CodeWiz_etcReadSensor_mconRead: 'MCON%1(pin%2)의 측정값%3',
@@ -212,30 +236,29 @@ Entry.CodeWiz.setLanguage = function() {
                 ▼을 눌러 SCON에 연결된 네오픽셀의 개수와 사용을 설정할 수 있습니다.`,
                 CodeWiz_neopixel_brightness: `밝기를 0~255 사이 값으로 지정합니다.`,
                 CodeWiz_neopixel_setColor_one: `입력한 번호의 LED를 선택한 색으로 켭니다.`,
-                CodeWiz_neopixel_setColor_one2:
-                    `입력한 번호의 LED를 빨강, 초록, 파랑에 입력된 값의 색으로 켭니다.
+                CodeWiz_neopixel_setColor_one2: `입력한 번호의 LED를 빨강, 초록, 파랑에 입력된 값의 색으로 켭니다.
                     각 값을 0~255 사이 값으로 지정합니다.`,
                 CodeWiz_neopixel_off_one: `입력한 번호의 LED를 끕니다.`,
                 CodeWiz_neopixel_setColor_all: `모든 LED를 선택한 색으로 켭니다.`,
                 CodeWiz_neopixel_setColor_all2: `모든 LED를 빨강, 초록, 파랑에 입력된 값의 색으로 켭니다.
                 각 값을 0~255 사이 값으로 지정합니다.`,
                 CodeWiz_neopixel_off_all: `모든 LED를 끕니다.`,
-                CodeWiz_neopixel_OnPixelRandomColor:`입력한 번호의 LED를 무작위 색으로 켭니다.`,
-                CodeWiz_neopixel_fillRandom:`모든 LED를 무작위 색으로 채웁니다.`,
-                CodeWiz_neopixel_rotate:`모든 LED를 지정한 방향으로 회전시킵니다.
+                CodeWiz_neopixel_OnPixelRandomColor: `입력한 번호의 LED를 무작위 색으로 켭니다.`,
+                CodeWiz_neopixel_fillRandom: `모든 LED를 무작위 색으로 채웁니다.`,
+                CodeWiz_neopixel_rotate: `모든 LED를 지정한 방향으로 회전시킵니다.
                 방향은 ▼을 눌러 설정합니다.`,
-                CodeWiz_neopixel_shift:`모든 LED를 지정한 방향으로 밀어냅니다.
+                CodeWiz_neopixel_shift: `모든 LED를 지정한 방향으로 밀어냅니다.
                 빈자리는 기존 색으로 채워집니다.
                 방향은 ▼을 눌러 설정합니다.`,
-                CodeWiz_neopixel_gradationRGB:`지정범위의 LED를 선택한 색의 그라데이션으로 채웁니다.
+                CodeWiz_neopixel_gradationRGB: `지정범위의 LED를 선택한 색의 그라데이션으로 채웁니다.
                 왼쪽색부터 오른쪽색까지 RGB색표현의 그라데이션으로 채워집니다.
                 범위는 초기화한 LED범위를 벗어날 수 없으며 서로 다른 값이여야 합니다.
                 LED 번호가 작은 값은 왼쪽에 큰 값은 오른쪽에 위치해야합니다.`,
-                CodeWiz_neopixel_gradationHSL:`지정범위의 LED를 선택한 색의 그라데이션으로 채웁니다.
+                CodeWiz_neopixel_gradationHSL: `지정범위의 LED를 선택한 색의 그라데이션으로 채웁니다.
                 왼쪽색부터 오른쪽색까지 HSL색표현의 그라데이션으로 채워집니다.
                 범위는 초기화한 LED범위를 벗어날 수 없으며 서로 다른 값이여야 합니다.
                 LED 번호가 작은 값은 왼쪽에 큰 값은 오른쪽에 위치해야합니다.`,
-                CodeWiz_neopixel_wheeeeeeel:`녹색, 빨강, 파랑의 세 가지색을 기준으로 섞은 색을 순환시켜 켜주는 블록입니다.
+                CodeWiz_neopixel_wheeeeeeel: `녹색, 빨강, 파랑의 세 가지색을 기준으로 섞은 색을 순환시켜 켜주는 블록입니다.
                 이 블록을 사용해서 흐르는 듯한 네오픽셀을 표시할 수 있습니다.`,
 
                 CodeWiz_OLED_clear: `OLED에 표시된 내용을 지웁니다.`,
@@ -271,7 +294,7 @@ Entry.CodeWiz.setLanguage = function() {
                 ▼을 눌러 ‘비움’ 대신 ‘채움‘을 선택하면 원 내부가 채워집니다.`,
                 CodeWiz_OLED_drawPoligon: `점1(x좌표, y좌표), 점2 (x좌표, y좌표), 점3 (x좌표, y좌표)을 연결하여 흰색 선 삼각형을 그립니다.
                 ▼을 눌러 ‘비움’ 대신 ‘채움‘을 선택하면 원 내부가 채워집니다.`,
-                CodeWiz_OLED_printHG:`입력한 내용(한글포함)을 OLED에 출력합니다.
+                CodeWiz_OLED_printHG: `입력한 내용(한글포함)을 OLED에 출력합니다.
                 ▼을 눌러 ‘⭕’를 선택하면 아랫줄로 커서를 이동시키고 ‘❌‘를 선택하면 마지막 글자 오른쪽으로 커서를 이동시킵니다.`,
 
                 CodeWiz_DIGITAL_OUTPUT_digitalWrite: `지정된 핀(터치센서 또는 SCON)에 연결된 센서로 HIGH 또는 LOW 를 내보냅니다.
@@ -282,6 +305,33 @@ Entry.CodeWiz.setLanguage = function() {
                 
                 <현재 활용 가능한 확장도구>
                 프로펠러`,
+
+                CodeWiz_OzEye_initOzEye: `오즈아이 시작을 설정합니다.`,
+                CodeWiz_OzEye_setModeOfOzEye: `오즈아이를 선택된 알고리즘으로 설정합니다.
+
+                1.선 인식
+                2.색 인식
+                3.태그 인식
+                4.이미지 인식
+                5.사물 인식
+                6.사물 추적
+                7.선 + 태그`,
+                CodeWiz_OzEye_readOzEye: `오즈아이가 인식한 결과를 주기적으로 보내줍니다.`,
+                CodeWiz_OzEye_isLearnedOzEye: `입력한 ID 번호 데이터를 학습했다면 ‘참’으로 판단하여 알려줍니다.`,
+                CodeWiz_OzEye_isContainOzEye: `입력한 ID 번호의 사각형 데이터가 인식된다면 ‘참’으로 판단하여 알려줍니다.
+                    ▼을 눌러 화살표를 선택하면 화살표 데이터가 인식될 때 ‘참’으로 판단하여 알려줍니다.`,
+                CodeWiz_OzEye_getCountLearnedOzEye: `화면에 감지된 학습한 데이터 수를 알려줍니다.`,
+                CodeWiz_OzEye_hasTypeOzEye: `읽어온 데이터 타입이 선택한 타입(사각형/화살표)과 같다면 ‘참’으로 판단하여 알려줍니다.`,
+                CodeWiz_OzEye_getArrowInfoOzEye: `읽어온 화살표 데이터의 좌표 값을 알려줍니다. 좌표 값은 ‘시작 X좌표‘, ‘시작 Y좌표‘, ‘종료 X좌표‘, ‘종료 Y좌표‘ 중 하나를 선택합니다.
+                    대상이 없다면 -1을 반환합니다.`,
+                CodeWiz_OzEye_getBoxInfoOzEye2: `읽어온 사각형 데이터의 정보를 알려줍니다. 정보는 ‘중심 X좌표‘, ‘중심 Y좌표’, ‘너비‘, ‘높이’ 중 하나를 선택합니다.
+                    대상이 없다면 -1을 반환합니다.`,
+                CodeWiz_OzEye_getBoxInfoOzEye: `읽어온 사각형 데이터의 정보를 알려줍니다. 정보는 ‘ID’, ‘중심 X좌표‘, ‘중심 Y좌표’, ‘너비‘, ‘높이’ 중 하나를 선택합니다.
+                    대상이 없다면 -1을 반환합니다.`,
+                // CodeWiz_OzEye_writeTextOzEye: `오즈아이 화면의 지정된 좌표에 입력된 데이터를 출력합니다.`,
+                // CodeWiz_OzEye_clearTextOzEye: `오즈아이 화면에 출력되어 있는 데이터를 지웁니다.`,
+                CodeWiz_OzEye_setLightLevel: '오즈아이의 라이트 밝기를 1~7 단계로 설정합니다.',
+                CodeWiz_OzEye_LightOff: '오즈아이 라이트를 끕니다.',
 
                 CodeWiz_HuskyLens_initHuskyLens: `허스키렌즈 시작을 설정합니다.`,
                 CodeWiz_HuskyLens_setModeOfHuskyLens: `허스키렌즈를 선택된 알고리즘으로 설정합니다.
@@ -295,19 +345,15 @@ Entry.CodeWiz.setLanguage = function() {
                 7.OBJECT_CLASSIFICATION`,
                 CodeWiz_HuskyLens_readHuskyLens: `허스키렌즈가 인식한 결과를 주기적으로 보내줍니다.`,
                 CodeWiz_HuskyLens_isLearnedHuskyLens: `입력한 ID 번호 데이터를 학습했다면 ‘참’으로 판단하여 알려줍니다.`,
-                CodeWiz_HuskyLens_isContainHuskyLens:
-                    `입력한 ID 번호의 사각형 데이터가 인식된다면 ‘참’으로 판단하여 알려줍니다.
+                CodeWiz_HuskyLens_isContainHuskyLens: `입력한 ID 번호의 사각형 데이터가 인식된다면 ‘참’으로 판단하여 알려줍니다.
                     ▼을 눌러 화살표를 선택하면 화살표 데이터가 인식될 때 ‘참’으로 판단하여 알려줍니다.`,
                 CodeWiz_HuskyLens_getCountLearnedHuskyLens: `화면에 감지된 학습한 데이터 수를 알려줍니다.`,
                 CodeWiz_HuskyLens_hasTypeHuskyLens: `읽어온 데이터 타입이 선택한 타입(사각형/화살표)과 같다면 ‘참’으로 판단하여 알려줍니다.`,
-                CodeWiz_HuskyLens_getArrowInfoHuskyLens:
-                    `읽어온 화살표 데이터의 좌표 값을 알려줍니다. 좌표 값은 ‘시작 X좌표‘, ‘시작 Y좌표‘, ‘종료 X좌표‘, ‘종료 Y좌표‘ 중 하나를 선택합니다.
+                CodeWiz_HuskyLens_getArrowInfoHuskyLens: `읽어온 화살표 데이터의 좌표 값을 알려줍니다. 좌표 값은 ‘시작 X좌표‘, ‘시작 Y좌표‘, ‘종료 X좌표‘, ‘종료 Y좌표‘ 중 하나를 선택합니다.
                     대상이 없다면 -1을 반환합니다.`,
-                CodeWiz_HuskyLens_getBoxInfoHuskyLens2:
-                    `읽어온 사각형 데이터의 정보를 알려줍니다. 정보는 ‘중심 X좌표‘, ‘중심 Y좌표’, ‘너비‘, ‘높이’ 중 하나를 선택합니다.
+                CodeWiz_HuskyLens_getBoxInfoHuskyLens2: `읽어온 사각형 데이터의 정보를 알려줍니다. 정보는 ‘중심 X좌표‘, ‘중심 Y좌표’, ‘너비‘, ‘높이’ 중 하나를 선택합니다.
                     대상이 없다면 -1을 반환합니다.`,
-                CodeWiz_HuskyLens_getBoxInfoHuskyLens:
-                    `읽어온 사각형 데이터의 정보를 알려줍니다. 정보는 ‘ID’, ‘중심 X좌표‘, ‘중심 Y좌표’, ‘너비‘, ‘높이’ 중 하나를 선택합니다.
+                CodeWiz_HuskyLens_getBoxInfoHuskyLens: `읽어온 사각형 데이터의 정보를 알려줍니다. 정보는 ‘ID’, ‘중심 X좌표‘, ‘중심 Y좌표’, ‘너비‘, ‘높이’ 중 하나를 선택합니다.
                     대상이 없다면 -1을 반환합니다.`,
                 CodeWiz_HuskyLens_writeTextHuskyLens: `허스키렌즈 화면의 지정된 좌표에 입력된 데이터를 출력합니다.`,
                 CodeWiz_HuskyLens_clearTextHuskyLens: `허스키렌즈 화면에 출력되어 있는 데이터를 지웁니다.`,
@@ -348,12 +394,12 @@ Entry.CodeWiz.setLanguage = function() {
                 CodeWiz_ColorSensor_getColorValue: `MCON에 연결된 컬러센서에 인식된 빨강의 색상 값을 0~255 사이값으로 알려줍니다.
                 ▼을 눌러 초록, 파랑을 선택할 수 있습니다.`,
 
-                CodeWiz_DHT_init:`지정한 핀으로 디지털 온습도를 설정합니다.`,
-                CodeWiz_DHT_getValue:`앞서 설정한 디지털 온습도에서 선택한 값을 가져옵니다.`,
+                CodeWiz_DHT_init: `지정한 핀으로 디지털 온습도를 설정합니다.`,
+                CodeWiz_DHT_getValue: `앞서 설정한 디지털 온습도에서 선택한 값을 가져옵니다.`,
 
-                CodeWiz_Joystick_setPin:'지정한 핀으로 조이스틱을 설정합니다.',
-                CodeWiz_Joystick_readAxis:'설정된 조이스틱의 지정한 축의 레버값을 읽어옵니다.',
-                CodeWiz_Joystick_readButton:'설정된 조이스틱의 버튼이 눌렸는지 값을 읽어옵니다.',
+                CodeWiz_Joystick_setPin: '지정한 핀으로 조이스틱을 설정합니다.',
+                CodeWiz_Joystick_readAxis: '설정된 조이스틱의 지정한 축의 레버값을 읽어옵니다.',
+                CodeWiz_Joystick_readButton: '설정된 조이스틱의 버튼이 눌렸는지 값을 읽어옵니다.',
 
                 CodeWiz_etcReadSensor_mconRead: `가변저항/워터센서/토양수분센서의 측정값
                 선택한 센서에 따라서 값이 적절히 매핑되어 반환됩니다.`,
@@ -419,6 +465,22 @@ Entry.CodeWiz.blockMenuBlocks = [
     'CodeWiz_DIGITAL_OUTPUT_digitalWrite',
     'CodeWiz_DIGITAL_OUTPUT_pwmWrite',
 
+    'CodeWiz_OzEye_title',
+    'CodeWiz_OzEye_initOzEye',
+    'CodeWiz_OzEye_setModeOfOzEye',
+    'CodeWiz_OzEye_readOzEye',
+    'CodeWiz_OzEye_isLearnedOzEye',
+    'CodeWiz_OzEye_isContainOzEye',
+    'CodeWiz_OzEye_getCountLearnedOzEye',
+    'CodeWiz_OzEye_hasTypeOzEye',
+    'CodeWiz_OzEye_getArrowInfoOzEye',
+    'CodeWiz_OzEye_getBoxInfoOzEye2',
+    'CodeWiz_OzEye_getBoxInfoOzEye',
+    // 'CodeWiz_OzEye_writeTextOzEye',
+    // 'CodeWiz_OzEye_clearTextOzEye',
+    'CodeWiz_OzEye_setLightLevel',
+    'CodeWiz_OzEye_LightOff',
+
     'CodeWiz_HuskyLens_title',
     'CodeWiz_HuskyLens_initHuskyLens',
     'CodeWiz_HuskyLens_setModeOfHuskyLens',
@@ -483,11 +545,11 @@ Entry.CodeWiz.preWait = function() {
 };
 Entry.CodeWiz.checkComplete = function(timeout, id) {
     let _promise = new Promise((resolve) => {
-        timeout = timeout?? 1000;
+        timeout = timeout ?? 1000;
         Entry.CodeWiz.intervalId = setInterval(() => {
             // console.log(Entry.CodeWiz.intervalId, 'runOK:', Entry.hw.portData[id]);
             let ret = Entry.hw.portData[id]?.value;
-            if (ret!==undefined&& ret !== null) {
+            if (ret !== undefined && ret !== null) {
                 clearInterval(Entry.CodeWiz.intervalId);
                 clearTimeout(Entry.CodeWiz.timeoutId);
                 Entry.CodeWiz.intervalId = null;
@@ -604,7 +666,7 @@ Entry.CodeWiz.getBlocks = function() {
             func: function(sprite, script) {
                 var sensor = script.getField('GYRO_TYPE', script);
                 var hw_sensorData = Entry.hw.portData;
-                return hw_sensorData[sensor]?? 0;
+                return hw_sensorData[sensor] ?? 0;
             },
         },
         CodeWiz_isPushedButton: {
@@ -1295,10 +1357,10 @@ Entry.CodeWiz.getBlocks = function() {
                     value: {
                         opcode: 3,
                         params: [
-                            num, 
-                            Math.floor(Math.random()*256), 
-                            Math.floor(Math.random()*256),
-                            Math.floor(Math.random()*256)
+                            num,
+                            Math.floor(Math.random() * 256),
+                            Math.floor(Math.random() * 256),
+                            Math.floor(Math.random() * 256),
                         ],
                     },
                 };
@@ -1484,7 +1546,7 @@ Entry.CodeWiz.getBlocks = function() {
             paramsKeyMap: {
                 START: 0,
                 END: 1,
-                S_COLOR:2,
+                S_COLOR: 2,
                 E_COLOR: 3,
             },
             class: 'CodeWiz_neopixel',
@@ -1545,7 +1607,7 @@ Entry.CodeWiz.getBlocks = function() {
             paramsKeyMap: {
                 START: 0,
                 END: 1,
-                S_COLOR:2,
+                S_COLOR: 2,
                 E_COLOR: 3,
             },
             class: 'CodeWiz_neopixel',
@@ -1589,8 +1651,7 @@ Entry.CodeWiz.getBlocks = function() {
                 params: [],
                 type: 'CodeWiz_neopixel_wheeeeeeel',
             },
-            paramsKeyMap: {
-            },
+            paramsKeyMap: {},
             class: 'CodeWiz_neopixel',
             isNotFor: ['CodeWiz'],
             async func(sprite, script) {
@@ -3157,6 +3218,818 @@ Entry.CodeWiz.getBlocks = function() {
             isNotFor: ['CodeWiz'],
             events: {},
         },
+
+        /////////오즈아이 시작//////////////////////////////////////////////////////////////////////////////////////////////
+
+        CodeWiz_OzEye_title: {
+            skeleton: 'basic_text',
+            skeletonOptions: {
+                box: {
+                    offsetX: this.getOffsetX(Lang.template.CodeWiz_OzEye_title),
+                    offsetY: 5,
+                },
+            },
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            fontColor: '#333333',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.template.CodeWiz_OzEye_title,
+                    color: '#333333',
+                    align: 'left',
+                },
+            ],
+            def: {
+                type: 'CodeWiz_OzEye_title',
+            },
+            class: 'CodeWiz_OzEye',
+            isNotFor: ['CodeWiz'],
+            events: {},
+        },
+
+        CodeWiz_OzEye_initOzEye: {
+            // Block UI : '오즈아이 시작설정%1',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'CodeWiz_OzEye_initOzEye',
+            },
+            paramsKeyMap: {},
+            class: 'CodeWiz_OzEye',
+            isNotFor: ['CodeWiz'],
+            async func(sprite, script) {
+                if (Entry.CodeWiz.intervalId) {
+                    await Entry.CodeWiz.preWait();
+                }
+
+                const order = {
+                    type: Entry.CodeWiz.sensorTypes.WRITE,
+                    value: {
+                        opcode: 52,
+                        params: [],
+                    },
+                };
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                //delete Entry.hw.portData[id];
+            },
+        },
+
+        CodeWiz_OzEye_setModeOfOzEye: {
+            // Block UI : '오즈아이 %1알고리즘으로 설정%2'
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['1.선 인식', '3'],
+                        ['2.색 인식', '4'],
+                        ['3.태그 인식', '5'],
+                        ['4.이미지 인식', '6'],
+                        ['5.사물 인식', '2'],
+                        ['6.사물 추적', '1'],
+                        ['7.선 + 태그', '7'],
+                    ],
+                    value: '2',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'CodeWiz_OzEye_setModeOfOzEye',
+            },
+            paramsKeyMap: {
+                MODE: 0,
+            },
+            class: 'CodeWiz_OzEye',
+            isNotFor: ['CodeWiz'],
+            async func(sprite, script) {
+                if (Entry.CodeWiz.intervalId) {
+                    await Entry.CodeWiz.preWait();
+                }
+                let mode = script.getNumberValue('MODE', script);
+                const order = {
+                    type: Entry.CodeWiz.sensorTypes.WRITE,
+                    value: {
+                        opcode: 53,
+                        params: [mode],
+                    },
+                };
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                //delete Entry.hw.portData[id];
+            },
+        },
+        CodeWiz_OzEye_readOzEye: {
+            // Block UI : "오즈아이 데이터 요청시작%1",
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [],
+                type: 'CodeWiz_OzEye_readOzEye',
+            },
+            paramsKeyMap: {},
+            class: 'CodeWiz_OzEye',
+            isNotFor: ['CodeWiz'],
+            async func(sprite, script) {
+                if (Entry.CodeWiz.intervalId) {
+                    await Entry.CodeWiz.preWait();
+                }
+
+                const order = {
+                    type: Entry.CodeWiz.sensorTypes.WRITE,
+                    value: {
+                        opcode: 54,
+                        params: [],
+                    },
+                };
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                //delete Entry.hw.portData[id];
+            },
+        },
+        CodeWiz_OzEye_isLearnedOzEye: {
+            // Block UI : "오즈아이 ID가%1인 데이터를 학습했는가?%2",
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [1, null],
+                type: 'CodeWiz_OzEye_isLearnedOzEye',
+            },
+            paramsKeyMap: {
+                ID: 0,
+            },
+            class: 'CodeWiz_OzEye',
+            isNotFor: ['CodeWiz'],
+            async func(sprite, script) {
+                if (Entry.CodeWiz.intervalId) {
+                    await Entry.CodeWiz.preWait();
+                }
+                let learnId = script.getNumberValue('ID', script);
+                const order = {
+                    type: Entry.CodeWiz.sensorTypes.READ,
+                    value: {
+                        opcode: 15,
+                        params: [learnId],
+                    },
+                };
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                let retVal = Entry.hw.portData[id]?.value ?? false;
+                //delete Entry.hw.portData[id];
+
+                return retVal;
+            },
+        },
+        CodeWiz_OzEye_isContainOzEye: {
+            // Block UI : "오즈아이 ID:%1로 인식한 %2데이터가 있는가?%3",
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['사각형', '42'],
+                        ['화살표', '43'],
+                    ],
+                    value: '42',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [1, null, null],
+                type: 'CodeWiz_OzEye_isContainOzEye',
+            },
+            paramsKeyMap: {
+                ID: 0,
+                TYPE: 1,
+            },
+            class: 'CodeWiz_OzEye',
+            isNotFor: ['CodeWiz'],
+            func(sprite, script) {
+                let _learnId = script.getNumberValue('ID', script);
+                let _type = script.getNumberValue('TYPE', script);
+                // console.log(this.sensorData);
+                // console.log(Entry.hw.portData.HUSKY_READ);
+                const huskyData = Entry.hw.portData.HUSKY_READ;
+                if (!huskyData._list || huskyData._list.length === 0) {
+                    return false;
+                }
+                if (huskyData?._type !== _type) {
+                    return false;
+                }
+                let _list = Entry.hw.portData.HUSKY_READ._list;
+                for (let i = 0; i < _list.length; ++i) {
+                    if (_list[i][0] === _learnId) {
+                        return true;
+                    }
+                }
+                return false;
+            },
+            // async func(sprite, script) {
+            //     if (Entry.CodeWiz.intervalId) {
+            //         await Entry.CodeWiz.preWait();
+            //     }
+            //     let _learnId = script.getNumberValue('ID', script);
+            //     let _type = script.getNumberValue('TYPE', script);
+            //     const order = {
+            //         type: Entry.CodeWiz.sensorTypes.READ,
+            //         value: {
+            //             opcode: 2,
+            //             params: [_learnId, _type],
+            //         },
+            //     };
+            //     const id = Entry.CodeWiz.sendOrder(order);
+            //     await Entry.CodeWiz.checkComplete(1000, id);
+            //     let retVal= Entry.hw.portData[id]?.value ?? false;
+            //     //delete Entry.hw.portData[id];
+            //     return retVal;
+            // },
+        },
+        CodeWiz_OzEye_getCountLearnedOzEye: {
+            // Block UI : "오즈아이가 감지한 학습데이터 수%1",
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'CodeWiz_OzEye_getCountLearnedOzEye',
+            },
+            paramsKeyMap: {},
+            class: 'CodeWiz_OzEye',
+            isNotFor: ['CodeWiz'],
+            func(sprite, script) {
+                return Entry.hw.portData.HUSKY_READ?._count ?? 0;
+            },
+            // async func(sprite, script) {
+            //     if (Entry.CodeWiz.intervalId) {
+            //         await Entry.CodeWiz.preWait();
+            //     }
+
+            //     const order = {
+            //         type: Entry.CodeWiz.sensorTypes.READ,
+            //         value: {
+            //             opcode: 3,
+            //             params: [],
+            //         },
+            //     };
+            //     const id = Entry.CodeWiz.sendOrder(order);
+            //     await Entry.CodeWiz.checkComplete(1000, id);
+
+            //     let retVal= Entry.hw.portData[id]?.value ?? 0;
+            //     //delete Entry.hw.portData[id];
+            //     return retVal;
+            // },
+        },
+        CodeWiz_OzEye_hasTypeOzEye: {
+            // Block UI : "오즈아이가 읽은 데이터 타입이%1인가?%2",
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['사각형', '42'],
+                        ['화살표', '43'],
+                    ],
+                    value: '42',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'CodeWiz_OzEye_hasTypeOzEye',
+            },
+            paramsKeyMap: {
+                TYPE: 0,
+            },
+            class: 'CodeWiz_OzEye',
+            isNotFor: ['CodeWiz'],
+            func(sprite, script) {
+                let _type = script.getNumberValue('TYPE', script);
+                return Entry.hw.portData.HUSKY_READ?._type === _type;
+            },
+            // async func(sprite, script) {
+            //     if (Entry.CodeWiz.intervalId) {
+            //         await Entry.CodeWiz.preWait();
+            //     }
+            //     let _type = script.getNumberValue('TYPE', script);
+
+            //     const order = {
+            //         type: Entry.CodeWiz.sensorTypes.READ,
+            //         value: {
+            //             opcode: 4,
+            //             params: [_type],
+            //         },
+            //     };
+            //     const id = Entry.CodeWiz.sendOrder(order);
+            //     await Entry.CodeWiz.checkComplete(1000, id);
+
+            //     let retVal= Entry.hw.portData[id]?.value ?? false;
+            //     //delete Entry.hw.portData[id];
+            //     return retVal
+            // },
+        },
+        CodeWiz_OzEye_getArrowInfoOzEye: {
+            // Block UI : "오즈아이가 읽은 ID%1인 화살표정보%2%3",
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['시작 X좌표', '1'],
+                        ['시작 Y좌표', '2'],
+                        ['종료 X좌표', '3'],
+                        ['종료 Y좌표', '4'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [1, null],
+                type: 'CodeWiz_OzEye_getArrowInfoOzEye',
+            },
+            paramsKeyMap: {
+                ID: 0,
+                TYPE: 1,
+            },
+            class: 'CodeWiz_OzEye',
+            isNotFor: ['CodeWiz'],
+            func(sprite, script) {
+                let _id = script.getNumberValue('ID', script);
+                let _arrowType = script.getNumberValue('TYPE', script);
+                const huskyData = Entry.hw.portData.HUSKY_READ;
+                if (!huskyData._list || huskyData._list.length === 0) {
+                    return -1;
+                }
+                if (huskyData?._type !== 43) {
+                    return -1;
+                }
+                for (let i = 0; i < huskyData._list.length; ++i) {
+                    if (huskyData._list[i][0] === _id) {
+                        return huskyData._list[i][_arrowType];
+                    }
+                }
+                return -1;
+            },
+            // async func(sprite, script) {
+            //     if (Entry.CodeWiz.intervalId) {
+            //         await Entry.CodeWiz.preWait();
+            //     }
+            //     let _arrowType = script.getNumberValue('TYPE', script);
+
+            //     const order = {
+            //         type: Entry.CodeWiz.sensorTypes.READ,
+            //         value: {
+            //             opcode: 5,
+            //             params: [_arrowType],
+            //         },
+            //     };
+            //     const id = Entry.CodeWiz.sendOrder(order);
+            //     await Entry.CodeWiz.checkComplete(1000, id);
+
+            //     let retVal= Entry.hw.portData[id]?.value ?? 0;
+            //     //delete Entry.hw.portData[id];
+            //     return retVal
+            // },
+        },
+        CodeWiz_OzEye_getBoxInfoOzEye2: {
+            // Block UI : "오즈아이가 읽은 ID%1인 사각형정보%2%3",
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['중심 X좌표', '1'],
+                        ['중심 Y좌표', '2'],
+                        ['너비', '3'],
+                        ['높이', '4'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [1, null],
+                type: 'CodeWiz_OzEye_getBoxInfoOzEye2',
+            },
+            paramsKeyMap: {
+                ID: 0,
+                TYPE: 1,
+            },
+            class: 'CodeWiz_OzEye',
+            isNotFor: ['CodeWiz'],
+            func(sprite, script) {
+                let _id = script.getNumberValue('ID', script);
+                let _boxType = script.getNumberValue('TYPE', script);
+                const huskyData = Entry.hw.portData.HUSKY_READ;
+                if (!huskyData._list || huskyData._list.length === 0) {
+                    return -1;
+                }
+                if (huskyData?._type !== 42) {
+                    return -1;
+                }
+                for (let i = 0; i < huskyData._list.length; ++i) {
+                    if (huskyData._list[i][0] === _id) {
+                        return huskyData._list[i][_boxType];
+                    }
+                }
+                return -1;
+            },
+        },
+        CodeWiz_OzEye_getBoxInfoOzEye: {
+            // Block UI : "오즈아이가 읽은 사각형정보%1(중심좌표가 중앙에 가장 가까운 것)%2",
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['ID', '0'],
+                        ['중심 X좌표', '1'],
+                        ['중심 Y좌표', '2'],
+                        ['너비', '3'],
+                        ['높이', '4'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'CodeWiz_OzEye_getBoxInfoOzEye',
+            },
+            paramsKeyMap: {
+                TYPE: 0,
+            },
+            class: 'CodeWiz_OzEye',
+            isNotFor: ['CodeWiz'],
+            func(sprite, script) {
+                let _boxType = script.getNumberValue('TYPE', script);
+                const huskyData = Entry.hw.portData.HUSKY_READ;
+                if (!huskyData._list || huskyData._list.length === 0) {
+                    return -1;
+                }
+                if (huskyData?._type !== 42 || huskyData?._count === 0) {
+                    return -1;
+                }
+                let curIdx = 0;
+                let dist = Entry.CodeWiz.HUSKY.getDist(
+                    huskyData._list[0][0],
+                    huskyData._list[0][1]
+                );
+                let curDist;
+                for (let i = 1; i < huskyData._count; ++i) {
+                    curDist = Entry.CodeWiz.HUSKY.getDist(
+                        huskyData._list[i][0],
+                        huskyData._list[i][1]
+                    );
+                    if (dist > curDist) {
+                        dist = curDist;
+                        curIdx = i;
+                    }
+                }
+                return huskyData._list[curIdx][_boxType];
+            },
+            // async func(sprite, script) {
+            //     if (Entry.CodeWiz.intervalId) {
+            //         await Entry.CodeWiz.preWait();
+            //     }
+            //     let _boxType = script.getNumberValue('TYPE', script);
+
+            //     const order = {
+            //         type: Entry.CodeWiz.sensorTypes.READ,
+            //         value: {
+            //             opcode: 6,
+            //             params: [_boxType],
+            //         },
+            //     };
+            //     const id = Entry.CodeWiz.sendOrder(order);
+            //     await Entry.CodeWiz.checkComplete(1000, id);
+
+            //     let retVal= Entry.hw.portData[id]?.value ?? 0;
+            //     //delete Entry.hw.portData[id];
+            //     return retVal
+            // },
+        },
+
+        //오즈아이에 텍스트 출력하기 기능 이후 적용
+        /*
+        CodeWiz_OzEye_writeTextOzEye: {
+            // Block UI : "오즈아이 x:%1 y:%2에 %3출력%4",
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [0, 0, 'CodeWiz'],
+                type: 'CodeWiz_OzEye_writeTextOzEye',
+            },
+            paramsKeyMap: {
+                X: 0,
+                Y: 1,
+                TEXT: 2,
+            },
+            class: 'CodeWiz_OzEye',
+            isNotFor: ['CodeWiz'],
+            async func(sprite, script) {
+                if (Entry.CodeWiz.intervalId) {
+                    await Entry.CodeWiz.preWait();
+                }
+                let _x = script.getNumberValue('X', script);
+                let _y = script.getNumberValue('Y', script);
+                let _text = script.getStringValue('TEXT');
+
+                const order = {
+                    type: Entry.CodeWiz.sensorTypes.WRITE,
+                    value: {
+                        opcode: 55,
+                        params: [_x, _y, _text],
+                    },
+                };
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                //delete Entry.hw.portData[id];
+            },
+        },
+        CodeWiz_OzEye_clearTextOzEye: {
+            // Block UI : "오즈아이 텍스트 지우기%1",
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [],
+                type: 'CodeWiz_OzEye_clearTextOzEye',
+            },
+            paramsKeyMap: {},
+            class: 'CodeWiz_OzEye',
+            isNotFor: ['CodeWiz'],
+            async func(sprite, script) {
+                if (Entry.CodeWiz.intervalId) {
+                    await Entry.CodeWiz.preWait();
+                }
+
+                const order = {
+                    type: Entry.CodeWiz.sensorTypes.WRITE,
+                    value: {
+                        opcode: 56,
+                        params: [],
+                    },
+                };
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                //delete Entry.hw.portData[id];
+            },
+        },
+        */
+
+        CodeWiz_OzEye_setLightLevel: {
+            // Block UI : '오즈아이 라이트 밝기를 %1 단계로 설정(1~7)%2',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['1', '1'],
+                        ['2', '2'],
+                        ['3', '3'],
+                        ['4', '4'],
+                        ['5', '5'],
+                        ['6', '6'],
+                        ['7', '7'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'CodeWiz_OzEye_setLightLevel',
+            },
+            paramsKeyMap: {
+                Level: 0,
+            },
+            class: 'CodeWiz_OzEye',
+            isNotFor: ['CodeWiz'],
+            async func(sprite, script) {
+                if (Entry.CodeWiz.intervalId) {
+                    await Entry.CodeWiz.preWait();
+                }
+                let Level = script.getNumberValue('Level', script);
+                const order = {
+                    type: Entry.CodeWiz.sensorTypes.WRITE,
+                    value: {
+                        opcode: 57,
+                        params: [Level],
+                    },
+                };
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                //delete Entry.hw.portData[id];
+            },
+        },
+
+        CodeWiz_OzEye_LightOff: {
+            // Block UI : '오즈아이 라이트 끄기%1',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'CodeWiz_OzEye_LightOff',
+            },
+            paramsKeyMap: {},
+            class: 'CodeWiz_OzEye',
+            isNotFor: ['CodeWiz'],
+            async func(sprite, script) {
+                if (Entry.CodeWiz.intervalId) {
+                    await Entry.CodeWiz.preWait();
+                }
+
+                const order = {
+                    type: Entry.CodeWiz.sensorTypes.WRITE,
+                    value: {
+                        opcode: 58,
+                        params: [],
+                    },
+                };
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                //delete Entry.hw.portData[id];
+            },
+        },
+
+        //////////오즈아이 끝/////////////////////////////////////////////////////////////////////////////////////////////
+
         CodeWiz_HuskyLens_initHuskyLens: {
             // Block UI : '허스키렌즈 시작설정%1',
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -3381,19 +4254,21 @@ Entry.CodeWiz.getBlocks = function() {
                 // console.log(Entry.hw.portData);
                 // console.log(Entry.hw.portData.HUSKY_READ);
                 const huskyData = Entry.hw.portData.HUSKY_READ;
-                if(huskyData?._type !== _type) {
+                if (!huskyData._list || huskyData._list.length === 0) {
+                    return false;
+                }
+                if (huskyData?._type !== _type) {
                     return false;
                 }
                 let _list = Entry.hw.portData.HUSKY_READ._list;
-                for(let i=0; i<_list.length; ++i)
-                {
-                    if(_list[i][0] === _learnId) {
+                for (let i = 0; i < _list.length; ++i) {
+                    if (_list[i][0] === _learnId) {
                         return true;
                     }
                 }
                 return false;
             },
-            // async func(sprite, script) {                
+            // async func(sprite, script) {
             //     if (Entry.CodeWiz.intervalId) {
             //         await Entry.CodeWiz.preWait();
             //     }
@@ -3434,8 +4309,8 @@ Entry.CodeWiz.getBlocks = function() {
             paramsKeyMap: {},
             class: 'CodeWiz_HuskyLens',
             isNotFor: ['CodeWiz'],
-            func(sprite, script) {                
-                return Entry.hw.portData.HUSKY_READ?._count??0;
+            func(sprite, script) {
+                return Entry.hw.portData.HUSKY_READ?._count ?? 0;
             },
             // async func(sprite, script) {
             //     if (Entry.CodeWiz.intervalId) {
@@ -3548,7 +4423,7 @@ Entry.CodeWiz.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [1,null],
+                params: [1, null],
                 type: 'CodeWiz_HuskyLens_getArrowInfoHuskyLens',
             },
             paramsKeyMap: {
@@ -3557,15 +4432,18 @@ Entry.CodeWiz.getBlocks = function() {
             },
             class: 'CodeWiz_HuskyLens',
             isNotFor: ['CodeWiz'],
-            func(sprite, script) {                
+            func(sprite, script) {
                 let _id = script.getNumberValue('ID', script);
                 let _arrowType = script.getNumberValue('TYPE', script);
-                const huskyData=Entry.hw.portData.HUSKY_READ;
-                if(huskyData?._type !== 43) {
+                const huskyData = Entry.hw.portData.HUSKY_READ;
+                if (!huskyData._list || huskyData._list.length === 0) {
                     return -1;
                 }
-                for(let i=0; i<huskyData._list.length; ++i) {
-                    if(huskyData._list[i][0] === _id) {
+                if (huskyData?._type !== 43) {
+                    return -1;
+                }
+                for (let i = 0; i < huskyData._list.length; ++i) {
+                    if (huskyData._list[i][0] === _id) {
                         return huskyData._list[i][_arrowType];
                     }
                 }
@@ -3633,15 +4511,18 @@ Entry.CodeWiz.getBlocks = function() {
             },
             class: 'CodeWiz_HuskyLens',
             isNotFor: ['CodeWiz'],
-            func(sprite, script) {                
+            func(sprite, script) {
                 let _id = script.getNumberValue('ID', script);
                 let _boxType = script.getNumberValue('TYPE', script);
-                const huskyData=Entry.hw.portData.HUSKY_READ;
-                if(huskyData?._type !== 42) {
+                const huskyData = Entry.hw.portData.HUSKY_READ;
+                if (!huskyData._list || huskyData._list.length === 0) {
                     return -1;
                 }
-                for(let i=0; i<huskyData._list.length; ++i) {
-                    if(huskyData._list[i][0] === _id) {
+                if (huskyData?._type !== 42) {
+                    return -1;
+                }
+                for (let i = 0; i < huskyData._list.length; ++i) {
+                    if (huskyData._list[i][0] === _id) {
                         return huskyData._list[i][_boxType];
                     }
                 }
@@ -3687,16 +4568,25 @@ Entry.CodeWiz.getBlocks = function() {
             isNotFor: ['CodeWiz'],
             func(sprite, script) {
                 let _boxType = script.getNumberValue('TYPE', script);
-                const huskyData=Entry.hw.portData.HUSKY_READ;
-                if(huskyData?._type !== 42 || huskyData?._count===0) {
+                const huskyData = Entry.hw.portData.HUSKY_READ;
+                if (!huskyData._list || huskyData._list.length === 0) {
+                    return -1;
+                }
+                if (huskyData?._type !== 42 || huskyData?._count === 0) {
                     return -1;
                 }
                 let curIdx = 0;
-                let dist = Entry.CodeWiz.HUSKY.getDist(huskyData._list[0][0], huskyData._list[0][1]);
+                let dist = Entry.CodeWiz.HUSKY.getDist(
+                    huskyData._list[0][0],
+                    huskyData._list[0][1]
+                );
                 let curDist;
-                for(let i=1; i<huskyData._count; ++i) {
-                    curDist = Entry.CodeWiz.HUSKY.getDist(huskyData._list[i][0], huskyData._list[i][1]);
-                    if(dist>curDist) {
+                for (let i = 1; i < huskyData._count; ++i) {
+                    curDist = Entry.CodeWiz.HUSKY.getDist(
+                        huskyData._list[i][0],
+                        huskyData._list[i][1]
+                    );
+                    if (dist > curDist) {
                         dist = curDist;
                         curIdx = i;
                     }
@@ -4109,9 +4999,9 @@ Entry.CodeWiz.getBlocks = function() {
                 }
                 let _lValue = Number.parseInt(script.getNumberValue('L_VALUE', script));
                 let _rValue = Number.parseInt(script.getNumberValue('R_VALUE', script));
-                _lValue=Math.min(Math.max(-1000, _lValue), 1000);
-                _rValue=Math.min(Math.max(-1000, _rValue), 1000);
-                
+                _lValue = Math.min(Math.max(-1000, _lValue), 1000);
+                _rValue = Math.min(Math.max(-1000, _rValue), 1000);
+
                 const order = {
                     type: Entry.CodeWiz.sensorTypes.WRITE,
                     value: {
@@ -4768,9 +5658,9 @@ Entry.CodeWiz.getBlocks = function() {
                 const id = Entry.CodeWiz.sendOrder(order);
                 await Entry.CodeWiz.checkComplete(1000, id);
 
-                let retVal= Entry.hw.portData[id]?.value ?? false;
+                let retVal = Entry.hw.portData[id]?.value ?? false;
                 delete Entry.hw.portData[id];
-                return retVal
+                return retVal;
             },
         },
         CodeWiz_ColorSensor_getColorValue: {
@@ -4824,9 +5714,9 @@ Entry.CodeWiz.getBlocks = function() {
                 const id = Entry.CodeWiz.sendOrder(order);
                 await Entry.CodeWiz.checkComplete(1000, id);
 
-                let retVal= Entry.hw.portData[id]?.value ?? 0;
+                let retVal = Entry.hw.portData[id]?.value ?? 0;
                 delete Entry.hw.portData[id];
-                return retVal
+                return retVal;
             },
         },
 
@@ -4964,9 +5854,9 @@ Entry.CodeWiz.getBlocks = function() {
                 const id = Entry.CodeWiz.sendOrder(order);
                 await Entry.CodeWiz.checkComplete(1000, id);
 
-                let retVal= Entry.hw.portData[id]?.value ?? 0.0;
+                let retVal = Entry.hw.portData[id]?.value ?? 0.0;
                 delete Entry.hw.portData[id];
-                return retVal
+                return retVal;
             },
         },
         CodeWiz_Joystick_title: {
@@ -5075,7 +5965,6 @@ Entry.CodeWiz.getBlocks = function() {
                 let _pinB = script.getNumberValue('PIN_B', script);
                 let _range = script.getNumberValue('RANGE', script);
 
-
                 const order = {
                     type: Entry.CodeWiz.sensorTypes.WRITE,
                     value: {
@@ -5117,7 +6006,7 @@ Entry.CodeWiz.getBlocks = function() {
                 type: 'CodeWiz_Joystick_readAxis',
             },
             paramsKeyMap: {
-                TYPE: 0
+                TYPE: 0,
             },
             class: 'CodeWiz_Joystick',
             isNotFor: ['CodeWiz'],
@@ -5135,13 +6024,13 @@ Entry.CodeWiz.getBlocks = function() {
                     },
                 };
 
-                const id =Entry.CodeWiz.sendOrder(order);
+                const id = Entry.CodeWiz.sendOrder(order);
                 await Entry.CodeWiz.checkComplete(1000, id);
-                
-                let retVal= Entry.hw.portData[id]?.value ?? 0;
+
+                let retVal = Entry.hw.portData[id]?.value ?? 0;
                 delete Entry.hw.portData[id];
                 // console.log(_type===0?"X:":"Y:",retVal);
-                return retVal
+                return retVal;
             },
         },
         CodeWiz_Joystick_readButton: {
@@ -5162,8 +6051,7 @@ Entry.CodeWiz.getBlocks = function() {
                 params: [null],
                 type: 'CodeWiz_Joystick_readButton',
             },
-            paramsKeyMap: {
-            },
+            paramsKeyMap: {},
             class: 'CodeWiz_Joystick',
             isNotFor: ['CodeWiz'],
             async func(sprite, script) {
@@ -5178,12 +6066,12 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [],
                     },
                 };
-                const id =Entry.CodeWiz.sendOrder(order);
+                const id = Entry.CodeWiz.sendOrder(order);
                 await Entry.CodeWiz.checkComplete(1000, id);
-                let retVal= Entry.hw.portData[id]?.value ?? false;
+                let retVal = Entry.hw.portData[id]?.value ?? false;
                 delete Entry.hw.portData[id];
                 // console.log("Button:",retVal);
-                return retVal
+                return retVal;
             },
         },
 
@@ -5191,7 +6079,7 @@ Entry.CodeWiz.getBlocks = function() {
             skeleton: 'basic_text',
             skeletonOptions: {
                 box: {
-                    offsetX: 5+this.getOffsetX(Lang.template.CodeWiz_etcReadSensor_title),
+                    offsetX: 5 + this.getOffsetX(Lang.template.CodeWiz_etcReadSensor_title),
                     offsetY: 5,
                 },
             },
@@ -5278,9 +6166,9 @@ Entry.CodeWiz.getBlocks = function() {
                 const id = Entry.CodeWiz.sendOrder(order);
                 await Entry.CodeWiz.checkComplete(1000, id);
 
-                let retVal= Entry.hw.portData[id]?.value ?? 0;
+                let retVal = Entry.hw.portData[id]?.value ?? 0;
                 delete Entry.hw.portData[id];
-                return retVal
+                return retVal;
             },
         },
         CodeWiz_etcReadSensor_digitalRead: {
@@ -5352,9 +6240,9 @@ Entry.CodeWiz.getBlocks = function() {
                 const id = Entry.CodeWiz.sendOrder(order);
                 await Entry.CodeWiz.checkComplete(1000, id);
 
-                let retVal= Entry.hw.portData[id]?.value ?? false;
+                let retVal = Entry.hw.portData[id]?.value ?? false;
                 delete Entry.hw.portData[id];
-                return retVal
+                return retVal;
             },
         },
         CodeWiz_etcReadSensor_InfraredThermometerRead: {

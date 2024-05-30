@@ -3,5 +3,6 @@
   "entry.js": "/dist/entry.js",
   "entry.min.css": "/dist/entry.min.css",
   "entry.min.js": "/dist/entry.min.js",
-  "522.js": "/dist/522.b63b01dbf06dbf9f3969.js"
+  "25.js": "/dist/25.5fee5242b74479295c81.js",
+  "libkhaiii.wasm": "/dist/libkhaiii.wasm"
 }
