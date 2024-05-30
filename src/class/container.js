@@ -7,7 +7,7 @@
 import { Draggable } from '@entrylabs/tool';
 import { GEHelper } from '../graphicEngine/GEHelper';
 import DataTable from './DataTable';
-import { getInputList } from '../util/videoUtils';
+import { getInputList } from '@entrylabs/legacy-video';
 /**
  * Class for a container.
  * This have view for objects.

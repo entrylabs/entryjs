@@ -4,7 +4,7 @@
 'use strict';
 
 const { returnEmptyArr, createTooltip } = require('../command_util');
-import VideoUtils from '../../util/videoUtils';
+import VideoUtils from '@entrylabs/legacy-video';
 import WebUsbFlasher from '../../class/hardware/webUsbFlasher';
 
 (function(c) {
