@@ -226,8 +226,8 @@ Entry.EntryObject = class {
         const objectType = this.objectType;
         this.thumbUrl = '';
         if (objectType === 'sprite') {
-            if (picture.fileurl) {
-                this.thumbUrl = picture.fileurl;
+            if (picture.thumbUrl || picture.fileurl) {
+                this.thumbUrl = picture.thumbUrl || picture.fileurl;
             } else {
                 const fileName = picture.filename;
                 this.thumbUrl = `${Entry.defaultPath}/uploads/${fileName.substring(
