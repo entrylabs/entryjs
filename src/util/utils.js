@@ -1437,7 +1437,6 @@ Entry.getPicturesJSON = function (pictures = [], isClone) {
         o.dimension = p.dimension;
         o.filename = p.filename;
         o.fileurl = p.fileurl;
-        o.thumbUrl = p.thumbUrl;
         o.name = p.name;
         o.scale = p.scale;
         o.imageType = p.imageType || 'png';

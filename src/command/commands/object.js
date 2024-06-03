@@ -7,7 +7,7 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
 import VideoUtils from '@entrylabs/legacy-video';
 import WebUsbFlasher from '../../class/hardware/webUsbFlasher';
 
-(function (c) {
+(function(c) {
     const COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
 
     c[COMMAND_TYPES.selectObject] = {
@@ -67,13 +67,9 @@ import WebUsbFlasher from '../../class/hardware/webUsbFlasher';
             o.dimension = picture.dimension;
             o.filename = picture.filename;
             o.fileurl = picture.fileurl;
-            o.thumbUrl = picture.thumbUrl;
             o.name = picture.name;
             o.scale = picture.scale;
-            return [
-                ['objectId', objectId],
-                ['picture', o],
-            ];
+            return [['objectId', objectId], ['picture', o]];
         },
         dom: ['.btn_confirm_modal'],
         restrict(data, domQuery, callback) {
@@ -120,10 +116,7 @@ import WebUsbFlasher from '../../class/hardware/webUsbFlasher';
             return [objectId, picture];
         },
         log(objectId, picture) {
-            return [
-                ['objectId', objectId],
-                ['pictureId', picture._id],
-            ];
+            return [['objectId', objectId], ['pictureId', picture._id]];
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         validate: false,
@@ -158,10 +151,7 @@ import WebUsbFlasher from '../../class/hardware/webUsbFlasher';
             o.filename = sound.filename;
             o.fileurl = sound.fileurl;
             o.name = sound.name;
-            return [
-                ['objectId', objectId],
-                ['sound', o],
-            ];
+            return [['objectId', objectId], ['sound', o]];
         },
         dom: ['.btn_confirm_modal'],
         restrict(data, domQuery, callback) {
@@ -207,10 +197,7 @@ import WebUsbFlasher from '../../class/hardware/webUsbFlasher';
             return [objectId, sound];
         },
         log(objectId, sound) {
-            return [
-                ['objectId', objectId],
-                ['soundId', sound._id],
-            ];
+            return [['objectId', objectId], ['soundId', sound._id]];
         },
         dom: ['.btn_confirm_modal'],
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
@@ -374,10 +361,7 @@ import WebUsbFlasher from '../../class/hardware/webUsbFlasher';
         },
         log(objectId, newName) {
             const object = Entry.container.getObject(objectId);
-            return [
-                ['objectId', objectId],
-                ['newName', newName],
-            ];
+            return [['objectId', objectId], ['newName', newName]];
         },
         dom: ['container', 'objectId', '&0', 'nameInput'],
         restrict: _inputRestrictor,
@@ -393,10 +377,7 @@ import WebUsbFlasher from '../../class/hardware/webUsbFlasher';
             return [oldIndex, newIndex];
         },
         log(newIndex, oldIndex) {
-            return [
-                ['newIndex', newIndex],
-                ['oldIndex', oldIndex],
-            ];
+            return [['newIndex', newIndex], ['oldIndex', oldIndex]];
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         undo: 'objectReorder',
@@ -416,10 +397,7 @@ import WebUsbFlasher from '../../class/hardware/webUsbFlasher';
         },
         log(objectId, newX) {
             const { entity } = Entry.container.getObject(objectId);
-            return [
-                ['objectId', objectId],
-                ['newX', newX],
-            ];
+            return [['objectId', objectId], ['newX', newX]];
         },
         dom: ['container', 'objectId', '&0', 'xInput'],
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
@@ -441,10 +419,7 @@ import WebUsbFlasher from '../../class/hardware/webUsbFlasher';
         },
         log(objectId, newY) {
             const { entity } = Entry.container.getObject(objectId);
-            return [
-                ['objectId', objectId],
-                ['newY', newY],
-            ];
+            return [['objectId', objectId], ['newY', newY]];
         },
         dom: ['container', 'objectId', '&0', 'yInput'],
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
@@ -466,10 +441,7 @@ import WebUsbFlasher from '../../class/hardware/webUsbFlasher';
         },
         log(objectId, newSize) {
             const { entity } = Entry.container.getObject(objectId);
-            return [
-                ['objectId', objectId],
-                ['newSize', newSize],
-            ];
+            return [['objectId', objectId], ['newSize', newSize]];
         },
         dom: ['container', 'objectId', '&0', 'sizeInput'],
         restrict: _inputRestrictor,
@@ -491,10 +463,7 @@ import WebUsbFlasher from '../../class/hardware/webUsbFlasher';
         },
         log(objectId, newValue) {
             const { entity } = Entry.container.getObject(objectId);
-            return [
-                ['objectId', objectId],
-                ['newRotationValue', newValue],
-            ];
+            return [['objectId', objectId], ['newRotationValue', newValue]];
         },
         dom: ['container', 'objectId', '&0', 'rotationInput'],
         restrict: _inputRestrictor,
@@ -516,10 +485,7 @@ import WebUsbFlasher from '../../class/hardware/webUsbFlasher';
         },
         log(objectId, newValue) {
             const { entity } = Entry.container.getObject(objectId);
-            return [
-                ['objectId', objectId],
-                ['newDirectionValue', newValue],
-            ];
+            return [['objectId', objectId], ['newDirectionValue', newValue]];
         },
         dom: ['container', 'objectId', '&0', 'directionInput'],
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
@@ -543,10 +509,7 @@ import WebUsbFlasher from '../../class/hardware/webUsbFlasher';
         },
         log(objectId, newValue) {
             const { entity } = Entry.container.getObject(objectId);
-            return [
-                ['objectId', objectId],
-                ['newDirectionValue', newValue],
-            ];
+            return [['objectId', objectId], ['newDirectionValue', newValue]];
         },
         dom: ['container', 'objectId', '&0', 'rotationMethod', '&1'],
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
@@ -562,11 +525,7 @@ import WebUsbFlasher from '../../class/hardware/webUsbFlasher';
             return [objectId, oldModel, newModel];
         },
         log(objectId, newModel, oldModel) {
-            return [
-                ['objectId', objectId],
-                ['newModel', newModel],
-                ['oldModel', oldModel],
-            ];
+            return [['objectId', objectId], ['newModel', newModel], ['oldModel', oldModel]];
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         undo: 'entitySetModel',

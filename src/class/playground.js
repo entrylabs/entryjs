@@ -1274,8 +1274,8 @@ Entry.Playground = class Playground {
             element.picture = picture;
 
             const thumbnailView = $element.find(`#t_${picture.id}`)[0];
-            if (picture.thumbUrl || picture.fileurl) {
-                thumbnailView.style.backgroundImage = `url("${picture.thumbUrl || picture.fileurl}")`;
+            if (picture.fileurl) {
+                thumbnailView.style.backgroundImage = `url("${picture.fileurl}")`;
             } else {
                 // deprecated
                 const fileName = picture.filename;
@@ -1870,8 +1870,8 @@ Entry.Playground = class Playground {
             }
         });
 
-        if (picture.thumbUrl || picture.fileurl) {
-            thumbnailView.style.backgroundImage = `url("${picture.thumbUrl || picture.fileurl}")`;
+        if (picture.fileurl) {
+            thumbnailView.style.backgroundImage = `url("${picture.fileurl}")`;
         } else {
             // deptecated
             const fileName = picture.filename;
