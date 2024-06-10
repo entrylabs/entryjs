@@ -28,6 +28,7 @@ class TelliotBase {
 		});
 
 		console.log('[afterReceive] : ' + keys);
+		console.log('[afterReceive] : ' , data.state);
     }
 
 	afterSend = function () {
