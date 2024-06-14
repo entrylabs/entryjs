@@ -235,7 +235,7 @@ Entry.Robotis_rb_koala.setLanguage = function() {
                 robotis_RCar_cm_ir_value: "지정한 번호의 IR 센서 값(범위: 0 ~ 200)",
                 robotis_RCar_cm_ir_compare: "지정한 번호의 IR 센서 값과 지정한 값의 비교식이 맞으면 '참', 아니면 '거짓'으로 판단합니다.",
                 robotis_RCar_detectFrontObj: "지정한 센서 앞에 물체가 감지되면 '참', 아니면 '거짓'으로 판단합니다.",
-                robotis_RCar_cm_btn_value: "지정한 버튼이 지정한 상태이면 '참', 아니면 '거짓'으로 판단합니다.",
+                robotis_RCar_cm_btn_value: "지정한 버튼이 눌렸다가 해제되면 '참', 아니면 '거짓'으로 판단합니다.",
                 robotis_RCar_cm_joystick_value: "조이스틱 위치가 지정한 상태이면 '참', 아니면 '거짓'으로 판단합니다.",
                 robotis_RCar_mic: "마이크로 감지된 소리의 세기를 데시벨(dB)로 표시합니다.",
                 robotis_RCar_detectSound_compare: "소리가 나는 방향이 지정한 방향과 동일하면 '참', 아니면 '거짓'으로 판단합니다.",
@@ -681,7 +681,7 @@ Entry.Robotis_rb_koala.setLanguage = function() {
                 robotis_RCar_drive_angle: "Both wheels rotate %1 degree %2 %3",
                 robotis_RCar_go_distance: "Moves %2 %1 cm %3",
                 robotis_RCar_turn_angle: "Rotates %1 degree(s) %2 in place %3",
-                robotis_RCar_follow_line: "%1 속도로 라인 따라가기 %2",
+                robotis_RCar_follow_line: "Follow line with %1 speed %2",
                 robotis_RCar_stop_at_cross: "Stop at cross %1 %2",
                 robotis_RCar_turn_at_line: "%1 at cross and stop %2",
                 robotis_RCar_drive_stop: "Stop %1",
@@ -768,7 +768,7 @@ Entry.Robotis_rb_koala.setLanguage = function() {
                 robotis_RCar_cm_ir_value: "IR sensor value of the specified number (range: 0 ~ 200)",
                 robotis_RCar_cm_ir_compare: "If the IR sensor value of the specified number matches the specified value, it is determined as 'true'; otherwise, 'false'.",
                 robotis_RCar_detectFrontObj: "If an object is detected in front of the specified sensor, it is determined as 'true'; otherwise, 'false'.",
-                robotis_RCar_cm_btn_value: "If the specified button is in the specified state, it is determined as 'true'; otherwise, 'false'.",
+                robotis_RCar_cm_btn_value: "If the specified button is clicked, it is determined as 'true'; otherwise, 'false'.",
                 robotis_RCar_cm_joystick_value: "If the joystick position is in the specified state, it is determined as 'true'; otherwise, 'false'.",
                 robotis_RCar_mic: "Displays the intensity of the sound detected by the microphone in decibels (dB).",
                 robotis_RCar_detectSound_compare: "If the direction of the sound matches the specified direction, it is determined as 'true'; otherwise, 'false'.",
@@ -4548,7 +4548,7 @@ Entry.Robotis_rb_koala.getBlocks = function() {
                     Entry.Robotis_openCM70.delay
                 );
             },
-            syntax: { js: [], py: ['Robotis.RB100_led(%1, %2)'] },
+            syntax: { js: [], py: ['Robotis.RB100_led_pattern(%1, %2)'] },
         },
 
 

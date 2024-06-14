@@ -103,12 +103,6 @@ Entry.Robotis_rb_P_Assembly.blockMenuBlocks = [
     'robotis_Practice_stop_at_cross',
     'robotis_Practice_turn_at_line',
     'robotis_Practice_drive_stop',
-    //'robotis_Practice_follow_line_stop',
-    /*
-    'robotis_practice_robot_go',
-    'robotis_practice_robot_stop',
-    'robotis_practice_robot_rotate',
-    */
 
     // 값 블록
     'robotis_Practice_cm_ir_value',
@@ -178,7 +172,6 @@ Entry.Robotis_rb_P_Assembly.blockMenuBlocks = [
 
     // AI Camera 제어
     'robotis_Practice_huskylens_set_mode',
-    //'robotis_Practice_huskylens_save_result',
     'robotis_Practice_huskylens_print_custom_text',
     'robotis_Practice_huskylens_clear_custom_text',
 ];
@@ -198,7 +191,6 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
             template: {
                 // 주행 제어
                 robotis_Practice_drive_simple: "속도 %1 (으)로 %2 하기 %3",
-                robotis_Practice_drive_stop: "정지하기 %1",
                 robotis_Practice_drive_advanced: "왼쪽바퀴 %1 속도로 %2 하기, 오른쪽바퀴 %3 속도로 %4 하기 %5",
                 robotis_Practice_drive_seperate: "%1 바퀴 %2 속도로 %3 으로 회전하기 %4",
                 robotis_Practice_drive_angle: "%1 바퀴 %2 도만큼 %3 으로 회전하기 %4",
@@ -206,8 +198,8 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_Practice_turn_angle:"%1 도 %2 하기%3",
                 robotis_Practice_follow_line: "%1 속도로 라인 따라가기 %2",
                 robotis_Practice_stop_at_cross: "교차로 %1 에서 멈추기 %2",
-                robotis_Practice_follow_line_stop: "라인 따라가기 종료 %1",
                 robotis_Practice_turn_at_line: "교차로에서 %1 하고 멈추기 %2",
+                robotis_Practice_drive_stop: "정지하기 %1",
 
 
                 // 값 블록
@@ -215,8 +207,8 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_Practice_cm_ir_compare: "%1 적외선센서 값이 %2 보다 %3",
                 //robotis_Practice_detectFrontObj: "%1의 %2에 물체가 있으면",  // 거리센서도 사용할 경우
                 robotis_Practice_detectFrontObj: "적외선센서의 %2에 물체가 있으면",  // 거리센서를 사용하지 않을 경우
-                robotis_Practice_cm_btn_value: "제어기의 %1 버튼이 %2 이면",
-                robotis_Practice_cm_joystick_value: "제어기의 노랑 조이스틱 위치가 %1 이면",
+                robotis_Practice_cm_btn_value: "로봇의 %1 버튼을 클릭했을때",
+                robotis_Practice_cm_joystick_value: "로봇의 노랑 조이스틱 위치가 %1 이면",
                 robotis_Practice_mic: "소리의 크기(dB)",
                 robotis_Practice_detectSound_compare: "소리가 제어기의 %1에서 들리면",
                 robotis_Practice_imu: "%1축의 %2 값",
@@ -286,7 +278,6 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
 
                 // AI 카메라 제어
                 robotis_Practice_huskylens_set_mode: "AI 카메라: 모드를 %1(으)로 설정 %2",
-                robotis_Practice_huskylens_save_result: "AI 카메라: 감지결과 요청 (반복호출필요) %1",
                 robotis_Practice_huskylens_print_custom_text: "AI 카메라: 화면 위치 (%1,%2)에 %3를 보여주기%4",
                 robotis_Practice_huskylens_clear_custom_text: "AI 카메라: 화면의 글 지우기 %1",
             },
@@ -306,7 +297,7 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 // 값 블록
                 robotis_Practice_cm_ir_value: "지정한 번호의 IR 센서 값(범위: 0 ~ 200)",
                 robotis_Practice_cm_ir_compare: "지정한 번호의 IR 센서 값과 지정한 값의 비교식이 맞으면 '참', 아니면 '거짓'으로 판단합니다.",
-                robotis_Practice_detectFrontObj: "적외선센서 앞에 물체가 감지되면 '참', 아니면 '거짓'으로 판단합니다.",
+                robotis_Practice_detectFrontObj: "지정한 방향의 적외선센서에 물체가 감지되면 '참', 아니면 '거짓'으로 판단합니다.",
                 robotis_Practice_cm_btn_value: "지정한 버튼이 지정한 상태이면 '참', 아니면 '거짓'으로 판단합니다.",
                 robotis_Practice_cm_joystick_value: "조이스틱 위치가 지정한 상태이면 '참', 아니면 '거짓'으로 판단합니다.",
                 robotis_Practice_mic: "마이크로 감지된 소리의 세기를 데시벨(dB)로 표시합니다.",
@@ -768,70 +759,91 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
         },
         en: {
             template: {
-                robotis_RB_cm_ir_value: "IR sensor value of %1 Value of IR Sensor",
-                robotis_RB_cm_ir_compare: "If IR sensor value of %1 is %2 %3",
-                robotis_RB_detectFrontObj: "If there is an object in front",
-                robotis_RB_cm_btn_value: "If %1 button is %2",
-                robotis_RB_cm_joystick_value: "If the joystick location is %1",
-                robotis_RB_mic: "MIC volume(dB)",
-                robotis_RB_detectSound_compare: "If sound is detected from %1",
-                robotis_RB_imu: "%1 axis' %2 value",
-                robotis_RB_roll_pitch: "%1 Controller position ",
-                robotis_RB_environment_value: "%1 %2 value",
-                robotis_RB_environment_compare: "If %1 %2 value is %3 %4",
-                robotis_RB_distance_value: "%1 %2 value",
-                robotis_RB_distance_compare: "If %1 %2 value is %3 %4",
-                robotis_dxl_value: "ID %1 motor %2 value",
-                //robotis_RB_detectPose:"If robot falls %1",
+                // 주행 제어
+                robotis_Practice_drive_simple: "Move %2 with velocity %1 %3",
+                robotis_Practice_drive_advanced: "Left wheel %2 with velocity %1, right wheel %4 with velocity %3 %5",
+                robotis_Practice_drive_seperate: "%1 wheel rotate %3 with velocity %2 %4",
+                robotis_Practice_drive_angle: "Both wheels rotate %1 degree %2 %3",
+                robotis_Practice_go_distance: "Moves %2 %1 cm %3",
+                robotis_Practice_turn_angle: "Rotates %1 degree(s) %2 in place %3",
+                robotis_Practice_follow_line: "Follow line with %1 speed %2",
+                robotis_Practice_stop_at_cross: "Stop at cross %1 %2",
+                robotis_Practice_turn_at_line: "%1 at cross and stop %2",
+                robotis_Practice_drive_stop: "Stop %1",
+        
+        
+        
+                // 값 블록
+                robotis_Practice_cm_ir_value: "Value of %1 IR Sensor",
+                robotis_Practice_cm_ir_compare: "If the number %1 IR sensor value is %3 than %2",
+                robotis_Practice_detectFrontObj: "If %2 IR sensor detected an object",
+                robotis_Practice_cm_btn_value: "When the robot's %1 button is clicked",
+                robotis_Practice_cm_joystick_value: "If the robot's yellow joystick position is %1",
+                robotis_Practice_mic: "MIC volume(dB)",
+                robotis_Practice_detectSound_compare: "If sound is detected from %1 of the robot",
+                robotis_Practice_imu: "%1 axis' %2 value",
+                robotis_Practice_roll_pitch: "%1 value of the controller",
+                robotis_Practice_environment_value: "%1 value",
+                robotis_Practice_environment_compare: "If %1 value is %3 than %2",
+                robotis_Practice_line_cross_compare: "If the type of cross is %1",
+                robotis_Practice_dxl_value: "The angle of ID %1",
 
-                robotis_practice_robot_go:"With %1 velocity, move robot %2",
-                robotis_practice_robot_stop:"Robot STOP",
-                robotis_practice_robot_rotate:"Robot rotate %1° %2",
+                // 소리
+                robotis_Practice_scale_simple: "Play the note %2 as %3 in octave %1 %4",
+                robotis_Practice_scale_advanced: "Play the note %2 in octave %1 for %3 beat %4",
+                robotis_Practice_rest_simple: "%1 %2",
+                robotis_Practice_rest_advanced: "Rest %1 beat %2",
+                robotis_Practice_beat_per_minute: "Set playing speed to %1 %2",
+                robotis_Practice_Hello: "Robot speaks %1 %2",
+                robotis_Practice_effectSound: "Play sound effect %1 %2",
+                robotis_Practice_record: "Record to sound slot %1 %2",
+                robotis_Practice_playRecord: "Play sound from slot %1 %2",
+
                 
-                robotis_RB_follow_line: "Follow line with speed level %1 %2",
-                robotis_RB_follow_line_stop: "Stop following line %1",
+                // LCD 제어
+                robotis_Practice_screen: "Set screen expression to %1 %2 %3",
+                robotis_Practice_anim_screen: "Set screen animation to %1 %2 %3",
+                robotis_Practice_icon_screen_food_plant: "Display %1 from [Food/Plants] at position (%2, %3) in size %4 %5",
+                robotis_Practice_icon_screen_animal_human: "Display %1 from [Animal/Human] at position (%2, %3) in size %4 %5",
+                robotis_Practice_icon_screen_object_tool: "Display %1 from [Object/Tool] at position (%2, %3) in size %4 %5",
+                robotis_Practice_icon_screen_vehicle_number: "Display %1 from [Vehicle/Number] at position (%2, %3) in size %4 %5",
+                robotis_Practice_text_screen: "Display %1 in %5 in %4 at (%2, %3) on the screen %6",
+                robotis_Practice_text_screen_redraw: "Newly display %1 in %4 at (%2, %3) %5",
+                robotis_Practice_pixel: "Display %3 colored dot at (%1, %2) %4",
+                robotis_Practice_LCDColor: "Set screen color as %1 %2",
+                robotis_Practice_LCD_Flash: "Blink the screen with %1 and %2 at intervals of %3 seconds %4",
+                robotis_Practice_LCDBright: "Set screen brightness as %1 %2",
 
-                robotis_RB_cm_buzzer_index: "%1 at %2 octaves for %3 second(s) -> %4 %5",
-                robotis_RB_cm_screen: "Choose %1 as a screen background %2",
-                robotis_RB_cm_anim_screen: "Choose %1 as a screen animation %2",
-                robotis_RB_rsp_screen: "Display %1 on the controller screen at position (%2, %3) with a size of %4 %5",
-                robotis_RB_text_screen: "Display %1 on the controller screen at position (%2, %3) with %4 %5 %6",
-
-                robotis_RB_LCDBright: "Adjust screen brightness to %1 %2",
-                robotis_RB_LCDColor: "Set screen color to %1 %2",
-
-                robotis_RB_LEDBright: "Set the brightness of the %1 LED to %2 %3",
-                robotis_RB_cm_led: "%1 LED %2 %3",
-
-                robotis_RB_Hello: "Say %1 %2",
-                robotis_RB_effectSound: "Play the sound of %1 %2",
-                robotis_RB_record: "Record in room %1 %2",
-                robotis_RB_playRecord: "Play recorded sound in room %1 %2",
-
-                robotis_dxl_set_mode: "Set ID %1 motor as %2 mode %3",
-                //robotis_dxl_control: "Move 1st motor %1°, 2nd motor %2°, 3rd motor %3°, 4th motor %4°, 5th motor %5°, 6th motor %6°, 7th motor %7°, 8th motor %8° for  second %9 %10",
-                robotis_dxl_each_control: "Move %1th motor %2° for %3 second",
-                robotis_dxl_set_position: "Rotate ID %1 motor to angle %3° at speed %2 %4",
-                robotis_dxl_set_rotate: "%4 ID %1 motor %3 at speed %2 %4",
-                robotis_dxl_set_multiturn_round: "Rotate ID %1 motor %3 round %4 at speed %2 %5",
-
-                robotis_huskylens_block_value_closest_to_center: "%1 of the rectangle closest to the center",
-                robotis_huskylens_arrow_value_closest_to_center: "%1 of the arrow closest to the center",
-                robotis_huskylens_number_of_learned_id: "The number of learned ID",
-                robotis_huskylens_block_value_of_id: "%2 of the rectangle of ID %1",
-                robotis_huskylens_arrow_value_of_id: "%2 of the arrow of ID %1",
-
-                robotis_huskylens_connection_status: "📷 If %1",
-                robotis_huskylens_if_detected: "📷 If %1 is shown",
-                robotis_huskylens_if_learned_id: "📷 If object of ID %1 is learned",
-                robotis_huskylens_if_detected_id_type: "📷 If detected %2 of ID %1",
-
-                robotis_huskylens_set_mode: "📷 Set mode to %1 %2",
-                robotis_huskylens_save_result: "📷 Do recognition (use repeatedly) %1 ",
-                robotis_huskylens_print_custom_text: "📷 Print %3 at location (%1,%2)%4",
-                robotis_huskylens_clear_custom_text: "📷 Clear text %1",
+                // LED 제어
+                robotis_Practice_cm_led: "%2 the robot's %1 LED %3",
+                robotis_Practice_cm_led_pattern: "LED %1 blinks at a %2 speed %3",
 
 
+                // DXL 제어
+                robotis_Practice_dxl_set_mode: "Set ID %1 motor as %2 mode %3",
+                robotis_Practice_dxl_each_control: "Move %1th motor %2° for %3 second",
+                robotis_Practice_dxl_set_position: "Rotate ID %1 motor to angle %3° at speed %2 %4",
+                robotis_Practice_dxl_set_rotate: "%4 ID %1 motor %3 at speed %2 %4",
+                robotis_Practice_dxl_set_multiturn_round: "Rotate ID %1 motor %3 times %4 at speed %2 %5",
+
+                
+                // AI Camera 값 블록
+                robotis_Practice_huskylens_connection_status: "AI Camera: If %1",
+                robotis_Practice_huskylens_if_detected: "AI Camera: If %1 is displayed",
+        
+                robotis_Practice_huskylens_block_value_closest_to_center: "AI Camera: %1 of the rectangle closest to the center of the screen",
+                robotis_Practice_huskylens_arrow_value_closest_to_center: "AI Camera: %1 of the arrow closest to the center of the screen",
+                robotis_Practice_huskylens_number_of_learned_id: "AI Camera: the number of learned ID",
+                robotis_Practice_huskylens_block_value_of_id: "AI Camera: %2 of rectangle with detected ID %1",
+                robotis_Practice_huskylens_arrow_value_of_id: "AI Camera: %2 of arrow with detected ID %1",
+        
+                robotis_Practice_huskylens_if_learned_id: "AI Camera: If learned data with ID %1",
+                robotis_Practice_huskylens_if_detected_id_type: "AI Camera: If learned %2 data with ID %1",
+        
+                // AI 카메라 제어
+                robotis_Practice_huskylens_set_mode: "AI Camera: Set mode to %1 %2",
+                robotis_Practice_huskylens_print_custom_text: "AI Camera: Display %3 at screen position (%1, %2) %4",
+                robotis_Practice_huskylens_clear_custom_text: "AI Camera: Clear screen text %1",
             },            
             Helper: {
                 // 주행 제어
@@ -849,8 +861,8 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 // 값 블록
                 robotis_Practice_cm_ir_value: "IR sensor value of the specified number (range: 0 ~ 200)", 
                 robotis_Practice_cm_ir_compare: "If the IR sensor value of the specified number matches the specified value, it is determined as 'true'; otherwise, 'false'.", 
-                robotis_Practice_detectFrontObj: "If an object is detected in front of the specified sensor, it is determined as 'true'; otherwise, 'false'.", 
-                robotis_Practice_cm_btn_value: "If the specified button is in the specified state, it is determined as 'true'; otherwise, 'false'.", 
+                robotis_Practice_detectFrontObj: "It returns 'true' if an object is detected by the infrared sensor in the specified direction; otherwise, it returns 'false'.", 
+                robotis_Practice_cm_btn_value: "If the specified button is clicked, it is determined as 'true'; otherwise, 'false'.", 
                 robotis_Practice_cm_joystick_value: "If the joystick position is in the specified state, it is determined as 'true'; otherwise, 'false'.", 
                 robotis_Practice_mic: "Displays the intensity of the sound detected by the microphone in decibels (dB).", 
                 robotis_Practice_detectSound_compare: "If the direction of the sound matches the specified direction, it is determined as 'true'; otherwise, 'false'.", 
@@ -1984,57 +1996,6 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 py: ['Robotis.rb100_follow_line(%1)'],
             },
         },
-        robotis_Practice_follow_line_stop: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                   null
-                ],
-                type: 'robotis_Practice_follow_line_stop',
-            },
-            paramsKeyMap: {
-            },
-            class: 'robotis_rb100_move',
-            isNotFor: ['Robotis_rb_P_Assembly'],
-            func: function (sprite, script) {
-                // instruction / address / length / value / default length
-                
-                var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
-                var data_address = 5200;
-                var data_length = 1;
-                var data_value = 0;
-            
-
-                var data_sendqueue = [
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        data_value,
-                    ],
-                ];
-                return Entry.Robotis_carCont.postCallReturn(
-                    script,
-                    data_sendqueue,
-                    Entry.Robotis_openCM70.delay
-                );
-            },
-            syntax: {
-                js: [],
-                py: ['Robotis.rb100_follow_line_stop()'],
-            },
-        },
 
         
 
@@ -2333,22 +2294,10 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.robotis_blue, '45'],
-                        [Lang.Blocks.robotis_red, '42'],
+                        [Lang.Blocks.robotis_blue, '47'],
+                        [Lang.Blocks.robotis_red, '44'],
                     ],
                     value: '45',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.robotis_push, '1'],
-                        [Lang.Blocks.robotis_notPush, '0'],
-
-                    ],
-                    value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -2358,20 +2307,18 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             def: {
                 params: [
                     null,
-                    null
                 ],
                 type: 'robotis_Practice_cm_btn_value',
             },
             paramsKeyMap: {
                 VALUE: 0,
-                COMPARE_VAL: 1
             },
             class: 'robotis_rb100_custom',
             isNotFor: ['Robotis_rb_P_Assembly'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
                 var data_address = script.getNumberValue('VALUE');
-                var compareValue = script.getNumberValue('COMPARE_VAL');
+                var compareValue = 1;
 
                 var result = Entry.hw.portData[data_address];
                 if(result == undefined) {
@@ -6909,56 +6856,6 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             syntax: {
                 js: [],
                 py: ['Robotis.set_huskylens_mode(%1)'],
-            },
-        },
-        robotis_Practice_huskylens_save_result: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                ],
-                type: 'robotis_Practice_huskylens_save_result',
-            },
-            paramsKeyMap: {
-            },
-            class: 'robotis_openCM70_cm',
-            isNotFor: ['Robotis_rb_P_Assembly'],
-            func: function (sprite, script) {
-                // instruction / address / length / value / default length
-
-                var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
-                var data_address = 4002;
-                var data_length = 1;
-                var data_value = 1;
-
-                var data_sendqueue = [
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        data_value,
-                    ],
-                ];
-
-                return Entry.Robotis_carCont.postCallReturn(
-                    script,
-                    data_sendqueue,
-                    Entry.Robotis_openCM70.delay
-                );
-            },
-            syntax: {
-                js: [],
-                py: ['Robotis.robotis_huskylens_save_result()'],
             },
         },
         robotis_Practice_huskylens_print_custom_text: {
