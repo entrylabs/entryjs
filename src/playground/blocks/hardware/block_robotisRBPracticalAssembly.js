@@ -2896,6 +2896,14 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
 
                     return 0;
                 }
+                else {
+                    if (device_id_name == "PIR_100_TEMPERATURE") {
+                        result = result % 256;
+                        if (result > 128) {
+                            result = result - 256;
+                        }
+                    }
+                }
                 return result;
             },
             syntax: {
