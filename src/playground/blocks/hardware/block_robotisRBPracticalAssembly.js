@@ -207,8 +207,8 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_Practice_cm_ir_compare: "%1 적외선센서 값이 %2 보다 %3",
                 //robotis_Practice_detectFrontObj: "%1의 %2에 물체가 있으면",  // 거리센서도 사용할 경우
                 robotis_Practice_detectFrontObj: "적외선센서의 %2에 물체가 있으면",  // 거리센서를 사용하지 않을 경우
-                robotis_Practice_cm_btn_value: "로봇의 %1 버튼을 클릭했을때",
-                robotis_Practice_cm_joystick_value: "로봇의 노랑 조이스틱 위치가 %1 이면",
+                robotis_Practice_cm_btn_value: "제어기의 %1 버튼을 클릭했을때",
+                robotis_Practice_cm_joystick_value: "제어기의 노랑 조이스틱 위치가 %1 이면",
                 robotis_Practice_mic: "소리의 크기(dB)",
                 robotis_Practice_detectSound_compare: "소리가 제어기의 %1에서 들리면",
                 robotis_Practice_imu: "%1축의 %2 값",
@@ -283,16 +283,16 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
             },
             Helper: {
                 // 주행 제어
-                robotis_Practice_drive_simple: "실과로봇을 지정한 속도와 방향으로 주행\n속도범위: -100 ~ 100\n속도단위: %",
-                robotis_Practice_drive_advanced: "실과로봇의 좌,우 바퀴를 각각 지정한 속도와 방향으로 회전\n속도범위: -100 ~ 100\n속도단위: %",
-                robotis_Practice_drive_seperate: "실과로봇의 지정한 바퀴를 지정한 속도와 방향으로 회전\n속도범위: -100 ~ 100\n속도단위: %",
-                robotis_Practice_drive_angle: "실과로봇의 두 바퀴를 지정한 방향과 지정한 각도만큼 회전\n각도범위: -5760 ~ 5760\n각도단위: 도",
+                robotis_Practice_drive_simple: "로봇아이를 지정한 속도와 방향으로 주행\n속도범위: -100 ~ 100\n속도단위: %",
+                robotis_Practice_drive_advanced: "로봇아이의 좌,우 바퀴를 각각 지정한 속도와 방향으로 회전\n속도범위: -100 ~ 100\n속도단위: %",
+                robotis_Practice_drive_seperate: "로봇아이의 지정한 바퀴를 지정한 속도와 방향으로 회전\n속도범위: -100 ~ 100\n속도단위: %",
+                robotis_Practice_drive_angle: "로봇아이의 두 바퀴를 지정한 방향과 지정한 각도만큼 회전\n각도범위: -5760 ~ 5760\n각도단위: 도",
                 robotis_Practice_go_distance: "지정거리만큼 앞 또는 뒤로 이동\n거리범위: -1000 ~ 1000\n거리단위: mm",
                 robotis_Practice_turn_angle: "지정한 각도와 방향으로 제자리회전\n각도범위: -360 ~ 360\n각도단위: 도",
                 robotis_Practice_follow_line: "지정한 수준의 속도로 라인 따라가기 시작",
                 robotis_Practice_stop_at_cross: "지정한 교차로에서 멈추기",
                 robotis_Practice_turn_at_line: "교차로에서 지정한 회전을 하고 멈추기",
-                robotis_Practice_drive_stop: "실과로봇 정지하기",
+                robotis_Practice_drive_stop: "로봇아이 정지하기",
 
                 // 값 블록
                 robotis_Practice_cm_ir_value: "지정한 번호의 IR 센서 값(범위: 0 ~ 200)",
@@ -336,17 +336,18 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_Practice_pixel: "화면에 표시할 점의 위치와 색상을 설정\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120",
                 robotis_Practice_LCDBright: "화면 밝기를 설정\n밝기범위: 1% ~ 100%",
                 robotis_Practice_LCDColor: "화면 색상을 설정",
+                robotis_Practice_LCD_Flash: "화면이 깜박이는 2가지 색상과 간격을 지정",
 
                 // LED 제어
                 robotis_Practice_cm_led: "제어기의 지정한 LED를 켜거나 끄기",
-                robotis_Practice_cm_led_pattern: "제어기의 지정한 LED의 깜박임 패턴 설정",
+                robotis_Practice_cm_led_pattern: "제어기의 깜박임 패턴 설정",
                 
                 // DXL 제어
                 robotis_Practice_dxl_set_mode: "지정한 ID의 모터의 동작모드를 설정",
-                robotis_Practice_dxl_each_control: "지정한 ID의 모터가 지정한 위치로 지정한 시간(초)동안 움직여 지정한 각도로 움직이도록 설정",
+                robotis_Practice_dxl_each_control: "지정한 ID의 모터가 지정한 각도로 지정한 시간(초)동안 움직이도록 설정",
                 robotis_Practice_dxl_set_position: "지정한 ID의 모터가 지정한 속도로 지정한 각도로 움직이도록 설정",
-                robotis_Practice_dxl_set_rotate: "지정한 ID의 모터의 회전 속도를 설정",
-                robotis_Practice_dxl_set_multiturn_round: "지정한 ID의 모터가 지정한 속도와 방향으로 지정한 각도만큼 회전",
+                robotis_Practice_dxl_set_rotate: "지정한 ID의 모터의 회전 속도와 방향을 설정",
+                robotis_Practice_dxl_set_multiturn_round: "지정한 ID의 모터가 지정한 속도와 방향으로 지정한 바퀴만큼 회전",
                 
                 // AI Camera 값 블록
                 robotis_Practice_huskylens_connection_status: "AI 카메라가 연결된 상태이면 '참', 아니면 '거짓'으로 판단합니다.",
@@ -777,8 +778,8 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_Practice_cm_ir_value: "Value of %1 IR Sensor",
                 robotis_Practice_cm_ir_compare: "If the number %1 IR sensor value is %3 than %2",
                 robotis_Practice_detectFrontObj: "If %2 IR sensor detected an object",
-                robotis_Practice_cm_btn_value: "When the robot's %1 button is clicked",
-                robotis_Practice_cm_joystick_value: "If the robot's yellow joystick position is %1",
+                robotis_Practice_cm_btn_value: "When the controller's %1 button is clicked",
+                robotis_Practice_cm_joystick_value: "If the controller's yellow joystick position is %1",
                 robotis_Practice_mic: "MIC volume(dB)",
                 robotis_Practice_detectSound_compare: "If sound is detected from %1 of the robot",
                 robotis_Practice_imu: "%1 axis' %2 value",
@@ -896,19 +897,20 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_Practice_text_screen: "Set the position, font size, and color of the specified text on the screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120", 
                 robotis_Practice_text_screen_redraw: "Set the position and color of the specified text to be newly displayed (clearing the background of the text) on the screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120\nSize: 0 ~ 200", 
                 robotis_Practice_pixel: "Set the position and color of the dot to be displayed on the screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120", 
-                robotis_Practice_LCDBright: "Set the screen brightness\nBrightness range: 1% ~ 100%", 
+                robotis_Practice_LCDBright: "Set the screen brightness\nBrightness range: 0% ~ 100%", 
                 robotis_Practice_LCDColor: "Set the screen color", 
+                robotis_Practice_LCD_Flash: "Specify two colors and the interval for the screen to blink.",
 
                 // LED 제어
                 robotis_Practice_cm_led: "Turn the specified LED of the controller on or off", 
-                robotis_Practice_cm_led_pattern: "Set the blinking pattern of the specified LED of the controller", 
+                robotis_Practice_cm_led_pattern: "Set the blinking pattern of LEDs of the controller", 
 
                 // DXL 제어
-                robotis_Practice_dxl_set_mode: "Set the operating mode of the motor with the specified ID", 
-                robotis_Practice_dxl_each_control: "Set the motor with the specified ID to move to the specified angle for the specified time (seconds) at the specified speed", 
-                robotis_Practice_dxl_set_position: "Set the motor with the specified ID to move to the specified angle at the specified speed", 
-                robotis_Practice_dxl_set_rotate: "Set the rotation speed of the motor with the specified ID", 
-                robotis_Practice_dxl_set_multiturn_round: "Set the motor with the specified ID to rotate at the specified speed and direction by the specified angle", 
+                robotis_Practice_dxl_set_mode: "Set the operating mode of the motor with the specified ID",
+                robotis_Practice_dxl_each_control: "Set the motor with the specified ID to move to the specified angle for the specified time (seconds)",
+                robotis_Practice_dxl_set_position: "Set the motor with the specified ID to move to the specified angle at the specified speed",
+                robotis_Practice_dxl_set_rotate: "Set the rotation speed and direction of the motor with the specified ID",
+                robotis_Practice_dxl_set_multiturn_round: "Set the motor with the specified ID to rotate the specified number of turns at the specified speed and direction",
 
                 // AI Camera 값 블록
                 robotis_Practice_huskylens_connection_status: "If the AI camera is connected, it is determined as 'true'; otherwise, 'false'.", 
@@ -2297,7 +2299,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                         [Lang.Blocks.robotis_blue, '47'],
                         [Lang.Blocks.robotis_red, '44'],
                     ],
-                    value: '45',
+                    value: '47',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -4502,6 +4504,8 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 var data_address = 180;
                 var data_length = 1;
                 var data_value = 0;
+
+                bright = Math.min(Math.max(bright, 0), 100);
                 
                 data_value = bright;
                 

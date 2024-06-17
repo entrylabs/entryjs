@@ -220,16 +220,16 @@ Entry.Robotis_rb_koala.setLanguage = function() {
             },
             Helper: {
                 // 주행 제어
-                robotis_RCar_drive_simple: "실과로봇을 지정한 속도와 방향으로 주행\n속도범위: -100 ~ 100\n속도단위: %",
-                robotis_RCar_drive_advanced: "실과로봇의 좌,우 바퀴를 각각 지정한 속도와 방향으로 회전\n속도범위: -100 ~ 100\n속도단위: %",
-                robotis_RCar_drive_seperate: "실과로봇의 지정한 바퀴를 지정한 속도와 방향으로 회전\n속도범위: -100 ~ 100\n속도단위: %",
-                robotis_RCar_drive_angle: "실과로봇의 두 바퀴를 지정한 방향과 지정한 각도만큼 회전\n각도범위: -5760 ~ 5760\n각도단위: 도",
+                robotis_RCar_drive_simple: "코알라봇을 지정한 속도와 방향으로 주행\n속도범위: -100 ~ 100\n속도단위: %",
+                robotis_RCar_drive_advanced: "코알라봇의 좌,우 바퀴를 각각 지정한 속도와 방향으로 회전\n속도범위: -100 ~ 100\n속도단위: %",
+                robotis_RCar_drive_seperate: "코알라봇의 지정한 바퀴를 지정한 속도와 방향으로 회전\n속도범위: -100 ~ 100\n속도단위: %",
+                robotis_RCar_drive_angle: "코알라봇의 두 바퀴를 지정한 방향과 지정한 각도만큼 회전\n각도범위: -5760 ~ 5760\n각도단위: 도",
                 robotis_RCar_go_distance: "지정거리만큼 앞 또는 뒤로 이동\n거리범위: -1000 ~ 1000\n거리단위: mm",
                 robotis_RCar_turn_angle: "지정한 각도와 방향으로 제자리회전\n각도범위: -360 ~ 360\n각도단위: 도",
                 robotis_RCar_follow_line: "지정한 수준의 속도로 라인 따라가기 시작",
                 robotis_RCar_stop_at_cross: "지정한 교차로에서 멈추기",
                 robotis_RCar_turn_at_line: "교차로에서 지정한 회전을 하고 멈추기",
-                robotis_RCar_drive_stop: "실과로봇 정지하기",
+                robotis_RCar_drive_stop: "코알라봇 정지하기",
 
                 // 값 블록
                 robotis_RCar_cm_ir_value: "지정한 번호의 IR 센서 값(범위: 0 ~ 200)",
@@ -274,7 +274,7 @@ Entry.Robotis_rb_koala.setLanguage = function() {
 
                 // LED 제어
                 robotis_RCar_cm_led: "제어기의 지정한 LED를 켜거나 끄기",
-                robotis_RCar_cm_led_pattern: "제어기의 지정한 LED의 깜박임 패턴 설정",
+                robotis_RCar_cm_led_pattern: "제어기의 LED의 깜박임 패턴 설정",
                 
                 // AI Camera 값 블록
                 robotis_RCar_huskylens_connection_status: "AI 카메라가 연결된 상태이면 '참', 아니면 '거짓'으로 판단합니다.",
@@ -800,12 +800,12 @@ Entry.Robotis_rb_koala.setLanguage = function() {
                 robotis_RCar_text_screen: "Set the position, font size, and color of the specified text on the screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120",
                 robotis_RCar_text_screen_redraw: "Set the position and color of the specified text to be newly displayed (clearing the background of the text) on the screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120\nSize: 0 ~ 200",
                 robotis_RCar_pixel: "Set the position and color of the dot to be displayed on the screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120",
-                robotis_RCar_LCDBright: "Set the screen brightness\nBrightness range: 1% ~ 100%",
+                robotis_RCar_LCDBright: "Set the screen brightness\nBrightness range: 0% ~ 100%",
                 robotis_RCar_LCDColor: "Set the screen color",
 
                 // LED Control
                 robotis_RCar_cm_led: "Turn the specified LED of the controller on or off",
-                robotis_RCar_cm_led_pattern: "Set the blinking pattern of the specified LED of the controller",
+                robotis_RCar_cm_led_pattern: "Set the blinking pattern of LEDs of the controller",
                 
                 // AI Camera Value Blocks
                 robotis_RCar_huskylens_connection_status: "If the AI camera is connected, it is determined as 'true'; otherwise, 'false'.",
@@ -2376,7 +2376,7 @@ Entry.Robotis_rb_koala.getBlocks = function() {
                         [Lang.Blocks.robotis_blue, '47'],
                         [Lang.Blocks.robotis_red, '44'],
                     ],
-                    value: '44',
+                    value: '47',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -4300,6 +4300,8 @@ Entry.Robotis_rb_koala.getBlocks = function() {
                 var data_address = 180;
                 var data_length = 1;
                 var data_value = 0;
+
+                bright = Math.min(Math.max(bright, 0), 100);
                 
                 data_value = bright;
                 
