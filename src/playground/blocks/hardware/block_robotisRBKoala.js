@@ -839,7 +839,7 @@ Entry.Robotis_rb_koala.setLanguage = function() {
                 robotis_right: "Right",
                 robotis_both: "Both",
                 robotis_rgee: "R-GEE",
-                robotis_rla: "KoalaBot",
+                robotis_rla: "KODALA",
                 robotis_kkokdu: "TIG",
                 robotis_korean1: "Hello!",
                 robotis_korean2: "Great to see you.",
