@@ -60,6 +60,7 @@ export interface UartEvents {
  * UART Service
  */
 export class UartService extends (EventDispatcher as new () => TypedDispatcher<UartEvents>) {
+    public static serviceName = 'UartService';
     /**
      * @hidden
      */

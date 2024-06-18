@@ -110,6 +110,7 @@ export declare interface IEntry extends EntryOptions {
     expansionBlocks: any;
     aiUtilizeBlocks: any;
     hardwareLiteBlocks: any;
+    generateHash: () => string;
 }
 
 declare type IHardwareType = 'serial' | 'bluetooth' | 'hid' | 'ble';

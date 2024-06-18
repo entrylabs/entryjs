@@ -10,6 +10,7 @@ import {
     redo,
     isModified,
     getAudioBuffer,
+    destroy,
 } from '@entrylabs/sound-editor';
 import toWav from 'audiobuffer-to-wav';
 
@@ -202,6 +203,7 @@ class SoundEditor {
 
     destory() {
         unregistExportFunction();
+        destroy();
     }
 }
 

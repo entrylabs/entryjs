@@ -11,11 +11,6 @@ Entry.ETkit = {
   },
 
   setZero: function() {
-    //Entry.hw.sendQueue.readablePorts = [];
-    //for (let port = 2; port < 14; port++) {
-    //    Entry.hw.sendQueue[port] = 0;
-    //    Entry.hw.sendQueue.readablePorts.push(port);
-    //}
     if (!Entry.hw.sendQueue.SET) {
       Entry.hw.sendQueue = {
         GET: {},
@@ -439,13 +434,11 @@ Entry.ETkit.getBlocks = function () {
         var text = [];
 
         if (!script.isStart) {
-          if (typeof string === 'string') {
+          if (typeof string === 'string' || typeof string === 'number') {
+            string = string.toString();
             for (var i = 0; i < string.length; i++) {
               text[i] = string.charCodeAt(i);
             }
-          } else if (typeof string === 'number') {
-            text[0] = 1;
-            text[1] = string / 1;
           } else {
             text[0] = string;
           }
@@ -599,57 +592,77 @@ Entry.ETkit.getBlocks = function () {
       outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
       fontColor: '#fff',
       skeleton: 'basic_boolean_field',
-      statements: [],
       template: Lang.template.etkit_get_digital_pin_bool,
       params: [
-        {
-          type: 'Block',
-          accept: 'string',
-        },
+          {
+              type: 'Block',
+              accept: 'string',
+              defaultType: 'number',
+          },
       ],
       events: {},
       def: {
-        params: [
-          {
-            type: 'etkit_list_digital_basic',
-          },
-        ],
-        type: 'etkit_get_digital_pin_bool',
+          params: [
+              {
+                  type: 'arduino_get_port_number',
+                  params: [4],
+              },
+          ],
+          type: 'etkit_get_digital_pin_bool',
       },
       paramsKeyMap: {
-        PORT: 0,
+          PORT: 0,
       },
       class: 'ETkitGet',
       isNotFor: ['ETkit'],
-      func: function (sprite, script) {
-        var port = script.getNumberValue('PORT');
-        var DIGITAL = Entry.hw.portData.DIGITAL;
-        if (!Entry.hw.sendQueue['GET']) {
-          Entry.hw.sendQueue['GET'] = {};
-        }
-        if (Entry.hw.sendQueue.SET[port]) {
-          return Entry.hw.sendQueue.SET[port].data;
-        } else {
-          Entry.hw.sendQueue['GET'][Entry.ETkit.sensorTypes.DIGITAL] = {
-            port: port,
-            time: new Date().getTime(),
-          };
-        }
-        return DIGITAL ? DIGITAL[port] || 0 : 0;
+      func(sprite, script) {
+          const { hwModule = {} } = Entry.hw;
+          const { name } = hwModule;
+          if (name === 'ETkit') {
+              //var port = script.getValue('PORT');
+              const port = script.getNumberValue('PORT', script);
+              const DIGITAL = Entry.hw.portData.DIGITAL;
+              if (!Entry.hw.sendQueue.GET) {
+                  Entry.hw.sendQueue.GET = {};
+              }
+              Entry.hw.sendQueue.GET[Entry.ETkit.sensorTypes.DIGITAL] = {
+                  port,
+                  time: new Date().getTime(),
+              };
+              return DIGITAL ? DIGITAL[port] || 0 : 0;
+          } else {
+              return Entry.block.etkit_get_digital_pin_bool.func(sprite, script);
+          }
       },
-      syntax: { js: [], py: ['etkit.get_digital_pin_bool(%1)'] },
+      syntax: {
+          js: [],
+          py: [
+              {
+                  syntax: 'Arduino.etkit_get_digital_pin_bool(%1)',
+                  blockType: 'param',
+                  textParams: [
+                      {
+                          type: 'Block',
+                          accept: 'string',
+                      },
+                  ],
+              },
+          ],
+      },
     },
     etkit_set_digital_pin: {
       color: EntryStatic.colorSet.block.default.HARDWARE,
       outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
       skeleton: 'basic',
       statements: [],
+      template: Lang.template.etkit_set_digital_pin,
       params: [
           {
-            type: 'Block',
-            accept: 'string',
-            defaultType: 'number',
+              type: 'Block',
+              accept: 'string',
+              defaultType: 'number',
           },
+          
           {
               type: 'Dropdown',
               options: [
@@ -661,10 +674,15 @@ Entry.ETkit.getBlocks = function () {
               bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
               arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
           },
+          
+          /*{
+              type: 'Block',
+              accept: 'string',
+          },*/
           {
-            type: 'Indicator',
-            img: 'block_icon/hardware_icon.svg',
-            size: 12,
+              type: 'Indicator',
+              img: 'block_icon/hardware_icon.svg',
+              size: 12,
           },
       ],
       events: {},
@@ -672,8 +690,13 @@ Entry.ETkit.getBlocks = function () {
           params: [
               {
                   type: 'arduino_get_port_number',
-                  params: ['11'],
+                  //type: 'etkit_list_digital_basic',
+                  params: [5],
               },
+              //{
+              //    type: 'etkit_toggle_digital_basic',
+              //    params: ['on'],
+              //},
               null,
               null,
           ],
@@ -685,37 +708,46 @@ Entry.ETkit.getBlocks = function () {
       },
       class: 'ETkitSet',
       isNotFor: ['ETkit'],
-      func: function(sprite, script) {
-        const port = script.getNumberValue('PORT');
-        let value = script.getValue('VALUE');
+      func: function (sprite, script) {
+          const port = script.getNumberValue('PORT');
+          let value = script.getValue('VALUE');
 
-        if (typeof value === 'string') {
-            value = value.toLowerCase();
-        }
-        if (Entry.ETkit.highList.indexOf(value) > -1) {
-            value = 255;
-        } else if (Entry.ETkit.lowList.indexOf(value) > -1) {
-            value = 0;
-        } else {
-            throw new Error();
-        }        
-        if (!Entry.hw.sendQueue.SET) {
-            Entry.hw.sendQueue.SET = {};
-        }
-        Entry.hw.sendQueue.SET[port] = {
-            type: Entry.ETkit.sensorTypes.DIGITAL,
-            data: value,
-            time: new Date().getTime(),
-        };
-        //Entry.hw.setDigitalPortValue(port, value);
-        
-        Entry.hw.sendQueue[port] = value;
-        return script.callReturn();
+          if (typeof value === 'string') {
+              value = value.toLowerCase();
+          }
+          if (Entry.ETkit.highList.indexOf(value) > -1) {
+              value = 255;
+          } else if (Entry.ETkit.lowList.indexOf(value) > -1) {
+              value = 0;
+          } else {
+              throw new Error();
+          }
+          if (!Entry.hw.sendQueue.SET) {
+              Entry.hw.sendQueue.SET = {};
+          }
+          Entry.hw.sendQueue.SET[port] = {
+              type: Entry.ETkit.sensorTypes.DIGITAL,
+              data: value,
+              time: new Date().getTime(),
+          };
+          return script.callReturn();
       },
       syntax: {
           js: [],
           py: [
-              'etkit.set_digital_pin(%1, %2)'
+              {
+                  syntax: 'Arduino.digitalWrite(%1, %2)',
+                  textParams: [
+                      {
+                          type: 'Block',
+                          accept: 'string',
+                      },
+                      {
+                          type: 'Block',
+                          accept: 'string',
+                      },
+                  ],
+              },
           ],
       },
     },
@@ -772,10 +804,12 @@ Entry.ETkit.getBlocks = function () {
           {
               type: 'Block',
               accept: 'string',
+              defaultType: 'number',
           },
           {
               type: 'Block',
               accept: 'string',
+              defaultType: 'number',
           },
           {
               type: 'Indicator',
@@ -786,14 +820,11 @@ Entry.ETkit.getBlocks = function () {
       events: {},
       def: {
           params: [
-              {
-                  type: 'etkit_list_digital_basic',
-              },
-              {
-                  type: 'text',
-                  params: ['90'],
-              },
-              null,
+            {
+              type: 'arduino_get_port_number',
+              params: ['3'],
+            },
+            null,
           ],
           type: 'etkit_set_digital_servo',
       },
@@ -804,21 +835,22 @@ Entry.ETkit.getBlocks = function () {
       class: 'ETkitSet',
       isNotFor: ['ETkit'],
       func: function(sprite, script) {
-          var port = script.getNumberValue('PORT');
-          var value = script.getNumberValue('VALUE');
-          value = Math.min(value, 180);
-          value = Math.max(value, 0);
+        const sq = Entry.hw.sendQueue;
+        const port = script.getNumberValue('PORT', script);
+        let value = script.getNumberValue('VALUE', script);
+        value = Math.min(180, value);
+        value = Math.max(0, value);
 
-          if (!Entry.hw.sendQueue['SET']) {
-              Entry.hw.sendQueue['SET'] = {};
-          }
-          Entry.hw.sendQueue['SET'][port] = {
-              type: Entry.ETkit.sensorTypes.SERVO,
-              data: value,
-              time: new Date().getTime(),
-          };
+        if (!sq.SET) {
+            sq.SET = {};
+        }
+        sq.SET[port] = {
+            type: Entry.ETkit.sensorTypes.SERVO,
+            data: value,
+            time: new Date().getTime(),
+        };
 
-          return script.callReturn();
+        return script.callReturn();
       },
       syntax: { js: [], py: ['etkit.set_digital_servo(%1, %2)'] },
     },
@@ -1080,9 +1112,85 @@ Entry.ETkit.getBlocks = function () {
       },
       syntax: { js: [], py: ['etkit.get_digital_segment()'] },
     },
+    arduino_get_port_number: {
+      color: EntryStatic.colorSet.block.default.HARDWARE,
+      outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+      skeleton: 'basic_string_field',
+      statements: [],
+      //template: Lang.template.arduino_get_port_number,
+      template: '%1',
+      params: [
+          {
+              type: 'Dropdown',
+              options: [
+                  ['0', '0'],
+                  ['1', '1'],
+                  ['2', '2'],
+                  ['3', '3'],
+                  ['4', '4'],
+                  ['5', '5'],
+                  ['6', '6'],
+                  ['7', '7'],
+                  ['8', '8'],
+                  ['9', '9'],
+                  ['10', '10'],
+                  ['11', '11'],
+                  ['12', '12'],
+                  ['13', '13'],
+              ],
+              value: '5',
+              fontSize: 11,
+              bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+              arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+          },
+      ],
+      events: {},
+      def: {
+          params: [null],
+      },
+      paramsKeyMap: {
+          PORT: 0,
+      },
+      func(sprite, script) {
+          return script.getStringField('PORT');
+      },
+      syntax: {
+          js: [],
+          py: [
+              {
+                  syntax: '%1',
+                  textParams: [
+                      {
+                          type: 'Dropdown',
+                          options: [
+                              ['0', '0'],
+                              ['1', '1'],
+                              ['2', '2'],
+                              ['3', '3'],
+                              ['4', '4'],
+                              ['5', '5'],
+                              ['6', '6'],
+                              ['7', '7'],
+                              ['8', '8'],
+                              ['9', '9'],
+                              ['10', '10'],
+                              ['11', '11'],
+                              ['12', '12'],
+                              ['13', '13'],
+                          ],
+                          value: '0',
+                          fontSize: 11,
+                          bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                          arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                      },
+                  ],
+                  keyOption: 'arduino_get_port_number',
+              },
+          ],
+      },
+  },
+  
   };
 }
-
-
 
 module.exports = Entry.ETkit;

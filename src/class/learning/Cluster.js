@@ -135,7 +135,10 @@ class Cluster {
     }
 
     setTrainOption(type, value) {
-        this.#trainParam[type] = value;
+        this.#trainParam = {
+            ...this.#trainParam,
+            [type]: value,
+        };
     }
 
     getTrainOption() {

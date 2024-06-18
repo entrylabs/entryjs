@@ -128,9 +128,11 @@ Entry.Playground = class Playground {
 
             const resizeHandle = Entry.createElement('div')
                 .addClass('entryPlaygroundResizeWorkspace', 'entryRemove')
+                .bindOnClick(() => {
+                    this.mainWorkspace.blockMenu.toggleBlockMenu();
+                })
                 .appendTo(codeView);
             this.resizeHandle_ = resizeHandle;
-            this.initializeResizeHandle(resizeHandle);
 
             /** @type {!Element} */
             this.codeView_ = codeView;
@@ -574,6 +576,7 @@ Entry.Playground = class Playground {
             id: 'entryWorkspaceBoard',
             class: 'entryWorkspaceBoard',
         });
+        this.boardView_ = boardView;
 
         const blockMenuView = Entry.Dom('div', {
             parent: codeView,
@@ -617,6 +620,12 @@ Entry.Playground = class Playground {
         }
         if (Entry.hwLite) {
             Entry.hwLite.refreshHardwareLiteBlockMenu();
+        }
+        if (Entry.options.expansionDisable) {
+            Entry.playground.blockMenu.banCategory('expansion');
+        }
+        if (Entry.options.aiUtilizeDisable) {
+            Entry.playground.blockMenu.banCategory('ai_utilize');
         }
     }
 
@@ -721,9 +730,7 @@ Entry.Playground = class Playground {
      */
     generateTextView(textView) {
         const that = this;
-        const wrap = Entry.createElement('div')
-            .addClass('write_box')
-            .appendTo(textView);
+        const wrap = Entry.createElement('div').addClass('write_box').appendTo(textView);
         const writeSet = Entry.createElement('div').addClass('write_set');
         const inputArea = Entry.createElement('div').addClass('input_box');
         wrap.appendChild(writeSet);
@@ -955,7 +962,7 @@ Entry.Playground = class Playground {
         );
         textEditInput.type = 'text';
         textEditInput.placeholder = Lang.Workspace.textbox_input;
-        const textChangeApply = function() {
+        const textChangeApply = function () {
             const object = Entry.playground.object;
             const entity = object.entity;
             const selected = $('#entryTextBoxAttrFontName').data('font');
@@ -982,7 +989,7 @@ Entry.Playground = class Playground {
         textEditInput.addEventListener('focusin', () => {
             textEditInput.prevText = textEditInput.value;
         });
-        textEditInput.onblur = function() {
+        textEditInput.onblur = function () {
             if (textEditInput.value !== textEditInput.prevText) {
                 Entry.do('editText', textEditInput.value, textEditInput.prevText);
             }
@@ -1001,7 +1008,7 @@ Entry.Playground = class Playground {
         textEditArea.addEventListener('focusin', () => {
             textEditArea.prevText = textEditArea.value;
         });
-        textEditArea.onblur = function() {
+        textEditArea.onblur = function () {
             if (textEditArea.value !== textEditArea.prevText) {
                 Entry.do('editText', textEditArea.value, textEditArea.prevText);
             }
@@ -1480,9 +1487,9 @@ Entry.Playground = class Playground {
         Entry.aiUtilize.banAIUtilizeBlocks(items.map(({ name }) => name));
     }
 
-    setAiLearningBlock(url, info) {
+    setAiLearningBlock(data) {
         Entry.aiLearning.removeLearningBlocks();
-        Entry.aiLearning.load({ url, ...info });
+        Entry.aiLearning.load({ ...data });
     }
 
     /**
@@ -1520,6 +1527,7 @@ Entry.Playground = class Playground {
         if (!this.tabViewElements) {
             return;
         }
+
         for (const i in this.tabViewElements) {
             this.tabViewElements[i].removeClass('entryTabSelected');
         }
@@ -1530,7 +1538,15 @@ Entry.Playground = class Playground {
             Entry.playground.toggleOnVariableView();
             this.tabViewElements.code.removeClass('entryTabSelected');
             this.tabViewElements[viewType].addClass('entryTabSelected');
+            this.resizeHandle_.removeClass('unfolding');
+            this.resizeHandle_.addClass('entryRemove');
+            this.boardView_.addClass('wideView');
+            Entry.windowResized.notify();
             return;
+        } else {
+            this.resizeHandle_.removeClass('entryRemove');
+            this.boardView_.removeClass('wideView');
+            Entry.windowResized.notify();
         }
         const views = this.view_.children;
         for (let i = 0; i < views.length; i++) {
@@ -1681,40 +1697,6 @@ Entry.Playground = class Playground {
     }
 
     /**
-     * Handle is resizing playground handle.
-     * This add mouse move and mouse up event to document.
-     * @param {!Element} handle
-     */
-    initializeResizeHandle(handle) {
-        let listener;
-        const that = this;
-        $(handle).bind('mousedown touchstart', function(e) {
-            e.preventDefault();
-            if (Entry.disposeEvent) {
-                Entry.disposeEvent.notify();
-            }
-            that.resizing = true;
-            if (Entry.documentMousemove) {
-                listener = Entry.documentMousemove.attach(this, ({ clientX }) => {
-                    if (that.resizing) {
-                        Entry.resizeElement({
-                            menuWidth: clientX - Entry.interfaceState.canvasWidth,
-                        });
-                    }
-                });
-            }
-            $(document).bind('mouseup.resizeHandle touchend.resizeHandle', () => {
-                $(document).unbind('.resizeHandle');
-                if (listener) {
-                    that.resizing = false;
-                    listener.destroy();
-                    listener = undefined;
-                }
-            });
-        });
-    }
-
-    /**
      * Reload playground
      */
     reloadPlayground() {
@@ -1828,7 +1810,7 @@ Entry.Playground = class Playground {
     generatePictureElement(picture) {
         const element = Entry.createElement('li', picture.id)
             .addClass('entryPlaygroundPictureElement')
-            .bindOnClick(function() {
+            .bindOnClick(function () {
                 Entry.playground.selectPicture(this.picture);
             });
         picture.view = element;
@@ -1873,8 +1855,19 @@ Entry.Playground = class Playground {
             'entryPlaygroundPictureThumbnail'
         );
 
+        let mouseDownCoordinate;
+        const moveThreshold = 5;
+        thumbnailView.addEventListener('touchstart', (e) => {
+            const event = Entry.Utils.convertMouseEvent(e);
+            mouseDownCoordinate = { y: event.clientY };
+        });
+
         thumbnailView.addEventListener('touchmove', (e) => {
             e.preventDefault();
+            const event = Entry.Utils.convertMouseEvent(e);
+            if (Math.abs(event.clientY - mouseDownCoordinate.y) > moveThreshold) {
+                Entry.ContextMenu.hide();
+            }
         });
 
         if (picture.fileurl) {
@@ -1905,9 +1898,8 @@ Entry.Playground = class Playground {
         element.appendChild(nameView);
         Entry.createElement('div', `s_${picture.id}`)
             .addClass('entryPlaygroundPictureSize')
-            .appendTo(
-                element
-            ).textContent = `${picture.dimension.width} X ${picture.dimension.height}`;
+            .appendTo(element).textContent =
+            `${picture.dimension.width} X ${picture.dimension.height}`;
 
         const removeButton = Entry.createElement('div').addClass('entryPlayground_del');
         const { Buttons = {} } = Lang || {};
@@ -2016,8 +2008,19 @@ Entry.Playground = class Playground {
             }
         });
 
+        let mouseDownCoordinate;
+        const moveThreshold = 5;
+        thumbnailView.addEventListener('touchstart', (e) => {
+            const event = Entry.Utils.convertMouseEvent(e);
+            mouseDownCoordinate = { y: event.clientY };
+        });
+
         thumbnailView.addEventListener('touchmove', (e) => {
             e.preventDefault();
+            const event = Entry.Utils.convertMouseEvent(e);
+            if (Math.abs(event.clientY - mouseDownCoordinate.y) > moveThreshold) {
+                Entry.ContextMenu.hide();
+            }
         });
 
         thumbnailView.bindOnClick(() => {
@@ -2331,18 +2334,14 @@ Entry.Playground = class Playground {
         if (isLineBreak) {
             entity.setLineBreak(true);
             $('.input_inner').height('228px');
-            $('.write_type_box a')
-                .eq(1)
-                .addClass('on');
+            $('.write_type_box a').eq(1).addClass('on');
             $('.input_box .single').hide();
             $('.input_box .multi').show();
             this._setFontFontUI();
         } else {
             entity.setLineBreak(false);
             $('.input_inner').height('40px');
-            $('.write_type_box a')
-                .eq(0)
-                .addClass('on');
+            $('.write_type_box a').eq(0).addClass('on');
             $('.input_box .multi').hide();
             $('.input_box .single').show();
         }

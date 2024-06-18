@@ -1,5 +1,4 @@
 import Bayes, { fromJson } from './bayes';
-import InputPopup from './InputPopup';
 
 const { callApi } = require('../../util/common');
 
@@ -14,13 +13,19 @@ class TextNaiveBaye {
     #labels = [];
     #popup = null;
     #result = [];
-    constructor({ url, labels }) {
+    #loadModel;
+    constructor({ url, labels, modelId, loadModel }) {
         this.#url = url;
         this.#labels = labels;
+        this.#loadModel = loadModel;
         this.classifier = new Bayes({
             tokenizer: this.tokenizer,
         });
-        this.load(`/uploads/${url}/model.json`);
+        this.load(url, modelId);
+    }
+
+    get labels() {
+        return this.#labels;
     }
 
     unbanBlocks(blockMenu) {
@@ -37,9 +42,11 @@ class TextNaiveBaye {
 
     getResult(index) {
         const result = this.#result.length ? this.#result : this.#popup?.result || [];
-        const defaultResult = {probability: 0, className: ''};
-        if(index !== undefined && index > -1) {
-            return result.find(({className}) => className === this.#labels[index]) || defaultResult;
+        const defaultResult = { probability: 0, className: '' };
+        if (index !== undefined && index > -1) {
+            return (
+                result.find(({ className }) => className === this.#labels[index]) || defaultResult
+            );
         }
         return result[0] || defaultResult;
     }
@@ -50,12 +57,17 @@ class TextNaiveBaye {
             return;
         }
         this.#result = [];
-        this.#popup = new InputPopup({
-            url: this.#url, 
+        Entry.dispatchEvent('openMLInputPopup', {
+            type: 'text',
+            predict: async (text) => {
+                this.#result = await this.predict(text);
+            },
+            url: this.#url,
             labels: this.#labels,
-            type: this.#type
+            setResult: (result) => {
+                this.#result = result;
+            },
         });
-        this.#popup.open();
     }
 
     async tokenizer(text) {
@@ -73,8 +85,11 @@ class TextNaiveBaye {
         return this.#result;
     }
 
-    async load(url) {
-        const { data } = await callApi(url, { url });
+    async load(url, modelId) {
+        const data = await this.#loadModel({ url, modelId });
+        if (!data) {
+            return;
+        }
         this.classifier = fromJson(JSON.stringify(data));
         this.classifier.tokenizer = this.tokenizer;
         this.isLoaded = true;

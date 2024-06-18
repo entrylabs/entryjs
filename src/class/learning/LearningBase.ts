@@ -4,8 +4,8 @@ import DataTable from '../DataTable';
 type Table = {
     id: string;
     fieldsInfo: Array<any>;
-    data: Array<any>
-}
+    data: Array<any>;
+};
 class LearningBase {
     type = 'base';
     attrLength = 0;
@@ -13,16 +13,16 @@ class LearningBase {
     view?: LearningView = null;
     trained: boolean = false;
     chartEnable: boolean = false;
-    fields:Array<String> = [];
-    predictFields:Array<String> = [];
+    fields: Array<String> = [];
+    predictFields: Array<String> = [];
     result = {};
-    table:Table;
+    loadModel: () => {};
+    table: Table;
     trainParam: any = null;
     trainCallback: (value: any) => void;
 
-    chart:any = null;
+    chart: any = null;
     predictResult: any = null;
-
 
     constructor(params: any = {}) {
         this.view = new LearningView({ name: params.name || '', status: 0 });
@@ -99,7 +99,10 @@ class LearningBase {
     }
 
     setTrainOption(type: string, value: any) {
-        this.trainParam[type] = value;
+        this.trainParam = {
+            ...this.trainParam,
+            [type]: value,
+        };
     }
 
     getTrainOption() {
@@ -117,7 +120,7 @@ class LearningBase {
     generateChart() {
         throw new Error('Method not implemented.');
     }
-    
+
     train() {
         throw new Error('Method not implemented.');
     }
@@ -125,7 +128,7 @@ class LearningBase {
     load() {
         throw new Error('Method not implemented.');
     }
-    
+
     predict() {
         throw new Error('Method not implemented.');
     }

@@ -25,7 +25,8 @@ type ImageRange = {
 };
 
 type TMessageData = {
-    action: String;
+    id: string;
+    action: string;
     width?: number;
     height?: number;
     range?: ImageRange;
@@ -99,6 +100,7 @@ function calcMotion(data: TMessageData) {
             motionCanvas.width,
             motionCanvas.height
         ).data;
+        const id = data.id;
         const sprite = data.sprite;
         const flipState = data.flipState;
         let { minX, maxX, minY, maxY } = data.range;
@@ -109,7 +111,7 @@ function calcMotion(data: TMessageData) {
             maxX = motionCanvas.width / 2 + x + (width * scaleX) / 2;
             minY = motionCanvas.height / 2 - y - (height * scaleY) / 2;
             maxY = motionCanvas.height / 2 - y + (height * scaleY) / 2;
-            if (isFlipState(flipState, 'horizontal')) {
+            if (!isFlipState(flipState, 'horizontal')) {
                 const tempMinX = minX;
                 minX = motionCanvas.width - maxX;
                 maxX = motionCanvas.width - tempMinX;
@@ -220,9 +222,9 @@ function calcMotion(data: TMessageData) {
             },
         };
         if (sprite) {
-            ctx.postMessage({ action: 'sprite_return', result });
+            ctx.postMessage({ id, action: 'sprite_return', result });
         } else {
-            ctx.postMessage({ action: 'next_detect_motion', result });
+            ctx.postMessage({ id, action: 'next_detect_motion', result });
         }
     } catch (e) {
         console.error(e);
