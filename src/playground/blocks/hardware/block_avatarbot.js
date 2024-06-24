@@ -1,13 +1,13 @@
 'use strict';
 
-Entry.avmboard = {
+Entry.avatarbot = {
     id: ['99.1'],
-    name: 'avmboard',
+    name: 'avatarbot',
     url: 'http://avatarmecha.co.kr',
-    imageName: 'avmboard.png',
+    imageName: 'avatarbot.png',
     title: {
-        ko: 'AVM-BOARD',
-        en: 'AVM-BOARD',
+        ko: 'AvatarBot',
+        en: 'AvatarBot',
     },
     setZero() {
         Entry.hw.sendQueue.readablePorts = [];
@@ -18,7 +18,7 @@ Entry.avmboard = {
         Entry.hw.update();
     },
     monitorTemplate: {
-        imgPath: 'hardware/avmboard.png',
+        imgPath: 'hardware/avatarbot.png',
         width: 605,
         height: 434,
         listPorts: {
@@ -117,53 +117,53 @@ Entry.avmboard = {
     },
 };
 
-Entry.avmboard.setLanguage = function() {
+Entry.avatarbot.setLanguage = function() {
     return {
         ko: {
             template: {
-                avmboard_get_number_sensor_value: '아날로그 %1 번 센서값  ',
-                avmboard_get_digital_value: '디지털 %1 번 센서값  ',
-                avmboard_toggle_led: '디지털 %1 번 핀 %2 %3',
-                avmboard_toggle_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
-                avmboard_convert_scale: '%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 바꾼값  ',
+                avatarbot_get_number_sensor_value: '아날로그 %1 번 센서값  ',
+                avatarbot_get_digital_value: '디지털 %1 번 센서값  ',
+                avatarbot_toggle_led: '디지털 %1 번 핀 %2 %3',
+                avatarbot_toggle_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
+                avatarbot_convert_scale: '%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 바꾼값  ',
             },
             Device: {
-                avmboard: 'avmboard',
+                avatarbot: 'avatarbot',
             },
             Menus: {
-                avmboard: 'avmboard',
+                avatarbot: 'avatarbot',
             },
         },
         en: {
             template: {
-                avmboard_get_number_sensor_value: 'Analog %1 Sensor value  ',
-                avmboard_get_digital_value: 'Digital %1 Sensor value  ',
-                avmboard_toggle_led: 'Digital %1 Pin %2 %3',
-                avmboard_toggle_pwm: 'Digital %1 Pin %2 %3',
-                avmboard_convert_scale: 'Map Value %1 %2 ~ %3 to %4 ~ %5  ',
+                avatarbot_get_number_sensor_value: 'Analog %1 Sensor value  ',
+                avatarbot_get_digital_value: 'Digital %1 Sensor value  ',
+                avatarbot_toggle_led: 'Digital %1 Pin %2 %3',
+                avatarbot_toggle_pwm: 'Digital %1 Pin %2 %3',
+                avatarbot_convert_scale: 'Map Value %1 %2 ~ %3 to %4 ~ %5  ',
             },
             Device: {
-                avmboard: 'avmboard',
+                avatarbot: 'avatarbot',
             },
             Menus: {
-                avmboard: 'avmboard',
+                avatarbot: 'avatarbot',
             },
         },
     };
 };
 
-Entry.avmboard.blockMenuBlocks = [
-    'avmboard_get_number_sensor_value',
-    'avmboard_get_digital_value',
-    'avmboard_toggle_led',
-    'avmboard_toggle_pwm',
-    'avmboard_convert_scale',
+Entry.avatarbot.blockMenuBlocks = [
+    'avatarbot_get_number_sensor_value',
+    'avatarbot_get_digital_value',
+    'avatarbot_toggle_led',
+    'avatarbot_toggle_pwm',
+    'avatarbot_convert_scale',
 ];
 
-Entry.avmboard.getBlocks = function() {
+Entry.avatarbot.getBlocks = function() {
     return {
-        //region avmboard 아두이노
-        avmboard_text: {
+        //region avatarbot 아두이노
+        avatarbot_text: {
             color: '#FFD974',
             skeleton: 'basic_string_field',
             statements: [],
@@ -194,12 +194,12 @@ Entry.avmboard.getBlocks = function() {
                                 converter: Entry.block.converters.returnStringOrNumberByValue,
                             },
                         ],
-                        keyOption: 'avmboard_text',
+                        keyOption: 'avatarbot_text',
                     },
                 ],
             },
         },
-        avmboard_get_sensor_number: {
+        avatarbot_get_sensor_number: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -255,12 +255,12 @@ Entry.avmboard.getBlocks = function() {
                                 converter: Entry.block.converters.returnStringValue,
                             },
                         ],
-                        keyOption: 'avmboard_get_sensor_number',
+                        keyOption: 'avatarbot_get_sensor_number',
                     },
                 ],
             },
         },
-        avmboard_get_port_number: {
+        avatarbot_get_port_number: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -330,12 +330,12 @@ Entry.avmboard.getBlocks = function() {
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                             },
                         ],
-                        keyOption: 'avmboard_get_port_number',
+                        keyOption: 'avatarbot_get_port_number',
                     },
                 ],
             },
         },
-        avmboard_get_pwm_port_number: {
+        avatarbot_get_pwm_port_number: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -390,12 +390,12 @@ Entry.avmboard.getBlocks = function() {
                                 converter: Entry.block.converters.returnStringOrNumberByValue,
                             },
                         ],
-                        keyOption: 'avmboard_get_pwm_port_number',
+                        keyOption: 'avatarbot_get_pwm_port_number',
                     },
                 ],
             },
         },
-        avmboard_get_number_sensor_value: {
+        avatarbot_get_number_sensor_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -412,16 +412,16 @@ Entry.avmboard.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'avmboard_get_sensor_number',
+                        type: 'avatarbot_get_sensor_number',
                     },
                 ],
-                type: 'avmboard_get_number_sensor_value',
+                type: 'avatarbot_get_number_sensor_value',
             },
             paramsKeyMap: {
                 VALUE: 0,
             },
-            class: 'avmboard_value',
-            isNotFor: ['avmboard'],
+            class: 'avatarbot_value',
+            isNotFor: ['avatarbot'],
             func(sprite, script) {
                 const signal = script.getValue('VALUE', script);
                 return Entry.hw.getAnalogPortValue(signal[1]);
@@ -430,7 +430,7 @@ Entry.avmboard.getBlocks = function() {
                 js: [],
                 py: [
                     {
-                        syntax: 'avmboard.sensor_value(%1)',
+                        syntax: 'avatarbot.sensor_value(%1)',
                         blockType: 'param',
                         textParams: [
                             {
@@ -442,7 +442,7 @@ Entry.avmboard.getBlocks = function() {
                 ],
             },
         },
-        avmboard_get_digital_value: {
+        avatarbot_get_digital_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -459,21 +459,21 @@ Entry.avmboard.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'avmboard_get_port_number',
+                        type: 'avatarbot_get_port_number',
                     },
                 ],
-                type: 'avmboard_get_digital_value',
+                type: 'avatarbot_get_digital_value',
             },
             paramsKeyMap: {
                 PORT: 0,
             },
-            class: 'avmboard_value',
-            isNotFor: ['avmboard'],
+            class: 'avatarbot_value',
+            isNotFor: ['avatarbot'],
             func(sprite, script) {
                 const { hwModule = {} } = Entry.hw;
                 const { name } = hwModule;
-                if (name === 'avmboardExt') {
-                    return Entry.block.avmboard_ext_get_digital.func(sprite, script);
+                if (name === 'avatarbotExt') {
+                    return Entry.block.avatarbot_ext_get_digital.func(sprite, script);
                 } else {
                     const signal = script.getNumberValue('PORT', script);
                     return Entry.hw.getDigitalPortValue(signal);
@@ -483,9 +483,9 @@ Entry.avmboard.getBlocks = function() {
                 js: [],
                 py: [
                     {
-                        syntax: 'avmboard.digitalRead(%1)',
+                        syntax: 'avatarbot.digitalRead(%1)',
                         blockType: 'param',
-                        replaceBlockType: 'avmboard_ext_get_digital',
+                        replaceBlockType: 'avatarbot_ext_get_digital',
                         textParams: [
                             {
                                 type: 'Block',
@@ -496,7 +496,7 @@ Entry.avmboard.getBlocks = function() {
                 ],
             },
         },
-        avmboard_toggle_led: {
+        avatarbot_toggle_led: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -528,19 +528,19 @@ Entry.avmboard.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'avmboard_get_port_number',
+                        type: 'avatarbot_get_port_number',
                     },
                     null,
                     null,
                 ],
-                type: 'avmboard_toggle_led',
+                type: 'avatarbot_toggle_led',
             },
             paramsKeyMap: {
                 VALUE: 0,
                 OPERATOR: 1,
             },
-            class: 'avmboard_set',
-            isNotFor: ['avmboard'],
+            class: 'avatarbot_set',
+            isNotFor: ['avatarbot'],
             func(sprite, script) {
                 const port = script.getNumberValue('VALUE');
                 const operator = script.getField('OPERATOR');
@@ -552,7 +552,7 @@ Entry.avmboard.getBlocks = function() {
                 js: [],
                 py: [
                     {
-                        syntax: 'avmboard.pin_digital(%1, %2)',
+                        syntax: 'avatarbot.pin_digital(%1, %2)',
                         textParams: [
                             {
                                 type: 'Block',
@@ -575,7 +575,7 @@ Entry.avmboard.getBlocks = function() {
                 ],
             },
         },
-        avmboard_toggle_pwm: {
+        avatarbot_toggle_pwm: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -601,22 +601,22 @@ Entry.avmboard.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'avmboard_get_pwm_port_number',
+                        type: 'avatarbot_get_pwm_port_number',
                     },
                     {
-                        type: 'avmboard_text',
+                        type: 'avatarbot_text',
                         params: ['255'],
                     },
                     null,
                 ],
-                type: 'avmboard_toggle_pwm',
+                type: 'avatarbot_toggle_pwm',
             },
             paramsKeyMap: {
                 PORT: 0,
                 VALUE: 1,
             },
-            class: 'avmboard_set',
-            isNotFor: ['avmboard'],
+            class: 'avatarbot_set',
+            isNotFor: ['avatarbot'],
             func(sprite, script) {
                 const port = script.getNumberValue('PORT');
                 let value = script.getNumberValue('VALUE');
@@ -630,7 +630,7 @@ Entry.avmboard.getBlocks = function() {
                 js: [],
                 py: [
                     {
-                        syntax: 'avmboard.set_pin_digital(%1, %2)',
+                        syntax: 'avatarbot.set_pin_digital(%1, %2)',
                         textParams: [
                             {
                                 type: 'Block',
@@ -645,7 +645,7 @@ Entry.avmboard.getBlocks = function() {
                 ],
             },
         },
-        avmboard_convert_scale: {
+        avatarbot_convert_scale: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -682,10 +682,10 @@ Entry.avmboard.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'avmboard_get_number_sensor_value',
+                        type: 'avatarbot_get_number_sensor_value',
                         params: [
                             {
-                                type: 'avmboard_get_sensor_number',
+                                type: 'avatarbot_get_sensor_number',
                                 id: 'bl5e',
                             },
                         ],
@@ -707,7 +707,7 @@ Entry.avmboard.getBlocks = function() {
                         params: ['100'],
                     },
                 ],
-                type: 'avmboard_convert_scale',
+                type: 'avatarbot_convert_scale',
             },
             paramsKeyMap: {
                 VALUE1: 0,
@@ -716,8 +716,8 @@ Entry.avmboard.getBlocks = function() {
                 VALUE4: 3,
                 VALUE5: 4,
             },
-            class: 'avmboard',
-            isNotFor: ['avmboard'],
+            class: 'avatarbot',
+            isNotFor: ['avatarbot'],
             func(sprite, script) {
                 const value1 = script.getNumberValue('VALUE1', script);
                 let value2 = script.getNumberValue('VALUE2', script);
@@ -765,7 +765,7 @@ Entry.avmboard.getBlocks = function() {
                 js: [],
                 py: [
                     {
-                        syntax: 'avmboard.convert_scale(%1, %2, %3, %4, %5)',
+                        syntax: 'avatarbot.convert_scale(%1, %2, %3, %4, %5)',
                         blockType: 'param',
                         textParams: [
                             {
@@ -793,8 +793,8 @@ Entry.avmboard.getBlocks = function() {
                 ],
             },
         },
-        //endregion avmboard 아두이노
+        //endregion avatarbot 아두이노
     };
 };
 
-module.exports = Entry.avmboard;
+module.exports = Entry.avatarbot;
