@@ -1,68 +1,28 @@
 'use strict';
 
-Entry.Robotis_rb_P_Assembly = {
+Entry.Robotis_rb_koala = {
     INSTRUCTION: {
         NONE: 0,
         WRITE: 3,
         READ: 2,
         SYNCWRITE: 4,
         REGWRITE: 5,
-        ACTION: 6,
-        BYPASS_READ: 0xA2,
-        BYPASS_WRITE: 0xA3
+        ACTION: 6
     },
     CONTROL_TABLE: {
         // [default address, default length, address (when reads together), length (when reads together)]
-        CM_LED_R: [79, 1],
-        CM_LED_G: [80, 1],
-        CM_LED_B: [81, 1],
-
         RB_LED_L: [40, 1],
         RB_LED_R: [41, 1],
         RB_LED_B: [40, 2],
-
-        CM_BUZZER_INDEX: [60, 1], //[84, 1]
-        CM_BUZZER_TIME: [63, 1], //[85, 1]
-        CM_SOUND_DETECTED: [86, 1],
-        CM_SOUND_DETECTING: [87, 1],
-        CM_USER_BUTTON: [26, 1],
-        CM_MOTION: [66, 2], //[66,1]
-
-        AUX_SERVO_POSITION: [152, 2],
-
-        AUX_CUSTOM: [216, 2],
-
-        AUX_SERVO_MODE: [126, 1],
-        AUX_SERVO_SPEED: [136, 2],
-        AUX_MOTOR_SPEED: [136, 2],
-        AUX_LED_MODULE: [210, 1],
     },
     DXL_POSITION: {
-        values: [0, 0, 0, 0, 0, 0, 0, 0]
+        values: [0,0,0,0,0,0,0,0]
     },
     setZero: function () {
         // instruction / address / length / value / default length
-        Entry.Robotis_carCont.setRobotisData([
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 21, 2, 20],
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 40, 2, 0],
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 66, 2, 0],
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 5200, 1, 0],
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 710, 2, 0],
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 19, 1, 1], // bypass 모드 켜기
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 4250, 1, 1], // huskylens 텍스트 지우기
-            [Entry.Robotis_rb.INSTRUCTION.BYPASS_WRITE, 64, 1, 0xFE, 0], // torque off
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 23, 1, 1], // auto report 모드 켜기
-        ]);
-        Entry.Robotis_carCont.update();
         Entry.hw.sendQueue['setZero'] = [1];
-        Entry.Robotis_carCont.setRobotisData(null);
         Entry.Robotis_carCont.update();
-        const start = new Date().getTime();
-        while (true) {
-            if (new Date().getTime() - start > 1000) {
-                break;
-            }
-        }
+        Entry.Robotis_carCont.setRobotisData(null);
         Entry.hw.sendQueue['setZero'] = null;
         Entry.Robotis_carCont.update();
         Entry.Robotis_carCont.setRobotisData([
@@ -76,296 +36,263 @@ Entry.Robotis_rb_P_Assembly = {
             [Entry.Robotis_rb.INSTRUCTION.BYPASS_WRITE, 64, 1, 0xFE, 0], // torque off
             [Entry.Robotis_rb.INSTRUCTION.WRITE, 23, 1, 1], // auto report 모드 켜기
         ]);
-
         Entry.Robotis_carCont.update();
     },
-    id: ['7.A', '7.B'],
-    name: 'Robotis_rb_P_Assembly',
-    url: 'http://www.robotis.com/index/product.php?cate_code=111310',
-    imageName: 'robotis_RB100_Practical_Assembly.png',
+    id: ['7.C'],
+    name: 'Robotis_rb_koala',
+    url: 'https://www.robotis.com/shop/list.php?ca_id=1050',
+    imageName: 'robotis_RB100im_Koala.png',
     title: {
-        "ko": "로봇아이(AI)",
-        "en": "Robot AI"
+        "ko": "코알라봇",
+        "en": "KoalaBot"
     },
     delay: 30,
     readDelay: 30,
 };
 
-Entry.Robotis_rb_P_Assembly.blockMenuBlocks = [
+Entry.Robotis_rb_koala.blockMenuBlocks = [
+
     // 주행 제어
-    'robotis_Practice_drive_simple',
-    'robotis_Practice_drive_advanced',
-    'robotis_Practice_drive_seperate',
-    'robotis_Practice_drive_angle',
-    'robotis_Practice_go_distance',
-    'robotis_Practice_turn_angle',
-    'robotis_Practice_follow_line',
-    'robotis_Practice_stop_at_cross',
-    'robotis_Practice_turn_at_line',
-    'robotis_Practice_drive_stop',
+    'robotis_RCar_drive_simple',
+    'robotis_RCar_drive_advanced',
+    'robotis_RCar_drive_seperate',
+    'robotis_RCar_drive_angle',
+    'robotis_RCar_go_distance',
+    'robotis_RCar_turn_angle',
+    'robotis_RCar_follow_line',
+    'robotis_RCar_stop_at_cross',
+    'robotis_RCar_turn_at_line',
+    'robotis_RCar_drive_stop',
+    //'robotis_RCar_follow_line_stop',
+    /*
+    'robotis_practice_robot_go',
+    'robotis_practice_robot_stop',
+    'robotis_practice_robot_rotate',
+    */
 
     // 값 블록
-    'robotis_Practice_cm_ir_value',
-    'robotis_Practice_detectFrontObj',
-    'robotis_Practice_cm_ir_compare',
-    'robotis_Practice_cm_btn_value',
-    'robotis_Practice_cm_joystick_value',
-    'robotis_Practice_mic',
-    'robotis_Practice_detectSound_compare',
-    'robotis_Practice_imu',
-    'robotis_Practice_roll_pitch', 
-    //'robotis_Practice_distance_value',
-    'robotis_Practice_environment_value',
-    'robotis_Practice_line_cross_compare',
-    //'robotis_Practice_distance_compare',
-    'robotis_Practice_environment_compare',
-    'robotis_Practice_dxl_value',
+    'robotis_RCar_cm_ir_value',
+    'robotis_RCar_cm_ir_compare',
+    'robotis_RCar_detectFrontObj',
+    'robotis_RCar_cm_btn_value',
+    'robotis_RCar_cm_joystick_value',
+    'robotis_RCar_mic',
+    'robotis_RCar_detectSound_compare',
+    'robotis_RCar_imu',
+    'robotis_RCar_roll_pitch', 
+    /*
+    'robotis_RCar_environment_value',
+    'robotis_RCar_environment_compare',
+    */
+    'robotis_RCar_distance_value',
+    'robotis_RCar_distance_compare',
+    'robotis_RCar_dxl_value',
+    'robotis_RCar_line_cross_compare',
 
     // 소리
-    'robotis_Practice_scale_simple',
-    'robotis_Practice_scale_advanced',
-    'robotis_Practice_rest_simple',
-    'robotis_Practice_rest_advanced',
-    'robotis_Practice_beat_per_minute',
-    'robotis_Practice_Hello',
-    'robotis_Practice_effectSound',
-    'robotis_Practice_record',
-    'robotis_Practice_playRecord',
+    'robotis_RCar_scale_simple',
+    'robotis_RCar_scale_advanced',
+    'robotis_RCar_rest_simple',
+    'robotis_RCar_rest_advanced',
+    'robotis_RCar_beat_per_minute',
+    'robotis_RCar_Hello',
+    'robotis_RCar_effectSound',
+    'robotis_RCar_record',
+    'robotis_RCar_playRecord',
 
     // LCD 제어
-    'robotis_Practice_screen',
-    'robotis_Practice_anim_screen',
-    'robotis_Practice_icon_screen_food_plant',
-    'robotis_Practice_icon_screen_animal_human',
-    'robotis_Practice_icon_screen_object_tool',
-    'robotis_Practice_icon_screen_vehicle_number',
-    'robotis_Practice_text_screen',
-    'robotis_Practice_text_screen_redraw',
-    'robotis_Practice_pixel',
-    'robotis_Practice_LCDColor',
-    'robotis_Practice_LCD_Flash',
-    'robotis_Practice_LCDBright',
+    'robotis_RCar_screen',
+    'robotis_RCar_anim_screen',
+    'robotis_RCar_icon_screen_food_plant',
+    'robotis_RCar_icon_screen_animal_human',
+    'robotis_RCar_icon_screen_object_tool',
+    'robotis_RCar_icon_screen_vehicle_number',
+    'robotis_RCar_text_screen',
+    'robotis_RCar_text_screen_redraw',
+    'robotis_RCar_pixel',
+    'robotis_RCar_LCDColor',
+    'robotis_RCar_LCDBright',
 
     // LED 제어
-    'robotis_Practice_cm_led',
-    'robotis_Practice_cm_led_pattern',
-
-    // 다이나믹셀 제어
-    'robotis_Practice_dxl_set_mode',
-    'robotis_Practice_dxl_each_control',
-    'robotis_Practice_dxl_set_position',
-    'robotis_Practice_dxl_set_rotate',
-    'robotis_Practice_dxl_set_multiturn_round',
+    'robotis_RCar_cm_led',
+    'robotis_RCar_cm_led_pattern',
 
     // AI 카메라 값 블록
-    'robotis_Practice_huskylens_connection_status',
-    'robotis_Practice_huskylens_if_detected',
+    'robotis_RCar_huskylens_connection_status',
+    'robotis_RCar_huskylens_if_detected',
 
-    'robotis_Practice_huskylens_block_value_closest_to_center',
-    'robotis_Practice_huskylens_arrow_value_closest_to_center',
-    'robotis_Practice_huskylens_number_of_learned_id',
-    'robotis_Practice_huskylens_block_value_of_id',
-    'robotis_Practice_huskylens_arrow_value_of_id',
+    'robotis_RCar_huskylens_block_value_closest_to_center',
+    'robotis_RCar_huskylens_arrow_value_closest_to_center',
+    'robotis_RCar_huskylens_number_of_learned_id',
+    'robotis_RCar_huskylens_block_value_of_id',
+    'robotis_RCar_huskylens_arrow_value_of_id',
 
-    'robotis_Practice_huskylens_if_learned_id',
-    'robotis_Practice_huskylens_if_detected_id_type',
+    'robotis_RCar_huskylens_if_learned_id',
+    'robotis_RCar_huskylens_if_detected_id_type',
 
-    // AI Camera 제어
-    'robotis_Practice_huskylens_set_mode',
-    'robotis_Practice_huskylens_print_custom_text',
-    'robotis_Practice_huskylens_clear_custom_text',
+    // AI 카메라 제어
+    'robotis_RCar_huskylens_set_mode',
+    'robotis_RCar_huskylens_print_custom_text',
+    'robotis_RCar_huskylens_clear_custom_text',
 ];
 
-function sleepBlocking(milliseconds) {
-    const start = new Date().getTime();
-    while (true) {
-        if (new Date().getTime() - start > milliseconds) {
-            break;
-        }
-    }
-}
-
-Entry.Robotis_rb_P_Assembly.setLanguage = function () {
+Entry.Robotis_rb_koala.setLanguage = function() {
     return {
         ko: {
             template: {
                 // 주행 제어
-                robotis_Practice_drive_simple: "속도 %1 (으)로 %2 하기 %3",
-                robotis_Practice_drive_advanced: "왼쪽바퀴 %1 속도로 %2 하기, 오른쪽바퀴 %3 속도로 %4 하기 %5",
-                robotis_Practice_drive_seperate: "%1 바퀴 %2 속도로 %3 으로 회전하기 %4",
-                robotis_Practice_drive_angle: "%1 바퀴 %2 도만큼 %3 으로 회전하기 %4",
-                robotis_Practice_go_distance:"%1 cm %2 하기 %3",
-                robotis_Practice_turn_angle:"%1 도 %2 하기%3",
-                robotis_Practice_follow_line: "%1 속도로 라인 따라가기 %2",
-                robotis_Practice_stop_at_cross: "교차로 %1 에서 멈추기 %2",
-                robotis_Practice_turn_at_line: "교차로에서 %1 하고 멈추기 %2",
-                robotis_Practice_drive_stop: "정지하기 %1",
+                robotis_RCar_drive_simple: "속도 %1 (으)로 %2 하기 %3",
+                robotis_RCar_drive_advanced: "왼쪽바퀴 %1 속도로 %2, 오른쪽바퀴 %3 속도로 %4 %5",
+                robotis_RCar_drive_seperate: "%1 바퀴 %2 속도로 %3 으로 회전하기 %4",
+                robotis_RCar_drive_angle: "양쪽 바퀴 %1 도만큼 %2 으로 회전하기 %3",
+                robotis_RCar_go_distance: "%1 cm %2 하기 %3",
+                robotis_RCar_turn_angle: "로봇 %1 도 %2 하기%3",
+                robotis_RCar_follow_line: "%1 속도로 라인 따라가기 %2",
+                robotis_RCar_stop_at_cross: "교차로 %1 에서 멈추기 %2",
+                robotis_RCar_turn_at_line: "교차로에서 %1 하고 멈추기 %2",
+                robotis_RCar_drive_stop: "정지하기 %1",
 
 
                 // 값 블록
-                robotis_Practice_cm_ir_value: "%1 적외선센서 값",
-                robotis_Practice_cm_ir_compare: "%1 적외선센서 값이 %2 보다 %3",
-                //robotis_Practice_detectFrontObj: "%1의 %2에 물체가 있으면",  // 거리센서도 사용할 경우
-                robotis_Practice_detectFrontObj: "적외선센서의 %2에 물체가 있으면",  // 거리센서를 사용하지 않을 경우
-                robotis_Practice_cm_btn_value: "제어기의 %1 버튼을 클릭했을때",
-                robotis_Practice_cm_joystick_value: "제어기의 노랑 조이스틱 위치가 %1 이면",
-                robotis_Practice_mic: "소리의 크기(dB)",
-                robotis_Practice_detectSound_compare: "소리가 제어기의 %1에서 들리면",
-                robotis_Practice_imu: "%1축의 %2 값",
-                robotis_Practice_roll_pitch: "제어기의 %1 값",
-                robotis_Practice_line_cross_compare: "교차로 모양이 %1이면",
-                robotis_Practice_distance_value: "%1 값",
-                robotis_Practice_distance_compare: "%1 값이 %2보다 %3",
-                robotis_Practice_environment_value: "%1 값",
-                robotis_Practice_environment_compare: "%1 값이 %2보다 %3",
-                robotis_Practice_dxl_value: "%1의 각도값",
+                robotis_RCar_cm_ir_value: "%1 적외선센서 값",
+                robotis_RCar_cm_ir_compare: "%1 적외선센서 값이 %2 보다 %3",
+                robotis_RCar_detectFrontObj: "%1의 앞에 물체가 있으면",
+                robotis_RCar_cm_btn_value: "로봇의 %1 버튼을 눌렀을 때",
+                robotis_RCar_cm_joystick_value: "로봇의 노랑 조이스틱 위치가 %1 이면",
+                robotis_RCar_mic: "소리의 크기(dB)",
+                robotis_RCar_detectSound_compare: "소리가 로봇의 %1에서 들리면",
+                robotis_RCar_imu: "%1축의 %2 값",
+                robotis_RCar_roll_pitch: "로봇의 %1 값",
+                robotis_RCar_distance_value: "%1 값",
+                robotis_RCar_distance_compare: "%1 값이 %2보다 %3",
+                robotis_RCar_line_cross_compare: "교차로 모양이 %1이면",
+                robotis_RCar_dxl_value: "%1의 각도값",
 
 
                 // 소리
-                robotis_Practice_scale_simple: "옥타브%1 로 %2 음을 %3로 연주하기 %4",
-                robotis_Practice_scale_advanced: "옥타브%1 로 %2 음을 %3박자 연주하기 %4",
-                robotis_Practice_rest_simple: "%1 %2",
-                robotis_Practice_rest_advanced: "쉼표 %1 박자 %2",
-                robotis_Practice_beat_per_minute: "연주 빠르기를 %1 (으)로 정하기 %2",
-                robotis_Practice_Hello: "로봇 %1 말하기 %2",
-                robotis_Practice_effectSound: "효과음 %1 재생하기 %2",
-                robotis_Practice_record: "소리 %1번에 녹음하기 %2",
-                robotis_Practice_playRecord: "소리 %1번을 재생하기 %2",
+                robotis_RCar_scale_simple: "옥타브%1 로 %2 음을 %3로 연주하기 %4",
+                robotis_RCar_scale_advanced: "옥타브%1 로 %2 음을 %3박자 연주하기 %4",
+                robotis_RCar_rest_simple: "%1 %2",
+                robotis_RCar_rest_advanced: "쉼표 %1 박자 %2",
+                robotis_RCar_beat_per_minute: "연주 빠르기를 %1 (으)로 정하기 %2",
+                robotis_RCar_Hello: "로봇 %1 말하기 %2",
+                robotis_RCar_effectSound: "효과음 %1 재생하기 %2",
+                robotis_RCar_record: "소리 %1번에 녹음하기 %2",
+                robotis_RCar_playRecord: "소리 %1번을 재생하기 %2",
 
                 
                 // LCD 제어
-                robotis_Practice_screen: "화면 표정을 %1 %2 (으)로 정하기 %3",
-                robotis_Practice_anim_screen: "화면 애니메이션을 %1 %2 (으)로 정하기 %3",
-                robotis_Practice_icon_screen_food_plant: "화면에 [음식/식물]중 %1를 (%2, %3)위치에 %4 크기로 표시 %5",
-                robotis_Practice_icon_screen_animal_human: "화면에 [동물/사람]중 %1를 (%2, %3)위치에 %4 크기로 표시 %5",
-                robotis_Practice_icon_screen_object_tool: "화면에 [물건/도구]중 %1를 (%2, %3)위치에 %4 크기로 표시 %5",
-                robotis_Practice_icon_screen_vehicle_number: "화면에 [탈것/숫자]중 %1를 (%2, %3)위치에 %4 크기로 표시 %5",
-                robotis_Practice_text_screen: "화면에 %1를 (%2, %3)위치에 %4 로 %5으로 표시 %6",
-                robotis_Practice_pixel: "화면 (%1, %2)위치에 %3 색 점 표시 %4",
-                robotis_Practice_text_screen_redraw: "화면에 %1를 (%2, %3)위치에 %4으로 새로 표시 %5",
-                robotis_Practice_LCDColor: "화면 색상을 %1 (으)로 정하기 %2",
-                robotis_Practice_LCD_Flash: "화면을 %1과 %2으로 %3초 간격으로 깜박이기 %4",
-                robotis_Practice_LCDBright: "화면 밝기를 %1 (으)로 정하기 %2",
+                robotis_RCar_screen: "화면 표정을 %1 %2 (으)로 정하기 %3",
+                robotis_RCar_anim_screen: "화면 애니메이션을 %1 %2 (으)로 정하기 %3",
+                robotis_RCar_icon_screen_food_plant: "화면에 [음식/식물]중 %1 (%2, %3)위치에 %4 크기로 표시 %5",
+                robotis_RCar_icon_screen_animal_human: "화면에 [동물/사람]중 %1 (%2, %3)위치에 %4 크기로 표시 %5",
+                robotis_RCar_icon_screen_object_tool: "화면에 [물건/도구]중 %1 (%2, %3)위치에 %4 크기로 표시 %5",
+                robotis_RCar_icon_screen_vehicle_number: "화면에 [탈것/숫자]중 %1 (%2, %3)위치에 %4 크기로 표시 %5",
+                robotis_RCar_text_screen: "화면에 %1 (%2, %3)위치에 %4 로 %5으로 표시 %6",
+                robotis_RCar_text_screen_redraw: "화면에 %1 (%2, %3)위치에 %4으로 새로 표시 %5",
+                robotis_RCar_pixel: "화면 (%1, %2)위치에 %3 색 점 표시 %4",
+                robotis_RCar_LCDBright: "화면 밝기를 %1 (으)로 정하기 %2",
+                robotis_RCar_LCDColor: "화면 색상을 %1 (으)로 정하기 %2",
                 
                 
                 // LED 제어
-                robotis_Practice_cm_led: "로봇 %1 LED %2 %3",
-                robotis_Practice_cm_led_pattern: "LED %1 %2로 깜박이기 %3",
+                robotis_RCar_cm_led: "로봇 %1 LED %2 %3",
+                robotis_RCar_cm_led_pattern: "LED %1 %2로 깜박이기 %3",
                 
+                // AI Camera 값 블록
+                robotis_RCar_huskylens_connection_status: "AI 카메라 %1이면",
+                robotis_RCar_huskylens_if_detected: "AI 카메라 %1 이/가 표시되면",
 
-                // DXL 제어
-                robotis_Practice_dxl_set_mode: "%1 번 모터 %2 모드로 설정 %3",
-                robotis_Practice_dxl_each_control: "%1 번 모터 %2°로 %3 초 동안 움직이기 %4",
-                robotis_Practice_dxl_set_position: "%1 번 모터 %2 속도로 %3° 위치로 회전 %4",
-                robotis_Practice_dxl_set_rotate: "%1 번 모터 %2 속도로 %3 으로 %4 %5",
-                robotis_Practice_dxl_set_multiturn_round: "%1 번 모터 %2 속도로 %3 바퀴 %4으로 회전 %5",
-                
+                robotis_RCar_huskylens_block_value_closest_to_center: "AI 카메라 화면 중앙과 가장 가까운 사각형의 %1",
+                robotis_RCar_huskylens_arrow_value_closest_to_center: "AI 카메라 화면 중앙과 가장 가까운 화살표의 %1",
+                robotis_RCar_huskylens_number_of_learned_id: "AI 카메라 학습한 ID의 갯수",
+                robotis_RCar_huskylens_block_value_of_id: "AI 카메라 감지된 ID가 %1인 사각형의 %2",
+                robotis_RCar_huskylens_arrow_value_of_id: "AI 카메라 감지된 ID가 %1인 화살표의 %2",
 
-                
-                // Huskylens 값 블록
-                robotis_Practice_huskylens_connection_status: "AI 카메라: %1이면",
-                robotis_Practice_huskylens_if_detected: "AI 카메라: %1 이/가 표시되면",
-
-                robotis_Practice_huskylens_block_value_closest_to_center: "AI 카메라: 화면 중앙과 가장 가까운 사각형의 %1",
-                robotis_Practice_huskylens_arrow_value_closest_to_center: "AI 카메라: 화면 중앙과 가장 가까운 화살표의 %1",
-                robotis_Practice_huskylens_number_of_learned_id: "AI 카메라: 학습한 ID의 갯수",
-                robotis_Practice_huskylens_block_value_of_id: "AI 카메라: 감지된 ID가 %1인 사각형의 %2",
-                robotis_Practice_huskylens_arrow_value_of_id: "AI 카메라: 감지된 ID가 %1인 화살표의 %2",
-
-                robotis_Practice_huskylens_if_learned_id: "AI 카메라: ID가 %1인 데이터를 학습하였으면",
-                robotis_Practice_huskylens_if_detected_id_type: "AI 카메라: ID가 %1인 %2데이터를 인식하였으면",
-                
+                robotis_RCar_huskylens_if_learned_id: "AI 카메라 ID가 %1인 데이터를 학습하였으면",
+                robotis_RCar_huskylens_if_detected_id_type: "AI 카메라 ID가 %1인 %2데이터를 인식하였으면",
 
                 // AI 카메라 제어
-                robotis_Practice_huskylens_set_mode: "AI 카메라: 모드를 %1(으)로 설정 %2",
-                robotis_Practice_huskylens_print_custom_text: "AI 카메라: 화면 위치 (%1,%2)에 %3를 보여주기%4",
-                robotis_Practice_huskylens_clear_custom_text: "AI 카메라: 화면의 글 지우기 %1",
+                robotis_RCar_huskylens_set_mode: "AI 카메라 모드를 %1(으)로 설정 %2",
+                robotis_RCar_huskylens_print_custom_text: "AI 카메라 화면 위치 (%1,%2)에 %3를 보여주기%4",
+                robotis_RCar_huskylens_clear_custom_text: "AI 카메라 화면의 글 지우기 %1",
+
             },
             Helper: {
                 // 주행 제어
-                robotis_Practice_drive_simple: "로봇아이를 지정한 속도와 방향으로 주행\n속도범위: -100 ~ 100\n속도단위: %",
-                robotis_Practice_drive_advanced: "로봇아이의 좌,우 바퀴를 각각 지정한 속도와 방향으로 회전\n속도범위: -100 ~ 100\n속도단위: %",
-                robotis_Practice_drive_seperate: "로봇아이의 지정한 바퀴를 지정한 속도와 방향으로 회전\n속도범위: -100 ~ 100\n속도단위: %",
-                robotis_Practice_drive_angle: "로봇아이의 두 바퀴를 지정한 방향과 지정한 각도만큼 회전\n각도범위: -5760 ~ 5760\n각도단위: 도",
-                robotis_Practice_go_distance: "지정거리만큼 앞 또는 뒤로 이동\n거리범위: -1000 ~ 1000\n거리단위: mm",
-                robotis_Practice_turn_angle: "지정한 각도와 방향으로 제자리회전\n각도범위: -360 ~ 360\n각도단위: 도",
-                robotis_Practice_follow_line: "지정한 수준의 속도로 라인 따라가기 시작",
-                robotis_Practice_stop_at_cross: "지정한 교차로에서 멈추기",
-                robotis_Practice_turn_at_line: "교차로에서 지정한 회전을 하고 멈추기",
-                robotis_Practice_drive_stop: "로봇아이 정지하기",
+                robotis_RCar_drive_simple: "코알라봇을 지정한 속도와 방향으로 주행\n속도범위: -100 ~ 100\n속도단위: %",
+                robotis_RCar_drive_advanced: "코알라봇의 좌,우 바퀴를 각각 지정한 속도와 방향으로 회전\n속도범위: -100 ~ 100\n속도단위: %",
+                robotis_RCar_drive_seperate: "코알라봇의 지정한 바퀴를 지정한 속도와 방향으로 회전\n속도범위: -100 ~ 100\n속도단위: %",
+                robotis_RCar_drive_angle: "코알라봇의 두 바퀴를 지정한 방향과 지정한 각도만큼 회전\n각도범위: -5760 ~ 5760\n각도단위: 도",
+                robotis_RCar_go_distance: "지정거리만큼 앞 또는 뒤로 이동\n거리범위: -1000 ~ 1000\n거리단위: mm",
+                robotis_RCar_turn_angle: "지정한 각도와 방향으로 제자리회전\n각도범위: -360 ~ 360\n각도단위: 도",
+                robotis_RCar_follow_line: "지정한 수준의 속도로 라인 따라가기 시작",
+                robotis_RCar_stop_at_cross: "지정한 교차로에서 멈추기",
+                robotis_RCar_turn_at_line: "교차로에서 지정한 회전을 하고 멈추기",
+                robotis_RCar_drive_stop: "코알라봇 정지하기",
 
                 // 값 블록
-                robotis_Practice_cm_ir_value: "지정한 번호의 IR 센서 값(범위: 0 ~ 200)",
-                robotis_Practice_cm_ir_compare: "지정한 번호의 IR 센서 값과 지정한 값의 비교식이 맞으면 '참', 아니면 '거짓'으로 판단합니다.",
-                robotis_Practice_detectFrontObj: "지정한 방향의 적외선센서에 물체가 감지되면 '참', 아니면 '거짓'으로 판단합니다.",
-                robotis_Practice_cm_btn_value: "지정한 버튼이 지정한 상태이면 '참', 아니면 '거짓'으로 판단합니다.",
-                robotis_Practice_cm_joystick_value: "조이스틱 위치가 지정한 상태이면 '참', 아니면 '거짓'으로 판단합니다.",
-                robotis_Practice_mic: "마이크로 감지된 소리의 세기를 데시벨(dB)로 표시합니다.",
-                robotis_Practice_detectSound_compare: "소리가 나는 방향이 지정한 방향과 동일하면 '참', 아니면 '거짓'으로 판단합니다.",
-                robotis_Practice_imu: "지정한 축의 지정한 가속도센서/자이로센서의 값\n범위: -100 ~ 100",
-                robotis_Practice_roll_pitch: "roll/pitch 값\nroll: -180° ~ 180°, pitch: -90° ~ 90°",
-                robotis_Practice_distance_value: "지정한 센서값\n거리범위: 0 ~ 1000mm\n조도범위: 0 ~ 100%\n버튼센서: 0(눌리지 않음) / 1(눌림)",
-                robotis_Practice_distance_compare: "지정한 센서값의 지정한 수식이 맞으면 '참', 아니면 '거짓'으로 판단합니다.",
-                robotis_Practice_environment_value: "지정한 센서값\n움직임센서: 0(움직임 없음) / 1(움직임 있음)\n밝기범위: 0 ~ 100%\n온도범위: -25°C ~ 85°C",
-                robotis_Practice_environment_compare: "지정한 센서값의 지정한 수식이 맞으면 '참', 아니면 '거짓'으로 판단합니다.",
-                robotis_Practice_line_cross_compare: "지정한 교차로 모양이면 '참', 아니면 '거짓'으로 판단합니다.",
-                robotis_Practice_dxl_value: "지정한 모터의 위치 각도값\n범위: -180° ~ 180°",
+                robotis_RCar_cm_ir_value: "지정한 번호의 IR 센서 값(범위: 0 ~ 200)",
+                robotis_RCar_cm_ir_compare: "지정한 번호의 IR 센서 값과 지정한 값의 비교식이 맞으면 '참', 아니면 '거짓'으로 판단합니다.",
+                robotis_RCar_detectFrontObj: "지정한 센서 앞에 물체가 감지되면 '참', 아니면 '거짓'으로 판단합니다.",
+                robotis_RCar_cm_btn_value: "지정한 버튼이 눌렸다가 해제되면 '참', 아니면 '거짓'으로 판단합니다.",
+                robotis_RCar_cm_joystick_value: "조이스틱 위치가 지정한 상태이면 '참', 아니면 '거짓'으로 판단합니다.",
+                robotis_RCar_mic: "마이크로 감지된 소리의 세기를 데시벨(dB)로 표시합니다.",
+                robotis_RCar_detectSound_compare: "소리가 나는 방향이 지정한 방향과 동일하면 '참', 아니면 '거짓'으로 판단합니다.",
+                robotis_RCar_imu: "지정한 축의 지정한 가속도센서/자이로센서의 값\n범위: -100 ~ 100",
+                robotis_RCar_roll_pitch: "roll/pitch 값\nroll: -180° ~ 180°, pitch: -90° ~ 90°",
+                robotis_RCar_distance_value: "지정한 센서값\n거리범위: 0 ~ 1000mm\n밝기범위: 0 ~ 100%\n버튼센서: 0(눌리지 않음) / 1(눌림)",
+                robotis_RCar_distance_compare: "지정한 센서값의 지정한 수식이 맞으면 '참', 아니면 '거짓'으로 판단합니다.",
+                robotis_RCar_line_cross_compare: "지정한 교차로 모양이면 '참', 아니면 '거짓'으로 판단합니다.",
+                robotis_RCar_dxl_value: "지정한 모터의 위치 각도값\n범위: -180° ~ 180°",
 
 
                 // 소리
-                robotis_Practice_scale_simple: "지정한 옥타브, 음계, 음표로 연주하기",
-                robotis_Practice_scale_advanced: "지정한 옥타브, 음계, 박자로 연주하기",
-                robotis_Practice_rest_simple: "지정한 쉼표 쉬기",
-                robotis_Practice_rest_advanced: "지정한 박자 쉬기",
-                robotis_Practice_beat_per_minute: "연주 빠르기를 지정하기 (BPM)\n범위: 10 ~ 600",
-                robotis_Practice_Hello: "로봇이 지정한 말소리를 재생하기",
-                robotis_Practice_effectSound: "로봇이 지정한 효과음을 재생하기",
-                robotis_Practice_record: "지정번호 보관함에 녹음하여 저장하기",
-                robotis_Practice_playRecord: "지정번호 보관함의 녹음음성을 재생하기",
+                robotis_RCar_scale_simple: "지정한 옥타브, 음계, 음표로 연주하기",
+                robotis_RCar_scale_advanced: "지정한 옥타브, 음계, 박자로 연주하기",
+                robotis_RCar_rest_simple: "지정한 쉼표 쉬기",
+                robotis_RCar_rest_advanced: "지정한 박자 쉬기",
+                robotis_RCar_beat_per_minute: "연주 빠르기를 지정하기 (BPM)\n범위: 10 ~ 600",
+                robotis_RCar_Hello: "로봇이 지정한 말소리를 재생하기",
+                robotis_RCar_effectSound: "로봇이 지정한 효과음을 재생하기",
+                robotis_RCar_record: "지정번호 보관함에 녹음하여 저장하기",
+                robotis_RCar_playRecord: "지정번호 보관함의 녹음음성을 재생하기",
 
                 
                 // LCD 제어
-                robotis_Practice_screen: "제어기 화면배경의 캐릭터와 표정을 설정",
-                robotis_Practice_anim_screen: "제어기 화면 애니메이션의 캐릭터와 표정을 설정",
-                robotis_Practice_icon_screen_food_plant: "화면에 [음식/식물]중 특정 아이콘을 표시할 위치와 크기를 설정\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120\n크기: 0 ~ 200",
-                robotis_Practice_icon_screen_animal_human: "화면에 [동물/사람]중 특정 아이콘을 표시할 위치와 크기를 설정\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120\n크기: 0 ~ 200",
-                robotis_Practice_icon_screen_object_tool: "화면에 [물건/도구]중 특정 아이콘을 표시할 위치와 크기를 설정\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120\n크기: 0 ~ 200",
-                robotis_Practice_icon_screen_vehicle_number: "화면에 [탈것/숫자]중 특정 아이콘을 표시할 위치와 크기를 설정\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120\n크기: 0 ~ 200",
-                robotis_Practice_text_screen: "화면에 지정한 문구를 표시할 위치와 폰트크기, 색상을 설정\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120",
-                robotis_Practice_text_screen_redraw: "화면에 지정한 문구를 새롭게(문구의 배경 지움) 표시할 위치와 색상을 설정\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120\n크기: 0 ~ 200",
-                robotis_Practice_pixel: "화면에 표시할 점의 위치와 색상을 설정\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120",
-                robotis_Practice_LCDBright: "화면 밝기를 설정\n밝기범위: 1% ~ 100%",
-                robotis_Practice_LCDColor: "화면 색상을 설정",
-                robotis_Practice_LCD_Flash: "화면이 깜박이는 2가지 색상과 간격을 지정",
+                robotis_RCar_screen: "제어기 화면배경의 캐릭터와 표정을 설정",
+                robotis_RCar_anim_screen: "제어기 화면 애니메이션의 캐릭터와 표정을 설정",
+                robotis_RCar_icon_screen_food_plant: "화면에 [음식/식물]중 특정 아이콘을 표시할 위치와 크기를 설정\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120\n크기: 0 ~ 200",
+                robotis_RCar_icon_screen_animal_human: "화면에 [동물/사람]중 특정 아이콘을 표시할 위치와 크기를 설정\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120\n크기: 0 ~ 200",
+                robotis_RCar_icon_screen_object_tool: "화면에 [물건/도구]중 특정 아이콘을 표시할 위치와 크기를 설정\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120\n크기: 0 ~ 200",
+                robotis_RCar_icon_screen_vehicle_number: "화면에 [탈것/숫자]중 특정 아이콘을 표시할 위치와 크기를 설정\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120\n크기: 0 ~ 200",
+                robotis_RCar_text_screen: "화면에 지정한 문구를 표시할 위치와 폰트크기, 색상을 설정\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120",
+                robotis_RCar_text_screen_redraw: "화면에 지정한 문구를 새롭게(문구의 배경 지움) 표시할 위치와 색상을 설정\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120\n크기: 0 ~ 200",
+                robotis_RCar_pixel: "화면에 표시할 점의 위치와 색상을 설정\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120",
+                robotis_RCar_LCDBright: "화면 밝기를 설정\n밝기범위: 1% ~ 100%",
+                robotis_RCar_LCDColor: "화면 색상을 설정",
 
                 // LED 제어
-                robotis_Practice_cm_led: "제어기의 지정한 LED를 켜거나 끄기",
-                robotis_Practice_cm_led_pattern: "제어기의 깜박임 패턴 설정",
-                
-                // DXL 제어
-                robotis_Practice_dxl_set_mode: "지정한 ID의 모터의 동작모드를 설정",
-                robotis_Practice_dxl_each_control: "지정한 ID의 모터가 지정한 각도로 지정한 시간(초)동안 움직이도록 설정",
-                robotis_Practice_dxl_set_position: "지정한 ID의 모터가 지정한 속도로 지정한 각도로 움직이도록 설정",
-                robotis_Practice_dxl_set_rotate: "지정한 ID의 모터의 회전 속도와 방향을 설정",
-                robotis_Practice_dxl_set_multiturn_round: "지정한 ID의 모터가 지정한 속도와 방향으로 지정한 바퀴만큼 회전",
+                robotis_RCar_cm_led: "제어기의 지정한 LED를 켜거나 끄기",
+                robotis_RCar_cm_led_pattern: "제어기의 LED의 깜박임 패턴 설정",
                 
                 // AI Camera 값 블록
-                robotis_Practice_huskylens_connection_status: "AI 카메라가 연결된 상태이면 '참', 아니면 '거짓'으로 판단합니다.",
-                robotis_Practice_huskylens_if_detected: "AI 카메라의 LCD화면에 선택한 기호(사각형/화살표)가 표시되면 '참', 아니면 '거짓'으로 판단합니다.",
+                robotis_RCar_huskylens_connection_status: "AI 카메라가 연결된 상태이면 '참', 아니면 '거짓'으로 판단합니다.",
+                robotis_RCar_huskylens_if_detected: "AI 카메라의 LCD화면에 선택한 기호(사각형/화살표)가 표시되면 '참', 아니면 '거짓'으로 판단합니다.",
 
-                robotis_Practice_huskylens_block_value_closest_to_center: "AI 카메라 화면 중앙과 가장 가까운 사각형의 X좌표/Y좌표/너비/높이/학습ID",
-                robotis_Practice_huskylens_arrow_value_closest_to_center: "AI 카메라 화면 중앙과 가장 가까운 화살표의 시작점X좌표/시작점Y좌표/끝점X좌표/끝점Y좌표/학습ID",
-                robotis_Practice_huskylens_number_of_learned_id: "AI 카메라가 학습한 ID의 갯수",
-                robotis_Practice_huskylens_block_value_of_id: "AI 카메라가 감지한 사각형중 지정한 ID의 사각형의 X좌표/Y좌표/너비/높이",
-                robotis_Practice_huskylens_arrow_value_of_id: "AI 카메라가 감지한 화살표중 지정한 ID의 화살표의 시작점X좌표/시작점Y좌표/끝점X좌표/끝점Y좌표",
+                robotis_RCar_huskylens_block_value_closest_to_center: "AI 카메라 화면 중앙과 가장 가까운 사각형의 X좌표/Y좌표/너비/높이/학습ID",
+                robotis_RCar_huskylens_arrow_value_closest_to_center: "AI 카메라 화면 중앙과 가장 가까운 화살표의 시작점X좌표/시작점Y좌표/끝점X좌표/끝점Y좌표/학습ID",
+                robotis_RCar_huskylens_number_of_learned_id: "AI 카메라가 학습한 ID의 갯수",
+                robotis_RCar_huskylens_block_value_of_id: "AI 카메라가 감지한 사각형중 지정한 ID의 사각형의 X좌표/Y좌표/너비/높이",
+                robotis_RCar_huskylens_arrow_value_of_id: "AI 카메라가 감지한 화살표중 지정한 ID의 화살표의 시작점X좌표/시작점Y좌표/끝점X좌표/끝점Y좌표",
 
-                robotis_Practice_huskylens_if_learned_id: "AI 카메라가 지정한 ID인 데이터를 학습하였으면 '참', 아니면 '거짓'으로 판단합니다.",
-                robotis_Practice_huskylens_if_detected_id_type: "AI 카메라가 지정한 ID인 지정한 데이터(사각형/화살표)를 학습하였으면 '참', 아니면 '거짓'으로 판단합니다.",
+                robotis_RCar_huskylens_if_learned_id: "AI 카메라가 지정한 ID인 데이터를 학습하였으면 '참', 아니면 '거짓'으로 판단합니다.",
+                robotis_RCar_huskylens_if_detected_id_type: "AI 카메라가 지정한 ID인 지정한 데이터(사각형/화살표)를 학습하였으면 '참', 아니면 '거짓'으로 판단합니다.",
 
                 // AI 카메라 제어
-                robotis_Practice_huskylens_set_mode: "AI 카메라의 모드를 설정",
-                robotis_Practice_huskylens_print_custom_text: "AI 카메라 화면의 지정한 위치에 지정한 문구 출력\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120",
-                robotis_Practice_huskylens_clear_custom_text: "AI 카메라 화면에 표시한 모든 문구 지우기",
+                robotis_RCar_huskylens_set_mode: "AI 카메라의 모드를 설정",
+                robotis_RCar_huskylens_print_custom_text: "AI 카메라 화면의 지정한 위치에 지정한 문구 출력\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120",
+                robotis_RCar_huskylens_clear_custom_text: "AI 카메라 화면에 표시한 모든 문구 지우기",
             },
             Blocks: {
                 robotis_red: "빨강",
@@ -443,16 +370,17 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_korean58: "앗",
                 robotis_korean59: "힝",
                 robotis_korean60: "이익",
+                robotis_koala: "코알라",
                 robotis_dog: "개",
                 robotis_frog: "개구리",
                 robotis_cat: "고양이",
                 robotis_chicken: "닭",
                 robotis_tiger: "호랑이",
                 robotis_mouse: "쥐",
+                robotis_whistle: "호루라기",
                 robotis_ambul: "앰뷸런스",
                 robotis_Horn: "경적(빵빵)",
                 robotis_siren: "사이렌(경찰차)",
-                robotis_whistle: "호루라기",
                 robotis_gun: "총소리",
                 robotis_clap: "박수소리",
                 robotis_melody1: "멜로디1",
@@ -493,15 +421,9 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_face22: "목욕",
                 robotis_face23: "햐트뿅뿅",
 
-                robotis_flashing1: "깜박임1",
-                robotis_flashing2: "깜박임2",
-                robotis_flashing3: "깜박임3",
-                robotis_flashing4: "깜박임4",
-                robotis_flashing5: "깜박임5",
-                robotis_flashing6: "깜박임6",
-                robotis_flashing7: "깜박임7",
-                robotis_flashing8: "깜박임8",
-                robotis_flashing9: "깜박임9",
+                robotis_pattern1: "패턴1",
+                robotis_pattern2: "패턴2",
+                robotis_pattern3: "패턴3",
                 robotis_moveF: "전진",
                 robotis_moveB: "후진",
                 robotis_moveL: "좌회전",
@@ -637,8 +559,8 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_icon_object_tool_31: "칼",
                 robotis_icon_object_tool_32: "풍선",
                 robotis_icon_object_tool_33: "물통",
-                robotis_icon_object_tool_34: "나무막대(세로)",
-                robotis_icon_object_tool_35: "나무막대(가로)",
+                robotis_icon_object_tool_34: "나무막대(가로)",
+                robotis_icon_object_tool_35: "나무막대(세로)",
                 robotis_icon_object_tool_36: "낚시바늘",
                 robotis_icon_vehicle_number_1: "자동차",
                 robotis_icon_vehicle_number_2: "버스",
@@ -678,6 +600,9 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_icon_vehicle_number_36: "8",
                 robotis_icon_vehicle_number_37: "9",
                 robotis_icon_vehicle_number_38: "10",
+                robotis_speed_fast: "빠른 속도",
+                robotis_speed_midium: "중간 속도",
+                robotis_speed_slow: "느린 속도",
                 robotis_clockwise: "시계방향",
                 robotis_counterclockwise: "반시계방향",
                 robotis_up: "들기",
@@ -689,8 +614,8 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_front_left: "앞 왼쪽",
                 robotis_bottom_right: "아래 오른쪽",
                 robotis_bottom_left: "아래 왼쪽",
-                robotis_side_right: "우측",
-                robotis_side_left: "좌측",
+                robotis_side_right: "오른쪽 모서리",
+                robotis_side_left: "왼쪽 모서리",
                 robotis_front_ir_sensor: "적외선센서",
                 robotis_distance_sensor: "거리센서",
                 robotis_front: "앞",
@@ -725,17 +650,6 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_line_cross_type_11: "¦",
                 robotis_line_cross_type_12: "︙",
 
-                robotis_dxl_mode_joint: "관절",
-                robotis_dxl_mode_wheel: "바퀴",
-                robotis_dxl_mode_multi_turn: "여러바퀴회전",
-                robotis_dxl_move_rotate: "회전",
-                robotis_dxl_move_stop: "정지",
-                robotis_dxl_rotate_cw: "시계방향",
-                robotis_dxl_rotate_ccw: "반시계방향",
-                robotis_dxl_value_angle: "각도",
-                robotis_dxl_value_velocity: "속도",
-                robotis_dxl_value_moving: "움직임",
-
                 robotis_connected: "연결",
                 robotis_disconnected: "없음",
                 robotis_huskylens_mode_face_recognition: "얼굴인식",
@@ -761,176 +675,156 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
         en: {
             template: {
                 // 주행 제어
-                robotis_Practice_drive_simple: "Move %2 with velocity %1 %3",
-                robotis_Practice_drive_advanced: "Left wheel %2 with velocity %1, right wheel %4 with velocity %3 %5",
-                robotis_Practice_drive_seperate: "%1 wheel rotate %3 with velocity %2 %4",
-                robotis_Practice_drive_angle: "Both wheels rotate %1 degree %2 %3",
-                robotis_Practice_go_distance: "Moves %2 %1 cm %3",
-                robotis_Practice_turn_angle: "Rotates %1 degree(s) %2 in place %3",
-                robotis_Practice_follow_line: "Follow line with %1 speed %2",
-                robotis_Practice_stop_at_cross: "Stop at cross %1 %2",
-                robotis_Practice_turn_at_line: "%1 at cross and stop %2",
-                robotis_Practice_drive_stop: "Stop %1",
-        
+                robotis_RCar_drive_simple: "Move %2 with velocity %1 %3",
+                robotis_RCar_drive_advanced: "Left wheel %2 with velocity %1, right wheel %4 with velocity %3 %5",
+                robotis_RCar_drive_seperate: "%1 wheel rotate %3 with velocity %2 %4",
+                robotis_RCar_drive_angle: "Both wheels rotate %1 degree %2 %3",
+                robotis_RCar_go_distance: "Moves %2 %1 cm %3",
+                robotis_RCar_turn_angle: "Rotates %1 degree(s) %2 in place %3",
+                robotis_RCar_follow_line: "Follow line with %1 speed %2",
+                robotis_RCar_stop_at_cross: "Stop at cross %1 %2",
+                robotis_RCar_turn_at_line: "%1 at cross and stop %2",
+                robotis_RCar_drive_stop: "Stop %1",
         
         
                 // 값 블록
-                robotis_Practice_cm_ir_value: "Value of %1 IR Sensor",
-                robotis_Practice_cm_ir_compare: "If the number %1 IR sensor value is %3 than %2",
-                robotis_Practice_detectFrontObj: "If %2 IR sensor detected an object",
-                robotis_Practice_cm_btn_value: "When the controller's %1 button is clicked",
-                robotis_Practice_cm_joystick_value: "If the controller's yellow joystick position is %1",
-                robotis_Practice_mic: "MIC volume(dB)",
-                robotis_Practice_detectSound_compare: "If sound is detected from %1 of the robot",
-                robotis_Practice_imu: "%1 axis' %2 value",
-                robotis_Practice_roll_pitch: "%1 value of the controller",
-                robotis_Practice_environment_value: "%1 value",
-                robotis_Practice_environment_compare: "If %1 value is %3 than %2",
-                robotis_Practice_line_cross_compare: "If the type of cross is %1",
-                robotis_Practice_dxl_value: "The angle of ID %1",
-
+                robotis_RCar_cm_ir_value: "Value of %1 IR Sensor",
+                robotis_RCar_cm_ir_compare: "If the number %1 IR sensor value is %3 than %2",
+                robotis_RCar_detectFrontObj: "If there is an object in front of %1",
+                robotis_RCar_cm_btn_value: "When the robot's %1 button is pressed",
+                robotis_RCar_cm_joystick_value: "If the robot's yellow joystick position is %1",
+                robotis_RCar_mic: "MIC volume(dB)",
+                robotis_RCar_detectSound_compare: "If sound is detected from %1 of the robot",
+                robotis_RCar_imu: "%1 axis' %2 value",
+                robotis_RCar_roll_pitch: "%1 value of the controller",
+                robotis_RCar_distance_value: "%1 value",
+                robotis_RCar_distance_compare: "If %1 value is %3 than %2",
+                robotis_RCar_line_cross_compare: "If the type of cross is %1",
+                robotis_RCar_dxl_value: "The angle of ID %1",
+        
+        
                 // 소리
-                robotis_Practice_scale_simple: "Play the note %2 as %3 in octave %1 %4",
-                robotis_Practice_scale_advanced: "Play the note %2 in octave %1 for %3 beat %4",
-                robotis_Practice_rest_simple: "%1 %2",
-                robotis_Practice_rest_advanced: "Rest %1 beat %2",
-                robotis_Practice_beat_per_minute: "Set playing speed to %1 %2",
-                robotis_Practice_Hello: "Robot speaks %1 %2",
-                robotis_Practice_effectSound: "Play sound effect %1 %2",
-                robotis_Practice_record: "Record to sound slot %1 %2",
-                robotis_Practice_playRecord: "Play sound from slot %1 %2",
-
+                robotis_RCar_scale_simple: "Play the note %2 as %3 in octave %1 %4",
+                robotis_RCar_scale_advanced: "Play the note %2 in octave %1 for %3 beat %4",
+                robotis_RCar_rest_simple: "%1 %2",
+                robotis_RCar_rest_advanced: "Rest %1 beat %2",
+                robotis_RCar_beat_per_minute: "Set playing speed to %1 %2",
+                robotis_RCar_Hello: "Robot speaks %1 %2",
+                robotis_RCar_effectSound: "Play sound effect %1 %2",
+                robotis_RCar_record: "Record to sound slot %1 %2",
+                robotis_RCar_playRecord: "Play sound from slot %1 %2",
+        
                 
                 // LCD 제어
-                robotis_Practice_screen: "Set screen expression to %1 %2 %3",
-                robotis_Practice_anim_screen: "Set screen animation to %1 %2 %3",
-                robotis_Practice_icon_screen_food_plant: "Display %1 from [Food/Plants] at position (%2, %3) in size %4 %5",
-                robotis_Practice_icon_screen_animal_human: "Display %1 from [Animal/Human] at position (%2, %3) in size %4 %5",
-                robotis_Practice_icon_screen_object_tool: "Display %1 from [Object/Tool] at position (%2, %3) in size %4 %5",
-                robotis_Practice_icon_screen_vehicle_number: "Display %1 from [Vehicle/Number] at position (%2, %3) in size %4 %5",
-                robotis_Practice_text_screen: "Display %1 in %5 in %4 at (%2, %3) on the screen %6",
-                robotis_Practice_text_screen_redraw: "Newly display %1 in %4 at (%2, %3) %5",
-                robotis_Practice_pixel: "Display %3 colored dot at (%1, %2) %4",
-                robotis_Practice_LCDColor: "Set screen color as %1 %2",
-                robotis_Practice_LCD_Flash: "Blink the screen with %1 and %2 at intervals of %3 seconds %4",
-                robotis_Practice_LCDBright: "Set screen brightness as %1 %2",
-
+                robotis_RCar_screen: "Set screen expression to %1 %2 %3",
+                robotis_RCar_anim_screen: "Set screen animation to %1 %2 %3",
+                robotis_RCar_icon_screen_food_plant: "Display %1 from [Food/Plants] at position (%2, %3) in size %4 %5",
+                robotis_RCar_icon_screen_animal_human: "Display %1 from [Animal/Human] at position (%2, %3) in size %4 %5",
+                robotis_RCar_icon_screen_object_tool: "Display %1 from [Object/Tool] at position (%2, %3) in size %4 %5",
+                robotis_RCar_icon_screen_vehicle_number: "Display %1 from [Vehicle/Number] at position (%2, %3) in size %4 %5",
+                robotis_RCar_text_screen: "Display %1 in %5 in %4 at (%2, %3) on the screen %6",
+                robotis_RCar_text_screen_redraw: "Newly display %1 in %4 at (%2, %3) %5",
+                robotis_RCar_pixel: "Display %3 colored dot at (%1, %2) %4",
+                robotis_RCar_LCDBright: "Set screen brightness as %1 %2",
+                robotis_RCar_LCDColor: "Set screen color as %1 %2",
+                
+                
                 // LED 제어
-                robotis_Practice_cm_led: "%2 the robot's %1 LED %3",
-                robotis_Practice_cm_led_pattern: "LED %1 blinks at a %2 speed %3",
-
-
-                // DXL 제어
-                robotis_Practice_dxl_set_mode: "Set ID %1 motor as %2 mode %3",
-                robotis_Practice_dxl_each_control: "Move %1th motor %2° for %3 second",
-                robotis_Practice_dxl_set_position: "Rotate ID %1 motor to angle %3° at speed %2 %4",
-                robotis_Practice_dxl_set_rotate: "%4 ID %1 motor %3 at speed %2 %4",
-                robotis_Practice_dxl_set_multiturn_round: "Rotate ID %1 motor %3 times %4 at speed %2 %5",
-
+                robotis_RCar_cm_led: "%2 the robot's %1 LED %3",
+                robotis_RCar_cm_led_pattern: "LED %1 blinks at a %2 speed %3",
                 
                 // AI Camera 값 블록
-                robotis_Practice_huskylens_connection_status: "AI Camera: If %1",
-                robotis_Practice_huskylens_if_detected: "AI Camera: If %1 is displayed",
+                robotis_RCar_huskylens_connection_status: "AI Camera: If %1",
+                robotis_RCar_huskylens_if_detected: "AI Camera: If %1 is displayed",
         
-                robotis_Practice_huskylens_block_value_closest_to_center: "AI Camera: %1 of the rectangle closest to the center of the screen",
-                robotis_Practice_huskylens_arrow_value_closest_to_center: "AI Camera: %1 of the arrow closest to the center of the screen",
-                robotis_Practice_huskylens_number_of_learned_id: "AI Camera: the number of learned ID",
-                robotis_Practice_huskylens_block_value_of_id: "AI Camera: %2 of rectangle with detected ID %1",
-                robotis_Practice_huskylens_arrow_value_of_id: "AI Camera: %2 of arrow with detected ID %1",
+                robotis_RCar_huskylens_block_value_closest_to_center: "AI Camera: %1 of the rectangle closest to the center of the screen",
+                robotis_RCar_huskylens_arrow_value_closest_to_center: "AI Camera: %1 of the arrow closest to the center of the screen",
+                robotis_RCar_huskylens_number_of_learned_id: "AI Camera: the number of learned ID",
+                robotis_RCar_huskylens_block_value_of_id: "AI Camera: %2 of rectangle with detected ID %1",
+                robotis_RCar_huskylens_arrow_value_of_id: "AI Camera: %2 of arrow with detected ID %1",
         
-                robotis_Practice_huskylens_if_learned_id: "AI Camera: If learned data with ID %1",
-                robotis_Practice_huskylens_if_detected_id_type: "AI Camera: If learned %2 data with ID %1",
+                robotis_RCar_huskylens_if_learned_id: "AI Camera: If learned data with ID %1",
+                robotis_RCar_huskylens_if_detected_id_type: "AI Camera: If learned %2 data with ID %1",
         
                 // AI 카메라 제어
-                robotis_Practice_huskylens_set_mode: "AI Camera: Set mode to %1 %2",
-                robotis_Practice_huskylens_print_custom_text: "AI Camera: Display %3 at screen position (%1, %2) %4",
-                robotis_Practice_huskylens_clear_custom_text: "AI Camera: Clear screen text %1",
+                robotis_RCar_huskylens_set_mode: "AI Camera: Set mode to %1 %2",
+                robotis_RCar_huskylens_print_custom_text: "AI Camera: Display %3 at screen position (%1, %2) %4",
+                robotis_RCar_huskylens_clear_custom_text: "AI Camera: Clear screen text %1",
             },            
             Helper: {
-                // 주행 제어
-                robotis_Practice_drive_simple: "Drive the robot at the specified speed and direction\nSpeed range: -100 ~ 100\nSpeed unit: %", 
-                robotis_Practice_drive_advanced: "Rotate the left and right wheels of the robot at the specified speed and direction\nSpeed range: -100 ~ 100\nSpeed unit: %", 
-                robotis_Practice_drive_seperate: "Rotate the specified wheel of the robot at the specified speed and direction\nSpeed range: -100 ~ 100\nSpeed unit: %", 
-                robotis_Practice_drive_angle: "Rotate the two wheels of the robot in the specified direction and by the specified angle\nAngle range: -5760 ~ 5760\nAngle unit: degrees", 
-                robotis_Practice_go_distance: "Move forward or backward by the specified distance\nDistance range: -1000 ~ 1000\nDistance unit: mm", 
-                robotis_Practice_turn_angle: "Rotate in place by the specified angle and direction\nAngle range: -360 ~ 360\nAngle unit: degrees", 
-                robotis_Practice_follow_line: "Start following the line at the specified speed", 
-                robotis_Practice_stop_at_cross: "Stop at the specified intersection", 
-                robotis_Practice_turn_at_line: "Make the specified turn at the intersection and stop", 
-                robotis_Practice_drive_stop: "Stop the robot", 
+                // Driving Control
+                robotis_RCar_drive_simple: "Drive the robot at the specified speed and direction\nSpeed range: -100 ~ 100\nSpeed unit: %",
+                robotis_RCar_drive_advanced: "Rotate the left and right wheels of the robot at the specified speed and direction\nSpeed range: -100 ~ 100\nSpeed unit: %",
+                robotis_RCar_drive_seperate: "Rotate the specified wheel of the robot at the specified speed and direction\nSpeed range: -100 ~ 100\nSpeed unit: %",
+                robotis_RCar_drive_angle: "Rotate the two wheels of the robot in the specified direction and by the specified angle\nAngle range: -5760 ~ 5760\nAngle unit: degrees",
+                robotis_RCar_go_distance: "Move forward or backward by the specified distance\nDistance range: -1000 ~ 1000\nDistance unit: mm",
+                robotis_RCar_turn_angle: "Rotate in place by the specified angle and direction\nAngle range: -360 ~ 360\nAngle unit: degrees",
+                robotis_RCar_follow_line: "Start following the line at the specified speed",
+                robotis_RCar_stop_at_cross: "Stop at the specified intersection",
+                robotis_RCar_turn_at_line: "Make the specified turn at the intersection and stop",
+                robotis_RCar_drive_stop: "Stop the robot",
 
-                // 값 블록
-                robotis_Practice_cm_ir_value: "IR sensor value of the specified number (range: 0 ~ 200)", 
-                robotis_Practice_cm_ir_compare: "If the IR sensor value of the specified number matches the specified value, it is determined as 'true'; otherwise, 'false'.", 
-                robotis_Practice_detectFrontObj: "It returns 'true' if an object is detected by the infrared sensor in the specified direction; otherwise, it returns 'false'.", 
-                robotis_Practice_cm_btn_value: "If the specified button is clicked, it is determined as 'true'; otherwise, 'false'.", 
-                robotis_Practice_cm_joystick_value: "If the joystick position is in the specified state, it is determined as 'true'; otherwise, 'false'.", 
-                robotis_Practice_mic: "Displays the intensity of the sound detected by the microphone in decibels (dB).", 
-                robotis_Practice_detectSound_compare: "If the direction of the sound matches the specified direction, it is determined as 'true'; otherwise, 'false'.", 
-                robotis_Practice_imu: "Value of the specified accelerometer/gyro sensor on the specified axis\nRange: -100 ~ 100", 
-                robotis_Practice_roll_pitch: "roll/pitch value\nroll: -180° ~ 180°, pitch: -90° ~ 90°", 
-                robotis_Practice_distance_value: "Value of the specified sensor\nDistance range: 0 ~ 1000mm\nIlluminance range: 0 ~ 100%\nButton sensor: 0 (not pressed) / 1 (pressed)", 
-                robotis_Practice_distance_compare: "If the specified equation of the specified sensor value is correct, it is determined as 'true'; otherwise, 'false'.", 
-                robotis_Practice_environment_value: "Value of the specified sensor\nMotion sensor: 0 (no movement) / 1 (movement)\nBrightness range: 0 ~ 100%\nTemperature range: -25°C ~ 85°C", 
-                robotis_Practice_environment_compare: "If the specified equation of the specified sensor value is correct, it is determined as 'true'; otherwise, 'false'.", 
-                robotis_Practice_line_cross_compare: "If the specified intersection shape is correct, it is determined as 'true'; otherwise, 'false'.", 
-                robotis_Practice_dxl_value: "Position angle value of the specified motor\nRange: -180° ~ 180°", 
+                // Value Blocks
+                robotis_RCar_cm_ir_value: "IR sensor value of the specified number (range: 0 ~ 200)",
+                robotis_RCar_cm_ir_compare: "If the IR sensor value of the specified number matches the specified value, it is determined as 'true'; otherwise, 'false'.",
+                robotis_RCar_detectFrontObj: "If an object is detected in front of the specified sensor, it is determined as 'true'; otherwise, 'false'.",
+                robotis_RCar_cm_btn_value: "If the specified button is clicked, it is determined as 'true'; otherwise, 'false'.",
+                robotis_RCar_cm_joystick_value: "If the joystick position is in the specified state, it is determined as 'true'; otherwise, 'false'.",
+                robotis_RCar_mic: "Displays the intensity of the sound detected by the microphone in decibels (dB).",
+                robotis_RCar_detectSound_compare: "If the direction of the sound matches the specified direction, it is determined as 'true'; otherwise, 'false'.",
+                robotis_RCar_imu: "Value of the specified accelerometer/gyro sensor on the specified axis\nRange: -100 ~ 100",
+                robotis_RCar_roll_pitch: "roll/pitch value\nroll: -180° ~ 180°, pitch: -90° ~ 90°",
+                robotis_RCar_distance_value: "Value of the specified sensor\nDistance range: 0 ~ 1000mm\nIlluminance range: 0 ~ 100%\nButton sensor: 0 (not pressed) / 1 (pressed)",
+                robotis_RCar_distance_compare: "If the specified equation of the specified sensor value is correct, it is determined as 'true'; otherwise, 'false'.",
+                robotis_RCar_line_cross_compare: "If the specified intersection shape is correct, it is determined as 'true'; otherwise, 'false'.",
+                robotis_RCar_dxl_value: "Position angle value of the specified motor\nRange: -180° ~ 180°",
 
-                // 소리
-                robotis_Practice_scale_simple: "Play with the specified octave, scale, and note", 
-                robotis_Practice_scale_advanced: "Play with the specified octave, scale, and beat", 
-                robotis_Practice_rest_simple: "Rest for the specified rest note", 
-                robotis_Practice_rest_advanced: "Rest for the specified beat", 
-                robotis_Practice_beat_per_minute: "Set the playing speed (BPM)\nRange: 10 ~ 600", 
-                robotis_Practice_Hello: "Play the specified voice of the robot", 
-                robotis_Practice_effectSound: "Play the specified sound effect of the robot", 
-                robotis_Practice_record: "Record and save to the specified number storage", 
-                robotis_Practice_playRecord: "Play the recorded voice in the specified number storage", 
+                // Sound
+                robotis_RCar_scale_simple: "Play with the specified octave, scale, and note",
+                robotis_RCar_scale_advanced: "Play with the specified octave, scale, and beat",
+                robotis_RCar_rest_simple: "Rest for the specified rest note",
+                robotis_RCar_rest_advanced: "Rest for the specified beat",
+                robotis_RCar_beat_per_minute: "Set the playing speed (BPM)\nRange: 10 ~ 600",
+                robotis_RCar_Hello: "Play the specified voice of the robot",
+                robotis_RCar_effectSound: "Play the specified sound effect of the robot",
+                robotis_RCar_record: "Record and save to the specified number storage",
+                robotis_RCar_playRecord: "Play the recorded voice in the specified number storage",
 
-                // LCD 제어
-                robotis_Practice_screen: "Set the character and expression of the controller screen background", 
-                robotis_Practice_anim_screen: "Set the character and expression of the controller screen animation", 
-                robotis_Practice_icon_screen_food_plant: "Set the position and size of a specific icon in [food/plant] on the screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120\nSize: 0 ~ 200", 
-                robotis_Practice_icon_screen_animal_human: "Set the position and size of a specific icon in [animal/human] on the screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120\nSize: 0 ~ 200", 
-                robotis_Practice_icon_screen_object_tool: "Set the position and size of a specific icon in [object/tool] on the screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120\nSize: 0 ~ 200", 
-                robotis_Practice_icon_screen_vehicle_number: "Set the position and size of a specific icon in [vehicle/number] on the screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120\nSize: 0 ~ 200", 
-                robotis_Practice_text_screen: "Set the position, font size, and color of the specified text on the screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120", 
-                robotis_Practice_text_screen_redraw: "Set the position and color of the specified text to be newly displayed (clearing the background of the text) on the screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120\nSize: 0 ~ 200", 
-                robotis_Practice_pixel: "Set the position and color of the dot to be displayed on the screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120", 
-                robotis_Practice_LCDBright: "Set the screen brightness\nBrightness range: 0% ~ 100%", 
-                robotis_Practice_LCDColor: "Set the screen color", 
-                robotis_Practice_LCD_Flash: "Specify two colors and the interval for the screen to blink.",
+                // LCD Control
+                robotis_RCar_screen: "Set the character and expression of the controller screen background",
+                robotis_RCar_anim_screen: "Set the character and expression of the controller screen animation",
+                robotis_RCar_icon_screen_food_plant: "Set the position and size of a specific icon in [food/plant] on the screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120\nSize: 0 ~ 200",
+                robotis_RCar_icon_screen_animal_human: "Set the position and size of a specific icon in [animal/human] on the screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120\nSize: 0 ~ 200",
+                robotis_RCar_icon_screen_object_tool: "Set the position and size of a specific icon in [object/tool] on the screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120\nSize: 0 ~ 200",
+                robotis_RCar_icon_screen_vehicle_number: "Set the position and size of a specific icon in [vehicle/number] on the screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120\nSize: 0 ~ 200",
+                robotis_RCar_text_screen: "Set the position, font size, and color of the specified text on the screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120",
+                robotis_RCar_text_screen_redraw: "Set the position and color of the specified text to be newly displayed (clearing the background of the text) on the screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120\nSize: 0 ~ 200",
+                robotis_RCar_pixel: "Set the position and color of the dot to be displayed on the screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120",
+                robotis_RCar_LCDBright: "Set the screen brightness\nBrightness range: 0% ~ 100%",
+                robotis_RCar_LCDColor: "Set the screen color",
 
-                // LED 제어
-                robotis_Practice_cm_led: "Turn the specified LED of the controller on or off", 
-                robotis_Practice_cm_led_pattern: "Set the blinking pattern of LEDs of the controller", 
+                // LED Control
+                robotis_RCar_cm_led: "Turn the specified LED of the controller on or off",
+                robotis_RCar_cm_led_pattern: "Set the blinking pattern of LEDs of the controller",
+                
+                // AI Camera Value Blocks
+                robotis_RCar_huskylens_connection_status: "If the AI camera is connected, it is determined as 'true'; otherwise, 'false'.",
+                robotis_RCar_huskylens_if_detected: "If the selected symbol (rectangle/arrow) is displayed on the LCD screen of the AI camera, it is determined as 'true'; otherwise, 'false'.",
 
-                // DXL 제어
-                robotis_Practice_dxl_set_mode: "Set the operating mode of the motor with the specified ID",
-                robotis_Practice_dxl_each_control: "Set the motor with the specified ID to move to the specified angle for the specified time (seconds)",
-                robotis_Practice_dxl_set_position: "Set the motor with the specified ID to move to the specified angle at the specified speed",
-                robotis_Practice_dxl_set_rotate: "Set the rotation speed and direction of the motor with the specified ID",
-                robotis_Practice_dxl_set_multiturn_round: "Set the motor with the specified ID to rotate the specified number of turns at the specified speed and direction",
+                robotis_RCar_huskylens_block_value_closest_to_center: "X coordinate/Y coordinate/width/height/learning ID of the rectangle closest to the center of the AI camera screen",
+                robotis_RCar_huskylens_arrow_value_closest_to_center: "Starting point X coordinate/starting point Y coordinate/end point X coordinate/end point Y coordinate/learning ID of the arrow closest to the center of the AI camera screen",
+                robotis_RCar_huskylens_number_of_learned_id: "Number of IDs learned by the AI camera",
+                robotis_RCar_huskylens_block_value_of_id: "X coordinate/Y coordinate/width/height of the rectangle with the specified ID detected by the AI camera",
+                robotis_RCar_huskylens_arrow_value_of_id: "Starting point X coordinate/starting point Y coordinate/end point X coordinate/end point Y coordinate of the arrow with the specified ID detected by the AI camera",
 
-                // AI Camera 값 블록
-                robotis_Practice_huskylens_connection_status: "If the AI camera is connected, it is determined as 'true'; otherwise, 'false'.", 
-                robotis_Practice_huskylens_if_detected: "If the selected symbol (rectangle/arrow) is displayed on the LCD screen of the AI camera, it is determined as 'true'; otherwise, 'false'.", 
+                robotis_RCar_huskylens_if_learned_id: "If the AI camera has learned data with the specified ID, it is determined as 'true'; otherwise, 'false'.",
+                robotis_RCar_huskylens_if_detected_id_type: "If the AI camera has learned the specified data (rectangle/arrow) with the specified ID, it is determined as 'true'; otherwise, 'false'.",
 
-                robotis_Practice_huskylens_block_value_closest_to_center: "X coordinate/Y coordinate/width/height/learning ID of the rectangle closest to the center of the AI camera screen", 
-                robotis_Practice_huskylens_arrow_value_closest_to_center: "Starting point X coordinate/starting point Y coordinate/end point X coordinate/end point Y coordinate/learning ID of the arrow closest to the center of the AI camera screen", 
-                robotis_Practice_huskylens_number_of_learned_id: "Number of IDs learned by the AI camera", 
-                robotis_Practice_huskylens_block_value_of_id: "X coordinate/Y coordinate/width/height of the rectangle with the specified ID detected by the AI camera", 
-                robotis_Practice_huskylens_arrow_value_of_id: "Starting point X coordinate/starting point Y coordinate/end point X coordinate/end point Y coordinate of the arrow with the specified ID detected by the AI camera", 
-
-                robotis_Practice_huskylens_if_learned_id: "If the AI camera has learned the data of the specified ID, it is determined as 'true'; otherwise, 'false'.", 
-                robotis_Practice_huskylens_if_detected_id_type: "If the AI camera has learned the specified data (rectangle/arrow) of the specified ID, it is determined as 'true'; otherwise, 'false'.", 
-
-                // AI 카메라 제어
-                robotis_Practice_huskylens_set_mode: "Set the mode of the AI camera", 
-                robotis_Practice_huskylens_print_custom_text: "Print the specified text at the specified position on the AI camera screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120", 
-                robotis_Practice_huskylens_clear_custom_text: "Clear all the text displayed on the AI camera screen", 
+                // AI Camera Control
+                robotis_RCar_huskylens_set_mode: "Set the mode of the AI camera",
+                robotis_RCar_huskylens_print_custom_text: "Print the specified text at the specified position on the AI camera screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120",
+                robotis_RCar_huskylens_clear_custom_text: "Clear all texts displayed on the AI camera screen",
             },
-
             Blocks: {
                 robotis_red: "Red",
                 robotis_orange: "Orange",
@@ -944,6 +838,9 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_center: "Center",
                 robotis_right: "Right",
                 robotis_both: "Both",
+                robotis_rgee: "R-GEE",
+                robotis_rla: "KODALA",
+                robotis_kkokdu: "TIG",
                 robotis_korean1: "Hello!",
                 robotis_korean2: "Great to see you.",
                 robotis_korean3: "Okay ~",
@@ -1010,10 +907,10 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_chicken: "Rooster",
                 robotis_tiger: "Tiger",
                 robotis_mouse: "Mouse",
+                robotis_whistle: "Whistle",
                 robotis_ambul: "Ambulance",
                 robotis_Horn: "CarHorn",
                 robotis_siren: "Siren",
-                robotis_whistle: "Whistle",
                 robotis_gun: "Gunshot",
                 robotis_clap: "Clap",
                 robotis_melody1: "Melody1",
@@ -1052,24 +949,28 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_face20: "Sad",
                 robotis_face21: "Cry",
                 robotis_face22: "Bath",
-                robotis_face23: "Heart-Eyes",
-                robotis_flashing1: "Flashing1",
-                robotis_flashing2: "Flashing2",
-                robotis_flashing3: "Flashing3",
-                robotis_flashing4: "Flashing4",
-                robotis_flashing5: "Flashing5",
-                robotis_flashing6: "Flashing6",
-                robotis_flashing7: "Flashing7",
-                robotis_flashing8: "Flashing8",
-                robotis_flashing9: "Flashing9",
+                robotis_face23: "Heart-Eyes",     
+
+                robotis_pattern1: "Pattern1",
+                robotis_pattern2: "Pattern2",
+                robotis_pattern3: "Pattern3",  
                 robotis_moveF: "Forward",
                 robotis_moveB: "Backward",
                 robotis_moveL: "LeftTurn",
                 robotis_moveR: "RightTurn",
+                robotis_moveU: "U-turn",
+                robotis_moveL_in_place: "Turn left in place",
+                robotis_moveR_in_place: "Trun right in place",
+                robotis_moveU_in_place: "U-turn in place",
                 robotis_moveRG1: "Stand",
                 robotis_moveRG2: "Sit",
                 robotis_moveRG3: "Struggle",
                 robotis_moveRG4: "RaiseFeet",
+                robotis_stop: "Stop",
+                robotis_roll: "Left-right rotate angle (roll)",
+                robotis_pitch: "Forward-backward rotate angle (pitch)",
+                robotis_direction_forward: "Forward",
+                robotis_direction_backward: "Backward",
                 robotis_stMotion1: "Standard",
                 robotis_stMotion2: "Forward",
                 robotis_stMotion3: "TurnRight",
@@ -1097,52 +998,218 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_screen1: "Sissor",
                 robotis_screen2: "Rock",
                 robotis_screen3: "Paper",
-                robotis_dxl_mode_joint: "Joint",
-                robotis_dxl_mode_wheel: "Wheel",
-                robotis_dxl_mode_multi_turn: "Multi-turn",
-                robotis_dxl_move_rotate: "Rotate",
-                robotis_dxl_move_stop: "Stop",
-                robotis_dxl_rotate_cw: "clockwise",
-                robotis_dxl_rotate_ccw: "counter clockwise",
-                robotis_dxl_value_angle: "angle",
-                robotis_dxl_value_velocity: "velocity",
-                robotis_dxl_value_moving: "moving",
-                robotis_connected: "connected",
-                robotis_disconnected: "NOT connected",
-                robotis_huskylens_mode_face_recognition: "Face recognition",
-                robotis_huskylens_mode_object_tracking: "Object tracking",
-                robotis_huskylens_mode_object_recognition: "Object recognition",
-                robotis_huskylens_mode_line_recognition: "Line tracking",
-                robotis_huskylens_mode_color_recognition: "Color recognition",
-                robotis_huskylens_mode_tag_recognition: "Tag recognition",
-                robotis_huskylens_mode_object_classification: "Object classification",
-                robotis_huskylens_block: "Rectangle",
+                robotis_icon_food_plant_1: "Milk",
+                robotis_icon_food_plant_2: "Tree",
+                robotis_icon_food_plant_3: "Soup",
+                robotis_icon_food_plant_4: "Cake",
+                robotis_icon_food_plant_5: "Water",
+                robotis_icon_food_plant_6: "Juice",
+                robotis_icon_food_plant_7: "Carrot",
+                robotis_icon_food_plant_8: "Apple",
+                robotis_icon_food_plant_9: "Orange",
+                robotis_icon_food_plant_10: "Meat",
+                robotis_icon_food_plant_11: "Flowerpot",
+                robotis_icon_food_plant_12: "Rose",
+                robotis_icon_food_plant_13: "Grape",
+                robotis_icon_food_plant_14: "Potato",
+                robotis_icon_food_plant_15: "Candy",
+                robotis_icon_food_plant_16: "Cheese",
+                robotis_icon_food_plant_17: "Bread",
+                robotis_icon_food_plant_18: "Flowers",
+                robotis_icon_food_plant_19: "Coffee",
+                robotis_icon_food_plant_20: "Tulip",
+                robotis_icon_food_plant_21: "Banana",
+                robotis_icon_food_plant_22: "Fruits",
+                robotis_icon_food_plant_23: "Hamburger",
+                robotis_icon_food_plant_24: "Pizza",
+                robotis_icon_animal_human_1: "Shiba Dog",
+                robotis_icon_animal_human_2: "Puppy",
+                robotis_icon_animal_human_3: "Bear",
+                robotis_icon_animal_human_4: "Bird",
+                robotis_icon_animal_human_5: "Duck",
+                robotis_icon_animal_human_6: "Lion",
+                robotis_icon_animal_human_7: "Tiger",
+                robotis_icon_animal_human_8: "Horse",
+                robotis_icon_animal_human_9: "Sheep",
+                robotis_icon_animal_human_10: "Shark 1 (Left)",
+                robotis_icon_animal_human_11: "Shark 1 (Right)",
+                robotis_icon_animal_human_12: "Shark 2 (Left)",
+                robotis_icon_animal_human_13: "Shark 2 (Right)",
+                robotis_icon_animal_human_14: "Fish 1",
+                robotis_icon_animal_human_15: "Fish 2",
+                robotis_icon_animal_human_16: "Fish 3",
+                robotis_icon_animal_human_17: "Octopus",
+                robotis_icon_animal_human_18: "Monkey",
+                robotis_icon_animal_human_19: "Chicken",
+                robotis_icon_animal_human_20: "Pig",
+                robotis_icon_animal_human_21: "Person (Chubby)",
+                robotis_icon_animal_human_22: "Person (Swimsuit)",
+                robotis_icon_animal_human_23: "Baby",
+                robotis_icon_animal_human_24: "Person (Running)",
+                robotis_icon_animal_human_25: "Person (Singing)",
+                robotis_icon_animal_human_26: "Person (Sitting)",
+                robotis_icon_animal_human_27: "Person (Angry)",
+                robotis_icon_animal_human_28: "Person (Cheering)",
+                robotis_icon_animal_human_29: "King",
+                robotis_icon_animal_human_30: "Prince",
+                robotis_icon_animal_human_31: "Princess",
+                robotis_icon_animal_human_32: "Chef",
+                robotis_icon_animal_human_33: "Doctor",
+                robotis_icon_animal_human_34: "Nurse",
+                robotis_icon_object_tool_1: "Bag",
+                robotis_icon_object_tool_2: "Box",
+                robotis_icon_object_tool_3: "Mug",
+                robotis_icon_object_tool_4: "Hat (Fedora)",
+                robotis_icon_object_tool_5: "Hat (Cap)",
+                robotis_icon_object_tool_6: "Key",
+                robotis_icon_object_tool_7: "Toy",
+                robotis_icon_object_tool_8: "Book",
+                robotis_icon_object_tool_9: "Teddy Bear",
+                robotis_icon_object_tool_10: "Drum",
+                robotis_icon_object_tool_11: "Notebook",
+                robotis_icon_object_tool_12: "Pen",
+                robotis_icon_object_tool_13: "Desk",
+                robotis_icon_object_tool_14: "Table",
+                robotis_icon_object_tool_15: "Chair",
+                robotis_icon_object_tool_16: "Bed",
+                robotis_icon_object_tool_17: "Tent",
+                robotis_icon_object_tool_18: "Plate",
+                robotis_icon_object_tool_19: "Soccer Ball",
+                robotis_icon_object_tool_20: "Bell",
+                robotis_icon_object_tool_21: "Watch",
+                robotis_icon_object_tool_22: "Shoes",
+                robotis_icon_object_tool_23: "Lamp",
+                robotis_icon_object_tool_24: "Radio",
+                robotis_icon_object_tool_25: "Banknote",
+                robotis_icon_object_tool_26: "Ruler",
+                robotis_icon_object_tool_27: "Camera",
+                robotis_icon_object_tool_28: "Spoon",
+                robotis_icon_object_tool_29: "Keyboard",
+                robotis_icon_object_tool_30: "Calendar",
+                robotis_icon_object_tool_31: "Knife",
+                robotis_icon_object_tool_32: "Balloon",
+                robotis_icon_object_tool_33: "Water Bottle",
+                robotis_icon_object_tool_34: "Wooden Stick (Horizontal)",
+                robotis_icon_object_tool_35: "Wooden Stick (Vertical)",
+                robotis_icon_object_tool_36: "Fishing Hook",
+                robotis_icon_vehicle_number_1: "Car",
+                robotis_icon_vehicle_number_2: "Bus",
+                robotis_icon_vehicle_number_3: "Truck",
+                robotis_icon_vehicle_number_4: "Jeep",
+                robotis_icon_vehicle_number_5: "Bicycle",
+                robotis_icon_vehicle_number_6: "Subway",
+                robotis_icon_vehicle_number_7: "Train",
+                robotis_icon_vehicle_number_8: "Airplane",
+                robotis_icon_vehicle_number_9: "Fighter Jet (Vertical)",
+                robotis_icon_vehicle_number_10: "Fighter Jet (Horizontal)",
+                robotis_icon_vehicle_number_11: "Rocket",
+                robotis_icon_vehicle_number_12: "Fishing Boat",
+                robotis_icon_vehicle_number_13: "Passenger Ship",
+                robotis_icon_vehicle_number_14: "Submarine (Left)",
+                robotis_icon_vehicle_number_15: "Submarine (Right)",
+                robotis_icon_vehicle_number_16: "Airplane (Left)",
+                robotis_icon_vehicle_number_17: "Airplane (Right)",
+                robotis_icon_vehicle_number_18: "Airplane (Top)",
+                robotis_icon_vehicle_number_19: "Spaceship (Left)",
+                robotis_icon_vehicle_number_20: "Spaceship (Right)",
+                robotis_icon_vehicle_number_21: "Spaceship (Top)",
+                robotis_icon_vehicle_number_22: "Dice (1)",
+                robotis_icon_vehicle_number_23: "Dice (2)",
+                robotis_icon_vehicle_number_24: "Dice (3)",
+                robotis_icon_vehicle_number_25: "Dice (4)",
+                robotis_icon_vehicle_number_26: "Dice (5)",
+                robotis_icon_vehicle_number_27: "Dice (6)",
+                robotis_icon_vehicle_number_28: "0",
+                robotis_icon_vehicle_number_29: "1",
+                robotis_icon_vehicle_number_30: "2",
+                robotis_icon_vehicle_number_31: "3",
+                robotis_icon_vehicle_number_32: "4",
+                robotis_icon_vehicle_number_33: "5",
+                robotis_icon_vehicle_number_34: "6",
+                robotis_icon_vehicle_number_35: "7",
+                robotis_icon_vehicle_number_36: "8",
+                robotis_icon_vehicle_number_37: "9",
+                robotis_icon_vehicle_number_38: "10",
+                robotis_speed_fast: "Fast Speed",
+                robotis_speed_midium: "Medium Speed",
+                robotis_speed_slow: "Slow Speed",
+                robotis_clockwise: "Clockwise",
+                robotis_counterclockwise: "Counterclockwise",
+                robotis_up: "Lift",
+                robotis_down: "Lower",
+                robotis_if_greater: "If Greater",
+                robotis_if_smaller: "If Smaller",
+                robotis_if_equal: "If Equal",
+                robotis_front_right: "Front Right",
+                robotis_front_left: "Front Left",
+                robotis_bottom_right: "Bottom Right",
+                robotis_bottom_left: "Bottom Left",
+                robotis_side_right: "Right Edge",
+                robotis_side_left: "Left Edge",
+                robotis_front_ir_sensor: "Infrared Sensor",
+                robotis_distance_sensor: "Distance Sensor",
+                robotis_front: "Front",
+                robotis_right: "Right",
+                robotis_left_wheel: "Left Wheel",
+                robotis_right_wheel: "Right Wheel",
+                robotis_beat_sound_8th_note: "Eighth Note (♪)",
+                robotis_beat_sound_dotted_8th_note: "Dotted Eighth Note (♪.)",
+                robotis_beat_sound_quarter_note: "Quarter Note (♩)",
+                robotis_beat_sound_dotted_quarter_note: "Dotted Quarter Note (♩.)",
+                robotis_beat_sound_half_note: "Half Note (𝅗𝅥)",
+                robotis_beat_sound_dotted_half_note: "Dotted Half Note (𝅗𝅥.)",
+                robotis_beat_sound_whole_note: "Whole Note (𝅝)",
+                robotis_beat_sound_dotted_note: "Dotted Whole Note (𝅝.)",
+                robotis_beat_rest_8th_note: "Eighth Rest (𝄾)",
+                robotis_beat_rest_dotted_8th_note: "Dotted Eighth Rest (𝄾.)",
+                robotis_beat_rest_quarter_note: "Quarter Rest (𝄽)",
+                robotis_beat_rest_dotted_quarter_note: "Dotted Quarter Rest (𝄽.)",
+                robotis_beat_rest_half_note: "Half Rest (𝄼)",
+                robotis_beat_rest_dotted_half_note: "Dotted Half Rest (𝄼˙)",
+                robotis_beat_rest_whole_note: "Whole Rest (𝄻)",
+                robotis_beat_rest_dotted_note: "Dotted Whole Rest (𝄻˙)",
+                robotis_line_cross_type_0: "|",
+                robotis_line_cross_type_1: " (Blank)",
+                robotis_line_cross_type_5: "🞣",
+                robotis_line_cross_type_6: "⏉",
+                robotis_line_cross_type_7: "⊣",
+                robotis_line_cross_type_8: "⊢",
+                robotis_line_cross_type_9: "⏋",
+                robotis_line_cross_type_10: "⎾",
+                robotis_line_cross_type_11: "¦",
+                robotis_line_cross_type_12: "︙",
+                robotis_connected: "Connected",
+                robotis_disconnected: "Not connected",
+                robotis_huskylens_mode_face_recognition: "Face Recognition",
+                robotis_huskylens_mode_object_tracking: "Object Tracking",
+                robotis_huskylens_mode_object_recognition: "Object Recognition",
+                robotis_huskylens_mode_line_tracking: "Line Tracking",
+                robotis_huskylens_mode_color_recognition: "Color Recognition",
+                robotis_huskylens_mode_tag_recognition: "Tag Recognition",
+                robotis_huskylens_mode_object_classification: "Object Classification",
+                robotis_huskylens_block: "Block",
                 robotis_huskylens_arrow: "Arrow",
-                robotis_huskylens_center_block_center_x: "Center X",
-                robotis_huskylens_center_block_center_y: "Center Y",
+                robotis_huskylens_center_block_center_x: "Center X Coordinate",
+                robotis_huskylens_center_block_center_y: "Center Y Coordinate",
                 robotis_huskylens_center_block_width: "Width",
                 robotis_huskylens_center_block_height: "Height",
                 robotis_huskylens_center_leared_id: "Learned ID",
-                robotis_huskylens_center_arrow_origin_x: "Origin X",
-                robotis_huskylens_center_arrow_origin_y: "Origin Y",
-                robotis_huskylens_center_arrow_target_x: "Target X",
-                robotis_huskylens_center_arrow_target_y: "Target Y",
+                robotis_huskylens_center_arrow_origin_x: "Start X Coordinate",
+                robotis_huskylens_center_arrow_origin_y: "Start Y Coordinate",
+                robotis_huskylens_center_arrow_target_x: "End X Coordinate",
+                robotis_huskylens_center_arrow_target_y: "End Y Coordinate",
             },
         }
     }
 };
 
-let dxl_last_valid_value = [];
 let rb100_last_valid_value = [];
 let bg_color = 0;
 let beat_per_minute = 75;
 
-const _doevent = ms => new Promise(res => setTimeout(res, ms));
-async function wait(nTime) { await _doevent(nTime); }
-
-Entry.Robotis_rb_P_Assembly.getBlocks = function () {
+Entry.Robotis_rb_koala.getBlocks = function() {
     return {
-        robotis_Practice_drive_simple: {
+        robotis_RCar_drive_simple: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1179,14 +1246,14 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     null,
                     null,
                 ],
-                type: 'robotis_Practice_drive_simple',
+                type: 'robotis_RCar_drive_simple',
             },
             paramsKeyMap: {
                 SPEED: 0,
                 DIRECTION: 1,
             },
             class: 'robotis_rb100_move',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var speed = script.getNumberValue('SPEED', script);
@@ -1231,10 +1298,10 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.opencm70_RCar_go_simple(%1, %2)'],
+                py: ['Robotis.RCar_go_simple(%1, %2)'],
             },
         },
-        robotis_Practice_drive_stop: {
+        robotis_RCar_drive_stop: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1251,13 +1318,13 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 params: [
                     null,
                 ],
-                type: 'robotis_Practice_drive_stop',
+                type: 'robotis_RCar_drive_stop',
             },
             paramsKeyMap: {
                 DIRECTION: 0,
             },
             class: 'robotis_rb100_move',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 
@@ -1288,10 +1355,10 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.opencm70_RCar_stop(%1, %2)'],
+                py: ['Robotis.RCar_stop(%1, %2)'],
             },
         },
-        robotis_Practice_drive_advanced: {
+        robotis_RCar_drive_advanced: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1347,7 +1414,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     },
                     null,
                 ],
-                type: 'robotis_Practice_drive_advanced',
+                type: 'robotis_RCar_drive_advanced',
             },
             paramsKeyMap: {
                 LEFT_SPEED: 0,
@@ -1356,13 +1423,13 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 RIGHT_DIRECTION: 3,
             },
             class: 'robotis_rb100_move',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 let leftSpeed = script.getNumberValue('LEFT_SPEED', script);
-                let leftDirection = script.getField('LEFT_DIRECTION', script);
+                let leftDirection = script.getNumberValue('LEFT_DIRECTION', script);
                 let rightSpeed = script.getNumberValue('RIGHT_SPEED', script);
-                let rightDirection = script.getField('RIGHT_DIRECTION', script);
+                let rightDirection = script.getNumberValue('RIGHT_DIRECTION', script);
                 
                 var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
                 var data_address = 710;
@@ -1382,6 +1449,9 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     rightSpeed = -rightSpeed;
                 }
                 
+                if (leftSpeed < 0) leftSpeed = 256 + leftSpeed;
+                if (rightSpeed < 0) rightSpeed = 256 + rightSpeed;
+                
                 data_value = leftSpeed + rightSpeed * 256;
 
                 var data_sendqueue = [
@@ -1400,10 +1470,10 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.opencm70_RCar_go_advanced(%1, %2)'],
+                py: ['Robotis.RCar_go_advanced(%1, %2)'],
             },
         },
-        robotis_Practice_drive_seperate: {
+        robotis_RCar_drive_seperate: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1414,6 +1484,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     options: [
                         [Lang.Blocks.robotis_left, '1'],
                         [Lang.Blocks.robotis_right, '0'],
+                        [Lang.Blocks.robotis_both, '2'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -1451,7 +1522,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     },
                     null,
                 ],
-                type: 'robotis_Practice_drive_seperate',
+                type: 'robotis_RCar_drive_seperate',
             },
             paramsKeyMap: {
                 WHEEL_SIDE: 0,
@@ -1459,7 +1530,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 WHEEL_DIRECTION: 2,
             },
             class: 'robotis_rb100_move',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 let wheelSide = script.getNumberValue('WHEEL_SIDE', script);
@@ -1485,8 +1556,11 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 if (wheelSide == 1) {
                     leftSpeed = wheelSpeed;
                     rightSpeed = 127; // 속도제어 안함
-                } else {
+                } else if (wheelSide == 0) {
                     leftSpeed = 127; // 속도제어 안함
+                    rightSpeed = wheelSpeed;
+                } else {
+                    leftSpeed = wheelSpeed; // 속도제어 안함
                     rightSpeed = wheelSpeed;
                 }
 
@@ -1503,31 +1577,20 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
                     data_sendqueue,
-                    25, //Entry.Robotis_openCM70.delay
+                    Entry.Robotis_openCM70.delay
                 );
             },
             syntax: {
                 js: [],
-                py: ['Robotis.opencm70_RCar_go_seperate(%1, %2)'],
+                py: ['Robotis.RCar_go_seperate(%1, %2)'],
             },
         },
-        robotis_Practice_drive_angle: {
+        robotis_RCar_drive_angle: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.robotis_left, '1'],
-                        [Lang.Blocks.robotis_right, '0'],
-                    ],
-                    value: '1',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
                 {
                     type: 'Block',
                     accept: 'string',
@@ -1552,25 +1615,22 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             events: {},
             def: {
                 params: [
-                    null,
                     {
                         type: 'number',
-                        params: ['15'],
+                        params: ['180'],
                     },
                     null,
                 ],
-                type: 'robotis_Practice_drive_angle',
+                type: 'robotis_RCar_drive_angle',
             },
             paramsKeyMap: {
-                WHEEL_SIDE: 0,
-                WHEEL_ANGLE: 1,
-                WHEEL_DIRECTION: 2,
+                WHEEL_ANGLE: 0,
+                WHEEL_DIRECTION: 1,
             },
             class: 'robotis_rb100_move',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
-                let wheelSide = script.getNumberValue('WHEEL_SIDE', script);
                 let wheelAngle = script.getNumberValue('WHEEL_ANGLE', script);
                 let wheelDirection = script.getNumberValue('WHEEL_DIRECTION', script);
                 
@@ -1578,10 +1638,10 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 let data_address = 580;
                 let data_length = 8;
                 let angleValue = 0;
-                let id = 33 + wheelSide;
-                let data_buf = [];
+                let data_buf_left = [];
+                let data_buf_right = [];
                 let i = 0;
-                let speed = 150;
+                let speed = 50;
 
                 if (wheelDirection == '2') {
                     wheelAngle = -wheelAngle;
@@ -1594,19 +1654,32 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
 
                 angleValue = wheelAngle;
                 if (wheelAngle < 0) angleValue = 65536 + angleValue;
-                
-                data_buf.push(id);
-                data_buf.push(0);
-                data_buf.push(speed % 256);
-                data_buf.push(Math.floor(speed/256));
-                data_buf.push(angleValue % 256);
-                data_buf.push(Math.floor(angleValue/256) % 256);
+
+                data_buf_left.push(35);
+                data_buf_left.push(0);
+                data_buf_left.push(speed % 256);
+                data_buf_left.push(Math.floor(speed/256));
+                data_buf_left.push(angleValue % 256);
+                data_buf_left.push(Math.floor(angleValue/256) % 256);
                 if (wheelAngle >= 0) {
-                    data_buf.push(0);
-                    data_buf.push(0);
+                    data_buf_left.push(0);
+                    data_buf_left.push(0);
                 } else {
-                    data_buf.push(0xFF);
-                    data_buf.push(0xFF);
+                    data_buf_left.push(0xFF);
+                    data_buf_left.push(0xFF);
+                }
+                data_buf_right.push(36);
+                data_buf_right.push(0);
+                data_buf_right.push(speed % 256);
+                data_buf_right.push(Math.floor(speed/256));
+                data_buf_right.push(angleValue % 256);
+                data_buf_right.push(Math.floor(angleValue/256) % 256);
+                if (wheelAngle >= 0) {
+                    data_buf_right.push(0);
+                    data_buf_right.push(0);
+                } else {
+                    data_buf_right.push(0xFF);
+                    data_buf_right.push(0xFF);
                 }
 
                 var data_sendqueue = [
@@ -1614,7 +1687,13 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                         data_instruction,
                         data_address,
                         data_length,
-                        data_buf,
+                        data_buf_left,
+                    ],
+                    [
+                        data_instruction,
+                        data_address,
+                        data_length,
+                        data_buf_right,
                     ],
                 ];
                 return Entry.Robotis_carCont.postCallReturn(
@@ -1625,10 +1704,10 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.opencm70_RCar_go_angle(%1, %2)'],
+                py: ['Robotis.RCar_go_angle(%1, %2)'],
             },
         },
-        robotis_Practice_go_distance: {
+        robotis_RCar_go_distance: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1660,11 +1739,11 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 params: [
                     {
                         type: 'number',
-                        params: ['10'],
+                        params: ['5'],
                     },
                     null,
                 ],
-                type: 'robotis_Practice_go_distance',
+                type: 'robotis_RCar_go_distance',
             },
             
             paramsKeyMap: {
@@ -1672,10 +1751,10 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 DIRECTION: 1,
             },
             class: 'robotis_rb100_move',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func(entity, script) {
                 var distance = script.getNumberValue('DISTANCE', script);
-                var direction = script.getField('DIRECTION', script);
+                var direction = script.getNumberValue('DIRECTION', script);
 
                 if(distance > 1000) {
                     distance = 1000;
@@ -1686,7 +1765,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
                 var data_address = 270;
                 var data_length = 4;
-                var data_value = Math.floor(10 * distance * direction); 
+                var data_value = Math.floor(10 * distance * direction);
         
                 var data_sendqueue = [
                     [
@@ -1706,10 +1785,10 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     //Entry.Robotis_openCM70.delay
                 );
             },
-            syntax: { js: [], py: ['Robotis.robotis_dxl_each_control(%1)'] },
+            syntax: { js: [], py: ['Robotis.RCar_go_distance(%1, %2)'] },
         },
 
-        robotis_Practice_turn_angle:{
+        robotis_RCar_turn_angle:{
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1746,7 +1825,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     },
                     null,
                 ],
-                type: 'robotis_Practice_turn_angle',
+                type: 'robotis_RCar_turn_angle',
             },
             
             paramsKeyMap: {
@@ -1754,17 +1833,17 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 DIRECTION: 1,
             },
             class: 'robotis_rb100_move',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func(entity, script) {
                 var angle = script.getNumberValue('ANGLE', script);
                 var direction = script.getNumberValue('DIRECTION', script);
 
                 angle *= direction;
 
-                if(angle > 720) {
-                    angle = 720;
-                } else if(angle < -720) {
-                    angle = -720;
+                if(angle > 360) {
+                    angle = 360;
+                } else if(angle < -360) {
+                    angle = -360;
                 }
 
                 var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
@@ -1791,9 +1870,9 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     //Entry.Robotis_openCM70.delay
                 );
             },
-            syntax: { js: [], py: ['Robotis.robotis_dxl_each_control(%1)'] },
+            syntax: { js: [], py: ['Robotis.RCar_turn_angle(%1)'] },
         },
-        robotis_Practice_follow_line: {
+        robotis_RCar_follow_line: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1824,13 +1903,13 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     null,
                     null,
                 ],
-                type: 'robotis_Practice_follow_line',
+                type: 'robotis_RCar_follow_line',
             },
             paramsKeyMap: {
                 SPEED: 0,
             },
             class: 'robotis_rb100_move',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var speed_level = script.getNumberValue('SPEED', script);
@@ -1858,7 +1937,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 py: ['Robotis.rb100_follow_line(%1)'],
             },
         },
-        robotis_Practice_stop_at_cross: {
+        robotis_RCar_stop_at_cross: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1889,23 +1968,23 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     null,
                     null,
                 ],
-                type: 'robotis_Practice_stop_at_cross',
+                type: 'robotis_RCar_stop_at_cross',
             },
             paramsKeyMap: {
                 CROSS: 0,
             },
             class: 'robotis_rb100_move',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: async function (sprite, script) {
                 // instruction / address / length / value / default length
-                var cross_type = script.getNumberValue('CROSS', script);
+                var corss_type = script.getNumberValue('CROSS', script);
                 var data_address = 5201;
 
                 // max 10 seconds
                 for (let i = 0; i < 100; i++) {
                     await Entry.Utils.sleep(100);
                     console.log(Entry.hw.portData[data_address]);
-                    if (Entry.hw.portData[data_address] == cross_type) {
+                    if (Entry.hw.portData[data_address] == corss_type) {
                         break;
                     }
                     if (Entry.engine.isState('stop') == true) {
@@ -1930,10 +2009,10 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.rb100_stop_at_cross(%1)'],
+                py: ['Robotis.rb100_follow_line(%1)'],
             },
         },
-        robotis_Practice_turn_at_line: {
+        robotis_RCar_turn_at_line: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1964,13 +2043,13 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     null,
                     null,
                 ],
-                type: 'robotis_Practice_turn_at_line',
+                type: 'robotis_RCar_turn_at_line',
             },
             paramsKeyMap: {
                 TURN_TYPE: 0,
             },
             class: 'robotis_rb100_move',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var turn_type = script.getNumberValue('TURN_TYPE', script);
@@ -1978,6 +2057,18 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
                 var data_address = 66;
                 var data_length = 2;
+                let extra_delay = 0;
+
+                switch (turn_type) {
+                    case 0:
+                    case 1:
+                        extra_delay = 2000;
+                        break;
+                        
+                    case 2:
+                        extra_delay = 3500;
+                        break;
+                }
 
                 var data_sendqueue = [
                     [
@@ -1990,19 +2081,70 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
                     data_sendqueue,
+                    Entry.Robotis_openCM70.delay + extra_delay,
+                );
+            },
+            syntax: {
+                js: [],
+                py: ['Robotis.RCar_turn_at_line(%1)'],
+            },
+        },
+        robotis_RCar_follow_line_stop: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                   null
+                ],
+                type: 'robotis_RCar_follow_line_stop',
+            },
+            paramsKeyMap: {
+            },
+            class: 'robotis_rb100_move',
+            isNotFor: ['Robotis_rb_koala'],
+            func: function (sprite, script) {
+                // instruction / address / length / value / default length
+                
+                var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                var data_address = 5200;
+                var data_length = 1;
+                var data_value = 0;
+            
+
+                var data_sendqueue = [
+                    [
+                        data_instruction,
+                        data_address,
+                        data_length,
+                        data_value,
+                    ],
+                ];
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
                     Entry.Robotis_openCM70.delay
                 );
             },
             syntax: {
                 js: [],
-                py: ['Robotis.rb100_follow_line(%1)'],
+                py: ['Robotis.rb100_follow_line_stop()'],
             },
         },
 
         
 
 
-        robotis_Practice_cm_ir_value: {
+        robotis_RCar_cm_ir_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -2030,13 +2172,13 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 params: [
                     null
                 ],
-                type: 'robotis_Practice_cm_ir_value',
+                type: 'robotis_RCar_cm_ir_value',
             },
             paramsKeyMap: {
                 VALUE: 0,
             },
             class: 'robotis_rb100_custom',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
 
@@ -2058,10 +2200,10 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.opencm70_cm_ir_value(%1)'],
+                py: ['Robotis.rb100_ir_value(%1)'],
             },
         },
-        robotis_Practice_cm_ir_compare: {
+        robotis_RCar_cm_ir_compare: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -2106,7 +2248,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     50,
                     null,
                 ],
-                type: 'robotis_Practice_cm_ir_compare',
+                type: 'robotis_RCar_cm_ir_compare',
             },
             paramsKeyMap: {
                 VALUE: 0,
@@ -2114,7 +2256,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 COMPARE_OP: 2,
             },
             class: 'robotis_rb100_custom',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
                 var data_address = script.getNumberValue('VALUE');
@@ -2141,10 +2283,10 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.robotis_RB_cm_ir_compare(%1)'],
+                py: ['Robotis.RB100_ir_compare(%1)'],
             },
         },
-        robotis_Practice_detectFrontObj:{
+        robotis_RCar_detectFrontObj:{
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -2162,6 +2304,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
+                /*
                 {
                     type: 'Dropdown',
                     options: [
@@ -2174,106 +2317,40 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
+                */
             ],
             events: {},
             def: {
                 params: [
                     null,
-                    null,
+                    //null,
                 ],
-                type: 'robotis_Practice_detectFrontObj',
+                type: 'robotis_RCar_detectFrontObj',
             },
             paramsKeyMap: {
                 SENSOR: 0,
-                DIRECTION: 1,
+                //DIRECTION: 1,
             },
             class: 'robotis_rb100_custom',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
-
-                // instruction / address / length / value / default length
-                var data_instruction = Entry.Robotis_rb.INSTRUCTION.READ;
-                var data_address = 360;
-                var data_length = 4;
-                var data_value = 0;
-
-                var data_default_address = 0;
-                var data_default_length = 0;
                 let sensorType = script.getNumberValue('SENSOR');
-                let direction = script.getNumberValue('DIRECTION');
                 let ir_1 = 0;
                 let ir_2 = 0;
 
                 if (sensorType == 0)
                 {
-                    if (direction == 0) {
-                        ir_1 = Entry.hw.portData[360];
-                        ir_2 = Entry.hw.portData[362];
-                        if (ir_1 == undefined) ir_1 = 0;
-                        if (ir_2 == undefined) ir_2 = 0;
-                        return ir_1 > 100 || ir_2 > 100;
-                    } else if (direction == 1) {
-                        ir_1 = Entry.hw.portData[368];
-                        if (ir_1 == undefined) ir_1 = 0;
-                        return ir_1 > 100;
-                    } else if (direction == 2) {
-                        ir_1 = Entry.hw.portData[370];
-                        if (ir_1 == undefined) ir_1 = 0;
-                        return ir_1 > 100;
-                    }
+                    ir_1 = Entry.hw.portData[360];
+                    ir_2 = Entry.hw.portData[362];
+                    if (ir_1 == undefined) ir_1 = 0;
+                    if (ir_2 == undefined) ir_2 = 0;
+                    return ir_1 > 100 || ir_2 > 100;
                 } else if (sensorType == 1) {
-                    data_instruction = Entry.Robotis_rb.INSTRUCTION.BYPASS_READ;
-                    data_address = 25;
-                    data_length = 2;
-                    data_value = 110; // id
-                    
-                    data_default_address = data_address;
-                    data_default_length = data_length;
-
-                    if (
-                        Entry.hw.sendQueue.prevAddress &&
-                        Entry.hw.sendQueue.prevAddress == data_default_address
-                    ) {
-                        if (
-                            Entry.hw.sendQueue.prevTime &&
-                            new Date() - Entry.hw.sendQueue.prevTime < Entry.Robotis_openCM70.readDelay
-                        ) {
-                            //throw new Entry.Utils.AsyncError();
-                            if(typeof Entry.hw.sendQueue.prevResult == 'undefined') {
-                                return false;
-                            }
-                            return Entry.hw.sendQueue.prevResult < 200;
-                        }
-                    }
-
-                    Entry.Robotis_carCont.setRobotisData([
-                        [
-                            data_instruction,
-                            data_address,
-                            data_length,
-                            data_value,
-                            data_default_length,
-                        ],
-                    ]);
-                    // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-                    Entry.Robotis_carCont.update();
-
-                    // 통합센서의 컨트롤 테이블 주소는 RB-100블록에서 사용하지 않는 주소를 사용
-                    // 주소 겹침 방지
-                    var result = Entry.hw.portData[data_default_address];
-                    if (result == undefined)
-                    {
-                        result = rb100_last_valid_value[data_default_address];
-                    }
-                    else
-                    {
-                        rb100_last_valid_value[data_default_address] = result;
-                    }
-                    Entry.hw.sendQueue.prevAddress = data_default_address;
-                    Entry.hw.sendQueue.prevTime = new Date();
-                    Entry.hw.sendQueue.prevResult = result;
-
+                    let device_id_name = "DIST_110_DISTANCE";
+    
+                    var result = Entry.hw.portData[device_id_name];
+    
                     if(typeof result == 'undefined') {
                         return false;
                     } else {
@@ -2283,10 +2360,10 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.RB_detectFrontObj()'],
+                py: ['Robotis.RB100_detectFrontObj()'],
             },
         },
-        robotis_Practice_cm_btn_value: {
+        robotis_RCar_cm_btn_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -2310,13 +2387,13 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 params: [
                     null,
                 ],
-                type: 'robotis_Practice_cm_btn_value',
+                type: 'robotis_RCar_cm_btn_value',
             },
             paramsKeyMap: {
                 VALUE: 0,
             },
             class: 'robotis_rb100_custom',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
                 var data_address = script.getNumberValue('VALUE');
@@ -2331,10 +2408,10 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.opencm70_cm_btn_value(%1)'],
+                py: ['Robotis.RB100_btn_value(%1)'],
             },
         },
-        robotis_Practice_cm_joystick_value: {
+        robotis_RCar_cm_joystick_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -2365,13 +2442,13 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 params: [
                     null
                 ],
-                type: 'robotis_Practice_cm_joystick_value',
+                type: 'robotis_RCar_cm_joystick_value',
             },
             paramsKeyMap: {
                 COMPARE_VAL: 0,
             },
             class: 'robotis_rb100_custom',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
                 var data_address = 50;
@@ -2386,10 +2463,10 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.openCM70_cm_joystick_value()'],
+                py: ['Robotis.RB100_joystick_value()'],
             },
         },
-        robotis_Practice_mic:{
+        robotis_RCar_mic:{
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -2401,14 +2478,14 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 params: [
                     null
                 ],
-                type: 'robotis_Practice_mic',
+                type: 'robotis_RCar_mic',
             },
             paramsKeyMap: {
                 VALUE: 0,
             },
             class: 'robotis_rb100_custom',
-            isNotFor: ['Robotis_rb_P_Assembly'],
-            func: async function (sprite, script) {
+            isNotFor: ['Robotis_rb_koala'],
+            func: function (sprite, script) {
                 var scope = script.executor.scope;
                 var data_address = 119;
 
@@ -2421,10 +2498,10 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.robotis_RB_mic()'],
+                py: ['Robotis.RB100_mic()'],
             },
         },
-        robotis_Practice_detectSound_compare:{
+        robotis_RCar_detectSound_compare:{
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -2449,13 +2526,13 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 params: [
                     null,
                 ],
-                type: 'robotis_Practice_detectSound_compare',
+                type: 'robotis_RCar_detectSound_compare',
             },
             paramsKeyMap: {
                 VALUE: 0,
             },
             class: 'robotis_rb100_custom',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
                 var data_address = 5031;
@@ -2471,10 +2548,10 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.RB_detectSound_compare(%1)'],
+                py: ['Robotis.RB100_detectSound_compare(%1)'],
             },
         },
-        robotis_Practice_imu:{
+        robotis_RCar_imu:{
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -2511,17 +2588,17 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     null,
                     null
                 ],
-                type: 'robotis_Practice_imu',
+                type: 'robotis_RCar_imu',
             },
             paramsKeyMap: {
                 AXIS: 0,
                 MODE: 1,
             },
             class: 'robotis_rb100_custom',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
-                var data_address = script.getField('AXIS', script) - script.getField('MODE', script);
+                var data_address = script.getNumberValue('AXIS', script) - script.getNumberValue('MODE', script);
 
                 var result = Entry.hw.portData[data_address];
 
@@ -2532,10 +2609,10 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.robotis_RB_imu()'],
+                py: ['Robotis.RB100_imu()'],
             },
         },
-        robotis_Practice_roll_pitch:{
+        robotis_RCar_roll_pitch:{
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -2559,13 +2636,13 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 params: [
                     null,
                 ],
-                type: 'robotis_Practice_roll_pitch',
+                type: 'robotis_RCar_roll_pitch',
             },
             paramsKeyMap: {
                 AXIS: 0,
             },
             class: 'robotis_rb100_custom',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
                 var data_address = script.getNumberValue('AXIS');
@@ -2579,10 +2656,10 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.robotis_RB_roll_pitch(%1)'],
+                py: ['Robotis.RB100_roll_pitch(%1)'],
             },
         },
-        robotis_Practice_distance_value: {
+        robotis_RCar_distance_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -2594,6 +2671,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     options: [
                         [Lang.Blocks.robotis_sensing_distance, '25'],
                         [Lang.Blocks.robotis_sensing_button, '24'],
+                        [Lang.Blocks.robotis_sensing_brightness, '30'],
                     ],
                     value: '25',
                     fontSize: 11,
@@ -2606,74 +2684,33 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 params: [
                     null,
                 ],
-                type: 'robotis_Practice_distance_value',
+                type: 'robotis_RCar_distance_value',
             },
             paramsKeyMap: {
                 ADDR: 0,
             },
             class: 'robotis_rb100_custom',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
+                var data_address = script.getNumberValue('ADDR');
+                let device_id_name = "";
 
-                // instruction / address / length / value / default length
-                var data_instruction = Entry.Robotis_rb.INSTRUCTION.BYPASS_READ;
-                var data_address = 0;
-                var data_length = 2;
-                var data_value = 110;
-
-                var data_default_address = 0;
-                var data_default_length = 0;
-                
-                data_address = script.getNumberValue('ADDR');
-
-                if (data_address == 24) data_length = 1;
-
-                data_default_address = data_address;
-                data_default_length = data_length;
-
-                if (
-                    Entry.hw.sendQueue.prevAddress &&
-                    Entry.hw.sendQueue.prevAddress == data_default_address
-                ) {
-                    if (
-                        Entry.hw.sendQueue.prevTime &&
-                        new Date() - Entry.hw.sendQueue.prevTime < Entry.Robotis_openCM70.readDelay
-                    ) {
-                        //throw new Entry.Utils.AsyncError();
-                        if(typeof Entry.hw.sendQueue.prevResult == 'undefined') {
-                            return 0;
-                        }
-                        return Entry.hw.sendQueue.prevResult;
-                    }
+                switch (data_address) {
+                    case 25:
+                        device_id_name = "DIST_110_DISTANCE";
+                        break;
+                    
+                    case 24:
+                        device_id_name = "DIST_110_BUTTON";
+                        break;
+                        
+                    case 30:
+                        device_id_name = "DIST_110_BRIGHTNESS";
+                        break;
                 }
 
-                Entry.Robotis_carCont.setRobotisData([
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        data_value,
-                        data_default_length,
-                    ],
-                ]);
-                // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-                Entry.Robotis_carCont.update();
-
-                // 통합센서의 컨트롤 테이블 주소는 RB-100블록에서 사용하지 않는 주소를 사용
-                // 주소 겹침 방지
-                var result = Entry.hw.portData[data_default_address];
-                if (result == undefined)
-                {
-                    result = rb100_last_valid_value[data_default_address];
-                }
-                else
-                {
-                    rb100_last_valid_value[data_default_address] = result;
-                }
-                Entry.hw.sendQueue.prevAddress = data_default_address;
-                Entry.hw.sendQueue.prevTime = new Date();
-                Entry.hw.sendQueue.prevResult = result;
+                var result = Entry.hw.portData[device_id_name];
 
                 if(typeof result == 'undefined') {
 
@@ -2683,10 +2720,10 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.opencm70_cm_distance_value(%1)'],
+                py: ['Robotis.RB100_distance_value(%1)'],
             },
         },
-        robotis_Practice_distance_compare: {
+        robotis_RCar_distance_compare: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -2698,6 +2735,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     options: [
                         [Lang.Blocks.robotis_sensing_distance, '25'],
                         [Lang.Blocks.robotis_sensing_button, '24'],
+                        [Lang.Blocks.robotis_sensing_brightness, '30'],
                     ],
                     value: '25',
                     fontSize: 11,
@@ -2714,7 +2752,6 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     options: [
                         [Lang.Blocks.robotis_if_greater, '0'],
                         [Lang.Blocks.robotis_if_smaller, '1'],
-                        [Lang.Blocks.robotis_if_equal, '2'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -2732,7 +2769,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     },
                     null,
                 ],
-                type: 'robotis_Practice_distance_compare',
+                type: 'robotis_RCar_distance_compare',
             },
             paramsKeyMap: {
                 ADDR: 0,
@@ -2740,236 +2777,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 COMPARE_OP: 2,
             },
             class: 'robotis_rb100_custom',
-            isNotFor: ['Robotis_rb_P_Assembly'],
-            func: function (sprite, script) {
-                var scope = script.executor.scope;
-
-                // instruction / address / length / value / default length
-                var data_instruction = Entry.Robotis_rb.INSTRUCTION.BYPASS_READ;
-                var data_address = 0;
-                var data_length = 2;
-                var data_id = 110;
-
-                var data_default_address = 0;
-                var data_default_length = 0;
-                var compareValue = script.getNumberValue('COMPARE_VAL');
-                var compareOP = script.getNumberValue('COMPARE_OP');
-
-                data_address = script.getNumberValue('ADDR');
-
-                if (data_address == 24) data_length = 1;
-
-                data_default_address = data_address;
-                data_default_length = data_length;
-
-                if (
-                    Entry.hw.sendQueue.prevAddress &&
-                    Entry.hw.sendQueue.prevAddress == data_default_address
-                ) {
-                    if (
-                        Entry.hw.sendQueue.prevTime &&
-                        new Date() - Entry.hw.sendQueue.prevTime < 200//Entry.Robotis_openCM70.readDelay//200
-                    ) {
-                        //throw new Entry.Utils.AsyncError();
-                
-                        //  return false;
-                        switch(compareOP) {
-                            case 0:
-                                return Entry.hw.sendQueue.prevResult > compareValue;
-                            case 1:
-                                return Entry.hw.sendQueue.prevResult < compareValue;
-                            case 2:
-                                return Entry.hw.sendQueue.prevResult == compareValue;
-                            default:
-                                return false;
-                        }
-                    }
-                }
-
-                Entry.Robotis_carCont.setRobotisData([
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        data_id,
-                        data_default_length,
-                    ],
-                ]);
-                
-                
-                Entry.Robotis_carCont.update();
-
-                
-                // 통합센서의 컨트롤 테이블 주소는 RB-100블록에서 사용하지 않는 주소를 사용
-                // 주소 겹침 방지
-                var result = Entry.hw.portData[data_default_address];
-                if (result == undefined)
-                {
-                    result = rb100_last_valid_value[data_default_address];
-                }
-                else
-                {
-                    rb100_last_valid_value[data_default_address] = result;
-                }
-                Entry.hw.sendQueue.prevAddress = data_default_address;
-                Entry.hw.sendQueue.prevTime = new Date();
-                Entry.hw.sendQueue.prevResult = result;
-
-                if(result == undefined) {
-                    return false;
-                }
-
-                switch(compareOP) {
-                    case 0:
-                        return result > compareValue;
-                    case 1:
-                        return result < compareValue;
-                    case 2:
-                        return result == compareValue;
-                    default:
-                        return false;
-                }
-               
-            },
-            syntax: {
-                js: [],
-                py: ['Robotis.robotis_RB_cm_distance_compare(%1)'],
-            },
-        },
-        robotis_Practice_environment_value: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#fff',
-            skeleton: 'basic_string_field',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.robotis_sensing_temperature, '28'],
-                        [Lang.Blocks.robotis_sensing_humidity, '29'],
-                        [Lang.Blocks.robotis_sensing_brightness, '30'],
-                        [Lang.Blocks.robotis_sensing_motion, '27'],
-                    ],
-                    value: '28',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    null
-                ],
-                type: 'robotis_Practice_environment_value',
-            },
-            paramsKeyMap: {
-                ADDR: 0,
-            },
-            class: 'robotis_rb100_custom',
-            isNotFor: ['Robotis_rb_P_Assembly'],
-            func: function (sprite, script) {
-                var scope = script.executor.scope;
-                var data_address = script.getNumberValue('ADDR');
-                let device_id_name = "";
-
-                switch (data_address) {
-                    case 28:
-                        device_id_name = "PIR_100_TEMPERATURE";
-                        break;
-                    
-                    case 29:
-                        device_id_name = "PIR_100_HUMIDITY";
-                        break;
-                        
-                    case 30:
-                        device_id_name = "PIR_100_BRIGHTNESS";
-                        break;
-
-                    case 27:
-                        device_id_name = "PIR_100_PIR";
-                        break;
-                }
-
-                var result = Entry.hw.portData[device_id_name];
-
-                if(typeof result == 'undefined') {
-
-                    return 0;
-                }
-                else {
-                    if (device_id_name == "PIR_100_TEMPERATURE") {
-                        result = result % 256;
-                        if (result > 128) {
-                            result = result - 256;
-                        }
-                    }
-                }
-                return result;
-            },
-            syntax: {
-                js: [],
-                py: ['Robotis.opencm70_cm_environment_value(%1)'],
-            },
-        },
-        robotis_Practice_environment_compare: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#fff',
-            skeleton: 'basic_boolean_field',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.robotis_sensing_temperature, '28'],
-                        [Lang.Blocks.robotis_sensing_humidity, '29'],
-                        [Lang.Blocks.robotis_sensing_brightness, '30'],
-                        [Lang.Blocks.robotis_sensing_motion, '27'],
-                    ],
-                    value: '28',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    value: 'asdfasdf',
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.robotis_if_greater, '0'],
-                        [Lang.Blocks.robotis_if_smaller, '1'],
-                        [Lang.Blocks.robotis_if_equal, '2'],
-                    ],
-                    value: '0',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    null,
-                    {
-                        type: 'number',
-                        params: [0]
-                    },
-                    null,
-                ],
-                type: 'robotis_Practice_environment_compare',
-            },
-            paramsKeyMap: {
-                ADDR: 0,
-                COMPARE_VAL: 1,
-                COMPARE_OP: 2,
-            },
-            class: 'robotis_rb100_custom',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
 
@@ -2980,20 +2788,16 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 let device_id_name = "";
 
                 switch (data_address) {
-                    case 28:
-                        device_id_name = "PIR_100_TEMPERATURE";
+                    case 25:
+                        device_id_name = "DIST_110_DISTANCE";
                         break;
                     
-                    case 29:
-                        device_id_name = "PIR_100_HUMIDITY";
+                    case 24:
+                        device_id_name = "DIST_110_BUTTON";
                         break;
                         
                     case 30:
-                        device_id_name = "PIR_100_BRIGHTNESS";
-                        break;
-
-                    case 27:
-                        device_id_name = "PIR_100_PIR";
+                        device_id_name = "DIST_110_BRIGHTNESS";
                         break;
                 }
 
@@ -3016,10 +2820,10 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.robotis_RB_cm_environment_compare(%1)'],
+                py: ['Robotis.RB10_distance_compare(%1)'],
             },
         },
-        robotis_Practice_dxl_value: {
+        robotis_RCar_dxl_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -3029,18 +2833,10 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.robotis_left_wheel, '52'],
-                        [Lang.Blocks.robotis_right_wheel, '51'],
-                        ["ID 1", '1'],
-                        ["ID 2", '2'],
-                        ["ID 3", '3'],
-                        ["ID 4", '4'],
-                        ["ID 5", '5'],
-                        ["ID 6", '6'],
-                        ["ID 7", '7'],
-                        ["ID 8", '8'],
+                        [Lang.Blocks.robotis_left_wheel, '36'],
+                        [Lang.Blocks.robotis_right_wheel, '35'],
                     ],
-                    value: '52',
+                    value: '36',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -3060,17 +2856,17 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             events: {},
             def: {
                 params: [
-                    52,
+                    36,
                     null,
                 ],
-                type: 'robotis_Practice_dxl_value',
+                type: 'robotis_RCar_dxl_value',
             },
             paramsKeyMap: {
                 ID: 0,
                 TYPE: 1,
             },
             class: 'robotis_rb100_custom',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
 
@@ -3091,10 +2887,10 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.get_dxl_value(%1)'],
+                py: ['Robotis.get_dxl_value(%1, %2)'],
             },
         },
-        robotis_Practice_line_cross_compare:{
+        robotis_RCar_line_cross_compare:{
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -3120,13 +2916,13 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 params: [
                     null,
                 ],
-                type: 'robotis_Practice_line_cross_compare',
+                type: 'robotis_RCar_line_cross_compare',
             },
             paramsKeyMap: {
                 VALUE: 0,
             },
             class: 'robotis_rb100_custom',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
                 var data_address = 5201;
@@ -3143,14 +2939,14 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.RB_line_cross_compare(%1)'],
+                py: ['Robotis.RB100_cross_type_compare(%1)'],
             },
         },
 
 
 
         
-        robotis_Practice_screen: {
+        robotis_RCar_screen: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -3159,11 +2955,11 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.robotis_kkokdu, '3'],
                         [Lang.Blocks.robotis_rla, '2'],
                         [Lang.Blocks.robotis_rgee, '0'],
+                        [Lang.Blocks.robotis_kkokdu, '3'],
                     ],
-                    value: '3',
+                    value: '2',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -3211,14 +3007,14 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     null,
                     null,
                 ],
-                type: 'robotis_Practice_screen',
+                type: 'robotis_RCar_screen',
             },
             paramsKeyMap: {
                 ROBOT_TYPE: 0,
                 BACKGROUND: 1,
             },
             class: 'robotis_rb100_lcd',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var robotType = script.getNumberValue('ROBOT_TYPE', script);
@@ -3324,10 +3120,10 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     Entry.Robotis_openCM70.delay + 200
                 );
             },
-            syntax: { js: [], py: ['Robotis.opencm70_cm_screen(%1)'] },
+            syntax: { js: [], py: ['Robotis.RB100_screen(%1, %2)'] },
         },
 
-        robotis_Practice_anim_screen: {
+        robotis_RCar_anim_screen: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -3336,11 +3132,11 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.robotis_kkokdu, '1'],
                         [Lang.Blocks.robotis_rla, '0'],
                         [Lang.Blocks.robotis_rgee, '-1'],
+                        [Lang.Blocks.robotis_kkokdu, '1'],
                     ],
-                    value: '1',
+                    value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -3355,7 +3151,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                         [Lang.Blocks.robotis_car_anim05, '30984'],
 
                         [Lang.Blocks.robotis_car_anim06, '30985'],
-                        [Lang.Blocks.robotis_car_anim07, '30986'], 
+                        //[Lang.Blocks.robotis_car_anim07, '30986'], 
                         [Lang.Blocks.robotis_car_anim08, '30987'],
                         [Lang.Blocks.robotis_car_anim09, '30988'],
                         [Lang.Blocks.robotis_car_anim10, '30989'],
@@ -3388,14 +3184,14 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     null,
                     null,
                 ],
-                type: 'robotis_Practice_anim_screen',
+                type: 'robotis_RCar_anim_screen',
             },
             paramsKeyMap: {
                 ROBOT_TYPE: 0,
                 BACKGROUND: 1,
             },
             class: 'robotis_rb100_lcd',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var robotType = script.getNumberValue('ROBOT_TYPE', script);
@@ -3502,9 +3298,9 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     Entry.Robotis_openCM70.delay //+ 1000
                 );
             },
-            syntax: { js: [], py: ['Robotis.opencm70_cm_screen(%1)'] },
+            syntax: { js: [], py: ['Robotis.RB100_anim_screen(%1)'] },
         },
-        robotis_Practice_icon_screen_food_plant: {
+        robotis_RCar_icon_screen_food_plant: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -3576,7 +3372,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     50,
                     null,
                 ],
-                type: 'robotis_Practice_icon_screen_food_plant',
+                type: 'robotis_RCar_icon_screen_food_plant',
             },
             paramsKeyMap: {
                 ICON: 0,
@@ -3585,7 +3381,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 SIZE: 3,
             },
             class: 'robotis_rb100_lcd',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var iconNum = script.getField('ICON', script);
@@ -3638,10 +3434,10 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.RB_rsp_screen(%1,%2,%3,%4)'],
+                py: ['Robotis.RB100_icon_screen_food_plant(%1,%2,%3,%4)'],
             },
         },
-        robotis_Practice_icon_screen_animal_human: {
+        robotis_RCar_icon_screen_animal_human: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -3723,7 +3519,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     50,
                     null,
                 ],
-                type: 'robotis_Practice_icon_screen_animal_human',
+                type: 'robotis_RCar_icon_screen_animal_human',
             },
             paramsKeyMap: {
                 ICON: 0,
@@ -3732,7 +3528,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 SIZE: 3,
             },
             class: 'robotis_rb100_lcd',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var iconNum = script.getField('ICON', script);
@@ -3785,10 +3581,10 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.RB_rsp_screen(%1,%2,%3,%4)'],
+                py: ['Robotis.RB100_icon_screen_animal_human(%1,%2,%3,%4)'],
             },
         },
-        robotis_Practice_icon_screen_object_tool: {
+        robotis_RCar_icon_screen_object_tool: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -3872,7 +3668,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     50,
                     null,
                 ],
-                type: 'robotis_Practice_icon_screen_object_tool',
+                type: 'robotis_RCar_icon_screen_object_tool',
             },
             paramsKeyMap: {
                 ICON: 0,
@@ -3881,7 +3677,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 SIZE: 3,
             },
             class: 'robotis_rb100_lcd',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var iconNum = script.getField('ICON', script);
@@ -3929,15 +3725,15 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
                     data_sendqueue,
-                    Entry.Robotis_openCM70.delay + 200
+                    Entry.Robotis_openCM70.delay + 100
                 );
             },
             syntax: {
                 js: [],
-                py: ['Robotis.RB_rsp_screen(%1,%2,%3,%4)'],
+                py: ['Robotis.RB100_icon_screen_object_tool(%1,%2,%3,%4)'],
             },
         },
-        robotis_Practice_icon_screen_vehicle_number: {
+        robotis_RCar_icon_screen_vehicle_number: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -4023,7 +3819,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     50,
                     null,
                 ],
-                type: 'robotis_Practice_icon_screen_vehicle_number',
+                type: 'robotis_RCar_icon_screen_vehicle_number',
             },
             paramsKeyMap: {
                 ICON: 0,
@@ -4032,7 +3828,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 SIZE: 3,
             },
             class: 'robotis_rb100_lcd',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var iconNum = script.getField('ICON', script);
@@ -4080,15 +3876,15 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
                     data_sendqueue,
-                    Entry.Robotis_openCM70.delay + 200
+                    Entry.Robotis_openCM70.delay + 100
                 );
             },
             syntax: {
                 js: [],
-                py: ['Robotis.RB_rsp_screen(%1,%2,%3,%4)'],
+                py: ['Robotis.RB100_icon_screen_vehicle_number(%1,%2,%3,%4)'],
             },
         },
-        robotis_Practice_text_screen: {
+        robotis_RCar_text_screen: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -4157,7 +3953,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     null,
                     null,
                 ],
-                type: 'robotis_Practice_text_screen',
+                type: 'robotis_RCar_text_screen',
             },
             paramsKeyMap: {
                 TEXT: 0,
@@ -4167,7 +3963,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 COLOR: 4,
             },
             class: 'robotis_rb100_lcd',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var text = script.getStringValue('TEXT', script);
@@ -4226,10 +4022,10 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.RB_text_screen(%1,%2,%3,%4)'],
+                py: ['Robotis.RB100_text_screen(%1,%2,%3,%4)'],
             },
         },
-        robotis_Practice_pixel: {
+        robotis_RCar_pixel: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -4281,7 +4077,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     },
                     null,
                 ],
-                type: 'robotis_Practice_pixel',
+                type: 'robotis_RCar_pixel',
             },
             paramsKeyMap: {
                 X: 0,
@@ -4289,7 +4085,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 COLOR: 2,
             },
             class: 'robotis_rb100_lcd',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var x = script.getNumberValue('X', script);
@@ -4339,10 +4135,10 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.RB_text_screen(%1,%2,%3,%4)'],
+                py: ['Robotis.RB100_pixel(%1,%2,%3)'],
             },
         },
-        robotis_Practice_text_screen_redraw: {
+        robotis_RCar_text_screen_redraw: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -4399,7 +4195,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     },
                     null,
                 ],
-                type: 'robotis_Practice_text_screen_redraw',
+                type: 'robotis_RCar_text_screen_redraw',
             },
             paramsKeyMap: {
                 TEXT: 0,
@@ -4408,7 +4204,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 COLOR: 3,
             },
             class: 'robotis_rb100_lcd',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var text = script.getStringValue('TEXT', script);
@@ -4465,10 +4261,10 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.RB_text_screen(%1,%2,%3,%4)'],
+                py: ['Robotis.RB100_text_screen_redraw(%1,%2,%3,%4)'],
             },
         },
-        robotis_Practice_LCDBright: {
+        robotis_RCar_LCDBright: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -4489,13 +4285,13 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 params: [
                     50,
                 ],
-                type: 'robotis_Practice_LCDBright',
+                type: 'robotis_RCar_LCDBright',
             },
             paramsKeyMap: {
                 BRIGHT: 0,
             },
             class: 'robotis_rb100_lcd',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var bright = script.getNumberValue('BRIGHT', script);
@@ -4525,10 +4321,10 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.RB_LCDBright(%1)'],
+                py: ['Robotis.RB100_LCDBright(%1)'],
             },
         },
-        robotis_Practice_LCDColor: {
+        robotis_RCar_LCDColor: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -4564,13 +4360,13 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 params: [
                     null,
                 ],
-                type: 'robotis_Practice_LCDColor',
+                type: 'robotis_RCar_LCDColor',
             },
             paramsKeyMap: {
                 COLOR: 0,
             },
             class: 'robotis_rb100_lcd',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var color = script.getNumberValue('COLOR', script);
@@ -4584,9 +4380,6 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 bg_color = color;
                 
                 var data_sendqueue = [
-                    [
-                        Entry.Robotis_rb.INSTRUCTION.WRITE, 163, 2, 2817
-                    ],
                     [
                         data_instruction,
                         data_address,
@@ -4603,134 +4396,12 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.RB_LCDColor(%1)'],
-            },
-        },
-        robotis_Practice_LCD_Flash: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.robotis_red, '224'],
-                        [Lang.Blocks.robotis_orange, '244'],
-                        [Lang.Blocks.robotis_yellow, '252'],
-                        [Lang.Blocks.robotis_green, '28'],
-                        [Lang.Blocks.robotis_blue, '3'],
-                        [Lang.Blocks.robotis_darkblue, '2'],
-                        [Lang.Blocks.robotis_purple, '130'],
-                        [Lang.Blocks.robotis_brown, '173'],
-                        [Lang.Blocks.robotis_black, '0'],
-                        [Lang.Blocks.robotis_white, '255'],
-                    ],
-                    value: '224',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.robotis_red, '224'],
-                        [Lang.Blocks.robotis_orange, '244'],
-                        [Lang.Blocks.robotis_yellow, '252'],
-                        [Lang.Blocks.robotis_green, '28'],
-                        [Lang.Blocks.robotis_blue, '3'],
-                        [Lang.Blocks.robotis_darkblue, '2'],
-                        [Lang.Blocks.robotis_purple, '130'],
-                        [Lang.Blocks.robotis_brown, '173'],
-                        [Lang.Blocks.robotis_black, '0'],
-                        [Lang.Blocks.robotis_white, '255'],
-                    ],
-                    value: '0',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [0.3, '3'],
-                        [0.4, '4'],
-                        [0.5, '5'],
-                        [0.6, '6'],
-                        [0.7, '7'],
-                        [0.8, '8'],
-                        [0.9, '9'],
-                        [1.0, '10'],
-                        [1.1, '11'],
-                        [1.2, '12'],
-                        [1.3, '13'],
-                        [1.4, '14'],
-                        [1.5, '15'],
-                        [1.6, '16'],
-                        [1.7, '17'],
-                        [1.8, '18'],
-                        [1.9, '19'],
-                        [2.0, '20'],
-                    ],
-                    value: '5',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    null,
-                ],
-                type: 'robotis_Practice_LCD_Flash',
-            },
-            paramsKeyMap: {
-                COLOR_ON: 0,
-                COLOR_OFF: 1,
-                PERIOD: 2,
-            },
-            class: 'robotis_rb100_lcd',
-            isNotFor: ['Robotis_rb_P_Assembly'],
-            func: function (sprite, script) {
-                // instruction / address / length / value / default length
-                const color_on = script.getNumberValue('COLOR_ON', script);
-                const color_off = script.getNumberValue('COLOR_OFF', script);
-                const period = script.getNumberValue('PERIOD', script);
-                const colors = color_on + (color_off << 8);
-
-                // 0x8000: use flashing mode, 
-                // (period << 8): on time (0.1 sec)
-                // period: off time (0.1 sec)
-                const time_parameter = 0x8000 + (period << 8) + period; 
-                
-                var data_sendqueue = [
-                    [
-                        Entry.Robotis_rb.INSTRUCTION.WRITE, 158, 2, colors
-                    ],
-                    [
-                        Entry.Robotis_rb.INSTRUCTION.WRITE, 163, 2, time_parameter
-                    ],
-                ];
-                return Entry.Robotis_carCont.postCallReturn(
-                    script,
-                    data_sendqueue,
-                    Entry.Robotis_openCM70.delay + 100
-                );
-            },
-            syntax: {
-                js: [],
-                py: ['Robotis.RB_LCD_Flash(%1, %2, %3)'],
+                py: ['Robotis.RB100_LCDColor(%1)'],
             },
         },
 
         
-        robotis_Practice_cm_led: {
+        robotis_RCar_cm_led: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -4768,14 +4439,14 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             events: {},
             def: {
                 params: [null, null, null],
-                type: 'robotis_Practice_cm_led',
+                type: 'robotis_RCar_cm_led',
             },
             paramsKeyMap: {
                 RB_LED: 0,
                 VALUE: 1,
             },
             class: 'robotis_rb100_led',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var cmLed = script.getField('RB_LED', script);
@@ -4795,8 +4466,6 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     data_address = 40;
                     data_length = 2;
                     data_value = 200 * 257 * value;
-                } else {
-                    data_value = value * cmLed;
                 }
               
                 var data_sendqueue = [
@@ -4811,7 +4480,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: { js: [], py: ['Robotis.RB100_led(%1, %2)'] },
         },
-        robotis_Practice_cm_led_pattern: {
+        robotis_RCar_cm_led_pattern: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -4850,14 +4519,14 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             events: {},
             def: {
                 params: [null, null, null],
-                type: 'robotis_Practice_cm_led_pattern',
+                type: 'robotis_RCar_cm_led_pattern',
             },
             paramsKeyMap: {
                 PATTERN: 0,
                 SPEED: 1,
             },
             class: 'robotis_rb100_led',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var pattern = script.getNumberValue('PATTERN', script);
@@ -4885,635 +4554,12 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
         },
 
 
-        
-        robotis_Practice_dxl_set_mode: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ["1", '1'],
-                        ["2", '2'], //Lang.Blocks.robotis_common_green_color
-                        ["3", '3'],
-                        ["4", '4'],
-                        ["5", '5'],
-                        ["6", '6'],
-                        ["7", '7'],
-                        ["8", '8'],
-                        ["51", '51'],
-                        ["52", '52'],
-                    ],
-                    value: '1',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.robotis_dxl_mode_joint, '3'],
-                        [Lang.Blocks.robotis_dxl_mode_wheel, '1'],
-                        [Lang.Blocks.robotis_dxl_mode_multi_turn, '4'],
-                    ],
-                    value: '3',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    '1',
-                    null,
-                    null,
-                ],
-                type: 'robotis_Practice_dxl_set_mode',
-            },
-            paramsKeyMap: {
-                DXL_ID: 0,
-                DXL_MODE: 1,
-            },
-            class: 'robotis_openCM70_cm',
-            isNotFor: ['Robotis_rb_H', 'Robotis_rb_P_Assembly'],
-            func: function (sprite, script) {
-                // instruction / address / length / value / default length
-                var dxl_id = script.getNumberValue('DXL_ID', script);
-                var dxl_mode = script.getField('DXL_MODE', script);
-
-                var data_instruction = Entry.Robotis_rb.INSTRUCTION.BYPASS_WRITE;
-                var data_address = 0;
-                var data_length = 0;
-                var data_value = 0;
-
-                data_address =
-                    Entry.Robotis_rb.CONTROL_TABLE.DXL_OPERATING_MODE[0];
-                data_length =
-                    Entry.Robotis_rb.CONTROL_TABLE.DXL_OPERATING_MODE[1];
-
-                data_value = dxl_mode;
-
-                var data_sendqueue = [
-                    [
-                        data_instruction,
-                        Entry.Robotis_rb.CONTROL_TABLE.DXL_TORQUE_ENABLE[0],
-                        Entry.Robotis_rb.CONTROL_TABLE.DXL_TORQUE_ENABLE[1],
-                        dxl_id,
-                        0
-                    ],
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        dxl_id,
-                        data_value
-                    ],
-                    [
-                        data_instruction,
-                        Entry.Robotis_rb.CONTROL_TABLE.DXL_TORQUE_ENABLE[0],
-                        Entry.Robotis_rb.CONTROL_TABLE.DXL_TORQUE_ENABLE[1],
-                        dxl_id,
-                        1
-                    ],
-                ];
-
-                return Entry.Robotis_carCont.postCallReturn(
-                    script,
-                    data_sendqueue,
-                    Entry.Robotis_openCM70.delay
-                );
-            },
-            syntax: {
-                js: [],
-                py: ['Robotis.set_dxl_mode(%1, %2)'],
-            },
-        },
-        robotis_Practice_dxl_each_control: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ["1", '1'],
-                        ["2", '2'], //Lang.Blocks.robotis_common_green_color
-                        ["3", '3'],
-                        ["4", '4'],
-                        ["5", '5'],
-                        ["6", '6'],
-                        ["7", '7'],
-                        ["8", '8'],
-                        ["51", '51'],
-                        ["52", '52'],
-                    ],
-                    value: '1',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    null,
-                    {
-                        type: 'number',
-                        params: ['0'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['1'],
-                    },
-                ],
-                type: 'robotis_Practice_dxl_each_control',
-            },
-
-            paramsKeyMap: {
-                DXLNUM: 0,
-                ANGLE: 1,
-                TIME: 2,
-            },
-            class: 'robotis_openCM70_cm',
-            isNotFor: ['Robotis_rb_P_Assembly'],
-            func(entity, script) {
-                var data_instruction = Entry.Robotis_rb.INSTRUCTION.BYPASS_WRITE;
-                var data_address = 0;
-                var data_length = 0;
-
-                data_address =
-                    Entry.Robotis_rb.CONTROL_TABLE.DXL_PROFILE_VELOCITY[0];
-                data_length =
-                    Entry.Robotis_rb.CONTROL_TABLE.DXL_PROFILE_VELOCITY[1] + Entry.Robotis_rb.CONTROL_TABLE.DXL_GOAL_POSITION[1];
-
-
-                var dxlID = script.getField('DXLNUM', script);
-                var angle = script.getNumberValue('ANGLE', script);
-                var time = script.getNumberValue('TIME', script) * 1000;
-                var data_buf = [];
-
-                var engValue = 2048;
-                engValue = Math.floor(2048 - Math.round(angle * 4096) / 360);
-                var velocity = 0;
-
-                if (time == 0) {
-                    velocity = 0;
-                } else {
-                    velocity = Math.round(Math.floor(60 * Math.abs(angle - Entry.Robotis_rb.DXL_POSITION.values[dxlID - 1]) * 1000 / 360 / time) / 0.229);
-                }
-                Entry.Robotis_rb.DXL_POSITION.values[dxlID - 1] = angle;
-
-                data_buf.push(velocity%256);
-                data_buf.push(Math.floor(velocity/256));
-                data_buf.push(0);
-                data_buf.push(0);
-
-                data_buf.push(engValue%256);
-                data_buf.push(Math.floor(engValue/256));
-                data_buf.push(0);
-                data_buf.push(0);
-
-                var data_sendqueue = [
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        dxlID,
-                        data_buf
-                    ],
-                ];
-
-                return Entry.Robotis_carCont.postCallReturn(
-                    script,
-                    data_sendqueue,
-                    time + Entry.Robotis_openCM70.delay
-                    //Entry.Robotis_openCM70.delay
-                );
-            },
-            syntax: { js: [], py: ['Robotis.robotis_dxl_each_control(%1)'] },
-        },
-        robotis_Practice_dxl_set_position: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ["1", '1'],
-                        ["2", '2'], //Lang.Blocks.robotis_common_green_color
-                        ["3", '3'],
-                        ["4", '4'],
-                        ["5", '5'],
-                        ["6", '6'],
-                        ["7", '7'],
-                        ["8", '8'],
-                        ["51", '51'],
-                        ["52", '52'],
-                    ],
-                    value: '1',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    '1',
-                    '50',
-                    '0',
-                    null,
-                ],
-                type: 'robotis_Practice_dxl_set_position',
-            },
-            paramsKeyMap: {
-                DXL_ID: 0,
-                DXL_SPEED: 1,
-                DXL_ANGLE: 2,
-            },
-            class: 'robotis_openCM70_cm',
-            isNotFor: ['Robotis_rb_H', 'Robotis_rb_P_Assembly'],
-            func: function (sprite, script) {
-                // instruction / address / length / value / default length
-                var dxl_id = script.getNumberValue('DXL_ID', script);
-                var dxl_speed = script.getNumberValue('DXL_SPEED', script);
-                var dxl_angle = script.getNumberValue('DXL_ANGLE', script);
-
-                var data_instruction = Entry.Robotis_rb.INSTRUCTION.BYPASS_WRITE;
-                var data_address = 0;
-                var data_length = 0;
-                var data_buf = [];
-
-                data_address =
-                    Entry.Robotis_rb.CONTROL_TABLE.DXL_PROFILE_VELOCITY[0];
-                data_length =
-                    Entry.Robotis_rb.CONTROL_TABLE.DXL_PROFILE_VELOCITY[1] + Entry.Robotis_rb.CONTROL_TABLE.DXL_GOAL_POSITION[1];
-
-                if (dxl_speed < 0) dxl_speed = 0;
-                else if (dxl_speed > 100) dxl_speed = 100;
-
-                data_buf.push((dxl_speed*10)%256);
-                data_buf.push(Math.floor(dxl_speed*10/256));
-                data_buf.push(0);
-                data_buf.push(0);
-
-                if (dxl_angle < -179) dxl_angle = -179;
-                else if (dxl_angle > 180) dxl_angle = 180;
-
-                dxl_angle = 180 - dxl_angle;
-
-                data_buf.push(Math.floor(dxl_angle*4096/360)%256);
-                data_buf.push(Math.floor(dxl_angle*4096/360/256));
-                data_buf.push(0);
-                data_buf.push(0);
-
-                var data_sendqueue = [
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        dxl_id,
-                        data_buf
-                    ],
-                ];
-
-                return Entry.Robotis_carCont.postCallReturn(
-                    script,
-                    data_sendqueue,
-                    Entry.Robotis_openCM70.delay
-                );
-            },
-            syntax: {
-                js: [],
-                py: ['Robotis.set_dxl_position(%1, %2, %3)'],
-            },
-        },
-        robotis_Practice_dxl_set_rotate: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ["1", '1'],
-                        ["2", '2'], //Lang.Blocks.robotis_common_green_color
-                        ["3", '3'],
-                        ["4", '4'],
-                        ["5", '5'],
-                        ["6", '6'],
-                        ["7", '7'],
-                        ["8", '8'],
-                        ["51", '51'],
-                        ["52", '52'],
-                    ],
-                    value: '1',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.robotis_dxl_rotate_cw, '1'],
-                        [Lang.Blocks.robotis_dxl_rotate_ccw, '2'],
-                    ],
-                    value: '1',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.robotis_dxl_move_rotate, '1'],
-                        [Lang.Blocks.robotis_dxl_move_stop, '0'],
-                    ],
-                    value: '1',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    '1',
-                    '50',
-                    null,
-                    null,
-                    null,
-                ],
-                type: 'robotis_Practice_dxl_set_rotate',
-            },
-            paramsKeyMap: {
-                DXL_ID: 0,
-                DXL_SPEED: 1,
-                DXL_DIRECTION: 2,
-                DXL_MOVE: 3,
-            },
-            class: 'robotis_openCM70_cm',
-            isNotFor: ['Robotis_rb_H', 'Robotis_rb_P_Assembly'],
-            func: function (sprite, script) {
-                // instruction / address / length / value / default length
-                var dxl_id = script.getNumberValue('DXL_ID', script);
-                var dxl_speed = script.getNumberValue('DXL_SPEED', script);
-                var dxl_direction = script.getNumberValue('DXL_DIRECTION', script);
-                var dxl_move = script.getNumberValue('DXL_MOVE', script);
-
-                var data_instruction = Entry.Robotis_rb.INSTRUCTION.BYPASS_WRITE;
-                var data_address = 0;
-                var data_length = 0;
-                var data_value = 0;
-
-                data_address =
-                    Entry.Robotis_rb.CONTROL_TABLE.DXL_GOAL_VELOCITY[0];
-                data_length =
-                    Entry.Robotis_rb.CONTROL_TABLE.DXL_GOAL_VELOCITY[1];
-
-                if (dxl_speed < 0) dxl_speed = 0;
-                else if (dxl_speed > 100) dxl_speed = 100;
-
-                data_value = dxl_speed * 10;
-
-                // cw일 경우 음수처리
-                if (dxl_direction == 1) data_value = -data_value;
-
-                // 알쥐나 알라 우측 바퀴인 경우 reverse mode이므로 방향 반대
-                if (dxl_id == 33 || dxl_id == 35) data_value = -data_value;
-
-                data_value = data_value * dxl_move;
-
-                var data_sendqueue = [
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        dxl_id,
-                        data_value
-                    ],
-                ];
-
-                return Entry.Robotis_carCont.postCallReturn(
-                    script,
-                    data_sendqueue,
-                    Entry.Robotis_openCM70.delay
-                );
-            },
-            syntax: {
-                js: [],
-                py: ['Robotis.set_dxl_rotate(%1, %2, %3)'],
-            },
-        },
-        robotis_Practice_dxl_set_multiturn_round: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ["1", '1'],
-                        ["2", '2'], //Lang.Blocks.robotis_common_green_color
-                        ["3", '3'],
-                        ["4", '4'],
-                        ["5", '5'],
-                        ["6", '6'],
-                        ["7", '7'],
-                        ["8", '8'],
-                        ["51", '51'],
-                        ["52", '52'],
-                    ],
-                    value: '1',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.robotis_dxl_rotate_cw, '1'],
-                        [Lang.Blocks.robotis_dxl_rotate_ccw, '2'],
-                    ],
-                    value: '1',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    '1',
-                    '50',
-                    '1',
-                    null,
-                    null,
-                ],
-                type: 'robotis_Practice_dxl_set_multiturn_round',
-            },
-            paramsKeyMap: {
-                DXL_ID: 0,
-                DXL_SPEED: 1,
-                DXL_ROUND: 2,
-                DXL_DIRECTION: 3,
-            },
-            class: 'robotis_openCM70_cm',
-            isNotFor: ['Robotis_rb_H', 'Robotis_rb_P_Assembly'],
-            func: function (sprite, script) {
-                // instruction / address / length / value / default length
-                var dxl_id = script.getNumberValue('DXL_ID', script);
-                var dxl_speed = script.getNumberValue('DXL_SPEED', script);
-                var dxl_round = script.getNumberValue('DXL_ROUND', script);
-                var dxl_direction = script.getNumberValue('DXL_DIRECTION', script);
-
-
-                var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
-                var data_address_1 = 0;
-                var data_length_1 = 0;
-                var data_value_1 = 0;
-                var data_address_2 = 0;
-                var data_length_2 = 0;
-                var data_value_2 = 0;
-                var data_address_3 = 0;
-                var data_length_3 = 0;
-                var data_value_3 = 0;
-
-                var data_sendqueue = [];
-                var result = undefined;
-
-                if (dxl_id == 0 || dxl_speed == 0 || dxl_round == 0) {
-                    return;
-                }
-
-                data_address_1 =
-                    Entry.Robotis_rb.CONTROL_TABLE.CM_DXL_MULTITURN_ID[0];
-                data_length_1 =
-                    Entry.Robotis_rb.CONTROL_TABLE.CM_DXL_MULTITURN_ID[1];
-
-                data_address_2 =
-                    Entry.Robotis_rb.CONTROL_TABLE.CM_DXL_MULTITURN_SPEED[0];
-                data_length_2 =
-                    Entry.Robotis_rb.CONTROL_TABLE.CM_DXL_MULTITURN_SPEED[1];
-
-                if (dxl_speed < 0) dxl_speed = 0;
-                else if (dxl_speed > 100) dxl_speed = 100;
-
-                data_value_2 = dxl_speed * 10;
-
-                data_address_3 =
-                    Entry.Robotis_rb.CONTROL_TABLE.CM_DXL_MULTITURN_DISTANCE[0];
-                data_length_3 =
-                    Entry.Robotis_rb.CONTROL_TABLE.CM_DXL_MULTITURN_DISTANCE[1];
-
-                if (dxl_round < 0) dxl_round = 0;
-                else if (dxl_round > 100) dxl_round = 100;
-
-                data_value_3 = dxl_round * 4096;
-
-                if (dxl_direction == 1) data_value_3 = -data_value_3;
-
-                data_sendqueue = [
-                    [
-                        data_instruction,
-                        data_address_1,
-                        data_length_1,
-                        dxl_id,
-                    ],
-                    [
-                        data_instruction,
-                        data_address_2,
-                        data_length_2,
-                        data_value_2,
-                    ],
-                    [
-                        data_instruction,
-                        data_address_3,
-                        data_length_3,
-                        data_value_3,
-                    ],
-                ];
-
-                return Entry.Robotis_carCont.postCallReturn(
-                    script,
-                    data_sendqueue,
-                    Entry.Robotis_openCM70.delay
-                );
-            },
-            syntax: {
-                js: [],
-                py: ['Robotis.set_dxl_rotate(%1, %2, %3)'],
-            },
-        },
-
-
 
 
 
 
         
-        robotis_Practice_scale_simple: {
+        robotis_RCar_scale_simple: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -5585,7 +4631,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     null,
                     null,
                 ],
-                type: 'robotis_Practice_scale_simple',
+                type: 'robotis_RCar_scale_simple',
             },
             paramsKeyMap: {
                 CM_BUZZER_OCTAV: 0,
@@ -5593,7 +4639,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 CM_BUZZER_NOTE: 2,
             },
             class: 'robotis_rb100_sound',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var cmBuzzerIndex = script.getNumberValue('CM_BUZZER_INDEX', script);
@@ -5684,10 +4730,10 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.opencm70_cm_buzzer_index(%1, %2)'],
+                py: ['Robotis.RB100_buzzer_simple(%1, %2, %3)'],
             },
         }, 
-        robotis_Practice_scale_advanced: {
+        robotis_RCar_scale_advanced: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -5746,7 +4792,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     1,
                     null,
                 ],
-                type: 'robotis_Practice_scale_advanced',
+                type: 'robotis_RCar_scale_advanced',
             },
             paramsKeyMap: {
                 CM_BUZZER_OCTAV: 0,
@@ -5754,7 +4800,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 CM_BUZZER_BEAT: 2,
             },
             class: 'robotis_rb100_sound',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var cmBuzzerIndex = script.getNumberValue('CM_BUZZER_INDEX', script);
@@ -5815,10 +4861,10 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.opencm70_cm_buzzer_index(%1, %2)'],
+                py: ['Robotis.RB100_buzzer_advanced(%1, %2, %3)'],
             },
         }, 
-        robotis_Practice_rest_simple: {
+        robotis_RCar_rest_simple: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -5849,13 +4895,13 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     null,
                     null,
                 ],
-                type: 'robotis_Practice_rest_simple',
+                type: 'robotis_RCar_rest_simple',
             },
             paramsKeyMap: {
                 CM_BUZZER_NOTE: 0,
             },
             class: 'robotis_rb100_sound',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var cmBuzzerNote = script.getNumberValue('CM_BUZZER_NOTE', script);
@@ -5892,10 +4938,10 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.opencm70_cm_buzzer_index(%1, %2)'],
+                py: ['Robotis.RB100_rest_simple(%1)'],
             },
         }, 
-        robotis_Practice_rest_advanced: {
+        robotis_RCar_rest_advanced: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -5917,13 +4963,13 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     1,
                     null,
                 ],
-                type: 'robotis_Practice_rest_advanced',
+                type: 'robotis_RCar_rest_advanced',
             },
             paramsKeyMap: {
                 CM_BUZZER_BEAT: 0,
             },
             class: 'robotis_rb100_sound',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var cmBuzzerBeat = script.getNumberValue('CM_BUZZER_BEAT', script);
@@ -5946,10 +4992,10 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.opencm70_cm_buzzer_index(%1, %2)'],
+                py: ['Robotis.RB100_rest_advanced(%1)'],
             },
         }, 
-        robotis_Practice_beat_per_minute: {
+        robotis_RCar_beat_per_minute: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -5971,13 +5017,13 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     75,
                     null,
                 ],
-                type: 'robotis_Practice_beat_per_minute',
+                type: 'robotis_RCar_beat_per_minute',
             },
             paramsKeyMap: {
                 CM_BUZZER_BPM: 0,
             },
             class: 'robotis_rb100_sound',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var cmBuzzerBpm = script.getNumberValue('CM_BUZZER_BPM', script);
@@ -5996,11 +5042,11 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.opencm70_cm_buzzer_index(%1, %2)'],
+                py: ['Robotis.RB100_bpm(%1)'],
             },
         }, 
         
-        robotis_Practice_Hello: {
+        robotis_RCar_Hello: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -6086,13 +5132,13 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 params: [
                     null,
                 ],
-                type: 'robotis_Practice_Hello',
+                type: 'robotis_RCar_Hello',
             },
             paramsKeyMap: {
                 HELLO: 0,
             },
             class: 'robotis_rb100_sound',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var cmHello = script.getField('HELLO', script);
@@ -6135,10 +5181,10 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.RB_Hello(%1)'],
+                py: ['Robotis.RB100_Hello(%1)'],
             },
         },
-        robotis_Practice_effectSound:{
+        robotis_RCar_effectSound:{
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -6147,17 +5193,14 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.robotis_dog, '0'],
-                        [Lang.Blocks.robotis_frog, '1'],
-                        [Lang.Blocks.robotis_cat, '2'],
-                        [Lang.Blocks.robotis_chicken, '7'],
-                        [Lang.Blocks.robotis_tiger, '19'],
-                        [Lang.Blocks.robotis_mouse, '17'],
+                        [Lang.Blocks.robotis_koala, '8'],
 
+                        [Lang.Blocks.robotis_whistle, '274'],
                         [Lang.Blocks.robotis_ambul, '773'],
                         [Lang.Blocks.robotis_Horn, '781'],
                         [Lang.Blocks.robotis_siren, '774'],
-                        [Lang.Blocks.robotis_whistle, '274'],
+                        
+
                         [Lang.Blocks.robotis_gun, '775'],
                         [Lang.Blocks.robotis_clap, '260'],
 
@@ -6165,8 +5208,15 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                         [Lang.Blocks.robotis_melody2, '787'],
                         [Lang.Blocks.robotis_melody3, '788'],
                         [Lang.Blocks.robotis_melody4, '789'],
+
+                        [Lang.Blocks.robotis_dog, '0'],
+                        [Lang.Blocks.robotis_frog, '1'],
+                        [Lang.Blocks.robotis_cat, '2'],
+                        [Lang.Blocks.robotis_chicken, '7'],
+                        [Lang.Blocks.robotis_tiger, '19'],
+                        [Lang.Blocks.robotis_mouse, '17'],
                     ],
-                    value: '0',
+                    value: '8',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -6182,13 +5232,13 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 params: [
                     null,
                 ],
-                type: 'robotis_Practice_effectSound',
+                type: 'robotis_RCar_effectSound',
             },
             paramsKeyMap: {
                 HELLO: 0,
             },
             class: 'robotis_rb100_sound',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var cmHello = script.getField('HELLO', script);
@@ -6231,10 +5281,10 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.RB_Hello(%1)'],
+                py: ['Robotis.RB100_effect_sound(%1)'],
             },
         },
-        robotis_Practice_record:{
+        robotis_RCar_record:{
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -6265,13 +5315,13 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 params: [
                     null,
                 ],
-                type: 'robotis_Practice_record',
+                type: 'robotis_RCar_record',
             },
             paramsKeyMap: {
                 ROOM: 0,
             },
             class: 'robotis_rb100_sound',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var roomNum = script.getField('ROOM', script);
@@ -6301,10 +5351,10 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.RB_record(%1)'],
+                py: ['Robotis.RB100_record(%1)'],
             },
         },
-        robotis_Practice_playRecord:{
+        robotis_RCar_playRecord:{
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -6335,13 +5385,13 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 params: [
                     null,
                 ],
-                type: 'robotis_Practice_playRecord',
+                type: 'robotis_RCar_playRecord',
             },
             paramsKeyMap: {
                 ROOM: 0,
             },
             class: 'robotis_rb100_sound',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var roomNum = script.getField('ROOM', script);
@@ -6371,7 +5421,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.RB_playRecord(%1)'],
+                py: ['Robotis.RB100_playRecord(%1)'],
             },
         },
 
@@ -6380,7 +5430,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
 
 
         
-        robotis_Practice_huskylens_block_value_closest_to_center: {
+        robotis_RCar_huskylens_block_value_closest_to_center: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -6407,13 +5457,13 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 params: [
                     null,
                 ],
-                type: 'robotis_Practice_huskylens_block_value_closest_to_center',
+                type: 'robotis_RCar_huskylens_block_value_closest_to_center',
             },
             paramsKeyMap: {
                 DATA_TYPE: 0,
             },
             class: 'robotis_rb100_custom_huskylens',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
                 var data_address = 4009;
@@ -6431,7 +5481,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 py: ['Robotis.robotis_huskylens_block_value_closest_to_center(%1)'],
             },
         },
-        robotis_Practice_huskylens_arrow_value_closest_to_center: {
+        robotis_RCar_huskylens_arrow_value_closest_to_center: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -6458,13 +5508,13 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 params: [
                     null,
                 ],
-                type: 'robotis_Practice_huskylens_arrow_value_closest_to_center',
+                type: 'robotis_RCar_huskylens_arrow_value_closest_to_center',
             },
             paramsKeyMap: {
                 DATA_TYPE: 0,
             },
             class: 'robotis_rb100_custom_huskylens',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
                 var data_address = 4019;
@@ -6483,7 +5533,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 py: ['Robotis.robotis_huskylens_arrow_value_closest_to_center(%1)'],
             },
         },
-        robotis_Practice_huskylens_number_of_learned_id: {
+        robotis_RCar_huskylens_number_of_learned_id: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -6495,12 +5545,12 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             def: {
                 params: [
                 ],
-                type: 'robotis_Practice_huskylens_number_of_learned_id',
+                type: 'robotis_RCar_huskylens_number_of_learned_id',
             },
             paramsKeyMap: {
             },
             class: 'robotis_rb100_custom_huskylens',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
                 var data_address = 4003;
@@ -6516,7 +5566,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 py: ['Robotis.robotis_huskylens_number_of_learned_id()'],
             },
         },
-        robotis_Practice_huskylens_block_value_of_id: {
+        robotis_RCar_huskylens_block_value_of_id: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -6560,14 +5610,14 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     null,
                     null,
                 ],
-                type: 'robotis_Practice_huskylens_block_value_of_id',
+                type: 'robotis_RCar_huskylens_block_value_of_id',
             },
             paramsKeyMap: {
                 ID: 0,
                 TYPE: 1,
             },
             class: 'robotis_rb100_custom_huskylens',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
 
@@ -6609,7 +5659,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 py: ['Robotis.robotis_huskylens_block_value_of_id(%1, %2)'],
             },
         },
-        robotis_Practice_huskylens_arrow_value_of_id: {
+        robotis_RCar_huskylens_arrow_value_of_id: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -6653,14 +5703,14 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     null,
                     null,
                 ],
-                type: 'robotis_Practice_huskylens_arrow_value_of_id',
+                type: 'robotis_RCar_huskylens_arrow_value_of_id',
             },
             paramsKeyMap: {
                 ID: 0,
                 TYPE: 1,
             },
             class: 'robotis_rb100_custom_huskylens',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
 
@@ -6701,7 +5751,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 py: ['Robotis.robotis_huskylens_arrow_value_of_id(%1, %2)'],
             },
         },
-        robotis_Practice_huskylens_connection_status: {
+        robotis_RCar_huskylens_connection_status: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -6725,13 +5775,13 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 params: [
                     null,
                 ],
-                type: 'robotis_Practice_huskylens_connection_status',
+                type: 'robotis_RCar_huskylens_connection_status',
             },
             paramsKeyMap: {
                 STATUS: 0,
             },
             class: 'robotis_rb100_custom_huskylens',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
                 var data_address = 4000;
@@ -6750,7 +5800,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 py: ['Robotis.robotis_huskylens_connection_status(%1)'],
             },
         },
-        robotis_Practice_huskylens_if_detected: {
+        robotis_RCar_huskylens_if_detected: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -6774,13 +5824,13 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 params: [
                     null,
                 ],
-                type: 'robotis_Practice_huskylens_if_detected',
+                type: 'robotis_RCar_huskylens_if_detected',
             },
             paramsKeyMap: {
                 DETECT_TYPE: 0,
             },
             class: 'robotis_rb100_custom_huskylens',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
                 var data_address = 4005; // block
@@ -6802,7 +5852,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 py: ['Robotis.robotis_huskylens_if_detected(%1)'],
             },
         },
-        robotis_Practice_huskylens_set_mode: {
+        robotis_RCar_huskylens_set_mode: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -6835,16 +5885,16 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 params: [
                     null,
                 ],
-                type: 'robotis_Practice_huskylens_set_mode',
+                type: 'robotis_RCar_huskylens_set_mode',
             },
             paramsKeyMap: {
-                AI_CAMERA_MODE: 0,
+                HUSKYLENS_MODE: 0,
             },
             class: 'robotis_openCM70_cm',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
-                var huskylens_mode = script.getField('AI_CAMERA_MODE', script);
+                var huskylens_mode = script.getField('HUSKYLENS_MODE', script);
 
                 var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
                 var data_address = 4001;
@@ -6870,7 +5920,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 py: ['Robotis.set_huskylens_mode(%1)'],
             },
         },
-        robotis_Practice_huskylens_print_custom_text: {
+        robotis_RCar_huskylens_print_custom_text: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -6907,7 +5957,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     },
                     "Hello!"
                 ],
-                type: 'robotis_Practice_huskylens_print_custom_text',
+                type: 'robotis_RCar_huskylens_print_custom_text',
             },
             paramsKeyMap: {
                 X: 0,
@@ -6915,7 +5965,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 TEXT: 2,
             },
             class: 'robotis_openCM70_cm',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var x = script.getNumberValue('X', script);
@@ -6969,7 +6019,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 py: ['Robotis.robotis_huskylens_print_custom_text(%1,%2,%3)'],
             },
         },
-        robotis_Practice_huskylens_clear_custom_text: {
+        robotis_RCar_huskylens_clear_custom_text: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -6985,12 +6035,12 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             def: {
                 params: [
                 ],
-                type: 'robotis_Practice_huskylens_clear_custom_text',
+                type: 'robotis_RCar_huskylens_clear_custom_text',
             },
             paramsKeyMap: {
             },
             class: 'robotis_openCM70_cm',
-            isNotFor: ['Robotis_rb_P_Assembly'],
+            isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
 
@@ -7018,17 +6068,9 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 py: ['Robotis.robotis_huskylens_clear_custom_text()'],
             },
         },
-
-
-
-
-
-
-
     };
-};
+}
 
-module.exports = [Entry.Robotis_rb_P_Assembly];
-
+module.exports = [Entry.Robotis_rb_koala];
 
 
