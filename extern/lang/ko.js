@@ -689,6 +689,10 @@ Lang.Blocks = {
     dplay_analog_number_3: 'A3',
     dplay_analog_number_4: 'A4',
     dplay_analog_number_5: 'A5',
+    
+    avatarbot_DC_CW: '정회전',
+    avatarbot_DC_CCW: '역회전',
+    
     ARDUINO_arduino_get_string_1: '신호',
     ARDUINO_arduino_get_string_2: '의 글자 결과값',
     ARDUINO_arduino_send_1: '신호',
@@ -7056,12 +7060,19 @@ Lang.template = {
     albert_clear_led: '%1 %2',
     albert_change_wheels_by: '%1 %2 %3',
     albert_set_wheels_to: '%1 %2 %3',
+    
     avatarbot_text: '%1',
+    avatarbot_get_adc_dac_sonic_number: '%1  ',
+    avatarbot_get_gpio_dc_number: '%1  ',
+    avatarbot_get_serve_number: '%1  ',
+    avatarbot_get_pwm_port_number: '%1  ',
+    
     avatarbot_get_sensor_number: '%1  ',
     avatarbot_get_port_number: '%1  ',
     avatarbot_get_digital_toggle: '%1  ',
     avatarbot_get_pwm_port_number: '%1  ',
     avatarbot_get_number_sensor_value: '아날로그 %1 번 센서값  ',
+    
     avatarbot_ext_get_analog_value: '아날로그 %1 번 센서값',
     avatarbot_ext_get_analog_value_map: '%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값',
     avatarbot_ext_get_ultrasonic_value: '울트라소닉 Trig %1 Echo %2 센서값',
@@ -7070,6 +7081,7 @@ Lang.template = {
     avatarbot_ext_set_tone: '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5',
     avatarbot_ext_set_servo: '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
     avatarbot_ext_get_digital: '디지털 %1 번 센서값',
+    
     arduino_text: '%1',
     arduino_get_sensor_number: '%1  ',
     arduino_get_port_number: '%1  ',
