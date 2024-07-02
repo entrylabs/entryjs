@@ -20,8 +20,8 @@ Entry.avatarbot = {
         Entry.hw.update();
     },
     */
-   	sendBuffer: new Array(230).fill(0),
-    avatarBotDataSet : 230,
+   	sendBuffer: new Array(210).fill(0),
+    avatarBotDataSet : 210,
     setZero() { 
 		// 엔트리 정지시 하드웨어 초기화 로직
 		this.sendBuffer.fill(0);
@@ -43,14 +43,12 @@ Entry.avatarbot = {
 		Entry.hw.sendQueue.CMD[index+3] = Entry.avatarbot.avatarBotDataSet;
 		
 		// pwm. 2~5 pad
-		for(var i=0; i<4; i++)
-		{
-			index = Entry.avatarbot.BoardFunType.GPIO_LED_PWM0 + (i*10);
-			Entry.hw.sendQueue.CMD[index+2] = (Entry.avatarbot.Board_PWM.Freq)&0xff;
-			Entry.hw.sendQueue.CMD[index+3] = (Entry.avatarbot.Board_PWM.Freq>>8)&0xff;
-			Entry.hw.sendQueue.CMD[index+4] = (Entry.avatarbot.Board_PWM.Freq>>16)&0xff;
-			Entry.hw.sendQueue.CMD[index+5] = (Entry.avatarbot.Board_PWM.Resolution)&0xff;
-		}
+		index = Entry.avatarbot.BoardFunType.GPIO_PWM_SET;
+		Entry.hw.sendQueue.CMD[index+1] = (Entry.avatarbot.Board_PWM.Freq)&0xff;
+		Entry.hw.sendQueue.CMD[index+2] = (Entry.avatarbot.Board_PWM.Freq>>8)&0xff;
+		Entry.hw.sendQueue.CMD[index+3] = (Entry.avatarbot.Board_PWM.Freq>>16)&0xff;
+		Entry.hw.sendQueue.CMD[index+4] = (Entry.avatarbot.Board_PWM.Resolution)&0xff;
+		
 		// adc
 		index = Entry.avatarbot.BoardFunType.ADC;
 		Entry.hw.sendQueue.CMD[index+4] = (Entry.avatarbot.Board_ADC.Attenuation_11db)&0xff;
@@ -103,27 +101,25 @@ Entry.avatarbot = {
     BoardFunType : {
     	Info: 0,
     	Button:10,
-        GPIO_LED_PWM0: 20,
-        GPIO_LED_PWM1: 30,
-        GPIO_LED_PWM2: 40,
-        GPIO_LED_PWM3: 50,
-        ADC: 60,
-        DAC: 70,
-        IR_Remote: 80,
-        Buzzer: 90,
-        PCA9568: 100,
-        Servo_M0: 110,
-        Servo_M1: 120,
-        Servo_M2: 130,
-        Servo_M3: 140,
-        Servo_M4: 150,
-        Servo_M5: 160,
-        Servo_M6: 170,
-        Servo_M7: 180,
-        DC_M: 190,
-        MPU6050: 200,
-        LED_Strip: 210,
-        ULTRA_SONIC: 220
+        GPIO_PWM_SET: 20,
+        GPIO_PWM: 30,
+        ADC: 40,
+        IR_Remote: 50,
+        Buzzer: 60,
+        PCA9568: 70,
+        Servo_M0: 80,
+        Servo_M1: 90,
+        Servo_M2: 100,
+        Servo_M3: 110,
+        Servo_M4: 120,
+        Servo_M5: 130,
+        Servo_M6: 140,
+        Servo_M7: 150,
+        DC_M: 160,
+        MPU6050_1: 170,
+        MPU6050_2: 180,
+        LED_Strip: 190,
+        ULTRA_SONIC: 200
 	},
 	
 	Board_Buttton:{
@@ -136,28 +132,13 @@ Entry.avatarbot = {
 		En0: 0,
 		Type0: 0, // gpio(0), ledc(1), pwm(2)
 		value0: 0, //0~255, duty or value
-		Freq0: 5000, // default - 5000
-		resolution0: 13, // default - 13
 		getValue0: 0, // input value
+		
 		// gpio1
 		En1: 0,
 		Type1: 0,
 		value1: 0,
-		Freq1: 5000,
-		resolution1: 13,
 		getValue1: 0,
-		// gpio2
-		En2: 0,
-		Type2: 0,
-		value2: 0,
-		Freq2: 5000,
-		resolution2: 13,
-		getValue2: 0,
-		// gpio3
-		En3: 0,
-		Type3: 0, // type=0 only gpio
-		value3: 0,
-		getValue3: 0
 	},
 	
 	Board_PWM : { // default gpio resolution, freq
@@ -176,13 +157,6 @@ Entry.avatarbot = {
 		Attenuation_2_5db: 1,
 		Attenuation_6db: 2,
 		Attenuation_11db: 3 // default db value.
-	},
-	
-	Board_DAC : {
-		En0: 0,
-		setValue0: 0, // 8bit default. 0 ~ 255
-		En1: 0,
-		setValue1: 0	
 	},
 	
 	Board_IR_Remote : {
@@ -292,9 +266,12 @@ Entry.avatarbot = {
 	Board_MPU6050 : {
 		En:0,
 		// get value list
-		x:0,
-		y:0,
-		z:0,
+		acceleration_x:0,
+		acceleration_y:0,
+		acceleration_z:0,
+		rotation_x:0,
+		rotation_y:0,
+		rotation_z:0,
 		temperature:0
 	},
 	Board_LED_Strip : {
@@ -307,7 +284,7 @@ Entry.avatarbot = {
 		b: 0
 	},
 	
-	Board_LED_Strip : {
+	Board_ultraSonic : {
 		En0:0,
 		En1: 0,
 		// get value
