@@ -912,12 +912,10 @@ Entry.avatarbot.getBlocks = function() {
             class: 'avatarbot_value',
             isNotFor: ['avatarbot'],
             func(sprite, script) { // 블록 기능정의
-	            // 해당 값을 getField, getValue로 가져오고
-	            // 가져 올때 paramsKeyMap에서
-	            // 정의한 VALUE라는 키값으로 데이터를 가져옵니다.
-                // const signal = script.getValue('VALUE', script);
-                // return Entry.hw.getAnalogPortValue(signal[1]);
-                return 0;
+                let sensorData = Entry.hw.portData.CMD[Entry.avatarbot.BoardFunType.Button+1] == 0 ? 0 : 1;
+                Entry.hw.sendQueue.CMD[Entry.avatarbot.BoardFunType.Button+1] = 0;
+                Entry.hw.update();
+            	return sensorData;
             },
             syntax: {
                 js: [],
