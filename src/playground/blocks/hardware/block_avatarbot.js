@@ -20,9 +20,12 @@ Entry.avatarbot = {
         Entry.hw.update();
     },
     */
+   	sendBuffer: new Array(230).fill(0),
     avatarBotDataSet : 230,
     setZero() { 
 		// 엔트리 정지시 하드웨어 초기화 로직
+		this.sendBuffer.fill(0);
+		Entry.hw.sendQueue.CMD = this.sendBuffer;
 		/*
         Entry.hw.sendQueue.readablePorts = [];
         // data buffer 23*10 table value.
@@ -32,64 +35,65 @@ Entry.avatarbot = {
         }
         */
         //
-        /*
+        
         var index = Entry.avatarbot.BoardFunType.Info;
-		Entry.hw.sendQueue[index+0] = 0x99;
-		Entry.hw.sendQueue[index+1] = 0x01;
-		Entry.hw.sendQueue[index+2] = 0x01;
-		Entry.hw.sendQueue[index+3] = Entry.avatarbot.avatarBotDataSet;
+		Entry.hw.sendQueue.CMD[index+0] = 0x99;
+		Entry.hw.sendQueue.CMD[index+1] = 0x01;
+		Entry.hw.sendQueue.CMD[index+2] = 0x01;
+		Entry.hw.sendQueue.CMD[index+3] = Entry.avatarbot.avatarBotDataSet;
 		
 		// pwm. 2~5 pad
 		for(var i=0; i<4; i++)
 		{
 			index = Entry.avatarbot.BoardFunType.GPIO_LED_PWM0 + (i*10);
-			Entry.hw.sendQueue[index+2] = (Entry.avatarbot.Board_PWM.Freq)&0xff;
-			Entry.hw.sendQueue[index+3] = (Entry.avatarbot.Board_PWM.Freq>>8)&0xff;
-			Entry.hw.sendQueue[index+4] = (Entry.avatarbot.Board_PWM.Freq>>16)&0xff;
-			Entry.hw.sendQueue[index+5] = (Entry.avatarbot.Board_PWM.Resolution)&0xff;
+			Entry.hw.sendQueue.CMD[index+2] = (Entry.avatarbot.Board_PWM.Freq)&0xff;
+			Entry.hw.sendQueue.CMD[index+3] = (Entry.avatarbot.Board_PWM.Freq>>8)&0xff;
+			Entry.hw.sendQueue.CMD[index+4] = (Entry.avatarbot.Board_PWM.Freq>>16)&0xff;
+			Entry.hw.sendQueue.CMD[index+5] = (Entry.avatarbot.Board_PWM.Resolution)&0xff;
 		}
 		// adc
 		index = Entry.avatarbot.BoardFunType.ADC;
-		Entry.hw.sendQueue[index+4] = (Entry.avatarbot.Board_ADC.Attenuation_11db)&0xff;
-		Entry.hw.sendQueue[index+5] = (Entry.avatarbot.Board_ADC.Resolution)&0xff;
+		Entry.hw.sendQueue.CMD[index+4] = (Entry.avatarbot.Board_ADC.Attenuation_11db)&0xff;
+		Entry.hw.sendQueue.CMD[index+5] = (Entry.avatarbot.Board_ADC.Resolution)&0xff;
 		
 		// pca9568
 		index = Entry.avatarbot.BoardFunType.PCA9568;
-		Entry.hw.sendQueue[index+1] = (Entry.avatarbot.Board_PCA9568.Freq)&0xff;
-		Entry.hw.sendQueue[index+2] = (Entry.avatarbot.Board_PCA9568.Freq>>8)&0xff;
-		Entry.hw.sendQueue[index+3] = (Entry.avatarbot.Board_PCA9568.Freq>>16)&0xff;
-		Entry.hw.sendQueue[index+4] = (Entry.avatarbot.Board_PCA9568.Freq>>24)&0xff;
+		Entry.hw.sendQueue.CMD[index+1] = (Entry.avatarbot.Board_PCA9568.Freq)&0xff;
+		Entry.hw.sendQueue.CMD[index+2] = (Entry.avatarbot.Board_PCA9568.Freq>>8)&0xff;
+		Entry.hw.sendQueue.CMD[index+3] = (Entry.avatarbot.Board_PCA9568.Freq>>16)&0xff;
+		Entry.hw.sendQueue.CMD[index+4] = (Entry.avatarbot.Board_PCA9568.Freq>>24)&0xff;
 		
-		Entry.hw.sendQueue[index+5] = (Entry.avatarbot.Board_PCA9568.Osci)&0xff;
-		Entry.hw.sendQueue[index+6] = (Entry.avatarbot.Board_PCA9568.Osci>>8)&0xff;
-		Entry.hw.sendQueue[index+7] = (Entry.avatarbot.Board_PCA9568.Osci>>16)&0xff;
-		Entry.hw.sendQueue[index+8] = (Entry.avatarbot.Board_PCA9568.Osci>>24)&0xff;
+		Entry.hw.sendQueue.CMD[index+5] = (Entry.avatarbot.Board_PCA9568.Osci)&0xff;
+		Entry.hw.sendQueue.CMD[index+6] = (Entry.avatarbot.Board_PCA9568.Osci>>8)&0xff;
+		Entry.hw.sendQueue.CMD[index+7] = (Entry.avatarbot.Board_PCA9568.Osci>>16)&0xff;
+		Entry.hw.sendQueue.CMD[index+8] = (Entry.avatarbot.Board_PCA9568.Osci>>24)&0xff;
 		
 		// servo moter
 		for(var i=0; i<8; i++)
 		{
 			index = Entry.avatarbot.BoardFunType.Servo_M0 + (i*10);
-			Entry.hw.sendQueue[index+1] = (Entry.avatarbot.Board_Servo.Pulse_Min)&0xff;	
-			Entry.hw.sendQueue[index+2] = (Entry.avatarbot.Board_Servo.Pulse_Min>>8)&0xff;	
+			Entry.hw.sendQueue.CMD[index+1] = (Entry.avatarbot.Board_Servo.Pulse_Min)&0xff;	
+			Entry.hw.sendQueue.CMD[index+2] = (Entry.avatarbot.Board_Servo.Pulse_Min>>8)&0xff;	
 			
-			Entry.hw.sendQueue[index+3] = (Entry.avatarbot.Board_Servo.Pulse_Max)&0xff;	
-			Entry.hw.sendQueue[index+4] = (Entry.avatarbot.Board_Servo.Pulse_Max>>8)&0xff;	
+			Entry.hw.sendQueue.CMD[index+3] = (Entry.avatarbot.Board_Servo.Pulse_Max)&0xff;	
+			Entry.hw.sendQueue.CMD[index+4] = (Entry.avatarbot.Board_Servo.Pulse_Max>>8)&0xff;	
 			
-			Entry.hw.sendQueue[index+5] = (Entry.avatarbot.Board_Servo.us_Min)&0xff;	
-			Entry.hw.sendQueue[index+6] = (Entry.avatarbot.Board_Servo.us_Min>>8)&0xff;	
+			Entry.hw.sendQueue.CMD[index+5] = (Entry.avatarbot.Board_Servo.us_Min)&0xff;	
+			Entry.hw.sendQueue.CMD[index+6] = (Entry.avatarbot.Board_Servo.us_Min>>8)&0xff;	
 			
-			Entry.hw.sendQueue[index+7] = (Entry.avatarbot.Board_Servo.us_Max)&0xff;	
-			Entry.hw.sendQueue[index+8] = (Entry.avatarbot.Board_Servo.us_Max>>8)&0xff;	
+			Entry.hw.sendQueue.CMD[index+7] = (Entry.avatarbot.Board_Servo.us_Max)&0xff;	
+			Entry.hw.sendQueue.CMD[index+8] = (Entry.avatarbot.Board_Servo.us_Max>>8)&0xff;	
 		}
         //
+        /*
         for(var i=0; i<(data.length/10); i++)
 		{
 			var index = i*10;
 			console.log('[jhkim] setZero - DataSet[', i, ']: ', 
-				Entry.hw.sendQueue[index+0], ' | ', Entry.hw.sendQueue[index+1], ' | ', Entry.hw.sendQueue[index+2], ' | ', 
-				Entry.hw.sendQueue[index+3], ' | ', Entry.hw.sendQueue[index+4], ' | ', Entry.hw.sendQueue[index+5], ' | ', 
-				Entry.hw.sendQueue[index+6], ' | ', Entry.hw.sendQueue[index+7], ' | ', Entry.hw.sendQueue[index+8], ' | ', 
-				Entry.hw.sendQueue[index+9]);
+				Entry.hw.sendQueue.CMD[index+0], ' | ', Entry.hw.sendQueue.CMD[index+1], ' | ', Entry.hw.sendQueue.CMD[index+2], ' | ', 
+				Entry.hw.sendQueue.CMD[index+3], ' | ', Entry.hw.sendQueue.CMD[index+4], ' | ', Entry.hw.sendQueue.CMD[index+5], ' | ', 
+				Entry.hw.sendQueue.CMD[index+6], ' | ', Entry.hw.sendQueue.CMD[index+7], ' | ', Entry.hw.sendQueue.CMD[index+8], ' | ', 
+				Entry.hw.sendQueue.CMD[index+9]);
 		}
 		*/
         //
@@ -859,10 +863,14 @@ Entry.avatarbot.getBlocks = function() {
             func(sprite, script) {
                 const signal = script.getNumberValue('PORT', script);
                 // console.log("avatarbot_hw_test : %d", Entry.hw.portData[signal]);
-                console.log("avatarbot value test....");
+                // console.log("avatarbot value test....");
                 // console.log("%d %d", 	what, speed);
                 
-                return Entry.hw.portData[signal];
+                // return Entry.hw.portData[signal];
+                // Entry.hw.update();
+                
+                return Entry.hw.sendQueue.CMD[Entry.avatarbot.BoardFunType.GPIO_LED_PWM0+signal];
+                // return script.callReturn();
             },
             syntax: {
                 js: [],
@@ -1724,9 +1732,15 @@ Entry.avatarbot.getBlocks = function() {
                     defaultType: 'number',
                 },
                 {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.avatarbot_DC_CW, '0'],
+                        [Lang.Blocks.avatarbot_DC_CCW, '1'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -1738,19 +1752,9 @@ Entry.avatarbot.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'avatarbot_get_serve_number',
+                        type: 'avatarbot_get_gpio_dc_number',
                     },
-                    {
-	                    type: 'Dropdown',
-	                    options: [
-	                        [Lang.Blocks.avatarbot_DC_CW, '정회전'],
-	                        [Lang.Blocks.avatarbot_DC_CCW, '역회전'],
-	                    ],
-	                    value: '정회전',
-	                    fontSize: 11,
-	                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-	                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-	                },
+                    null,
                     {
                         type: 'number',
                         params: ['0'],
@@ -1769,7 +1773,7 @@ Entry.avatarbot.getBlocks = function() {
                 const dc_m = script.getNumberValue('VALUE1', script); // Channel
                 let cw = script.getNumberValue('VALUE2', script); // cw, ccw
                 let speed = script.getNumberValue('VALUE3', script); // duty speed
-                const cw_value = cw == '정회전' ? 1 : 0;
+                // const cw_value = cw == '정회전' ? 1 : 0;
                 return 0;
             },
             syntax: {
@@ -1786,10 +1790,10 @@ Entry.avatarbot.getBlocks = function() {
                             {
                                 type: 'Dropdown',
                                 options: [
-                                    [Lang.Blocks.avatarbot_DC_CW, '정회전'],
-	                        		[Lang.Blocks.avatarbot_DC_CCW, '역회전'],
+                                    [Lang.Blocks.avatarbot_DC_CW, '0'],
+	                        		[Lang.Blocks.avatarbot_DC_CCW, '1'],
                                 ],
-                                value: '정회전',
+                                value: '0',
                                 fontSize: 11,
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
