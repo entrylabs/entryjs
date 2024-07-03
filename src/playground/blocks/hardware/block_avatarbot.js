@@ -414,10 +414,9 @@ Entry.avatarbot.setLanguage = function() {
                 // avatarbot_ir_remote: '리모컨 %1 (으)로 동작 ',
                 avatarbot_buzzer: '부저 %1 (으)로 동작 ',
                 avatarbot_pca9568: '모터 컨트롤 주파수 %1 와 오실레이터 %2 (으)로 설정 ',
-                avatarbot_servo_setting: '서보 모터 %1 을 신호 %2 ~ %3 (으)로 시간(us) %4 ~ %5 (으)로 설정 ',
-                avatarbot_servo: '서보 모터 %1 을 %2 (으)로 동작 ',
+                avatarbot_servo: '서보 모터 %1 을 시간(us) %2 ~ %3 (으)로 %4 동작 ',
                 avatarbot_dc: 'DC 모터 %1 을 %2 방향으로 %3 (으)로 동작 ',
-                avatarbot_get_mpu6050: '자이로 가속도 센서 값 ', // x,y,z, temperature
+                avatarbot_get_mpu6050: '자이로 가속도 센서 %1 값 ',
                 avatarbot_led_strip: 'LED 스트립 %1 동작 ',
                 avatarbot_ultra_sonic:'초음파 %1 번 센서 값 ',
                 //
@@ -464,7 +463,6 @@ Entry.avatarbot.blockMenuBlocks = [
     // 'avatarbot_ir_remote',
     'avatarbot_buzzer',
     'avatarbot_pca9568',
-    'avatarbot_servo_setting',
     'avatarbot_servo',
     'avatarbot_dc',
     'avatarbot_get_mpu6050',
@@ -1001,7 +999,17 @@ Entry.avatarbot.getBlocks = function() {
             isNotFor: ['avatarbot'],
             func(sprite, script) {
                 const signal = script.getNumberValue('PORT', script);
-                return Entry.hw.getDigitalPortValue(signal);
+                // return Entry.hw.getDigitalPortValue(signal);
+                let index = (signal*4) + Entry.avatarbot.BoardFunType.GPIO_PWM;
+                let sensorData = Entry.hw.portData.CMD[index+3] == 0 ? 0 : 1; // ch0, ch1 value
+                
+                // digital setting
+                Entry.hw.sendQueue.CMD[index] = 1; // ch en
+                Entry.hw.sendQueue.CMD[index+1] = 0; // duty
+                Entry.hw.sendQueue.CMD[index+2] = 0; // type in(0)
+                Entry.hw.update();
+                
+            	return sensorData;
             },
             syntax: {
                 js: [],
@@ -1067,10 +1075,20 @@ Entry.avatarbot.getBlocks = function() {
             class: 'avatarbot_set',
             isNotFor: ['avatarbot'],
             func(sprite, script) {
-                const port = script.getNumberValue('VALUE');
+                //
+                const signal = script.getNumberValue('VALUE', script);
                 const operator = script.getField('OPERATOR');
                 const value = operator == 'on' ? 255 : 0;
-                Entry.hw.setDigitalPortValue(port, value);
+         
+                let index = (signal*4) + Entry.avatarbot.BoardFunType.GPIO_PWM;
+                // let sensorData = Entry.hw.portData.CMD[index+3] == 0 ? 0 : 1; // ch0, ch1 value
+                
+                // digital setting
+                Entry.hw.sendQueue.CMD[index] = 1; // ch en
+                Entry.hw.sendQueue.CMD[index+1] = value; // duty or value
+                Entry.hw.sendQueue.CMD[index+2] = 1; // type out(0)
+                Entry.hw.update();
+                
                 return script.callReturn();
             },
             syntax: {
@@ -1144,12 +1162,20 @@ Entry.avatarbot.getBlocks = function() {
             class: 'avatarbot_set',
             isNotFor: ['avatarbot'],
             func(sprite, script) {
-                const port = script.getNumberValue('PORT');
+                const signal = script.getNumberValue('PORT');
                 let value = script.getNumberValue('VALUE');
                 value = Math.round(value);
                 value = Math.max(value, 0);
                 value = Math.min(value, 255);
-                Entry.hw.setDigitalPortValue(port, value);
+                
+                let index = (signal*4) + Entry.avatarbot.BoardFunType.GPIO_PWM;
+                
+                // digital setting
+                Entry.hw.sendQueue.CMD[index] = 1; // ch en
+                Entry.hw.sendQueue.CMD[index+1] = value; // duty or value : 0 ~ 255
+                Entry.hw.sendQueue.CMD[index+2] = 2; // type pwm(2)
+                Entry.hw.update();
+                
                 return script.callReturn();
             },
             syntax: {
@@ -1362,17 +1388,23 @@ Entry.avatarbot.getBlocks = function() {
             },
             paramsKeyMap: {
                 // PORT: 0,
-                VALUE: 1,
+                VALUE: 0,
             },
             class: 'avatarbot_set',
             isNotFor: ['avatarbot'],
             func(sprite, script) {
-                // const port = script.getNumberValue('PORT');
                 let value = script.getNumberValue('VALUE');
                 value = Math.round(value);
                 value = Math.max(value, 0);
                 value = Math.min(value, 10);
-                // Entry.hw.setDigitalPortValue(port, value);
+                
+                let index = Entry.avatarbot.BoardFunType.Buzzer;
+                
+                // digital setting
+                Entry.hw.sendQueue.CMD[index] = 1; // buzzer en
+                Entry.hw.sendQueue.CMD[index+1] = value; // buzzer sample
+                Entry.hw.update();
+                
                 return script.callReturn();
             },
             syntax: {
@@ -1439,9 +1471,23 @@ Entry.avatarbot.getBlocks = function() {
             class: 'avatarbot_set',
             isNotFor: ['avatarbot'],
             func(sprite, script) {
-                const port = script.getNumberValue('FREQ');
-                const value = script.getNumberValue('OSC');
-                // Entry.hw.setDigitalPortValue(port, value);
+                const freq = script.getNumberValue('FREQ');
+                const osci = script.getNumberValue('OSC');
+                
+                let index = Entry.avatarbot.BoardFunType.PCA9568;
+                
+                // digital setting
+                Entry.hw.sendQueue.CMD[index] = 1; // PCA9568 en            
+                Entry.hw.sendQueue.CMD[index+1] = (freq)&0xff; // PCA9568 freq0
+                Entry.hw.sendQueue.CMD[index+2] = (freq>>8)&0xff; // PCA9568 freq1
+                Entry.hw.sendQueue.CMD[index+3] = (freq>>16)&0xff; // PCA9568 freq2
+                Entry.hw.sendQueue.CMD[index+4] = (freq>>24)&0xff; // PCA9568 freq3
+                Entry.hw.sendQueue.CMD[index+5] = (osci)&0xff; // PCA9568 osci0
+                Entry.hw.sendQueue.CMD[index+6] = (osci>>8)&0xff; // PCA9568 osci1
+                Entry.hw.sendQueue.CMD[index+7] = (osci>>16)&0xff; // PCA9568 osci2
+                Entry.hw.sendQueue.CMD[index+8] = (osci>>24)&0xff; // PCA9568 osci3
+                Entry.hw.update();
+                
                 return script.callReturn();
             },
             syntax: {
@@ -1450,115 +1496,6 @@ Entry.avatarbot.getBlocks = function() {
                     {
                         syntax: 'avatarbot.set_pca9568(%1 %2)',
                         textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
-            },
-        },
-        //---------------------------------------------------------------
-		avatarbot_servo_setting: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#fff',
-            skeleton: 'basic_string_field',
-            statements: [],
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    {
-                        type: 'avatarbot_get_serve_number',
-                    },
-                    {
-                        type: 'number',
-                        params: ['150'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['600'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['500'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['2400'],
-                    },
-                ],
-                type: 'avatarbot_servo_setting',
-            },
-            paramsKeyMap: {
-                VALUE1: 0,
-                VALUE2: 1,
-                VALUE3: 2,
-                VALUE4: 3,
-                VALUE5: 4,
-            },
-            class: 'avatarbot',
-            isNotFor: ['avatarbot'],
-            func(sprite, script) {
-                const serve_m = script.getNumberValue('VALUE1', script); // Channel
-                let p_min = script.getNumberValue('VALUE2', script); // pulse min
-                let p_max = script.getNumberValue('VALUE3', script); // pulse max
-                let us_min = script.getNumberValue('VALUE4', script); // us min
-                let us_max = script.getNumberValue('VALUE5', script); // us max
-                
-                return 0;
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'avatarbot.servo_setting(%1, %2, %3, %4, %5)',
-                        blockType: 'param',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
                             {
                                 type: 'Block',
                                 accept: 'string',
@@ -1590,12 +1527,30 @@ Entry.avatarbot.getBlocks = function() {
                     accept: 'string',
                     defaultType: 'number',
                 },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
             ],
             events: {},
             def: {
                 params: [
                     {
                         type: 'avatarbot_get_serve_number',
+                    },
+                    {
+                        type: 'number',
+                        params: ['500'],
+                    },
+                    {
+                        type: 'number',
+                        params: ['2400'],
                     },
                     {
                         type: 'number',
@@ -1607,21 +1562,61 @@ Entry.avatarbot.getBlocks = function() {
             paramsKeyMap: {
                 VALUE1: 0,
                 VALUE2: 1,
+                VALUE3: 2,
+                VALUE4: 3,
             },
             class: 'avatarbot',
             isNotFor: ['avatarbot'],
             func(sprite, script) {
-                const serve_m = script.getNumberValue('VALUE1', script); // Channel
-                let value = script.getNumberValue('VALUE2', script); // target value
-                return 0;
+                const signal = script.getNumberValue('VALUE1', script);
+                let us_min = script.getNumberValue('VALUE2', script);
+                let us_max = script.getNumberValue('VALUE3', script);
+                let value = script.getNumberValue('VALUE4', script);
+                us_min = Math.round(us_min);
+                us_max = Math.round(us_max);
+                value = Math.round(value);
+                
+                us_min = Math.max(us_min, 200); //150 
+                us_max = Math.min(us_max, 700); // 600
+                
+                us_min = Math.min(us_min, us_max); // us_min < us_max :: check.
+                us_max = Math.max(us_min, us_max);
+                
+                value = Math.max(value, 0); //150 
+                value = Math.min(value, 180); // 600
+                
+                let index = (signal*10) + Entry.avatarbot.BoardFunType.Servo_M0; // base+10,20,30,...n
+                
+                // digital setting
+                Entry.hw.sendQueue.CMD[index] = 1; // ch en
+                // Entry.hw.sendQueue.CMD[index+1] = 0; // pulse min low
+                // Entry.hw.sendQueue.CMD[index+2] = 0; // pulse min high
+                // Entry.hw.sendQueue.CMD[index+3] = 0; // pulse max low
+                // Entry.hw.sendQueue.CMD[index+4] = 0; // pulse max high
+                Entry.hw.sendQueue.CMD[index+5] = (us_min)&0xff; // us min low
+                Entry.hw.sendQueue.CMD[index+6] = (us_min>>8)&0xff; // us min high
+                Entry.hw.sendQueue.CMD[index+7] = (us_max)&0xff; // us max low
+                Entry.hw.sendQueue.CMD[index+8] = (us_max>>8)&0xff; // us max high
+                Entry.hw.sendQueue.CMD[index+9] = (value)&0xff; // angle value. 0 ~ 180
+                Entry.hw.update();
+                
+                return script.callReturn();
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'avatarbot.servo_m(%1, %2)',
+                        syntax: 'avatarbot.servo(%1, %2, %3, %4)',
                         blockType: 'param',
                         textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
                             {
                                 type: 'Block',
                                 accept: 'string',
@@ -1687,11 +1682,24 @@ Entry.avatarbot.getBlocks = function() {
             class: 'avatarbot',
             isNotFor: ['avatarbot'],
             func(sprite, script) {
-                const dc_m = script.getNumberValue('VALUE1', script); // Channel
-                let cw = script.getNumberValue('VALUE2', script); // cw, ccw
-                let speed = script.getNumberValue('VALUE3', script); // duty speed
+                // const dc_m = script.getNumberValue('VALUE1', script); // Channel
+                // let cw = script.getNumberValue('VALUE2', script); // cw, ccw
+                // let speed = script.getNumberValue('VALUE3', script); // duty speed
                 // const cw_value = cw == '정회전' ? 1 : 0;
-                return 0;
+                const signal = script.getNumberValue('VALUE1', script);
+                let cw = script.getNumberValue('VALUE2', script);
+                let speed = script.getNumberValue('VALUE3', script);
+                
+                speed = Math.round(speed);
+                speed = Math.max(speed, 0); 
+                speed = Math.min(speed, 255);
+                
+                let index = (signal*2) + Entry.avatarbot.BoardFunType.DC_M; // base+2,4,6,8
+                Entry.hw.sendQueue.CMD[index] = (1 + (cw<<4))&0xff; // ch en
+                Entry.hw.sendQueue.CMD[index+1] = speed&0xff;
+                Entry.hw.update();
+                
+                return script.callReturn();
             },
             syntax: {
                 js: [],
@@ -1733,16 +1741,30 @@ Entry.avatarbot.getBlocks = function() {
             skeleton: 'basic_string_field', // 블록 모양 정의
             statements: [],
             params: [
-                
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['Acceleration', '0'],
+                        ['Rotation', '1'],
+                        ['Temperature', '2'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
             ],
             events: {},
             def: { // 보여질 블록 정의
             	// def의 params의 경우는 초기값을 지정할수 있습니다.
             	// TextInput의 경우에도 def > params을 통해 값을 지정할수 있습니다.
+            	params: [
+                    null,
+                ],
                 type: 'avatarbot_get_mpu6050', // func name
             },
             paramsKeyMap: { // 파라미터를 사용 할때 쓰는 Key값 정의
-                // VALUE: 0,
+                VALUE: 0,
             },
             class: 'avatarbot_value',
             isNotFor: ['avatarbot'],
@@ -1752,7 +1774,36 @@ Entry.avatarbot.getBlocks = function() {
 	            // 정의한 VALUE라는 키값으로 데이터를 가져옵니다.
                 // const signal = script.getValue('VALUE', script);
                 // return Entry.hw.getAnalogPortValue(signal[1]);
-                return 0;
+                const type = script.getNumberValue('VALUE', script);
+                let index = Entry.avatarbot.BoardFunType.MPU6050_1;
+                // 가속도 값
+                let acceleration_x = ((Entry.hw.portData.CMD[index+1]&0x80)==0?"":"-") + (Entry.hw.portData.CMD[index+1]&0x7f) +"."+ ((Entry.hw.portData.CMD[index+2]>9)?"":"0") + Entry.hw.portData.CMD[index+2];
+                let acceleration_y = ((Entry.hw.portData.CMD[index+3]&0x80)==0?"":"-") + (Entry.hw.portData.CMD[index+3]&0x7f) +"."+ ((Entry.hw.portData.CMD[index+4]>9)?"":"0") + Entry.hw.portData.CMD[index+4];
+                let acceleration_z = ((Entry.hw.portData.CMD[index+5]&0x80)==0?"":"-") + (Entry.hw.portData.CMD[index+5]&0x7f) +"."+ ((Entry.hw.portData.CMD[index+6]>9)?"":"0") + Entry.hw.portData.CMD[index+6];
+                let temperature = ((Entry.hw.portData.CMD[index+7]&0x80)==0?"":"-") + (Entry.hw.portData.CMD[index+7]&0x7f) +"."+ ((Entry.hw.portData.CMD[index+8]>9)?"":"0") + Entry.hw.portData.CMD[index+8];
+                //
+                index = Entry.avatarbot.BoardFunType.MPU6050_2;
+                // 회전값
+                let rotation_x = ((Entry.hw.portData.CMD[index+1]&0x80)==0?"":"-") + (Entry.hw.portData.CMD[index+1]&0x7f) +"."+ ((Entry.hw.portData.CMD[index+2]>9)?"":"0") + Entry.hw.portData.CMD[index+2];
+                let rotation_y = ((Entry.hw.portData.CMD[index+3]&0x80)==0?"":"-") + (Entry.hw.portData.CMD[index+3]&0x7f) +"."+ ((Entry.hw.portData.CMD[index+4]>9)?"":"0") + Entry.hw.portData.CMD[index+4];
+                let rotation_z = ((Entry.hw.portData.CMD[index+5]&0x80)==0?"":"-") + (Entry.hw.portData.CMD[index+5]&0x7f) +"."+ ((Entry.hw.portData.CMD[index+6]>9)?"":"0") + Entry.hw.portData.CMD[index+6];
+                
+                // let mpu6050 = `Acceleration X: ${acceleration_x}, Y: ${acceleration_y}, Z: ${acceleration_z} m/s^2\nRotation X: ${rotation_x}, Y: ${rotation_y}, Z: ${rotation_z} rad/s\nTemperature: ${temperature} degC`;
+				let mpu6050 = "";
+				if(type == 0){
+					mpu6050 = `Acceleration X: ${acceleration_x}, Y: ${acceleration_y}, Z: ${acceleration_z} m/s^2`;
+				}else if(type == 1){
+					mpu6050 = `Rotation X: ${rotation_x}, Y: ${rotation_y}, Z: ${rotation_z} rad/s`;
+				}else if(type == 2){
+					mpu6050 = `Temperature: ${temperature} degC`;
+				}
+				
+                // 
+                index = Entry.avatarbot.BoardFunType.MPU6050_1;
+                Entry.hw.sendQueue.CMD[index] = 1; // ch en
+                Entry.hw.update();
+                
+                return mpu6050;
             },
             syntax: {
                 js: [],
@@ -1807,6 +1858,11 @@ Entry.avatarbot.getBlocks = function() {
                 value = Math.min(value, 10);
                 // Entry.hw.setDigitalPortValue(port, value);
                 
+                let index = Entry.avatarbot.BoardFunType.LED_Strip;
+                Entry.hw.sendQueue.CMD[index] = 1; // ch en
+                Entry.hw.sendQueue.CMD[index+1] = value; // sample 0, 1~other...
+                Entry.hw.update();
+                
                 return script.callReturn();
             },
             syntax: {
@@ -1858,9 +1914,16 @@ Entry.avatarbot.getBlocks = function() {
 	            // 해당 값을 getField, getValue로 가져오고
 	            // 가져 올때 paramsKeyMap에서
 	            // 정의한 VALUE라는 키값으로 데이터를 가져옵니다.
-                const signal = script.getValue('VALUE', script);
-                // return Entry.hw.getAnalogPortValue(signal[1]);
-                return 0;
+                const signal = script.getNumberValue('VALUE');
+                let index = (signal*5) + Entry.avatarbot.BoardFunType.ULTRA_SONIC;
+                let cm = ((Entry.hw.portData.CMD[index+1]&0x80)==0?"":"-") + (Entry.hw.portData.CMD[index+1]&0x7f) +"." + ((Entry.hw.portData.CMD[index+2]>9)?"":"0") + Entry.hw.portData.CMD[index+2];
+                let inch = ((Entry.hw.portData.CMD[index+3]&0x80)==0?"":"-") + (Entry.hw.portData.CMD[index+3]&0x7f) +"." + ((Entry.hw.portData.CMD[index+4]>9)?"":"0") + Entry.hw.portData.CMD[index+4];
+                
+                Entry.hw.sendQueue.CMD[index] = 1; // ch en
+                Entry.hw.update();
+                
+                let sonic = `${cm} cm, ${inch} inch`;
+                return sonic;
             },
             syntax: {
                 js: [],
