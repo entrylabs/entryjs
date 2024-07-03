@@ -402,7 +402,7 @@ Entry.avatarbot.setLanguage = function() {
         ko: {
             template: {
 				//
-			   	avatarbot_hw_test: 'AvatarBot HW Test %1 번 값 ',
+			   	// avatarbot_hw_test: 'AvatarBot HW Test %1 번 값 ',
                 //
                 avatarbot_get_button: '버튼 값 ',
                 avatarbot_get_number_sensor_value: '아날로그 %1 번 센서값  ', // adc
@@ -411,7 +411,6 @@ Entry.avatarbot.setLanguage = function() {
                 avatarbot_toggle_pwm: 'PWM %1 번 핀을 %2 (으)로 정하기 %3',
                 avatarbot_convert_scale: '%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 바꾼값  ',
                 //
-                avatarbot_dac: 'DAC %1 번을 값(Duty) %2 (으)로 정하기 %3',
                 // avatarbot_ir_remote: '리모컨 %1 (으)로 동작 ',
                 avatarbot_buzzer: '부저 %1 (으)로 동작 ',
                 avatarbot_pca9568: '모터 컨트롤 주파수 %1 와 오실레이터 %2 (으)로 설정 ',
@@ -453,7 +452,7 @@ Entry.avatarbot.setLanguage = function() {
 // 엔트리에 등록할 블록들의 블록명 작성
 Entry.avatarbot.blockMenuBlocks = [
     // hw data 통신 test
-    'avatarbot_hw_test',
+    // 'avatarbot_hw_test',
     // base block
     'avatarbot_get_button',
     'avatarbot_get_number_sensor_value',
@@ -462,7 +461,6 @@ Entry.avatarbot.blockMenuBlocks = [
     'avatarbot_toggle_pwm',
     'avatarbot_convert_scale',
     //
-    'avatarbot_dac',
     // 'avatarbot_ir_remote',
     'avatarbot_buzzer',
     'avatarbot_pca9568',
@@ -581,7 +579,7 @@ Entry.avatarbot.getBlocks = function() {
         // get port(module, function) number
         // - gpio(4), pwm(3), adc(2), dac(2), servo_m(8), dc_m(4), ulrasonic(2) 
         //---------------------------------------------------------------
-        avatarbot_get_adc_dac_sonic_number: {
+        avatarbot_get_port_number: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -627,7 +625,7 @@ Entry.avatarbot.getBlocks = function() {
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                             },
                         ],
-                        keyOption: 'avatarbot_get_adc_dac_sonic_number',
+                        keyOption: 'avatarbot_get_port_number',
                     },
                 ],
             },
@@ -753,6 +751,7 @@ Entry.avatarbot.getBlocks = function() {
             },
         },
         //---------------------------------------------------------------
+        /*
         avatarbot_get_pwm_port_number: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -807,9 +806,11 @@ Entry.avatarbot.getBlocks = function() {
                 ],
             },
         },
+        */
         //---------------------------------------------------------------
         // hw test
         //---------------------------------------------------------------
+        /*
         avatarbot_hw_test:{
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -865,6 +866,7 @@ Entry.avatarbot.getBlocks = function() {
                 ],
             },     		   
 	   	},
+	   	*/
 	   	//---------------------------------------------------------------
 	   	// base function.
 	   	//---------------------------------------------------------------
@@ -926,7 +928,7 @@ Entry.avatarbot.getBlocks = function() {
             	// TextInput의 경우에도 def > params을 통해 값을 지정할수 있습니다.
                 params: [
                     {
-                        type: 'avatarbot_get_adc_dac_sonic_number', // 상단 func 가져와서 사용.
+                        type: 'avatarbot_get_port_number', // 상단 func 가져와서 사용.
                     },
                 ],
                 type: 'avatarbot_get_number_sensor_value', // func name
@@ -940,8 +942,18 @@ Entry.avatarbot.getBlocks = function() {
 	            // 해당 값을 getField, getValue로 가져오고
 	            // 가져 올때 paramsKeyMap에서
 	            // 정의한 VALUE라는 키값으로 데이터를 가져옵니다.
-                const signal = script.getValue('VALUE', script);
-                return Entry.hw.getAnalogPortValue(signal[1]);
+                // const signal = script.getValue('VALUE', script);
+                // return Entry.hw.getAnalogPortValue(signal[1]);
+                const signal = script.getNumberValue('VALUE', script);
+                let index = (signal*2) + Entry.avatarbot.BoardFunType.ADC;
+                let sensorData_low = Entry.hw.portData.CMD[index + 6]; // low
+                let sensorData_high = Entry.hw.portData.CMD[index + 7]<<8; // high
+                let sensorData = sensorData_low + sensorData_high;
+                
+                Entry.hw.sendQueue.CMD[Entry.avatarbot.BoardFunType.ADC + signal] = 1;
+                Entry.hw.update();
+            	
+                return sensorData;
             },
             syntax: {
                 js: [],
@@ -977,7 +989,7 @@ Entry.avatarbot.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'avatarbot_get_gpio_dc_number',
+                        type: 'avatarbot_get_port_number',
                     },
                 ],
                 type: 'avatarbot_get_digital_value',
@@ -1041,7 +1053,7 @@ Entry.avatarbot.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'avatarbot_get_gpio_dc_number',
+                        type: 'avatarbot_get_port_number',
                     },
                     null,
                     null,
@@ -1115,7 +1127,7 @@ Entry.avatarbot.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'avatarbot_get_pwm_port_number',
+                        type: 'avatarbot_get_port_number',
                     },
                     {
                         type: 'avatarbot_text',
@@ -1200,7 +1212,7 @@ Entry.avatarbot.getBlocks = function() {
                         type: 'avatarbot_get_number_sensor_value',
                         params: [
                             {
-                                type: 'avatarbot_get_adc_dac_sonic_number',
+                                type: 'avatarbot_get_port_number',
                                 id: 'bl5e',
                             },
                         ],
@@ -1309,76 +1321,6 @@ Entry.avatarbot.getBlocks = function() {
             },
         },
         //---------------------------------------------------------------
-        avatarbot_dac: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    {
-                        type: 'avatarbot_get_adc_dac_sonic_number',
-                    },
-                    {
-                        type: 'avatarbot_text',
-                        params: ['255'],
-                    },
-                    null,
-                ],
-                type: 'avatarbot_dac',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-                VALUE: 1,
-            },
-            class: 'avatarbot_set',
-            isNotFor: ['avatarbot'],
-            func(sprite, script) {
-                const port = script.getNumberValue('PORT');
-                let value = script.getNumberValue('VALUE');
-                value = Math.round(value);
-                value = Math.max(value, 0);
-                value = Math.min(value, 255);
-                Entry.hw.setDigitalPortValue(port, value);
-                return script.callReturn();
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'avatarbot.set_dac_duty(%1, %2)',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
-            },
-        },
         //---------------------------------------------------------------
         avatarbot_buzzer: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -1407,7 +1349,7 @@ Entry.avatarbot.getBlocks = function() {
                 params: [
                     /*
                     {
-                        type: 'avatarbot_get_adc_dac_sonic_number',
+                        type: 'avatarbot_get_port_number',
                     },
                     */
                     {
@@ -1902,7 +1844,7 @@ Entry.avatarbot.getBlocks = function() {
             	// TextInput의 경우에도 def > params을 통해 값을 지정할수 있습니다.
                 params: [
                     {
-                        type: 'avatarbot_get_adc_dac_sonic_number', // 상단 func 가져와서 사용.
+                        type: 'avatarbot_get_port_number', // 상단 func 가져와서 사용.
                     },
                 ],
                 type: 'avatarbot_ultra_sonic', // func name
