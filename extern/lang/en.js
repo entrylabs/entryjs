@@ -1125,8 +1125,6 @@ Lang.Blocks = {
     ardublock_motor_forward: 'Forward',
     ardublock_motor_backward: 'Backward',
     
-    avatarbot_DC_CW: 'Forward',
-    avatarbot_DC_CCW: 'Backward',
     
     ARDUINO_on: 'On',
     ARDUINO_off: 'Off',
@@ -6565,25 +6563,6 @@ Lang.template = {
     albert_set_wheels_to: '%1 %2 %3',
     
     
-    avatarbot_text: '%1',
-    avatarbot_get_adc_dac_sonic_number: '%1  ',
-    avatarbot_get_gpio_dc_number: '%1  ',
-    avatarbot_get_serve_number: '%1  ',
-    avatarbot_get_pwm_port_number: '%1  ',
-    
-    avatarbot_get_sensor_number: '%1  ',
-    avatarbot_get_port_number: '%1  ',
-    avatarbot_get_digital_toggle: '%1  ',
-    avatarbot_get_pwm_port_number: '%1  ',
-    avatarbot_get_number_sensor_value: 'Analog %1 Sensor value  ',
-    avatarbot_ext_get_analog_value: 'Analog %1 Sensor value',
-    avatarbot_ext_get_analog_value_map: 'Map Value %1 %2 ~ %3 to %4 ~ %5',
-    avatarbot_ext_get_ultrasonic_value: 'Read ultrasonic sensor trig pin %1 echo pin %2',
-    avatarbot_ext_toggle_led: 'Digital %1 Pin %2 %3',
-    avatarbot_ext_digital_pwm: 'Digital %1 Pin %2 %3',
-    avatarbot_ext_set_tone: 'Play tone pin %1 on note %2 octave %3 beat %4 %5',
-    avatarbot_ext_set_servo: 'Set servo pin %1 angle as %2 %3',
-    avatarbot_ext_get_digital: 'Digital %1 Sensor value',
     
     
     arduino_text: '%1',
