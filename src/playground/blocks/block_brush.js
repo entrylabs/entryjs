@@ -257,7 +257,7 @@ module.exports = {
                         sprite.brush.moveTo(sprite.getX(), sprite.getY() * -1);
                     }
 
-                    if (!sprite.paint || !sprite.shapes.length) {
+                    if (!sprite.paint || !sprite.paintShapes.length) {
                         Entry.setBasicPaint(sprite);
                         sprite.paint.stop = true;
                     }
@@ -310,7 +310,7 @@ module.exports = {
                 func(sprite, script) {
                     const colour = script.getStringValue('VALUE', script);
 
-                    if (!sprite.paint || !sprite.shapes.length) {
+                    if (!sprite.paint || !sprite.paintShapes.length) {
                         Entry.setBasicPaint(sprite);
                         sprite.paint.stop = true;
                     }
@@ -507,7 +507,7 @@ module.exports = {
                         sprite.brush.stop = true;
                     }
 
-                    if (!sprite.paint || !sprite.shapes.length) {
+                    if (!sprite.paint || !sprite.paintShapes.length) {
                         Entry.setBasicPaint(sprite);
                         sprite.paint.stop = true;
                     }
@@ -609,7 +609,7 @@ module.exports = {
                         sprite.brush.moveTo(sprite.getX(), sprite.getY() * -1);
                     }
 
-                    if (!sprite.paint || !sprite.shapes.length) {
+                    if (!sprite.paint || !sprite.paintShapes.length) {
                         Entry.setBasicPaint(sprite);
                         sprite.paint.stop = true;
                     }

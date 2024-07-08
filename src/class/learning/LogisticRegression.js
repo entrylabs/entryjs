@@ -36,7 +36,10 @@ class LogisticRegression extends LearningBase {
         if (this.attrLength === 1) {
             this.chartEnable = true;
         }
-        this.load(`/uploads/${url}/model.json`);
+        if (this.url !== url) {
+            this.load(url);
+            this.url = url;
+        }
 
         this.fields = table?.select?.[0]?.map((index) => table?.fields[index]);
         this.predictFields = table?.select?.[1]?.map((index) => table?.fields[index]);
@@ -47,7 +50,31 @@ class LogisticRegression extends LearningBase {
     }
 
     async load(url) {
-        this.model = await tf.loadLayersModel(url);
+        const model = await tf.loadLayersModel(url);
+        const modelData = new Promise((resolve) =>
+            model.save({
+                save: (data) => {
+                    const layers = data?.modelTopology?.config?.layers;
+                    if (Array.isArray(layers)) {
+                        data.modelTopology.config.layers.forEach((layer) => {
+                            if (layer?.config?.name) {
+                                layer.config.name = `${layer.config.name}_ws`;
+                            }
+                        });
+                    }
+                    if (Array.isArray(data.weightSpecs)) {
+                        data.weightSpecs.forEach((spec) => {
+                            const splits = spec.name.split('/');
+                            splits[0] = `${splits[0]}_ws`;
+                            spec.name = splits.join('/');
+                        });
+                    }
+                    resolve(data);
+                },
+            })
+        );
+        this.model = await tf.loadLayersModel({ load: () => modelData });
+        model.dispose();
     }
 
     async train() {
@@ -145,6 +172,7 @@ function createModel(inputShape, numClasses = 1) {
     const model = tf.sequential({
         layers: [
             tf.layers.dense({
+                name: 'log_dense_ws',
                 inputShape: [inputShape],
                 units: numClasses,
                 activation: numClasses === 2 ? 'sigmoid' : 'softmax',

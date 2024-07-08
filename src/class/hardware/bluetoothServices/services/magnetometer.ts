@@ -113,6 +113,7 @@ export interface MagnetometerEvents {
 export class MagnetometerService extends (EventDispatcher as new () => TypedDispatcher<
     MagnetometerEvents
 >) {
+    public static serviceName = 'MagnetometerService';
     /**
      * @hidden
      */
@@ -228,10 +229,9 @@ export class MagnetometerService extends (EventDispatcher as new () => TypedDisp
     private magnetometerCalibrationChangedHandler(event: Event) {
         const view = (event.target as BluetoothRemoteGATTCharacteristic).value!;
         if (view.byteLength === 1) {
-            this.dispatchEvent(
-                'magnetometercalibrationchanged',
-                view.getUint8(0) as MagnetometerCalibration
-            );
+            this.dispatchEvent('magnetometercalibrationchanged', view.getUint8(
+                0
+            ) as MagnetometerCalibration);
         }
     }
 

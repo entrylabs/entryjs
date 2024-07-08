@@ -1,0 +1,9 @@
+{
+    "name": "CodeWizLite",
+    "version": "1.0.0",
+    "type": "hardware",
+    "title": "코드위즈",
+    "description": "Codewiz",
+    "imageName": "codewizlite.png",
+    "moduleId": "011201"
+}

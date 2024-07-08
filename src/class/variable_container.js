@@ -152,7 +152,7 @@ Entry.VariableContainer = class VariableContainer {
         this.variableAddButton_ = variableAddButton;
 
         const messageAddButton = createElement('button').addClass('entryVariableAddWorkspace');
-        messageAddButton.textContent = Lang.Workspace.message_create;
+        messageAddButton.textContent = Lang.Workspace.message_add;
         this.messageAddButton_ = messageAddButton;
 
         const listAddButton = createElement('button').addClass('entryVariableAddWorkspace');

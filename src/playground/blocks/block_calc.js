@@ -16,12 +16,7 @@ module.exports = {
                     },
                     {
                         type: 'Dropdown',
-                        options: [
-                            ['+', 'PLUS'],
-                            ['-', 'MINUS'],
-                            ['x', 'MULTI'],
-                            ['/', 'DIVIDE'],
-                        ],
+                        options: [['+', 'PLUS'], ['-', 'MINUS'], ['x', 'MULTI'], ['/', 'DIVIDE']],
                         value: 'PLUS',
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.CALC,
@@ -335,10 +330,7 @@ module.exports = {
                     },
                     {
                         type: 'Dropdown',
-                        options: [
-                            ['x', 'x'],
-                            ['y', 'y'],
-                        ],
+                        options: [['x', 'x'], ['y', 'y']],
                         value: 'x',
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.CALC,
@@ -386,10 +378,7 @@ module.exports = {
                                 },
                                 {
                                     type: 'Dropdown',
-                                    options: [
-                                        ['x', 'x'],
-                                        ['y', 'y'],
-                                    ],
+                                    options: [['x', 'x'], ['y', 'y']],
                                     value: 'x',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.colorSet.arrow.default.CALC,
@@ -628,7 +617,7 @@ module.exports = {
                     if (operator === 'QUOTIENT') {
                         return Math.floor(left / right);
                     } else {
-                        return left % right;
+                        return left - right * Math.floor(left / right);
                     }
                 },
                 syntax: {
@@ -1403,9 +1392,7 @@ module.exports = {
                     } else if (operator === 'MINUTE') {
                         return dateTime.getMinutes();
                     } else if (operator === 'DAY_OF_WEEK') {
-                        const daysLang = ['일', '월', '화', '수', '목', '금', '토'];
-                        const dayNum = dateTime.getDay();
-                        return daysLang[dayNum];
+                        return dateTime.getDay();
                     } else {
                         return dateTime.getSeconds();
                     }
@@ -2553,11 +2540,7 @@ module.exports = {
                     },
                     {
                         type: 'Dropdown',
-                        options: [
-                            ['R', 'r'],
-                            ['G', 'g'],
-                            ['B', 'b'],
-                        ],
+                        options: [['R', 'r'], ['G', 'g'], ['B', 'b']],
                         value: 'RED',
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.CALC,

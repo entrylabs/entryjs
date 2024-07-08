@@ -1596,7 +1596,6 @@ class MediaPipeUtils {
 
     destroy() {
         this.isInitialized = false;
-        console.log('destroy');
     }
 }
 

@@ -21,6 +21,7 @@ class EntryIntro implements IEntry.Intro {
         }
         this.view_.addClass('active');
         view.appendTo(this.view_);
+        Entry.windowResized.notify();
     }
 
     removeView() {

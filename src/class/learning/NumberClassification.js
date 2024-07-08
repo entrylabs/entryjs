@@ -1,6 +1,5 @@
 import LearningView from './LearningView';
 import Chart from './Chart';
-const { callApi } = require('../../util/common');
 import _uniq from 'lodash/uniq';
 import _floor from 'lodash/floor';
 import _sum from 'lodash/sum';
@@ -33,7 +32,7 @@ class NumberClassification {
     #name = '';
     #fields = [];
     #predictField = [];
-
+    #loadModel;
     constructor(params = {}) {
         this.#view = new LearningView({ name: params.name || '', status: 0 });
         // 정지시 data 초기화.
@@ -43,7 +42,7 @@ class NumberClassification {
         this.init({ ...params });
     }
 
-    init({ name, url, table, trainParam }) {
+    init({ name, url, table, trainParam, modelId, loadModel }) {
         this.#name = name;
         this.#trainParam = trainParam;
         this.#table = table;
@@ -51,6 +50,7 @@ class NumberClassification {
             this.#view.setValue(value);
         };
         this.#isTrained = true;
+        this.#loadModel = loadModel;
 
         this.#attrLength = table?.select?.[0]?.length || 0;
         this.#fields = table?.select?.[0]?.map((index) => table?.fields[index]);
@@ -58,7 +58,11 @@ class NumberClassification {
         if (this.#attrLength === 2) {
             this.#chartEnable = true;
         }
-        this.load(`/uploads/${url}/model.json`);
+        if (this.url !== url || this.modelId !== modelId) {
+            this.load(url, modelId);
+            this.url = url;
+            this.modelId = modelId;
+        }
     }
 
     setTable() {
@@ -129,7 +133,10 @@ class NumberClassification {
     }
 
     setTrainOption(type, value) {
-        this.#trainParam[type] = value;
+        this.trainParam = {
+            ...this.trainParam,
+            [type]: value,
+        };
     }
 
     getTrainOption() {
@@ -183,18 +190,24 @@ class NumberClassification {
         this.#trainCallback(100);
     }
 
-    async load(url) {
-        const { data: savedData } = await callApi(url, { url });
-        this.#trainParam.trainData = savedData.data;
-        this.#trainParam.trainLabels = savedData.labels;
-        this.#trainParam.labels = _uniq(savedData.labels).sort((a, b) =>
-            String(a).localeCompare(String(b))
-        );
-        this.#trainParam.maxVector = savedData.maxVector;
-        this.#trainParam.minVector = savedData.minVector;
-        this.#trainParam.numLabels = savedData.numLabels;
-        this.#trainParam.neighbors = savedData.neighbors;
-        this.#trainParam.isLoaded = true;
+    async load(url, modelId) {
+        const savedData = await this.#loadModel({ url, modelId });
+        if (!savedData) {
+            return;
+        }
+        this.#trainParam = {
+            ...this.#trainParam,
+            trainData: savedData.data,
+            trainLabels: savedData.labels,
+            labels: _uniq(savedData.labels).sort((a, b) =>
+                String(a).localeCompare(String(b))
+            ),
+            maxVector: savedData.maxVector,
+            minVector: savedData.minVector,
+            numLabels: savedData.numLabels,
+            neighbors: savedData.neighbors,
+            isLoaded: true,
+        };
         this.colors = this.createColor();
     }
 
