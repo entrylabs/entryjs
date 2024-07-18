@@ -1838,7 +1838,7 @@ Entry.Playground = class Playground {
                     },
                 },
                 {
-                    text: Lang.Workspace.context_download,
+                    text: Lang.Workspace.context_download_image,
                     callback() {
                         Entry.playground.downloadPicture(picture.id);
                     },
@@ -1979,7 +1979,7 @@ Entry.Playground = class Playground {
                     },
                 },
                 {
-                    text: Lang.Workspace.context_download,
+                    text: Lang.Workspace.context_download_sound,
                     callback() {
                         Entry.playground.downloadSound(sound.id);
                     },
