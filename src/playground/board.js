@@ -785,12 +785,24 @@ Entry.Board = class Board {
             if (contentBlock.view.dragInstance) {
                 continue;
             }
-            if (content.acceptType !== targetType && content.acceptType !== 'boolean') {
-                continue;
-            }
             const startX = cursorX + content.box.x * this.scale;
             const startY = cursorY + content.box.y + (blockView.contentHeight % 1000) * -0.5;
             const endY = cursorY + content.box.y + content.box.height;
+            if (content.acceptType !== targetType && content.acceptType !== 'boolean') {
+                if (targetType === 'boolean') {
+                    const contentBlockView = contentBlock.view;
+                    metaData = metaData.concat(
+                        this._getFieldBlockMetaData(
+                            contentBlockView,
+                            startX + contentBlockView.contentPos.x * this.scale,
+                            startY + contentBlockView.contentPos.y,
+                            zIndex,
+                            targetType
+                        )
+                    );
+                }
+                continue;
+            }
             if (content.acceptType === targetType) {
                 metaData.push({
                     point: startY,
