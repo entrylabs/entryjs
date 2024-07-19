@@ -1241,7 +1241,7 @@ Lang.Blocks = {
     CALC_calc_operation_floor: '소수점 버림값',
     CALC_calc_operation_ceil: '소수점 올림값',
     CALC_calc_operation_round: '소수점 반올림값',
-    CALC_calc_operation_factorial: '펙토리얼',
+    CALC_calc_operation_factorial: '팩토리얼',
     CALC_calc_operation_abs: '절댓값',
     MOVING_locate_object_time_1: '',
     MOVING_locate_object_time_2: '초 동안',
@@ -6132,7 +6132,7 @@ Lang.Helper = {
     get_nickname: '작품을 실행하고 있는 사용자의 닉네임 값입니다.',
     get_project_timer_value: '이 블록이 실행되는 순간 초시계에 저장된 값입니다.',
     choose_project_timer_action:
-        '초시계의 상태를 결정합니다.\n시작하기: 초시계를 시작합니다. \n정지하기: 초시계를 정지합니다. \n초기화하기: 초시계의 값을 0으로 초기화합니다. ',
+        '초시계의 상태를 정합니다.\n- 시작하기: 초시계를 시작합니다.\n- 정지하기: 초시계를 정지합니다.\n- 초기화하기: 초시계의 값을 0으로 초기화합니다.',
     reset_project_timer: '실행되고 있던 타이머를 0으로 초기화합니다.',
     set_visible_project_timer: '초시계 창을 실행화면에서 숨기거나 보이게 합니다.',
     ask_and_wait:
