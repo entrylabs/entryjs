@@ -500,6 +500,7 @@ Entry.Code = class Code {
         await Promise.all(_promises);
         if (Entry.engine.isState('pause')) {
             await this.waitPauseState();
+            return this.funcAsyncExecute(funcCode, funcExecutor, _promises);
         } else if (!Entry.engine.isState('run')) {
             funcCode.removeExecutor(funcExecutor);
             return Entry.STATIC.BREAK;
@@ -545,6 +546,7 @@ Entry.Code = class Code {
         await Promise.all(_promises);
         if (Entry.engine.isState('pause')) {
             await this.waitPauseState();
+            return this.funcValueAsyncExecute(funcCode, funcExecutor, _promises);
         } else if (!Entry.engine.isState('run')) {
             funcCode.removeExecutor(funcExecutor);
             return await this.getAsyncParamsData(funcExecutor.result);
