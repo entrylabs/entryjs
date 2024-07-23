@@ -2756,7 +2756,9 @@ Entry.Utils.pauseSoundInstances = function () {
 Entry.Utils.recoverSoundInstances = function () {
     Entry.soundInstances.getAllValues().forEach((instance) => {
         instance.paused = false;
-        instance.sourceNode.playbackRate.value = Entry.playbackRateValue;
+        if (instance.sourceNode?.playbackRate) {
+            instance.sourceNode.playbackRate.value = Entry.playbackRateValue;
+        }
     });
     Entry.bgmInstances.getAllValues().forEach((instance) => {
         instance.paused = false;
@@ -2964,11 +2966,10 @@ Entry.Utils.removeBlockByType2 = function (blockType, callback) {
     }
 };
 
-Entry.Utils.sleep = (time = 0) => {
-    return new Promise((resolve) => {
+Entry.Utils.sleep = (time = 0) =>
+    new Promise((resolve) => {
         setTimeout(resolve, time);
     });
-};
 
 Entry.Utils.runAsync = async (func) => {
     await Entry.Utils.sleep();
