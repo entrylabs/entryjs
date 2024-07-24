@@ -113,7 +113,7 @@ Entry.ArduinoNano.setLanguage = function () {
                 arduino_nano_set_tone:
                     'Ring buzzer of pin %1 on note %2 octave %3 for %4 second(s) %5',
                 arduino_nano_set_servo: 'Set servo motor of pin %1 to %2 degree %3',
-                arduino_nano_get_digital: 'Digital %1 value',
+                arduino_nano_get_digital: 'digital %1 value',
                 arduino_nano_get_ultrasonic_value:
                     'Reports the value of ultrasonic sensor that connects pin.',
             },
@@ -130,6 +130,8 @@ Entry.ArduinoNano.setLanguage = function () {
                     'Set the degree of servo motor that connected with selected pin.',
                 arduino_nano_set_tone:
                     'Rings buzzer connected with selected pin during input seconds.',
+                arduino_nano_get_ultrasonic_value:
+                    'Reports the value of ultrasonic sensor that connects pin.',
             },
         },
     };
