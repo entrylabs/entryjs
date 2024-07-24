@@ -27,7 +27,7 @@ EntryStatic.variableBlockList = [
 
 EntryStatic.messageBlockList = ['when_message_cast', 'message_cast', 'message_cast_wait'];
 
-EntryStatic.getAllBlocks = function() {
+EntryStatic.getAllBlocks = function () {
     return [
         {
             category: 'start',
@@ -118,6 +118,8 @@ EntryStatic.getAllBlocks = function() {
                 'erase_all_effects',
                 'change_scale_size',
                 'set_scale_size',
+                'stretch_scale_size',
+                'reset_scale_size',
                 'flip_x',
                 'flip_y',
                 'change_object_index',
@@ -218,6 +220,7 @@ EntryStatic.getAllBlocks = function() {
                 'get_block_count',
                 'change_rgb_to_hex',
                 'change_hex_to_rgb',
+                'get_boolean_value',
             ],
         },
         {
@@ -506,7 +509,7 @@ EntryStatic.getAllBlocks = function() {
 
 /* eslint-disable */
 Object.defineProperty(EntryStatic, 'fonts', {
-    get: function() {
+    get: function () {
         return [
             {
                 name: Lang.Fonts.batang,
@@ -786,7 +789,7 @@ EntryStatic.colorSet = {
     },
 };
 
-EntryStatic.getDefaultFontFamily = function() {
+EntryStatic.getDefaultFontFamily = function () {
     const localLang = Lang || {};
     const type = localLang.type;
     const fallbackType = localLang.fallbackType;
@@ -797,7 +800,7 @@ EntryStatic.getDefaultFontFamily = function() {
     }
 };
 
-EntryStatic.getCategoryByBlock = function(blockName) {
+EntryStatic.getCategoryByBlock = function (blockName) {
     if (!blockName) {
         return false;
     }

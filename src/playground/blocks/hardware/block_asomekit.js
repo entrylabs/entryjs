@@ -92,6 +92,10 @@ Entry.AsomeKit.setLanguage = function() {
                 asomekit_turnoff_pin: '핀 초기화 %1',
                 
                 asomekit_led_ready: 'LED 준비하기 %1 %2 %3 %4 %5',
+                asomekit_red_led_ready: '빨간색 LED 준비하기 %1 %2',
+                asomekit_yellow_led_ready: '노란색 LED 준비하기 %1 %2',
+                asomekit_green_led_ready: '초록색 LED 준비하기 %1 %2',
+                asomekit_bright_led_ready: '고휘도 LED 준비하기 %1 %2',
                 asomekit_rgb_led_ready: 'RGB LED 준비하기 %1 %2 %3 %4',
                 asomekit_button_ready: '버튼 준비하기 %1 %2',
                 asomekit_music_ready: '음악 준비하기 %1 %2',
@@ -102,11 +106,24 @@ Entry.AsomeKit.setLanguage = function() {
                 asomekit_ultrasound_ready: '초음파 센서 준비하기 %1 %2 %3',
                 asomekit_brightness_ready: '조도 센서 준비하기 %1 %2',
                 asomekit_sound_ready: '소리 센서 준비하기 %1 %2',
+                asomekit_180servo_ready: '180도 서보모터 준비하기 %1 %2',
+                asomekit_360servo_ready: '360도 서보모터 준비하기 %1 %2',
+                asomekit_sound_effect_ready: '효과음 부저 준비하기 %1 %2',
+                asomekit_neopixel_ready: '네오픽셀 준비하기 %1 %2',
                 
                 asomekit_led: '%1 LED %2 %3',
                 asomekit_rgb_brightness: '%1 밝기 설정 %2 %3',
                 asomekit_led_tube: 'LED 튜브에 %1 표시 %2',
                 asomekit_led_tube_time: 'LED 튜브에 시간표시 %1 %2 %3 %4',
+                asomekit_neopixel_off: '네오픽셀 끄기 %1',
+                asomekit_neopixel_on: '네오픽셀 %1 칸 켜기 %2 %3 %4 %5',
+                asomekit_neopixel_all: '네오픽셀 동시에 모두 켜기 %1 %2 %3 %4',
+                asomekit_neopixel_relay: '네오픽셀 순서대로 켜기 %1 %2 %3 %4',
+                asomekit_neopixel_rainbow: '네오픽셀 무지개 켜기 %1 %2',
+
+                asomekit_180servo_angle: '180도 서보모터 각도 변경 %1 %2',
+                asomekit_360servo_off: '360도 서보모터 끄기 %1',
+                asomekit_360servo_duty: '360도 서보모터 켜기 %1',
                 
                 asomekit_ultrasound_measurement: '초음파 센서 거리측정 %1',
                 asomekit_humidity_measurement: '습도 재기 %1',
@@ -127,6 +144,7 @@ Entry.AsomeKit.setLanguage = function() {
                 asomekit_buzzer_onoff: '부저 %1 %2',
                 asomekit_buzzer_note: '음계로 소리내기 %1 %2 연주시간 %3초 %4',
                 asomekit_buzzer_tone: '주파수로 소리내기 %1Hz 연주시간 %2초 %3',
+                asomekit_sound_effect_play: '효과음 내기 %1 %2',
                 
                 asomekit_input_num: '%1',
                 asomekit_input_text: '"%1"',
@@ -148,6 +166,10 @@ Entry.AsomeKit.setLanguage = function() {
                 asomekit_turnoff_pin: 'Turn off pins %1',
                 
                 asomekit_led_ready: 'Prepare LED %1 %2 %3 %4 %5',
+                asomekit_red_led_ready: 'Prepare Red LED %1 %2',
+                asomekit_yellow_led_ready: 'Prepare Yellow LED %1 %2',
+                asomekit_green_led_ready: 'Prepare Green LED %1 %2',
+                asomekit_bright_led_ready: 'Prepare Bright LED %1 %2',
                 asomekit_rgb_led_ready: 'Prepare RGB %1 %2 %3 %4',
                 asomekit_button_ready: 'Prepare button %1 %2',
                 asomekit_music_ready: 'Prepare sound %1 %2',
@@ -158,11 +180,24 @@ Entry.AsomeKit.setLanguage = function() {
                 asomekit_ultrasound_ready: 'Prepare ultrasonic sensor %1 %2 %3',
                 asomekit_brightness_ready: 'Prepare light sensor %1 %2',
                 asomekit_sound_ready: 'Prepare sound sensor %1 %2',
+                asomekit_180servo_ready: 'Prepare 180 Servo %1 %2',
+                asomekit_360servo_ready: 'Prepare 360 Servo %1 %2',
+                asomekit_sound_effect_ready: 'Prepare sound effect %1 %2',
+                asomekit_neopixel_ready: 'Prepare Neopixel %1 %2',
                 
                 asomekit_led: '%1 LED %2 %3',
                 asomekit_rgb_brightness: 'Set brightness of %1 to %2 %3',
                 asomekit_led_tube: 'Display %1 on LED tube %2',
                 asomekit_led_tube_time: 'Display time %1 %2 %3 on LED tube %4',
+                asomekit_neopixel_off: 'Neopixel off %1',
+                asomekit_neopixel_on: 'Neopixel on %1 %2 %3 %4 %5',
+                asomekit_neopixel_all: 'Neopixel all on %1 %2 %3 %4',
+                asomekit_neopixel_relay: 'Neopixel relay on %1 %2 %3 %4',
+                asomekit_neopixel_rainbow: 'Neopixel rainbow %1 %2',
+
+                asomekit_180servo_angle: '180 Servo Angle %1 %2',
+                asomekit_360servo_off: '360 Servo Off %1',
+                asomekit_360servo_duty: '360 Servo On %1',
                 
                 asomekit_ultrasound_measurement: 'Measure distance %1',
                 asomekit_humidity_measurement: 'Measure humidity %1',
@@ -183,6 +218,7 @@ Entry.AsomeKit.setLanguage = function() {
                 asomekit_buzzer_onoff: 'buzzer %1 %2',
                 asomekit_buzzer_note: 'Play %1 %2 for %3 seconds %4',
                 asomekit_buzzer_tone: 'Make sound of %1 for %2 seconds %3',
+                asomekit_sound_effect_play: 'Sound Effect %1 %2',
 
                 asomekit_input_num: '%1',
                 asomekit_input_text: '"%1"',
@@ -206,6 +242,10 @@ Entry.AsomeKit.blockMenuBlocks = [
     'asomekit_turnoff_pin',
     
     'asomekit_led_ready',
+    'asomekit_red_led_ready',
+    'asomekit_yellow_led_ready',
+    'asomekit_green_led_ready',
+    'asomekit_bright_led_ready',
     'asomekit_rgb_led_ready',
     'asomekit_button_ready',
     'asomekit_music_ready',
@@ -216,11 +256,24 @@ Entry.AsomeKit.blockMenuBlocks = [
     'asomekit_ultrasound_ready',
     'asomekit_brightness_ready',
     'asomekit_sound_ready',
+    'asomekit_180servo_ready',
+    'asomekit_360servo_ready',
+    'asomekit_sound_effect_ready',
+    'asomekit_neopixel_ready',
     
     'asomekit_led',
     'asomekit_rgb_brightness',
     'asomekit_led_tube',
     'asomekit_led_tube_time',
+    'asomekit_neopixel_off',
+    'asomekit_neopixel_on',
+    'asomekit_neopixel_all',
+    'asomekit_neopixel_relay',
+    'asomekit_neopixel_rainbow',
+
+    'asomekit_180servo_angle',
+    'asomekit_360servo_duty',
+    'asomekit_360servo_off',
     
     'asomekit_ultrasound_measurement',
     'asomekit_humidity_measurement',
@@ -241,6 +294,7 @@ Entry.AsomeKit.blockMenuBlocks = [
     'asomekit_buzzer_onoff',
     'asomekit_buzzer_note',
     'asomekit_buzzer_tone',
+    'asomekit_sound_effect_play',
     
     'asomekit_input_num',
     'asomekit_input_text',
@@ -380,6 +434,242 @@ Entry.AsomeKit.getBlocks = function() {
                     script.msg_id = random_str(16);
                     sq.msg_id = script.msg_id;
                     sq.msg = format_str('red = OutputPin({0}); yellow = OutputPin({1}); green = OutputPin({2}); bright = OutputPin({3});', value1, value2, value3, value4);
+                    return script;
+                }
+
+                if (pd.msg_id && pd.msg_id.indexOf(script.msg_id) >= 0) {
+                    delete script.is_started;
+                    delete script.msg_id;
+                    return script.callReturn();
+                }
+
+                return script;
+            },
+            syntax: undefined,
+        },
+        asomekit_red_led_ready: {
+            template: Lang.template.asomekit_red_led_ready,
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                    
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            paramsKeyMap: {
+                VALUE1: 0,
+            },
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['13'],
+                    },
+                    null,
+                ],
+                type: 'asomekit_red_led_ready',
+            },
+            class: 'READY',
+            isNotFor: ['AsomeKit'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var pd = Entry.hw.portData;
+
+                var value1 = script.getValue('VALUE1');
+                    
+                if (!script.is_started) {
+                    script.is_started = true;
+                    script.msg_id = random_str(16);
+                    sq.msg_id = script.msg_id;
+                    sq.msg = format_str('red = OutputPin({0});', value1);
+                    return script;
+                }
+
+                if (pd.msg_id && pd.msg_id.indexOf(script.msg_id) >= 0) {
+                    delete script.is_started;
+                    delete script.msg_id;
+                    return script.callReturn();
+                }
+
+                return script;
+            },
+            syntax: undefined,
+        },
+        asomekit_yellow_led_ready: {
+            template: Lang.template.asomekit_yellow_led_ready,
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                    
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            paramsKeyMap: {
+                VALUE1: 0,
+            },
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['14'],
+                    },
+                    null,
+                ],
+                type: 'asomekit_yellow_led_ready',
+            },
+            class: 'READY',
+            isNotFor: ['AsomeKit'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var pd = Entry.hw.portData;
+
+                var value1 = script.getValue('VALUE1');
+                    
+                if (!script.is_started) {
+                    script.is_started = true;
+                    script.msg_id = random_str(16);
+                    sq.msg_id = script.msg_id;
+                    sq.msg = format_str('yellow = OutputPin({0});', value1);
+                    return script;
+                }
+
+                if (pd.msg_id && pd.msg_id.indexOf(script.msg_id) >= 0) {
+                    delete script.is_started;
+                    delete script.msg_id;
+                    return script.callReturn();
+                }
+
+                return script;
+            },
+            syntax: undefined,
+        },
+        asomekit_green_led_ready: {
+            template: Lang.template.asomekit_green_led_ready,
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                    
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            paramsKeyMap: {
+                VALUE1: 0,
+            },
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['15'],
+                    },
+                    null,
+                ],
+                type: 'asomekit_green_led_ready',
+            },
+            class: 'READY',
+            isNotFor: ['AsomeKit'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var pd = Entry.hw.portData;
+
+                var value1 = script.getValue('VALUE1');
+                    
+                if (!script.is_started) {
+                    script.is_started = true;
+                    script.msg_id = random_str(16);
+                    sq.msg_id = script.msg_id;
+                    sq.msg = format_str('green = OutputPin({0});', value1);
+                    return script;
+                }
+
+                if (pd.msg_id && pd.msg_id.indexOf(script.msg_id) >= 0) {
+                    delete script.is_started;
+                    delete script.msg_id;
+                    return script.callReturn();
+                }
+
+                return script;
+            },
+            syntax: undefined,
+        },
+        asomekit_bright_led_ready: {
+            template: Lang.template.asomekit_bright_led_ready,
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                    
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            paramsKeyMap: {
+                VALUE1: 0,
+            },
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['20'],
+                    },
+                    null,
+                ],
+                type: 'asomekit_bright_led_ready',
+            },
+            class: 'READY',
+            isNotFor: ['AsomeKit'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var pd = Entry.hw.portData;
+
+                var value1 = script.getValue('VALUE1');
+                    
+                if (!script.is_started) {
+                    script.is_started = true;
+                    script.msg_id = random_str(16);
+                    sq.msg_id = script.msg_id;
+                    sq.msg = format_str('bright = OutputPin({0});', value1);
                     return script;
                 }
 
@@ -1043,6 +1333,242 @@ Entry.AsomeKit.getBlocks = function() {
             },
             syntax: undefined,
         },
+        asomekit_180servo_ready: {
+            template: Lang.template.asomekit_180servo_ready,
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                    
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            paramsKeyMap: {
+                VALUE1: 0,
+            },
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['6'],
+                    },
+                    null,
+                ],
+                type: 'asomekit_180servo_ready',
+            },
+            class: 'READY',
+            isNotFor: ['AsomeKit'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var pd = Entry.hw.portData;
+
+                var value1 = script.getValue('VALUE1');
+                    
+                if (!script.is_started) {
+                    script.is_started = true;
+                    script.msg_id = random_str(16);
+                    sq.msg_id = script.msg_id;
+                    sq.msg = format_str('servo180 = ServoPin({0});', value1);
+                    return script;
+                }
+
+                if (pd.msg_id && pd.msg_id.indexOf(script.msg_id) >= 0) {
+                    delete script.is_started;
+                    delete script.msg_id;
+                    return script.callReturn();
+                }
+
+                return script;
+            },
+            syntax: undefined,
+        },
+        asomekit_360servo_ready: {
+            template: Lang.template.asomekit_360servo_ready,
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                    
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            paramsKeyMap: {
+                VALUE1: 0,
+            },
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['4'],
+                    },
+                    null,
+                ],
+                type: 'asomekit_360servo_ready',
+            },
+            class: 'READY',
+            isNotFor: ['AsomeKit'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var pd = Entry.hw.portData;
+
+                var value1 = script.getValue('VALUE1');
+                    
+                if (!script.is_started) {
+                    script.is_started = true;
+                    script.msg_id = random_str(16);
+                    sq.msg_id = script.msg_id;
+                    sq.msg = format_str('servo360 = ServoPin({0});', value1);
+                    return script;
+                }
+
+                if (pd.msg_id && pd.msg_id.indexOf(script.msg_id) >= 0) {
+                    delete script.is_started;
+                    delete script.msg_id;
+                    return script.callReturn();
+                }
+
+                return script;
+            },
+            syntax: undefined,
+        },
+        asomekit_sound_effect_ready: {
+            template: Lang.template.asomekit_sound_effect_ready,
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                    
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            paramsKeyMap: {
+                VALUE1: 0,
+            },
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['12'],
+                    },
+                    null,
+                ],
+                type: 'asomekit_sound_effect_ready',
+            },
+            class: 'READY',
+            isNotFor: ['AsomeKit'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var pd = Entry.hw.portData;
+
+                var value1 = script.getValue('VALUE1');
+                    
+                if (!script.is_started) {
+                    script.is_started = true;
+                    script.msg_id = random_str(16);
+                    sq.msg_id = script.msg_id;
+                    sq.msg = format_str('import sound_effect; sound_effect.open({0});', value1);
+                    return script;
+                }
+
+                if (pd.msg_id && pd.msg_id.indexOf(script.msg_id) >= 0) {
+                    delete script.is_started;
+                    delete script.msg_id;
+                    return script.callReturn();
+                }
+
+                return script;
+            },
+            syntax: undefined,
+        },
+        asomekit_neopixel_ready: {
+            template: Lang.template.asomekit_neopixel_ready,
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                    
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            paramsKeyMap: {
+                VALUE1: 0,
+            },
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    null,
+                ],
+                type: 'asomekit_neopixel_ready',
+            },
+            class: 'READY',
+            isNotFor: ['AsomeKit'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var pd = Entry.hw.portData;
+
+                var value1 = script.getValue('VALUE1');
+                    
+                if (!script.is_started) {
+                    script.is_started = true;
+                    script.msg_id = random_str(16);
+                    sq.msg_id = script.msg_id;
+                    sq.msg = format_str('import asomeneopixel; asomeneopixel.ready({0});', value1);
+                    return script;
+                }
+
+                if (pd.msg_id && pd.msg_id.indexOf(script.msg_id) >= 0) {
+                    delete script.is_started;
+                    delete script.msg_id;
+                    return script.callReturn();
+                }
+
+                return script;
+            },
+            syntax: undefined,
+        },
         
         // LED
         asomekit_led: {
@@ -1337,6 +1863,532 @@ Entry.AsomeKit.getBlocks = function() {
             },
             syntax: undefined,
         },
+        asomekit_neopixel_off: {
+            template: Lang.template.asomekit_neopixel_off,
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            paramsKeyMap: {
+            },
+            events: {},
+            def: {
+                params: [
+                    null
+                ],
+                type: 'asomekit_neopixel_off',
+            },
+            class: 'LED',
+            isNotFor: ['AsomeKit'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var pd = Entry.hw.portData;
+                    
+                if (!script.is_started) {
+                    script.is_started = true;
+                    script.msg_id = random_str(16);
+                    sq.msg_id = script.msg_id;
+                    sq.msg = format_str(`asomeneopixel.NeoPixel.fill((0,0,0)); asomeneopixel.NeoPixel.write();`,);
+                    return script;
+                }
+
+                if (pd.msg_id && pd.msg_id.indexOf(script.msg_id) >= 0) {
+                    delete script.is_started;
+                    delete script.msg_id;
+                    return script.callReturn();
+                }
+
+                return script;
+            },
+            syntax: undefined,
+        },
+        asomekit_neopixel_on: {
+            template: Lang.template.asomekit_neopixel_on,
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [ "1", "0" ],
+                        [ "2", "1" ],
+                        [ "3", "2" ],
+                        [ "4", "3" ],
+                        [ "5", "4" ],
+                        [ "6", "5" ],
+                        [ "7", "6" ],
+                        [ "8", "7" ],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            paramsKeyMap: {
+                VALUE1: 0,
+                VALUE2: 1,
+                VALUE3: 2,
+                VALUE4: 3,
+            },
+            events: {},
+            def: {
+                params: [
+                    null,
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null
+                ],
+                type: 'asomekit_neopixel_on',
+            },
+            class: 'LED',
+            isNotFor: ['AsomeKit'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var pd = Entry.hw.portData;
+
+                var value1 = script.getStringValue('VALUE1');
+                var value2 = script.getValue('VALUE2');
+                var value3 = script.getValue('VALUE3');
+                var value4 = script.getValue('VALUE4');
+                    
+                if (!script.is_started) {
+                    script.is_started = true;
+                    script.msg_id = random_str(16);
+                    sq.msg_id = script.msg_id;
+                    sq.msg = format_str(`asomeneopixel.NeoPixel[{0}] = ({1}, {2}, {3});asomeneopixel.NeoPixel.write();`, value1, value2, value3, value4);
+                    return script;
+                }
+
+                if (pd.msg_id && pd.msg_id.indexOf(script.msg_id) >= 0) {
+                    delete script.is_started;
+                    delete script.msg_id;
+                    return script.callReturn();
+                }
+
+                return script;
+            },
+            syntax: undefined,
+        },
+        asomekit_neopixel_all: {
+            template: Lang.template.asomekit_neopixel_all,
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            paramsKeyMap: {
+                VALUE1: 0,
+                VALUE2: 1,
+                VALUE3: 2,
+            },
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null
+                ],
+                type: 'asomekit_neopixel_all',
+            },
+            class: 'LED',
+            isNotFor: ['AsomeKit'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var pd = Entry.hw.portData;
+
+                var value1 = script.getValue('VALUE1');
+                var value2 = script.getValue('VALUE2');
+                var value3 = script.getValue('VALUE3');
+                    
+                if (!script.is_started) {
+                    script.is_started = true;
+                    script.msg_id = random_str(16);
+                    sq.msg_id = script.msg_id;
+                    sq.msg = format_str(`a = 'for pixel in range (0, 8):asomeneopixel.NeoPixel[pixel] = ({0}, {1}, {2});asomeneopixel.NeoPixel.write();';exec(a)`, value1, value2, value3);
+                    return script;
+                }
+
+                if (pd.msg_id && pd.msg_id.indexOf(script.msg_id) >= 0) {
+                    delete script.is_started;
+                    delete script.msg_id;
+                    return script.callReturn();
+                }
+
+                return script;
+            },
+            syntax: undefined,
+        },
+        asomekit_neopixel_relay: {
+            template: Lang.template.asomekit_neopixel_relay,
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            paramsKeyMap: {
+                VALUE1: 0,
+                VALUE2: 1,
+                VALUE3: 2,
+            },
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null
+                ],
+                type: 'asomekit_neopixel_relay',
+            },
+            class: 'LED',
+            isNotFor: ['AsomeKit'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var pd = Entry.hw.portData;
+
+                var value1 = script.getValue('VALUE1');
+                var value2 = script.getValue('VALUE2');
+                var value3 = script.getValue('VALUE3');
+                    
+                if (!script.is_started) {
+                    script.is_started = true;
+                    script.msg_id = random_str(16);
+                    sq.msg_id = script.msg_id;
+                    sq.msg = format_str(`a = 'for pixel in range (0, 8):asomeneopixel.NeoPixel[pixel] = ({0}, {1}, {2});asomeneopixel.NeoPixel.write();delay(1);';exec(a)`, value1, value2, value3);
+                    return script;
+                }
+
+                if (pd.msg_id && pd.msg_id.indexOf(script.msg_id) >= 0) {
+                    delete script.is_started;
+                    delete script.msg_id;
+                    return script.callReturn();
+                }
+
+                return script;
+            },
+            syntax: undefined,
+        },
+        asomekit_neopixel_rainbow: {
+            template: Lang.template.asomekit_neopixel_rainbow,
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            paramsKeyMap: {
+                VALUE1: 0,
+            },
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    null
+                ],
+                type: 'asomekit_neopixel_rainbow',
+            },
+            class: 'LED',
+            isNotFor: ['AsomeKit'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var pd = Entry.hw.portData;
+
+                var value1 = script.getValue('VALUE1');
+                    
+                if (!script.is_started) {
+                    script.is_started = true;
+                    script.msg_id = random_str(16);
+                    sq.msg_id = script.msg_id;
+                    sq.msg = format_str(`asomeneopixel.rainbow(775*{0});`,value1);
+                    return script;
+                }
+
+                if (pd.msg_id && pd.msg_id.indexOf(script.msg_id) >= 0) {
+                    delete script.is_started;
+                    delete script.msg_id;
+                    return script.callReturn();
+                }
+
+                return script;
+            },
+            syntax: undefined,
+        },
+
+
+        // Servo
+        asomekit_180servo_angle: {
+            template: Lang.template.asomekit_180servo_angle,
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                    
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            paramsKeyMap: {
+                VALUE1: 0,
+            },
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['90'],
+                    },
+                    null,
+                ],
+                type: 'asomekit_180servo_angle',
+            },
+            class: 'SERVO',
+            isNotFor: ['AsomeKit'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var pd = Entry.hw.portData;
+
+                var value1 = script.getValue('VALUE1');
+                    
+                if (!script.is_started) {
+                    script.is_started = true;
+                    script.msg_id = random_str(16);
+                    sq.msg_id = script.msg_id;
+                    sq.msg = format_str('servo180.angle({0});', value1);
+                    return script;
+                }
+
+                if (pd.msg_id && pd.msg_id.indexOf(script.msg_id) >= 0) {
+                    delete script.is_started;
+                    delete script.msg_id;
+                    return script.callReturn();
+                }
+
+                return script;
+            },
+            syntax: undefined,
+        },
+        asomekit_360servo_off: {
+            template: Lang.template.asomekit_360servo_off,
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            paramsKeyMap: {
+                VALUE1: 0,
+            },
+            events: {},
+            def: {
+                params: [
+                    null,
+                ],
+                type: 'asomekit_360servo_off',
+            },
+            class: 'SERVO',
+            isNotFor: ['AsomeKit'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var pd = Entry.hw.portData;
+
+                var value1 = script.getValue('VALUE1');
+                    
+                if (!script.is_started) {
+                    script.is_started = true;
+                    script.msg_id = random_str(16);
+                    sq.msg_id = script.msg_id;
+                    sq.msg = format_str('servo360.off();');
+                    return script;
+                }
+
+                if (pd.msg_id && pd.msg_id.indexOf(script.msg_id) >= 0) {
+                    delete script.is_started;
+                    delete script.msg_id;
+                    return script.callReturn();
+                }
+
+                return script;
+            },
+            syntax: undefined,
+        },
+        asomekit_360servo_duty: {
+            template: Lang.template.asomekit_360servo_duty,
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            paramsKeyMap: {
+                VALUE1: 0,
+            },
+            events: {},
+            def: {
+                params: [
+                    null,
+                ],
+                type: 'asomekit_360servo_duty',
+            },
+            class: 'SERVO',
+            isNotFor: ['AsomeKit'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var pd = Entry.hw.portData;
+
+                var value1 = script.getValue('VALUE1');
+                    
+                if (!script.is_started) {
+                    script.is_started = true;
+                    script.msg_id = random_str(16);
+                    sq.msg_id = script.msg_id;
+                    sq.msg = format_str('servo360.duty(250);');
+                    return script;
+                }
+
+                if (pd.msg_id && pd.msg_id.indexOf(script.msg_id) >= 0) {
+                    delete script.is_started;
+                    delete script.msg_id;
+                    return script.callReturn();
+                }
+
+                return script;
+            },
+            syntax: undefined,
+        },
+
         asomekit_ultrasound_measurement: {
             template: Lang.template.asomekit_ultrasound_measurement,
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -2075,6 +3127,76 @@ Entry.AsomeKit.getBlocks = function() {
             },
             syntax: undefined,
         },
+        asomekit_sound_effect_play: {
+            template: Lang.template.asomekit_sound_effect_play,
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [ "1", "level_up" ],
+                        [ "2", "so_sad" ],
+                        [ "3", "ariel" ],
+                        [ "4", "laugh"],
+                        [ "5", "sad"],
+                        [ "6", "victory"],
+                        [ "7", "get_ready"],
+                    ],
+                    value: 'level_up',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            paramsKeyMap: {
+                VALUE1: 0,
+            },
+            events: {},
+            def: {
+                params: [
+                    null, null
+                ],
+                type: 'asomekit_sound_effect_play',
+            },
+            class: 'Buzzer',
+            isNotFor: ['AsomeKit'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var pd = Entry.hw.portData;
+
+                var value1 = script.getStringValue('VALUE1');
+                    
+                if (!script.is_started) {
+                    script.is_started = true;
+                    script.msg_id = random_str(16);
+                    sq.msg_id = script.msg_id;
+                    sq.msg = format_str('sound_effect.{0}()', value1);
+                    return script;
+                }
+
+                if (pd.msg_id && pd.msg_id.indexOf(script.msg_id) >= 0) {
+                    delete script.is_started;
+                    delete script.msg_id;
+                    return script.callReturn();
+                }
+
+                return script;
+            },
+            syntax: undefined,
+        },
+
+
+
+
         asomekit_input_num: {
             template: Lang.template.asomekit_input_num,
             color: EntryStatic.colorSet.block.default.HARDWARE,
