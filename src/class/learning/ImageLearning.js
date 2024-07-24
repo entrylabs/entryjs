@@ -144,6 +144,11 @@ class ImageLearning {
         this.model = await tf.loadLayersModel(url);
         this.isLoaded = true;
     }
+
+    async reload() {
+        this.model = await tf.loadLayersModel(this.#url);
+        this.isLoaded = true;
+    }
 }
 
 export default ImageLearning;
