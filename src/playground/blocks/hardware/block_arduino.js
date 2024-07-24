@@ -145,7 +145,7 @@ Entry.Arduino.setLanguage = function () {
         en: {
             template: {
                 arduino_get_number_sensor_value: 'analog %1 value  ',
-                arduino_get_digital_value: 'Digital %1 value  ',
+                arduino_get_digital_value: 'digital %1 value  ',
                 arduino_toggle_led: '%2 digital %1 pin %3',
                 arduino_toggle_pwm: 'Set digital %1 pin to %2 %3',
                 arduino_convert_scale: 'mapped value of analog %1 that %2 ~ %3 to %4 ~ %5',
