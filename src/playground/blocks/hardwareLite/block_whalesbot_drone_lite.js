@@ -24,7 +24,7 @@ import metadata from './metadata_whalesbot_drone_lite.json';
             // duration도 미확인
             this.duration = 32;
             this.blockMenuBlocks = [
-                'whalesbot_drone_openning_3d_simulator',
+                // 'whalesbot_drone_openning_3d_simulator',
                 'whalesbot_drone_entering_pitch_mode',
                 'whalesbot_drone_exit_pitch_mode',
                 'whalesbot_drone_automatic_take_off_height',

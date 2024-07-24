@@ -5,6 +5,5 @@
     "title": "Whalesbot Drone",
     "description": "Whalesbot",
     "imageName": "whalesbot_drone",
-    "moduleId": "001001",
-    "simulator_url": "https://10.10.222.237:30002"
+    "moduleId": "001001"
 }
