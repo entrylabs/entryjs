@@ -77,7 +77,7 @@ Entry.ArduinoNano.setLanguage = function () {
                 arduino_nano_get_analog_value_map:
                     '%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 바꾼 값',
                 arduino_nano_get_ultrasonic_value:
-                    '디지털 %1 번 핀을 Trig에 디지털 %2 핀을 Echo에 연결한 초음파 센서 값',
+                    '디지털 %1 번 핀을 Trig에 디지털 %2 번 핀을 Echo에 연결한 초음파 센서 값',
                 arduino_nano_toggle_led: '디지털 %1 번 핀 %2 %3',
                 arduino_nano_digital_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
                 arduino_nano_set_tone: '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 울리기 %5',
@@ -114,8 +114,6 @@ Entry.ArduinoNano.setLanguage = function () {
                     'Ring buzzer of pin %1 on note %2 octave %3 for %4 second(s) %5',
                 arduino_nano_set_servo: 'Set servo motor of pin %1 to %2 degree %3',
                 arduino_nano_get_digital: 'digital %1 value',
-                arduino_nano_get_ultrasonic_value:
-                    'Reports the value of ultrasonic sensor that connects pin.',
             },
             Helper: {
                 arduino_nano_get_analog_value:
