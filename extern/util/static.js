@@ -220,6 +220,7 @@ EntryStatic.getAllBlocks = function () {
                 'get_block_count',
                 'change_rgb_to_hex',
                 'change_hex_to_rgb',
+                'get_boolean_value',
             ],
         },
         {

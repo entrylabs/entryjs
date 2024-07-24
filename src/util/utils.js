@@ -5,6 +5,7 @@ import _uniq from 'lodash/uniq';
 import _intersection from 'lodash/intersection';
 import _clamp from 'lodash/clamp';
 import _round from 'lodash/round';
+import _throttle from 'lodash/throttle';
 import FontFaceOnload from 'fontfaceonload';
 import DataTable from '../class/DataTable';
 import entryModuleLoader from '../class/entryModuleLoader';
@@ -2056,61 +2057,65 @@ Entry.Utils.createMouseEvent = function (type, event) {
     return e;
 };
 
-Entry.Utils.stopProjectWithToast = async (scope, message, error) => {
-    let block = scope.block;
-    message = message || 'Runtime Error';
-    const toast = error.toast;
-    const engine = Entry.engine;
+Entry.Utils.stopProjectWithToast = _throttle(
+    async (scope, message, error) => {
+        let block = scope.block;
+        message = message || 'Runtime Error';
+        const toast = error.toast;
+        const engine = Entry.engine;
 
-    if (engine) {
-        await engine.toggleStop();
-    }
-    if (Entry.type === 'workspace') {
-        if (scope.block && 'funcBlock' in scope.block) {
-            block = scope.block.funcBlock;
-        } else if (scope.funcExecutor) {
-            block = scope.funcExecutor.scope.block;
-            Entry.Func.edit(scope.type);
+        if (engine && engine.isState('run')) {
+            await engine.toggleStop();
         }
-
-        if (block) {
-            const id = block.getCode().object && block.getCode().object.id;
-            if (id) {
-                Entry.container.selectObject(block.getCode().object.id, true);
+        if (Entry.type === 'workspace') {
+            if (scope.block && 'funcBlock' in scope.block) {
+                block = scope.block.funcBlock;
+            } else if (scope.funcExecutor) {
+                block = scope.funcExecutor.scope.block;
+                Entry.Func.edit(scope.type);
             }
-            const view = block.view;
-            view && view.getBoard().activateBlock(block);
+
+            if (block) {
+                const id = block.getCode().object && block.getCode().object.id;
+                if (id) {
+                    Entry.container.selectObject(block.getCode().object.id, true);
+                }
+                const view = block.view;
+                view && view.getBoard().activateBlock(block);
+            }
         }
-    }
 
-    if (message === 'IncompatibleError' && Entry.toast) {
-        Entry.toast.alert(
-            Lang.Msgs.warn,
-            toast || [Lang.Workspace.check_runtime_error, Lang.Workspace.check_browser_error],
-            true
-        );
-        Entry.engine.hideAllAudioPanel();
-    }
-    if (message === 'OfflineError' && Entry.toast) {
-        Entry.toast.alert(
-            Lang.Msgs.warn,
-            toast || [
-                Lang.Workspace.check_runtime_error,
-                Lang.Workspace.offline_not_compatible_error,
-            ],
-            true
-        );
-    } else if (Entry.toast) {
-        Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.check_runtime_error, true);
-    }
+        if (message === 'IncompatibleError' && Entry.toast) {
+            Entry.toast.alert(
+                Lang.Msgs.warn,
+                toast || [Lang.Workspace.check_runtime_error, Lang.Workspace.check_browser_error],
+                true
+            );
+            Entry.engine.hideAllAudioPanel();
+        }
+        if (message === 'OfflineError' && Entry.toast) {
+            Entry.toast.alert(
+                Lang.Msgs.warn,
+                toast || [
+                    Lang.Workspace.check_runtime_error,
+                    Lang.Workspace.offline_not_compatible_error,
+                ],
+                true
+            );
+        } else if (Entry.toast) {
+            Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.check_runtime_error, true);
+        }
 
-    if (error) {
-        error.message = `${message}: ${error.message}`;
-        throw error;
-    }
+        if (error) {
+            error.message = `${message}: ${error.message}`;
+            throw error;
+        }
 
-    throw new Error(message);
-};
+        throw new Error(message);
+    },
+    300,
+    { trailing: false }
+);
 
 Entry.Utils.AsyncError = function (message) {
     this.name = 'AsyncError';
@@ -2751,7 +2756,9 @@ Entry.Utils.pauseSoundInstances = function () {
 Entry.Utils.recoverSoundInstances = function () {
     Entry.soundInstances.getAllValues().forEach((instance) => {
         instance.paused = false;
-        instance.sourceNode.playbackRate.value = Entry.playbackRateValue;
+        if (instance.sourceNode?.playbackRate) {
+            instance.sourceNode.playbackRate.value = Entry.playbackRateValue;
+        }
     });
     Entry.bgmInstances.getAllValues().forEach((instance) => {
         instance.paused = false;
@@ -2959,11 +2966,10 @@ Entry.Utils.removeBlockByType2 = function (blockType, callback) {
     }
 };
 
-Entry.Utils.sleep = (time = 0) => {
-    return new Promise((resolve) => {
+Entry.Utils.sleep = (time = 0) =>
+    new Promise((resolve) => {
         setTimeout(resolve, time);
     });
-};
 
 Entry.Utils.runAsync = async (func) => {
     await Entry.Utils.sleep();

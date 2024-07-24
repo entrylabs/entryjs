@@ -262,6 +262,10 @@ export default class AILearning {
         this.loadModel({ url, trainParam, tableData, isActive, classes });
     }
 
+    async reload() {
+        await this.#module?.reload?.();
+    }
+
     openInputPopup() {
         this.#module?.openInputPopup?.();
     }

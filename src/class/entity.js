@@ -1067,6 +1067,9 @@ Entry.EntityObject = class EntityObject {
      * @param {?picture model} pictureModel
      */
     setImage(pictureModel) {
+        if (!pictureModel) {
+            return;
+        }
         const that = this;
         delete pictureModel._id;
 
