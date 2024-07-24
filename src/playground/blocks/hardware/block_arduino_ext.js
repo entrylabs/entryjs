@@ -77,7 +77,7 @@ Entry.ArduinoExt.setLanguage = function () {
                 arduino_ext_get_analog_value_map:
                     '%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 바꾼 값',
                 arduino_ext_get_ultrasonic_value:
-                    '디지털 %1 번 핀을 Trig에 디지털 %2 핀을 Echo에 연결한 초음파 센서 값',
+                    '디지털 %1 번 핀을 Trig에 디지털 %2 번 핀을 Echo에 연결한 초음파 센서 값',
                 arduino_ext_toggle_led: '디지털 %1 번 핀 %2 %3',
                 arduino_ext_digital_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
                 arduino_ext_set_tone: '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 울리기 %5',
