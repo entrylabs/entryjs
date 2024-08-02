@@ -6490,6 +6490,22 @@ Lang.Helper = {
         '현재 선택한 지역의 날씨 정보입니다.\n*옵션\n시도: 서울, 강원, 경기, 경남, 경북, 광주, 대구, 대전, 부산, 세종, 울산, 인천, 전남, 전북, 제주, 충남, 충북 \n시군구: 시도별로 다름\n정보: 기온(℃), 미세먼지농도(㎍)',
     get_today_city_temperature:
         '오늘 선택한 지역과 시간대의 기온입니다.\n*옵션\n시도: 서울, 강원, 경기, 경남, 경북 광주, 대구, 대전, 부산, 세종, 울산, 인천, 전남, 전북, 제주, 충남, 충북 \n시군구: 시도별로 다름\n시간대: 00, 03, 06, 09, 12, 15, 18, 21',
+    get_cur_weather: '\n선택한 지역의 현재 날씨입니다.',
+    get_cur_wind: '\n선택한 지역의 현재 풍향입니다.',
+    get_cur_weather_data:
+        '\n선택한 지역의 현재 기상 정보입니다.\n- 기상 정보: 기온(℃), 미세먼지농도(PM10, ㎍)',
+    check_cur_weather: "\n선택한 지역의 현재 날씨가 선택한 날씨와 같다면 '참'으로 판단합니다.",
+    check_cur_finddust:
+        '\n선택한 지역의 현재 미세먼지 등급이 선택한 미세먼지 등급과 같다면 ‘참’으로 판단합니다.',
+    get_day_weather: '\n선택한 지역의 일별 날씨입니다.',
+    get_day_weather_data:
+        '\n선택한 지역의 일별 기상 정보입니다.\n- 기상 정보: 최저기온(℃), 최고기온(℃), 습도(%), 강수량(mm), 강수확률(%), 풍속(m/s)',
+    check_day_weather: "\n선택한 지역의 일별 날씨가 선택한 날씨와 같다면 '참'으로 판단합니다.",
+    get_time_weather: '\n선택한 지역의 시간대별(3시간) 날씨입니다.',
+    get_time_weather_data:
+        '\n선택한 지역의 시간대별(3시간) 기상 정보입니다.\n- 기상 정보: 기온(°c), 습도(%), 강수량(mm), 강수확률(%), 풍속(m/s)',
+    check_time_weather:
+        "\n선택한 지역의 시간대별(3시간) 날씨가 선택한 날씨와 같다면 '참'으로 판단합니다.",
     count_festival:
         '선택한 날짜와 지역에서 열리는 행사의 수입니다.\n* 옵션 \n지역: 서울, 강원, 경기, 경남, 경북 광주, 대구, 대전, 부산, 세종, 울산, 인천, 전남, 전북, 제주, 충남, 충북 \n행사일: 1~12월',
     get_festival_info:
@@ -7285,6 +7301,17 @@ Lang.template = {
     get_city_weather_data: '%1 %2 %3 의 %4',
     get_current_city_weather_data: '현재 %1 %2 의 %3',
     get_today_city_temperature: '오늘 %1 %2의 %3시 기온',
+    get_cur_weather: '현재 %1의 날씨',
+    get_cur_wind: '현재 %1의 풍향',
+    get_cur_weather_data: '현재 %1의 %2',
+    check_cur_weather: '현재 %1의 날씨가 %2인가?',
+    check_cur_finddust: '현재 %1의 미세먼지 등급이 %2인가?',
+    get_day_weather: '%1 %2의 날씨',
+    get_day_weather_data: '%1 %2의 %3',
+    check_day_weather: '%1 %2의 날씨가 %3 인가?',
+    get_time_weather: '%1의 %2시 날씨',
+    get_time_weather_data: '%1의 %2시 %3',
+    check_time_weather: '%1의 %2시 날씨가 %3 인가?',
     translate_title: '%1',
     get_translated_string: '%1 %2 을(를) %3(으)로 번역한 값',
     check_language: '%1의 언어',
