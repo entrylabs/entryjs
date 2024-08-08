@@ -23,7 +23,7 @@ if (!Entry.block) {
 
 function getConverters() {
     const c = {};
-    c.keyboardCode = function(key, value) {
+    c.keyboardCode = function (key, value) {
         let code;
 
         if (key) {
@@ -47,7 +47,7 @@ function getConverters() {
         }
     };
 
-    c.returnStringKey = function(key, value) {
+    c.returnStringKey = function (key, value) {
         if ((!value && typeof value !== 'number') || value === 'null') {
             return 'None';
         }
@@ -75,7 +75,7 @@ function getConverters() {
         return '"()"'.replace('()', key);
     };
 
-    c.returnRawStringKey = function(key, value) {
+    c.returnRawStringKey = function (key, value) {
         if ((!value && typeof value !== 'number') || value === 'null') {
             return 'None';
         }
@@ -91,7 +91,7 @@ function getConverters() {
         return '"()"'.replace('"()"', key);
     };
 
-    c.returnStringValue = function(key, value) {
+    c.returnStringValue = function (key, value) {
         if ((!value && typeof value !== 'number') || value === 'null') {
             return 'None';
         }
@@ -109,7 +109,7 @@ function getConverters() {
         return '"()"'.replace('()', value);
     };
 
-    c.returnOperator = function(key, value) {
+    c.returnOperator = function (key, value) {
         const map = {
             EQUAL: '==',
             GREATER: '>',
@@ -139,12 +139,12 @@ function getConverters() {
         return map[value];
     };
 
-    c.returnRawNumberValueByKey = function(key, value) {
+    c.returnRawNumberValueByKey = function (key, value) {
         //return String(key).replace(/\D/, '');
         return key;
     };
 
-    c.returnStringOrNumberByValue = function(key, value) {
+    c.returnStringOrNumberByValue = function (key, value) {
         if (!Entry.Utils.isNumber(value)) {
             value = value.replace(/\"/gi, '');
             return '"()"'.replace('()', value);
@@ -153,7 +153,7 @@ function getConverters() {
         }
     };
 
-    c.returnObjectOrStringValue = function(key, value) {
+    c.returnObjectOrStringValue = function (key, value) {
         if (Entry.container && Entry.container.getObject(value)) {
             const objectName = Entry.container.getObject(value).name;
             return '"()"'.replace('()', objectName);
@@ -173,7 +173,7 @@ function getConverters() {
         }
     };
 
-    c.returnStringValueUpperCase = function(key, value) {
+    c.returnStringValueUpperCase = function (key, value) {
         if (this.codeMap) {
             var codeMap = eval(this.codeMap);
         }
@@ -187,7 +187,7 @@ function getConverters() {
         return '"()"'.replace('()', value).toUpperCase();
     };
 
-    c.returnValueUpperCase = function(key, value) {
+    c.returnValueUpperCase = function (key, value) {
         if (this.codeMap) {
             var codeMap = eval(this.codeMap);
         }
@@ -201,7 +201,7 @@ function getConverters() {
         return value.toUpperCase();
     };
 
-    c.returnStringValueLowerCase = function(key, value) {
+    c.returnStringValueLowerCase = function (key, value) {
         if (this.codeMap) {
             var codeMap = eval(this.codeMap);
         }
@@ -215,7 +215,7 @@ function getConverters() {
         return '"()"'.replace('()', value).toLowerCase();
     };
 
-    c.returnValuePartialUpperCase = function(key, value) {
+    c.returnValuePartialUpperCase = function (key, value) {
         if (this.codeMap) {
             var codeMap = eval(this.codeMap);
         }
@@ -261,7 +261,7 @@ function getBlocks() {
             },
             events: {
                 mousedown: [
-                    function() {
+                    function () {
                         Entry.aiLearning.openManager();
                     },
                 ],
@@ -284,7 +284,7 @@ function getBlocks() {
             },
             events: {
                 mousedown: [
-                    function() {
+                    function () {
                         Entry.do('playgroundClickAddAIUtilizeBlock');
                     },
                 ],
@@ -307,7 +307,7 @@ function getBlocks() {
             },
             events: {
                 mousedown: [
-                    function() {
+                    function () {
                         Entry.do('playgroundClickAddExpansionBlock');
                     },
                 ],
@@ -329,7 +329,7 @@ function getBlocks() {
             ],
             events: {
                 mousedown: [
-                    function() {
+                    function () {
                         Entry.do('playgroundClickAddHardwareLiteBlock');
                     },
                 ],
@@ -356,7 +356,7 @@ function getBlocks() {
             ],
             events: {
                 mousedown: [
-                    function() {
+                    function () {
                         window.open(
                             'https://docs.playentry.org/user/block_hardware.html#POINT-%EC%95%84%EB%91%90%EC%9D%B4%EB%85%B8-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0'
                         );
@@ -380,7 +380,7 @@ function getBlocks() {
             ],
             events: {
                 mousedown: [
-                    function() {
+                    function () {
                         Entry.hwLite.connect();
                     },
                 ],
@@ -420,7 +420,7 @@ function getBlocks() {
             ],
             events: {
                 mousedown: [
-                    function() {
+                    function () {
                         Entry.hwLite.removeHardwareLiteModule();
                     },
                 ],
@@ -522,7 +522,7 @@ function getBlocks() {
             ],
             events: {
                 mousedown: [
-                    function() {
+                    function () {
                         Entry.hw.downloadConnector();
                     },
                 ],
@@ -574,7 +574,7 @@ function getBlocks() {
             class: 'arduino_default',
             events: {
                 mousedown: [
-                    function() {
+                    function () {
                         Entry.hw.downloadSource();
                     },
                 ],
@@ -626,7 +626,7 @@ function getBlocks() {
             class: 'arduino_default',
             events: {
                 mousedown: [
-                    function() {
+                    function () {
                         Entry.hw.retryConnect();
                     },
                 ],
@@ -647,7 +647,7 @@ function getBlocks() {
             ],
             events: {
                 mousedown: [
-                    function() {
+                    function () {
                         Entry.hw.retryConnect();
                     },
                 ],
@@ -669,7 +669,7 @@ function getBlocks() {
             class: 'arduino_default',
             events: {
                 mousedown: [
-                    function() {
+                    function () {
                         Entry.hw.openHardwareProgram();
                     },
                 ],
@@ -691,7 +691,7 @@ function getBlocks() {
             class: 'arduino_default',
             events: {
                 mousedown: [
-                    function() {
+                    function () {
                         Entry.hw.openHardwareProgram();
                     },
                 ],
@@ -1314,14 +1314,14 @@ function getBlocks() {
             ],
             events: {
                 viewAdd: [
-                    function() {
+                    function () {
                         if (Entry.engine) {
                             Entry.engine.showProjectTimer();
                         }
                     },
                 ],
                 viewDestroy: [
-                    function(block, notIncludeSelf) {
+                    function (block, notIncludeSelf) {
                         if (Entry.engine) {
                             Entry.engine.hideProjectTimer(block, notIncludeSelf);
                         }
@@ -1373,14 +1373,14 @@ function getBlocks() {
             ],
             events: {
                 viewAdd: [
-                    function() {
+                    function () {
                         if (Entry.engine) {
                             Entry.engine.showProjectTimer();
                         }
                     },
                 ],
                 viewDestroy: [
-                    function(block, notIncludeSelf) {
+                    function (block, notIncludeSelf) {
                         if (Entry.engine) {
                             Entry.engine.hideProjectTimer(block, notIncludeSelf);
                         }
@@ -3308,7 +3308,7 @@ function getBlocks() {
                     this.isContinue = true;
                     this.isAction = true;
                     const self = this;
-                    const callBack = function() {
+                    const callBack = function () {
                         Ntry.dispatchEvent('getItem');
                         self.isAction = false;
                     };
@@ -3342,7 +3342,7 @@ function getBlocks() {
                     this.isContinue = true;
                     this.isAction = true;
                     const self = this;
-                    const callBack = function() {
+                    const callBack = function () {
                         Ntry.dispatchEvent('getItem');
                         self.isAction = false;
                     };
@@ -3376,7 +3376,7 @@ function getBlocks() {
                     this.isAction = true;
                     const STATIC = Ntry.STATIC;
                     const self = this;
-                    const callBack = function() {
+                    const callBack = function () {
                         window.setTimeout(() => {
                             Ntry.dispatchEvent('unitAction', Ntry.STATIC.WALK, () => {
                                 self.isAction = false;
@@ -3431,7 +3431,7 @@ function getBlocks() {
                     this.isContinue = true;
                     this.isAction = true;
                     const self = this;
-                    const callBack = function() {
+                    const callBack = function () {
                         window.setTimeout(() => {
                             Ntry.dispatchEvent('unitAction', STATIC.WALK, () => {
                                 self.isAction = false;
@@ -3487,7 +3487,7 @@ function getBlocks() {
                     this.isAction = true;
                     const STATIC = Ntry.STATIC;
                     const self = this;
-                    const callBack = function() {
+                    const callBack = function () {
                         window.setTimeout(() => {
                             Ntry.dispatchEvent('unitAction', Ntry.STATIC.WALK, () => {
                                 self.isAction = false;
@@ -3543,7 +3543,7 @@ function getBlocks() {
                     this.isAction = true;
                     const STATIC = Ntry.STATIC;
                     const self = this;
-                    const callBack = function() {
+                    const callBack = function () {
                         window.setTimeout(() => {
                             Ntry.dispatchEvent('unitAction', STATIC.WALK, () => {
                                 self.isAction = false;
@@ -3625,7 +3625,7 @@ function getBlocks() {
                     this.isContinue = true;
                     this.isAction = true;
                     const self = this;
-                    const callBack = function() {
+                    const callBack = function () {
                         self.isAction = false;
                     };
                     // turn direction
@@ -3656,7 +3656,7 @@ function getBlocks() {
                     this.isContinue = true;
                     this.isAction = true;
                     const self = this;
-                    const callBack = function() {
+                    const callBack = function () {
                         self.isAction = false;
                     };
 
@@ -3688,7 +3688,7 @@ function getBlocks() {
                     this.isContinue = true;
                     this.isAction = true;
                     const self = this;
-                    const callBack = function() {
+                    const callBack = function () {
                         self.isAction = false;
                     };
 
@@ -3720,7 +3720,7 @@ function getBlocks() {
                     this.isContinue = true;
                     this.isAction = true;
                     const self = this;
-                    const callBack = function() {
+                    const callBack = function () {
                         self.isAction = false;
                     };
 
@@ -3941,7 +3941,7 @@ function getBlocks() {
                     this.isContinue = true;
                     this.isAction = true;
                     const self = this;
-                    const callBack = function() {
+                    const callBack = function () {
                         self.isAction = false;
                     };
 
@@ -3963,7 +3963,7 @@ function getBlocks() {
                     this.isContinue = true;
                     this.isAction = true;
                     const self = this;
-                    const callBack = function() {
+                    const callBack = function () {
                         self.isAction = false;
                     };
 
@@ -4010,7 +4010,7 @@ function getBlocks() {
                     this.isContinue = true;
                     this.isAction = true;
                     const self = this;
-                    const callBack = function() {
+                    const callBack = function () {
                         self.isAction = false;
                     };
                     const unit = Ntry.getUnit();
@@ -4534,7 +4534,7 @@ function getBlocks() {
                     this.isContinue = true;
                     this.isAction = true;
                     const self = this;
-                    const callBack = function() {
+                    const callBack = function () {
                         self.isAction = false;
                     };
                     // turn direction
@@ -4566,7 +4566,7 @@ function getBlocks() {
                     this.isContinue = true;
                     this.isAction = true;
                     const self = this;
-                    const callBack = function() {
+                    const callBack = function () {
                         self.isAction = false;
                     };
 
@@ -4599,7 +4599,7 @@ function getBlocks() {
                     this.isContinue = true;
                     this.isAction = true;
                     const self = this;
-                    const callBack = function() {
+                    const callBack = function () {
                         self.isAction = false;
                     };
 
@@ -4632,7 +4632,7 @@ function getBlocks() {
                     this.isContinue = true;
                     this.isAction = true;
                     const self = this;
-                    const callBack = function() {
+                    const callBack = function () {
                         self.isAction = false;
                     };
                     // turn direction
@@ -4892,7 +4892,7 @@ function getBlocks() {
                         Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID)
                     );
                     script.direction = unitComp.direction;
-                    const callBack = function() {
+                    const callBack = function () {
                         unitComp.direction = script.direction;
                         script.isAction = false;
                     };
@@ -5002,7 +5002,7 @@ function getBlocks() {
                         );
                         return Entry.STATIC.BREAK;
                     }
-                    const callBack = function() {
+                    const callBack = function () {
                         Ntry.dispatchEvent('playSound', 'dieLupin');
                         Ntry.dispatchEvent('destroyObstacle', 2, (state) => {
                             script.isAction = false;
@@ -5061,7 +5061,7 @@ function getBlocks() {
                     }
                     Ntry.dispatchEvent('destroyObstacle', 1, (state) => {});
                     Ntry.dispatchEvent('destroyObstacle', -1, (state) => {});
-                    const callBack = function() {
+                    const callBack = function () {
                         Ntry.dispatchEvent('startEnemyWalk', true, () => {
                             script.isAction = false;
                         });
@@ -5123,7 +5123,7 @@ function getBlocks() {
                     const backEnemyExist = !!findBackTile.length;
                     if (frontEnemyValid && !backEnemyExist) {
                         // success
-                        var callBack = function() {
+                        var callBack = function () {
                             Ntry.dispatchEvent('destroyObstacle', 1, (state) => {});
                             Ntry.dispatchEvent('startEnemyWalk', true, () => {
                                 script.isAction = false;
@@ -5132,7 +5132,7 @@ function getBlocks() {
                         Ntry.dispatchEvent('unitAction', Ntry.STATIC.PEPE, callBack);
                     } else if (frontEnemyValid && backEnemyExist) {
                         // attack and dead
-                        var callBack = function() {
+                        var callBack = function () {
                             Ntry.dispatchEvent('destroyObstacle', 1, (state) => {});
                             Ntry.dispatchEvent('startEnemyWalk', false, () => {});
                         };
@@ -5208,7 +5208,7 @@ function getBlocks() {
                     const backEnemyExist = !!findBackTile.length;
                     if (frontEnemyValid && !backEnemyExist) {
                         // success
-                        var callBack = function() {
+                        var callBack = function () {
                             Ntry.dispatchEvent('destroyObstacle', 1, (state) => {});
                             Ntry.dispatchEvent('startEnemyWalk', true, () => {
                                 script.isAction = false;
@@ -5217,7 +5217,7 @@ function getBlocks() {
                         Ntry.dispatchEvent('unitAction', Ntry.STATIC.PEPE, callBack);
                     } else if (frontEnemyValid && backEnemyExist) {
                         // attack and dead
-                        var callBack = function() {
+                        var callBack = function () {
                             Ntry.dispatchEvent('destroyObstacle', 1, (state) => {});
                             Ntry.dispatchEvent('startEnemyWalk', false, () => {});
                         };
@@ -5294,7 +5294,7 @@ function getBlocks() {
                         );
                         return Entry.STATIC.BREAK;
                     }
-                    const callBack = function() {
+                    const callBack = function () {
                         Ntry.dispatchEvent('destroyObstacle', 1, (state) => {
                             script.isAction = false;
                         });
@@ -5358,7 +5358,7 @@ function getBlocks() {
                     if (frontEnemyValid && !backEnemyExist) {
                         // success
                         Ntry.dispatchEvent('destroyObstacle', 1, (state) => {});
-                        var callBack = function() {
+                        var callBack = function () {
                             Ntry.dispatchEvent('startEnemyWalk', true, () => {
                                 script.isAction = false;
                             });
@@ -5367,7 +5367,7 @@ function getBlocks() {
                     } else if (frontEnemyValid && backEnemyExist) {
                         // attack and dead
                         Ntry.dispatchEvent('destroyObstacle', 1, (state) => {});
-                        var callBack = function() {
+                        var callBack = function () {
                             Ntry.dispatchEvent('startEnemyWalk', false, () => {});
                         };
                         Ntry.dispatchEvent('unitAction', Ntry.STATIC.PETI, callBack);
@@ -5417,7 +5417,7 @@ function getBlocks() {
                     $.each(entities, (id, entity) => {
                         unitId = id;
                     });
-                    const callBack = function() {
+                    const callBack = function () {
                         script.isAction = false;
                     };
                     const unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
@@ -5458,7 +5458,7 @@ function getBlocks() {
                     this.isContinue = true;
                     this.isAction = true;
                     const self = this;
-                    const callBack = function() {
+                    const callBack = function () {
                         self.isAction = false;
                     };
 
@@ -5491,7 +5491,7 @@ function getBlocks() {
                     this.isContinue = true;
                     this.isAction = true;
                     const self = this;
-                    const callBack = function() {
+                    const callBack = function () {
                         self.isAction = false;
                     };
 
@@ -5546,7 +5546,7 @@ function getBlocks() {
                     this.isContinue = true;
                     this.isAction = true;
                     const self = this;
-                    const callback = function() {
+                    const callback = function () {
                         Ntry.dispatchEvent('destroyObstacle', 1, (state) => {
                             switch (state) {
                                 case Ntry.STATIC.OBSTACLE_DESTROY_SUCCESS:
@@ -5992,7 +5992,7 @@ function getBlocks() {
                                 targetPos.minY = obstacleGrid.y * tileSize + tileSize / 2;
                             }
 
-                            (function(_id, _deltaPos, _deltaPos2, _targetPos, obstacleGrid) {
+                            (function (_id, _deltaPos, _deltaPos2, _targetPos, obstacleGrid) {
                                 const comp = Ntry.entityManager.getComponent(
                                     _id,
                                     Ntry.STATIC.ANIMATE
@@ -6112,7 +6112,7 @@ function getBlocks() {
                     this.isContinue = true;
                     this.isAction = true;
 
-                    const callback = function() {
+                    const callback = function () {
                         Ntry.dispatchEvent('destroyObstacle', 1, (state) => {
                             switch (state) {
                                 case Ntry.STATIC.OBSTACLE_DESTROY_SUCCESS:
@@ -7904,7 +7904,7 @@ function inheritBlockSchema() {
             block.isNotFor = [];
         }
         if (block.parent) {
-            const F = function() {};
+            const F = function () {};
             F.prototype = Entry.block[block.parent];
             const schema = new F();
             schema.syntax = undefined;
@@ -7918,13 +7918,13 @@ function inheritBlockSchema() {
 
 function assignBlocks() {
     Entry.block.converters = getConverters();
-    Entry.block.changeBlockText = function(key, text) {
+    Entry.block.changeBlockText = function (key, text) {
         const block = this[key];
         if (block) {
             block.params[0].text = text;
         }
     };
-    Entry.block.changeBlockEvent = function(key, event, callback) {
+    Entry.block.changeBlockEvent = function (key, event, callback) {
         const block = this[key];
         if (block) {
             block.events[event] = [callback];
@@ -7943,7 +7943,7 @@ function applySetLanguage(hasSetLanguageObj) {
     }
 }
 
-Entry.reloadBlock = function() {
+Entry.reloadBlock = function () {
     Object.values(Entry.HARDWARE_LIST).forEach(applySetLanguage);
     Object.values(Entry.HARDWARE_LITE_LIST).forEach(applySetLanguage);
     assignBlocks();
@@ -7952,7 +7952,7 @@ Entry.reloadBlock = function() {
 
 Entry.reloadBlock();
 
-Entry.destroyBlock = function() {
+Entry.destroyBlock = function () {
     blocks.destroyBlockList.forEach((fn) => {
         fn();
     });
