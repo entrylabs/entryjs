@@ -124,7 +124,7 @@ EntryStatic.searchProjectOption = [
     },
 ];
 
-EntryStatic.getAllBlocks = function() {
+EntryStatic.getAllBlocks = function () {
     return [
         {
             category: 'start',
@@ -559,7 +559,7 @@ EntryStatic.getAllBlocks = function() {
                 'arduino_open',
                 'arduino_cloud_pc_open',
                 'arduino_connect',
-                'arduino_download_connector',
+                // 'arduino_download_connector',
                 // 'download_guide',
                 'arduino_connected',
             ],
@@ -711,7 +711,7 @@ EntryStatic.artPeriodOptions = [
     },
 ];
 
-EntryStatic.getCategoryByBlock = function(blockName) {
+EntryStatic.getCategoryByBlock = function (blockName) {
     if (!blockName) {
         return false;
     }
@@ -1076,7 +1076,7 @@ EntryStatic.COMMAND_TYPES = {
     redo: 303,
 };
 
-EntryStatic.getDefaultFontFamily = function() {
+EntryStatic.getDefaultFontFamily = function () {
     const localLang = Lang || {};
     const type = localLang.type;
     const fallbackType = localLang.fallbackType;

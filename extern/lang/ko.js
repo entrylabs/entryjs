@@ -317,7 +317,7 @@ Lang.Blocks = {
     hardware_noti_installed: '프로그램을 설치해 연결할 때',
     hardware_program_download: '연결 프로그램 다운로드',
     arduino_noti_text:
-        '하드웨어 연결은 PC에서만 지원됩니다.\n브라우저로 연결할 때는\n연결 프로그램이 필요하지 않습니다.',
+        '하드웨어 연결은\n데스크톱 PC에서만 지원됩니다.\n \n태블릿 PC 연결 지원에 대해서는 \n하드웨어 제조사에 문의해 주세요.',
     hardware_connect_helper: '하드웨어 연결 도움말',
     arduino_lite_alert:
         '하드웨어를 찾을 수 없습니다.\n하드웨어에 펌웨어가 설치되었는지,\nPC와 하드웨어가 연결되어 있는지 \n다시 확인해 주세요.',

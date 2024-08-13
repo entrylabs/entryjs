@@ -318,7 +318,7 @@ function getBlocks() {
             color: EntryStatic.colorSet.common.TRANSPARENT,
             template: '%1',
             isNotFor: ['arduinoLiteSupported'],
-            class: 'arduino_default',
+            class: 'arduino_default_not_installed',
             params: [
                 {
                     type: 'Text',
@@ -491,7 +491,7 @@ function getBlocks() {
                 {
                     type: 'Text',
                     text: Lang.Blocks.arduino_noti_text,
-                    color: EntryStatic.colorSet.common.BUTTON,
+                    color: EntryStatic.colorSet.common.GRAY,
                     align: 'center',
                 },
             ],
@@ -502,32 +502,32 @@ function getBlocks() {
             isNotFor: ['arduinoDisconnected'],
             events: {},
         },
-        arduino_download_connector: {
-            skeleton: 'clickable_text',
-            skeletonOptions: {
-                box: {
-                    offsetX: 3,
-                },
-            },
-            isNotFor: ['arduinoDisconnected'],
-            color: EntryStatic.colorSet.common.TRANSPARENT,
-            class: 'arduino_default',
-            params: [
-                {
-                    type: 'Text',
-                    text: Lang.Blocks.ARDUINO_download_connector,
-                    color: EntryStatic.colorSet.common.TEXT,
-                    align: 'center',
-                },
-            ],
-            events: {
-                mousedown: [
-                    function () {
-                        Entry.hw.downloadConnector();
-                    },
-                ],
-            },
-        },
+        // arduino_download_connector: {
+        //     skeleton: 'clickable_text',
+        //     skeletonOptions: {
+        //         box: {
+        //             offsetX: 3,
+        //         },
+        //     },
+        //     isNotFor: ['arduinoDisconnected'],
+        //     color: EntryStatic.colorSet.common.TRANSPARENT,
+        //     class: 'arduino_default',
+        //     params: [
+        //         {
+        //             type: 'Text',
+        //             text: Lang.Blocks.ARDUINO_download_connector,
+        //             color: EntryStatic.colorSet.common.TEXT,
+        //             align: 'center',
+        //         },
+        //     ],
+        //     events: {
+        //         mousedown: [
+        //             function () {
+        //                 Entry.hw.downloadConnector();
+        //             },
+        //         ],
+        //     },
+        // },
         // download_guide: {
         //     skeleton: 'clickable_text',
         //     skeletonOptions: {
@@ -554,32 +554,32 @@ function getBlocks() {
         //         ],
         //     },
         // },
-        arduino_download_source: {
-            skeleton: 'clickable_text',
-            skeletonOptions: {
-                box: {
-                    offsetX: 3,
-                },
-            },
-            isNotFor: ['arduinoDisconnected'],
-            color: EntryStatic.colorSet.common.TRANSPARENT,
-            params: [
-                {
-                    type: 'Text',
-                    text: Lang.Blocks.ARDUINO_download_source,
-                    color: EntryStatic.colorSet.common.TEXT,
-                    align: 'center',
-                },
-            ],
-            class: 'arduino_default',
-            events: {
-                mousedown: [
-                    function () {
-                        Entry.hw.downloadSource();
-                    },
-                ],
-            },
-        },
+        // arduino_download_source: {
+        //     skeleton: 'clickable_text',
+        //     skeletonOptions: {
+        //         box: {
+        //             offsetX: 3,
+        //         },
+        //     },
+        //     isNotFor: ['arduinoDisconnected'],
+        //     color: EntryStatic.colorSet.common.TRANSPARENT,
+        //     params: [
+        //         {
+        //             type: 'Text',
+        //             text: Lang.Blocks.ARDUINO_download_source,
+        //             color: EntryStatic.colorSet.common.TEXT,
+        //             align: 'center',
+        //         },
+        //     ],
+        //     class: 'arduino_default',
+        //     events: {
+        //         mousedown: [
+        //             function () {
+        //                 Entry.hw.downloadSource();
+        //             },
+        //         ],
+        //     },
+        // },
         arduino_connected: {
             skeleton: 'basic_button',
             color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
@@ -740,6 +740,23 @@ function getBlocks() {
                     },
                 ],
             },
+        },
+        hardware_noti_not_installed: {
+            skeleton: 'basic_text',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            template: '%1',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.hardware_noti_not_installed,
+                    color: EntryStatic.colorSet.common.TEXT,
+                    align: 'center',
+                    fontSize: 14,
+                },
+            ],
+            class: 'arduino_default_not_installed',
+            isNotFor: ['arduinoDisconnected'],
+            events: {},
         },
         arduino_cloud_pc_open: {
             skeleton: 'basic_button',
