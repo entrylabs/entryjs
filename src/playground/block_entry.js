@@ -657,19 +657,27 @@ function getBlocks() {
             skeleton: 'clickable_text',
             skeletonOptions: {
                 box: {
-                    offsetX: 3,
+                    offsetX: 70,
+                    offsetY: -10,
                 },
             },
-            template: '%1',
+            template: '%1%2',
             isNotFor: ['arduinoDisconnected'],
             color: EntryStatic.colorSet.common.TRANSPARENT,
             class: 'arduino_guide',
             params: [
                 {
+                    type: 'Indicator',
+                    img: 'question_in_round.svg',
+                    size: 9,
+                    align: 'left',
+                },
+                {
                     type: 'Text',
                     text: Lang.Blocks.hardware_connect_helper,
                     color: EntryStatic.colorSet.common.BUTTON,
-                    align: 'center',
+                    align: 'left',
+                    fontSize: 13,
                 },
             ],
             events: {
