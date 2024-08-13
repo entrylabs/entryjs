@@ -653,6 +653,33 @@ function getBlocks() {
                 ],
             },
         },
+        hardware_connect_helper: {
+            skeleton: 'clickable_text',
+            skeletonOptions: {
+                box: {
+                    offsetX: 3,
+                },
+            },
+            template: '%1',
+            isNotFor: ['arduinoDisconnected'],
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            class: 'arduino_guide',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.hardware_connect_helper,
+                    color: EntryStatic.colorSet.common.BUTTON,
+                    align: 'center',
+                },
+            ],
+            events: {
+                mousedown: [
+                    function () {
+                        window.open('https://docs.playentry.org/user/block_hardware.html');
+                    },
+                ],
+            },
+        },
         arduino_open: {
             skeleton: 'basic_button',
             color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,

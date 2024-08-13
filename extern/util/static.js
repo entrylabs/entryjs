@@ -486,6 +486,7 @@ EntryStatic.getAllBlocks = function () {
         {
             category: 'arduino',
             blocks: [
+                'hardware_connect_helper',
                 'arduino_reconnect',
                 'arduino_open',
                 'arduino_cloud_pc_open',
