@@ -313,6 +313,9 @@ Lang.Blocks = {
     ARDUINO_open_connector: '연결 프로그램 열기',
     ARDUINO_download_source: '• 엔트리 아두이노 소스',
     ARDUINO_reconnect: '하드웨어 연결하기',
+    hardware_connect_helper: '하드웨어 연결 도움말',
+    hardware_noti_installed: '프로그램을 설치해 연결할 때',
+    hardware_program_download: '연결 프로그램 다운로드',
     arduino_noti_text:
         '하드웨어 연결은 PC에서만 지원됩니다.\n브라우저로 연결할 때는\n연결 프로그램이 필요하지 않습니다.',
     hardware_connect_helper: '하드웨어 연결 도움말',

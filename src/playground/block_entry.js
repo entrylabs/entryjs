@@ -623,7 +623,7 @@ function getBlocks() {
                     align: 'center',
                 },
             ],
-            class: 'arduino_default',
+            class: 'arduino_default_installed',
             events: {
                 mousedown: [
                     function () {
@@ -680,6 +680,23 @@ function getBlocks() {
                 ],
             },
         },
+        hardware_noti_installed: {
+            skeleton: 'basic_text',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            template: '%1',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.hardware_noti_installed,
+                    color: EntryStatic.colorSet.common.TEXT,
+                    align: 'center',
+                    fontSize: 14,
+                },
+            ],
+            class: 'arduino_default_installed',
+            isNotFor: ['arduinoDisconnected'],
+            events: {},
+        },
         arduino_open: {
             skeleton: 'basic_button',
             color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
@@ -693,11 +710,33 @@ function getBlocks() {
                     align: 'center',
                 },
             ],
-            class: 'arduino_default',
+            class: 'arduino_default_installed',
             events: {
                 mousedown: [
                     function () {
                         Entry.hw.openHardwareProgram();
+                    },
+                ],
+            },
+        },
+        hardware_program_download: {
+            skeleton: 'basic_button',
+            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
+            isNotFor: ['arduinoDisconnected'],
+            template: '%1',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.hardware_program_download,
+                    color: EntryStatic.colorSet.common.BUTTON,
+                    align: 'center',
+                },
+            ],
+            class: 'arduino_default_installed',
+            events: {
+                mousedown: [
+                    function () {
+                        Entry.hw.downloadConnector();
                     },
                 ],
             },
