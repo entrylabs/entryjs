@@ -426,23 +426,73 @@ function getBlocks() {
                 ],
             },
         },
-        arduino_lite_device_name: {
+        hardware_device_name_title: {
             skeleton: 'basic_text',
             color: EntryStatic.colorSet.common.TRANSPARENT,
             template: '%1',
             params: [
                 {
                     type: 'Text',
-                    text: '',
+                    text: Lang.Blocks.hardware_device_name_title,
+                    color: EntryStatic.colorSet.common.TEXT,
+                    align: 'center',
+                    fontWeight: '100',
+                },
+            ],
+            class: 'hardware_device_info',
+            isNotFor: [
+                'arduinoConnect',
+                'arduinoConnected',
+                'arduinoLiteConnectFailed',
+                'arduinoLiteConnected',
+            ],
+            events: {},
+        },
+        hardware_device_name_content: {
+            skeleton: 'basic_text',
+            skeletonOptions: {
+                box: {
+                    offsetY: 10,
+                },
+            },
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            template: '%1',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.hardware_device_name_content,
                     color: EntryStatic.colorSet.common.TEXT,
                     align: 'center',
                 },
             ],
-            def: {
-                type: 'arduino_lite_device_name',
+            class: 'hardware_device_info',
+            isNotFor: [
+                'arduinoConnect',
+                'arduinoConnected',
+                'arduinoLiteConnectFailed',
+                'arduinoLiteConnected',
+            ],
+            events: {},
+        },
+        hardware_connected_noti: {
+            skeleton: 'basic_text',
+            skeletonOptions: {
+                box: {
+                    offsetY: 10,
+                },
             },
-            class: 'arduino_lite_device_info',
-            isNotFor: ['arduinoLiteConnectFailed', 'arduinoLiteConnected'],
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            template: '%1',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.hardware_connected_noti,
+                    color: EntryStatic.colorSet.common.ALERT,
+                    align: 'center',
+                },
+            ],
+            class: 'hardware_device_alert',
+            isNotFor: ['arduinoConnect'],
             events: {},
         },
         arduino_lite_connected_noti: {
@@ -595,22 +645,22 @@ function getBlocks() {
             events: {},
         },
 
-        arduino_connect: {
-            skeleton: 'basic_text',
-            color: EntryStatic.colorSet.common.TRANSPARENT,
-            template: '%1',
-            isNotFor: ['arduinoConnect'],
-            class: 'arduino_default',
-            params: [
-                {
-                    type: 'Text',
-                    text: Lang.Blocks.ARDUINO_connect,
-                    color: EntryStatic.colorSet.common.TEXT,
-                    align: 'center',
-                },
-            ],
-            events: {},
-        },
+        // arduino_connect: {
+        //     skeleton: 'basic_text',
+        //     color: EntryStatic.colorSet.common.TRANSPARENT,
+        //     template: '%1',
+        //     isNotFor: ['arduinoConnect'],
+        //     class: 'arduino_default',
+        //     params: [
+        //         {
+        //             type: 'Text',
+        //             text: Lang.Blocks.ARDUINO_connect,
+        //             color: EntryStatic.colorSet.common.TEXT,
+        //             align: 'center',
+        //         },
+        //     ],
+        //     events: {},
+        // },
         arduino_reconnect: {
             skeleton: 'basic_button',
             color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
