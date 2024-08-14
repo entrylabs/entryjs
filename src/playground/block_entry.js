@@ -503,14 +503,14 @@ function getBlocks() {
                 {
                     type: 'Text',
                     text: Lang.Blocks.arduino_lite_connected_noti,
-                    color: EntryStatic.colorSet.common.BUTTON,
+                    color: EntryStatic.colorSet.common.GRAY,
                     align: 'center',
                 },
             ],
             def: {
                 type: 'arduino_lite_connected_noti',
             },
-            class: 'arduino_lite_device_info',
+            class: 'hardware_device_info',
             isNotFor: ['arduinoLiteConnectFailed', 'arduinoLiteConnected'],
             events: {},
         },
