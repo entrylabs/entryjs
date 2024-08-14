@@ -682,6 +682,60 @@ function getBlocks() {
                 ],
             },
         },
+        robot_connect_helper: {
+            skeleton: 'clickable_text',
+            skeletonOptions: {
+                box: {
+                    offsetX: 60,
+                    offsetY: -10,
+                },
+            },
+            template: '%1%2',
+            isNotFor: ['arduinoDisconnected'],
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            class: 'arduino_guide',
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'question_in_round.svg',
+                    size: 9,
+                    align: 'left',
+                },
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.ROBOT_connect_helper,
+                    color: EntryStatic.colorSet.common.BUTTON,
+                    align: 'left',
+                    fontSize: 13,
+                },
+            ],
+            events: {
+                mousedown: [
+                    function () {
+                        window.open('https://docs.playentry.org/user/block_hardware.html');
+                    },
+                ],
+            },
+        },
+        robot_noti: {
+            skeleton: 'basic_text',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            template: '%1',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.robot_noti_text,
+                    color: EntryStatic.colorSet.common.GRAY,
+                    align: 'center',
+                },
+            ],
+            def: {
+                type: 'robot_noti',
+            },
+            class: 'arduino_default_noti',
+            isNotFor: ['arduinoDisconnected'],
+            events: {},
+        },
         robot_reconnect: {
             skeleton: 'basic_button',
             color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,

@@ -332,6 +332,7 @@ Lang.Blocks = {
     arduino_lite_guide: '• 아두이노 연결 가이드',
     arduino_lite_connected_noti: '하드웨어를 선택한 상태에서\n작품을 저장해 주세요.',
     ARDUINO_LITE: '하드웨어 라이트',
+    ROBOT_connect_helper: '로봇 연결 도움말',
     ROBOT_reconnect: '로봇 연결하기',
     ARDUINO_program: '프로그램 실행하기',
     ARDUINO_cloud_pc_connector: '클라우드 PC 연결하기',

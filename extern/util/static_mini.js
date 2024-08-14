@@ -555,13 +555,16 @@ EntryStatic.getAllBlocks = function () {
         {
             category: 'hw_robot',
             blocks: [
+                'robot_connect_helper',
                 'robot_reconnect',
                 'arduino_open',
                 'arduino_cloud_pc_open',
                 'arduino_connect',
+                'hardware_program_download',
                 // 'arduino_download_connector',
                 // 'download_guide',
                 'arduino_connected',
+                'robot_noti',
             ],
         },
         {
@@ -1026,6 +1029,7 @@ EntryStatic.colorSet = {
     common: {
         WHITE: '#FFFFFF',
         DARK: '#000000',
+        GRAY: '#6c8696',
         TRANSPARENT: 'transparent',
         BUTTON: '#4f80ff',
         BUTTON_BACKGROUND: '#eee',
