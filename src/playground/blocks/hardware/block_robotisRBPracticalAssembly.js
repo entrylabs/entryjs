@@ -74,6 +74,8 @@ Entry.Robotis_rb_P_Assembly.blockMenuBlocks = [
     'robotis_Practice_securitybot_init',
     'robotis_Practice_securitybot_hi',
     'robotis_Practice_securitybot_alert',
+    'robotis_Practice_petbot_happy',
+    'robotis_Practice_petbot_sad',
 
     // 값 블록
     'robotis_Practice_cm_ir_value',
@@ -174,6 +176,8 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_Practice_securitybot_init: "보안로봇 초기화 %1",
                 robotis_Practice_securitybot_hi: "보안로봇 위아래로 흔들기 %1",
                 robotis_Practice_securitybot_alert: "보안로봇 좌우로 흔들기 %1",
+                robotis_Practice_petbot_happy: "반려로봇 행복에 겨움 %1",
+                robotis_Practice_petbot_sad: "반려로봇 슬픔에 잠김 %1",
 
 
                 // 값 블록
@@ -2101,6 +2105,90 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             syntax: {
                 js: [],
                 py: ['Robotis.securitybot_alert()'],
+            },
+        },
+        robotis_Practice_petbot_happy: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                ],
+                type: 'robotis_Practice_petbot_happy',
+            },
+            paramsKeyMap: {
+            },
+            class: 'robotis_rb100_move',
+            isNotFor: ['Robotis_rb_P_Assembly'],
+            func: function (sprite, script) {
+                // instruction / address / length / value / default length
+                
+                var data_sendqueue = [
+                    [
+                        Entry.Robotis_rb.INSTRUCTION.WRITE, 2121, 1, 1
+                    ]
+                ];
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    7500
+                );
+            },
+            syntax: {
+                js: [],
+                py: ['Robotis.petbot_happy()'],
+            },
+        },
+        robotis_Practice_petbot_sad: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                ],
+                type: 'robotis_Practice_petbot_sad',
+            },
+            paramsKeyMap: {
+            },
+            class: 'robotis_rb100_move',
+            isNotFor: ['Robotis_rb_P_Assembly'],
+            func: function (sprite, script) {
+                // instruction / address / length / value / default length
+                
+                var data_sendqueue = [
+                    [
+                        Entry.Robotis_rb.INSTRUCTION.WRITE, 2122, 1, 1
+                    ]
+                ];
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    3500
+                );
+            },
+            syntax: {
+                js: [],
+                py: ['Robotis.petbot_sad()'],
             },
         },
 
