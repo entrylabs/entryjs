@@ -240,10 +240,10 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_Practice_huskylens_connection_status: "AI 카메라: %1이면",
                 robotis_Practice_huskylens_if_detected: "AI 카메라: %1 이/가 표시되면",
 
-                robotis_Practice_huskylens_block_value_closest_to_center: "AI 카메라: 화면 중앙과 가장 가까운 사각형의 %1",
-                robotis_Practice_huskylens_arrow_value_closest_to_center: "AI 카메라: 화면 중앙과 가장 가까운 화살표의 %1",
+                robotis_Practice_huskylens_block_value_closest_to_center: "AI 카메라: 화면 중앙과 가까운 %1의 %2",
+                robotis_Practice_huskylens_arrow_value_closest_to_center: "AI 카메라: 화면 중앙과 가까운 화살표의 %1",
                 robotis_Practice_huskylens_number_of_learned_id: "AI 카메라: 학습한 ID의 갯수",
-                robotis_Practice_huskylens_block_value_of_id: "AI 카메라: 감지된 ID가 %1인 사각형의 %2",
+                robotis_Practice_huskylens_block_value_of_id: "AI 카메라: 감지된 ID가 %1인 %2의 %3",
                 robotis_Practice_huskylens_arrow_value_of_id: "AI 카메라: 감지된 ID가 %1인 화살표의 %2",
 
                 robotis_Practice_huskylens_if_learned_id: "AI 카메라: ID가 %1인 데이터를 학습하였으면",
@@ -719,8 +719,13 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_huskylens_mode_color_recognition: "색상인식",
                 robotis_huskylens_mode_tag_recognition: "태그인식",
                 robotis_huskylens_mode_object_classification: "물체분류",
-                robotis_huskylens_block: "사각형",
-                robotis_huskylens_arrow: "화살표",
+                robotis_huskylens_target_face: "얼굴",
+                robotis_huskylens_target_object: "사물",
+                robotis_huskylens_target_color: "색상",
+                robotis_huskylens_target_tag: "태그",
+                robotis_huskylens_target_qr: "QR코드",
+                robotis_huskylens_target_block: "사각형",
+                robotis_huskylens_target_arrow: "화살표",
                 robotis_huskylens_center_block_center_x: "중심 X좌표",
                 robotis_huskylens_center_block_center_y: "중심 Y좌표",
                 robotis_huskylens_center_block_width: "너비",
@@ -806,10 +811,10 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_Practice_huskylens_connection_status: "AI Camera: If %1",
                 robotis_Practice_huskylens_if_detected: "AI Camera: If %1 is displayed",
         
-                robotis_Practice_huskylens_block_value_closest_to_center: "AI Camera: %1 of the rectangle closest to the center of the screen",
+                robotis_Practice_huskylens_block_value_closest_to_center: "AI Camera: %2 of the %1 closest to the center of the screen",
                 robotis_Practice_huskylens_arrow_value_closest_to_center: "AI Camera: %1 of the arrow closest to the center of the screen",
                 robotis_Practice_huskylens_number_of_learned_id: "AI Camera: the number of learned ID",
-                robotis_Practice_huskylens_block_value_of_id: "AI Camera: %2 of rectangle with detected ID %1",
+                robotis_Practice_huskylens_block_value_of_id: "AI Camera: %3 of %2 with detected ID %1",
                 robotis_Practice_huskylens_arrow_value_of_id: "AI Camera: %2 of arrow with detected ID %1",
         
                 robotis_Practice_huskylens_if_learned_id: "AI Camera: If learned data with ID %1",
@@ -1090,8 +1095,8 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_huskylens_mode_color_recognition: "Color recognition",
                 robotis_huskylens_mode_tag_recognition: "Tag recognition",
                 robotis_huskylens_mode_object_classification: "Object classification",
-                robotis_huskylens_block: "Rectangle",
-                robotis_huskylens_arrow: "Arrow",
+                robotis_huskylens_target_block: "Rectangle",
+                robotis_huskylens_target_arrow: "Arrow",
                 robotis_huskylens_center_block_center_x: "Center X",
                 robotis_huskylens_center_block_center_y: "Center Y",
                 robotis_huskylens_center_block_width: "Width",
@@ -6490,6 +6495,20 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
+                        [Lang.Blocks.robotis_huskylens_target_face, '0'],
+                        [Lang.Blocks.robotis_huskylens_target_object, '1'],
+                        [Lang.Blocks.robotis_huskylens_target_color, '2'],
+                        [Lang.Blocks.robotis_huskylens_target_tag, '3'],
+                        [Lang.Blocks.robotis_huskylens_target_qr, '4'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
                         [Lang.Blocks.robotis_huskylens_center_block_center_x, '0'],
                         [Lang.Blocks.robotis_huskylens_center_block_center_y, '1'],
                         [Lang.Blocks.robotis_huskylens_center_block_width, '2'],
@@ -6506,11 +6525,13 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             def: {
                 params: [
                     null,
+                    null,
                 ],
                 type: 'robotis_Practice_huskylens_block_value_closest_to_center',
             },
             paramsKeyMap: {
-                DATA_TYPE: 0,
+                TARGET: 0,
+                DATA_TYPE: 1,
             },
             class: 'robotis_rb100_custom_huskylens',
             isNotFor: ['Robotis_rb_P_Assembly'],
@@ -6643,6 +6664,20 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     {
                         type: 'Dropdown',
                         options: [
+                            [Lang.Blocks.robotis_huskylens_target_face, '0'],
+                            [Lang.Blocks.robotis_huskylens_target_object, '1'],
+                            [Lang.Blocks.robotis_huskylens_target_color, '2'],
+                            [Lang.Blocks.robotis_huskylens_target_tag, '3'],
+                            [Lang.Blocks.robotis_huskylens_target_qr, '4'],
+                        ],
+                        value: '0',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: [
                             [Lang.Blocks.robotis_huskylens_center_block_center_x, '0'],
                             [Lang.Blocks.robotis_huskylens_center_block_center_y, '1'],
                             [Lang.Blocks.robotis_huskylens_center_block_width, '2'],
@@ -6659,12 +6694,14 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 params: [
                     null,
                     null,
+                    null,
                 ],
                 type: 'robotis_Practice_huskylens_block_value_of_id',
             },
             paramsKeyMap: {
                 ID: 0,
-                TYPE: 1,
+                TARGET: 1,
+                TYPE: 2,
             },
             class: 'robotis_rb100_custom_huskylens',
             isNotFor: ['Robotis_rb_P_Assembly'],
@@ -6860,8 +6897,12 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.robotis_huskylens_block, '0'],
-                        [Lang.Blocks.robotis_huskylens_arrow, '1'],
+                        [Lang.Blocks.robotis_huskylens_target_face, '0'],
+                        [Lang.Blocks.robotis_huskylens_target_object, '1'],
+                        [Lang.Blocks.robotis_huskylens_target_color, '2'],
+                        [Lang.Blocks.robotis_huskylens_target_tag, '3'],
+                        [Lang.Blocks.robotis_huskylens_target_qr, '4'],
+                        [Lang.Blocks.robotis_huskylens_target_arrow, '5'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -6886,7 +6927,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 var data_address = 4005; // block
                 var detect_type = script.getNumberValue('DETECT_TYPE');
 
-                if (detect_type == 1) data_address = 4006; // arrow
+                if (detect_type == 5) data_address = 4006; // arrow
 
                 var result = Entry.hw.portData[data_address];
 
