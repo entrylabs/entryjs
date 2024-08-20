@@ -176,8 +176,8 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_Practice_securitybot_init: "보안로봇 초기화 %1",
                 robotis_Practice_securitybot_hi: "보안로봇 위아래로 흔들기 %1",
                 robotis_Practice_securitybot_alert: "보안로봇 좌우로 흔들기 %1",
-                robotis_Practice_petbot_happy: "반려로봇 행복에 겨움 %1",
-                robotis_Practice_petbot_sad: "반려로봇 슬픔에 잠김 %1",
+                robotis_Practice_petbot_happy: "반려로봇 웃음 %1",
+                robotis_Practice_petbot_sad: "반려로봇 화남 %1",
 
 
                 // 값 블록
@@ -2002,7 +2002,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             paramsKeyMap: {
             },
-            class: 'robotis_rb100_move',
+            class: 'robotis_rb100_practice_special',
             isNotFor: ['Robotis_rb_P_Assembly'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
@@ -2044,7 +2044,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             paramsKeyMap: {
             },
-            class: 'robotis_rb100_move',
+            class: 'robotis_rb100_practice_special',
             isNotFor: ['Robotis_rb_P_Assembly'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
@@ -2057,7 +2057,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
                     data_sendqueue,
-                    3200
+                    4000
                 );
             },
             syntax: {
@@ -2086,7 +2086,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             paramsKeyMap: {
             },
-            class: 'robotis_rb100_move',
+            class: 'robotis_rb100_practice_special',
             isNotFor: ['Robotis_rb_P_Assembly'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
@@ -2099,7 +2099,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
                     data_sendqueue,
-                    4100
+                    5000
                 );
             },
             syntax: {
@@ -2128,7 +2128,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             paramsKeyMap: {
             },
-            class: 'robotis_rb100_move',
+            class: 'robotis_rb100_practice_special',
             isNotFor: ['Robotis_rb_P_Assembly'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
@@ -2170,7 +2170,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             paramsKeyMap: {
             },
-            class: 'robotis_rb100_move',
+            class: 'robotis_rb100_practice_special',
             isNotFor: ['Robotis_rb_P_Assembly'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
