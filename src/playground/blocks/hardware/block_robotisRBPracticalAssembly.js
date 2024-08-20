@@ -71,6 +71,9 @@ Entry.Robotis_rb_P_Assembly.blockMenuBlocks = [
     'robotis_Practice_stop_at_cross',
     'robotis_Practice_turn_at_line',
     'robotis_Practice_drive_stop',
+    'robotis_Practice_securitybot_init',
+    'robotis_Practice_securitybot_hi',
+    'robotis_Practice_securitybot_alert',
 
     // 값 블록
     'robotis_Practice_cm_ir_value',
@@ -168,6 +171,9 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_Practice_stop_at_cross: "교차로 %1 에서 멈추기 %2",
                 robotis_Practice_turn_at_line: "교차로에서 %1 하고 멈추기 %2",
                 robotis_Practice_drive_stop: "정지하기 %1",
+                robotis_Practice_securitybot_init: "보안로봇 초기화 %1",
+                robotis_Practice_securitybot_hi: "보안로봇 위아래로 흔들기 %1",
+                robotis_Practice_securitybot_alert: "보안로봇 좌우로 흔들기 %1",
 
 
                 // 값 블록
@@ -1964,6 +1970,132 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             syntax: {
                 js: [],
                 py: ['Robotis.rb100_follow_line(%1)'],
+            },
+        },
+        robotis_Practice_securitybot_init: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                ],
+                type: 'robotis_Practice_securitybot_init',
+            },
+            paramsKeyMap: {
+            },
+            class: 'robotis_rb100_move',
+            isNotFor: ['Robotis_rb_P_Assembly'],
+            func: function (sprite, script) {
+                // instruction / address / length / value / default length
+                
+                var data_sendqueue = [
+                    [
+                        Entry.Robotis_rb.INSTRUCTION.WRITE, 2110, 1, 1
+                    ]
+                ];
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    1100
+                );
+            },
+            syntax: {
+                js: [],
+                py: ['Robotis.securitybot_init()'],
+            },
+        },
+        robotis_Practice_securitybot_hi: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                ],
+                type: 'robotis_Practice_securitybot_hi',
+            },
+            paramsKeyMap: {
+            },
+            class: 'robotis_rb100_move',
+            isNotFor: ['Robotis_rb_P_Assembly'],
+            func: function (sprite, script) {
+                // instruction / address / length / value / default length
+                
+                var data_sendqueue = [
+                    [
+                        Entry.Robotis_rb.INSTRUCTION.WRITE, 2111, 1, 1
+                    ]
+                ];
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    3200
+                );
+            },
+            syntax: {
+                js: [],
+                py: ['Robotis.securitybot_hi()'],
+            },
+        },
+        robotis_Practice_securitybot_alert: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                ],
+                type: 'robotis_Practice_securitybot_alert',
+            },
+            paramsKeyMap: {
+            },
+            class: 'robotis_rb100_move',
+            isNotFor: ['Robotis_rb_P_Assembly'],
+            func: function (sprite, script) {
+                // instruction / address / length / value / default length
+                
+                var data_sendqueue = [
+                    [
+                        Entry.Robotis_rb.INSTRUCTION.WRITE, 2112, 1, 1
+                    ]
+                ];
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    4100
+                );
+            },
+            syntax: {
+                js: [],
+                py: ['Robotis.securitybot_alert()'],
             },
         },
 
