@@ -2099,7 +2099,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
                     data_sendqueue,
-                    2000
+                    3000
                 );
             },
             syntax: {
