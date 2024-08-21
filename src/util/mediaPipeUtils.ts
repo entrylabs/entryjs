@@ -312,6 +312,7 @@ class MediaPipeUtils {
                     },
                     width: this.VIDEO_WIDTH,
                     height: this.VIDEO_HEIGHT,
+                    aspectRatio: 16/9,
                 },
             });
             this.stream = stream;
@@ -373,6 +374,12 @@ class MediaPipeUtils {
             }
         });
         this.setForceFlipState(this.flipState, 0);
+
+        try {
+            window.screen.orientation.unlock();
+        } catch (e) {
+            console.log('cannot unlock');
+        }
     }
 
     async turnOnWebcam() {
@@ -384,6 +391,7 @@ class MediaPipeUtils {
                     deviceId: { exact: this.videoInputList[target][1] },
                     width: this.VIDEO_WIDTH,
                     height: this.VIDEO_HEIGHT,
+                    aspectRatio: 16/9,
                 },
             });
         } catch (err) {
@@ -407,6 +415,11 @@ class MediaPipeUtils {
             width: this.VIDEO_WIDTH,
             height: this.VIDEO_HEIGHT,
         });
+        try {
+            window.screen.orientation.lock('landscape');
+        } catch (e) {
+            console.log('cannot lock');
+        }
     }
 
     async checkPermission() {
