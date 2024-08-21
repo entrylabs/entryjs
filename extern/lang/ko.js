@@ -5532,8 +5532,9 @@ Lang.Workspace = {
         '인공지능 블록이 작품에 조립되어 있어 불러오기를 해제할 수 없습니다.',
     confirm_firmware_hwlite_block_msg:
         '%1 을(를)\n 엔트리에서 사용하려면\n 먼저 펌웨어를 설치해야 합니다.',
-    confirm_firmware_hwlite_block_title: '펌웨어 설치 확인',
-    confirm_firmware_hwlite_block_download: '펌웨어 설치',
+    confirm_firmware_hwlite_block_title: '펌웨어 설치 필요',
+    confirm_firmware_hwlite_block_download: '펌웨어 다운로드',
+    confirm_firmware_hwlite_block_usb_connect: 'USB 연결',
     confirm_firmware_hwlite_block_pass: '이미 설치함',
     select_hwlite_block_duplicated: '1개의 하드웨어만 선택해 주세요.',
     select_hwlite_block_none: '연결할 하드웨어를 선택해 주세요.',
@@ -7317,7 +7318,7 @@ Lang.template = {
     expansion_block_descriptions: '확장 블록은 인터넷이 연결되어 있어야 정상적으로 동작합니다.',
     aiUtilize_block_descriptions: '불러올 인공지능 블록을 선택해 주세요.',
     hardware_lite_descriptions:
-        '하드웨어 연결/작동 시 예기치 못한 문제가 발생할 수 있습니다.\r\n 하드웨어 웹 연결 중 문제 발생 시 엔트리 고객센터 또는 해당 하드웨어 업체의 고객센터에 연락해 주세요.',
+        '하드웨어 연결/작동 시 예기치 못한 문제가 발생할 수 있습니다.\n 하드웨어 웹 연결 중 문제 발생 시 엔트리 고객센터 또는 해당 하드웨어 업체의 고객센터에 연락해 주세요.',
     weather_title_text: '날씨',
     translate_title_text: '번역',
     festival_title_text: '행사',
