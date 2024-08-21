@@ -378,7 +378,7 @@ class MediaPipeUtils {
         try {
             window.screen.orientation.unlock();
         } catch (e) {
-            console.log('cannot unlock');
+            console.log('cannot unlock',e );
         }
     }
 
@@ -416,9 +416,12 @@ class MediaPipeUtils {
             height: this.VIDEO_HEIGHT,
         });
         try {
-            window.screen.orientation.lock('landscape');
+            const oppositeOrientation = screen.orientation.type.startsWith("portrait")
+            ? "landscape"
+            : "portrait";
+            screen.orientation.lock(oppositeOrientation);
         } catch (e) {
-            console.log('cannot lock');
+            console.log('cannot lock', e);
         }
     }
 
