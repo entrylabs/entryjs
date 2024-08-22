@@ -52,7 +52,8 @@ Entry.Robotis_carCont = {
             return script.callReturn();
         }
         // clear portData only if not RB-100 practical kit
-        if (Entry.hw.hwModule.id != "7.A,7.B") {
+        if (Entry.hw.hwModule.id != "7.A,7.B" &&
+            Entry.hw.hwModule.id != "7.C" ) {
             Entry.hw.portData = {};
         }
         setTimeout(function() {
