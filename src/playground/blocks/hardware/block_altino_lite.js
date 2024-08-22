@@ -566,7 +566,7 @@ Entry.AltinoLite.getBlocks = function() {
             skeleton: 'basic',
             statements: [],
             params: [
-                {
+                {                    
                     type: 'Dropdown',
                     options: [
                         ['1-' + Lang.Blocks.altino_lite_sound_oct, '1'],
