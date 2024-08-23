@@ -374,12 +374,6 @@ class MediaPipeUtils {
             }
         });
         this.setForceFlipState(this.flipState, 0);
-
-        try {
-            window.screen.orientation.unlock();
-        } catch (e) {
-            console.log('cannot unlock',e );
-        }
     }
 
     async turnOnWebcam() {
@@ -393,6 +387,20 @@ class MediaPipeUtils {
                     height: this.VIDEO_HEIGHT,
                     aspectRatio: 16/9,
                 },
+            });
+            screen.orientation.addEventListener("change", async (event) => {
+                const type = event.target.type;
+                const angle = event.target.angle;
+                console.log(`ScreenOrientation change: ${type}, ${angle} degrees.`);
+                const aspectRatio = type.includes('landscape') ? 16/9 : 9/16;
+                this.stream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        width: this.VIDEO_WIDTH,
+                        height: this.VIDEO_HEIGHT,
+                        aspectRatio,
+                    },
+                });
+                this.video.srcObject = this.stream;
             });
         } catch (err) {
             throw new Entry.Utils.IncompatibleError('IncompatibleError', [
@@ -415,14 +423,6 @@ class MediaPipeUtils {
             width: this.VIDEO_WIDTH,
             height: this.VIDEO_HEIGHT,
         });
-        try {
-            const oppositeOrientation = screen.orientation.type.startsWith("portrait")
-            ? "landscape"
-            : "portrait";
-            screen.orientation.lock(oppositeOrientation);
-        } catch (e) {
-            console.log('cannot lock', e);
-        }
     }
 
     async checkPermission() {
