@@ -304,7 +304,8 @@ class MediaPipeUtils {
         }
         this.sourceTarget = target;
         try {
-            const aspectRatio = window.screen.orientation.type.includes('landscape') ? 16/9 : 9/16;
+            const isMobile = typeof window.orientation !== 'undefined';
+            const aspectRatio = isMobile && window.screen.orientation.type.includes('portrait') ? 9/16: 16/9;
             const stream = await navigator.mediaDevices.getUserMedia({
                 audio: false,
                 video: {
@@ -382,7 +383,8 @@ class MediaPipeUtils {
         try {
             const target = this.sourceTarget || 0;
             
-            const aspectRatio = window.screen.orientation.type.includes('landscape') ? 16/9 : 9/16;
+            const isMobile = typeof window.orientation !== 'undefined';
+            const aspectRatio = isMobile && window.screen.orientation.type.includes('portrait') ? 9/16: 16/9;
             stream = await navigator.mediaDevices.getUserMedia({
                 video: {
                     deviceId: { exact: this.videoInputList[target][1] },
@@ -391,22 +393,7 @@ class MediaPipeUtils {
                     aspectRatio,
                 },
             });
-            screen.orientation.addEventListener("change", async (event) => {
-                const type = event.target.type;
-                const angle = event.target.angle;
-                
-                const aspectRatio = type.includes('landscape') ? 16/9 : 9/16;
-                console.log(`ScreenOrientation change: ${type}, ${angle} degrees.`, aspectRatio);
-                this.stream = await navigator.mediaDevices.getUserMedia({
-                    video: {
-                        width: this.VIDEO_WIDTH,
-                        height: this.VIDEO_HEIGHT,
-                        aspectRatio,
-                    },
-                });
-                console.log('video', this.video);
-                this.video.srcObject = this.stream;
-            });
+            console.log('aspectRatio', aspectRatio, stream);
         } catch (err) {
             throw new Entry.Utils.IncompatibleError('IncompatibleError', [
                 Lang.Workspace.check_webcam_error,
