@@ -304,6 +304,7 @@ class MediaPipeUtils {
         }
         this.sourceTarget = target;
         try {
+            const aspectRatio = window.screen.orientation.type.includes('landscape') ? 16/9 : 9/16;
             const stream = await navigator.mediaDevices.getUserMedia({
                 audio: false,
                 video: {
@@ -312,7 +313,7 @@ class MediaPipeUtils {
                     },
                     width: this.VIDEO_WIDTH,
                     height: this.VIDEO_HEIGHT,
-                    aspectRatio: 16/9,
+                    aspectRatio,
                 },
             });
             this.stream = stream;
@@ -380,19 +381,22 @@ class MediaPipeUtils {
         let stream;
         try {
             const target = this.sourceTarget || 0;
+            
+            const aspectRatio = window.screen.orientation.type.includes('landscape') ? 16/9 : 9/16;
             stream = await navigator.mediaDevices.getUserMedia({
                 video: {
                     deviceId: { exact: this.videoInputList[target][1] },
                     width: this.VIDEO_WIDTH,
                     height: this.VIDEO_HEIGHT,
-                    aspectRatio: 16/9,
+                    aspectRatio,
                 },
             });
             screen.orientation.addEventListener("change", async (event) => {
                 const type = event.target.type;
                 const angle = event.target.angle;
-                console.log(`ScreenOrientation change: ${type}, ${angle} degrees.`);
+                
                 const aspectRatio = type.includes('landscape') ? 16/9 : 9/16;
+                console.log(`ScreenOrientation change: ${type}, ${angle} degrees.`, aspectRatio);
                 this.stream = await navigator.mediaDevices.getUserMedia({
                     video: {
                         width: this.VIDEO_WIDTH,
@@ -400,6 +404,7 @@ class MediaPipeUtils {
                         aspectRatio,
                     },
                 });
+                console.log('video', this.video);
                 this.video.srcObject = this.stream;
             });
         } catch (err) {
