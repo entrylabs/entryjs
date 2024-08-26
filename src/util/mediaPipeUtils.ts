@@ -387,10 +387,6 @@ class MediaPipeUtils {
                 stream.getTracks().forEach((track) => {
                     track.stop();
                 });
-                window.requestAnimationFrame(() => {
-                    this.video.srcObject = null;
-                    this.stream = undefined;
-                });
             }
 
             const target = this.sourceTarget || 0;
