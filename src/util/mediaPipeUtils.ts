@@ -305,16 +305,17 @@ class MediaPipeUtils {
         this.sourceTarget = target;
         try {
             const isMobile = typeof window.orientation !== 'undefined';
-            const aspectRatio = isMobile && window.screen.orientation.type.includes('portrait') ? 9/16: 16/9;
+            const isPortrait = isMobile && window.screen.orientation.type.includes('portrait');
+            const width = isPortrait ? this.VIDEO_HEIGHT: this.VIDEO_WIDTH;
+            const height = isPortrait ? this.VIDEO_WIDTH: this.VIDEO_HEIGHT;
             const stream = await navigator.mediaDevices.getUserMedia({
                 audio: false,
                 video: {
                     deviceId: {
                         exact: inputSource[1],
                     },
-                    width: this.VIDEO_WIDTH,
-                    height: this.VIDEO_HEIGHT,
-                    aspectRatio,
+                    width,
+                    height,
                 },
             });
             this.stream = stream;
@@ -384,16 +385,16 @@ class MediaPipeUtils {
             const target = this.sourceTarget || 0;
             
             const isMobile = typeof window.orientation !== 'undefined';
-            const aspectRatio = isMobile && window.screen.orientation.type.includes('portrait') ? 9/16: 16/9;
+            const isPortrait = isMobile && window.screen.orientation.type.includes('portrait');
+            const width = isPortrait ? this.VIDEO_HEIGHT: this.VIDEO_WIDTH;
+            const height = isPortrait ? this.VIDEO_WIDTH: this.VIDEO_HEIGHT;
             stream = await navigator.mediaDevices.getUserMedia({
                 video: {
                     deviceId: { exact: this.videoInputList[target][1] },
-                    width: this.VIDEO_WIDTH,
-                    height: this.VIDEO_HEIGHT,
-                    aspectRatio,
+                    width,
+                    height,
                 },
             });
-            console.log('aspectRatio', aspectRatio, stream);
         } catch (err) {
             throw new Entry.Utils.IncompatibleError('IncompatibleError', [
                 Lang.Workspace.check_webcam_error,
