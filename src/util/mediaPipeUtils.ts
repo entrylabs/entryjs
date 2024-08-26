@@ -382,6 +382,17 @@ class MediaPipeUtils {
     registerRotateEvent = () => {
         const isMobile = typeof window.orientation !== 'undefined';
         const reloadVideo = async () => {
+            if (this.video.srcObject) {
+                const stream: MediaStream = this.video.srcObject as MediaStream;
+                stream.getTracks().forEach((track) => {
+                    track.stop();
+                });
+                window.requestAnimationFrame(() => {
+                    this.video.srcObject = null;
+                    this.stream = undefined;
+                });
+            }
+
             const target = this.sourceTarget || 0;
             const stream = await this.getVideoStream(this.videoInputList[target][1]);
             this.video.srcObject = stream;
