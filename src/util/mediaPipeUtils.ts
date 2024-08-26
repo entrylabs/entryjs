@@ -368,8 +368,8 @@ class MediaPipeUtils {
     async getVideoStream(source: string) {
         const isMobile = typeof window.orientation !== 'undefined';
         const isPortrait = isMobile && window.screen.orientation.type.includes('portrait');
-        const width = isPortrait ? this.VIDEO_HEIGHT: this.VIDEO_WIDTH;
-        const height = isPortrait ? this.VIDEO_WIDTH: this.VIDEO_HEIGHT;
+        const width = isPortrait ? this.VIDEO_HEIGHT : this.VIDEO_WIDTH;
+        const height = isPortrait ? this.VIDEO_WIDTH : this.VIDEO_HEIGHT;
         return await navigator.mediaDevices.getUserMedia({
             video: {
                 deviceId: { exact: source },
