@@ -19,6 +19,7 @@ Entry.NeoCannon = {
         d9: 0,
         d10: 0,
         angleState: 0,
+        neopixel: 0,
     },
     setZero() {
         let portMap = Entry.NeoCannon.PORT_MAP;
@@ -91,6 +92,11 @@ Entry.NeoCannon.setLanguage = function() {
                 neo_cannon_rgb_led_color_picker: 'RGB LED %1 %2',
                 neo_cannon_rgb_led_pwm: 'RGB LED 빨강 %1 초록 %2 파랑 %3 %4',
                 neo_cannon_rgb_led_off: 'RGB LED 끄기 %1',
+                neo_cannon_neopixel_color_picker: 'Neopixel %1번  %2 (으)로 켜기 %3',
+                neo_cannon_neopixel: 'Neopixel %1번  빨 %2 녹 %3 파 %4 (으)로 켜기 %5',
+                neo_cannon_neopixel_color_picker_all_on: 'Neopixel 전체 %1 (으)로 켜기 %2',
+                neo_cannon_neopixel_all_on: 'Neopixel 전체  빨 %1 녹 %2 파 %3 (으)로 켜기 %4',
+                neo_cannon_neopixel_all_off: 'Neopixel 전체 끄기 %1',
             },
 
             Helper: {
@@ -116,7 +122,17 @@ Entry.NeoCannon.setLanguage = function() {
                     'RGB LED를 색을 선택하여 원하는 색상을 나타낼 수 있습니다.<br/><font color="crimson">(주의, LED모드로 진행해주세요.)</font>',
                 neo_cannon_rgb_led_pwm:
                     'RGB LED에 세기값(0~255)을 주어 원하는 색상을 나타낼 수 있습니다.<br/><font color="crimson">(주의, LED모드로 진행해주세요.)</font>',
-                neo_cannon_rgb_led_off: 'RGB LED를 끌 수 있습니다.',
+                neo_cannon_rgb_led_off:
+                    'RGB LED를 끌 수 있습니다.',
+                neo_cannon_neopixel_color_picker:
+                    '색을 보고 RGB색상을 정하여 정해진 네오픽셀를 켤 수 있습니다.<br/><font color="crimson">(참고, 네오픽셀번호는 0번부터 17번까지 입니다.)</font>',
+                neo_cannon_neopixel:
+                    '정해준 네오픽셀 번호에 빨강, 파랑, 초록의 색을 넣고 조합하여 네오픽셀를 켤 수 있습니다.<br/><font color="crimson">(참고, 네오픽셀번호는 0번부터 17번까지 입니다.)</font>',
+                neo_cannon_neopixel_color_picker_all_on:
+                    '색을 보고 RGB색상을 정하여 모든 네오픽셀를 켤 수 있습니다.',
+                neo_cannon_neopixel_all_on:
+                    '빨강, 파랑, 초록의 색을 넣고 조합하여 모든 네오픽셀를 켤 수 있습니다.',
+                neo_cannon_neopixel_all_off: '모든 네오픽셀를 끌 수 있습니다.',
             },
         },
         en: {
@@ -135,6 +151,11 @@ Entry.NeoCannon.setLanguage = function() {
                 neo_cannon_rgb_led_color_picker: 'RGB LED %1 %2',
                 neo_cannon_rgb_led_pwm: 'RGB LED R %1 G %2 B %3 %4',
                 neo_cannon_rgb_led_off: 'RGB LED OFF',
+                neo_cannon_neopixel_color_picker: 'Neopixel number %1 turn on %2 %3',
+                neo_cannon_neopixel: 'Neopixel number %1 turn on R %2 G %3 B %4 %5',
+                neo_cannon_neopixel_color_picker_all_on: 'All Neopixel turn on %1 %2',
+                neo_cannon_neopixel_all_on: 'All Neopixel turn on R %1 G %2 B %3 %4',
+                neo_cannon_neopixel_all_off: 'All Neopixel turn off %1',
             },
         },
     };
@@ -155,6 +176,11 @@ Entry.NeoCannon.blockMenuBlocks = [
     'neo_cannon_rgb_led_color_picker',
     'neo_cannon_rgb_led_pwm',
     'neo_cannon_rgb_led_off',
+    'neo_cannon_neopixel_color_picker',
+    'neo_cannon_neopixel',
+    'neo_cannon_neopixel_color_picker_all_on',
+    'neo_cannon_neopixel_all_on',
+    'neo_cannon_neopixel_all_off',
 ];
 
 Entry.NeoCannon.getBlocks = function() {
@@ -1474,6 +1500,424 @@ Entry.NeoCannon.getBlocks = function() {
                 py: [
                     {
                         syntax: 'NeoCannon.rgbLedOff()',
+                        textParams: [],
+                    },
+                ],
+            },
+        },
+        neo_cannon_neopixel: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'number',
+                        params: ['100'],
+                    },
+                    {
+                        type: 'number',
+                        params: ['100'],
+                    },
+                    {
+                        type: 'number',
+                        params: ['100'],
+                    },
+                    null,
+                ],
+                type: 'neo_cannon_neopixel',
+            },
+            paramsKeyMap: {
+                NUM: 0,
+                RED: 1,
+                GREEN: 2,
+                BLUE: 3,
+            },
+            class: 'NeoCannonNeopixel',
+            isNotFor: ['NeoCannon'],
+            func: function (sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                let num = script.getNumberValue('NUM', script);
+                num = num % 18
+
+                let red = script.getNumberValue('RED', script);
+                let green = script.getNumberValue('GREEN', script);
+                let blue = script.getNumberValue('BLUE', script);
+
+                if (!sq.neopixel) {
+                    sq.neopixel = {};
+                }
+
+                if (num) {
+                    sq.neopixel = {
+                        type: Entry.NeoCannon.PORT_MAP.neopixel,
+                        data: {
+                            num,
+                            red,
+                            green,
+                            blue
+                        },
+                        time: new Date().getTime(),
+                    };
+    
+                    Entry.hw.update();
+                }
+
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'NeoCannon.neopixel(%1, %2, %3, %4)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        neo_cannon_neopixel_color_picker: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Color',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'neo_cannon_neopixel_color_picker',
+            },
+            paramsKeyMap: {
+                NUM: 0,
+                COLOR: 1,
+            },
+            class: 'NeoCannonNeopixel',
+            isNotFor: ['NeoCannon'],
+            func: function (sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                let num = script.getNumberValue('NUM', script);
+                num = num % 18
+
+                let value = script.getStringField('COLOR');
+
+                if (!sq.neopixel) {
+                    sq.neopixel = {};
+                }
+
+                if (num) {
+                    let red = parseInt(value.substr(1, 2), 16);
+                    let green = parseInt(value.substr(3, 2), 16);
+                    let blue = parseInt(value.substr(5, 2), 16);
+
+                    sq.neopixel = {
+                        type: Entry.NeoCannon.PORT_MAP.neopixel,
+                        data: {
+                            num,
+                            red,
+                            green,
+                            blue
+                        },
+                        time: new Date().getTime(),
+                    };
+    
+                    Entry.hw.update();
+                }
+
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'NeoCannon.neopixelColorPicker(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Color',
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        neo_cannon_neopixel_color_picker_all_on: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Color',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                    null,
+                ],
+                type: 'neo_cannon_neopixel_color_picker_all_on',
+            },
+            paramsKeyMap: {
+                COLOR: 0,
+            },
+            class: 'NeoCannonNeopixel',
+            isNotFor: ['NeoCannon'],
+            func: function (sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                let value = script.getStringField('COLOR');
+
+                if (!sq.neopixel) {
+                    sq.neopixel = {};
+                }
+
+                let red = parseInt(value.substr(1, 2), 16);
+                let green = parseInt(value.substr(3, 2), 16);
+                let blue = parseInt(value.substr(5, 2), 16);
+
+                sq.neopixel = {
+                    type: Entry.NeoCannon.PORT_MAP.neopixel,
+                    data: {
+                        red,
+                        green,
+                        blue
+                    },
+                    time: new Date().getTime(),
+                };
+
+                Entry.hw.update();
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'NeoCannon.neopixelColorPickerAllOn(%1)',
+                        textParams: [
+                            {
+                                type: 'Color',
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        neo_cannon_neopixel_all_on: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'number',
+                        params: ['100'],
+                    },
+                    {
+                        type: 'number',
+                        params: ['100'],
+                    },
+                    {
+                        type: 'number',
+                        params: ['100'],
+                    },
+                    null,
+                ],
+                type: 'neo_cannon_neopixel_all_on',
+            },
+            paramsKeyMap: {
+                RED: 0,
+                GREEN: 1,
+                BLUE: 2,
+            },
+            class: 'NeoCannonNeopixel',
+            isNotFor: ['NeoCannon'],
+            func: function (sprite, script) {
+                const sq = Entry.hw.sendQueue;
+
+                let red = script.getNumberValue('RED', script);
+                let green = script.getNumberValue('GREEN', script);
+                let blue = script.getNumberValue('BLUE', script);
+
+                if (!sq.neopixel) {
+                    sq.neopixel = {};
+                }
+
+                sq.neopixel = {
+                    type: Entry.NeoCannon.PORT_MAP.neopixel,
+                    data: {
+                        red,
+                        green,
+                        blue
+                    },
+                    time: new Date().getTime(),
+                };
+
+                Entry.hw.update();
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'NeoCannon.neopixelAllON(%1, %2, %3)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        neo_cannon_neopixel_all_off: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null,],
+                type: 'neo_cannon_neopixel_all_off',
+            },
+            paramsKeyMap: {},
+            class: 'NeoCannonNeopixel',
+            isNotFor: ['NeoCannon'],
+            func: function (sprite, script) {
+                const sq = Entry.hw.sendQueue;
+
+                if (!sq.neopixel) {
+                    sq.neopixel = {};
+                }
+
+                sq.neopixel = 0;
+
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'NeoCannon.neopixelAllOFF()',
                         textParams: [],
                     },
                 ],
