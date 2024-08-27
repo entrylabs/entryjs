@@ -43,40 +43,8 @@ Entry.Robotis_rb_P_Assembly = {
     setZero: function () {
         // instruction / address / length / value / default length
         Entry.Robotis_carCont.setRobotisData([
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 21, 2, 20],
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 40, 2, 0],
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 66, 2, 0],
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 5200, 1, 0],
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 710, 2, 0],
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 19, 1, 1], // bypass 모드 켜기
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 4250, 1, 1], // huskylens 텍스트 지우기
-            [Entry.Robotis_rb.INSTRUCTION.BYPASS_WRITE, 64, 1, 0xFE, 0], // torque off
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 23, 1, 1], // auto report 모드 켜기
+            [Entry.Robotis_rb.INSTRUCTION.WRITE, 2100, 1, 1], // PracticeBot Finish
         ]);
-        Entry.Robotis_carCont.update();
-        Entry.hw.sendQueue['setZero'] = [1];
-        Entry.Robotis_carCont.setRobotisData(null);
-        Entry.Robotis_carCont.update();
-        const start = new Date().getTime();
-        while (true) {
-            if (new Date().getTime() - start > 1000) {
-                break;
-            }
-        }
-        Entry.hw.sendQueue['setZero'] = null;
-        Entry.Robotis_carCont.update();
-        Entry.Robotis_carCont.setRobotisData([
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 21, 2, 20],
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 40, 2, 0],
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 66, 2, 0],
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 5200, 1, 0],
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 710, 2, 0],
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 19, 1, 1], // bypass 모드 켜기
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 4250, 1, 1], // huskylens 텍스트 지우기
-            [Entry.Robotis_rb.INSTRUCTION.BYPASS_WRITE, 64, 1, 0xFE, 0], // torque off
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 23, 1, 1], // auto report 모드 켜기
-        ]);
-
         Entry.Robotis_carCont.update();
     },
     id: ['7.A', '7.B'],
@@ -103,6 +71,11 @@ Entry.Robotis_rb_P_Assembly.blockMenuBlocks = [
     'robotis_Practice_stop_at_cross',
     'robotis_Practice_turn_at_line',
     'robotis_Practice_drive_stop',
+    'robotis_Practice_securitybot_init',
+    'robotis_Practice_securitybot_hi',
+    'robotis_Practice_securitybot_alert',
+    'robotis_Practice_petbot_happy',
+    'robotis_Practice_petbot_sad',
 
     // 값 블록
     'robotis_Practice_cm_ir_value',
@@ -200,6 +173,11 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_Practice_stop_at_cross: "교차로 %1 에서 멈추기 %2",
                 robotis_Practice_turn_at_line: "교차로에서 %1 하고 멈추기 %2",
                 robotis_Practice_drive_stop: "정지하기 %1",
+                robotis_Practice_securitybot_init: "보안로봇 초기화 %1",
+                robotis_Practice_securitybot_hi: "보안로봇 위아래로 흔들기 %1",
+                robotis_Practice_securitybot_alert: "보안로봇 좌우로 흔들기 %1",
+                robotis_Practice_petbot_happy: "반려로봇 웃음 %1",
+                robotis_Practice_petbot_sad: "반려로봇 화남 %1",
 
 
                 // 값 블록
@@ -266,10 +244,10 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_Practice_huskylens_connection_status: "AI 카메라: %1이면",
                 robotis_Practice_huskylens_if_detected: "AI 카메라: %1 이/가 표시되면",
 
-                robotis_Practice_huskylens_block_value_closest_to_center: "AI 카메라: 화면 중앙과 가장 가까운 사각형의 %1",
-                robotis_Practice_huskylens_arrow_value_closest_to_center: "AI 카메라: 화면 중앙과 가장 가까운 화살표의 %1",
+                robotis_Practice_huskylens_block_value_closest_to_center: "AI 카메라: 화면 중앙과 가까운 %1의 %2",
+                robotis_Practice_huskylens_arrow_value_closest_to_center: "AI 카메라: 화면 중앙과 가까운 화살표의 %1",
                 robotis_Practice_huskylens_number_of_learned_id: "AI 카메라: 학습한 ID의 갯수",
-                robotis_Practice_huskylens_block_value_of_id: "AI 카메라: 감지된 ID가 %1인 사각형의 %2",
+                robotis_Practice_huskylens_block_value_of_id: "AI 카메라: 감지된 ID가 %1인 %2의 %3",
                 robotis_Practice_huskylens_arrow_value_of_id: "AI 카메라: 감지된 ID가 %1인 화살표의 %2",
 
                 robotis_Practice_huskylens_if_learned_id: "AI 카메라: ID가 %1인 데이터를 학습하였으면",
@@ -745,8 +723,13 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_huskylens_mode_color_recognition: "색상인식",
                 robotis_huskylens_mode_tag_recognition: "태그인식",
                 robotis_huskylens_mode_object_classification: "물체분류",
-                robotis_huskylens_block: "사각형",
-                robotis_huskylens_arrow: "화살표",
+                robotis_huskylens_target_face: "얼굴",
+                robotis_huskylens_target_object: "사물",
+                robotis_huskylens_target_color: "색상",
+                robotis_huskylens_target_tag: "태그",
+                robotis_huskylens_target_qr: "QR코드",
+                robotis_huskylens_target_block: "사각형",
+                robotis_huskylens_target_arrow: "화살표",
                 robotis_huskylens_center_block_center_x: "중심 X좌표",
                 robotis_huskylens_center_block_center_y: "중심 Y좌표",
                 robotis_huskylens_center_block_width: "너비",
@@ -832,10 +815,10 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_Practice_huskylens_connection_status: "AI Camera: If %1",
                 robotis_Practice_huskylens_if_detected: "AI Camera: If %1 is displayed",
         
-                robotis_Practice_huskylens_block_value_closest_to_center: "AI Camera: %1 of the rectangle closest to the center of the screen",
+                robotis_Practice_huskylens_block_value_closest_to_center: "AI Camera: %2 of the %1 closest to the center of the screen",
                 robotis_Practice_huskylens_arrow_value_closest_to_center: "AI Camera: %1 of the arrow closest to the center of the screen",
                 robotis_Practice_huskylens_number_of_learned_id: "AI Camera: the number of learned ID",
-                robotis_Practice_huskylens_block_value_of_id: "AI Camera: %2 of rectangle with detected ID %1",
+                robotis_Practice_huskylens_block_value_of_id: "AI Camera: %3 of %2 with detected ID %1",
                 robotis_Practice_huskylens_arrow_value_of_id: "AI Camera: %2 of arrow with detected ID %1",
         
                 robotis_Practice_huskylens_if_learned_id: "AI Camera: If learned data with ID %1",
@@ -1116,8 +1099,8 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_huskylens_mode_color_recognition: "Color recognition",
                 robotis_huskylens_mode_tag_recognition: "Tag recognition",
                 robotis_huskylens_mode_object_classification: "Object classification",
-                robotis_huskylens_block: "Rectangle",
-                robotis_huskylens_arrow: "Arrow",
+                robotis_huskylens_target_block: "Rectangle",
+                robotis_huskylens_target_arrow: "Arrow",
                 robotis_huskylens_center_block_center_x: "Center X",
                 robotis_huskylens_center_block_center_y: "Center Y",
                 robotis_huskylens_center_block_width: "Width",
@@ -1996,6 +1979,216 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             syntax: {
                 js: [],
                 py: ['Robotis.rb100_follow_line(%1)'],
+            },
+        },
+        robotis_Practice_securitybot_init: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                ],
+                type: 'robotis_Practice_securitybot_init',
+            },
+            paramsKeyMap: {
+            },
+            class: 'robotis_rb100_practice_special',
+            isNotFor: ['Robotis_rb_P_Assembly'],
+            func: function (sprite, script) {
+                // instruction / address / length / value / default length
+                
+                var data_sendqueue = [
+                    [
+                        Entry.Robotis_rb.INSTRUCTION.WRITE, 2110, 1, 1
+                    ]
+                ];
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    1100
+                );
+            },
+            syntax: {
+                js: [],
+                py: ['Robotis.securitybot_init()'],
+            },
+        },
+        robotis_Practice_securitybot_hi: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                ],
+                type: 'robotis_Practice_securitybot_hi',
+            },
+            paramsKeyMap: {
+            },
+            class: 'robotis_rb100_practice_special',
+            isNotFor: ['Robotis_rb_P_Assembly'],
+            func: function (sprite, script) {
+                // instruction / address / length / value / default length
+                
+                var data_sendqueue = [
+                    [
+                        Entry.Robotis_rb.INSTRUCTION.WRITE, 2111, 1, 1
+                    ]
+                ];
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    3000
+                );
+            },
+            syntax: {
+                js: [],
+                py: ['Robotis.securitybot_hi()'],
+            },
+        },
+        robotis_Practice_securitybot_alert: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                ],
+                type: 'robotis_Practice_securitybot_alert',
+            },
+            paramsKeyMap: {
+            },
+            class: 'robotis_rb100_practice_special',
+            isNotFor: ['Robotis_rb_P_Assembly'],
+            func: function (sprite, script) {
+                // instruction / address / length / value / default length
+                
+                var data_sendqueue = [
+                    [
+                        Entry.Robotis_rb.INSTRUCTION.WRITE, 2112, 1, 1
+                    ]
+                ];
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    3000
+                );
+            },
+            syntax: {
+                js: [],
+                py: ['Robotis.securitybot_alert()'],
+            },
+        },
+        robotis_Practice_petbot_happy: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                ],
+                type: 'robotis_Practice_petbot_happy',
+            },
+            paramsKeyMap: {
+            },
+            class: 'robotis_rb100_practice_special',
+            isNotFor: ['Robotis_rb_P_Assembly'],
+            func: function (sprite, script) {
+                // instruction / address / length / value / default length
+                
+                var data_sendqueue = [
+                    [
+                        Entry.Robotis_rb.INSTRUCTION.WRITE, 2121, 1, 1
+                    ]
+                ];
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    7100
+                );
+            },
+            syntax: {
+                js: [],
+                py: ['Robotis.petbot_happy()'],
+            },
+        },
+        robotis_Practice_petbot_sad: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                ],
+                type: 'robotis_Practice_petbot_sad',
+            },
+            paramsKeyMap: {
+            },
+            class: 'robotis_rb100_practice_special',
+            isNotFor: ['Robotis_rb_P_Assembly'],
+            func: function (sprite, script) {
+                // instruction / address / length / value / default length
+                
+                var data_sendqueue = [
+                    [
+                        Entry.Robotis_rb.INSTRUCTION.WRITE, 2122, 1, 1
+                    ]
+                ];
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    2500
+                );
+            },
+            syntax: {
+                js: [],
+                py: ['Robotis.petbot_sad()'],
             },
         },
 
@@ -6390,6 +6583,20 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
+                        [Lang.Blocks.robotis_huskylens_target_face, '0'],
+                        [Lang.Blocks.robotis_huskylens_target_object, '1'],
+                        [Lang.Blocks.robotis_huskylens_target_color, '2'],
+                        [Lang.Blocks.robotis_huskylens_target_tag, '3'],
+                        [Lang.Blocks.robotis_huskylens_target_qr, '4'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
                         [Lang.Blocks.robotis_huskylens_center_block_center_x, '0'],
                         [Lang.Blocks.robotis_huskylens_center_block_center_y, '1'],
                         [Lang.Blocks.robotis_huskylens_center_block_width, '2'],
@@ -6406,11 +6613,13 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             def: {
                 params: [
                     null,
+                    null,
                 ],
                 type: 'robotis_Practice_huskylens_block_value_closest_to_center',
             },
             paramsKeyMap: {
-                DATA_TYPE: 0,
+                TARGET: 0,
+                DATA_TYPE: 1,
             },
             class: 'robotis_rb100_custom_huskylens',
             isNotFor: ['Robotis_rb_P_Assembly'],
@@ -6543,6 +6752,20 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     {
                         type: 'Dropdown',
                         options: [
+                            [Lang.Blocks.robotis_huskylens_target_face, '0'],
+                            [Lang.Blocks.robotis_huskylens_target_object, '1'],
+                            [Lang.Blocks.robotis_huskylens_target_color, '2'],
+                            [Lang.Blocks.robotis_huskylens_target_tag, '3'],
+                            [Lang.Blocks.robotis_huskylens_target_qr, '4'],
+                        ],
+                        value: '0',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: [
                             [Lang.Blocks.robotis_huskylens_center_block_center_x, '0'],
                             [Lang.Blocks.robotis_huskylens_center_block_center_y, '1'],
                             [Lang.Blocks.robotis_huskylens_center_block_width, '2'],
@@ -6559,12 +6782,14 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 params: [
                     null,
                     null,
+                    null,
                 ],
                 type: 'robotis_Practice_huskylens_block_value_of_id',
             },
             paramsKeyMap: {
                 ID: 0,
-                TYPE: 1,
+                TARGET: 1,
+                TYPE: 2,
             },
             class: 'robotis_rb100_custom_huskylens',
             isNotFor: ['Robotis_rb_P_Assembly'],
@@ -6760,8 +6985,12 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.robotis_huskylens_block, '0'],
-                        [Lang.Blocks.robotis_huskylens_arrow, '1'],
+                        [Lang.Blocks.robotis_huskylens_target_face, '0'],
+                        [Lang.Blocks.robotis_huskylens_target_object, '1'],
+                        [Lang.Blocks.robotis_huskylens_target_color, '2'],
+                        [Lang.Blocks.robotis_huskylens_target_tag, '3'],
+                        [Lang.Blocks.robotis_huskylens_target_qr, '4'],
+                        [Lang.Blocks.robotis_huskylens_target_arrow, '5'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -6786,7 +7015,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 var data_address = 4005; // block
                 var detect_type = script.getNumberValue('DETECT_TYPE');
 
-                if (detect_type == 1) data_address = 4006; // arrow
+                if (detect_type == 5) data_address = 4006; // arrow
 
                 var result = Entry.hw.portData[data_address];
 
