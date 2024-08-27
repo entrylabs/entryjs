@@ -1,0 +1,9 @@
+{
+    "name": "WhalesbotDrone",
+    "version": "1.0.0",
+    "type": "hardware",
+    "title": "고래봇 드론",
+    "description": "Whalesbot",
+    "imageName": "whalesbot_drone",
+    "moduleId": "620101"
+}

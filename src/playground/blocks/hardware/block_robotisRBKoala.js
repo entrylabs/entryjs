@@ -2716,6 +2716,11 @@ Entry.Robotis_rb_koala.getBlocks = function() {
 
                     return 0;
                 }
+
+                if (device_id_name == "DIST_110_DISTANCE") {
+                    if (result > 1000) result = 1000;
+                }
+
                 return result;
             },
             syntax: {
@@ -2804,6 +2809,10 @@ Entry.Robotis_rb_koala.getBlocks = function() {
                 var result = Entry.hw.portData[device_id_name];
                 if (typeof result == 'undefined') {
                     return false;
+                }
+
+                if (device_id_name == "DIST_110_DISTANCE") {
+                    if (result > 1000) result = 1000;
                 }
 
                 switch(compareOP) {
