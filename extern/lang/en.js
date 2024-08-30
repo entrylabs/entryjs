@@ -6094,6 +6094,24 @@ Lang.Helper = {
     get_current_city_weather_data:
         'Reports the current weather information (temperature, fine dust grade) of the selected region.',
     get_today_city_temperature: 'Report the today temperature of selected area and time zone.',
+    get_cur_weather: '\nReports the current weather in the selected area.',
+    get_cur_wind: '\nReports the current wind direction in the selected area.',
+    get_cur_weather_data:
+        '\nReports the current weather information in the selected area.\n- Weather information : temperature(℃), fine dust concentration(PM10, ㎍)',
+    check_cur_weather:
+        "\nChecks whether the current weather in the selected area matches the selected weather conditions. If so, it is judged as 'True'.",
+    check_cur_finddust:
+        "\nChecks whether the current fine dust grade in the selected area matches the selected fine dust grade. If so, it is judged as 'True'.",
+    get_day_weather: '\nReports the daily weather in the selected area.',
+    get_day_weather_data:
+        '\nReports the daily weather information in the selected area.\n- Weather information: the lowest temperature(℃), the highest temperature(℃), humidity(%), precipitation(mm), precipitation probability(%), wind speed(m/s)',
+    check_day_weather:
+        "\nChecks whether the daily weather in the selected area matches the selected weather conditions. If so, it is judged as 'True'. ",
+    get_time_weather: '\nReports the weather by hour(every 3 hours) in the selected area.',
+    get_time_weather_data:
+        '\nReports the weather information by hour(every 3 hours) in the selected area.\n- Weather information: the lowest temperature(℃), the highest temperature(℃), humidity(%), precipitation(mm), precipitation probability(%), wind speed(m/s)',
+    check_time_weather:
+        "\nChecks whether the weather by hour in the selected area matches the selected weather conditions. If so, it is judged as 'True'. ",
     count_festival:
         'Translate the input text into the selected language. You can enter up to 20 charactors. ',
     get_festival_info: 'Detects the language of the input text. You can enter up to 20 charactors.',
@@ -6792,6 +6810,17 @@ Lang.template = {
     get_city_weather_data: "%1 %2 %3's %4",
     get_current_city_weather_data: "Current %1 %2's %3",
     get_today_city_temperature: "Today %1 %2's %3h temperature(℃)",
+    get_cur_weather: 'Current weather in %1',
+    get_cur_wind: 'Current wind direction in %1',
+    get_cur_weather_data: 'Current %2 in %1',
+    check_cur_weather: 'Is current weather in %1 %2?',
+    check_cur_finddust: 'Is current fine dust grade in %1 %2?',
+    get_day_weather: 'Weather in %2 %3 %1',
+    get_day_weather_data: '%3 in %2 %1',
+    check_day_weather: 'Is %1 weather in %2 %3?',
+    get_time_weather: "%2 o'clock weather in %1",
+    get_time_weather_data: "%2 o'clock %3 in %1",
+    check_time_weather: "Is %2 o'clock weather in %1 %3?",
     translate_title: '%1',
     get_translated_string: 'Translate %1 %2 into %3',
     check_language: 'language of %1',
