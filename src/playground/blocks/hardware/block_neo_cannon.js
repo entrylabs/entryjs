@@ -30,7 +30,7 @@ Entry.NeoCannon = {
         Entry.hw.update();
     },
     toneTable: {
-        '0': 0,
+        0: 0,
         C: 1,
         CS: 2,
         D: 3,
@@ -45,18 +45,18 @@ Entry.NeoCannon = {
         B: 12,
     },
     toneMap: {
-        '1': [33, 65, 131, 262, 523, 1046, 2093, 4186],
-        '2': [35, 69, 139, 277, 554, 1109, 2217, 4435],
-        '3': [37, 73, 147, 294, 587, 1175, 2349, 4699],
-        '4': [39, 78, 156, 310, 622, 1245, 2637, 4978],
-        '5': [41, 82, 165, 330, 659, 1319, 2794, 5274],
-        '6': [44, 87, 175, 349, 698, 1397, 2849, 5588],
-        '7': [46, 92, 185, 370, 740, 1480, 2960, 5920],
-        '8': [49, 98, 196, 392, 784, 1568, 3136, 6272],
-        '9': [52, 104, 208, 415, 831, 1661, 3322, 6645],
-        '10': [55, 110, 220, 440, 880, 1760, 3520, 7040],
-        '11': [58, 117, 233, 466, 932, 1865, 3729, 7459],
-        '12': [62, 123, 247, 494, 988, 1976, 3951, 7902],
+        1: [33, 65, 131, 262, 523, 1046, 2093, 4186],
+        2: [35, 69, 139, 277, 554, 1109, 2217, 4435],
+        3: [37, 73, 147, 294, 587, 1175, 2349, 4699],
+        4: [39, 78, 156, 310, 622, 1245, 2637, 4978],
+        5: [41, 82, 165, 330, 659, 1319, 2794, 5274],
+        6: [44, 87, 175, 349, 698, 1397, 2849, 5588],
+        7: [46, 92, 185, 370, 740, 1480, 2960, 5920],
+        8: [49, 98, 196, 392, 784, 1568, 3136, 6272],
+        9: [52, 104, 208, 415, 831, 1661, 3322, 6645],
+        10: [55, 110, 220, 440, 880, 1760, 3520, 7040],
+        11: [58, 117, 233, 466, 932, 1865, 3729, 7459],
+        12: [62, 123, 247, 494, 988, 1976, 3951, 7902],
     },
     monitorTemplate: {
         imgPath: 'hw/neo_cannon.png',
@@ -74,7 +74,7 @@ Entry.NeoCannon = {
     BlockState: {},
 };
 
-Entry.NeoCannon.setLanguage = function() {
+Entry.NeoCannon.setLanguage = function () {
     return {
         ko: {
             template: {
@@ -122,8 +122,7 @@ Entry.NeoCannon.setLanguage = function() {
                     'RGB LED를 색을 선택하여 원하는 색상을 나타낼 수 있습니다.<br/><font color="crimson">(주의, LED모드로 진행해주세요.)</font>',
                 neo_cannon_rgb_led_pwm:
                     'RGB LED에 세기값(0~255)을 주어 원하는 색상을 나타낼 수 있습니다.<br/><font color="crimson">(주의, LED모드로 진행해주세요.)</font>',
-                neo_cannon_rgb_led_off:
-                    'RGB LED를 끌 수 있습니다.',
+                neo_cannon_rgb_led_off: 'RGB LED를 끌 수 있습니다.',
                 neo_cannon_neopixel_color_picker:
                     '색을 보고 RGB색상을 정하여 정해진 네오픽셀를 켤 수 있습니다.<br/><font color="crimson">(참고, 네오픽셀번호는 0번부터 17번까지 입니다.)</font>',
                 neo_cannon_neopixel:
@@ -183,7 +182,7 @@ Entry.NeoCannon.blockMenuBlocks = [
     'neo_cannon_neopixel_all_off',
 ];
 
-Entry.NeoCannon.getBlocks = function() {
+Entry.NeoCannon.getBlocks = function () {
     return {
         neo_cannon_get_vibe_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -200,7 +199,7 @@ Entry.NeoCannon.getBlocks = function() {
             class: 'NeoCannonGet',
             isNotFor: ['NeoCannon'],
             func(sprite, script) {
-                let port = 'vibe'
+                let port = 'vibe';
 
                 return Entry.hw.portData[port] || 0;
             },
@@ -1291,7 +1290,7 @@ Entry.NeoCannon.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: ["#0000FF", null],
+                params: ['#0000FF', null],
                 type: 'neo_cannon_rgb_led_color_picker',
             },
             paramsKeyMap: {
@@ -1299,7 +1298,7 @@ Entry.NeoCannon.getBlocks = function() {
             },
             class: 'NeoCannonRGB',
             isNotFor: ['NeoCannon'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 const sq = Entry.hw.sendQueue;
 
                 let value = script.getStringField('COLOR');
@@ -1399,7 +1398,7 @@ Entry.NeoCannon.getBlocks = function() {
             },
             class: 'NeoCannonRGB',
             isNotFor: ['NeoCannon'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 const sq = Entry.hw.sendQueue;
 
                 let red = script.getNumberValue('RED', script);
@@ -1471,7 +1470,7 @@ Entry.NeoCannon.getBlocks = function() {
             paramsKeyMap: {},
             class: 'NeoCannonRGB',
             isNotFor: ['NeoCannon'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 const sq = Entry.hw.sendQueue;
 
                 if (!sq.shootState) {
@@ -1570,8 +1569,8 @@ Entry.NeoCannon.getBlocks = function() {
             isNotFor: ['NeoCannon'],
             func: function (sprite, script) {
                 const sq = Entry.hw.sendQueue;
-                let num = script.getNumberValue('NUM', script);
-                num = num % 18
+                let num = script.getNumberValue('NUM', script) || 0;
+                num = num % 18;
 
                 let red = script.getNumberValue('RED', script);
                 let green = script.getNumberValue('GREEN', script);
@@ -1581,20 +1580,18 @@ Entry.NeoCannon.getBlocks = function() {
                     sq.neopixel = {};
                 }
 
-                if (num) {
-                    sq.neopixel = {
-                        type: Entry.NeoCannon.PORT_MAP.neopixel,
-                        data: {
-                            num,
-                            red,
-                            green,
-                            blue
-                        },
-                        time: new Date().getTime(),
-                    };
-    
-                    Entry.hw.update();
-                }
+                sq.neopixel = {
+                    type: Entry.NeoCannon.PORT_MAP.neopixel,
+                    data: {
+                        num,
+                        red,
+                        green,
+                        blue,
+                    },
+                    time: new Date().getTime(),
+                };
+
+                Entry.hw.update();
 
                 return script.callReturn();
             },
@@ -1665,8 +1662,8 @@ Entry.NeoCannon.getBlocks = function() {
             isNotFor: ['NeoCannon'],
             func: function (sprite, script) {
                 const sq = Entry.hw.sendQueue;
-                let num = script.getNumberValue('NUM', script);
-                num = num % 18
+                let num = script.getNumberValue('NUM', script) || 0;
+                num = num % 18;
 
                 let value = script.getStringField('COLOR');
 
@@ -1674,24 +1671,22 @@ Entry.NeoCannon.getBlocks = function() {
                     sq.neopixel = {};
                 }
 
-                if (num) {
-                    let red = parseInt(value.substr(1, 2), 16);
-                    let green = parseInt(value.substr(3, 2), 16);
-                    let blue = parseInt(value.substr(5, 2), 16);
+                let red = parseInt(value.substr(1, 2), 16);
+                let green = parseInt(value.substr(3, 2), 16);
+                let blue = parseInt(value.substr(5, 2), 16);
 
-                    sq.neopixel = {
-                        type: Entry.NeoCannon.PORT_MAP.neopixel,
-                        data: {
-                            num,
-                            red,
-                            green,
-                            blue
-                        },
-                        time: new Date().getTime(),
-                    };
-    
-                    Entry.hw.update();
-                }
+                sq.neopixel = {
+                    type: Entry.NeoCannon.PORT_MAP.neopixel,
+                    data: {
+                        num,
+                        red,
+                        green,
+                        blue,
+                    },
+                    time: new Date().getTime(),
+                };
+
+                Entry.hw.update();
 
                 return script.callReturn();
             },
@@ -1731,10 +1726,7 @@ Entry.NeoCannon.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [
-                    null,
-                    null,
-                ],
+                params: [null, null],
                 type: 'neo_cannon_neopixel_color_picker_all_on',
             },
             paramsKeyMap: {
@@ -1759,7 +1751,7 @@ Entry.NeoCannon.getBlocks = function() {
                     data: {
                         red,
                         green,
-                        blue
+                        blue,
                     },
                     time: new Date().getTime(),
                 };
@@ -1851,7 +1843,7 @@ Entry.NeoCannon.getBlocks = function() {
                     data: {
                         red,
                         green,
-                        blue
+                        blue,
                     },
                     time: new Date().getTime(),
                 };
@@ -1896,7 +1888,7 @@ Entry.NeoCannon.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [null,],
+                params: [null],
                 type: 'neo_cannon_neopixel_all_off',
             },
             paramsKeyMap: {},

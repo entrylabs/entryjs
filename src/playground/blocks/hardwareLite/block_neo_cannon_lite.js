@@ -1753,16 +1753,16 @@
                         NUM: 0,
                         COLOR: 1,
                     },
-                    class: 'NeoSpiderLite',
-                    isNotFor: ['NeoSpiderLite'],
+                    class: 'NeoCannonLiteNeopixel',
+                    isNotFor: ['NeoCannonLite'],
                     func(sprite, script) {
-                        return Entry.NeoSpiderLite.setNeopixelPicker(script);
+                        return Entry.NeoCannonLite.setNeopixelPicker(script);
                     },
                     syntax: {
                         js: [],
                         py: [
                             {
-                                syntax: 'NeoSpiderLite.neopixelColorPicker(%1, %2)',
+                                syntax: 'NeoCannonLite.neopixelColorPicker(%1, %2)',
                                 textParams: [
                                     {
                                         type: 'Block',
@@ -1771,6 +1771,99 @@
                                     {
                                         type: 'Color',
                                         converter: Entry.block.converters.returnStringValue,
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                },
+                neocannonlite_neopixel: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                            defaultType: 'number',
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                            defaultType: 'number',
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                            defaultType: 'number',
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                            defaultType: 'number',
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [
+                            {
+                                type: 'number',
+                                params: ['0'],
+                            },
+                            {
+                                type: 'number',
+                                params: ['100'],
+                            },
+                            {
+                                type: 'number',
+                                params: ['100'],
+                            },
+                            {
+                                type: 'number',
+                                params: ['100'],
+                            },
+                            null,
+                        ],
+                        type: 'neocannonlite_neopixel',
+                    },
+                    paramsKeyMap: {
+                        NUM: 0,
+                        RED: 1,
+                        GREEN: 2,
+                        BLUE: 3,
+                    },
+                    class: 'NeoCannonLiteNeopixel',
+                    isNotFor: ['NeoCannonLite'],
+                    func(sprite, script) {
+                        return Entry.NeoCannonLite.setNeopixel(script);
+                    },
+                    syntax: {
+                        js: [],
+                        py: [
+                            {
+                                syntax: 'NeoCannonLite.neopixel(%1, %2, %3, %4)',
+                                textParams: [
+                                    {
+                                        type: 'Block',
+                                        accept: 'string',
+                                    },
+                                    {
+                                        type: 'Block',
+                                        accept: 'string',
+                                    },
+                                    {
+                                        type: 'Block',
+                                        accept: 'string',
+                                    },
+                                    {
+                                        type: 'Block',
+                                        accept: 'string',
                                     },
                                 ],
                             },
@@ -1800,16 +1893,16 @@
                     paramsKeyMap: {
                         COLOR: 0,
                     },
-                    class: 'NeoSpiderLite',
-                    isNotFor: ['NeoSpiderLite'],
+                    class: 'NeoCannonLiteNeopixel',
+                    isNotFor: ['NeoCannonLite'],
                     func(sprite, script) {
-                        return Entry.NeoSpiderLite.setAllNeopixelPicker(script);
+                        return Entry.NeoCannonLite.setAllNeopixelPicker(script);
                     },
                     syntax: {
                         js: [],
                         py: [
                             {
-                                syntax: 'NeoSpiderLite.neopixelColorPickerAllOn(%1)',
+                                syntax: 'NeoCannonLite.neopixelColorPickerAllOn(%1)',
                                 textParams: [
                                     {
                                         type: 'Color',
@@ -1871,16 +1964,16 @@
                         GREEN: 1,
                         BLUE: 2,
                     },
-                    class: 'NeoSpiderLite',
-                    isNotFor: ['NeoSpiderLite'],
+                    class: 'NeoCannonLiteNeopixel',
+                    isNotFor: ['NeoCannonLite'],
                     func(sprite, script) {
-                        return Entry.NeoSpiderLite.setAllNeopixel(script);
+                        return Entry.NeoCannonLite.setAllNeopixel(script);
                     },
                     syntax: {
                         js: [],
                         py: [
                             {
-                                syntax: 'NeoSpiderLite.neopixelAllON(%1, %2, %3)',
+                                syntax: 'NeoCannonLite.neopixelAllON(%1, %2, %3)',
                                 textParams: [
                                     {
                                         type: 'Block',
@@ -1917,16 +2010,16 @@
                         type: 'neocannonlite_neopixel_all_off',
                     },
                     paramsKeyMap: {},
-                    class: 'NeoSpiderLite',
-                    isNotFor: ['NeoSpiderLite'],
+                    class: 'NeoCannonLiteNeopixel',
+                    isNotFor: ['NeoCannonLite'],
                     func(sprite, script) {
-                        return Entry.NeoSpiderLite.setNeopixelOff(script);
+                        return Entry.NeoCannonLite.setNeopixelOff(script);
                     },
                     syntax: {
                         js: [],
                         py: [
                             {
-                                syntax: 'NeoSpiderLite.neopixelAllOFF()',
+                                syntax: 'NeoCannonLite.neopixelAllOFF()',
                                 textParams: [],
                             },
                         ],
