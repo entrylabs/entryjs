@@ -232,11 +232,11 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 
 
                 // DXL 제어
-                robotis_Practice_dxl_set_mode: "%1 번 모터 %2 모드로 설정 %3",
-                robotis_Practice_dxl_each_control: "%1 번 모터 %2°로 %3 초 동안 움직이기 %4",
-                robotis_Practice_dxl_set_position: "%1 번 모터 %2 속도로 %3° 위치로 회전 %4",
-                robotis_Practice_dxl_set_rotate: "%1 번 모터 %2 속도로 %3 으로 %4 %5",
-                robotis_Practice_dxl_set_multiturn_round: "%1 번 모터 %2 속도로 %3 바퀴 %4으로 회전 %5",
+                robotis_Practice_dxl_set_mode: "%1 모터 %2 모드로 설정 %3",
+                robotis_Practice_dxl_each_control: "%1 모터 %2°로 %3 초 동안 움직이기 %4",
+                robotis_Practice_dxl_set_position: "%1 모터 %2 속도로 %3° 위치로 회전 %4",
+                robotis_Practice_dxl_set_rotate: "%1 모터 %2 속도로 %3 으로 %4 %5",
+                robotis_Practice_dxl_set_multiturn_round: "%1 모터 %2 속도로 %3 바퀴 %4으로 회전 %5",
                 
 
                 
@@ -5088,18 +5088,18 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        ["1", '1'],
-                        ["2", '2'], //Lang.Blocks.robotis_common_green_color
-                        ["3", '3'],
-                        ["4", '4'],
-                        ["5", '5'],
-                        ["6", '6'],
-                        ["7", '7'],
-                        ["8", '8'],
-                        ["51", '51'],
-                        ["52", '52'],
+                        [Lang.Blocks.robotis_left_wheel, '52'],
+                        [Lang.Blocks.robotis_right_wheel, '51'],
+                        ["ID 1", '1'],
+                        ["ID 2", '2'],
+                        ["ID 3", '3'],
+                        ["ID 4", '4'],
+                        ["ID 5", '5'],
+                        ["ID 6", '6'],
+                        ["ID 7", '7'],
+                        ["ID 8", '8'],
                     ],
-                    value: '1',
+                    value: '52',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -5125,7 +5125,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             events: {},
             def: {
                 params: [
-                    '1',
+                    '52',
                     null,
                     null,
                 ],
@@ -5198,18 +5198,18 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        ["1", '1'],
-                        ["2", '2'], //Lang.Blocks.robotis_common_green_color
-                        ["3", '3'],
-                        ["4", '4'],
-                        ["5", '5'],
-                        ["6", '6'],
-                        ["7", '7'],
-                        ["8", '8'],
-                        ["51", '51'],
-                        ["52", '52'],
+                        [Lang.Blocks.robotis_left_wheel, '52'],
+                        [Lang.Blocks.robotis_right_wheel, '51'],
+                        ["ID 1", '1'],
+                        ["ID 2", '2'],
+                        ["ID 3", '3'],
+                        ["ID 4", '4'],
+                        ["ID 5", '5'],
+                        ["ID 6", '6'],
+                        ["ID 7", '7'],
+                        ["ID 8", '8'],
                     ],
-                    value: '1',
+                    value: '52',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -5231,7 +5231,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             events: {},
             def: {
                 params: [
-                    null,
+                    '52',
                     {
                         type: 'number',
                         params: ['0'],
@@ -5316,18 +5316,18 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        ["1", '1'],
-                        ["2", '2'], //Lang.Blocks.robotis_common_green_color
-                        ["3", '3'],
-                        ["4", '4'],
-                        ["5", '5'],
-                        ["6", '6'],
-                        ["7", '7'],
-                        ["8", '8'],
-                        ["51", '51'],
-                        ["52", '52'],
+                        [Lang.Blocks.robotis_left_wheel, '52'],
+                        [Lang.Blocks.robotis_right_wheel, '51'],
+                        ["ID 1", '1'],
+                        ["ID 2", '2'],
+                        ["ID 3", '3'],
+                        ["ID 4", '4'],
+                        ["ID 5", '5'],
+                        ["ID 6", '6'],
+                        ["ID 7", '7'],
+                        ["ID 8", '8'],
                     ],
-                    value: '1',
+                    value: '52',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -5349,7 +5349,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             events: {},
             def: {
                 params: [
-                    '1',
+                    '52',
                     '50',
                     '0',
                     null,
@@ -5427,18 +5427,18 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        ["1", '1'],
-                        ["2", '2'], //Lang.Blocks.robotis_common_green_color
-                        ["3", '3'],
-                        ["4", '4'],
-                        ["5", '5'],
-                        ["6", '6'],
-                        ["7", '7'],
-                        ["8", '8'],
-                        ["51", '51'],
-                        ["52", '52'],
+                        [Lang.Blocks.robotis_left_wheel, '52'],
+                        [Lang.Blocks.robotis_right_wheel, '51'],
+                        ["ID 1", '1'],
+                        ["ID 2", '2'],
+                        ["ID 3", '3'],
+                        ["ID 4", '4'],
+                        ["ID 5", '5'],
+                        ["ID 6", '6'],
+                        ["ID 7", '7'],
+                        ["ID 8", '8'],
                     ],
-                    value: '1',
+                    value: '52',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -5478,7 +5478,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             events: {},
             def: {
                 params: [
-                    '1',
+                    '52',
                     '50',
                     null,
                     null,
@@ -5554,18 +5554,18 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        ["1", '1'],
-                        ["2", '2'], //Lang.Blocks.robotis_common_green_color
-                        ["3", '3'],
-                        ["4", '4'],
-                        ["5", '5'],
-                        ["6", '6'],
-                        ["7", '7'],
-                        ["8", '8'],
-                        ["51", '51'],
-                        ["52", '52'],
+                        [Lang.Blocks.robotis_left_wheel, '52'],
+                        [Lang.Blocks.robotis_right_wheel, '51'],
+                        ["ID 1", '1'],
+                        ["ID 2", '2'],
+                        ["ID 3", '3'],
+                        ["ID 4", '4'],
+                        ["ID 5", '5'],
+                        ["ID 6", '6'],
+                        ["ID 7", '7'],
+                        ["ID 8", '8'],
                     ],
-                    value: '1',
+                    value: '52',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -5598,7 +5598,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             events: {},
             def: {
                 params: [
-                    '1',
+                    '52',
                     '50',
                     '1',
                     null,
