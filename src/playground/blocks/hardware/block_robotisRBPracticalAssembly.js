@@ -1364,6 +1364,13 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 if (rightDirection == '2') {
                     rightSpeed = -rightSpeed;
                 }
+
+                if (leftSpeed < 0) {
+                    leftSpeed = 256 + leftSpeed;
+                }
+                if (rightSpeed < 0) {
+                    rightSpeed = 256 + rightSpeed;
+                }
                 
                 data_value = leftSpeed + rightSpeed * 256;
 
@@ -1561,7 +1568,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 let data_address = 580;
                 let data_length = 8;
                 let angleValue = 0;
-                let id = 33 + wheelSide;
+                let id = 51 + wheelSide;
                 let data_buf = [];
                 let i = 0;
                 let speed = 150;
@@ -5519,8 +5526,8 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 // cw일 경우 음수처리
                 if (dxl_direction == 1) data_value = -data_value;
 
-                // 알쥐나 알라 우측 바퀴인 경우 reverse mode이므로 방향 반대
-                if (dxl_id == 33 || dxl_id == 35) data_value = -data_value;
+                // 바퀴형 로봇인 경우 reverse mode이므로 방향 반대
+                if (dxl_id == 33 || dxl_id == 35 || dxl_id == 51) data_value = -data_value;
 
                 data_value = data_value * dxl_move;
 
@@ -5662,6 +5669,11 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
 
                 if (dxl_round < 0) dxl_round = 0;
                 else if (dxl_round > 100) dxl_round = 100;
+
+                // 바퀴형 로봇 우측 바퀴인 경우 reverse mode이므로 방향 반대
+                if (dxl_id == 33 || dxl_id == 35 || dxl_id == 51) {
+                    dxl_round = -dxl_round;
+                }
 
                 data_value_3 = dxl_round * 4096;
 
