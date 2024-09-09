@@ -113,7 +113,6 @@ module.exports = {
                                     type: 'Dropdown',
                                     value: 'next',
                                     options: keyInputList,
-                                    arrowColor: EntryStatic.colorSet.arrow.default.JUDGE,
                                     converter: Entry.block.converters.keyboardCode,
                                 },
                             ],
@@ -248,7 +247,6 @@ module.exports = {
                                     value: null,
                                     menuName: 'collision',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.colorSet.arrow.default.JUDGE,
                                     converter: Entry.block.converters.returnObjectOrStringValue,
                                     codeMap: 'Entry.CodeMap.Entry.reach_something[1]',
                                 },
@@ -762,6 +760,10 @@ module.exports = {
                     params: [null],
                     type: 'is_current_device_type',
                 },
+                pyHelpDef: {
+                    params: ['A&value'],
+                    type: 'is_current_device_type',
+                },
                 class: 'boolean_device',
                 isNotFor: [],
                 paramsKeyMap: {
@@ -781,7 +783,7 @@ module.exports = {
                     js: [],
                     py: [
                         {
-                            syntax: 'Entry.is_current_device_type()',
+                            syntax: 'Entry.is_current_device_type(%1)',
                             blockType: 'param',
                             textParams: [
                                 {
@@ -791,9 +793,9 @@ module.exports = {
                                         [Lang.Blocks.tablet, 'tablet'],
                                         [Lang.Blocks.smartphone, 'mobile'],
                                     ],
-                                    converter: Entry.block.converters.returnOperator,
                                     value: 'desktop',
                                     fontSize: 11,
+                                    converter: Entry.block.converters.returnStringValue,
                                 },
                             ],
                         },
