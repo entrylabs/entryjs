@@ -190,6 +190,8 @@ EntryStatic.getAllBlocks = function () {
                 'boolean_and_or',
                 'boolean_not',
                 'is_boost_mode',
+                'is_current_device_type',
+                'is_touch_supported',
             ],
         },
         {

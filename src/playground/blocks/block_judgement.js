@@ -738,6 +738,98 @@ module.exports = {
                     ],
                 },
             },
+            is_current_device_type: {
+                color: EntryStatic.colorSet.block.default.JUDGE,
+                outerLine: EntryStatic.colorSet.block.darken.JUDGE,
+                skeleton: 'basic_boolean_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.desktop, 'desktop'],
+                            [Lang.Blocks.tablet, 'tablet'],
+                            [Lang.Blocks.smartphone, 'smartphone'],
+                        ],
+                        value: 'desktop',
+                        fontSize: 10,
+                        bgColor: EntryStatic.colorSet.block.darken.JUDGE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null],
+                    type: 'is_current_device_type',
+                },
+                class: 'boolean_device',
+                isNotFor: [],
+                paramsKeyMap: {
+                    DEVICE: 0,
+                },
+                func(sprite, script) {
+                    const device = script.getField('DEVICE', script);
+                    const deviceType = Entry.Utils.getDeviceType();
+                    if (device !== 'desktop') {
+                        return deviceType === device;
+                    } else if (deviceType !== 'mobile' && deviceType !== 'tablet') {
+                        return true;
+                    }
+                    return false;
+                },
+                syntax: {
+                    js: [],
+                    py: [
+                        {
+                            syntax: 'Entry.is_current_device_type()',
+                            blockType: 'param',
+                            textParams: [
+                                {
+                                    type: 'Dropdown',
+                                    options: [
+                                        [Lang.Blocks.desktop, 'desktop'],
+                                        [Lang.Blocks.tablet, 'tablet'],
+                                        [Lang.Blocks.smartphone, 'mobile'],
+                                    ],
+                                    converter: Entry.block.converters.returnOperator,
+                                    value: 'desktop',
+                                    fontSize: 11,
+                                },
+                            ],
+                        },
+                    ],
+                },
+            },
+            is_touch_supported: {
+                color: EntryStatic.colorSet.block.default.JUDGE,
+                outerLine: EntryStatic.colorSet.block.darken.JUDGE,
+                skeleton: 'basic_boolean_field',
+                statements: [],
+                params: [],
+                events: {},
+                def: {
+                    params: [null],
+                    type: 'is_touch_supported',
+                },
+                class: 'boolean_device',
+                isNotFor: [],
+                func() {
+                    return (
+                        'ontouchstart' in window ||
+                        navigator.maxTouchPoints > 0 ||
+                        navigator.msMaxTouchPoints > 0
+                    );
+                },
+                syntax: {
+                    js: [],
+                    py: [
+                        {
+                            syntax: 'Entry.is_touch_supported()',
+                            blockType: 'param',
+                        },
+                    ],
+                },
+            },
         };
     },
 };
