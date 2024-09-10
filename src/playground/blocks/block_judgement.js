@@ -747,7 +747,7 @@ module.exports = {
                         options: [
                             [Lang.Blocks.desktop, 'desktop'],
                             [Lang.Blocks.tablet, 'tablet'],
-                            [Lang.Blocks.smartphone, 'smartphone'],
+                            [Lang.Blocks.smartphone, 'mobile'],
                         ],
                         value: 'desktop',
                         fontSize: 10,
