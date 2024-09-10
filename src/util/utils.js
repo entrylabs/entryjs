@@ -11,6 +11,7 @@ import DataTable from '../class/DataTable';
 import entryModuleLoader from '../class/entryModuleLoader';
 import { bignumber, chain } from 'mathjs';
 import { Scheduler } from './scheduler';
+import { UAParser } from 'ua-parser-js';
 
 Entry.Utils = {};
 
@@ -3099,3 +3100,9 @@ Entry.Utils.getEntryjsPath = () =>
     window.navigator.userAgent.indexOf('Electron') > -1
         ? `file://${window.getEntryjsPath()}`
         : `${window.location.origin}/lib/entry-js`;
+
+Entry.Utils.getDeviceType = (target) => {
+    const parser = new UAParser();
+    const result = parser.getResult();
+    return result.device.type;
+};

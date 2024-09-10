@@ -602,13 +602,15 @@ Lang.Blocks = {
     JUDGEMENT_boolean_or: 'OR',
     JUDGEMENT_true: 'True',
     JUDGEMENT_false: 'False',
-    wall: 'Wall',
+    wall: 'wall',
     START_press_some_key_up: 'Up',
     START_press_some_key_down: 'Down',
     START_press_some_key_right: 'Right',
     START_press_some_key_left: 'Left',
     START_press_some_key_space: 'Space',
     START_press_some_key_enter: 'Enter',
+    START_press_some_key_back_space: 'Backspace',
+    START_press_some_key_back_slash: 'Backslash',
     SCENE_when_scene_start: 'When scene started',
     SCENE_start_scene_1: 'Start',
     SCENE_start_scene_2: 'scene',
@@ -638,17 +640,17 @@ Lang.Blocks = {
     LOOKS_change_object_index_sub_3: 'backward',
     LOOKS_change_object_index_sub_4: 'back',
     entry: 'Entry',
-    JUDGEMENT_is_clicked: 'Mouse down?',
-    JUDGEMENT_is_object_clicked: 'Object clicked?',
+    JUDGEMENT_is_clicked: 'mouse clicked?',
+    JUDGEMENT_is_object_clicked: 'object clicked?',
     JUDGEMENT_is_type_1: 'is',
     JUDGEMENT_is_type_2: '?',
     is_type_number: 'number',
-    JUDGEMENT_is_press_some_key_2: ' pressed?',
+    JUDGEMENT_is_press_some_key_2: 'key pressed?',
     JUDGEMENT_reach_something_1: 'touching',
     JUDGEMENT_reach_something_2: '?',
-    JUDGEMENT_boolean_not_1: 'Is Not',
+    JUDGEMENT_boolean_not_1: 'is not',
     JUDGEMENT_boolean_not_2: '',
-    JUDGEMENT_is_boost_mode: 'Is the boost mode on?',
+    JUDGEMENT_is_boost_mode: 'is the boost mode on?',
     CALC_calc_rand_1: 'random number between',
     CALC_calc_rand_2: 'and',
     CALC_calc_rand_3: '',
@@ -1074,7 +1076,7 @@ Lang.Blocks = {
     ALTINO_BAT: 'battery check',
     ALTINO_Steering_Angle_Center: 'center',
     ALTINO_Steering_Angle_Left5: 'left5',
-    mouse_pointer: 'Mouse Pointer',
+    mouse_pointer: 'mouse cursor',
     self: 'self',
     wall_up: 'upper wall',
     wall_down: 'down wall',
@@ -1699,6 +1701,9 @@ Lang.Blocks = {
     location_jeollanam_gurye: 'Gurye-gun',
     width: 'width',
     height: 'height',
+    desktop: 'desktop',
+    tablet: 'tablet',
+    smartphone: 'smartphone',
 };
 Lang.video_body_coord_params = {
     left_eye: 'left eye',
@@ -5684,8 +5689,9 @@ Lang.Helper = {
     stop_bgm: 'Stops background music',
     is_clicked: 'Checks whether mouse is clicked.',
     is_object_clicked: 'Checks whether object is clicked.',
-    is_press_some_key: 'Checks whether an selected key is pressed.',
-    reach_something: 'Checks whether the object reaches the selected point.',
+    is_press_some_key: 'Checks whether the selected key is pressed.',
+    reach_something:
+        "Checks whether the object touches the selected item. If the object touches the selected item, it is judged as 'True'.",
     is_type:
         'Checks whether the input text consists of the selected characters. If the input text consists of the selected characters, it is judged as `True`.',
     is_included_in_list: 'Checks whether selected list contains the input value.',
@@ -5704,7 +5710,11 @@ Lang.Helper = {
     boolean_not:
         "Changes the input conditions to its opposite.\n(If the input condition is true, it returns 'False'. And if the input condition is false, it returns 'True'.)",
     is_boost_mode:
-        'Checks whether the boost mode is turned on or not.\nIf the boost mode is on, it is judged as "true".',
+        "Checks whether the boost mode is turned on or not.\nIf the boost mode is on, it is judged as 'True'.",
+    is_current_device_type:
+        "If the device that runs the project is the selected device, it is judged as 'true'.",
+    is_touch_supported:
+        "If the device that runs the project is a touch screen, it is judged as 'true'.",
     calc_basic:
         'Reports the value of the two input numbers of quadratic operations.\n+ : Adds two input numbers.\n- : Subtracts two input numbers.\n* : Multiplies two input numbers.\n/ : Divides two input numbers.',
     calc_rand:
@@ -6075,7 +6085,7 @@ Lang.Helper = {
     chocopi_touch_value:
         "The value will be smaller if the capacitance of the obeject is larger.<br/>If many people hold each other's hand and touch, the value will be smaller<br/>'Capacitance' means how many electric particles the object can hold.<br/><br/><br/>Port number(P1~P8) is automatically selected internally<br>It is needed only when multiple modules with the same kind are used",
     boolean_and_or:
-        'AND : Checks whether both conditions are true.\nOR : Checks whether at least one of the two conditions is true.',
+        'AND: Checks whether both conditions are true.\nOR: Checks whether at least one of the two conditions is true.',
     check_weather:
         '\nChecks whether the weather information of the selected date and region matches the actual weather conditions.',
     check_finedust:
@@ -7013,6 +7023,8 @@ Lang.template = {
     boolean_or: '%1 %2 %3',
     boolean_not: '%1 %2 %3',
     is_boost_mode: '%1',
+    is_current_device_type: 'is the project running on %1 ?',
+    is_touch_supported: 'touch screen?',
     true_or_false: '%1',
     True: '%1  ',
     False: '%1  ',
