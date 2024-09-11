@@ -86,6 +86,12 @@ Entry.avatarbot = {
 			Entry.hw.sendQueue.CMD[index+7] = (Entry.avatarbot.Board_Servo.us_Max)&0xff;	
 			Entry.hw.sendQueue.CMD[index+8] = (Entry.avatarbot.Board_Servo.us_Max>>8)&0xff;	
 		}
+		
+		// led 
+		index = Entry.avatarbot.BoardFunType.LED_Strip;
+		Entry.hw.sendQueue.CMD[index+2] = (Entry.avatarbot.Board_LED_Strip.led_num)&0xff;
+		Entry.hw.sendQueue.CMD[index+7] = (Entry.avatarbot.Board_LED_Strip.brightness)&0xff;
+		
         //
         /*
         for(var i=0; i<(data.length/10); i++)
@@ -280,11 +286,13 @@ Entry.avatarbot = {
 	Board_LED_Strip : {
 		En:0,
 		sample: 0,
-		led_num: 0,
+		led_num: 64,
 		color_order: 0,
 		r: 0,
 		g: 0,
-		b: 0
+		b: 0,
+		brightness:63,
+		set_en: 0,
 	},
 	
 	Board_ultraSonic : {
@@ -296,7 +304,6 @@ Entry.avatarbot = {
 		ch1_cm: 0,
 		ch2_inch: 0
 	},
-	
 	/*
     monitorTemplate: {
         imgPath: 'hardware/avatarbot.png',
@@ -445,7 +452,7 @@ Entry.avatarbot.setLanguage = function() {
                 avatarbot_buzzer_sample: '부저 샘플 (으)로 동작 ',
                 avatarbot_buzzer: '부저 %1 소리로 %2 초 동안 동작 ',
                 avatarbot_led_strip_sample: 'LED 스트립 (으)로 동작 ',
-                avatarbot_led_strip_set: 'LED 스트립 LED %1 개, 밝기 %2 동작 ',
+                avatarbot_led_strip_set: 'LED 스트립 LED %1 개, 밝기 %2 % 동작 ',
                 // avatarbot_ir_remote: '리모컨 %1 (으)로 동작 ',
                 avatarbot_get_mpu6050: '자이로 가속도 센서 %1 값 ',
                 avatarbot_ultra_sonic:'초음파 %1 번 센서 값 ',
@@ -2152,7 +2159,7 @@ Entry.avatarbot.getBlocks = function() {
             },
             paramsKeyMap: {
                 VALUE1: 0,
-                VALUE2: 0,
+                VALUE2: 1,
             },
             class: 'avatarbot_buzzer',
             isNotFor: ['avatarbot'],
@@ -2329,7 +2336,7 @@ Entry.avatarbot.getBlocks = function() {
                 params: [
                     {
                         type: 'avatarbot_text',
-                        params: ['51'],
+                        params: ['64'],
                     },
                     {
                         type: 'avatarbot_text',
@@ -2340,7 +2347,7 @@ Entry.avatarbot.getBlocks = function() {
             },
             paramsKeyMap: {
                 VALUE1: 0,
-             	VALUE2: 0,
+             	VALUE2: 1,
             },
             class: 'avatarbot_led',
             isNotFor: ['avatarbot'],
@@ -2362,9 +2369,10 @@ Entry.avatarbot.getBlocks = function() {
                 
                 let index = Entry.avatarbot.BoardFunType.LED_Strip;
                 Entry.hw.sendQueue.CMD[index] = 1; // ch en
-                Entry.hw.sendQueue.CMD[index+1] = 1; // sample 0, 1~other...
+                Entry.hw.sendQueue.CMD[index+1] = 0; // sample 0, 1~other...
                 Entry.hw.sendQueue.CMD[index+2] = value;
                 Entry.hw.sendQueue.CMD[index+7] = brightness;
+                Entry.hw.sendQueue.CMD[index+8] = 1; // setting enable.
                 Entry.hw.update();
                 
                 return script.callReturn();
