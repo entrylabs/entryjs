@@ -58,6 +58,10 @@ Entry.avatarbot = {
 		Entry.hw.sendQueue.CMD[index+4] = (Entry.avatarbot.Board_ADC.Attenuation_11db)&0xff;
 		Entry.hw.sendQueue.CMD[index+5] = (Entry.avatarbot.Board_ADC.Resolution)&0xff;
 		
+        // ir receiver 
+        index = Entry.avatarbot.BoardFunType.IR_Remote;
+        Entry.hw.sendQueue.CMD[index+1] = (Entry.avatarbot.Board_IR_Remote.Value)&0xff;
+		
 		// pca9568
 		index = Entry.avatarbot.BoardFunType.PCA9568;
 		Entry.hw.sendQueue.CMD[index+1] = (Entry.avatarbot.Board_PCA9568.Freq)&0xff;
@@ -169,7 +173,12 @@ Entry.avatarbot = {
 	},
 	
 	Board_IR_Remote : {
-		En: 0
+		Flag: 0,
+        Value: 0xff,
+        Repeat: 0,
+        Address: 0,
+        Command: 0,
+        Raw_data: 0
 	},
 	
 	Board_Buzzer : {
@@ -457,6 +466,8 @@ Entry.avatarbot.setLanguage = function() {
                 avatarbot_get_mpu6050: '자이로 가속도 센서 %1 값 ',
                 avatarbot_ultra_sonic:'초음파 %1 번 센서 값 ',
                 //
+                avatarbot_ir_receiver:'리모컨 %1 동작 ',
+                //
             },
             Device: {
                 avatarbot: 'avatarbot',
@@ -512,6 +523,8 @@ Entry.avatarbot.blockMenuBlocks = [
     // 'avatarbot_ir_remote',
     'avatarbot_get_mpu6050',
     'avatarbot_ultra_sonic',
+    //
+    'avatarbot_ir_receiver',
 ];
 
 // 블록 생성
@@ -2545,6 +2558,157 @@ Entry.avatarbot.getBlocks = function() {
             },
         },
        	//---------------------------------------------------------------
+        avatarbot_ir_receiver: {
+            color: EntryStatic.colorSet.block.default.HARDWARE, //블록 색상
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE, //경계선 색상
+            fontColor: '#fff', // 폰트색상 basic_string_field는 기본 색상이 검정색(#000) 입니다.
+            skeleton: 'basic_string_field', // 블록 모양 정의
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['기본', '0'],
+                        ['상세', '1'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: { // 보여질 블록 정의
+            	// def의 params의 경우는 초기값을 지정할수 있습니다.
+            	// TextInput의 경우에도 def > params을 통해 값을 지정할수 있습니다.
+                params: [
+                    null,
+                ],
+                type: 'avatarbot_ir_receiver', // func name
+            },
+            paramsKeyMap: { // 파라미터를 사용 할때 쓰는 Key값 정의
+                VALUE: 0,
+            },
+            class: 'avatarbot_ir_receiver_data',
+            isNotFor: ['avatarbot'],
+            func(sprite, script) { // 블록 기능정의
+            	if (!Entry.hw.sendQueue.CMD) {
+                    Entry.avatarbot.dataTableReset();
+                }
+                // let sensorData = Entry.hw.portData.CMD[Entry.avatarbot.BoardFunType.Button+1] == 0 ? 0 : 1;
+                // Entry.hw.sendQueue.CMD[Entry.avatarbot.BoardFunType.Button+1] = 0;
+                // Entry.hw.update();
+            	// return sensorData;
+                //---
+                // 해당 값을 getField, getValue로 가져오고
+	            // 가져 올때 paramsKeyMap에서
+	            // 정의한 VALUE라는 키값으로 데이터를 가져옵니다.
+                // const signal = script.getValue('VALUE', script);
+                // return Entry.hw.getAnalogPortValue(signal[1]);
+                const type = script.getNumberValue('VALUE', script);
+                let index = Entry.avatarbot.BoardFunType.IR_Remote;
+                // data list
+                let ir_flag = Entry.hw.portData.CMD[index+0]; // 0 or 1
+                let ir_value = Entry.hw.portData.CMD[index+1]; // 0 or 1
+                let ir_repeat = Entry.hw.portData.CMD[index+2]; // 0 or 1
+                let ir_address = Entry.hw.portData.CMD[index+3]; // 0 or 1
+                let ir_command = Entry.hw.portData.CMD[index+4]; // 0 or 1
+
+                let ir_raw_data = 0x00000000; // unsigned int
+                ir_raw_data = Entry.hw.portData.CMD[index+5]; // unsigned int
+                ir_raw_data += (Entry.hw.portData.CMD[index+6]<<8);     
+                ir_raw_data += (Entry.hw.portData.CMD[index+7]<<16);
+                ir_raw_data += (Entry.hw.portData.CMD[index+8]<<24);
+                
+                // let mpu6050 = `Acceleration X: ${acceleration_x}, Y: ${acceleration_y}, Z: ${acceleration_z} m/s^2\nRotation X: ${rotation_x}, Y: ${rotation_y}, Z: ${rotation_z} rad/s\nTemperature: ${temperature} degC`;
+				
+                let ir_revicer = "";
+                if(ir_flag == 1)
+                {
+                    if(type == 1)
+                    {
+                        ir_revicer = `장치(${ir_address}), 값(${ir_command}), `;
+                    } 
+
+                    switch(ir_value)
+                    {
+                        case 0: // power
+                            ir_revicer += `전원`;
+                            break;
+                        case 1: // up
+                            ir_revicer += `위`;
+                            break;
+                        case 2: // down
+                            ir_revicer += `아래`;
+                            break;
+                        case 3: // left
+                            ir_revicer += `왼쪽`;
+                            break;
+                        case 4: // right
+                            ir_revicer += `오른쪽`;
+                            break;
+                        case 5: // ok
+                            ir_revicer += `ok`;
+                            break;
+                        case 6: // *
+                            ir_revicer += `*`;
+                            break;
+                        case 7: // #
+                            ir_revicer += `#`;
+                            break;
+                        case 8: // nb0
+                            ir_revicer += `0`;
+                            break;
+                        case 9: // 1
+                            ir_revicer += `1`;
+                            break;
+                        case 10:// 2
+                            ir_revicer += `2`;
+                            break;
+                        case 11: // 3
+                            ir_revicer += `3`;
+                            break;
+                        case 12: // 4s
+                            ir_revicer += `4`;
+                            break;
+                        case 13: // 5
+                            ir_revicer += `5`;
+                            break;
+                        case 14: // 6
+                            ir_revicer += `6`;
+                            break;
+                        case 15: // 7
+                            ir_revicer += `7`;
+                            break;
+                        case 16: // 8
+                            ir_revicer += `8`;
+                            break;
+                        case 17: // 9
+                            ir_revicer += `9`;
+                            break;
+                        default:
+                            break;        
+                    }
+                }
+                
+                Entry.hw.sendQueue.CMD[index] = 0; // flag clear x -> 0
+                Entry.hw.update();
+                return ir_revicer;
+
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'avatarbot.get_ir_receiver()',
+                        blockType: 'param',
+                        textParams: [
+                        ],
+                    },
+                ],
+            },
+        },
+        //---------------------------------------------------------------
         //endregion avatarbot 아두이노
         //---------------------------------------------------------------
     };
