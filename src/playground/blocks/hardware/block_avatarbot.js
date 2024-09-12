@@ -114,6 +114,7 @@ Entry.avatarbot = {
     BoardFunType : {
     	Info: 0,
     	Button:10,
+        OLED:12, // OLED : 12(EN),13(Sample)
         GPIO_PWM_SET: 20,
         GPIO_PWM: 30,
         ADC: 40,
@@ -426,6 +427,7 @@ Entry.avatarbot.setLanguage = function() {
 			    avatarbot_get_adc_dac_sonic_number: '%1  ',
 			    avatarbot_get_gpio_dc_number: '%1  ',
 			    avatarbot_get_serve_number: '%1  ',
+                avatarbot_get_oled_number: '%1  ',
 			    avatarbot_get_pwm_port_number: '%1  ',
 			    avatarbot_get_buzzer_tone_number: '%1 ',
 			    avatarbot_get_buzzer_time_number: '%1 ',
@@ -444,29 +446,33 @@ Entry.avatarbot.setLanguage = function() {
 			    avatarbot_ext_get_digital: '디지털 %1 번 센서값',
 			    avatarbot_DC_CW: '정회전',
     			avatarbot_DC_CCW: '역회전',
+                avatarbot_func_on: '시작',
+    			avatarbot_func_off: '정지',
     			
 				//
 			   	// avatarbot_hw_test: 'AvatarBot HW Test %1 번 값 ',
                 //
-                avatarbot_get_button: '버튼 값 ',
-                avatarbot_get_number_sensor_value: '아날로그 %1 번 센서값  ', // adc
-                avatarbot_convert_scale: '%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 바꾼값  ',
-                avatarbot_get_digital_value: '디지털 %1 번 센서값  ',
-                avatarbot_toggle_led: 'LED %1 번 핀 %2 %3',
-                avatarbot_toggle_pwm: 'PWM %1 번 핀을 %2 % (으)로 정하기 ',
+                avatarbot_get_button: '버튼 값 가져오기 ',
+                avatarbot_get_number_sensor_value: '아날로그 %1 번 센서값 가져오기 ', // adc
+                avatarbot_convert_scale: '%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 바꾼값 가져오기 ',
+                avatarbot_get_digital_value: '디지털 %1 번 센서값 가져오기 ',
+                avatarbot_toggle_led: 'LED %1 번 핀 %2 %3 ',
+                avatarbot_toggle_pwm: 'PWM %1 번 핀을 %2 % 로 %3 ',
                 //
                 // avatarbot_pca9568: '모터 컨트롤 주파수 %1 와 오실레이터 %2 (으)로 설정 ',
-                avatarbot_servo: '서보 모터 %1 을 시간(us) %2 ~ %3 (으)로 %4 ° 동작 ',
-                avatarbot_dc: 'DC 모터 %1 을 %2 방향으로 %3 % (으)로 동작 ',
-                avatarbot_buzzer_sample: '부저 샘플 (으)로 동작 ',
-                avatarbot_buzzer: '부저 %1 소리로 %2 초 동안 동작 ',
-                avatarbot_led_strip_sample: 'LED 스트립 (으)로 동작 ',
-                avatarbot_led_strip_set: 'LED 스트립 LED %1 개, 밝기 %2 % 동작 ',
+                avatarbot_servo: '서보 모터 %1 을 시간(us) %2 ~ %3로 %4 ° %5 ',
+                avatarbot_dc: 'DC 모터 %1 을 %2 방향으로 %3 % %4 ',
+                avatarbot_buzzer_sample: '부저 샘플 %1 ',
+                avatarbot_buzzer: '부저 %1 소리로 %2 초 동안 %3 ',
+                avatarbot_led_strip_sample: 'LED 스트립 샘플 %1 ',
+                avatarbot_led_strip_set: 'LED 스트립 LED %1 개, 밝기 %2 % 설정 ',
                 // avatarbot_ir_remote: '리모컨 %1 (으)로 동작 ',
-                avatarbot_get_mpu6050: '자이로 가속도 센서 %1 값 ',
-                avatarbot_ultra_sonic:'초음파 %1 번 센서 값 ',
+                avatarbot_get_mpu6050: '자이로 가속도 센서 %1 값 가져오기 ',
+                avatarbot_ultra_sonic:'초음파 %1 번 센서 값 가져오기 ',
                 //
-                avatarbot_ir_receiver:'리모컨 %1 동작 ',
+                avatarbot_ir_receiver:'리모컨 %1 모드로 값 가져오기 ',
+
+                avatarbot_oled_sample:'OLED %1 화면으로 %2 ',
                 //
             },
             Device: {
@@ -525,6 +531,7 @@ Entry.avatarbot.blockMenuBlocks = [
     'avatarbot_ultra_sonic',
     //
     'avatarbot_ir_receiver',
+    'avatarbot_oled_sample',
 ];
 
 // 블록 생성
@@ -1130,6 +1137,8 @@ Entry.avatarbot.getBlocks = function() {
                         ['3', '3'],
                         ['4', '4'],
                         ['5', '5'],
+                        ['6', '6'],
+                        ['7', '7'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -1162,6 +1171,8 @@ Entry.avatarbot.getBlocks = function() {
 			                        ['3', '3'],
 			                        ['4', '4'],
 			                        ['5', '5'],
+                                    ['6', '6'],
+                                    ['7', '7'],
                                 ],
                                 value: '0',
                                 fontSize: 11,
@@ -1170,6 +1181,88 @@ Entry.avatarbot.getBlocks = function() {
                             },
                         ],
                         keyOption: 'avatarbot_get_serve_number',
+                    },
+                ],
+            },
+        },
+        //---------------------------------------------------------------
+        avatarbot_get_oled_number: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['none', '0'],
+                        ['lines', '1'],
+                        ['rectangles', '2'],
+                        ['fill rectangles', '3'],
+                        ['circles', '4'],
+                        ['fill circles', '5'],
+                        ['round', '6'],
+                        ['fill round', '7'],
+                        ['triangles', '8'],
+                        ['fill triangles', '9'],
+                        ['text', '10'],
+                        ['stylized text', '11'],
+                        ['scroll text', '12'],
+                        ['bitmap', '13'],
+                        ['snow bitmap', '14'],
+                        ['logo text', '15'],
+                        ['image', '16'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            func(sprite, script) {
+                return script.getStringField('PORT');
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: '%1',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+			                        ['none', '0'],
+                                    ['lines', '1'],
+                                    ['rectangles', '2'],
+                                    ['fill rectangles', '3'],
+                                    ['circles', '4'],
+                                    ['fill circles', '5'],
+                                    ['round', '6'],
+                                    ['fill round', '7'],
+                                    ['triangles', '8'],
+                                    ['fill triangles', '9'],
+                                    ['text', '10'],
+                                    ['stylized text', '11'],
+                                    ['scroll text', '12'],
+                                    ['bitmap', '13'],
+                                    ['snow bitmap', '14'],
+                                    ['logo text', '15'],
+                                    ['image', '16'],
+                                ],
+                                value: '0',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                            },
+                        ],
+                        keyOption: 'avatarbot_get_oled_number',
                     },
                 ],
             },
@@ -1630,10 +1723,21 @@ Entry.avatarbot.getBlocks = function() {
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                {
+                /*{
                     type: 'Indicator',
                     img: 'block_icon/hardware_icon.svg',
                     size: 12,
+                },*/
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.template.avatarbot_func_on, '1'],
+                        [Lang.template.avatarbot_func_off, '0'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -1650,6 +1754,7 @@ Entry.avatarbot.getBlocks = function() {
             paramsKeyMap: {
                 VALUE: 0,
                 OPERATOR: 1,
+                RUN:2,
             },
             class: 'avatarbot_gpio_pwm',
             isNotFor: ['avatarbot'],
@@ -1661,13 +1766,15 @@ Entry.avatarbot.getBlocks = function() {
                 
                 const signal = script.getNumberValue('VALUE', script);
                 const operator = script.getField('OPERATOR');
+                const run = script.getField('RUN');
                 const value = operator == 'on' ? 255 : 0;
-         
+                const on = run == '1' ? 1 : 0;
+
                 let index = (signal*4) + Entry.avatarbot.BoardFunType.GPIO_PWM;
                 // let sensorData = Entry.hw.portData.CMD[index+3] == 0 ? 0 : 1; // ch0, ch1 value
                 
                 // digital setting
-                Entry.hw.sendQueue.CMD[index] = 1; // ch en
+                Entry.hw.sendQueue.CMD[index] = on; // 1; // ch en
                 Entry.hw.sendQueue.CMD[index+1] = value; // duty or value
                 Entry.hw.sendQueue.CMD[index+2] = 1; // type out(0)
                 Entry.hw.update();
@@ -1678,7 +1785,7 @@ Entry.avatarbot.getBlocks = function() {
                 js: [],
                 py: [
                     {
-                        syntax: 'avatarbot.pin_digital(%1, %2)',
+                        syntax: 'avatarbot.pin_digital(%1, %2, %3)',
                         textParams: [
                             {
                                 type: 'Block',
@@ -1696,6 +1803,19 @@ Entry.avatarbot.getBlocks = function() {
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter: Entry.block.converters.returnStringValue,
                             },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.template.avatarbot_func_on, '1'],
+                                    [Lang.template.avatarbot_func_off, '0'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            
                         ],
                     },
                 ],
@@ -1718,6 +1838,17 @@ Entry.avatarbot.getBlocks = function() {
                     accept: 'string',
                     defaultType: 'number',
                 },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.template.avatarbot_func_on, '1'],
+                        [Lang.template.avatarbot_func_off, '0'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
             ],
             events: {},
             def: {
@@ -1735,6 +1866,7 @@ Entry.avatarbot.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
                 VALUE: 1,
+                RUN:2,
             },
             class: 'avatarbot_gpio_pwm',
             isNotFor: ['avatarbot'],
@@ -1745,6 +1877,9 @@ Entry.avatarbot.getBlocks = function() {
                 
                 const signal = script.getNumberValue('PORT');
                 let value = script.getNumberValue('VALUE');
+                const run = script.getField('RUN');
+                const on = run == '1' ? 1 : 0;
+
                 value = Math.round(value);
                 value = Math.max(value, 0);
                 value = Math.min(value, 100);
@@ -1752,7 +1887,7 @@ Entry.avatarbot.getBlocks = function() {
                 let index = (signal*4) + Entry.avatarbot.BoardFunType.GPIO_PWM;
                 
                 // digital setting
-                Entry.hw.sendQueue.CMD[index] = 1; // ch en
+                Entry.hw.sendQueue.CMD[index] = on; // 1; // ch en
                 Entry.hw.sendQueue.CMD[index+1] = value; // duty or value : 0 ~ 255
                 Entry.hw.sendQueue.CMD[index+2] = 2; // type pwm(2)
                 Entry.hw.update();
@@ -1772,6 +1907,18 @@ Entry.avatarbot.getBlocks = function() {
                             {
                                 type: 'Block',
                                 accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.template.avatarbot_func_on, '1'],
+                                    [Lang.template.avatarbot_func_off, '0'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
                             },
                         ],
                     },
@@ -1892,6 +2039,17 @@ Entry.avatarbot.getBlocks = function() {
                     accept: 'string',
                     defaultType: 'number',
                 },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.template.avatarbot_func_on, '1'],
+                        [Lang.template.avatarbot_func_off, '0'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
             ],
             events: {},
             def: {
@@ -1911,6 +2069,7 @@ Entry.avatarbot.getBlocks = function() {
                         type: 'number',
                         params: ['0'],
                     },
+                    null,
                 ],
                 type: 'avatarbot_servo',
             },
@@ -1919,6 +2078,7 @@ Entry.avatarbot.getBlocks = function() {
                 VALUE2: 1,
                 VALUE3: 2,
                 VALUE4: 3,
+                RUN:4,
             },
             class: 'avatarbot',
             isNotFor: ['avatarbot'],
@@ -1931,6 +2091,9 @@ Entry.avatarbot.getBlocks = function() {
                 let us_min = script.getNumberValue('VALUE2', script);
                 let us_max = script.getNumberValue('VALUE3', script);
                 let value = script.getNumberValue('VALUE4', script);
+                const run = script.getField('RUN');
+                const on = run == '1' ? 1 : 0;
+
                 us_min = Math.round(us_min);
                 us_max = Math.round(us_max);
                 value = Math.round(value);
@@ -1947,7 +2110,7 @@ Entry.avatarbot.getBlocks = function() {
                 let index = (signal*10) + Entry.avatarbot.BoardFunType.Servo_M0; // base+10,20,30,...n
                 
                 // digital setting
-                Entry.hw.sendQueue.CMD[index] = 1; // ch en
+                Entry.hw.sendQueue.CMD[index] = on; // 1; // ch en
                 // Entry.hw.sendQueue.CMD[index+1] = 0; // pulse min low
                 // Entry.hw.sendQueue.CMD[index+2] = 0; // pulse min high
                 // Entry.hw.sendQueue.CMD[index+3] = 0; // pulse max low
@@ -1984,6 +2147,18 @@ Entry.avatarbot.getBlocks = function() {
                                 type: 'Block',
                                 accept: 'string',
                             },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.template.avatarbot_func_on, '1'],
+                                    [Lang.template.avatarbot_func_off, '0'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
                         ],
                     },
                 ],
@@ -2018,6 +2193,17 @@ Entry.avatarbot.getBlocks = function() {
                     accept: 'string',
                     defaultType: 'number',
                 },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.template.avatarbot_func_on, '1'],
+                        [Lang.template.avatarbot_func_off, '0'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
             ],
             events: {},
             def: {
@@ -2030,6 +2216,7 @@ Entry.avatarbot.getBlocks = function() {
                         type: 'number',
                         params: ['0'],
                     },
+                    null,
                 ],
                 type: 'avatarbot_dc',
             },
@@ -2037,6 +2224,7 @@ Entry.avatarbot.getBlocks = function() {
                 VALUE1: 0,
                 VALUE2: 1,
                 VALUE3: 2,
+                RUN:3,
             },
             class: 'avatarbot',
             isNotFor: ['avatarbot'],
@@ -2052,13 +2240,16 @@ Entry.avatarbot.getBlocks = function() {
                 const signal = script.getNumberValue('VALUE1', script);
                 let cw = script.getNumberValue('VALUE2', script);
                 let speed = script.getNumberValue('VALUE3', script);
-                
+                const run = script.getField('RUN');
+                const on = run == '1' ? 1 : 0;
+
                 speed = Math.round(speed);
                 speed = Math.max(speed, 0); 
                 speed = Math.min(speed, 100);
                 
                 let index = (signal*2) + Entry.avatarbot.BoardFunType.DC_M; // base+2,4,6,8
-                Entry.hw.sendQueue.CMD[index] = (1 + (cw<<4))&0xff; // ch en
+                // Entry.hw.sendQueue.CMD[index] = (1 + (cw<<4))&0xff; // ch en
+                Entry.hw.sendQueue.CMD[index] = (on + (cw<<4))&0xff; // ch en
                 Entry.hw.sendQueue.CMD[index+1] = speed&0xff;
                 Entry.hw.update();
                 
@@ -2091,6 +2282,18 @@ Entry.avatarbot.getBlocks = function() {
                                 type: 'Block',
                                 accept: 'string',
                             },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.template.avatarbot_func_on, '1'],
+                                    [Lang.template.avatarbot_func_off, '0'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
                         ],
                     },
                 ],
@@ -2103,16 +2306,29 @@ Entry.avatarbot.getBlocks = function() {
             skeleton: 'basic',
             statements: [],
             params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.template.avatarbot_func_on, '1'],
+                        [Lang.template.avatarbot_func_off, '0'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
             ],
             events: {},
             def: {
                 params: [
+                    null,
                 ],
                 type: 'avatarbot_buzzer_sample',
             },
             paramsKeyMap: {
                 // PORT: 0,
                 // VALUE: 0,
+                RUN:0,
             },
             class: 'avatarbot_buzzer',
             isNotFor: ['avatarbot'],
@@ -2122,8 +2338,11 @@ Entry.avatarbot.getBlocks = function() {
                 }
                 
                 let index = Entry.avatarbot.BoardFunType.Buzzer;
+                const run = script.getField('RUN');
+                const on = run == '1' ? 1 : 0;
+
                 // digital setting
-                Entry.hw.sendQueue.CMD[index] = 1; // buzzer en
+                Entry.hw.sendQueue.CMD[index] = on; // 1; // buzzer en
                 Entry.hw.sendQueue.CMD[index+1] = 1; // buzzer sample
                 Entry.hw.update();
                 return script.callReturn();
@@ -2134,6 +2353,18 @@ Entry.avatarbot.getBlocks = function() {
                     {
                         syntax: 'avatarbot.buzzer_sample()',
                         textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.template.avatarbot_func_on, '1'],
+                                    [Lang.template.avatarbot_func_off, '0'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
                         ],
                     },
                 ],
@@ -2157,6 +2388,17 @@ Entry.avatarbot.getBlocks = function() {
                     accept: 'string',
                     defaultType: 'number',
                 },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.template.avatarbot_func_on, '1'],
+                        [Lang.template.avatarbot_func_off, '0'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
             ],
             events: {},
             def: {
@@ -2167,12 +2409,14 @@ Entry.avatarbot.getBlocks = function() {
                     {
                         type: 'avatarbot_get_buzzer_time_number', // 0 ~ 4s
                     },
+                    null,
                 ],
                 type: 'avatarbot_buzzer',
             },
             paramsKeyMap: {
                 VALUE1: 0,
                 VALUE2: 1,
+                RUN: 2,
             },
             class: 'avatarbot_buzzer',
             isNotFor: ['avatarbot'],
@@ -2183,10 +2427,12 @@ Entry.avatarbot.getBlocks = function() {
                 
                 const tone = script.getNumberValue('VALUE1');
                 const time = script.getNumberValue('VALUE2');
-                
+                const run = script.getField('RUN');
+                const on = run == '1' ? 1 : 0;
+
                 let index = Entry.avatarbot.BoardFunType.Buzzer;
                 // digital setting
-                Entry.hw.sendQueue.CMD[index] = 1; // buzzer en
+                Entry.hw.sendQueue.CMD[index] = on; // 1; // buzzer en
                 Entry.hw.sendQueue.CMD[index+1] = 0; // buzzer sample
                 Entry.hw.sendQueue.CMD[index+2] = tone; // tone0
                 // Entry.hw.sendQueue.CMD[index+3] = 0; // tone1
@@ -2214,6 +2460,18 @@ Entry.avatarbot.getBlocks = function() {
                             {
                                 type: 'Block',
                                 accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.template.avatarbot_func_on, '1'],
+                                    [Lang.template.avatarbot_func_off, '0'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
                             },
                         ],
                     },
@@ -2292,14 +2550,27 @@ Entry.avatarbot.getBlocks = function() {
             skeleton: 'basic',
             statements: [],
             params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.template.avatarbot_func_on, '1'],
+                        [Lang.template.avatarbot_func_off, '0'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
             ],
             events: {},
             def: {
                 params: [
+                    null,
                 ],
                 type: 'avatarbot_led_strip_sample',
             },
             paramsKeyMap: {
+                RUN: 0,
             },
             class: 'avatarbot_led',
             isNotFor: ['avatarbot'],
@@ -2309,8 +2580,11 @@ Entry.avatarbot.getBlocks = function() {
                 }
                 
                 let index = Entry.avatarbot.BoardFunType.LED_Strip;
-                Entry.hw.sendQueue.CMD[index] = 1; // ch en
-                Entry.hw.sendQueue.CMD[index+1] = 1; // sample 0, 1~other...
+                const run = script.getField('RUN');
+                const on = run == '1' ? 1 : 0;
+
+                Entry.hw.sendQueue.CMD[index] = on; // 1; // ch en
+                Entry.hw.sendQueue.CMD[index+1] = 1; // 0 : not run, sample 1, 1~other...
                 Entry.hw.update();
                 
                 return script.callReturn();
@@ -2321,7 +2595,20 @@ Entry.avatarbot.getBlocks = function() {
                     {
                         syntax: 'avatarbot.set_led_strip_sample()',
                         textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.template.avatarbot_func_on, '1'],
+                                    [Lang.template.avatarbot_func_off, '0'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
                         ],
+                        
                     },
                 ],
             },
@@ -2606,6 +2893,7 @@ Entry.avatarbot.getBlocks = function() {
                 // const signal = script.getValue('VALUE', script);
                 // return Entry.hw.getAnalogPortValue(signal[1]);
                 const type = script.getNumberValue('VALUE', script);
+
                 let index = Entry.avatarbot.BoardFunType.IR_Remote;
                 // data list
                 let ir_flag = Entry.hw.portData.CMD[index+0]; // 0 or 1
@@ -2704,6 +2992,90 @@ Entry.avatarbot.getBlocks = function() {
                         blockType: 'param',
                         textParams: [
                         ],
+                    },
+                ],
+            },
+        },
+        //---------------------------------------------------------------
+        avatarbot_oled_sample: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.template.avatarbot_func_on, '1'],
+                        [Lang.template.avatarbot_func_off, '0'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'avatarbot_get_oled_number',
+                    },
+                    null,
+                ],
+                type: 'avatarbot_oled_sample',
+            },
+            paramsKeyMap: {
+                VALUE1: 0,
+                RUN: 1,
+            },
+            class: 'avatarbot_oled',
+            isNotFor: ['avatarbot'],
+            func(sprite, script) {
+				if (!Entry.hw.sendQueue.CMD) {
+                    Entry.avatarbot.dataTableReset();
+                }
+                const sample = script.getNumberValue('VALUE1', script);
+                const run = script.getField('RUN');
+                const on = run == '1' ? 1 : 0;
+                
+                let index = Entry.avatarbot.BoardFunType.OLED;
+
+                Entry.hw.sendQueue.CMD[index] = on; // 1; // ch en
+                Entry.hw.sendQueue.CMD[index+1] = sample; // 0 : not run, sample 1~n
+                Entry.hw.update();
+                
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'avatarbot.set_oled_sample(%1 %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.template.avatarbot_func_on, '1'],
+                                    [Lang.template.avatarbot_func_off, '0'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        
                     },
                 ],
             },
