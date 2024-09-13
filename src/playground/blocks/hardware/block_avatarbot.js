@@ -30,7 +30,10 @@ Entry.avatarbot = {
     dataTableReset() {
 		this.sendBuffer.fill(0);
 		Entry.hw.sendQueue.CMD = this.sendBuffer;
-		/*
+		
+        this.dc_m_index.fill(0);
+        this.buzzer_index = 0;
+        /*
         Entry.hw.sendQueue.readablePorts = [];
         // data buffer 23*10 table value.
         for (let index = 0; index < 230; index++) {
@@ -113,6 +116,7 @@ Entry.avatarbot = {
 	},
     BoardFunType : {
     	Info: 0,
+        Info_isConnect: 5,
     	Button:10,
         OLED:12, // OLED : 12(EN),13(Sample)
         GPIO_PWM_SET: 20,
@@ -181,7 +185,8 @@ Entry.avatarbot = {
         Command: 0,
         Raw_data: 0
 	},
-	
+
+	buzzer_index: 0,
 	Board_Buzzer : {
 		En: 0,
 		sample: 0,
@@ -271,6 +276,7 @@ Entry.avatarbot = {
 		us_Max: 2100
 	},
 	
+    dc_m_index: new Array(4).fill(0),
 	Board_DC_M : {
 		En0:0,
 		CCW0:0,
@@ -424,6 +430,7 @@ Entry.avatarbot.setLanguage = function() {
 				// global.
 				avatarbot: 'avatarbot',
 				avatarbot_text: '%1',
+                avatarbot_get_timer_number: '%1  ',
 			    avatarbot_get_adc_dac_sonic_number: '%1  ',
 			    avatarbot_get_gpio_dc_number: '%1  ',
 			    avatarbot_get_serve_number: '%1  ',
@@ -456,14 +463,14 @@ Entry.avatarbot.setLanguage = function() {
                 avatarbot_get_number_sensor_value: '아날로그 %1 번 센서값 가져오기 ', // adc
                 avatarbot_convert_scale: '%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 바꾼값 가져오기 ',
                 avatarbot_get_digital_value: '디지털 %1 번 센서값 가져오기 ',
-                avatarbot_toggle_led: 'LED %1 번 핀 %2 %3 ',
+                avatarbot_toggle_led: 'LED %1 번 핀 %2 ',
                 avatarbot_toggle_pwm: 'PWM %1 번 핀을 %2 % 로 %3 ',
                 //
                 // avatarbot_pca9568: '모터 컨트롤 주파수 %1 와 오실레이터 %2 (으)로 설정 ',
                 avatarbot_servo: '서보 모터 %1 을 시간(us) %2 ~ %3로 %4 ° %5 ',
-                avatarbot_dc: 'DC 모터 %1 을 %2 방향으로 %3 % %4 ',
-                avatarbot_buzzer_sample: '부저 샘플 %1 ',
-                avatarbot_buzzer: '부저 %1 소리로 %2 초 동안 %3 ',
+                avatarbot_dc: 'DC 모터 %1 을 %2 방향으로 %3 % %4 동작 ',
+                avatarbot_buzzer_sample: '부저 샘플 %1 %2 초 동안 시작 ',
+                avatarbot_buzzer: '부저 %1 소리로 %2 초 동안 시작 ',
                 avatarbot_led_strip_sample: 'LED 스트립 샘플 %1 ',
                 avatarbot_led_strip_set: 'LED 스트립 LED %1 개, 밝기 %2 % 설정 ',
                 // avatarbot_ir_remote: '리모컨 %1 (으)로 동작 ',
@@ -878,7 +885,7 @@ Entry.avatarbot.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-						['0', '0'],
+						['정지', '0'],
                         ['1', '1'],
                         ['2', '2'],
                         ['3', '3'],
@@ -887,7 +894,7 @@ Entry.avatarbot.getBlocks = function() {
                         ['6', '6'],
                         ['7', '7'],
                     ],
-                    value: '0',
+                    value: '4',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -912,7 +919,7 @@ Entry.avatarbot.getBlocks = function() {
                             {
                                 type: 'Dropdown',
                                 options: [
-									['0', '0'],
+									['정지', '0'],
 			                        ['1', '1'],
 			                        ['2', '2'],
 			                        ['3', '3'],
@@ -921,7 +928,7 @@ Entry.avatarbot.getBlocks = function() {
 			                        ['6', '6'],
 			                        ['7', '7'],
                                 ],
-                                value: '0',
+                                value: '4',
                                 fontSize: 11,
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1263,6 +1270,76 @@ Entry.avatarbot.getBlocks = function() {
                             },
                         ],
                         keyOption: 'avatarbot_get_oled_number',
+                    },
+                ],
+            },
+        },
+        //---------------------------------------------------------------
+        avatarbot_get_timer_number: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['정지', '0'],
+                        ['1 초', '1'],
+                        ['2 초', '2'],
+                        ['3 초', '3'],
+                        ['4 초', '4'],
+                        ['5 초', '5'],
+                        ['6 초', '6'],
+                        ['7 초', '7'],
+                        ['8 초', '8'],
+                        ['9 초', '9'],
+                        ['10초', '10'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                TIME: 0,
+            },
+            func(sprite, script) {
+                return script.getStringField('TIME');
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: '%1',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+			                        ['정지', '0'],
+                                    ['1 초', '1'],
+                                    ['2 초', '2'],
+                                    ['3 초', '3'],
+                                    ['4 초', '4'],
+                                    ['5 초', '5'],
+                                    ['6 초', '6'],
+                                    ['7 초', '7'],
+                                    ['8 초', '8'],
+                                    ['9 초', '9'],
+                                    ['10초', '10'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                            },
+                        ],
+                        keyOption: 'avatarbot_get_timer_number',
                     },
                 ],
             },
@@ -1728,6 +1805,7 @@ Entry.avatarbot.getBlocks = function() {
                     img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },*/
+                /*
                 {
                     type: 'Dropdown',
                     options: [
@@ -1739,6 +1817,7 @@ Entry.avatarbot.getBlocks = function() {
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
+                */
             ],
             events: {},
             def: {
@@ -1747,14 +1826,14 @@ Entry.avatarbot.getBlocks = function() {
                         type: 'avatarbot_get_port_number',
                     },
                     null,
-                    null,
+                    // null,
                 ],
                 type: 'avatarbot_toggle_led',
             },
             paramsKeyMap: {
                 VALUE: 0,
                 OPERATOR: 1,
-                RUN:2,
+                // RUN:2,
             },
             class: 'avatarbot_gpio_pwm',
             isNotFor: ['avatarbot'],
@@ -1766,9 +1845,10 @@ Entry.avatarbot.getBlocks = function() {
                 
                 const signal = script.getNumberValue('VALUE', script);
                 const operator = script.getField('OPERATOR');
-                const run = script.getField('RUN');
+                // const run = script.getField('RUN');
                 const value = operator == 'on' ? 255 : 0;
-                const on = run == '1' ? 1 : 0;
+                // const on = run == '1' ? 1 : 0;
+                const on = operator == 'on' ? 1 : 0;
 
                 let index = (signal*4) + Entry.avatarbot.BoardFunType.GPIO_PWM;
                 // let sensorData = Entry.hw.portData.CMD[index+3] == 0 ? 0 : 1; // ch0, ch1 value
@@ -1785,7 +1865,7 @@ Entry.avatarbot.getBlocks = function() {
                 js: [],
                 py: [
                     {
-                        syntax: 'avatarbot.pin_digital(%1, %2, %3)',
+                        syntax: 'avatarbot.pin_digital(%1, %2)',
                         textParams: [
                             {
                                 type: 'Block',
@@ -1803,6 +1883,7 @@ Entry.avatarbot.getBlocks = function() {
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter: Entry.block.converters.returnStringValue,
                             },
+                            /*
                             {
                                 type: 'Dropdown',
                                 options: [
@@ -1815,7 +1896,7 @@ Entry.avatarbot.getBlocks = function() {
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter: Entry.block.converters.returnStringValue,
                             },
-                            
+                            */
                         ],
                     },
                 ],
@@ -1841,10 +1922,10 @@ Entry.avatarbot.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.template.avatarbot_func_on, '1'],
-                        [Lang.template.avatarbot_func_off, '0'],
+                        [Lang.Blocks.ARDUINO_on, 'on'],
+                        [Lang.Blocks.ARDUINO_off, 'off'],
                     ],
-                    value: '1',
+                    value: 'on',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1878,8 +1959,8 @@ Entry.avatarbot.getBlocks = function() {
                 const signal = script.getNumberValue('PORT');
                 let value = script.getNumberValue('VALUE');
                 const run = script.getField('RUN');
-                const on = run == '1' ? 1 : 0;
-
+                const on = run == 'on' ? 1 : 0;
+                
                 value = Math.round(value);
                 value = Math.max(value, 0);
                 value = Math.min(value, 100);
@@ -1898,7 +1979,7 @@ Entry.avatarbot.getBlocks = function() {
                 js: [],
                 py: [
                     {
-                        syntax: 'avatarbot.set_pin_digital(%1, %2)',
+                        syntax: 'avatarbot.set_pin_digital(%1, %2, %3)',
                         textParams: [
                             {
                                 type: 'Block',
@@ -1911,10 +1992,10 @@ Entry.avatarbot.getBlocks = function() {
                             {
                                 type: 'Dropdown',
                                 options: [
-                                    [Lang.template.avatarbot_func_on, '1'],
-                                    [Lang.template.avatarbot_func_off, '0'],
+                                    [Lang.Blocks.ARDUINO_on, 'on'],
+                                    [Lang.Blocks.ARDUINO_off, 'off'],
                                 ],
-                                value: '1',
+                                value: 'on',
                                 fontSize: 11,
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -2193,6 +2274,7 @@ Entry.avatarbot.getBlocks = function() {
                     accept: 'string',
                     defaultType: 'number',
                 },
+                /*
                 {
                     type: 'Dropdown',
                     options: [
@@ -2203,6 +2285,12 @@ Entry.avatarbot.getBlocks = function() {
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                */
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
                 },
             ],
             events: {},
@@ -2216,7 +2304,10 @@ Entry.avatarbot.getBlocks = function() {
                         type: 'number',
                         params: ['0'],
                     },
-                    null,
+                    // null,
+                    {
+                        type: 'avatarbot_get_timer_number',
+                    },
                 ],
                 type: 'avatarbot_dc',
             },
@@ -2224,7 +2315,8 @@ Entry.avatarbot.getBlocks = function() {
                 VALUE1: 0,
                 VALUE2: 1,
                 VALUE3: 2,
-                RUN:3,
+                // RUN:3,
+                TIME: 3,
             },
             class: 'avatarbot',
             isNotFor: ['avatarbot'],
@@ -2240,16 +2332,30 @@ Entry.avatarbot.getBlocks = function() {
                 const signal = script.getNumberValue('VALUE1', script);
                 let cw = script.getNumberValue('VALUE2', script);
                 let speed = script.getNumberValue('VALUE3', script);
-                const run = script.getField('RUN');
-                const on = run == '1' ? 1 : 0;
+                // const run = script.getField('RUN');
+                // const on = run == '1' ? 1 : 0;
+                const time = script.getNumberValue('TIME', script);
+                const on = time>0? 1:0; // 100ms ~ 1s = 1, 0ms = 0
 
                 speed = Math.round(speed);
                 speed = Math.max(speed, 0); 
                 speed = Math.min(speed, 100);
                 
+                Entry.avatarbot.dc_m_index[signal] += 1;
+                if(Entry.avatarbot.dc_m_index[signal] > 3)
+                {
+                    Entry.avatarbot.dc_m_index[signal] = 0;
+                }
+                
+                if(on == 0)
+                {
+                    Entry.avatarbot.dc_m_index[signal] = 0;
+                }
+
                 let index = (signal*2) + Entry.avatarbot.BoardFunType.DC_M; // base+2,4,6,8
+                
                 // Entry.hw.sendQueue.CMD[index] = (1 + (cw<<4))&0xff; // ch en
-                Entry.hw.sendQueue.CMD[index] = (on + (cw<<4))&0xff; // ch en
+                Entry.hw.sendQueue.CMD[index] = (on + (cw<<1) + (Entry.avatarbot.dc_m_index[signal]<<2) + (time<<4))&0xff; // ch en
                 Entry.hw.sendQueue.CMD[index+1] = speed&0xff;
                 Entry.hw.update();
                 
@@ -2259,7 +2365,7 @@ Entry.avatarbot.getBlocks = function() {
                 js: [],
                 py: [
                     {
-                        syntax: 'avatarbot.dc(%1, %2, %3)',
+                        syntax: 'avatarbot.dc(%1, %2, %3, %4)',
                         blockType: 'param',
                         textParams: [
                             {
@@ -2282,6 +2388,7 @@ Entry.avatarbot.getBlocks = function() {
                                 type: 'Block',
                                 accept: 'string',
                             },
+                            /*
                             {
                                 type: 'Dropdown',
                                 options: [
@@ -2294,6 +2401,12 @@ Entry.avatarbot.getBlocks = function() {
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter: Entry.block.converters.returnStringValue,
                             },
+                            */
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+
                         ],
                     },
                 ],
@@ -2306,6 +2419,7 @@ Entry.avatarbot.getBlocks = function() {
             skeleton: 'basic',
             statements: [],
             params: [
+                /*
                 {
                     type: 'Dropdown',
                     options: [
@@ -2317,18 +2431,28 @@ Entry.avatarbot.getBlocks = function() {
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
+                */
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
             ],
             events: {},
             def: {
                 params: [
-                    null,
+                    // null,
+                    {
+                        type: 'avatarbot_get_buzzer_time_number', // 0 ~ 4s
+                    },
                 ],
                 type: 'avatarbot_buzzer_sample',
             },
             paramsKeyMap: {
                 // PORT: 0,
                 // VALUE: 0,
-                RUN:0,
+                // RUN:0,
+                TIME:0,
             },
             class: 'avatarbot_buzzer',
             isNotFor: ['avatarbot'],
@@ -2338,11 +2462,27 @@ Entry.avatarbot.getBlocks = function() {
                 }
                 
                 let index = Entry.avatarbot.BoardFunType.Buzzer;
+                /*
                 const run = script.getField('RUN');
                 const on = run == '1' ? 1 : 0;
-
+                */
+                const time = script.getNumberValue('TIME', script);
+                const on = time>0? 1:0; // 100ms ~ 1s = 1, 0ms = 0
+                
+                Entry.avatarbot.buzzer_index += 1;
+                if(Entry.avatarbot.buzzer_index > 7)
+                {
+                    Entry.avatarbot.buzzer_index = 0;
+                }
+                
+                if(on == 0)
+                {
+                    Entry.avatarbot.buzzer_index = 0;
+                }
+                
                 // digital setting
-                Entry.hw.sendQueue.CMD[index] = on; // 1; // buzzer en
+                // Entry.hw.sendQueue.CMD[index] = on; // 1; // buzzer en
+                Entry.hw.sendQueue.CMD[index] = on + (Entry.avatarbot.buzzer_index<<1) + (time<<4); // 1; // buzzer en
                 Entry.hw.sendQueue.CMD[index+1] = 1; // buzzer sample
                 Entry.hw.update();
                 return script.callReturn();
@@ -2353,6 +2493,7 @@ Entry.avatarbot.getBlocks = function() {
                     {
                         syntax: 'avatarbot.buzzer_sample()',
                         textParams: [
+                            /*
                             {
                                 type: 'Dropdown',
                                 options: [
@@ -2364,6 +2505,11 @@ Entry.avatarbot.getBlocks = function() {
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter: Entry.block.converters.returnStringValue,
+                            },
+                            */
+                            {
+                                type: 'Block',
+                                accept: 'string',
                             },
                         ],
                     },
@@ -2388,6 +2534,7 @@ Entry.avatarbot.getBlocks = function() {
                     accept: 'string',
                     defaultType: 'number',
                 },
+                /*
                 {
                     type: 'Dropdown',
                     options: [
@@ -2399,6 +2546,7 @@ Entry.avatarbot.getBlocks = function() {
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
+                */
             ],
             events: {},
             def: {
@@ -2409,14 +2557,16 @@ Entry.avatarbot.getBlocks = function() {
                     {
                         type: 'avatarbot_get_buzzer_time_number', // 0 ~ 4s
                     },
-                    null,
+                    // null,
                 ],
                 type: 'avatarbot_buzzer',
             },
             paramsKeyMap: {
                 VALUE1: 0,
-                VALUE2: 1,
-                RUN: 2,
+                // VALUE2: 1,
+                TIME: 1,
+                // RUN: 2,
+
             },
             class: 'avatarbot_buzzer',
             isNotFor: ['avatarbot'],
@@ -2426,13 +2576,28 @@ Entry.avatarbot.getBlocks = function() {
                 }
                 
                 const tone = script.getNumberValue('VALUE1');
+                /*
                 const time = script.getNumberValue('VALUE2');
                 const run = script.getField('RUN');
                 const on = run == '1' ? 1 : 0;
-
+                */
+                const time = script.getNumberValue('TIME', script);
+                const on = time>0? 1:0; // 100ms ~ 1s = 1, 0ms = 0
+                
+                Entry.avatarbot.buzzer_index += 1;
+                if(Entry.avatarbot.buzzer_index > 7)
+                {
+                    Entry.avatarbot.buzzer_index = 0;
+                }
+                
+                if(on == 0)
+                {
+                    Entry.avatarbot.buzzer_index = 0;
+                }
+                
                 let index = Entry.avatarbot.BoardFunType.Buzzer;
                 // digital setting
-                Entry.hw.sendQueue.CMD[index] = on; // 1; // buzzer en
+                Entry.hw.sendQueue.CMD[index] = on + (Entry.avatarbot.buzzer_index<<1) + (time<<4); // 1; // buzzer en
                 Entry.hw.sendQueue.CMD[index+1] = 0; // buzzer sample
                 Entry.hw.sendQueue.CMD[index+2] = tone; // tone0
                 // Entry.hw.sendQueue.CMD[index+3] = 0; // tone1
@@ -2461,6 +2626,7 @@ Entry.avatarbot.getBlocks = function() {
                                 type: 'Block',
                                 accept: 'string',
                             },
+                            /*
                             {
                                 type: 'Dropdown',
                                 options: [
@@ -2473,6 +2639,7 @@ Entry.avatarbot.getBlocks = function() {
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter: Entry.block.converters.returnStringValue,
                             },
+                            */
                         ],
                     },
                 ],
@@ -3008,6 +3175,7 @@ Entry.avatarbot.getBlocks = function() {
                     accept: 'string',
                     defaultType: 'number',
                 },
+                
                 {
                     type: 'Dropdown',
                     options: [
@@ -3019,6 +3187,14 @@ Entry.avatarbot.getBlocks = function() {
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
+                
+               /*
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                */
             ],
             events: {},
             def: {
@@ -3026,13 +3202,18 @@ Entry.avatarbot.getBlocks = function() {
                     {
                         type: 'avatarbot_get_oled_number',
                     },
-                    null,
+                    /*
+                    {
+                        type: 'avatarbot_get_timer_number',
+                    },
+                    */
                 ],
                 type: 'avatarbot_oled_sample',
             },
             paramsKeyMap: {
                 VALUE1: 0,
                 RUN: 1,
+                // TIME: 1,
             },
             class: 'avatarbot_oled',
             isNotFor: ['avatarbot'],
@@ -3040,17 +3221,63 @@ Entry.avatarbot.getBlocks = function() {
 				if (!Entry.hw.sendQueue.CMD) {
                     Entry.avatarbot.dataTableReset();
                 }
+                
                 const sample = script.getNumberValue('VALUE1', script);
                 const run = script.getField('RUN');
                 const on = run == '1' ? 1 : 0;
-                
+                // const time = script.getNumberValue('TIME', script);
+                // const on = time>0? 1:0; // 100ms ~ 1s = 1, 0ms = 0
+
                 let index = Entry.avatarbot.BoardFunType.OLED;
 
-                Entry.hw.sendQueue.CMD[index] = on; // 1; // ch en
+                Entry.hw.sendQueue.CMD[index] = on; // 1; // ch en + ch time
                 Entry.hw.sendQueue.CMD[index+1] = sample; // 0 : not run, sample 1~n
                 Entry.hw.update();
                 
                 return script.callReturn();
+
+                /*
+                if (!script.isStart) {
+                    const sample = script.getNumberValue('VALUE1', script);
+                    // const run = script.getField('RUN');
+                    // const on = run == '1' ? 1 : 0;
+                    const time = script.getNumberValue('TIME', script);
+                    const on = time>0? 1:0; // 100ms ~ 1s = 1, 0ms = 0
+
+                    let index = Entry.avatarbot.BoardFunType.OLED;
+
+                    Entry.hw.sendQueue.CMD[index] = on + (time<<1); // 1; // ch en + ch time
+                    Entry.hw.sendQueue.CMD[index+1] = sample; // 0 : not run, sample 1~n
+                    Entry.hw.update();
+                    if(time == 0)
+                    {
+                        return script.callReturn;
+                    }
+                    var duration = time;
+                    duration = duration * 100;
+                    script.isStart = true;
+                    script.timeFlag = 1;
+
+                    
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, duration + 32);
+
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+
+                    let index = Entry.avatarbot.BoardFunType.OLED;
+                    Entry.hw.sendQueue.CMD[index] = 0; // 1; // ch en + ch time
+                    Entry.hw.sendQueue.CMD[index+1] = 0; // 0 : not run, sample 1~n
+                    Entry.hw.update();
+                    return script.callReturn();
+                }
+                */
             },
             syntax: {
                 js: [],
@@ -3062,6 +3289,7 @@ Entry.avatarbot.getBlocks = function() {
                                 type: 'Block',
                                 accept: 'string',
                             },
+                            
                             {
                                 type: 'Dropdown',
                                 options: [
@@ -3074,6 +3302,13 @@ Entry.avatarbot.getBlocks = function() {
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter: Entry.block.converters.returnStringValue,
                             },
+                            
+                           /*
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            */
                         ],
                         
                     },
