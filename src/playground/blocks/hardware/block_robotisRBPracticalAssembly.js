@@ -2415,12 +2415,12 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 {
                     case 1:
                         address = 2132;
-                        wait_time = 6000;
+                        wait_time = 6500;
                         break;
 
                     case 2:
                         address = 2133;
-                        wait_time = 1600;
+                        wait_time = 2100;
                         break;
                 }
                 
