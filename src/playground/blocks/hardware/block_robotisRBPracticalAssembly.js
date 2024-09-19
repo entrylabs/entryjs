@@ -45,6 +45,7 @@ Entry.Robotis_rb_P_Assembly = {
         Entry.Robotis_carCont.setRobotisData([
             [Entry.Robotis_rb.INSTRUCTION.WRITE, 2100, 1, 1], // PracticeBot Finish
         ]);
+        camera_id_for_use = 0;
         Entry.Robotis_carCont.update();
     },
     id: ['7.A', '7.B'],
@@ -1155,6 +1156,7 @@ let dxl_last_valid_value = [];
 let rb100_last_valid_value = [];
 let bg_color = 0;
 let beat_per_minute = 75;
+let camera_id_for_use = 0;
 
 const _doevent = ms => new Promise(res => setTimeout(res, ms));
 async function wait(nTime) { await _doevent(nTime); }
@@ -7056,20 +7058,23 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 var data_length = 2;
                 var data_value = script.getNumberValue('ID');
 
-                var data_sendqueue = [
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        data_value,
-                    ],
-                ];
+                if (camera_id_for_use != data_value) {
+                    var data_sendqueue = [
+                        [
+                            data_instruction,
+                            data_address,
+                            data_length,
+                            data_value,
+                        ],
+                    ];
 
-                Entry.Robotis_carCont.postCallReturn(
-                    script,
-                    data_sendqueue,
-                    Entry.Robotis_openCM70.delay
-                );
+                    Entry.Robotis_carCont.postCallReturn(
+                        script,
+                        data_sendqueue,
+                        Entry.Robotis_openCM70.delay
+                    );
+                    camera_id_for_use = data_value;
+                }
 
                 data_address = 4036; // BLOCK_RESULT_BY_ID_X_CENTER
 
@@ -7149,20 +7154,23 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 var data_length = 2;
                 var data_value = script.getNumberValue('ID');
 
-                var data_sendqueue = [
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        data_value,
-                    ],
-                ];
+                if (camera_id_for_use != data_value) {
+                    var data_sendqueue = [
+                        [
+                            data_instruction,
+                            data_address,
+                            data_length,
+                            data_value,
+                        ],
+                    ];
 
-                Entry.Robotis_carCont.postCallReturn(
-                    script,
-                    data_sendqueue,
-                    Entry.Robotis_openCM70.delay
-                );
+                    Entry.Robotis_carCont.postCallReturn(
+                        script,
+                        data_sendqueue,
+                        Entry.Robotis_openCM70.delay
+                    );
+                    camera_id_for_use = data_value;
+                }
 
                 data_address = 4044; // ARROW_RESULT_BY_ID_X_ORIGIN
 
