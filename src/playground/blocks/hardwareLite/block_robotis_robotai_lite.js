@@ -163,7 +163,7 @@ let camera_id_for_use = 0;
         constructor() {
             this.id = '070B01';
             this.url = 'http://www.robotis.com';
-            this.imageName = 'robotis_robotai.png';
+            this.imageName = 'robotis_robotai_lite.png';
             this.name = 'RobotisRobotaiLite';
             this.blockMenuBlocks = [
                 // 주행 제어
