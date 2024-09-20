@@ -3516,7 +3516,6 @@ Entry.ProboConnect.getBlocks = function() {
                 const TR = Entry.ProboConnect.convertDropdownMelody(
                     script.getStringValue('PARAM0')
                 );
-                console.log("TR ", TR);
                 if (!script.isStart) {
                     switch(TR) {
                         case 0 :
