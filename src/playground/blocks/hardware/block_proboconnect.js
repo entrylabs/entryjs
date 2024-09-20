@@ -590,16 +590,18 @@ Entry.ProboConnect = {
         switch (value) {
             case Lang.template.item_melody_start:
             case '1':
-                return 1;
+                return 0;
             case Lang.template.item_melody_end:
             case '2':
-                return 2;
+                return 1;
             case Lang.template.item_melody_level_up:
             case '3':
-                return 3;
+                return 2;
             case Lang.template.item_melody_level_down:
             case '4':
-                return 4;
+                return 3;
+            default:
+                return value;
         }
     },    
     convertDropdownColor1(value) {
@@ -3511,8 +3513,10 @@ Entry.ProboConnect.getBlocks = function() {
                         timeValue
                     );
                 }
-                const param0 =  script.getNumberValue('PARAM0');
-                const TR = Entry.ProboConnect.convertDropdownMelody(param0);
+                const TR = Entry.ProboConnect.convertDropdownMelody(
+                    script.getStringValue('PARAM0')
+                );
+                console.log("TR ", TR);
                 if (!script.isStart) {
                     switch(TR) {
                         case 0 :
