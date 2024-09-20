@@ -1520,7 +1520,7 @@ Entry.ProboConnect.getBlocks = function() {
                         [Lang.template.item_note_sixteenth, '16'],
                         [Lang.template.item_note_thirty_second, '32'],
                     ],
-                    value: 'n4',
+                    value: '4',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
