@@ -532,14 +532,18 @@ Entry.ProboConnect = {
     },
     convertDropdownSensorTransfer(value) {
         switch (value) {
+            case '1':
             case Lang.template.item_value:
-                return '1';
+                return 1;
+            case '2':
             case Lang.template.item_angle:
-                return '2';
+                return 2;
+            case '3':
             case Lang.template.item_absolute_angle:
-                return '3';
+                return 3;
+            case '4':
             case Lang.template.item_number_of_rotations:
-                return '4';
+                return 4;
             default:
                 value;
         }
@@ -2675,6 +2679,7 @@ Entry.ProboConnect.getBlocks = function() {
                 const select = Entry.ProboConnect.convertDropdownSensorTransfer(
                     script.getStringValue('PARAM2')
                 );
+
                 let value = Entry.hw.portData.InputData.Analog[port];
 
                 if (value < (Entry.ProboConnect.Infinite_Buff[port] - 150)) {
