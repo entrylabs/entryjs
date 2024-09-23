@@ -427,7 +427,7 @@ function getBlocks() {
             },
         },
         hardware_device_name_title: {
-            skeleton: 'basic_text',
+            skeleton: 'basic_text_light',
             color: EntryStatic.colorSet.common.TRANSPARENT,
             template: '%1',
             params: [
