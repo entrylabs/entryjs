@@ -1117,7 +1117,7 @@ const convertPresetImageToLedState = (preset) => {
                     def: {
                         type: 'microbit2blelite_common_title',
                     },
-                    class: 'microbit2blelite_title',
+                    class: 'microbit2bleliteLed',
                     isNotFor: ['Microbit2BleLite'],
                     events: {},
                 },
@@ -2344,7 +2344,7 @@ const convertPresetImageToLedState = (preset) => {
                     def: {
                         type: 'microbit2blelite_v2_title',
                     },
-                    class: 'microbit2blelite_title',
+                    class: 'microbit2blelitev2',
                     isNotFor: ['Microbit2BleLite'],
                     events: {},
                 },
