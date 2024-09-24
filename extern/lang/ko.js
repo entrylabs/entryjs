@@ -5551,6 +5551,8 @@ Lang.Workspace = {
     progress_firmware_hwlite_step2_title: '펌웨어 설치',
     progress_firmware_hwlite_step2_content1: '펌웨어를 설치하고 있습니다.\n잠시만 기다려 주세요.',
     progress_firmware_hwlite_step2_content_complete: '펌웨어 설치가 완료되었습니다.',
+    usbconnect_fail_alert:
+        "기기 연결에 실패했습니다. 연결 상태를 확인하고 '다시 선택'을 눌러 주세요.",
     progress_firmware_hwlite_step2_content_fail: '펌웨어 설치에 실패했습니다.',
     progress_firmware_hwlite_step2_content_select: '설치할 펌웨어 버전을 선택해 주세요',
     select_hwlite_block_duplicated: '1개의 하드웨어만 선택해 주세요.',

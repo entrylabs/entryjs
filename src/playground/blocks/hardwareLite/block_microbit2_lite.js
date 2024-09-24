@@ -4,7 +4,7 @@ const _throttle = require('lodash/throttle');
 
 const EVENT_INTERVAL = 150;
 
-(function() {
+(function () {
     Entry.Microbit2lite = new (class Microbit2Lite {
         constructor() {
             this.commandStatus = {};
@@ -1018,7 +1018,7 @@ const EVENT_INTERVAL = 150;
             };
         }
 
-        getBlocks = function() {
+        getBlocks = function () {
             return {
                 microbit2lite_common_title: {
                     skeleton: 'basic_text',
@@ -1035,7 +1035,7 @@ const EVENT_INTERVAL = 150;
                     def: {
                         type: 'microbit2lite_common_title',
                     },
-                    class: 'microbit2lite_title',
+                    class: 'microbit2litePin',
                     isNotFor: ['Microbit2lite'],
                     events: {},
                 },
@@ -2292,7 +2292,7 @@ const EVENT_INTERVAL = 150;
                     def: {
                         type: 'microbit2lite_v2_title',
                     },
-                    class: 'microbit2lite_title',
+                    class: 'microbit2litev2',
                     isNotFor: ['Microbit2lite'],
                     events: {},
                 },
