@@ -156,6 +156,7 @@ const crcTable = [
 const rb100_last_valid_value = [];
 let bg_color = 0;
 let beat_per_minute = 75;
+let camera_id_for_use = 0;
 
 (function () {
     Entry.RobotisRobotaiLite = new (class RobotisRobotaiLite {
@@ -296,6 +297,7 @@ let beat_per_minute = 75;
             this.__removeAllTimeouts();
             this.robotisBuffer = [];
             this.robotisBuffer.push([INST_WRITE, 2100, 1, 1]);
+            camera_id_for_use = 0;
             if (Entry.hwLite && Entry.hwLite.serial) {
                 Entry.hwLite.serial.update();
             }
@@ -2925,12 +2927,12 @@ let beat_per_minute = 75;
                         switch (action) {
                             case 1:
                                 address = 2132;
-                                wait_time = 6000;
+                                wait_time = 6500;
                                 break;
 
                             case 2:
                                 address = 2133;
-                                wait_time = 1600;
+                                wait_time = 2100;
                                 break;
                         }
 
@@ -6995,15 +6997,18 @@ let beat_per_minute = 75;
                         let data_length = 2;
                         let data_value = script.getNumberValue('ID');
 
-                        let data_sendqueue = [
-                            [data_instruction, data_address, data_length, data_value],
-                        ];
+                        if (data_value != camera_id_for_use) {
+                            let data_sendqueue = [
+                                [data_instruction, data_address, data_length, data_value],
+                            ];
 
-                        Entry.RobotisRobotaiLite.postCallReturn(
-                            script,
-                            data_sendqueue,
-                            DEFAULT_DELAY
-                        );
+                            Entry.RobotisRobotaiLite.postCallReturn(
+                                script,
+                                data_sendqueue,
+                                DEFAULT_DELAY
+                            );
+                            camera_id_for_use = data_value;
+                        }
 
                         data_address = 4036; // BLOCK_RESULT_BY_ID_X_CENTER
 
@@ -7080,15 +7085,18 @@ let beat_per_minute = 75;
                         let data_length = 2;
                         let data_value = script.getNumberValue('ID');
 
-                        let data_sendqueue = [
-                            [data_instruction, data_address, data_length, data_value],
-                        ];
+                        if (data_value != camera_id_for_use) {
+                            let data_sendqueue = [
+                                [data_instruction, data_address, data_length, data_value],
+                            ];
 
-                        Entry.RobotisRobotaiLite.postCallReturn(
-                            script,
-                            data_sendqueue,
-                            DEFAULT_DELAY
-                        );
+                            Entry.RobotisRobotaiLite.postCallReturn(
+                                script,
+                                data_sendqueue,
+                                DEFAULT_DELAY
+                            );
+                            camera_id_for_use = data_value;
+                        }
 
                         data_address = 4044; // ARROW_RESULT_BY_ID_X_ORIGIN
 
