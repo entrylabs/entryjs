@@ -1,6 +1,6 @@
 'use strict';
 
-(function() {
+(function () {
     Entry.CodeWizLite = new (class CodeWizLite {
         constructor() {
             this.id = '011201';
@@ -245,7 +245,7 @@
             this.HUSKY = {
                 CENT_X: 160,
                 CENT_Y: 120,
-                getDist: function(x, y) {
+                getDist: function (x, y) {
                     return Math.sqrt(Math.pow(this.CENT_X - x, 2) + Math.pow(this.CENT_Y - y, 2));
                 },
             };
@@ -385,11 +385,7 @@
             // }
             // return Entry.generateHash(6) + opcode;
             // Symbol을 쓰면 hw로 넘길수있나 -> 있으면 지금과 비교해서 속도는?
-            return (
-                Date.now()
-                    .toString()
-                    .substring(6) + opcode
-            );
+            return Date.now().toString().substring(6) + opcode;
         }
 
         // 코드위즈에 보낼 데이터를 만드는 함수입니다.
@@ -954,7 +950,7 @@
                     },
                     isNotFor: ['CodeWizLite'],
                     class: 'CodeWizLite_default_sensor',
-                    func: function(sprite, script) {
+                    func: function (sprite, script) {
                         var sensor = script.getField('SENSOR', script);
                         var hw_sensorData = Entry.CodeWizLite.sensorData;
                         return hw_sensorData[sensor] ?? 0;
@@ -989,7 +985,7 @@
                     },
                     isNotFor: ['CodeWizLite'],
                     class: 'CodeWizLite_default_sensor',
-                    func: function(sprite, script) {
+                    func: function (sprite, script) {
                         var sensor = script.getField('GYRO_TYPE', script);
                         var hw_sensorData = Entry.CodeWizLite.sensorData;
                         return hw_sensorData[sensor] ?? 0;
@@ -1025,7 +1021,7 @@
                     },
                     isNotFor: ['CodeWizLite'],
                     class: 'CodeWizLite_default_sensor',
-                    func: function(sprite, script) {
+                    func: function (sprite, script) {
                         var sensor = script.getField('SWITCH', script);
                         var hw_sensorData = Entry.CodeWizLite.sensorData;
                         return hw_sensorData[sensor] ?? false;
@@ -1065,7 +1061,7 @@
                     },
                     isNotFor: ['CodeWizLite'],
                     class: 'CodeWizLite_default_sensor',
-                    func: function(sprite, script) {
+                    func: function (sprite, script) {
                         var sensor = script.getField('SWITCH', script);
                         var hw_sensorData = Entry.CodeWizLite.sensorData;
                         return hw_sensorData[sensor] ?? 0;

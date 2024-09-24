@@ -1,47 +1,46 @@
 'use strict';
 
-
 Entry.ProboConnect = {
     afterReceive(pd) {
-        if(Entry.engine.isState('run')){
+        if(Entry.engine.isState('run')) {
             Entry.engine.fireEvent('event_remote_input');
             Entry.engine.fireEvent('event_digital_input');
         }
-
     },
 
     id: '27.1',
-    name: 'ProboConnect', // isNotFor 속성과 대소문자까지 정확하게 매치되어야 합니다.
-    url: 'http://www.probo.kr/', // 생략 가능합니다. 엔트리 사이트에서 홍보시 사용됩니다.
-    imageName: 'ProboConnect.png', // images/hardware 폴더 내에 존재하는 이미지입니다. 엔트리 사이트에서 홍보시 사용됩니다.
+    name: 'ProboConnect',
+    url: 'https://www.aluxonline.com',
+    imageName: 'ProboConnect.png',
+    blockIndex: 0,
     title: {
         ko: '프로보커넥트',
         en: 'ProboConnect',
     },
     Color: [
-        /*레드*/ [13, 37],
-        /*그린*/ [38, 62],
-        /*블루*/ [63, 87],
-        /*옐로우*/ [88, 112],
-        /*블랙*/ [113, 137],
-        /*화이트*/ [138, 162],
+        [13, 37],   // 빨강
+        [38, 62],   // 초록
+        [63, 87],   // 파랑
+        [88, 112],  // 노랑
+        [113, 137], // 검정
+        [138, 162], // 하양
     ],
     
     Note:{
-        n32	:	48,// = 1*3*4*4,
-        n16	:	96,// = 2*3*4*4,
-        n16d:	144,// = 3*3*4*4,
-        n16t:	64,// = 2*2*4*4,
-        n8	:	192,// = 4*3*4*4,
-        n8d	:	288,// = 6*3*4*4,
-        n8t	:	128,// = 4*2*4*4,
-        n4	:	384,// = 8*3*4*4,
-        n4d	:	576,// = 12*3*4*4,
-        n4t	:	256,// = 8*2*4*4,
-        n2	:	768,// = 16*3*4*4,
-        n2d	:	1152,// = 24*3*4*4,
-        n2t	:	512,// = 16*2*4*4,
-        n1	:	1536,// = 32*3*4*4
+        n32	: 48,   // = 1*3*4*4,
+        n16	: 96,   // = 2*3*4*4,
+        n16d: 144,  // = 3*3*4*4,
+        n16t: 64,   // = 2*2*4*4,
+        n8	: 192,  // = 4*3*4*4,
+        n8d	: 288,  // = 6*3*4*4,
+        n8t	: 128,  // = 4*2*4*4,
+        n4	: 384,  // = 8*3*4*4,
+        n4d	: 576,  // = 12*3*4*4,
+        n4t	: 256,  // = 8*2*4*4,
+        n2	: 768,  // = 16*3*4*4,
+        n2d	: 1152, // = 24*3*4*4,
+        n2t	: 512,  // = 16*2*4*4,
+        n1	: 1536, // = 32*3*4*4
     },
 
     RGB_LED:{
@@ -147,17 +146,37 @@ Entry.ProboConnect = {
     Melody_S: [0, 35391, 31530, 28090, 26513, 23621, 21044, 18748],
 
     Track:[
-        [0x451F,0x3D95,0x36DD,0x33C8,0x2E22,0x291A,0x249E],// Start : size 7,
-        [0x228F,0x249E,0x291A,0x2E22,0x33C8,0x36DD,0x3D95,0x451F],// End : size 8,
-        [0x228F,0x1B6E,0x1711,0x1147],// LevelUp : size 4,
-        [0x1147,0x1711,0x1B6E,0x228F],// LevelDwon : size 4,
+        [0x451F, 0x3D95, 0x36DD, 0x33C8, 0x2E22, 0x291A, 0x249E],// Start : size 7,
+        [0x228F, 0x249E, 0x291A, 0x2E22, 0x33C8, 0x36DD, 0x3D95, 0x451F],// End : size 8,
+        [0x228F, 0x1B6E, 0x1711, 0x1147 ],// LevelUp : size 4,
+        [0x1147, 0x1711, 0x1B6E, 0x228F ],// LevelDwon : size 4,
     ],
     
-    Infinite_Buff: { AA1: 0, AA2: 0, AA3: 0, AA4: 0 },
-    Infinite_Count: { AA1: 0, AA2: 0, AA3: 0, AA4: 0 },
-    Infinite_Start: { AA1: 0, AA2: 0, AA3: 0, AA4: 0 },
+    Infinite_Buff: {
+        AA1: 0,
+        AA2: 0,
+        AA3: 0,
+        AA4: 0
+    },
+    Infinite_Count: {
+        AA1: 0,
+        AA2: 0,
+        AA3: 0,
+        AA4: 0
+    },
+    Infinite_Start: {
+        AA1: 0,
+        AA2: 0,
+        AA3: 0,
+        AA4: 0
+    },
 
-    SenserSet:{AA1: 0, AA2: 0, AA3: 0, AA4: 0 },
+    SenserSet:{
+        AA1: 0,
+        AA2: 0,
+        AA3: 0,
+        AA4: 0
+    },
 
     InputData: {
         Analog: {
@@ -204,24 +223,24 @@ Entry.ProboConnect = {
             EEPR1: 0,
         },
         Infinite:{
-            ROTATION_1:0,
-            ROTATION_2:0,
-            ROTATION_3:0,
-            ROTATION_4:0
+            ROTATION_1: 0,
+            ROTATION_2: 0,
+            ROTATION_3: 0,
+            ROTATION_4: 0
         },
         Acceler:{
-            AXIS_X1:0,
-            AXIS_X2:0,
-            AXIS_X3:0,
-            AXIS_X4:0,
-            AXIS_Y1:0,
-            AXIS_Y2:0,
-            AXIS_Y3:0,
-            AXIS_Y4:0,
-            AXIS_Z1:0,
-            AXIS_Z2:0,
-            AXIS_Z3:0,
-            AXIS_Z4:0,
+            AXIS_X1: 0,
+            AXIS_X2: 0,
+            AXIS_X3: 0,
+            AXIS_X4: 0,
+            AXIS_Y1: 0,
+            AXIS_Y2: 0,
+            AXIS_Y3: 0,
+            AXIS_Y4: 0,
+            AXIS_Z1: 0,
+            AXIS_Z2: 0,
+            AXIS_Z3: 0,
+            AXIS_Z4: 0,
         }
     },
     RemoteData: {
@@ -267,184 +286,1499 @@ Entry.ProboConnect = {
     },
 
     setZero: function() {
-        for (var key in this.EdgeFlag) this.EdgeFlag[key] = 0;
-        for (var key in this.RemoteData) Entry.hw.sendQueue[key] = this.RemoteData[key];
-        // for (var key in this.Infinite_Start) this.Infinite_Start[key] = 0;
-        // for (var key in this.Infinite_Count) this.Infinite_Count[key] = 0;
-        // for (var key in this.Infinite_Buff) this.Infinite_Buff[key] = 0;
-        for (var key in this.SenserSet) this.SenserSet[key] = 0;
+        for (let key in this.EdgeFlag) {
+            this.EdgeFlag[key] = 0;
+        }
+        for (let key in this.RemoteData) {
+            Entry.hw.sendQueue[key] = this.RemoteData[key];
+        }
+        for (let key in this.SenserSet) {
+            this.SenserSet[key] = 0;
+        }
         Entry.hw.update();
+    },
+    convertDropdownRemote(value) {
+        switch (value) {
+            case '1':
+                return 'R_1';
+            case '2':
+                return 'R_2';
+            case '3':
+                return 'R_3';
+            case '4':
+                return 'R_4';
+            case '5':
+                return 'R_5';
+            case '6':
+                return 'R_6';
+            case '7':
+                return'R_7';
+            case '8':
+                return'R_8';
+            case '9':
+                return 'R_L1';
+            case '10':
+                return 'R_L2';
+            case '11':
+                return 'R_R1';
+            case '12':
+                return 'R_R2';
+            default:
+                return value;
+        }
+    },
+    convertDropdownDigital(value) {
+        switch (value) {
+            case '1':
+                return 'A1';
+            case '2':
+                return 'A2';
+            case '3':
+                return 'A3';
+            case '4':
+                return 'A4';
+            case '5':
+                return 'FEA1';
+            case '6':
+                return 'FEA2';
+            case '7':
+                return 'FEA3';
+            case '8':
+                return 'FEA4';
+            case '9':
+                return 'REA1';
+            case '10':
+                return 'REA2';
+            case '11':
+                return 'REA3';
+            case '12':
+                return 'REA4';
+            case '13':
+                return 'BEA1';
+            case '14':
+                return 'BEA2';
+            case '15':
+                return 'BEA3';
+            case '16':
+                return 'BEA4';
+            default:
+                return value;
+        }
+    },
+    convertDropdownAnalog(value) {
+        switch (value) {
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+                return 'AA' + value;
+            default:
+                return value;
+        }
+    },
+    convertDropdownAxis(value, axis) {
+        switch (value) {
+            case 'AA1':
+            case 'AA2':
+            case 'AA3':
+            case 'AA4':
+                value = value.substr(2, 2);
+                break;
+        }
+        return "AXIS_" + axis + value;
+    },
+    convertDropdownSensor1(value) {
+        switch (value) {
+            case Lang.template.item_switch:
+            case '1':
+                return 1;
+            case Lang.template.item_infrared:
+            case '2':
+                return 2;
+            case Lang.template.item_magnetic:
+            case '3':
+                return 3;
+            case Lang.template.item_rotation:
+            case '4':
+                return 4;
+            case Lang.template.item_color:
+            case '5':
+                return 5;
+            case Lang.template.item_acceleration:
+            case '6':
+                return 6;
+            case Lang.template.item_ultrasonic:
+            case '7':
+                return 7;
+            case Lang.template.item_heart_rate:
+            case '8':
+                return 8;
+            case Lang.template.item_illuminance:
+            case '9':
+                return 9;
+            case Lang.template.item_sound:
+            case '10':
+                return 10;
+            case Lang.template.item_tilt:
+            case '11':
+                return 11;
+            case Lang.template.item_pressure:
+            case '12':
+                return 12;
+            case Lang.template.item_multi_touch:
+            case '13':
+                return 13;        
+            case Lang.template.item_compass:
+            case '14':
+                return 14;
+            case Lang.template.item_3acceleration:
+            case '15':
+                return 15;        
+            case Lang.template.item_multi_switch:
+            case '16':
+                return 16;
+        }
+    },
+    convertDropdownSensor2(value) {
+        switch (value) {
+            case Lang.template.item_infinite_rotation:
+            case '1':
+                return 1;
+            case Lang.template.item_compass:
+            case '2':
+                return 2;
+            default:
+                return value;
+        }
+    },
+    convertDropdownKey(value) {
+        switch (value) {
+            case Lang.template.item_key_1:
+            case '1':
+                return 0;
+            case Lang.template.item_key_2:
+            case '2':
+                return 1;
+            case Lang.template.item_key_3:
+            case '3':
+                return 2;
+            case Lang.template.item_key_4:
+            case '4':
+                return 3;
+            case Lang.template.item_key_5:
+            case '5':
+                return 4;
+            case Lang.template.item_key_6:
+            case '6':
+                return 5;
+            case Lang.template.item_key_7:
+            case '7':
+                return 6;
+            case Lang.template.item_key_8:
+            case '8':
+                return 7;
+            default:
+                return value;
+        }
+    },
+    convertDropdownOnOff(value) {
+        switch (value) {
+            case Lang.template.item_on:
+            case '1':
+                return 1;
+            case Lang.template.item_off:
+            case '0':
+                return 0;
+            default:
+                return value
+        }
+        
+    },
+    convertDropdownDC(value) {
+        switch (value) {
+            case '1':
+            case '2':            
+            case '3':
+            case '4':
+            case '5':
+            case '6':
+            case '7':
+                return 'DC' + value;
+            default:
+                return value;
+        }
+    },
+    convertDropdownServo(value) {
+        switch (value) {
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+                return 'Servo' + value;
+            default:
+                return value;
+        }
+    },
+    convertDropdownPort(value) {
+        switch (value) {
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+                return 'B' + value;
+            default:
+                return value;
+        }
+    },
+    convertDropdownSensorTransfer(value) {
+        switch (value) {
+            case '1':
+            case Lang.template.item_value:
+                return 1;
+            case '2':
+            case Lang.template.item_angle:
+                return 2;
+            case '3':
+            case Lang.template.item_absolute_angle:
+                return 3;
+            case '4':
+            case Lang.template.item_number_of_rotations:
+                return 4;
+            default:
+                value;
+        }
+    },
+    convertDropdownPitch(pitch) {
+        // 배열의 인덱스 1번부터 음표
+        const index = (pitch % 12) + 1;
+
+        let value = 0;
+        if (36 <= pitch && pitch <= 47) {
+            value = Entry.ProboConnect.Melody[index];
+        } else if (48 <= pitch && pitch <= 59) {
+            value = Entry.ProboConnect.Melody[index] >> 1;
+        } else if (60 <= pitch && pitch <= 71) {
+            value = Entry.ProboConnect.Melody[index] >> 2;
+        } else if (72 <= pitch && pitch <= 83) {
+            value = Entry.ProboConnect.Melody[index] >> 3;
+        } else {
+            value = Entry.ProboConnect.Melody[0];
+        }
+        return value;
+    },
+    convertDropdownNote(value) {
+        switch (value) {
+            case Lang.template.item_note_whole:
+            case '1':
+                return 'n1';
+            case Lang.template.item_note_half:
+            case '2':
+                return 'n2';
+            case Lang.template.item_note_quarter:
+            case '4':
+                return 'n4';
+            case Lang.template.item_note_eighth:
+            case '8':
+                return 'n8';
+            case Lang.template.item_note_sixteenth:
+            case '16':
+                return 'n16';
+            case Lang.template.item_note_thirty_second:
+            case '32':
+                return 'n32';
+            default:
+                return value;
+        }
+    },
+    convertDropdownMelody(value) {
+        switch (value) {
+            case Lang.template.item_melody_start:
+            case '1':
+                return 0;
+            case Lang.template.item_melody_end:
+            case '2':
+                return 1;
+            case Lang.template.item_melody_level_up:
+            case '3':
+                return 2;
+            case Lang.template.item_melody_level_down:
+            case '4':
+                return 3;
+            default:
+                return value;
+        }
+    },    
+    convertDropdownColor1(value) {
+        switch (value) {
+            case Lang.template.item_color_red:
+                return 0;
+            case Lang.template.item_color_green:
+                return 1;
+            case Lang.template.item_color_blue:
+                return 2;
+            case Lang.template.item_color_yellow:
+                return 3;
+            case Lang.template.item_color_black:
+                return 4;
+            case Lang.template.item_color_white:
+                return 5;
+            default:
+                return value - 1;
+        }
+    },
+    convertDropdownColor2(value) {
+        switch (value) {
+            case Lang.template.item_color_red:
+            case '1':
+                return 1;
+            case Lang.template.item_color_green:
+            case '2':
+                return 23;
+            case Lang.template.item_color_blue:
+            case '3':
+                return 45;
+            case Lang.template.item_color_cyan:
+            case '4':
+                return 34;
+            case Lang.template.item_color_magenta:
+            case '5':
+                return 56;
+            case Lang.template.item_color_yellow:
+            case '6':
+                return 12;
+            case '7':
+            case Lang.template.item_color_white:
+                return 67;
+            default:
+                return value;
+        }
     },
 };
 
-// 언어 적용
 Entry.ProboConnect.setLanguage = function() {
     return {
         ko: {
-            // ko.js에 작성하던 내용
             template: {
-                connect_remote_event: '%1 리모컨 %2 키를 눌렀을 때 %3',
-                connect_digital_event: '%1 디지털 입력 %2 이(가) 들어왔을 때 %3',
+                item_switch: '스위치',
+                item_infrared: '적외선',
+                item_magnetic: '자석',
+                item_rotation: '회전',
+                item_color: '컬러',
+                item_acceleration: '가속도',
+                item_ultrasonic: '초음파',
+                item_heart_rate: '심박',
+                item_illuminance: '조도',
+                item_temperature: '온도',
+                item_sound: '소리',
+                item_tilt: '기울기',
+                item_pressure: '압력',
+                item_multi_touch: '멀티키',
+                item_compass: '나침반',
+                item_3acceleration: '3가속',
+                item_multi_switch: '분배기',
+                item_infinite_rotation: '무한회전',
+                item_color_red: '빨간색',
+                item_color_green: '초록색',
+                item_color_blue: '파란색',
+                item_color_cyan: '청녹색',
+                item_color_magenta: '자홍색',
+                item_color_yellow: '노란색',
+                item_color_black: '검정색',
+                item_color_white: '하얀색',
+                item_value: '값',
+                item_angle: '각도',
+                item_absolute_angle: '절대각도',
+                item_number_of_rotations: '회전 수',
+                item_key_1: '키1',
+                item_key_2: '키2',
+                item_key_3: '키3',
+                item_key_4: '키4',
+                item_key_5: '키5',
+                item_key_6: '키6',
+                item_key_7: '키7',
+                item_key_8: '키8',
+                item_all: '모두',
+                item_on: '켜기',
+                item_off: '끄기',
+                item_note_whole: '온',
+                item_note_half: '2분',
+                item_note_quarter: '4분',
+                item_note_eighth: '8분',
+                item_note_sixteenth: '16분',
+                item_note_thirty_second: '32분',
+                item_pitch_do: '도',
+                item_pitch_do_sharp: '도#',
+                item_pitch_re: '레',
+                item_pitch_re_sharp: '레#',
+                item_pitch_mi: '미',
+                item_pitch_fa: '파',
+                item_pitch_fa_sharp: '파#',
+                item_pitch_sol: '솔',
+                item_pitch_sol_sharp: '솔#',
+                item_pitch_ra: '라',
+                item_pitch_ra_sharp: '라#',
+                item_pitch_si: '시',
+                item_melody_start: '시작음',
+                item_melody_end: '종료음',
+                item_melody_level_up: '레벨 업',
+                item_melody_level_down: '레벨 다운',
 
-                connect_senser_setting: '센서 설정 A1:%1 A2:%2 A3:%3 A4:%4 %5',
+                connect_remote_event: '%1 리모컨 %2 키를 눌렀을 때',
+                connect_digital_event: '%1 디지털 입력 %2 이(가) 들어왔을 때',
+
+                connect_senser_setting: '입력포트 %1 을(를) %2 센서로 설정 %3',
 
                 connect_remote_input: '리모컨 입력 %1',
-                connect_digital_input: '디지털 센서 %1',
-                connect_analog_input: '아날로그 센서 %1',
-                connect_value_mapping: '%1 의 %2 ~ %3 값을 %4 ~ %5 (으)로 변환',
-                //connect_ultrasonic_cm: '초음파 센서 %1 의 거리(cm)',
-                connect_color_input_b: '컬러 센서 %1 이(가) %2 색 인가?',
-                connect_color_input_r: '컬러 센서 %1 의 색상',
-                connect_infinite_reset: '%1 센서 %2 초기화 %3',
-                connect_infinite_setting: '%1 센서 %2 의 값을 %3 값으로 정하기 %4',
-                connect_infinite_transform_input: '%1 센서 %2 의  %3',
-                connect_infinite_mm_diameter: '%1 센서 %2 지름 %3 의 mm 값',
+                connect_digital_input: '디지털 입력 %1',
+                connect_analog_input: '아날로그 입력 %1',
                 connect_3axis_acceler_x: '3가속도 %1의 X축',
                 connect_3axis_acceler_y: '3가속도 %1의 Y축',
                 connect_3axis_acceler_z: '3가속도 %1의 Z축',
+                connect_value_mapping: '%1 의 %2 ~ %3 값을 %4 ~ %5 (으)로 변환',
+                connect_color_input_b: '컬러 센서 %1 이(가) %2 인가?',
+                connect_color_input_r: '컬러 센서 %1 의 색상',
+                connect_infinite_setting: '%1 센서 %2 을 %3 값으로 정하기 %4',
+                connect_infinite_mm_diameter: '%1 센서 %2 지름 %3 의 mm 값',
+                connect_infinite_transform_input: '%1 센서 %2 의  %3',
                 connect_multi_sensor: '멀티키 센서 %1의 %2',
-      
+                connect_multi_switch: '분배 스위치 %1의 %2',
+                connect_eeprom_buffset: 'EEPROM %1 주소의 값 호출하기 %2',
+                connect_eeprom_address_value: 'EEPROM 주소의 값',      
 
-                connect_port_output: '출력포트 %1 을(를) %2 %3',
+                connect_port_output: '출력핀 %1 을(를) %2 %3',
                 connect_servo_output: '서보 모터 %1 의 위치를 %2 로 이동 %3',
                 connect_s_dc_output: 'S 모터 %1 을(를) %2 속도로 회전 %3',
                 connect_dc_output: 'DC 모터 %1 을(를) %2 속도로 회전 %3',
+                connect_melody_note_output: '%1 을(를) %2 음표로 연주하기 %3',
+                connect_melody_sec_output: '%1 을(를) %2 초 동안 연주하기 %3',
+                connect_melody_output: '%1 을(를) 연주하기 %2',
+                connect_value_sec_output: '%1 값을(를) %2 초 동안 연주하기 %3',
+                connect_value_output: '%1 값을(를) 연주하기 %2',
+                connect_melody_track_output: '%1 을(를) %2초 간격으로 재생하기 %3',
+                connect_melody_off: '멜로디 중지 %1',
                 connect_rgbled_on_output: 'RGB LED %1 을(를) %2 으로 켜기 %3',
-                connect_rgbled_flashing_output: 'RGB LED %1 %2 으로 %3 초 간격 %4',
-                connect_rgbled_dimming_output: 'RGB LED %1 을(를) %2 으로 디밍 %3',
                 connect_rgbled_off_output: 'RGB LED %1 을(를) 끄기 %2',
-                connect_mel_sec_output: '멜로디 %1 을(를) %2 초 동안 소리내기 %3',
-                connect_melody_output: '멜로디 %1 을(를) 소리내기 %2',
-                connect_mel_number_sec_output: '멜로디 %1 을(를) %2 초 동안 소리내기 %3',
-                connect_melody_number_output: '멜로디 %1 을(를) 소리내기 %2',
-                connect_melody_number_note_output: '멜로디 %1 을(를) %2음표로 소리내기 %3',
-                connect_value_output: '멜로디 %1 값을 소리내기 %2',
-                connect_melody_track_output: '멜로디 %1 을(를) %2초 간격으로 소리내기 %3',
-                connect_melody_off: '멜로디 소리끄기 %1',
-                connect_fnd_output: 'FND를 %1 (으)로 켜기 %2',
-                connect_fnd_off: 'FND를 끄기 %1',
-
+                connect_rgbled_dimming_output: 'RGB LED %1 을(를) %2 으로 디밍 %3',
+                connect_rgbled_flashing_output: 'RGB LED %1 %2 으로 %3 초 간격 %4',
+                connect_fnd_output: 'FND를 %1 (으)로 설정 %2',
+                connect_fnd_off: 'FND 끄기 %1',
                 connect_eeprom_write: 'EEPROM %1 주소에 %2 값 설정하기 %3',
-                connect_eeprom_buffset: 'EEPROM %1 주소의 값 임시저장소로 호출하기 %2',
-                connect_buff_read: 'EEPROM 임시저장소의 값',
             },
         },
         en: {
-            // en.js에 작성하던 내용
             template: {
-                connect_remote_event: '%1 when remote control %2 key pressed %3',
-                connect_digital_event: '%1 when digital input %2 is on %3',
+                item_switch: 'Switch',
+                item_infrared: 'Infrared',
+                item_magnetic: 'Magnetic',
+                item_rotation: 'Rotation',
+                item_color: 'Color',
+                item_acceleration: 'Acceleration',
+                item_ultrasonic: 'Ultrasonic',
+                item_heart_rate: 'Heart Rate',
+                item_illuminance: 'Illuminance',
+                item_temperature: 'Temperature',
+                item_sound: 'Sound',
+                item_tilt: 'Tilt',
+                item_pressure: 'Pressure',
+                item_multi_touch: 'Multi Touch',
+                item_compass: 'Compass',
+                item_3acceleration: '3Acceleration',
+                item_multi_switch: 'Multi Switch',
+                item_infinite_rotation: 'Infinite Rotation',
+                item_color_red: 'Red',
+                item_color_green: 'Green',
+                item_color_blue: 'Blue',
+                item_color_cyan: 'Cyan',
+                item_color_magenta: 'Magenta',
+                item_color_yellow: 'Yellow',
+                item_color_black: 'Black',
+                item_color_white: 'White',
+                item_value: 'Value',
+                item_angle: 'Angle',
+                item_absolute_angle: 'Absolute Angle',
+                item_number_of_rotations: 'Number of Rotations',
+                item_key_1: 'Key1',
+                item_key_2: 'Key2',
+                item_key_3: 'Key3',
+                item_key_4: 'Key4',
+                item_key_5: 'Key5',
+                item_key_6: 'Key6',
+                item_key_7: 'Key7',
+                item_key_8: 'Key8',
+                item_all: 'All',
+                item_on: 'On',
+                item_off: 'Off',
+                item_note_whole: 'Whole',
+                item_note_half: 'Half',
+                item_note_quarter: 'Quarter',
+                item_note_eighth: 'Eighth',
+                item_note_sixteenth: 'Sixteenth',
+                item_note_thirty_second: 'Thirty-Second',
+                item_pitch_do: 'do',
+                item_pitch_do_sharp: 'xdo',
+                item_pitch_re: 're',
+                item_pitch_re_sharp: 'xre',
+                item_pitch_mi: 'mi',
+                item_pitch_fa: 'fa',
+                item_pitch_fa_sharp: 'xfa',
+                item_pitch_sol: 'sol',
+                item_pitch_sol_sharp: 'xsol',
+                item_pitch_ra: 'ra',
+                item_pitch_ra_sharp: 'xra',
+                item_pitch_si: 'si',
+                item_melody_start: 'Start',
+                item_melody_end: 'End',
+                item_melody_level_up: 'Level up',
+                item_melody_level_down: 'Level down',
 
-                connect_senser_setting: 'senser setting A1:%1 A2:%2 A3:%3 A4:%4 %5',
+                connect_remote_event: '%1 When %2 remote control key pressed',
+                connect_digital_event: '%1 When %2 digital pin input',
 
-                connect_remote_input: 'remote input %1',
-                connect_digital_input: 'digital senser %1',
-                connect_analog_input: 'analog senser %1',
+                connect_senser_setting: 'Set input port %1 to %2 sensor %3',
+
+                connect_remote_input: 'Remote control %1',
+                connect_digital_input: 'Read digital pin %1',
+                connect_analog_input: 'Read analog pin %1',
+                connect_3axis_acceler_x: '3acceleration %1 and X',
+                connect_3axis_acceler_y: '3acceleration %1 and Y',
+                connect_3axis_acceler_z: '3acceleration %1 and Z',
                 connect_value_mapping: '%1 to value %2 ~ %3 change %4 ~ %5',
-                //connect_ultrasonic_cm: 'Distance(cm) of ultrasonic sensor %1',
-                connect_color_input_b: 'is color sensor %1 to %2 ?',
-                connect_color_input_r: 'color of color sensor %1',
-                connect_infinite_reset: '%1 rotation sensor %2 reset %3',
-                connect_infinite_setting: '%1 rotation sensor %2 setting the %3 %4',
+                connect_color_input_b: 'Is color sensor %1 %2 ?',
+                connect_color_input_r: 'Color of color sensor %1',
+                connect_infinite_setting: 'Set %1 sensor %2 to %3 value %4',
+                connect_infinite_mm_diameter: 'The move distance(in mm) when the %1 sensor %2 is %3 mm in diameter',
                 connect_infinite_transform_input: '%1 rotation sensor %2 to %3',
-                connect_infinite_mm_diameter: 'mm value of %1 rotation sensor %2 diameter %3',
-                connect_3axis_acceler_x: 'acceleration %1 of X-axis',
-                connect_3axis_acceler_y: 'acceleration %1 of Y-axis',
-                connect_3axis_acceler_z: 'acceleration %1 of Z-axis',
-                connect_multi_sensor: 'multi sensor %1 key %2',
+                connect_multi_sensor: 'Multi sensor %1 key %2',
+                connect_multi_switch: 'A key number of the multi-switch sensor %1 = %2',
+                connect_eeprom_buffset:'Calling the value of EEPROM %1 address',
+                connect_eeprom_address_value: 'Value of EEPROM address',
 
-                connect_port_output: 'output %1 port %2 %3',
-                connect_servo_output: 'move position of servo motor %1 to %2 %3',
-                connect_s_dc_output: 'rotate S motor %1 at %2 speed %3',
-                connect_dc_output: 'rotate dc motor %1 at %2 speed %3',
-                connect_rgbled_on_output: 'RGB LED %1 at %2 on %3',
-                connect_rgbled_flashing_output: 'RGB LED %1 %2 with %3 second interval %4',
-                connect_rgbled_dimming_output: 'RGB LED %1 at %2 Dimming %3',
-                connect_rgbled_off_output: 'RGB LED %1 off %2',
-                connect_mel_sec_output: 'melody %1 sounds for %2 seconds %3',
-                connect_melody_output: 'off melody sound %1',
-                connect_mel_number_sec_output: 'play melody %1 sounds for %2 seconds %3',
-                connect_melody_number_output: 'play the melody %1 %2',
-                connect_melody_number_note_output: 'play melody %1 with %2 notes %2',
-                connect_value_output: 'play the melody %1 value %2',
-                connect_melody_track_output: 'play the melody %1 at intervals of %2 second %3',
-                connect_melody_off: 'off melody sound %1',
-                connect_fnd_output: 'FND on %1 %2',
-                connect_fnd_off: 'FND off %1',
-                connect_eeprom_write: 'setting the EEPROM %1 address to a value of %2 %3',
-                connect_eeprom_buffset:
-                    'calling the value of the EEPROM %1 address into the temporary store %2',
-                connect_buff_read: 'value of EEPROM temporary store',
+                connect_dc_output: 'DC motor %1 velocity %2 %3',
+                connect_servo_output: 'Servo motor %1 position %2 %3',
+                connect_s_dc_output: 'Servo motor %1 speed %2 %3',
+                connect_port_output: 'Set digital pint %1 as %2 %3',
+                connect_melody_note_output: 'Play key %1 for %2 note %3',
+                connect_melody_sec_output: 'Play key %1 for %2 secs %3',
+                connect_melody_output: 'Play key %1 %2',
+                connect_value_sec_output: 'Play value %1 for %2 secs %3',
+                connect_value_output: 'Play value %1 %2',
+                connect_melody_track_output: 'Play sound %1 for %2 secs %3',
+                connect_melody_off: 'Stop tone %1',
+                connect_rgbled_on_output: 'Turn on RGB LED %1 to %2 %3',
+                connect_rgbled_off_output: 'Turn off RGB LED %1 %2',
+                connect_rgbled_dimming_output: 'Dimming RGB LED %1 to %2 %3',
+                connect_rgbled_flashing_output: 'RGB LED %1 Blinking %2 at %3 second intervals %4',
+                connect_fnd_output: 'Set FND to %1 %2',
+                connect_fnd_off: 'Turn off FND %1',
+                connect_eeprom_write: 'Set EEPROM %1 address to %2 %3',
             },
         },
     };
 };
 
 Entry.ProboConnect.blockMenuBlocks = [
-    //region proboconnect
-    ////Start
+    'connect_dropdown_remote',
+    'connect_dropdown_digital',
+    'connect_dropdown_analog',
+    'connect_dropdown_sensor_1',
+    'connect_dropdown_sensor_2',
+    'connect_dropdown_color_1',
+    'connect_dropdown_color_2',
+    'connect_dropdown_sensor_transfer',
+    'connect_dropdown_key',
+    'connect_dropdown_dc_1_all',
+    'connect_dropdown_servo_1_4',
+    'connect_dropdown_port_1_4',
+    'connect_dropdown_on_off',
+    'connect_dropdown_velocity',
+    'connect_dropdown_servo_position',
+    'connect_dropdown_note',
+    'connect_dropdown_time_1',
+    'connect_dropdown_time_2',
+    'connect_dropdown_time_3',
+    'connect_dropdown_pitch',
+    'connect_dropdown_melody',
+
+    //event
     'connect_remote_event',
     'connect_digital_event',
 
-    ////input
+    //input
     'connect_senser_setting',
     'connect_remote_input',
     'connect_digital_input',
     'connect_analog_input',
-    'connect_value_mapping',
-    //"connect_ultrasonic_cm",
-    'connect_color_input_b',
-    'connect_color_input_r',
-    'connect_infinite_reset',
-    'connect_infinite_setting',
-    'connect_infinite_transform_input',
-    'connect_infinite_mm_diameter',
     'connect_3axis_acceler_x',
     'connect_3axis_acceler_y',
     'connect_3axis_acceler_z',
+    'connect_value_mapping',
+    'connect_color_input_b',
+    'connect_color_input_r',
+    'connect_infinite_setting',
+    'connect_infinite_mm_diameter',
+    'connect_infinite_transform_input',
     'connect_multi_sensor',
+    'connect_multi_switch',
+    'connect_eeprom_buffset',
+    'connect_eeprom_address_value',
 
-    
-    ////output
-    'connect_port_output',
+    //output
+    'connect_dc_output',
     'connect_servo_output',
     'connect_s_dc_output',
-    'connect_dc_output',
-    'connect_rgbled_on_output',
-    'connect_rgbled_flashing_output',
-    'connect_rgbled_dimming_output',
-    'connect_rgbled_off_output',
-    'connect_mel_sec_output',
+    'connect_port_output',
+    'connect_melody_note_output',
+    'connect_melody_sec_output',
     'connect_melody_output',
-    'connect_mel_number_sec_output',
-    'connect_melody_number_output',
-    'connect_melody_number_note_output',
-    'connect_value_output',
+    'connect_value_sec_output',
+    'connect_value_output',    
     'connect_melody_track_output',
     'connect_melody_off',
+    'connect_rgbled_on_output',
+    'connect_rgbled_off_output',
+    'connect_rgbled_flashing_output',
+    'connect_rgbled_dimming_output',
     'connect_fnd_output',
     'connect_fnd_off',
-
-    //// EEPROM
+    // EEPROM
     'connect_eeprom_write',
-    'connect_eeprom_buffset',
-    'connect_buff_read',
-    //endregion proboconnect
 ];
 
 // 블록 생성
 Entry.ProboConnect.getBlocks = function() {
     return {
-        // 리모컨 입력 이벤트
+        ///========================================================================================
+        /// Dropdown block
+        ///========================================================================================
+        connect_dropdown_remote: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['R_1', '1'],
+                        ['R_2', '2'],
+                        ['R_3', '3'],
+                        ['R_4', '4'],
+                        ['R_5', '5'],
+                        ['R_6', '6'],
+                        ['R_7', '7'],
+                        ['R_8', '8'],
+                        ['R_L1', '9'],
+                        ['R_L2', '10'],
+                        ['R_R1', '11'],
+                        ['R_R2', '12'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            def: {
+                params: [
+                    null
+                ],
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+            },
+            events: {},
+            func: function(sprite, script) {
+                return script.getField('PARAM0');
+            }
+        },
+        connect_dropdown_digital: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['A1', '1'],
+                        ['A2', '2'],
+                        ['A3', '3'],
+                        ['A4', '4'],
+                        ['FEA1', '5'],
+                        ['FEA2', '6'],
+                        ['FEA3', '7'],
+                        ['FEA4', '8'],
+                        ['REA1', '9'],
+                        ['REA2', '10'],
+                        ['REA3', '11'],
+                        ['REA4', '12'],
+                        ['BEA1', '13'],
+                        ['BEA2', '14'],
+                        ['BEA3', '15'],
+                        ['BEA4', '16'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            def: {
+                params: [
+                    null
+                ],
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+            },
+            events: {},
+            func: function(sprite, script) {
+                return script.getField('PARAM0');
+            }
+        },
+        connect_dropdown_analog: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['AA1', '1'],
+                        ['AA2', '2'],
+                        ['AA3', '3'],
+                        ['AA4', '4'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            def: {
+                params: [
+                    null
+                ],
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+            },
+            events: {},
+            func: function(sprite, script) {
+                return script.getField('PARAM0');
+            }
+        },
+        connect_dropdown_sensor_1: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.template.item_switch, '1'],
+                        [Lang.template.item_infrared, '2'],
+                        [Lang.template.item_magnetic, '3'],
+                        [Lang.template.item_rotation, '4'],
+                        [Lang.template.item_color, '5'],
+                        [Lang.template.item_acceleration, '6'],
+                        [Lang.template.item_ultrasonic, '7'],
+                        [Lang.template.item_heart_rate, '8'],
+                        [Lang.template.item_illuminance, '9'],
+                        [Lang.template.item_sound, '10'],
+                        [Lang.template.item_tilt, '11'],
+                        [Lang.template.item_pressure, '12'],
+                        [Lang.template.item_multi_touch, '13'],
+                        [Lang.template.item_compass, '14'],
+                        [Lang.template.item_3acceleration, '15'],
+                        [Lang.template.item_multi_switch, '16'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            def: {
+                params: [
+                    null
+                ],
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+            },
+            events: {},
+            func: function(sprite, script) {
+                return script.getField('PARAM0');
+            }
+        },
+        connect_dropdown_sensor_2: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.template.item_infinite_rotation, '1'],
+                        [Lang.template.item_compass, '2'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            def: {
+                params: [
+                    null
+                ],
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+            },
+            events: {},
+            func: function(sprite, script) {
+                return script.getField('PARAM0');
+            }
+        },
+        connect_dropdown_color_1: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.template.item_color_red, '1'],
+                        [Lang.template.item_color_green, '2'],
+                        [Lang.template.item_color_blue, '3'],
+                        [Lang.template.item_color_yellow, '4'],
+                        [Lang.template.item_color_black, '5'],
+                        [Lang.template.item_color_white, '6'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            def: {
+                params: [
+                    null
+                ],
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+            },
+            events: {},
+            func: function(sprite, script) {
+                return script.getField('PARAM0');
+            }
+        },
+        connect_dropdown_color_2: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.template.item_color_red, '1'],
+                        [Lang.template.item_color_green, '2'],
+                        [Lang.template.item_color_blue, '3'],
+                        [Lang.template.item_color_cyan, '4'],
+                        [Lang.template.item_color_magenta, '5'],
+                        [Lang.template.item_color_yellow, '6'],
+                        [Lang.template.item_color_white, '7'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            def: {
+                params: [
+                    null
+                ],
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+            },
+            events: {},
+            func: function(sprite, script) {
+                return script.getField('PARAM0');
+            }
+        },
+        connect_dropdown_sensor_transfer: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.template.item_value, '1'],
+                        [Lang.template.item_angle, '2'],
+                        [Lang.template.item_absolute_angle, '3'],
+                        [Lang.template.item_number_of_rotations, '4'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            def: {
+                params: [
+                    null
+                ],
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+            },
+            events: {},
+            func: function(sprite, script) {
+                return script.getField('PARAM0');
+            }
+        },
+        connect_dropdown_key: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.template.item_key_1, '1'],
+                        [Lang.template.item_key_2, '2'],
+                        [Lang.template.item_key_3, '3'],
+                        [Lang.template.item_key_4, '4'],
+                        [Lang.template.item_key_5, '5'],
+                        [Lang.template.item_key_6, '6'],
+                        [Lang.template.item_key_7, '7'],
+                        [Lang.template.item_key_8, '8'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            def: {
+                params: [
+                    null
+                ],
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+            },
+            events: {},
+            func: function(sprite, script) {
+                return script.getField('PARAM0');
+            }
+        },
+        connect_dropdown_dc_1_all: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['1', 'DC1'],
+                        ['2', 'DC2'],
+                        ['3', 'DC3'],
+                        ['4', 'DC4'],
+                        ['1,2', 'DC5'],
+                        ['3,4', 'DC6'],
+                        [Lang.template.item_all, 'DC7'],
+                    ],
+                    value: 'DC1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            def: {
+                params: [
+                    null
+                ],
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+            },
+            events: {},
+            func: function(sprite, script) {
+                return script.getField('PARAM0');
+            }
+        },
+        connect_dropdown_servo_1_4: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['1', 'Servo1'],
+                        ['2', 'Servo2'],
+                        ['3', 'Servo3'],
+                        ['4', 'Servo4'],
+                    ],
+                    value: 'Servo1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            def: {
+                params: [
+                    null
+                ],
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+            },
+            events: {},
+            func: function(sprite, script) {
+                return script.getField('PARAM0');
+            }
+        },
+        connect_dropdown_velocity: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['20', '20'],
+                        ['15', '15'],
+                        ['10', '10'],
+                        ['5', '5'],
+                        ['0', '0'],
+                        ['-5', '-5'],
+                        ['-10', '-10'],
+                        ['-15', '-15'],
+                        ['-20', '-20'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            def: {
+                params: [
+                    null
+                ],
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+            },
+            events: {},
+            func: function(sprite, script) {
+                return script.getField('PARAM0');
+            }
+        },
+        connect_dropdown_servo_position: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['1', '1'],
+                        ['20', '20'],
+                        ['40', '40'],
+                        ['60', '60'],
+                        ['80', '80'],
+                        ['100', '100'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            def: {
+                params: [
+                    null
+                ],
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+            },
+            events: {},
+            func: function(sprite, script) {
+                return script.getField('PARAM0');
+            }
+        },
+        connect_dropdown_port_1_4: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['1', 'B1'],
+                        ['2', 'B2'],
+                        ['3', 'B3'],
+                        ['4', 'B4'],
+                    ],
+                    value: 'B1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            def: {
+                params: [
+                    null
+                ],
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+            },
+            events: {},
+            func: function(sprite, script) {
+                return script.getField('PARAM0');
+            }
+        },           
+        connect_dropdown_on_off: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.template.item_on, '1'],
+                        [Lang.template.item_off, '0'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            def: {
+                params: [
+                    null
+                ],
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+            },
+            events: {},
+            func: function(sprite, script) {
+                return script.getField('PARAM0');
+            }
+        },
+        connect_dropdown_note: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.template.item_note_whole, '1'],
+                        [Lang.template.item_note_half, '2'],
+                        [Lang.template.item_note_quarter, '4'],
+                        [Lang.template.item_note_eighth, '8'],
+                        [Lang.template.item_note_sixteenth, '16'],
+                        [Lang.template.item_note_thirty_second, '32'],
+                    ],
+                    value: '4',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            def: {
+                params: [
+                    null
+                ],
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+            },
+            events: {},
+            func: function(sprite, script) {
+                return script.getField('PARAM0');
+            }
+        },
+        connect_dropdown_time_1: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['0.1', '0.1'],
+                        ['0.3', '0.3'],
+                        ['0.5', '0.5'],
+                        ['0.7', '0.7'],
+                        ['1', '1'],
+                        ['2', '2'],
+                    ],
+                    value: '0.5',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            def: {
+                params: [
+                    null
+                ],
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+            },
+            events: {},
+            func: function(sprite, script) {
+                return script.getField('PARAM0');
+            }
+        },
+        connect_dropdown_time_2: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['0.1', '0.1'],
+                        ['0.3', '0.3'],
+                        ['0.5', '0.5'],
+                        ['0.7', '0.7'],
+                        ['1', '1'],
+                        ['2', '2'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            def: {
+                params: [
+                    null
+                ],
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+            },
+            events: {},
+            func: function(sprite, script) {
+                return script.getField('PARAM0');
+            }
+        },
+        connect_dropdown_time_3: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['0.05', '0.05'],
+                        ['0.1', '0.1'],
+                        ['0.2', '0.2'],
+                        ['0.5', '0.5'],
+                        ['1', '1'],
+                    ],
+                    value: '0.5',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            def: {
+                params: [
+                    null
+                ],
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+            },
+            events: {},
+            func: function(sprite, script) {
+                return script.getField('PARAM0');
+            }
+        },
+        connect_dropdown_pitch: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'DropdownExtra',
+                    options: [
+                        [Lang.template.item_pitch_do + ' (36)', '36'],
+                        [Lang.template.item_pitch_do_sharp + ' (37)', '37'],
+                        [Lang.template.item_pitch_re + ' (38)', '38'],
+                        [Lang.template.item_pitch_re_sharp + ' (39)', '39'],
+                        [Lang.template.item_pitch_mi + ' (40)', '40'],
+                        [Lang.template.item_pitch_fa + ' (41)', '41'],
+                        [Lang.template.item_pitch_fa_sharp + ' (42)', '42'],
+                        [Lang.template.item_pitch_sol + ' (43)', '43'],
+                        [Lang.template.item_pitch_sol_sharp + ' (44)', '44'],
+                        [Lang.template.item_pitch_ra + ' (45)', '45'],
+                        [Lang.template.item_pitch_ra_sharp + ' (46)', '46'],
+                        [Lang.template.item_pitch_si + ' (47)', '47'],
+
+                        [Lang.template.item_pitch_do + ' (48)', '48'],
+                        [Lang.template.item_pitch_do_sharp + ' (49)', '49'],
+                        [Lang.template.item_pitch_re + ' (50)', '50'],
+                        [Lang.template.item_pitch_re_sharp + ' (51)', '51'],
+                        [Lang.template.item_pitch_mi + ' (52)', '52'],
+                        [Lang.template.item_pitch_fa + ' (53)', '53'],
+                        [Lang.template.item_pitch_fa_sharp + ' (54)', '54'],
+                        [Lang.template.item_pitch_sol + ' (55)', '55'],
+                        [Lang.template.item_pitch_sol_sharp + ' (56)', '56'],
+                        [Lang.template.item_pitch_ra + ' (57)', '57'],
+                        [Lang.template.item_pitch_ra_sharp + ' (58)', '58'],
+                        [Lang.template.item_pitch_si + ' (59)', '59'],
+
+                        [Lang.template.item_pitch_do + ' (60)', '60'],
+                        [Lang.template.item_pitch_do_sharp + ' (61)', '61'],
+                        [Lang.template.item_pitch_re + ' (62)', '62'],
+                        [Lang.template.item_pitch_re_sharp + ' (63)', '63'],
+                        [Lang.template.item_pitch_mi + ' (64)', '64'],
+                        [Lang.template.item_pitch_fa + ' (65)', '65'],
+                        [Lang.template.item_pitch_fa_sharp + ' (66)', '66'],
+                        [Lang.template.item_pitch_sol + ' (67)', '67'],
+                        [Lang.template.item_pitch_sol_sharp + ' (68)', '68'],
+                        [Lang.template.item_pitch_ra + ' (69)', '69'],
+                        [Lang.template.item_pitch_ra_sharp + ' (70)', '70'],
+                        [Lang.template.item_pitch_si + ' (71)', '71'],
+
+                        [Lang.template.item_pitch_do + ' (72)', '72'],
+                        [Lang.template.item_pitch_do_sharp + ' (73)', '73'],
+                        [Lang.template.item_pitch_re + ' (74)', '74'],
+                        [Lang.template.item_pitch_re_sharp + ' (75)', '75'],
+                        [Lang.template.item_pitch_mi + ' (76)', '76'],
+                        [Lang.template.item_pitch_fa + ' (77)', '77'],
+                        [Lang.template.item_pitch_fa_sharp + ' (78)', '78'],
+                        [Lang.template.item_pitch_sol + ' (79)', '79'],
+                        [Lang.template.item_pitch_sol_sharp + ' (80)', '80'],
+                        [Lang.template.item_pitch_ra + ' (81)', '81'],
+                        [Lang.template.item_pitch_ra_sharp + ' (82)', '82'],
+                        [Lang.template.item_pitch_si + ' (83)', '83'],
+                    ],
+                    value: '60',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            def: {
+                params: [
+                    null
+                ],
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+            },
+            events: {},
+            func: function(sprite, script) {
+                const value = script.getField('PARAM0');
+                return value;
+            }
+        },
+        connect_dropdown_melody: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.template.item_melody_start, '1'],
+                        [Lang.template.item_melody_end, '2'],
+                        [Lang.template.item_melody_level_up, '3'],
+                        [Lang.template.item_melody_level_down, '4'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            def: {
+                params: [
+                    null
+                ],
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+            },
+            events: {},
+            func: function(sprite, script) {
+                return script.getField('PARAM0');
+            }
+        },
+        ///========================================================================================
+        /// Event block
+        ///========================================================================================
+        // 리모컨 R_1 키를 눌렀을 때
         connect_remote_event: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
+            fontColor: '#fff',
             skeleton: 'basic_event',
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/start_icon_play.svg',
+                    img: 'block_icon/start_icon_hardware.svg',
                     size: 14,
                     position: {
                         x: 0,
@@ -452,60 +1786,46 @@ Entry.ProboConnect.getBlocks = function() {
                     },
                 },
                 {
-                    type: 'Dropdown',
-                    options: [
-                        ['R_1', 'R_1'],
-                        ['R_2', 'R_2'],
-                        ['R_3', 'R_3'],
-                        ['R_4', 'R_4'],
-                        ['R_5', 'R_5'],
-                        ['R_6', 'R_6'],
-                        ['R_7', 'R_7'],
-                        ['R_8', 'R_8'],
-                        ['R_L1', 'R_L1'],
-                        ['R_L2', 'R_L2'],
-                        ['R_R1', 'R_R1'],
-                        ['R_R2', 'R_R2'],
-                    ],
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
+                    type: 'Block',
+                    accept: 'string',
                 },
             ],
             events: {},
             def: {
-                params: [null,'R_1',null],
+                params: [
+                    null,
+                    {
+                        type: 'connect_dropdown_remote',
+                    },
+                ],
                 type: 'connect_remote_event',
             },
             paramsKeyMap: {
-                BUTTON: 1,
+                PARAM1: 1,
             },
             class: 'event',
             isNotFor: ['ProboConnect'],
             event: 'event_remote_input',
             func(sprite, script) {
-                const btn = script.getStringField('BUTTON', script);
-                if(Entry.hw.portData.InputData.Remote[btn] == 1 )
+                const btn = Entry.ProboConnect.convertDropdownRemote(
+                    script.getStringValue('PARAM1')
+                );
+                if (Entry.hw.portData.InputData.Remote[btn] == 1 ) {
                     return script.callReturn();
-
+                }
                 return this.die();
             },
-        },
-        // 디지털 입력 이벤트
+        },        
+        // 디지털 입력 A1 이(가) 들어왔을 때
         connect_digital_event: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
+            fontColor: '#fff',
             skeleton: 'basic_event',
             params: [
                 {
                     type: 'Indicator',
-                    img: 'block_icon/start_icon_play.svg',
+                    img: 'block_icon/start_icon_hardware.svg',
                     size: 14,
                     position: {
                         x: 0,
@@ -513,880 +1833,79 @@ Entry.ProboConnect.getBlocks = function() {
                     },
                 },
                 {
-                    type: 'Dropdown',
-                    options: [
-                        ['A1', 'A1'],
-                        ['A2', 'A2'],
-                        ['A3', 'A3'],
-                        ['A4', 'A4'],
-                        ['FEA1', 'FEA1'],
-                        ['FEA2', 'FEA2'],
-                        ['FEA3', 'FEA3'],
-                        ['FEA4', 'FEA4'],
-                        ['REA1', 'REA1'],
-                        ['REA2', 'REA2'],
-                        ['REA3', 'REA3'],
-                        ['REA4', 'REA4'],
-                        ['BEA1', 'BEA1'],
-                        ['BEA2', 'BEA2'],
-                        ['BEA3', 'BEA3'],
-                        ['BEA4', 'BEA4'],
-                    ],
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
+                    type: 'Block',
+                    accept: 'string',
                 },
             ],
             events: {},
             def: {
-                params: [null,'A1',null],
+                params: [
+                    null,
+                    {
+                        type: 'connect_dropdown_digital',
+                    },
+                ],
                 type: 'connect_digital_event',
             },
             paramsKeyMap: {
-                PORT: 1,
+                PARAM1: 1,
             },
             class: 'event',
             isNotFor: ['ProboConnect'],
             event: 'event_digital_input',
             func(sprite, script) {
-                const port = script.getStringField('PORT', script);
-                var rt = false;
-                if (
-                    port == 'FEA1' ||
-                    port == 'FEA2' ||
-                    port == 'FEA3' ||
-                    port == 'FEA4' ||
-                    port == 'REA1' ||
-                    port == 'REA2' ||
-                    port == 'REA3' ||
-                    port == 'REA4' ||
-                    port == 'BEA1' ||
-                    port == 'BEA2' ||
-                    port == 'BEA3' ||
-                    port == 'BEA4'
-                ) {
-                    if (Entry.hw.portData.InputData.Digital[port] == 1) {
-                        if (Entry.ProboConnect.EdgeFlag[port] == 0) {
-                            Entry.ProboConnect.EdgeFlag[port] = 1;
+                const port = Entry.ProboConnect.convertDropdownDigital(
+                    script.getStringValue('PARAM1')
+                );
+                switch(port) {
+                    case 'FEA1':
+                    case 'FEA2':
+                    case 'FEA3':
+                    case 'FEA4':
+                    case 'REA1':
+                    case 'REA2':
+                    case 'REA3':
+                    case 'REA4':
+                    case 'BEA1':
+                    case 'BEA2':
+                    case 'BEA3':
+                    case 'BEA4':
+                        if (Entry.hw.portData.InputData.Digital[port] == 1) {
+                            if (Entry.ProboConnect.EdgeFlag[port] == 0) {
+                                Entry.ProboConnect.EdgeFlag[port] = 1;
+                                return script.callReturn();
+                            }
+                        } else {
+                            Entry.ProboConnect.EdgeFlag[port] = 0;
+                        }
+                        break;
+                    default:
+                        if (Entry.hw.portData.InputData.Digital[port] == 1 ) {
                             return script.callReturn();
                         }
-                    } else {
-                        Entry.ProboConnect.EdgeFlag[port] = 0;
-                    }
-                } else if(Entry.hw.portData.InputData.Digital[port] == 1 ){
-                    return script.callReturn();
+                        break;
                 }
+
                 return this.die();
             },
         },
-        // 리모컨 입력
-        connect_remote_input: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic_boolean_field',
-            params: [
-                {
-                    type: 'Dropdown',
-                    // Dropdown 생성 기준은
-                    // [["key1", "value1"],
-                    //  ["key2", "value2"]]
-                    options: [
-                        ['R_1', 'R_1'],
-                        ['R_2', 'R_2'],
-                        ['R_3', 'R_3'],
-                        ['R_4', 'R_4'],
-                        ['R_5', 'R_5'],
-                        ['R_6', 'R_6'],
-                        ['R_7', 'R_7'],
-                        ['R_8', 'R_8'],
-                        ['R_L1', 'R_L1'],
-                        ['R_L2', 'R_L2'],
-                        ['R_R1', 'R_R1'],
-                        ['R_R2', 'R_R2'],
-                    ],
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            def: {
-                params: ['R_1'],
-                type: 'connect_remote_input',
-            },
-            paramsKeyMap: {
-                BUTTON: 0,
-            },
-            class: 'input',
-            isNotFor: ['ProboConnect'],
-            func: function(sprite, script) {
-                const btn = script.getStringField('BUTTON', script);
-
-                return Entry.hw.portData.InputData.Remote[btn] == 1 ? true : false;
-            },
-        },
-        // 디지털 입력
-        connect_digital_input: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic_boolean_field',
-            params: [
-                {
-                    type: 'Dropdown',
-
-                    options: [
-                        ['A1', 'A1'],
-                        ['A2', 'A2'],
-                        ['A3', 'A3'],
-                        ['A4', 'A4'],
-                        ['FEA1', 'FEA1'],
-                        ['FEA2', 'FEA2'],
-                        ['FEA3', 'FEA3'],
-                        ['FEA4', 'FEA4'],
-                        ['REA1', 'REA1'],
-                        ['REA2', 'REA2'],
-                        ['REA3', 'REA3'],
-                        ['REA4', 'REA4'],
-                        ['BEA1', 'BEA1'],
-                        ['BEA2', 'BEA2'],
-                        ['BEA3', 'BEA3'],
-                        ['BEA4', 'BEA4'],
-                    ],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            def: {
-                params: ['A1'],
-                type: 'connect_digital_input',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-            },
-            class: 'input',
-            isNotFor: ['ProboConnect'],
-            func: function(sprite, script) {
-                const port = script.getStringField('PORT', script);
-                var rt = false;
-
-                if (
-                    port == 'FEA1' ||
-                    port == 'FEA2' ||
-                    port == 'FEA3' ||
-                    port == 'FEA4' ||
-                    port == 'REA1' ||
-                    port == 'REA2' ||
-                    port == 'REA3' ||
-                    port == 'REA4' ||
-                    port == 'BEA1' ||
-                    port == 'BEA2' ||
-                    port == 'BEA3' ||
-                    port == 'BEA4'
-                ) {
-                    if (Entry.hw.portData.InputData.Digital[port] == 1) {
-                        if (Entry.ProboConnect.EdgeFlag[port] == 0) {
-                            Entry.ProboConnect.EdgeFlag[port] = 1;
-                            rt = true;
-                        }
-                    } else {
-                        Entry.ProboConnect.EdgeFlag[port] = 0;
-                    }
-                } else rt = Entry.hw.portData.InputData.Digital[port] == 1 ? true : false;
-
-                return rt;
-            },
-        },
-        // 아날로그 입력
-        connect_analog_input: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic_string_field',
-            params: [
-                {
-                    type: 'Dropdown',
-                    // Dropdown 생성 기준은
-                    // [["key1", "value1"],
-                    //  ["key2", "value2"]]
-                    options: [['AA1', 'AA1'], ['AA2', 'AA2'], ['AA3', 'AA3'], ['AA4', 'AA4']],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            def: {
-                params: [
-                    // Dropdown 값의 경우 Value를 세팅하면 초기값이 처리 됩니다.
-                    'AA1',
-                ],
-                type: 'connect_analog_input',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-            },
-            class: 'input',
-            isNotFor: ['ProboConnect'],
-            func: function(sprite, script) {
-                const port = script.getStringField('PORT', script);
-
-                // Port 라는 key값을 가진 정보를 읽는다.
-                var value = 0;
-
-                if(Entry.ProboConnect.SenserSet[port]==5)
-                    value = 255 - Entry.hw.portData.InputData.Analog[port];
-                else
-                    value = Entry.hw.portData.InputData.Analog[port];
-
-                return value;
-            },
-        },
-        // 아날로그 입력 값 맵핑 블럭
-        connect_value_mapping: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic_string_field',
-            params: [
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-            ],
-            def: {
-                params: [
-                    // Dropdown 값의 경우 Value를 세팅하면 초기값이 처리 됩니다.
-                    '0',
-                    '0',
-                    '0',
-                    '0',
-                    '0',
-                ],
-                type: 'connect_value_mapping',
-            },
-            paramsKeyMap: {
-                DATA: 0,
-                SOURCE1: 1,
-                SOURCE2: 2,
-                TARGET1: 3,
-                TARGET2: 4,
-            },
-            class: 'input',
-            isNotFor: ['ProboConnect'],
-            func: function(sprite, script) {
-                const data = script.getNumberValue('DATA', script);
-                const source1 = script.getNumberValue('SOURCE1', script);
-                const source2 = script.getNumberValue('SOURCE2', script);
-                const target1 = script.getNumberValue('TARGET1', script);
-                const target2 = script.getNumberValue('TARGET2', script);
-
-                var value = 0;
-                var rate = (data - source1) / (source2 - source1);
-                var num = 0;
-
-                if (target1 < target2) {
-                    value = (target2 - target1) * rate;
-
-                    num = value % 1;
-
-                    if (num < 0.5) value -= num;
-                    else value += 1 - num;
-
-                    value = target1 + value;
-
-                    if (value < target1) value = target1;
-                    else if (value > target2) value = target2;
-                } else {
-                    value = (target1 - target2) * rate;
-
-                    num = value % 1;
-
-                    if (num < 0.5) value -= num;
-                    else value += 1 - num;
-
-                    value = target1 - value;
-
-                    if (value > target1) value = target1;
-                    else if (value < target2) value = target2;
-                }
-
-                return value;
-            },
-        },
-        // 컬러센서 bool
-        connect_color_input_b: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic_boolean_field',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [['AA1', 'AA1'], ['AA2', 'AA2'], ['AA3', 'AA3'], ['AA4', 'AA4']],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['빨강', '0'],
-                        ['초록', '1'],
-                        ['파랑', '2'],
-                        ['노랑', '3'],
-                        ['검정', '4'],
-                        ['하양', '5'],
-                    ],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            def: {
-                params: ['AA1', '0'],
-                type: 'connect_color_input_b',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-                COLOR: 1,
-            },
-            class: 'input',
-            isNotFor: ['ProboConnect'],
-            func: function(sprite, script) {
-                const port = script.getStringField('PORT', script);
-                const target = script.getNumberField('COLOR', script);
-                const value = Entry.hw.portData.InputData.Analog[port];
-                var color = Entry.ProboConnect.Color;
-
-                return color[target][0] <= value && value <= color[target][1];
-            },
-        },
-        // 컬러센서 value
-        connect_color_input_r: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic_string_field',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [['AA1', 'AA1'], ['AA2', 'AA2'], ['AA3', 'AA3'], ['AA4', 'AA4']],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            def: {
-                params: ['AA1'],
-                type: 'connect_color_input_r',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-            },
-            class: 'input',
-            isNotFor: ['ProboConnect'],
-            func: function(sprite, script) {
-                const port = script.getStringField('PORT', script);
-                const value = Entry.hw.portData.InputData.Analog[port];
-                var color = Entry.ProboConnect.Color;
-
-                for (var i = 0; i < 6; i++) {
-                    if (color[i][0] <= value && value <= color[i][1]) {
-                        switch (i) {
-                            case 0:
-                                return '빨강';
-                            case 1:
-                                return '초록';
-                            case 2:
-                                return '파랑';
-                            case 3:
-                                return '노랑';
-                            case 4:
-                                return '검정';
-                            case 5:
-                                return '하양';
-                        }
-                    }
-                }
-                return 0;
-            },
-        },
-        // 무한회전 센서 값 초기화
-        connect_infinite_reset: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [['무한회전', '0'], ['나침반', '1']],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [['AA1', 'AA1'], ['AA2', 'AA2'], ['AA3', 'AA3'], ['AA4', 'AA4']],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            def: {
-                params: [0,'AA1', null],
-                type: 'connect_infinite_reset',
-            },
-            paramsKeyMap: {
-                PORT: 1,
-            },
-            class: 'input',
-            isNotFor: ['ProboConnect'],
-            func: function(sprite, script) {
-                const port = script.getStringField('PORT', script);
-                const value = Entry.hw.portData.InputData.Analog[port];
-                Entry.ProboConnect.Infinite_Start[port] = value;
-                Entry.ProboConnect.Infinite_Buff[port] = value;
-                Entry.ProboConnect.Infinite_Count[port] = 0;
-            },
-        },
-        // 무한회전 센서 값 설정
-        connect_infinite_setting: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [['무한회전', '0'], ['나침반', '1']],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [['AA1', 'AA1'], ['AA2', 'AA2'], ['AA3', 'AA3'], ['AA4', 'AA4']],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                }
-            ],
-            def: {
-                params: [0, 'AA1', '0', null],
-                type: 'connect_infinite_setting',
-            },
-            paramsKeyMap: {
-                NAME: 0,
-                PORT: 1,
-                VALUE: 2,
-            },
-            class: 'input',
-            isNotFor: ['ProboConnect'],
-            func: function(sprite, script) {
-                const port = script.getStringField('PORT', script);
-                var value = script.getNumberValue('VALUE', script);
-                var count = 0;
-                // console.log("Start",Entry.ProboConnect.Infinite_Start[port]);
-                // console.log("Buff",Entry.ProboConnect.Infinite_Buff[port]);
-                // console.log("Count",Entry.ProboConnect.Infinite_Count[port]);
-                
-                if (value!=0){
-                    count = Number(value / 255).toFixed(0);
-                    value = value % 255;
-                }else{
-                    value = 0;
-                    count = 0;
-                }
-                console.log("count",count);
-                console.log("value",value);
-                console.log("Infinite_Buff",Entry.ProboConnect.Infinite_Buff[port]);
-
-                
-                Entry.ProboConnect.Infinite_Buff[port] = Entry.hw.portData.InputData.Analog[port];
-                Entry.ProboConnect.Infinite_Start[port] = Entry.hw.portData.InputData.Analog[port]-value;
-                Entry.ProboConnect.Infinite_Count[port] = count;
-
-                console.log("Infinite_Start",Entry.ProboConnect.Infinite_Start[port]);
-                console.log("Infinite_Buff",Entry.ProboConnect.Infinite_Buff[port]);
-                console.log("Infinite_Count",Entry.ProboConnect.Infinite_Count[port]);
-
-            },
-        },
-        // 무한회전 센서
-        connect_infinite_transform_input: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic_string_field',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [['무한회전', '0'], ['나침반', '1']],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [['AA1', 'AA1'], ['AA2', 'AA2'], ['AA3', 'AA3'], ['AA4', 'AA4']],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [['값', '1'], ['각도', '2'], ['회전 수', '3'], ['절대각도', '4']],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            def: {
-                params: [0,'AA1', '1'],
-                type: 'connect_infinite_transform_input',
-            },
-            paramsKeyMap: {
-                PORT: 1,
-                SELECT: 2,
-            },
-            class: 'input',
-            isNotFor: ['ProboConnect'],
-            func: function(sprite, script) {
-                const port = script.getStringField('PORT', script);
-                var value = Entry.hw.portData.InputData.Analog[port];
-                const select = script.getNumberField('SELECT', script);
-
-                if (value < (Entry.ProboConnect.Infinite_Buff[port] - 150))
-                    Entry.ProboConnect.Infinite_Count[port]++;
-                else if (value > (Entry.ProboConnect.Infinite_Buff[port] + 150))
-                    Entry.ProboConnect.Infinite_Count[port]--;
-
-                Entry.ProboConnect.Infinite_Buff[port] = value;
-
-                console.log("-Infinite_Start",Entry.ProboConnect.Infinite_Start[port]);
-                console.log("-Infinite_Buff",Entry.ProboConnect.Infinite_Buff[port]);
-                console.log("-Infinite_Count",Entry.ProboConnect.Infinite_Count[port]);
-
-                value = (Entry.ProboConnect.Infinite_Buff[port] - Entry.ProboConnect.Infinite_Start[port]) + (Entry.ProboConnect.Infinite_Count[port] * 255);
-                
-                switch (select) {
-                    case 2:
-                        if(value > 0)
-                            return Math.floor((value%255) * 1.41732);
-                        else
-                            return Math.ceil((value%255) * 1.41732);
-                    case 3:
-                        if(value > 0)
-                            return Math.floor(value / 255);
-                        else
-                            return Math.ceil(value / 255);
-                    case 4:
-                        return Number((360/255) * Entry.hw.portData.InputData.Analog[port]).toFixed(0);
-                    default:
-                        return value;
-                }
-            },
-        },
-        // 무한회전 센서 지름 설정
-        connect_infinite_mm_diameter: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic_string_field',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [['무한회전', '0'], ['나침반', '1']],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [['AA1', 'AA1'], ['AA2', 'AA2'], ['AA3', 'AA3'], ['AA4', 'AA4']],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-            ],
-            def: {
-                params: [0,'AA1', 53.5],
-                type: 'connect_infinite_mm_diameter',
-            },
-            paramsKeyMap: {
-                PORT: 1,
-                DIAMETER: 2,
-            },
-            class: 'input',
-            isNotFor: ['ProboConnect'],
-            func: function(sprite, script) {
-                const port = script.getStringField('PORT', script);
-                var value = Entry.hw.portData.InputData.Analog[port];
-                const diameter = script.getNumberValue('DIAMETER', script);
-
-                if (value < Entry.ProboConnect.Infinite_Buff[port] - 150)
-                    Entry.ProboConnect.Infinite_Count[port]++;
-                else if (value > Entry.ProboConnect.Infinite_Buff[port] + 150)
-                    Entry.ProboConnect.Infinite_Count[port]--;
-
-                Entry.ProboConnect.Infinite_Buff[port] = value;
-
-                value = (Entry.ProboConnect.Infinite_Buff[port] - Entry.ProboConnect.Infinite_Start[port]) + (Entry.ProboConnect.Infinite_Count[port] * 255);
-
-                return Number(
-                    2 *
-                    3.141592 *
-                    (diameter / 2) /
-                    255 *
-                    value
-                ).toFixed(3);
-            },
-        },
-        // 3가속도 X
-        connect_3axis_acceler_x: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic_string_field',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [['AA1', 'AXIS_X1'], ['AA2', 'AXIS_X2'], ['AA3', 'AXIS_X3'], ['AA4', 'AXIS_X4']],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            def: {
-                params: [
-                    'AXIS_X1',
-                ],
-                type: 'connect_3axis_acceler_x',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-            },
-            class: 'input',
-            isNotFor: ['ProboConnect'],
-            func: function(sprite, script) {
-                const port = script.getStringField('PORT', script);
-                var value = (Entry.hw.portData.InputData.Acceler[port])
-                if(value & 0x80) value = (value - 255);
-                return Number(value / 10).toFixed(1);
-            },
-        },
-        // 3가속도 Y
-        connect_3axis_acceler_y: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic_string_field',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [['AA1', 'AXIS_Y1'], ['AA2', 'AXIS_Y2'], ['AA3', 'AXIS_Y3'], ['AA4', 'AXIS_Y4']],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            def: {
-                params: [
-                    'AXIS_Y1',
-                ],
-                type: 'connect_3axis_acceler_y',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-            },
-            class: 'input',
-            isNotFor: ['ProboConnect'],
-            func: function(sprite, script) {
-                const port = script.getStringField('PORT', script);
-                var value = (Entry.hw.portData.InputData.Acceler[port])
-                if(value & 0x80) value = (value - 255);
-                return Number(value / 10).toFixed(1);
-            },
-        },
-        // 3가속도 Z
-        connect_3axis_acceler_z: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic_string_field',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [['AA1', 'AXIS_Z1'], ['AA2', 'AXIS_Z2'], ['AA3', 'AXIS_Z3'], ['AA4', 'AXIS_Z4']],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            def: {
-                params: [
-                    'AXIS_Z1',
-                ],
-                type: 'connect_3axis_acceler_z',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-            },
-            class: 'input',
-            isNotFor: ['ProboConnect'],
-            func: function(sprite, script) {
-                const port = script.getStringField('PORT', script);
-                var value = (Entry.hw.portData.InputData.Acceler[port])
-                if(value & 0x80) value = (value - 255);
-                return Number(value / 10).toFixed(1);
-            },
-        },
-        // 멀티키 센서
-        connect_multi_sensor: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic_boolean_field',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [['AA1', 'AA1'], ['AA2', 'AA2'], ['AA3', 'AA3'], ['AA4', 'AA4']],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['키1', 0],
-                        ['키2', 1],
-                        ['키3', 2],
-                        ['키4', 3],
-                        ['키5', 4],
-                        ['키6', 5],
-                        ['키7', 6],
-                        ['키8', 7],
-                    ],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            def: {
-                params: ['AA1', '0'],
-                type: 'connect_multi_sensor',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-                KEY: 1,
-            },
-            class: 'input',
-            isNotFor: ['ProboConnect'],
-            func: function(sprite, script) {
-                const port = script.getStringField('PORT', script);
-                const key = script.getNumberField('KEY', script);
-                const value = Entry.hw.portData.InputData.Analog[port] & (0x1<<key)? 1: 0;
-                return value;
-            },
-        },
-
-        //=========================================================================================================
-        //============================================ output =====================================================
-        //=========================================================================================================
+        ///========================================================================================
+        /// Input block
+        ///========================================================================================
+        // 입력포트 AA1 을(를) 스위치 센서로 설정
         connect_senser_setting: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
+            fontColor: '#fff',
             skeleton: 'basic',
             params: [
                 {
-                    type: 'Dropdown',
-                    options: [
-                        ['스위치', '1'], ['적외선', '2'], ['자석', '3'], ['초음파', '4'], ['회전', '5'], ['조도', '6'], ['온도', '7'], ['소리', '8'], ['기울기', '9'],
-                        ['압력', '10'], ['심박', '11'], ['컬러', '12'], ['가속도', '13'], ['멀티키', '14'], ['나침반', '15'], ['3가속', '16'],
-                    ],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    type: 'Block',
+                    accept: 'string',
                 },
                 {
-                    type: 'Dropdown',
-                    options: [
-                        ['스위치', '1'], ['적외선', '2'], ['자석', '3'], ['초음파', '4'], ['회전', '5'], ['조도', '6'], ['온도', '7'], ['소리', '8'], ['기울기', '9'],
-                        ['압력', '10'], ['심박', '11'], ['컬러', '12'], ['가속도', '13'], ['멀티키', '14'], ['나침반', '15'], ['3가속', '16'],
-                    ],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['스위치', '1'], ['적외선', '2'], ['자석', '3'], ['초음파', '4'], ['회전', '5'], ['조도', '6'], ['온도', '7'], ['소리', '8'], ['기울기', '9'],
-                        ['압력', '10'], ['심박', '11'], ['컬러', '12'], ['가속도', '13'], ['멀티키', '14'], ['나침반', '15'], ['3가속', '16'],
-                    ],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['스위치', '1'], ['적외선', '2'], ['자석', '3'], ['초음파', '4'], ['회전', '5'], ['조도', '6'], ['온도', '7'], ['소리', '8'], ['기울기', '9'],
-                        ['압력', '10'], ['심박', '11'], ['컬러', '12'], ['가속도', '13'], ['멀티키', '14'], ['나침반', '15'], ['3가속', '16'],
-                    ],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    type: 'Block',
+                    accept: 'string',
                 },
                 {
                     type: 'Indicator',
@@ -1395,14 +1914,20 @@ Entry.ProboConnect.getBlocks = function() {
                 },
             ],
             def: {
-                params: ['1', '1', '1', '1', null],
+                params: [
+                    {
+                        type: 'connect_dropdown_analog',
+                    },
+                    {
+                        type: 'connect_dropdown_sensor_1',
+                    },
+                    null,
+                ],
                 type: 'connect_senser_setting',
             },
             paramsKeyMap: {
-                PORT1: 0,
-                PORT2: 1,
-                PORT3: 2,
-                PORT4: 3,
+                PARAM0: 0,
+                PARAM1: 1,
             },
             class: 'setting',
             isNotFor: ['ProboConnect'],
@@ -1410,51 +1935,69 @@ Entry.ProboConnect.getBlocks = function() {
                 if (!script.isStart) {
                     script.isStart = true;
                     script.timeFlag = 1;
+                    const port = Entry.ProboConnect.convertDropdownAnalog(
+                        script.getStringValue('PARAM0')
+                    );
+                    const sensor = Entry.ProboConnect.convertDropdownSensor1(
+                        script.getStringValue('PARAM1')
+                    );                    
+                    let index = 0;
+                    switch (port) {
+                        case 'AA1':
+                            index = 0;
+                            break;
+                        case 'AA2':
+                            index = 1;
+                            break;
+                        case 'AA3':
+                            index = 2;
+                            break;
+                        case 'AA4':
+                            index = 3;
+                            break;
+                    }
 
-                    var Aset = [0, 0, 0, 0];
-                    var value = [0, 0, 0, 0];
-                    Aset[0] = script.getNumberField('PORT1', script);
-                    Aset[1] = script.getNumberField('PORT2', script);
-                    Aset[2] = script.getNumberField('PORT3', script);
-                    Aset[3] = script.getNumberField('PORT4', script);
+                    let Aset = [0, 0, 0, 0];
+                    let value = [0, 0, 0, 0];
 
-                    for (var i = 0; i < 4; i++) {
+                    Aset[index] = sensor;
+                    for (let i = 0; i < 4; i++) {
                         switch (Aset[i]) {
-                            case 1:
-                            case 2:
-                            case 3:
+                            case 1: // 스위치
+                            case 2: // 적외선
+                            case 3: // 자석
+                            case 16: // 분배기
                                 value[i] = 1;
                                 break;
-                            case 4:
-                            case 5:
-                            case 6:
-                            case 7:
+                            case 4: // 회전
+                            case 9: // 조도
+                            case 7: // 초음파
                                 value[i] = 2;
                                 break;
-                            case 8:
+                            case 10: // 소리
                                 value[i] = 3;
-                                break;
-                            case 9:
+                                break;                                
+                            case 11: // 기울기
                                 value[i] = 4;
                                 break;
-                            case 10:
+                            case 12: // 압력
                                 value[i] = 5;
                                 break;
-                            case 11:
+                            case 8: // 심박
                                 value[i] = 6;
                                 break;
-                            case 12:
+                            case 5: // 컬러
                                 value[i] = 7;
                                 break;
-                            case 13:
+                            case 6: // 가속도
                                 value[i] = 8;
                                 break;
-                            case 14:
-                                value[i] = 11;
-                                break;
-                            case 16:
-                            case 15:
+                            case 14: // 나침반
+                            case 15: // 3가속
                                 value[i] = 9;
+                                break;
+                            case 13: // 멀티터치(멀티키)
+                                value[i] = 11;
                                 break;
                         }
                     }
@@ -1467,10 +2010,10 @@ Entry.ProboConnect.getBlocks = function() {
                     Entry.hw.sendQueue['ASET2'] = (value[0] << 4) | value[1];
                     Entry.hw.sendQueue['ASET1'] = (value[2] << 4) | value[3];
 
-                    var fps = Entry.FPS || 60;
-                    var timeValue = 60 / fps * 200; // 0.2초
+                    let fps = Entry.FPS || 60;
+                    let timeValue = 60 / fps * 200; // 0.2초
 
-                    var blockId = script.block.id;
+                    let blockId = script.block.id;
                     Entry.TimeWaitManager.add(
                         blockId,
                         function() {
@@ -1482,7 +2025,6 @@ Entry.ProboConnect.getBlocks = function() {
                 } else if (script.timeFlag == 1) {
                     return script;
                 } else {
-
                     delete script.timeFlag;
                     delete script.isStart;
                     Entry.engine.isContinue = false;
@@ -1491,973 +2033,484 @@ Entry.ProboConnect.getBlocks = function() {
 
             },
         },
-        connect_port_output: {
+        // 리모컨 입력 R_1
+        connect_remote_input: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [['B1', 'B1'], ['B2', 'B2'], ['B3', 'B3'], ['B4', 'B4']],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [['on', 1], ['off', 0]],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            def: {
-                params: ['B1', 1, null],
-                type: 'connect_port_output',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-                VALUE: 1,
-            },
-            class: 'output',
-            isNotFor: ['ProboConnect'],
-            func: function(sprite, script) {
-                const motor = script.getStringField('PORT', script);
-                const value = script.getNumberField('VALUE', script);
-
-                Entry.hw.sendQueue[motor] = value;
-            },
-        },
-        connect_servo_output: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['B1', 'Servo1'],
-                        ['B2', 'Servo2'],
-                        ['B3', 'Servo3'],
-                        ['B4', 'Servo4'],
-                    ],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            def: {
-                params: ['Servo1', { type: 'number', params: ['1'] }, null],
-                type: 'connect_servo_output',
-            },
-            paramsKeyMap: {
-                SERVO: 0,
-                VALUE: 1,
-            },
-            class: 'output',
-            isNotFor: ['ProboConnect'],
-            func: function(sprite, script) {
-                // const servo = script.getStringField('SERVO', script);
-                // const value = script.getNumberValue('VALUE', script) | 0x80;
-
-                const servo = script.getStringField('SERVO', script);
-                const value = script.getNumberValue('VALUE', script);
-                if(value<1) value=0;
-                else if (value>100) value = 100;
-
-                Entry.hw.sendQueue[servo] = value;
-            },
-        },
-        connect_dc_output: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [['M1', 'DC1'], ['M2', 'DC2'], ['M3', 'DC3'], ['M4', 'DC4'], ['M1,M2', 'DC5'], ['M3,M4', 'DC6'], ['ALL', 'DC7']],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            def: {
-                params: ['DC1', { type: 'number', params: ['0'] }, null],
-                type: 'connect_dc_output',
-            },
-            paramsKeyMap: {
-                MOTOR: 0,
-                VALUE: 1,
-            },
-            class: 'output',
-            isNotFor: ['ProboConnect'],
-            func: function(sprite, script) {
-                const motor = script.getStringField('MOTOR', script);
-                const value = script.getNumberValue('VALUE', script);
-                if(motor=='DC5'){
-                    Entry.hw.sendQueue['DC1'] = value;
-                    Entry.hw.sendQueue['DC2'] = value;
-                }else if(motor=='DC6'){
-                    Entry.hw.sendQueue['DC3'] = value;
-                    Entry.hw.sendQueue['DC4'] = value;
-                }else if(motor=='DC7'){
-                    Entry.hw.sendQueue['DC1'] = value;
-                    Entry.hw.sendQueue['DC2'] = value;
-                    Entry.hw.sendQueue['DC3'] = value;
-                    Entry.hw.sendQueue['DC4'] = value;
-                }else{
-                    Entry.hw.sendQueue[motor] = value;
-                }
-            },
-        },
-        connect_s_dc_output: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [['S1', 'Servo1'], ['S2', 'Servo2'], ['S3', 'Servo3'], ['S4', 'Servo4']],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            def: {
-                params: ['Servo1', { type: 'number', params: ['0'] }, null],
-                type: 'connect_s_dc_output',
-            },
-            paramsKeyMap: {
-                MOTOR: 0,
-                VALUE: 1,
-            },
-            class: 'output',
-            isNotFor: ['ProboConnect'],
-            func: function(sprite, script) {
-                const motor = script.getStringField('MOTOR', script);
-                var value = script.getNumberValue('VALUE', script);
-
-                if(value > 20) value = 20;
-                else if(value < -20) value = -20;
-                value += 148;
-
-                console.log(value);
-
-                if(motor=='Servo5'){
-                    Entry.hw.sendQueue['Servo1'] = value;
-                    Entry.hw.sendQueue['Servo2'] = value;
-                }else if(motor=='Servo6'){
-                    Entry.hw.sendQueue['Servo3'] = value;
-                    Entry.hw.sendQueue['Servo4'] = value;
-                }else{
-                    Entry.hw.sendQueue[motor] = value;
-                }
-            },
-        },
-        connect_rgbled_on_output: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [['B1', 'Servo1'], ['B2', 'Servo2'], ['B3', 'Servo3'], ['B4', 'Servo4']],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [                  
-                    ['빨강', '1'],
-                    ['노랑', '12'],
-                    ['초록', '23'],
-                    ['청록', '34'],
-                    ['파랑', '45'],
-                    ['자홍', '56'],
-                    ['하양', '67'],],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            def: {
-                params: ['Servo1', '1', null],
-                type: 'connect_rgbled_on_output',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-                COLOR: 1,
-            },
-            class: 'output',
-            isNotFor: ['ProboConnect'],
-            func: function(sprite, script) {
-                const port = script.getStringField('PORT', script);
-                const color = script.getNumberValue('COLOR', script);
-                console.log(port);
-                console.log(color);
-                Entry.hw.sendQueue[port] = color;
-            },
-        },
-        connect_rgbled_flashing_output: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [['B1', 'Servo1'], ['B2', 'Servo2'], ['B3', 'Servo3'], ['B4', 'Servo4']],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [                  
-                        ['빨강', '1'],
-                        ['노랑', '12'],
-                        ['초록', '23'],
-                        ['청록', '34'],
-                        ['파랑', '45'],
-                        ['자홍', '56'],
-                        ['하양', '67'],],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [                  
-                        ['0.05', '1'],
-                        ['0.1', '2'],
-                        ['0.2', '3'],
-                        ['0.5', '4'],
-                        ['1', '5'],],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            def: {
-                params: ['Servo1', '1', '3', null],
-                type: 'connect_rgbled_flashing_output',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-                COLOR: 1,
-                SEC: 2,
-            },
-            class: 'output',
-            isNotFor: ['ProboConnect'],
-            func: function(sprite, script) {
-                const port = script.getStringField('PORT', script);
-                const color = script.getNumberValue('COLOR', script);
-                const sec = script.getNumberField('SEC', script);
-                const value = color+sec;
-                console.log("color",color);
-                console.log("sec",sec);
-                console.log("color+sec",value);
-
-                Entry.hw.sendQueue[port] = value;
-                
-            },
-        },
-        connect_rgbled_dimming_output: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [['B1', 'Servo1'], ['B2', 'Servo2'], ['B3', 'Servo3'], ['B4', 'Servo4']],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [                  
-                        ['빨강', '90'],
-                        ['노랑', '91'],
-                        ['초록', '92'],
-                        ['청록', '93'],
-                        ['파랑', '94'],
-                        ['자홍', '95'],
-                        ['하양', '96'],],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            def: {
-                params: ['Servo1', '90', null],
-                type: 'connect_rgbled_dimming_output',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-                COLOR: 1,
-            },
-            class: 'output',
-            isNotFor: ['ProboConnect'],
-            func: function(sprite, script) {
-                const port = script.getStringField('PORT', script);
-                const color = script.getNumberValue('COLOR', script);
-                Entry.hw.sendQueue[port] = color;
-            },
-        },
-        connect_rgbled_off_output: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [['B1', 'Servo1'], ['B2', 'Servo2'], ['B3', 'Servo3'], ['B4', 'Servo4']],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            def: {
-                params: ['Servo1', null],
-                type: 'connect_rgbled_off_output',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-                COLOR: 1,
-            },
-            class: 'output',
-            isNotFor: ['ProboConnect'],
-            func: function(sprite, script) {
-                const port = script.getStringField('PORT', script);
-                const color = script.getNumberValue('COLOR', script);
-                Entry.hw.sendQueue[port] = color;
-            },
-        },
-        connect_mel_sec_output: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['[1]도', 1],
-                        ['[1]레', 3],
-                        ['[1]미', 5],
-                        ['[1]파', 6],
-                        ['[1]솔', 8],
-                        ['[1]라', 10],
-                        ['[1]시', 12],
-                        ['[2]도', 13],
-                        ['[2]레', 15],
-                        ['[2]미', 17],
-                        ['[2]파', 18],
-                        ['[2]솔', 20],
-                        ['[2]라', 22],
-                        ['[2]시', 24],
-                        ['[3]도', 25],
-                        ['[3]레', 27],
-                        ['[3]미', 29],
-                        ['[3]파', 30],
-                        ['[3]솔', 32],
-                        ['[3]라', 34],
-                        ['[3]시', 36],
-                        ['[4]도', 37],
-                        ['[4]레', 39],
-                        ['[4]미', 41],
-                        ['[4]파', 42],
-                        ['[4]솔', 44],
-                        ['[4]라', 46],
-                        ['[4]시', 48],
-                    ],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            def: {
-                params: [1, { type: 'number', params: ['1'] }, null],
-                type: 'connect_mel_sec_output',
-            },
-            paramsKeyMap: {
-                MELODY: 0,
-                SEC: 1,
-            },
-            class: 'output',
-            isNotFor: ['ProboConnect'],
-            func: function(sprite, script) {
-                if (!script.isStart) {
-                    script.isStart = true;
-                    script.timeFlag = 1;
-                    const mel = script.getNumberField('MELODY', script);
-                    var timeValue = script.getNumberValue('SEC', script);
-                    var melody = 0;
-
-                    if (mel > 0 && mel < 13) melody = Entry.ProboConnect.Melody[mel];
-                    else if (mel < 25) melody = Entry.ProboConnect.Melody[mel - 12] / 2;
-                    else if (mel < 37) melody = Entry.ProboConnect.Melody[mel - 24] / 4;
-                    else if (mel < 49) melody = Entry.ProboConnect.Melody[mel - 36] / 8;
-
-                    Entry.hw.sendQueue['MEL2'] = melody >> 8;
-                    Entry.hw.sendQueue['MEL1'] = melody;
-
-                    var fps = Entry.FPS || 60;
-                    timeValue = 60 / fps * timeValue * 1000;
-
-                    var blockId = script.block.id;
-                    Entry.TimeWaitManager.add(
-                        blockId,
-                        function() {
-                            script.timeFlag = 0;
-                        },
-                        timeValue
-                    );
-                    return script;
-                } else if (script.timeFlag == 1) {
-                    return script;
-                } else {
-                    Entry.hw.sendQueue['MEL2'] = 0;
-                    Entry.hw.sendQueue['MEL1'] = 0;
-
-                    delete script.timeFlag;
-                    delete script.isStart;
-                    Entry.engine.isContinue = false;
-                    return script.callReturn();
-                }
-            },
-        },
-        connect_melody_output: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['[1]도', 1],
-                        ['[1]레', 3],
-                        ['[1]미', 5],
-                        ['[1]파', 6],
-                        ['[1]솔', 8],
-                        ['[1]라', 10],
-                        ['[1]시', 12],
-                        ['[2]도', 13],
-                        ['[2]레', 15],
-                        ['[2]미', 17],
-                        ['[2]파', 18],
-                        ['[2]솔', 20],
-                        ['[2]라', 22],
-                        ['[2]시', 24],
-                        ['[3]도', 25],
-                        ['[3]레', 27],
-                        ['[3]미', 29],
-                        ['[3]파', 30],
-                        ['[3]솔', 32],
-                        ['[3]라', 34],
-                        ['[3]시', 36],
-                        ['[4]도', 37],
-                        ['[4]레', 39],
-                        ['[4]미', 41],
-                        ['[4]파', 42],
-                        ['[4]솔', 44],
-                        ['[4]라', 46],
-                        ['[4]시', 48],
-                    ],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            def: {
-                params: [1, null],
-                type: 'connect_melody_output',
-            },
-            paramsKeyMap: {
-                MELODY: 0,
-            },
-            class: 'output',
-            isNotFor: ['ProboConnect'],
-            func: function(sprite, script) {
-                const mel = script.getNumberField('MELODY', script);
-                var melody = 0;
-
-                if (mel > 0 && mel < 13) melody = Entry.ProboConnect.Melody[mel];
-                else if (mel < 25) melody = Entry.ProboConnect.Melody[mel - 12] / 2;
-                else if (mel < 37) melody = Entry.ProboConnect.Melody[mel - 24] / 4;
-                else if (mel < 49) melody = Entry.ProboConnect.Melody[mel - 36] / 8;
-                
-                Entry.hw.sendQueue['MEL2'] = melody >> 8;
-                Entry.hw.sendQueue['MEL1'] = melody;
-            },
-        },
-        connect_mel_number_sec_output: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic',
+            fontColor: '#fff',
+            skeleton: 'basic_boolean_field',
             params: [
                 {
                     type: 'Block',
                     accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
                 },
             ],
             def: {
                 params: [
-                    { type: 'number', params: ['1'] }, 
-                    { type: 'number', params: ['1'] },
-                     null],
-                type: 'connect_mel_number_sec_output',
+                    {
+                        type: 'connect_dropdown_remote',
+                    },
+                ],
+                type: 'connect_remote_input',
             },
             paramsKeyMap: {
-                MELODY: 0,
-                SEC: 1,
+                PARAM0: 0,
             },
-            class: 'output',
+            class: 'input',
             isNotFor: ['ProboConnect'],
             func: function(sprite, script) {
-                if (!script.isStart) {
-                    script.isStart = true;
-                    script.timeFlag = 1;
-                    const mel = script.getNumberValue('MELODY', script);
-                    var timeValue = script.getNumberValue('SEC', script);
-                    var melody = 0;
-
-                    if (mel > 0 && mel < 8) melody = Entry.ProboConnect.Melody_S[mel];
-                    else if (mel < 15) melody = Entry.ProboConnect.Melody_S[mel - 7] / 2;
-                    else if (mel < 22) melody = Entry.ProboConnect.Melody_S[mel - 14] / 4;
-                    else if (mel < 29) melody = Entry.ProboConnect.Melody_S[mel - 21] / 8;
-                    else melody = 0;
-    
-                    Entry.hw.sendQueue['MEL2'] = melody >> 8;
-                    Entry.hw.sendQueue['MEL1'] = melody;
-
-                    console.log(melody);
-                    console.log(timeValue);
-
-                    var fps = Entry.FPS || 60;
-                    timeValue = 60 / fps * timeValue * 1000;
-
-                    var blockId = script.block.id;
-                    Entry.TimeWaitManager.add(
-                        blockId,
-                        function() {
-                            script.timeFlag = 0;
-                        },
-                        timeValue
-                    );
-                    return script;
-                } else if (script.timeFlag == 1) {
-                    return script;
-                } else {
-                    Entry.hw.sendQueue['MEL2'] = 0;
-                    Entry.hw.sendQueue['MEL1'] = 0;
-
-                    delete script.timeFlag;
-                    delete script.isStart;
-                    Entry.engine.isContinue = false;
-                    return script.callReturn();
+                const btn = Entry.ProboConnect.convertDropdownRemote(
+                    script.getStringValue('PARAM0')
+                );
+                return Entry.hw.portData.InputData.Remote[btn] == 1 ? true : false;
+            },
+        },
+        // 디지털 입력 A1
+        connect_digital_input: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_boolean_field',
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
+            def: {
+                params: [
+                    {
+                        type: 'connect_dropdown_digital',
+                    },
+                ],
+                type: 'connect_digital_input',
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+            },
+            class: 'input',
+            isNotFor: ['ProboConnect'],
+            func: function(sprite, script) {
+                const port = Entry.ProboConnect.convertDropdownDigital(
+                    script.getStringValue('PARAM0')
+                );                
+                let rt = false;
+                switch(port) {
+                    case 'FEA1':
+                    case 'FEA2':
+                    case 'FEA3':
+                    case 'FEA4':
+                    case 'REA1':
+                    case 'REA2':
+                    case 'REA3':
+                    case 'REA4':
+                    case 'BEA1':
+                    case 'BEA2':
+                    case 'BEA3':
+                    case 'BEA4':
+                        if (Entry.hw.portData.InputData.Digital[port] == 1) {
+                            if (Entry.ProboConnect.EdgeFlag[port] == 0) {
+                                Entry.ProboConnect.EdgeFlag[port] = 1;
+                                rt = true;
+                            }
+                        } else {
+                            Entry.ProboConnect.EdgeFlag[port] = 0;
+                        }
+                        break;
+                    default:
+                        rt = Entry.hw.portData.InputData.Digital[port] == 1 ? true : false;
+                        break;
                 }
+                return rt;
             },
         },
-        connect_melody_number_output: {
+        // 아날로그 입력 AA1
+        connect_analog_input: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic',
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
             params: [
                 {
                     type: 'Block',
                     accept: 'string',
                 },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
             ],
             def: {
-                params: [{ type: 'number', params: ['1'] }, null],
-                type: 'connect_melody_number_output',
+                params: [
+                    {
+                        type: 'connect_dropdown_analog',
+                    },
+                ],
+                type: 'connect_analog_input',
             },
             paramsKeyMap: {
-                MELODY: 0,
+                PARAM0: 0,
             },
-            class: 'output',
+            class: 'input',
             isNotFor: ['ProboConnect'],
             func: function(sprite, script) {
-                const mel = script.getNumberValue('MELODY', script);
-
-                if (mel > 0 && mel < 8) melody = Entry.ProboConnect.Melody_S[mel];
-                else if (mel < 15) melody = Entry.ProboConnect.Melody_S[mel - 7] / 2;
-                else if (mel < 22) melody = Entry.ProboConnect.Melody_S[mel - 14] / 4;
-                else if (mel < 29) melody = Entry.ProboConnect.Melody_S[mel - 21] / 8;
-                else melody = 0;
-
-                Entry.hw.sendQueue['MEL2'] = melody >> 8;
-                Entry.hw.sendQueue['MEL1'] = melody;
+                const port = Entry.ProboConnect.convertDropdownAnalog(
+                    script.getStringValue('PARAM0')
+                );
+                let value = Entry.ProboConnect.SenserSet[port] == 5
+                    ? 255 - Entry.hw.portData.InputData.Analog[port]
+                    : Entry.hw.portData.InputData.Analog[port];
+                return value;
             },
         },
-        connect_melody_number_note_output: {
+        // 3가속도 AA1 의 X축
+        connect_3axis_acceler_x: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic',
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
             params: [
                 {
                     type: 'Block',
                     accept: 'string',
                 },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['온', 'n1'],
-                        ['2분','n2'],
-                        ['4분','n4'],
-                        ['8분','n8'],
-                        ['16분','n16'],
-                        ['32분','n32'],
-                    ],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
             ],
             def: {
-                params: [{ type: 'number', params: ['1'] }, 'n1', null],
-                type: 'connect_melody_number_note_output',
+                params: [
+                    {
+                        type: 'connect_dropdown_analog',
+                    },
+                ],
+                type: 'connect_3axis_acceler_x',
             },
             paramsKeyMap: {
-                MELODY: 0,
-                NOTE: 1,
+                PARAM0: 0,
             },
-            class: 'output',
+            class: 'input',
             isNotFor: ['ProboConnect'],
             func: function(sprite, script) {
-                if (!script.isStart) {
-                    script.isStart = true;
-                    script.timeFlag = 1;
-                    var mel = script.getNumberValue('MELODY', script);
-                    const note = script.getStringField('NOTE', script);
-                    var timeValue = Entry.ProboConnect.Note[note];
-                    var melody = 0;
-
-                    if (mel > 0 && mel < 8) melody = Entry.ProboConnect.Melody_S[mel];
-                    else if (mel < 15) melody = Entry.ProboConnect.Melody_S[mel - 7] / 2;
-                    else if (mel < 22) melody = Entry.ProboConnect.Melody_S[mel - 14] / 4;
-                    else if (mel < 29) melody = Entry.ProboConnect.Melody_S[mel - 21] / 8;
-                    else melody = 0;
-
-                    Entry.hw.sendQueue['MEL2'] = melody >> 8;
-                    Entry.hw.sendQueue['MEL1'] = melody;
-
-                    var fps = Entry.FPS || 60;
-                    timeValue = 60 / fps * timeValue;
-
-                    var blockId = script.block.id;
-                    Entry.TimeWaitManager.add(
-                        blockId,
-                        function() {
-                            script.timeFlag = 0;
-                        },
-                        timeValue
-                    );
-                    return script;
-                } else if (script.timeFlag == 1) {
-                    return script;
-                } else {
-                    Entry.hw.sendQueue['MEL2'] = 0;
-                    Entry.hw.sendQueue['MEL1'] = 0;
-
-                    delete script.timeFlag;
-                    delete script.isStart;
-                    Entry.engine.isContinue = false;
-                    return script.callReturn();
+                const axis = Entry.ProboConnect.convertDropdownAxis(
+                    script.getStringValue('PARAM0'),
+                    "X"
+                );
+                let value = (Entry.hw.portData.InputData.Acceler[axis]);
+                if (value & 0x80) {
+                    value = (value - 255);
                 }
+                return Number(value / 10).toFixed(1);
             },
         },
-        connect_value_output: {
+        // 3가속도 AA1의 Y축
+        connect_3axis_acceler_y: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic',
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
             params: [
                 {
                     type: 'Block',
                     accept: 'string',
                 },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
             ],
             def: {
-                params: [35391, null],
-                type: 'connect_value_output',
+                params: [
+                    {
+                        type: 'connect_dropdown_analog',
+                    },
+                ],
+                type: 'connect_3axis_acceler_y',
             },
             paramsKeyMap: {
-                MELODY: 0,
+                PARAM0: 0,
             },
-            class: 'output',
+            class: 'input',
             isNotFor: ['ProboConnect'],
             func: function(sprite, script) {
-                var melody = script.getNumberValue('MELODY', script);
-
-                Entry.hw.sendQueue['MEL2'] = (melody >> 8) & 0xff;
-                Entry.hw.sendQueue['MEL1'] = melody & 0xff;
+                const axis = Entry.ProboConnect.convertDropdownAxis(
+                    script.getStringValue('PARAM0'),
+                    "Y"
+                );
+                let value = (Entry.hw.portData.InputData.Acceler[axis]);
+                if (value & 0x80) {
+                    value = (value - 255);
+                }
+                return Number(value / 10).toFixed(1);
             },
         },
-        connect_melody_track_output: {
+        // 3가속도 AA1 의 Z축
+        connect_3axis_acceler_z: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic',
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
             params: [
                 {
-                    type: 'Dropdown',
-                    options: [                  
-                    ['시작음', 0],
-                    ['종료음', 1],
-                    ['레벨업', 2],
-                    ['레벨다운', 3]],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [                  
-                    ['0.1', 100],
-                    ['0.3', 300],
-                    ['0.5', 500],
-                    ['0.7', 700],
-                    ['1', 1000],
-                    ['2', 2000]],
-                    fontSize: 11,
-
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
+                    type: 'Block',
+                    accept: 'string',
                 },
             ],
             def: {
-                params: [0, 1000, null],
-                type: 'connect_melody_track_output',
+                params: [
+                    {
+                        type: 'connect_dropdown_analog',
+                    },
+                ],
+                type: 'connect_3axis_acceler_z',
             },
             paramsKeyMap: {
-                MELODY: 0,
-                SEC: 1,
+                PARAM0: 0,
             },
-            class: 'output',
+            class: 'input',
             isNotFor: ['ProboConnect'],
             func: function(sprite, script) {
-                function getTrackStep(track,script){
-                    if(!script.isStart){
-                        script.isStart = true;
-                        script.trackStep = 0;
+                const axis = Entry.ProboConnect.convertDropdownAxis(
+                    script.getStringValue('PARAM0'),
+                    "Z"
+                );
+                let value = (Entry.hw.portData.InputData.Acceler[axis]);
+                if (value & 0x80) {
+                    value = (value - 255);
+                }
+                return Number(value / 10).toFixed(1);
+            },
+        },
+        // AA1의 0 ~ 255 값을 0 ~ 100 (으)로 변환
+        connect_value_mapping: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+            ],
+            def: {
+                params: [
+                    {
+                        type: 'connect_dropdown_analog',
+                    },
+                    {
+                        type: 'number',
+                        params: [ 0 ],
+                    },
+                    {
+                        type: 'number',
+                        params: [ 255 ],
+                    },
+                    {
+                        type: 'number',
+                        params: [ 0 ],
+                    },
+                    {
+                        type: 'number',
+                        params: [ 100 ],
+                    },
+                ],
+                type: 'connect_value_mapping',
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+                PARAM1: 1,
+                PARAM2: 2,
+                PARAM3: 3,
+                PARAM4: 4,
+            },
+            class: 'input',
+            isNotFor: ['ProboConnect'],
+            func: function(sprite, script) {
+                const port = Entry.ProboConnect.convertDropdownAnalog(
+                    script.getStringValue('PARAM0')
+                );
+                const source1 = script.getNumberValue('PARAM1');
+                const source2 = script.getNumberValue('PARAM2');
+                const target1 = script.getNumberValue('PARAM3');
+                const target2 = script.getNumberValue('PARAM4');
+
+                // Port 라는 key값을 가진 정보를 읽는다.
+                let data = 0;
+                if (Entry.ProboConnect.SenserSet[port] == 5) {
+                    data = 255 - Entry.hw.portData.InputData.Analog[port];
+                } else {
+                    data = Entry.hw.portData.InputData.Analog[port];
+                }
+                let value = 0;
+                let rate = (data - source1) / (source2 - source1);
+                let num = 0;
+
+                if (target1 < target2) {
+                    value = (target2 - target1) * rate;
+                    num = value % 1;
+                    if (num < 0.5) {
+                        value -= num;
                     }
-                    else
-                        script.trackStep++;
-
-                    var timeValue = script.getNumberValue('SEC', script);
-
-                    script.timeFlag = 1;
-                    var melody = Entry.ProboConnect.Track[track][script.trackStep];
-                    Entry.hw.sendQueue['MEL2'] = (melody >> 8) & 0xff;
-                    Entry.hw.sendQueue['MEL1'] = melody & 0xff;
-
-                    var fps = Entry.FPS || 60;
-                    var timeValue = 60 / fps * timeValue;
-
-                    Entry.TimeWaitManager.add(
-                        script.block.id,
-                        function() {
-                            script.timeFlag = 0;
-                        },
-                        timeValue
-                    );
-                }
-
-                const TR = script.getNumberValue('MELODY', script);
-                if (!script.isStart) {
-                    switch(TR){
-                        case 0 :
-                            script.maxStep = 6;
-                            break;
-                        case 1 :
-                            script.maxStep = 7;
-                            break;
-                        case 2 :
-                            script.maxStep = 3;
-                            break;
-                        case 3 :
-                            script.maxStep = 3;
-                            break;
+                    else {
+                        value += 1 - num;
                     }
-                    getTrackStep(TR,script);
-                    return script;
-                } else if (script.timeFlag == 1) {
-                    console.log('timeFlag',script.timeFlag);
-                    return script;
-                } else if (script.trackStep < script.maxStep){
-                    getTrackStep(TR,script);
-                    return script;
+                    value = target1 + value;
+                    if (value < target1) {
+                        value = target1;
+                    } else if (value > target2) {
+                        value = target2;
+                    }
                 } else {
-
-                    Entry.hw.sendQueue['MEL2'] = 0;
-                    Entry.hw.sendQueue['MEL1'] = 0;
-
-                    delete script.trackStep;
-                    delete script.maxStep;
-                    delete script.timeFlag;
-                    delete script.isStart;
-                    Entry.engine.isContinue = false;
-                    return script.callReturn();
+                    value = (target1 - target2) * rate;
+                    num = value % 1;
+                    if (num < 0.5) {
+                        value -= num;
+                    } else {
+                        value += 1 - num;
+                    }
+                    value = target1 - value;
+                    if (value > target1) {
+                        value = target1;
+                    } else if (value < target2) {
+                        value = target2;
+                    }
                 }
+                return value;
             },
         },
-     
-        connect_melody_off: {
+        // 컬러센서 AA1 이(가) 빨간색 색인가?
+        connect_color_input_b: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic',
+            fontColor: '#fff',
+            skeleton: 'basic_boolean_field',
             params: [
                 {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
                 },
             ],
             def: {
-                params: [null],
-                type: 'connect_melody_off',
+                params: [
+                    {
+                        type: 'connect_dropdown_analog',
+                    },
+                    {
+                        type: 'connect_dropdown_color_1',
+                    },
+                ],
+                type: 'connect_color_input_b',
             },
-            class: 'output',
+            paramsKeyMap: {
+                PARAM0: 0,
+                PARAM1: 1,
+            },
+            class: 'input',
             isNotFor: ['ProboConnect'],
             func: function(sprite, script) {
-                Entry.hw.sendQueue['MEL2'] = 0;
-                Entry.hw.sendQueue['MEL1'] = 0;
+                const port = Entry.ProboConnect.convertDropdownAnalog(
+                    script.getStringValue('PARAM0')
+                );
+                const target = Entry.ProboConnect.convertDropdownColor1(
+                    script.getNumberValue('PARAM1')
+                );
+                const value = Entry.hw.portData.InputData.Analog[port];
+                const color = Entry.ProboConnect.Color;
+                return color[target][0] <= value && value <= color[target][1];
             },
         },
-        connect_fnd_output: {
+        // 컬러센서 AA1 의 색상
+        connect_color_input_r: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+            ],
+            def: {
+                params: [                    
+                    {
+                        type: 'connect_dropdown_analog',
+                    },
+                ],
+                type: 'connect_color_input_r',
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+            },
+            class: 'input',
+            isNotFor: ['ProboConnect'],
+            func: function(sprite, script) {
+                const port = Entry.ProboConnect.convertDropdownAnalog(
+                    script.getStringValue('PARAM0')
+                );
+                const value = Entry.hw.portData.InputData.Analog[port];
+                const color = Entry.ProboConnect.Color;
+                let colorName = '';
+                for (let i = 0; i < 6; i++) {
+                    if (color[i][0] <= value && value <= color[i][1]) {
+                        switch (i) {
+                            case 0:
+                                colorName = Lang.template.item_color_red;
+                                break;
+                            case 1:
+                                colorName = Lang.template.item_color_green;
+                                break;
+                            case 2:
+                                colorName = Lang.template.item_color_blue;
+                                break;
+                            case 3:
+                                colorName = Lang.template.item_color_yellow;
+                                break;
+                            case 4:
+                                colorName = Lang.template.item_color_black;
+                                break;
+                            case 5:
+                                colorName = Lang.template.item_color_white;
+                                break;
+                        }
+                    }
+                }
+                return colorName;
+            },
+        },
+        // 무한회전 센서 AA1 을 0 값으로 정하기
+        connect_infinite_setting: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
             skeleton: 'basic',
             params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
                 {
                     type: 'Block',
                     accept: 'string',
@@ -2466,50 +2519,307 @@ Entry.ProboConnect.getBlocks = function() {
                     type: 'Indicator',
                     img: 'block_icon/hardware_icon.svg',
                     size: 12,
-                },
+                }
             ],
             def: {
-                params: ['0', null],
-                type: 'connect_fnd_output',
+                params: [
+                    {
+                        type: 'connect_dropdown_sensor_2',
+                    },
+                    {
+                        type: 'connect_dropdown_analog',
+                    },
+                    {
+                        type: 'number',
+                        params: [ 0 ],
+                    },
+                    null
+                ],
+                type: 'connect_infinite_setting',
             },
             paramsKeyMap: {
-                FND: 0,
+                PARAM0: 0,
+                PARAM1: 1,
+                PARAM2: 2,
             },
-            class: 'output',
+            class: 'input',
             isNotFor: ['ProboConnect'],
             func: function(sprite, script) {
-                const fnd = script.getNumberValue('FND', script);
-                Entry.hw.sendQueue['FND'] = fnd;
+                const port = Entry.ProboConnect.convertDropdownAnalog(
+                    script.getStringValue('PARAM1')
+                );
+                let value = script.getNumberValue('PARAM2');
+                let count = 0;
+                
+                if (value != 0) {
+                    count = Number(value / 255).toFixed(0);
+                    value = value % 255;
+                } else {
+                    value = 0;
+                    count = 0;
+                }
+                
+                Entry.ProboConnect.Infinite_Buff[port] = Entry.hw.portData.InputData.Analog[port];
+                Entry.ProboConnect.Infinite_Start[port] = Entry.hw.portData.InputData.Analog[port]-value;
+                Entry.ProboConnect.Infinite_Count[port] = count;
+
+                return script.callReturn();
             },
         },
-        connect_fnd_off: {
+        // 무한회전 센서 AA1 지름 53.5 의 mm 값
+        connect_infinite_mm_diameter: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic',
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
             params: [
                 {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
                 },
             ],
             def: {
-                params: [null],
-                type: 'connect_fnd_off',
+                params: [
+                    {
+                        type: 'connect_dropdown_sensor_2',
+                    },
+                    {
+                        type: 'connect_dropdown_analog',
+                    },
+                    {
+                        type: 'number',
+                        params: [ 53.5 ],
+                    },
+                ],
+                type: 'connect_infinite_mm_diameter',
             },
-            class: 'output',
+            paramsKeyMap: {
+                PARAM1: 1,
+                PARAM2: 2,
+            },
+            class: 'input',
             isNotFor: ['ProboConnect'],
             func: function(sprite, script) {
-                Entry.hw.sendQueue['FND'] = 100;
+                const port = Entry.ProboConnect.convertDropdownAnalog(
+                    script.getStringValue('PARAM1')
+                );
+                const diameter = script.getNumberValue('PARAM2');
+                let value = Entry.hw.portData.InputData.Analog[port];
+
+                if (value < Entry.ProboConnect.Infinite_Buff[port] - 150) {
+
+                    Entry.ProboConnect.Infinite_Count[port]++;
+                } else if (value > Entry.ProboConnect.Infinite_Buff[port] + 150) {
+                    Entry.ProboConnect.Infinite_Count[port]--;
+                }                    
+                Entry.ProboConnect.Infinite_Buff[port] = value;
+                value = (Entry.ProboConnect.Infinite_Buff[port] - Entry.ProboConnect.Infinite_Start[port]) + (Entry.ProboConnect.Infinite_Count[port] * 255);
+
+                return Number(
+                    2 *
+                    3.141592 *
+                    (diameter / 2) /
+                    255 *
+                    value
+                ).toFixed(3);
             },
         },
+        // 무한회전 센서 AA1 의 값
+        connect_infinite_transform_input: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
+            def: {
+                params: [                    
+                    {
+                        type: 'connect_dropdown_sensor_2',
+                    },
+                    {
+                        type: 'connect_dropdown_analog',
+                    },
+                    {
+                        type: 'connect_dropdown_sensor_transfer',
+                    },
+                ],
+                type: 'connect_infinite_transform_input',
+            },
+            paramsKeyMap: {
+                PARAM1: 1,
+                PARAM2: 2,
+            },
+            class: 'input',
+            isNotFor: ['ProboConnect'],
+            func: function(sprite, script) {
+                const port = Entry.ProboConnect.convertDropdownAnalog(
+                    script.getStringValue('PARAM1')
+                );
+                const select = Entry.ProboConnect.convertDropdownSensorTransfer(
+                    script.getStringValue('PARAM2')
+                );
 
-        //============================================ EEPROM =====================================================
+                let value = Entry.hw.portData.InputData.Analog[port];
+
+                if (value < (Entry.ProboConnect.Infinite_Buff[port] - 150)) {
+                    Entry.ProboConnect.Infinite_Count[port]++;
+                } else if (value > (Entry.ProboConnect.Infinite_Buff[port] + 150)) {
+                    Entry.ProboConnect.Infinite_Count[port]--;
+                }
+                Entry.ProboConnect.Infinite_Buff[port] = value;
+                value = (Entry.ProboConnect.Infinite_Buff[port] - Entry.ProboConnect.Infinite_Start[port]) + (Entry.ProboConnect.Infinite_Count[port] * 255);
+
+                switch (select) {
+                    case 2:
+                        if (value > 0) {
+                            return Math.floor((value%255) * 1.41732);
+                        } else {
+                            return Math.ceil((value%255) * 1.41732);
+                        }                            
+                    case 3:
+                        return Number((360/255) * Entry.hw.portData.InputData.Analog[port]).toFixed(0);
+                    case 4:
+                        if (value > 0) {
+                            return Math.floor(value / 255);
+                        } else {
+                            return Math.ceil(value / 255);
+                        }
+                    default:
+                        return value;
+                }
+            },
+        },
+        // 멀티키 센서 AA1 의 키1
+        connect_multi_sensor: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_boolean_field',
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
+            def: {
+                params: [
+                    {
+                        type: 'connect_dropdown_analog',
+                    },
+                    {
+                        type: 'connect_dropdown_key',
+                    },
+                ],
+                type: 'connect_multi_sensor',
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+                PARAM1: 1,
+            },
+            class: 'input',
+            isNotFor: ['ProboConnect'],
+            func: function(sprite, script) {
+                const port = Entry.ProboConnect.convertDropdownAnalog(
+                    script.getStringValue('PARAM0')
+                );
+                const key = Entry.ProboConnect.convertDropdownKey(
+                    script.getStringValue('PARAM1')
+                );
+                const value = Entry.hw.portData.InputData.Analog[port] & (0x1 << key)? 1 : 0;
+                return value;
+            },
+        },
+        // 분배스위치 센서 AA1의 키1
+        connect_multi_switch: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_boolean_field',
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
+            def: {
+                params: [
+                    {
+                        type: 'connect_dropdown_analog',
+                    },
+                    {
+                        type: 'connect_dropdown_key',
+                    },
+                ],
+                type: 'connect_multi_switch',
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+                PARAM1: 1,
+            },
+            class: 'input',
+            isNotFor: ['ProboConnect'],
+            func: function(sprite, script) {
+                const port = Entry.ProboConnect.convertDropdownAnalog(
+                    script.getStringValue('PARAM0')
+                );
+                const key = Entry.ProboConnect.convertDropdownKey(
+                    script.getStringValue('PARAM1')
+                );
+                const analog = Entry.hw.portData.InputData.Analog[port];
+                let  value = -1;
+                if (1 <= analog && analog <= 19) {
+                    value = 0;
+                } else if (26 <= analog && analog <= 44) {
+                    value = 1;
+                } else if (53 <= analog && analog <= 77) {
+                    value = 2;
+                } else if (83 <= analog && analog <= 101) {
+                    value = 3;
+                } else if (107 <= analog && analog <= 125) {
+                    value = 4;
+                } else if (139 <= analog && analog <= 157) {
+                    value = 5;
+                } else if (160 <= analog && analog <= 178) {
+                    value = 6;
+                } else if (191 <= analog && analog <= 209) {
+                    value = 7;
+                }
+                return key === value ? 1 : 0;
+            },
+        },
         connect_eeprom_buffset: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
+            fontColor: '#fff',
             skeleton: 'basic',
             params: [
                 {
@@ -2529,7 +2839,7 @@ Entry.ProboConnect.getBlocks = function() {
             paramsKeyMap: {
                 ADDRESS: 0,
             },
-            class: 'EEPROM',
+            class: 'input',
             isNotFor: ['ProboConnect'],
             func: function(sprite, script) {
                 const address = script.getNumberValue('ADDRESS', script);
@@ -2569,15 +2879,16 @@ Entry.ProboConnect.getBlocks = function() {
                 }
             },
         },
-        connect_buff_read: {
+        // EEPROM 주소의 값
+        connect_eeprom_address_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
+            fontColor: '#fff',
             skeleton: 'basic_string_field',
             def: {
-                type: 'connect_buff_read',
+                type: 'connect_eeprom_address_value',
             },
-            class: 'EEPROM',
+            class: 'input',
             isNotFor: ['ProboConnect'],
             func: function(sprite, script) {
                 var value = 0;
@@ -2588,10 +2899,14 @@ Entry.ProboConnect.getBlocks = function() {
                 return value;
             },
         },
-        connect_eeprom_write: {
+        ///========================================================================================
+        /// output block
+        ///========================================================================================
+        // DC 모터 1을(를) 0 속도로 회전
+        connect_dc_output: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
+            fontColor: '#fff',
             skeleton: 'basic',
             params: [
                 {
@@ -2610,34 +2925,281 @@ Entry.ProboConnect.getBlocks = function() {
             ],
             def: {
                 params: [
-                    { type: 'number', params: ['0'] },
-                    { type: 'number', params: ['0'] },
+                    { 
+                        type: 'connect_dropdown_dc_1_all',
+                    },
+                    {
+                        type: 'connect_dropdown_velocity',
+                    },
                     null,
                 ],
-                type: 'connect_eeprom_write',
+                type: 'connect_dc_output',
             },
             paramsKeyMap: {
-                ADDRESS: 0,
-                VALUE: 1,
+                PARAM0: 0,
+                PARAM1: 1,
             },
-            class: 'EEPROM',
+            class: 'output',
             isNotFor: ['ProboConnect'],
             func: function(sprite, script) {
-                const address = script.getNumberValue('ADDRESS', script);
-                const value = script.getNumberValue('VALUE', script);
-                if (!script.isStart) {
-                    Entry.hw.sendQueue['EEPR4'] = 0x80;
-                    Entry.hw.sendQueue['EEPR3'] = address;
-                    Entry.hw.sendQueue['EEPR2'] = value >> 8;
-                    Entry.hw.sendQueue['EEPR1'] = value & 0xff;
+                const motor = Entry.ProboConnect.convertDropdownDC(
+                    script.getStringValue('PARAM0')
+                ); 
+                const value = script.getNumberValue('PARAM1');
+                switch (motor) {
+                    case 'DC5':
+                        Entry.hw.sendQueue['DC1'] = value;
+                        Entry.hw.sendQueue['DC2'] = value;
+                        break;
+                    case 'DC6':
+                        Entry.hw.sendQueue['DC3'] = value;
+                        Entry.hw.sendQueue['DC4'] = value;
+                        break;
+                    case 'DC7':
+                        Entry.hw.sendQueue['DC1'] = value;
+                        Entry.hw.sendQueue['DC2'] = value;
+                        Entry.hw.sendQueue['DC3'] = value;
+                        Entry.hw.sendQueue['DC4'] = value;
+                        break;
+                    default:
+                        Entry.hw.sendQueue[motor] = value;
+                        break;
+                }
+                return script.callReturn();
+            },
+        },
+        // 서보모터 1 의 위치를 1 로 이동 
+        connect_servo_output: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            def: {
+                params: [
+                    { 
+                        type: 'connect_dropdown_servo_1_4',
+                    },
+                    {
+                        type: 'connect_dropdown_servo_position',
+                    },
+                    null,
+                ],
+                type: 'connect_servo_output',
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+                PARAM1: 1,
+            },
+            class: 'output',
+            isNotFor: ['ProboConnect'],
+            func: function(sprite, script) {
+                const servo = Entry.ProboConnect.convertDropdownServo(
+                    script.getStringValue('PARAM0')
+                );
+                let value = script.getNumberValue('PARAM1');
+                if (value < 1) {
+                    value = 0;
+                } else if (value > 100) {
+                    value = 100;
+                }
 
+                Entry.hw.sendQueue[servo] = value;
+                return script.callReturn();
+            },
+        },
+        // S 모터 1 을(를) 0 속도로 회전
+        connect_s_dc_output: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            def: {
+                params: [
+                    { 
+                        type: 'connect_dropdown_servo_1_4',
+                    },
+                    {
+                        type: 'connect_dropdown_velocity',
+                    },
+                    null,
+                ],
+                type: 'connect_s_dc_output',
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+                PARAM1: 1,
+            },
+            class: 'output',
+            isNotFor: ['ProboConnect'],
+            func: function(sprite, script) {
+                const motor = Entry.ProboConnect.convertDropdownServo(
+                    script.getStringValue('PARAM0')
+                );
+                let value = script.getNumberValue('PARAM1');
+
+                if (value > 20) {
+                    value = 20;
+                } else if (value < -20) {
+                    value = -20;
+                }
+                value += 148;
+
+                switch (motor) {
+                    case 'Servo5':
+                        Entry.hw.sendQueue['Servo1'] = value;
+                        Entry.hw.sendQueue['Servo2'] = value;
+                        break;
+                    case 'Servo6':
+                        Entry.hw.sendQueue['Servo3'] = value;
+                        Entry.hw.sendQueue['Servo4'] = value;
+                        break;
+                    default:
+                        Entry.hw.sendQueue[motor] = value;
+                        break;
+                }
+                return script.callReturn();
+            },
+        },
+        // 출력핀 1 을(를) 켜기
+        connect_port_output: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            def: {
+                params: [
+                    { 
+                        type: 'connect_dropdown_port_1_4',
+                    },
+                    {
+                        type: 'connect_dropdown_on_off',
+                    },
+                    null
+                ],
+                type: 'connect_port_output',
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+                PARAM1: 1,
+            },
+            class: 'output',
+            isNotFor: ['ProboConnect'],
+            func: function(sprite, script) {
+                const motor = Entry.ProboConnect.convertDropdownPort(
+                    script.getStringValue('PARAM0')
+                );
+                const value = Entry.ProboConnect.convertDropdownOnOff(
+                    script.getNumberValue('PARAM1')
+                );
+
+                Entry.hw.sendQueue[motor] = value;
+                return script.callReturn();
+            },
+        },
+        // 도(60) 을(를) 4분 음표로 연주하기
+        connect_melody_note_output: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            def: {
+                params: [
+                    { 
+                        type: 'connect_dropdown_pitch',
+                    },
+                    {
+                        type: 'connect_dropdown_note',
+                    },
+                    null
+                ],
+                type: 'connect_melody_note_output',
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+                PARAM1: 1,
+            },
+            class: 'output',
+            isNotFor: ['ProboConnect'],
+            func: function(sprite, script) {
+                if (!script.isStart) {
                     script.isStart = true;
                     script.timeFlag = 1;
-                    var timeValue = 0.05;
-                    var fps = Entry.FPS || 60;
-                    timeValue = 60 / fps * timeValue * 1000;
+                    const pitch = Entry.ProboConnect.convertDropdownPitch(
+                        script.getNumberValue('PARAM0')
+                    );
+                    const note = Entry.ProboConnect.convertDropdownNote(
+                        script.getStringValue('PARAM1')
+                    );
+                    
+                    let timeValue = Entry.ProboConnect.Note[note];
 
-                    var blockId = script.block.id;
+                    Entry.hw.sendQueue['MEL2'] = pitch >> 8;
+                    Entry.hw.sendQueue['MEL1'] = pitch;
+
+                    let fps = Entry.FPS || 60;
+                    timeValue = 60 / fps * timeValue;
+
+                    let blockId = script.block.id;
                     Entry.TimeWaitManager.add(
                         blockId,
                         function() {
@@ -2645,11 +3207,764 @@ Entry.ProboConnect.getBlocks = function() {
                         },
                         timeValue
                     );
-
                     return script;
                 } else if (script.timeFlag == 1) {
                     return script;
                 } else {
+                    Entry.hw.sendQueue['MEL2'] = 0;
+                    Entry.hw.sendQueue['MEL1'] = 0;
+
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+        },
+        // 도(60) 을(를) 0.5 초 동안 연주하기
+        connect_melody_sec_output: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            def: {
+                params: [
+                    { 
+                        type: 'connect_dropdown_pitch',
+                    },
+                    {
+                        type: 'connect_dropdown_time_1',
+                    },
+                    null
+                ],
+                type: 'connect_melody_sec_output',
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+                PARAM1: 1,
+            },
+            class: 'output',
+            isNotFor: ['ProboConnect'],
+            func: function(sprite, script) {
+                if (!script.isStart) {
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    const pitch = Entry.ProboConnect.convertDropdownPitch(
+                        script.getNumberValue('PARAM0')
+                    );
+                    let timeValue = script.getNumberValue('PARAM1');
+                   
+                    Entry.hw.sendQueue['MEL2'] = pitch >> 8;
+                    Entry.hw.sendQueue['MEL1'] = pitch;
+
+                    let fps = Entry.FPS || 60;
+                    timeValue = 60 / fps * timeValue * 1000;
+
+                    let blockId = script.block.id;
+                    Entry.TimeWaitManager.add(
+                        blockId,
+                        function() {
+                            script.timeFlag = 0;
+                        },
+                        timeValue
+                    );
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    Entry.hw.sendQueue['MEL2'] = 0;
+                    Entry.hw.sendQueue['MEL1'] = 0;
+
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+        },
+        // 도(60) 을(를) 연주하기
+        connect_melody_output: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            params: [                
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            def: {
+                params: [
+                    { 
+                        type: 'connect_dropdown_pitch',
+                    },
+                    null
+                ],
+                type: 'connect_melody_output',
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+            },
+            class: 'output',
+            isNotFor: ['ProboConnect'],
+            func: function(sprite, script) {
+                const pitch = Entry.ProboConnect.convertDropdownPitch(
+                    script.getNumberValue('PARAM0')
+                );
+
+                Entry.hw.sendQueue['MEL2'] = pitch >> 8;
+                Entry.hw.sendQueue['MEL1'] = pitch;
+                return script.callReturn();
+            },
+        },
+        // 35391 값을 0.5 초 동안 연주하기
+        connect_value_sec_output: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            def: {
+                params: [
+                    {
+                        type: 'number',
+                        params: [ 35391 ],
+                    },
+                    {
+                        type: 'connect_dropdown_time_1',
+                    },
+                    null
+                ],
+                type: 'connect_value_sec_output',
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+                PARAM1: 1,
+            },
+            class: 'output',
+            isNotFor: ['ProboConnect'],
+            func: function(sprite, script) {
+                if (!script.isStart) {
+                    script.isStart = true;
+                    script.timeFlag = 1;
+
+                    let melody = script.getNumberValue('PARAM0');
+                    let timeValue = script.getNumberValue('PARAM1');
+
+                    Entry.hw.sendQueue['MEL2'] = (melody >> 8) & 0xff;
+                    Entry.hw.sendQueue['MEL1'] = melody & 0xff;
+
+                    let fps = Entry.FPS || 60;
+                    timeValue = 60 / fps * timeValue * 1000;
+
+                    let blockId = script.block.id;
+                    Entry.TimeWaitManager.add(
+                        blockId,
+                        function() {
+                            script.timeFlag = 0;
+                        },
+                        timeValue
+                    );
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    Entry.hw.sendQueue['MEL2'] = 0;
+                    Entry.hw.sendQueue['MEL1'] = 0;
+
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+        },
+        // 35391 값을(를) 연주하기
+        connect_value_output: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            def: {
+                params: [
+                    {
+                        type: 'number',
+                        params: [ 35391 ],
+                    },
+                    null
+                ],
+                type: 'connect_value_output',
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+            },
+            class: 'output',
+            isNotFor: ['ProboConnect'],
+            func: function(sprite, script) {
+                let melody = script.getNumberValue('PARAM0');
+                Entry.hw.sendQueue['MEL2'] = (melody >> 8) & 0xff;
+                Entry.hw.sendQueue['MEL1'] = melody & 0xff;
+                return script.callReturn();
+            },
+        },
+        // 시작음 을(를) 1 초 간격으로 재생하기
+        connect_melody_track_output: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            def: {
+                params: [
+                    { 
+                        type: 'connect_dropdown_melody',
+                    },
+                    { 
+                        type: 'connect_dropdown_time_2',
+                    },
+                    null
+                ],
+                type: 'connect_melody_track_output',
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+                PARAM1: 1,
+            },
+            class: 'output',
+            isNotFor: ['ProboConnect'],
+            func: function(sprite, script) {
+                function getTrackStep(track,script){
+                    if(!script.isStart){
+                        script.isStart = true;
+                        script.trackStep = 0;
+                    }
+                    else {
+                        script.trackStep++;
+                    }
+                    let timeValue = script.getNumberValue('PARAM1');
+                    script.timeFlag = 1;
+                    let melody = Entry.ProboConnect.Track[track][script.trackStep];
+                    Entry.hw.sendQueue['MEL2'] = (melody >> 8) & 0xff;
+                    Entry.hw.sendQueue['MEL1'] = melody & 0xff;
+
+                    let fps = Entry.FPS || 60;
+                    timeValue = 60 / fps * timeValue * 1000;
+
+                    Entry.TimeWaitManager.add(
+                        script.block.id,
+                        function() {
+                            script.timeFlag = 0;
+                        },
+                        timeValue
+                    );
+                }
+                const TR = Entry.ProboConnect.convertDropdownMelody(
+                    script.getStringValue('PARAM0')
+                );
+                if (!script.isStart) {
+                    switch(TR) {
+                        case 0 :
+                            script.maxStep = 6;
+                            break;
+                        case 1 :
+                            script.maxStep = 7;
+                            break;
+                        case 2 :
+                            script.maxStep = 3;
+                            break;
+                        case 3 :
+                            script.maxStep = 3;
+                            break;
+                    }
+                    getTrackStep(TR,script);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else if (script.trackStep < script.maxStep){
+                    getTrackStep(TR,script);
+                    return script;
+                } else {
+                    Entry.hw.sendQueue['MEL2'] = 0;
+                    Entry.hw.sendQueue['MEL1'] = 0;
+
+                    delete script.trackStep;
+                    delete script.maxStep;
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+        },
+        // 멜로디 중지
+        connect_melody_off: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            def: {
+                params: [
+                    null
+                ],
+                type: 'connect_melody_off',
+            },
+            class: 'output',
+            isNotFor: ['ProboConnect'],
+            func: function(sprite, script) {
+                Entry.hw.sendQueue['MEL2'] = 0;
+                Entry.hw.sendQueue['MEL1'] = 0;
+                return script.callReturn();
+            },
+        },
+        // RGB LED 1 을(를) 빨간색 으로 켜기
+        connect_rgbled_on_output: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            def: {
+                params: [
+                    { 
+                        type: 'connect_dropdown_servo_1_4',
+                    },
+                    {
+                        type: 'connect_dropdown_color_2',
+                    },
+                    null
+                ],
+                type: 'connect_rgbled_on_output',
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+                PARAM1: 1,
+            },
+            class: 'output',
+            isNotFor: ['ProboConnect'],
+            func: function(sprite, script) {
+                const port = Entry.ProboConnect.convertDropdownServo(
+                    script.getStringValue('PARAM0')
+                );
+                const color = Entry.ProboConnect.convertDropdownColor2(
+                    script.getStringValue('PARAM1')
+                );
+                Entry.hw.sendQueue[port] = color;
+                return script.callReturn();
+            },
+        },    
+        // RGB LED 을(를) 끄기    
+        connect_rgbled_off_output: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            def: {
+                params: [
+                    { 
+                        type: 'connect_dropdown_servo_1_4',
+                    },
+                    null
+                ],
+                type: 'connect_rgbled_off_output',
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+            },
+            class: 'output',
+            isNotFor: ['ProboConnect'],
+            func: function(sprite, script) {
+                const port = Entry.ProboConnect.convertDropdownServo(
+                    script.getStringValue('PARAM0')
+                );
+                Entry.hw.sendQueue[port] = 0;
+            },
+        },
+        // RGB LED 1 빨간색으로 0.5초 간격
+        connect_rgbled_flashing_output: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            def: {
+                params: [
+                    { 
+                        type: 'connect_dropdown_servo_1_4',
+                    },
+                    { 
+                        type: 'connect_dropdown_color_2',
+                    },
+                    { 
+                        type: 'connect_dropdown_time_3',
+                    },
+                    null
+                ],
+                type: 'connect_rgbled_flashing_output',
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+                PARAM1: 1,
+                PARAM2: 2,
+            },
+            class: 'output',
+            isNotFor: ['ProboConnect'],
+            func: function(sprite, script) {
+                const port = Entry.ProboConnect.convertDropdownServo(
+                    script.getStringValue('PARAM0')
+                );
+                const color = Entry.ProboConnect.convertDropdownColor2(
+                    script.getStringValue('PARAM1')
+                );
+                const sec = script.getNumberValue('PARAM2');
+                let value = 0;
+                switch (sec) {
+                    case 0.05:
+                        value = color + 0;
+                        break;
+                    case 0.1:
+                        value = color + 1;
+                        break;
+                    case 0.2:
+                        value = color + 2;
+                        break;                    
+                    case 0.5:
+                        value = color + 3;
+                        break;                        
+                    case 1:
+                        value = color + 4;
+                        break;
+                }
+                Entry.hw.sendQueue[port] = value;
+                return script.callReturn();
+            },
+        },
+        // RGB LED 1을(를) 빨간색으로 디밍
+        connect_rgbled_dimming_output: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            def: {
+                params: [
+                    { 
+                        type: 'connect_dropdown_servo_1_4',
+                    },
+                    { 
+                        type: 'connect_dropdown_color_2',
+                    },
+                    null
+                ],
+                type: 'connect_rgbled_dimming_output',
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+                PARAM1: 1,
+            },
+            class: 'output',
+            isNotFor: ['ProboConnect'],
+            func: function(sprite, script) {
+                const port = Entry.ProboConnect.convertDropdownServo(
+                    script.getStringValue('PARAM0')
+                );
+                let color = 0;
+                switch (script.getStringValue('PARAM1')) {
+                    case '1':
+                        color = 90;
+                        break;
+                    case '2':
+                        color = 92;
+                        break;
+                    case '3':
+                        color = 94;
+                        break;
+                    case '4':
+                        color = 93;
+                        break;
+                    case '5':
+                        color = 95;
+                        break;
+                    case '6':
+                        color = 91;
+                        break;
+                    case '7':
+                        color = 96;
+                        break;
+                }
+                Entry.hw.sendQueue[port] = color;
+                return script.callReturn();
+            },
+        },
+        // FND를 0 (으)로 설정
+        connect_fnd_output: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            def: {
+                params: [
+                    {
+                        type: 'number',
+                        params: [ 0 ],
+                    },
+                    null
+                ],
+                type: 'connect_fnd_output',
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+            },
+            class: 'output',
+            isNotFor: ['ProboConnect'],
+            func: function(sprite, script) {
+                const fnd = script.getNumberValue('PARAM0');
+                Entry.hw.sendQueue['FND'] = fnd;
+                return script.callReturn();
+            },
+        },
+        // FND 끄기
+        connect_fnd_off: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            def: {
+                params: [
+                    null
+                ],
+                type: 'connect_fnd_off',
+            },
+            class: 'output',
+            isNotFor: ['ProboConnect'],
+            func: function(sprite, script) {
+                Entry.hw.sendQueue['FND'] = 100;
+                return script.callReturn();
+            },
+        },
+        // EEPROM 0 주소에 0 값 설정하기
+        connect_eeprom_write: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            def: {
+                params: [
+                    { 
+                        type: 'number',
+                        params: [ 0 ]
+                    },
+                    {
+                        type: 'number',
+                        params: [ 0 ]
+                    },
+                    null,
+                ],
+                type: 'connect_eeprom_write',
+            },
+            paramsKeyMap: {
+                PARAM0: 0,
+                PARAM1: 1,
+            },
+            class: 'output',
+            isNotFor: ['ProboConnect'],
+            func: function(sprite, script) {
+                const address = script.getNumberValue('PARAM0');
+                const value = script.getNumberValue('PARAM1');
+                if (!script.isStart) {
+                    Entry.hw.update();
+                    Entry.hw.sendQueue['EEPR4'] = 0x80;
+                    Entry.hw.sendQueue['EEPR3'] = address;
+                    Entry.hw.sendQueue['EEPR2'] = (value >> 8) & 0xff;
+                    Entry.hw.sendQueue['EEPR1'] = value & 0xff;
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    let timeValue = 0.05;
+                    let fps = Entry.FPS || 60;
+                    timeValue = 60 / fps * timeValue * 1000;
+
+                    let blockId = script.block.id;
+                    Entry.TimeWaitManager.add(
+                        blockId,
+                        function() {
+                            script.timeFlag = 0;
+                        },
+                        timeValue
+                    );
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    Entry.hw.update();
+                    Entry.hw.sendQueue['EEPR4'] = 0x40;
+                    Entry.hw.sendQueue['EEPR3'] = address;
+                    Entry.hw.sendQueue['EEPR2'] = 0;
+                    Entry.hw.sendQueue['EEPR1'] = 0;
+
+                    setTimeout(function() {  
+                        Entry.hw.update();                      
+                        Entry.hw.sendQueue['EEPR4'] = 0;
+                        Entry.hw.sendQueue['EEPR3'] = 0;
+                        Entry.hw.sendQueue['EEPR2'] = 0;
+                        Entry.hw.sendQueue['EEPR1'] = 0;
+                    }, 100);
+                    
                     delete script.timeFlag;
                     delete script.isStart;
                     Entry.engine.isContinue = false;
