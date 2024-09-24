@@ -714,6 +714,8 @@ Lang.Blocks = {
     START_press_some_key_right: '오른쪽 화살표',
     START_press_some_key_space: '스페이스',
     START_press_some_key_up: '위쪽 화살표',
+    START_press_some_key_back_space: '백스페이스',
+    START_press_some_key_back_slash: '백슬래시',
     START_when_message_cast: '신호를 받았을 때',
     START_when_message_cast_1: '',
     START_when_message_cast_2: '신호를 받았을 때',
@@ -1993,6 +1995,9 @@ Lang.Blocks = {
     location_jeollanam_gurye: '구례군',
     width: '가로',
     height: '세로',
+    desktop: '데스크톱',
+    tablet: '태블릿',
+    smartphone: '스마트폰',
 };
 Lang.video_body_coord_params = {
     left_eye: '왼쪽 눈',
@@ -6126,8 +6131,10 @@ Lang.Helper = {
     function_general: '현재 만들고 있는 함수 블록 또는 지금까지 만들어 둔 함수 블록입니다.',
     boolean_and: '두 판단이 모두 참인 경우 ‘참’으로 판단합니다.',
     boolean_or: '두 판단 중 하나라도 참이 있는 경우 ‘참’으로 판단합니다.',
-    boolean_not: '해당 판단이 참이면 거짓, 거짓이면 참으로 만듭니다.',
+    boolean_not: "해당 판단이 참이면 '거짓', 거짓이면 '참'으로 판단합니다.",
     is_boost_mode: '부스트모드가 켜져 있으면 ‘참’으로 판단합니다.',
+    is_current_device_type: "작품을 실행하는 기기가 선택한 기기라면 '참'으로 판단합니다.",
+    is_touch_supported: "작품을 실행하는 기기에서 화면을 터치할 수 있다면 '참'으로 판단합니다.",
     calc_basic:
         '입력한 두 수의 사칙연산 값입니다.\n+ : 입력한 두 수를 더한 값입니다.\n- : 입력한 두 수를 뺀 값입니다.\n* : 입력한 두 수를 곱한 값입니다.\n/ : 입력한 두 수를 나눈 값입니다.',
     calc_rand:
@@ -6490,7 +6497,7 @@ Lang.Helper = {
     chocopi_touch_value:
         '터치패드에 연결된 물체의 전기용량이 커지면 값이 작아집니다.<br/>여러 명이 손잡고 만지면 더 작은 값이 됩니다.<br/>전기용량이란 물체에 전기를 띈 입자를 얼마나 가지고 있을 수 있는 지를 말합니다.<br/><br/>포트번호는 맞추지 않아도 됩니다.<br/>단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.',
     boolean_and_or:
-        '그리고 : 두 판단이 모두 참인 경우 ‘참’으로 판단합니다.\n또는 : 두 판단 중 하나라도 참이 있는 경우 ‘참’으로 판단합니다.',
+        '그리고: 두 판단이 모두 참인 경우 ‘참’으로 판단합니다.\n또는: 두 판단 중 하나라도 참이 있는 경우 ‘참’으로 판단합니다.',
     check_weather:
         '\n선택한 날짜와 지역의 날씨 정보를 실제 날씨 상태와 비교하여 일치하는 경우 ‘참’으로 판단합니다.\n * 옵션\n 날짜: 어제, 오늘, 내일, 모레, 3일 후, 4일 후, 5일 후, 6일 후\n 지역: 서울, 강원, 경기, 경남, 경북, 광주, 대구, 대전, 부산, 세종, 울산, 인천, 전남, 전북, 제주, 충남, 충북\n 날씨: 맑음, 구름조금, 구름많음, 흐림, 비, 진눈깨비, 눈',
     check_finedust:
@@ -7617,6 +7624,8 @@ Lang.template = {
     boolean_or: '%1 %2 %3',
     boolean_not: '%1 %2 %3',
     is_boost_mode: '%1',
+    is_current_device_type: '%1 에서 실행하는가?',
+    is_touch_supported: '화면을 터치할 수 있는가?',
     true_or_false: '%1',
     True: '%1  ',
     False: '%1  ',
