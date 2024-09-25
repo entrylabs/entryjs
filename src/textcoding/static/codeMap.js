@@ -2,7 +2,7 @@
 
 Entry.CodeMap = {};
 
-(function(cc) {
+(function (cc) {
     cc.Entry = {
         start_neighbor_scene: [
             {
@@ -59,6 +59,20 @@ Entry.CodeMap = {};
             },
         ],
         set_color: [
+            {
+                red: '#FF0000',
+                orange: '#FF9966',
+                yellow: '#FFFF66',
+                green: '#009900',
+                blue: '#3333FF',
+                navy: '#000099',
+                purple: '#993399',
+                black: '#000000',
+                white: '#FFFFFF',
+                brown: '#990000',
+            },
+        ],
+        set_text_color: [
             {
                 red: '#FF0000',
                 orange: '#FF9966',
