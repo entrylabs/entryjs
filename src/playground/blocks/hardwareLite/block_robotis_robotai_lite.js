@@ -7337,9 +7337,17 @@ let camera_id_for_use = 0;
                         let x = script.getNumberValue('X', script);
                         let y = script.getNumberValue('Y', script);
                         let text = script.getStringValue('TEXT', script);
-                        let text_len = text.length;
                         let data_buf = [];
                         let i = 0;
+
+                        // Encode the text as UTF-8
+                        let encoder = new TextEncoder();
+                        let utf8Array = encoder.encode(text);
+        
+                        // utf8Array is now a Uint8Array containing the UTF-8 bytes of the text
+                        let text_len = utf8Array.length;
+
+                        if (text_len > 45) text_len = 45;
 
                         if (x < -160) {
                             x = 160;
@@ -7367,7 +7375,7 @@ let camera_id_for_use = 0;
                         data_buf.push(0);
                         data_buf.push(0);
                         for (i = 0; i < text_len; i++) {
-                            data_buf.push(text[i]);
+                            data_buf.push(utf8Array[i]);
                         }
 
                         let data_instruction = INST_WRITE;
