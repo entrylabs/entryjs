@@ -2094,8 +2094,11 @@ let camera_id_for_use = 0;
                         if (wheelSide == 1) {
                             leftSpeed = wheelSpeed;
                             rightSpeed = 127; // 속도제어 안함
-                        } else {
+                        } else if (wheelSide == 0) {
                             leftSpeed = 127; // 속도제어 안함
+                            rightSpeed = wheelSpeed;
+                        } else {
+                            leftSpeed = wheelSpeed;
                             rightSpeed = wheelSpeed;
                         }
 
