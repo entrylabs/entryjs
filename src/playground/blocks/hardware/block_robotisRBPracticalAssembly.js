@@ -333,7 +333,7 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
 
                 // LED 제어
                 robotis_Practice_cm_led: "제어기의 지정한 LED를 켜거나 끄기",
-                robotis_Practice_cm_led_pattern: "제어기의 깜박임 패턴 설정",
+                robotis_Practice_cm_led_pattern: "제어기의 LED의 깜박임 패턴 설정",
                 
                 // DXL 제어
                 robotis_Practice_dxl_set_mode: "지정한 ID의 모터의 동작모드를 설정",
@@ -507,6 +507,9 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_moveRG2: "앉기",
                 robotis_moveRG3: "발버둥",
                 robotis_moveRG4: "발들기",
+                robotis_fast: '빠른',
+                robotis_normal: '보통',
+                robotis_slow: '느린',
                 robotis_stop: "정지",
                 robotis_roll: "좌우 회전각 (roll)",
                 robotis_pitch: "앞뒤 회전각 (pitch)",
@@ -1085,6 +1088,9 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_moveRG2: "Sit",
                 robotis_moveRG3: "Struggle",
                 robotis_moveRG4: "RaiseFeet",
+                robotis_fast: 'Fast',
+                robotis_normal: 'Normal',
+                robotis_slow: 'Slow',
                 robotis_stMotion1: "Standard",
                 robotis_stMotion2: "Forward",
                 robotis_stMotion3: "TurnRight",
@@ -1830,10 +1836,9 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['느린', '1'],
-                        ['보통', '2'],
-                        ['빠른', '3'],
-
+                        [Lang.Blocks.robotis_slow, '1'],
+                        [Lang.Blocks.robotis_normal, '2'],
+                        [Lang.Blocks.robotis_fast, '3'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -3757,7 +3762,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
 
                 var data_sendqueue = [
                     [data_instruction, data_address, data_length, data_value],
-                    [3, 162, 1, 1]
+                    [Entry.Robotis_rb.INSTRUCTION.WRITE, 162, 1, 1]
                 ];
               
 
@@ -3935,7 +3940,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
 
                 var data_sendqueue = [
                     [data_instruction, data_address, data_length, data_value],
-                    [3, 162, 1, 1]
+                    [Entry.Robotis_rb.INSTRUCTION.WRITE, 162, 1, 1]
                 ];
               
 
@@ -5037,7 +5042,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                         data_length,
                         data_value,
                     ],
-                    [3, 162, 1, 1]
+                    [Entry.Robotis_rb.INSTRUCTION.WRITE, 162, 1, 1]
                 ];
                 return Entry.Robotis_carCont.postCallReturn(
                     script,

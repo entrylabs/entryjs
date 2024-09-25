@@ -676,7 +676,7 @@ let camera_id_for_use = 0;
 
                         // LED 제어
                         robotis_robotai_lite_cm_led: '제어기의 지정한 LED를 켜거나 끄기',
-                        robotis_robotai_lite_cm_led_pattern: '제어기의 깜박임 패턴 설정',
+                        robotis_robotai_lite_cm_led_pattern: '제어기의 LED의 깜박임 패턴 설정',
 
                         // DXL 제어
                         robotis_robotai_lite_dxl_set_mode: '지정한 ID의 모터의 동작모드를 설정',
@@ -865,6 +865,9 @@ let camera_id_for_use = 0;
                         robotis_moveRG2: '앉기',
                         robotis_moveRG3: '발버둥',
                         robotis_moveRG4: '발들기',
+                        robotis_fast: '빠른',
+                        robotis_normal: '보통',
+                        robotis_slow: '느린',
                         robotis_stop: '정지',
                         robotis_roll: '좌우 회전각 (roll)',
                         robotis_pitch: '앞뒤 회전각 (pitch)',
@@ -1548,6 +1551,9 @@ let camera_id_for_use = 0;
                         robotis_moveRG2: 'Sit',
                         robotis_moveRG3: 'Struggle',
                         robotis_moveRG4: 'RaiseFeet',
+                        robotis_fast: 'Fast',
+                        robotis_normal: 'Normal',
+                        robotis_slow: 'Slow',
                         robotis_stop: 'Stop',
                         robotis_roll: 'Left-right rotate angle (roll)',
                         robotis_pitch: 'Forward-backward rotate angle (pitch)',
@@ -1846,7 +1852,7 @@ let camera_id_for_use = 0;
                         const speed = script.getNumberValue('SPEED', script);
                         const direction = script.getField('DIRECTION', script);
 
-                        const data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        const data_instruction = INST_WRITE;
                         const data_address = 710;
                         const data_length = 2;
                         let data_value = 0;
@@ -1881,51 +1887,6 @@ let camera_id_for_use = 0;
                     syntax: {
                         js: [],
                         py: ['Robotailite.go_simple(%1, %2)'],
-                    },
-                },
-                robotis_robotai_lite_drive_stop: {
-                    color: EntryStatic.colorSet.block.default.HARDWARE,
-                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                    skeleton: 'basic',
-                    statements: [],
-                    params: [
-                        {
-                            type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
-                            size: 12,
-                        },
-                    ],
-                    events: {},
-                    def: {
-                        params: [null],
-                        type: 'robotis_robotai_lite_drive_stop',
-                    },
-                    paramsKeyMap: {
-                        DIRECTION: 0,
-                    },
-                    class: 'robotis_robotai_lite_move',
-                    isNotFor: ['RobotisRobotaiLite'],
-                    func(sprite, script) {
-                        // instruction / address / length / value / default length
-
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
-                        let data_address = 710;
-                        let data_length = 2;
-                        let data_value = 0;
-
-                        let data_sendqueue = [
-                            [data_instruction, 5200, 1, 0],
-                            [data_instruction, data_address, data_length, data_value],
-                        ];
-                        return Entry.RobotisRobotaiLite.postCallReturn(
-                            script,
-                            data_sendqueue,
-                            DEFAULT_DELAY
-                        );
-                    },
-                    syntax: {
-                        js: [],
-                        py: ['Robotailite.stop(%1, %2)'],
                     },
                 },
                 robotis_robotai_lite_drive_advanced: {
@@ -2001,7 +1962,7 @@ let camera_id_for_use = 0;
                         let rightSpeed = script.getNumberValue('RIGHT_SPEED', script);
                         const rightDirection = script.getField('RIGHT_DIRECTION', script);
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 710;
                         let data_length = 2;
                         let data_value = 0;
@@ -2059,6 +2020,7 @@ let camera_id_for_use = 0;
                             options: [
                                 [Lang.Blocks.robotis_left, '1'],
                                 [Lang.Blocks.robotis_right, '0'],
+                                [Lang.Blocks.robotis_both, '2'],
                             ],
                             value: '1',
                             fontSize: 11,
@@ -2113,7 +2075,7 @@ let camera_id_for_use = 0;
 
                         let leftSpeed = 0;
                         let rightSpeed = 0;
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 710;
                         let data_length = 2;
                         let data_value = 0;
@@ -2216,7 +2178,7 @@ let camera_id_for_use = 0;
                         let wheelAngle = script.getNumberValue('WHEEL_ANGLE', script);
                         let wheelDirection = script.getNumberValue('WHEEL_DIRECTION', script);
 
-                        const data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        const data_instruction = INST_WRITE;
                         let data_address = 580;
                         let data_length = 8;
                         let angleValue = 0;
@@ -2302,7 +2264,7 @@ let camera_id_for_use = 0;
                         params: [
                             {
                                 type: 'number',
-                                params: ['10'],
+                                params: ['5'],
                             },
                             null,
                         ],
@@ -2325,7 +2287,7 @@ let camera_id_for_use = 0;
                             distance = -1000;
                         }
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 270;
                         let data_length = 4;
                         let data_value = Math.floor(10 * distance * direction);
@@ -2403,7 +2365,7 @@ let camera_id_for_use = 0;
                             angle = -720;
                         }
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 270;
                         let data_length = 4;
                         let data_value = Math.floor(angle);
@@ -2432,9 +2394,9 @@ let camera_id_for_use = 0;
                         {
                             type: 'Dropdown',
                             options: [
-                                ['느린', '1'],
-                                ['보통', '2'],
-                                ['빠른', '3'],
+                                [Lang.Blocks.robotis_slow, '1'],
+                                [Lang.Blocks.robotis_normal, '2'],
+                                [Lang.Blocks.robotis_fast, '3'],
                             ],
                             value: '1',
                             fontSize: 11,
@@ -2461,7 +2423,7 @@ let camera_id_for_use = 0;
                         // instruction / address / length / value / default length
                         let speed_level = script.getNumberValue('SPEED', script);
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 5200;
                         let data_length = 1;
 
@@ -2530,7 +2492,7 @@ let camera_id_for_use = 0;
                             }
                         }
 
-                        let data_sendqueue = [[Entry.Robotis_rb.INSTRUCTION.WRITE, 5200, 1, 0]];
+                        let data_sendqueue = [[INST_WRITE, 5200, 1, 0]];
 
                         return Entry.RobotisRobotaiLite.postCallReturn(
                             script,
@@ -2581,7 +2543,7 @@ let camera_id_for_use = 0;
                         // instruction / address / length / value / default length
                         let turn_type = script.getNumberValue('TURN_TYPE', script);
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 66;
                         let data_length = 2;
 
@@ -2596,7 +2558,52 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.follow_line(%1)'],
+                        py: ['Robotailite.turn_at_line(%1)'],
+                    },
+                },
+                robotis_robotai_lite_drive_stop: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [null],
+                        type: 'robotis_robotai_lite_drive_stop',
+                    },
+                    paramsKeyMap: {
+                        DIRECTION: 0,
+                    },
+                    class: 'robotis_robotai_lite_move',
+                    isNotFor: ['RobotisRobotaiLite'],
+                    func(sprite, script) {
+                        // instruction / address / length / value / default length
+
+                        let data_instruction = INST_WRITE;
+                        let data_address = 710;
+                        let data_length = 2;
+                        let data_value = 0;
+
+                        let data_sendqueue = [
+                            [data_instruction, 5200, 1, 0],
+                            [data_instruction, data_address, data_length, data_value],
+                        ];
+                        return Entry.RobotisRobotaiLite.postCallReturn(
+                            script,
+                            data_sendqueue,
+                            DEFAULT_DELAY
+                        );
+                    },
+                    syntax: {
+                        js: [],
+                        py: ['Robotailite.stop(%1, %2)'],
                     },
                 },
                 robotis_robotai_lite_securitybot_init: {
@@ -2622,7 +2629,7 @@ let camera_id_for_use = 0;
                     func(sprite, script) {
                         // instruction / address / length / value / default length
 
-                        let data_sendqueue = [[Entry.Robotis_rb.INSTRUCTION.WRITE, 2110, 1, 1]];
+                        let data_sendqueue = [[INST_WRITE, 2110, 1, 1]];
                         return Entry.RobotisRobotaiLite.postCallReturn(
                             script,
                             data_sendqueue,
@@ -2657,7 +2664,7 @@ let camera_id_for_use = 0;
                     func(sprite, script) {
                         // instruction / address / length / value / default length
 
-                        let data_sendqueue = [[Entry.Robotis_rb.INSTRUCTION.WRITE, 2111, 1, 1]];
+                        let data_sendqueue = [[INST_WRITE, 2111, 1, 1]];
                         return Entry.RobotisRobotaiLite.postCallReturn(
                             script,
                             data_sendqueue,
@@ -2692,7 +2699,7 @@ let camera_id_for_use = 0;
                     func(sprite, script) {
                         // instruction / address / length / value / default length
 
-                        let data_sendqueue = [[Entry.Robotis_rb.INSTRUCTION.WRITE, 2112, 1, 1]];
+                        let data_sendqueue = [[INST_WRITE, 2112, 1, 1]];
                         return Entry.RobotisRobotaiLite.postCallReturn(
                             script,
                             data_sendqueue,
@@ -2727,7 +2734,7 @@ let camera_id_for_use = 0;
                     func(sprite, script) {
                         // instruction / address / length / value / default length
 
-                        let data_sendqueue = [[Entry.Robotis_rb.INSTRUCTION.WRITE, 2121, 1, 1]];
+                        let data_sendqueue = [[INST_WRITE, 2121, 1, 1]];
                         return Entry.RobotisRobotaiLite.postCallReturn(
                             script,
                             data_sendqueue,
@@ -2762,7 +2769,7 @@ let camera_id_for_use = 0;
                     func(sprite, script) {
                         // instruction / address / length / value / default length
 
-                        let data_sendqueue = [[Entry.Robotis_rb.INSTRUCTION.WRITE, 2122, 1, 1]];
+                        let data_sendqueue = [[INST_WRITE, 2122, 1, 1]];
                         return Entry.RobotisRobotaiLite.postCallReturn(
                             script,
                             data_sendqueue,
@@ -2796,7 +2803,7 @@ let camera_id_for_use = 0;
                     class: 'robotis_robotai_lite_special',
                     isNotFor: ['RobotisRobotaiLite'],
                     func(sprite, script) {
-                        let data_sendqueue = [[Entry.Robotis_rb.INSTRUCTION.WRITE, 2130, 1, 1]];
+                        let data_sendqueue = [[INST_WRITE, 2130, 1, 1]];
                         return Entry.RobotisRobotaiLite.postCallReturn(
                             script,
                             data_sendqueue,
@@ -2831,7 +2838,7 @@ let camera_id_for_use = 0;
                     func(sprite, script) {
                         // instruction / address / length / value / default length
 
-                        let data_sendqueue = [[Entry.Robotis_rb.INSTRUCTION.WRITE, 2131, 1, 1]];
+                        let data_sendqueue = [[INST_WRITE, 2131, 1, 1]];
                         return Entry.RobotisRobotaiLite.postCallReturn(script, data_sendqueue, 200);
                     },
                     syntax: {
@@ -2936,7 +2943,7 @@ let camera_id_for_use = 0;
                                 break;
                         }
 
-                        let data_sendqueue = [[Entry.Robotis_rb.INSTRUCTION.WRITE, address, 1, 1]];
+                        let data_sendqueue = [[INST_WRITE, address, 1, 1]];
                         return Entry.RobotisRobotaiLite.postCallReturn(
                             script,
                             data_sendqueue,
@@ -3527,7 +3534,7 @@ let camera_id_for_use = 0;
                         {
                             type: 'Block',
                             accept: 'string',
-                            value: 'asdfasdf',
+                            value: '',
                         },
                         {
                             type: 'Dropdown',
@@ -3804,7 +3811,7 @@ let camera_id_for_use = 0;
                         let robotType = script.getNumberValue('ROBOT_TYPE', script);
                         let screenValue = script.getNumberValue('BACKGROUND', script);
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 163;
                         let data_length = 2;
                         let data_value = screenValue + robotType * 256;
@@ -3893,7 +3900,7 @@ let camera_id_for_use = 0;
 
                         let data_sendqueue = [
                             [data_instruction, data_address, data_length, data_value],
-                            [3, 162, 1, 1],
+                            [INST_WRITE, 162, 1, 1],
                         ];
 
                         return Entry.RobotisRobotaiLite.postCallReturn(
@@ -3976,7 +3983,7 @@ let camera_id_for_use = 0;
                         let robotType = script.getNumberValue('ROBOT_TYPE', script);
                         let screenValue = script.getNumberValue('BACKGROUND', script);
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 163;
                         let data_length = 2;
                         let data_value = screenValue;
@@ -4066,7 +4073,7 @@ let camera_id_for_use = 0;
 
                         let data_sendqueue = [
                             [data_instruction, data_address, data_length, data_value],
-                            [3, 162, 1, 1],
+                            [INST_WRITE, 162, 1, 1],
                         ];
 
                         return Entry.RobotisRobotaiLite.postCallReturn(
@@ -4166,7 +4173,7 @@ let camera_id_for_use = 0;
                         let y = script.getNumberValue('Y', script);
                         let size = script.getNumberValue('SIZE', script) * 2;
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 166;
                         let data_length = 2;
                         let data_value = 10496;
@@ -4192,11 +4199,11 @@ let camera_id_for_use = 0;
                         data_value = iconNum;
 
                         let data_sendqueue = [
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 130, 2, x],
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 132, 2, y],
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 149, 2, size],
+                            [INST_WRITE, 130, 2, x],
+                            [INST_WRITE, 132, 2, y],
+                            [INST_WRITE, 149, 2, size],
                             [data_instruction, data_address, data_length, data_value],
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 162, 1, 1],
+                            [INST_WRITE, 162, 1, 1],
                         ];
 
                         return Entry.RobotisRobotaiLite.postCallReturn(
@@ -4309,7 +4316,7 @@ let camera_id_for_use = 0;
                         let y = script.getNumberValue('Y', script);
                         let size = script.getNumberValue('SIZE', script) * 2;
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 166;
                         let data_length = 2;
                         let data_value = 10496;
@@ -4335,11 +4342,11 @@ let camera_id_for_use = 0;
                         data_value = iconNum;
 
                         let data_sendqueue = [
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 130, 2, x],
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 132, 2, y],
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 149, 2, size],
+                            [INST_WRITE, 130, 2, x],
+                            [INST_WRITE, 132, 2, y],
+                            [INST_WRITE, 149, 2, size],
                             [data_instruction, data_address, data_length, data_value],
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 162, 1, 1],
+                            [INST_WRITE, 162, 1, 1],
                         ];
 
                         return Entry.RobotisRobotaiLite.postCallReturn(
@@ -4454,7 +4461,7 @@ let camera_id_for_use = 0;
                         let y = script.getNumberValue('Y', script);
                         let size = script.getNumberValue('SIZE', script) * 2;
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 166;
                         let data_length = 2;
                         let data_value = 10496;
@@ -4480,11 +4487,11 @@ let camera_id_for_use = 0;
                         data_value = iconNum;
 
                         let data_sendqueue = [
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 130, 2, x],
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 132, 2, y],
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 149, 2, size],
+                            [INST_WRITE, 130, 2, x],
+                            [INST_WRITE, 132, 2, y],
+                            [INST_WRITE, 149, 2, size],
                             [data_instruction, data_address, data_length, data_value],
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 162, 1, 1],
+                            [INST_WRITE, 162, 1, 1],
                         ];
 
                         return Entry.RobotisRobotaiLite.postCallReturn(
@@ -4601,7 +4608,7 @@ let camera_id_for_use = 0;
                         let y = script.getNumberValue('Y', script);
                         let size = script.getNumberValue('SIZE', script) * 2;
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 166;
                         let data_length = 2;
                         let data_value = 10496;
@@ -4627,11 +4634,11 @@ let camera_id_for_use = 0;
                         data_value = iconNum;
 
                         let data_sendqueue = [
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 130, 2, x],
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 132, 2, y],
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 149, 2, size],
+                            [INST_WRITE, 130, 2, x],
+                            [INST_WRITE, 132, 2, y],
+                            [INST_WRITE, 149, 2, size],
                             [data_instruction, data_address, data_length, data_value],
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 162, 1, 1],
+                            [INST_WRITE, 162, 1, 1],
                         ];
 
                         return Entry.RobotisRobotaiLite.postCallReturn(
@@ -4735,7 +4742,7 @@ let camera_id_for_use = 0;
                         let data_buf = [];
                         let i = 0;
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 900;
                         let data_length = 2;
 
@@ -4771,7 +4778,7 @@ let camera_id_for_use = 0;
 
                         let data_sendqueue = [
                             [data_instruction, data_address, data_length, data_buf],
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 162, 1, 1],
+                            [INST_WRITE, 162, 1, 1],
                         ];
 
                         return Entry.RobotisRobotaiLite.postCallReturn(
@@ -4853,7 +4860,7 @@ let camera_id_for_use = 0;
                         let color = script.getNumberValue('COLOR', script);
                         let data_buf = [];
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 130;
                         let data_length = 11;
 
@@ -4883,7 +4890,7 @@ let camera_id_for_use = 0;
 
                         let data_sendqueue = [
                             [data_instruction, data_address, data_length, data_buf],
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 161, 2, 1 * 256 + 8],
+                            [INST_WRITE, 161, 2, 1 * 256 + 8],
                         ];
 
                         return Entry.RobotisRobotaiLite.postCallReturn(
@@ -5002,13 +5009,13 @@ let camera_id_for_use = 0;
                             data_buf.push(byteArray[i]);
                         }
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 900;
                         let data_length = 9 + byteArray.length;
 
                         let data_sendqueue = [
                             [data_instruction, data_address, data_length, data_buf],
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 162, 1, 1],
+                            [INST_WRITE, 162, 1, 1],
                         ];
 
                         return Entry.RobotisRobotaiLite.postCallReturn(
@@ -5052,7 +5059,7 @@ let camera_id_for_use = 0;
                         // instruction / address / length / value / default length
                         let bright = script.getNumberValue('BRIGHT', script);
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 180;
                         let data_length = 1;
                         let data_value = 0;
@@ -5120,7 +5127,7 @@ let camera_id_for_use = 0;
                         // instruction / address / length / value / default length
                         let color = script.getNumberValue('COLOR', script);
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 163;
                         let data_length = 2;
                         let data_value = 0;
@@ -5129,9 +5136,9 @@ let camera_id_for_use = 0;
                         bg_color = color;
 
                         let data_sendqueue = [
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 163, 2, 2817],
+                            [INST_WRITE, 163, 2, 2817],
                             [data_instruction, data_address, data_length, data_value],
-                            [3, 162, 1, 1],
+                            [INST_WRITE, 162, 1, 1],
                         ];
                         return Entry.RobotisRobotaiLite.postCallReturn(
                             script,
@@ -5246,8 +5253,8 @@ let camera_id_for_use = 0;
                         const time_parameter = 0x8000 + (period << 8) + period;
 
                         let data_sendqueue = [
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 158, 2, colors],
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 163, 2, time_parameter],
+                            [INST_WRITE, 158, 2, colors],
+                            [INST_WRITE, 163, 2, time_parameter],
                         ];
                         return Entry.RobotisRobotaiLite.postCallReturn(
                             script,
@@ -5312,7 +5319,7 @@ let camera_id_for_use = 0;
                         let cmLed = script.getField('RB_LED', script);
                         let value = script.getField('VALUE', script);
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 40;
                         let data_length = 1;
                         let data_value = 0;
@@ -5394,7 +5401,7 @@ let camera_id_for_use = 0;
                         let pattern = script.getNumberValue('PATTERN', script);
                         let speed = script.getNumberValue('SPEED', script);
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 40;
                         let data_length = 1;
                         let data_value = 0;
@@ -5928,7 +5935,7 @@ let camera_id_for_use = 0;
                         let dxl_round = script.getNumberValue('DXL_ROUND', script);
                         let dxl_direction = script.getNumberValue('DXL_DIRECTION', script);
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address_1 = 0;
                         let data_length_1 = 0;
                         let data_value_1 = 0;
@@ -6082,7 +6089,7 @@ let camera_id_for_use = 0;
                         let cmBuzzerNote = script.getNumberValue('CM_BUZZER_NOTE', script);
                         let cmBuzzerTime = 0;
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 0;
                         let data_value = 0;
                         let interval = 0;
@@ -6231,7 +6238,7 @@ let camera_id_for_use = 0;
 
                         cmBuzzerBeat = Math.min(Math.max(cmBuzzerBeat, 0), 100);
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address_1 = 0;
                         let data_length_1 = 0;
                         let data_value_1 = 0;
@@ -6536,7 +6543,7 @@ let camera_id_for_use = 0;
                         // instruction / address / length / value / default length
                         let cmHello = script.getField('HELLO', script);
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 110;
                         let data_length = 2;
                         let data_value = 0;
@@ -6618,7 +6625,7 @@ let camera_id_for_use = 0;
                         // instruction / address / length / value / default length
                         let cmHello = script.getField('HELLO', script);
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 110;
                         let data_length = 2;
                         let data_value = 0;
@@ -6695,7 +6702,7 @@ let camera_id_for_use = 0;
                         // instruction / address / length / value / default length
                         let roomNum = script.getField('ROOM', script);
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 115;
                         let data_length = 1;
                         let data_value = 0;
@@ -6757,7 +6764,7 @@ let camera_id_for_use = 0;
                         // instruction / address / length / value / default length
                         let roomNum = script.getField('ROOM', script);
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 116;
                         let data_length = 1;
                         let data_value = 0;
@@ -6992,7 +6999,7 @@ let camera_id_for_use = 0;
                         let scope = script.executor.scope;
 
                         // instruction / address / length / value / default length
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 4029; // ID_FOR_USE
                         let data_length = 2;
                         let data_value = script.getNumberValue('ID');
@@ -7080,7 +7087,7 @@ let camera_id_for_use = 0;
                         let scope = script.executor.scope;
 
                         // instruction / address / length / value / default length
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 4029; // ID_FOR_USE
                         let data_length = 2;
                         let data_value = script.getNumberValue('ID');
@@ -7257,7 +7264,7 @@ let camera_id_for_use = 0;
                         // instruction / address / length / value / default length
                         let ai_camera_mode = script.getField('AI_CAMERA_MODE', script);
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 4001;
                         let data_length = 1;
 
@@ -7360,7 +7367,7 @@ let camera_id_for_use = 0;
                             data_buf.push(text[i]);
                         }
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 4200;
                         let data_length = 6 + text_len;
 
@@ -7402,7 +7409,7 @@ let camera_id_for_use = 0;
                     func(sprite, script) {
                         // instruction / address / length / value / default length
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 4250;
                         let data_length = 1;
 
