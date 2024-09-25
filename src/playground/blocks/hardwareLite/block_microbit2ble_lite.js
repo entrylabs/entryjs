@@ -1105,6 +1105,7 @@ const convertPresetImageToLedState = (preset) => {
                 microbit2blelite_common_title: {
                     skeleton: 'basic_text',
                     color: EntryStatic.colorSet.common.TRANSPARENT,
+                    template: '%1',
                     fontColor: '#333333',
                     params: [
                         {
@@ -2333,6 +2334,7 @@ const convertPresetImageToLedState = (preset) => {
                     skeleton: 'basic_text',
                     color: EntryStatic.colorSet.common.TRANSPARENT,
                     fontColor: '#333333',
+                    template: '%1',
                     params: [
                         {
                             type: 'Text',
