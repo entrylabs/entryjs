@@ -31,7 +31,7 @@ export default class WebUsbFlasher {
 
     // INFO: 연결된 기기에 파라미터로 넘어온 펌웨어를 플래싱
     // TODO: 현재 유일한 지원기종인 microbitble에 맞춰져있음, 추후 지원기기가 늘어나면 로직수정 필요
-    async flashFirmware(firmwareUrl: string, moduleId: string) {
+    async flashFirmware(firmwareUrl: string, percentCallback: Function) {
         try {
             if (!this.device) {
                 throw Error('device undefined');
@@ -57,14 +57,14 @@ export default class WebUsbFlasher {
                 // TODO: 퍼센트 로직도 분리
                 if (sentPages % 128 == 0) {
                     this.flashingPercent = (offset / data.length) * 100;
-                    console.log(this.flashingPercent);
+                    percentCallback && percentCallback(this.flashingPercent);
                 }
                 await this.writeBuffer(cmdData);
                 sentPages++;
                 offset = end;
             }
             this.flashingPercent = (offset / data.length) * 100;
-            console.log(this.flashingPercent);
+            percentCallback && percentCallback(this.flashingPercent);
             this.flashState = 'end';
 
             // INFO: close
