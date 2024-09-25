@@ -1,0 +1,9 @@
+{
+    "name": "RobotisRobotaiLite",
+    "version": "1.0.0",
+    "type": "hardware",
+    "title": "로봇아이(AI)",
+    "description": "로보티즈",
+    "imageName": "robotis_robotai_lite",
+    "moduleId": "070B01"
+}

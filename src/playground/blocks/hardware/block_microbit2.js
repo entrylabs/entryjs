@@ -259,9 +259,13 @@ Entry.Microbit2 = new (class Microbit2 {
             'microbit2_get_sound_level',
         ];
         this.version = '2';
-        this.firePressedBtnEventWithThrottle = _throttle((pressedBtn) => {
-            Entry.engine.fireEventWithValue('microbit_btn_pressed', pressedBtn);
-        }, EVENT_INTERVAL, { leading: true, trailing: false });
+        this.firePressedBtnEventWithThrottle = _throttle(
+            (pressedBtn) => {
+                Entry.engine.fireEventWithValue('microbit_btn_pressed', pressedBtn);
+            },
+            EVENT_INTERVAL,
+            { leading: true, trailing: false }
+        );
     }
 
     setZero() {
@@ -735,7 +739,8 @@ Entry.Microbit2 = new (class Microbit2 {
                         'Plays the entered melody for the entered beat. You can choose a scale between 1 and 5 octaves.',
                     microbit2_play_preset_music: 'Plays preset music.',
                     microbit2_play_sound_effect: 'Plays preset sound.',
-                    microbit2_btn_event: 'When the selected button is pressed, the connected blocks below will run',
+                    microbit2_btn_event:
+                        'When the selected button is pressed, the connected blocks below will run',
                     microbit2_get_btn: "If the selected button is pressed, it is judged as 'True'.",
                     microbit2_get_logo: "If the logo is touched, it is judged as 'True'.",
                     microbit2_get_gesture:
@@ -978,7 +983,7 @@ Entry.Microbit2 = new (class Microbit2 {
                 def: {
                     type: 'microbit2_common_title',
                 },
-                class: 'microbit2_title',
+                class: 'microbit2Pin',
                 isNotFor: ['microbit2'],
                 events: {},
             },
@@ -997,7 +1002,7 @@ Entry.Microbit2 = new (class Microbit2 {
                 def: {
                     type: 'microbit2_v2_title',
                 },
-                class: 'microbit2_title',
+                class: 'microbit2v2',
                 isNotFor: ['microbit2'],
                 events: {},
             },
@@ -1971,7 +1976,7 @@ Entry.Microbit2 = new (class Microbit2 {
                     },
                 ],
                 def: {
-                    type: 'microbit2_btn_event'
+                    type: 'microbit2_btn_event',
                 },
                 paramsKeyMap: {
                     VALUE: 1,
