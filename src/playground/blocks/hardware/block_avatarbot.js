@@ -1,7 +1,7 @@
 'use strict';
 
 Entry.avatarbot = {
-    id: ['99.1'], // 엔트리에서 발급받은 하드웨어 번호를 기술합니다.
+    id: ['64.1'], // 엔트리에서 발급받은 하드웨어 번호를 기술합니다.
     name: 'avatarbot', // isNotFor 속성과 대소문자까지 정확하게 매치되어야 합니다.
     url: 'http://avatarmecha.co.kr', // 생략 가능합니다. 엔트리 사이트에서 홍보시 사용됩니다.
     imageName: 'avatarbot.png', // images/hardware, images/hw 폴더 내에 존재하는 이미지입니다.
