@@ -1024,6 +1024,7 @@ const EVENT_INTERVAL = 150;
                     skeleton: 'basic_text',
                     color: EntryStatic.colorSet.common.TRANSPARENT,
                     fontColor: '#333333',
+                    template: '%1',
                     params: [
                         {
                             type: 'Text',
@@ -2281,6 +2282,7 @@ const EVENT_INTERVAL = 150;
                     skeleton: 'basic_text',
                     color: EntryStatic.colorSet.common.TRANSPARENT,
                     fontColor: '#333333',
+                    template: '%1',
                     params: [
                         {
                             type: 'Text',
