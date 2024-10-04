@@ -604,9 +604,12 @@ Entry.Stage = class Stage {
                 y: posY,
                 readonly: false,
                 topPosition: true,
-                onsubmit() {
-                    Entry.dispatchEvent('canvasInputComplete');
-                },
+                onkeydown(event) {
+                    const keyCode = Entry.Utils.inputToKeycode(event);
+                    if (keyCode === 13) {
+                        Entry.dispatchEvent('canvasInputComplete');
+                    }
+                }
             });
 
             if (isWebGL) {
