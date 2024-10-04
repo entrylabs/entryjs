@@ -142,6 +142,14 @@
             true
         ); // create the hidden input element
 
+        window.addEventListener('keydown', (e) => {
+            if (self._hasFocus) {
+                var keyCode = e.keyCode || e.which;
+                console.log('window keydown', keyCode);
+                // self.keydown(e, self);
+            }
+        }, true);
+
         self._hiddenInput = document.createElement('input');
         self._hiddenInput.className = 'entryCanvasHiddenInput';
         self._hiddenInput.type = 'text';
@@ -822,12 +830,12 @@
          * @return {CanvasInput}
          */
         keydown: function keydown(e, self) {
-            var keyCode = e.which;
+            var keyCode = e.keyCode || e.which;
             var isShift = e.shiftKey;
             var key = null;
             var startText;
             var endText; // make sure the correct text field is being updated
-
+            console.log('keydown', keyCode);
             if (!self._hasFocus) {
                 return;
             } // fire custom user event
