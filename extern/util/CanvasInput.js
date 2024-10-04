@@ -62,7 +62,6 @@
         self._selection = [0, 0];
         self._wasOver = false;
         self._topPosition = o.topPosition; // parse box shadow
-        self._hasHiddenFocus = false;
         self.boxShadow(self._boxShadow, true); // calculate the full width and height with padding, borders and shadows
 
         self._calcWH(); // setup the off-DOM canvas
@@ -180,13 +179,6 @@
                 self._onkeyup(e, self);
             }
         }); // add this to the buffer
-
-        self._hiddenInput.addEventListener('focus', function(e) {
-            self._hasHiddenFocus = true;
-        });
-        self._hiddenInput.addEventListener('blur', function(e) {
-            self._hasHiddenFocus = false;
-        });
 
         inputs.push(self);
         self._inputsIndex = inputs.length - 1; // draw the text box
@@ -748,7 +740,7 @@
                 nav.indexOf('android') >= 0; // add support for mobile
 
             var isMobile = typeof window.orientation !== 'undefined';
-
+            var hasHiddenFocus = false;
             if (
                 isMobile &&
                 !isChromeMobile &&
@@ -774,7 +766,7 @@
                 input.addEventListener(
                     'blur',
                     function() {
-                        if (!self._hasHiddenFocus) {
+                        if (!hasHiddenFocus) {
                             self.blur(self);
                         }
                     },
@@ -785,11 +777,12 @@
             } // move the real focus to the hidden input
 
             var hasSelection = self._selection[0] > 0 || self._selection[1] > 0;
-            self._hasHiddenFocus = true;
+            hasHiddenFocus = true;
             self._hiddenInput.focus();
-
+            hasHiddenFocus = false;
             self._hiddenInput.selectionStart = hasSelection ? self._selection[0] : self._cursorPos;
             self._hiddenInput.selectionEnd = hasSelection ? self._selection[1] : self._cursorPos;
+
             return self.render();
         },
 

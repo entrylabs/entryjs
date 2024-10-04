@@ -59,7 +59,6 @@ import * as PIXI from 'pixi.js';
         self._selection = [0, 0];
         self._wasOver = false;
         self._topPosition = o.topPosition;
-        self._hasHiddenFocus = false;
 
         // parse box shadow
         self.boxShadow(self._boxShadow, true);
@@ -182,13 +181,6 @@ import * as PIXI from 'pixi.js';
             if (self._hasFocus) {
                 self._onkeyup(e, self);
             }
-        });
-
-        self._hiddenInput.addEventListener('focus', function(e) {
-            self._hasHiddenFocus = true;
-        });
-        self._hiddenInput.addEventListener('blur', function(e) {
-            self._hasHiddenFocus = false;
         });
 
         // add this to the buffer
@@ -779,6 +771,7 @@ import * as PIXI from 'pixi.js';
 
             // add support for mobile
             const isMobile = typeof window.orientation !== 'undefined';
+            var hasHiddenFocus = false;
             if (
                 isMobile &&
                 !isChromeMobile &&
@@ -802,7 +795,7 @@ import * as PIXI from 'pixi.js';
                 input.addEventListener(
                     'blur',
                     () => {
-                        if (!self._hasHiddenFocus) {
+                        if (!hasHiddenFocus) {
                             self.blur(self);
                         }
                     },
@@ -814,8 +807,9 @@ import * as PIXI from 'pixi.js';
 
             // move the real focus to the hidden input
             const hasSelection = self._selection[0] > 0 || self._selection[1] > 0;
-            self._hasHiddenFocus = true;
+            hasHiddenFocus = true;
             self._hiddenInput.focus();
+            hasHiddenFocus = false;
             self._hiddenInput.selectionStart = hasSelection ? self._selection[0] : self._cursorPos;
             self._hiddenInput.selectionEnd = hasSelection ? self._selection[1] : self._cursorPos;
 
