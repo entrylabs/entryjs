@@ -606,6 +606,7 @@ Entry.Stage = class Stage {
                 topPosition: true,
                 onkeydown(event) {
                     const keyCode = Entry.Utils.inputToKeycode(event);
+                    console.log('onKeydown', isWebGL, keyCode);
                     if (keyCode === 13) {
                         Entry.dispatchEvent('canvasInputComplete');
                     }
