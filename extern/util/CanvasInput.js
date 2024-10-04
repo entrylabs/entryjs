@@ -62,7 +62,7 @@
         self._selection = [0, 0];
         self._wasOver = false;
         self._topPosition = o.topPosition; // parse box shadow
-
+        self._hasHiddenFocus = false;
         self.boxShadow(self._boxShadow, true); // calculate the full width and height with padding, borders and shadows
 
         self._calcWH(); // setup the off-DOM canvas
@@ -142,14 +142,6 @@
             true
         ); // create the hidden input element
 
-        window.addEventListener('keydown', (e) => {
-            if (self._hasFocus) {
-                var keyCode = e.keyCode || e.which;
-                console.log('window keydown', keyCode);
-                // self.keydown(e, self);
-            }
-        }, true);
-
         self._hiddenInput = document.createElement('input');
         self._hiddenInput.className = 'entryCanvasHiddenInput';
         self._hiddenInput.type = 'text';
@@ -188,6 +180,13 @@
                 self._onkeyup(e, self);
             }
         }); // add this to the buffer
+
+        self._hiddenInput.addEventListener('focus', function(e) {
+            self._hasHiddenFocus = true;
+        });
+        self._hiddenInput.addEventListener('blur', function(e) {
+            self._hasHiddenFocus = false;
+        });
 
         inputs.push(self);
         self._inputsIndex = inputs.length - 1; // draw the text box
@@ -775,7 +774,9 @@
                 input.addEventListener(
                     'blur',
                     function() {
-                        self.blur(self);
+                        if (!self._hasHiddenFocus) {
+                            self.blur(self);
+                        }
                     },
                     false
                 );
@@ -784,7 +785,7 @@
             } // move the real focus to the hidden input
 
             var hasSelection = self._selection[0] > 0 || self._selection[1] > 0;
-
+            self._hasHiddenFocus = true;
             self._hiddenInput.focus();
 
             self._hiddenInput.selectionStart = hasSelection ? self._selection[0] : self._cursorPos;
@@ -830,12 +831,12 @@
          * @return {CanvasInput}
          */
         keydown: function keydown(e, self) {
-            var keyCode = e.keyCode || e.which;
+            var keyCode = e.which;
             var isShift = e.shiftKey;
             var key = null;
             var startText;
             var endText; // make sure the correct text field is being updated
-            console.log('keydown', keyCode);
+
             if (!self._hasFocus) {
                 return;
             } // fire custom user event
