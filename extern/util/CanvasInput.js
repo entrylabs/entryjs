@@ -140,7 +140,7 @@
             },
             true
         ); // create the hidden input element
-        self._hiddenForm = document.createElement('form');
+
         self._hiddenInput = document.createElement('input');
         self._hiddenInput.className = 'entryCanvasHiddenInput';
         self._hiddenInput.type = 'text';
@@ -156,8 +156,8 @@
         if (self._maxlength) {
             self._hiddenInput.maxLength = self._maxlength;
         }
-        self._hiddenForm.appendChild(self._hiddenInput);
-        document.body.appendChild(self._hiddenForm);
+
+        document.body.appendChild(self._hiddenInput);
         self._hiddenInput.value = self._value; // setup the keydown listener
 
         self._hiddenInput.addEventListener('keydown', function(e) {
@@ -761,7 +761,9 @@
                 );
                 input.style.width = self._width;
                 input.style.height = 0;
-                document.body.appendChild(input);
+                const form = document.createElement('form');
+                form.appendChild(input);
+                document.body.appendChild(form);
                 input.focus();
                 input.addEventListener(
                     'blur',
