@@ -143,6 +143,7 @@ import * as PIXI from 'pixi.js';
         );
 
         // create the hidden input element
+        self._hiddenForm = document.createElement('form');
         self._hiddenInput = document.createElement('input');
         self._hiddenInput.className = 'entryCanvasHiddenInput';
         self._hiddenInput.type = 'text';
@@ -157,7 +158,8 @@ import * as PIXI from 'pixi.js';
         if (self._maxlength) {
             self._hiddenInput.maxLength = self._maxlength;
         }
-        document.body.appendChild(self._hiddenInput);
+        self._hiddenForm.appendChild(self._hiddenInput);
+        document.body.appendChild(self._hiddenForm);
         self._hiddenInput.value = self._value;
 
         // setup the keydown listener
@@ -798,6 +800,13 @@ import * as PIXI from 'pixi.js';
                         if (!hasHiddenFocus) {
                             self.blur(self);
                         }
+                    },
+                    false
+                );
+                input.addEventListener(
+                    'focus',
+                    () => {
+                        self.focus();
                     },
                     false
                 );
