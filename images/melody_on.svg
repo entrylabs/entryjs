@@ -1,7 +1,1 @@
-<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-    <g transform="translate(9 7)" fill="#FFF" fill-rule="evenodd">
-        <rect width="14" height="19" rx="3"/>
-        <circle stroke="#00B6B1" stroke-width="1.2" stroke-linejoin="round" cx="7" cy="12.5" r="3.5"/>
-        <circle stroke="#00B6B1" stroke-width="1.2" cx="7" cy="4.5" r="2.1"/>
-    </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><g fill="#FFF" fill-rule="evenodd" transform="translate(9 7)"><rect width="14" height="19" rx="3"/><circle cx="7" cy="12.5" r="3.5" stroke="#00B6B1" stroke-linejoin="round" stroke-width="1.2"/><circle cx="7" cy="4.5" r="2.1" stroke="#00B6B1" stroke-width="1.2"/></g></svg>
