@@ -467,8 +467,6 @@ EntryStatic.getAllBlocks = function () {
                 'arduino_open',
                 'arduino_connect',
                 'hardware_program_download',
-                // 'arduino_download_connector',
-                // 'download_guide',
                 'arduino_connected',
                 'hardware_device_name_title',
                 'hardware_device_name_content',

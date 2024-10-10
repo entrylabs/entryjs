@@ -552,84 +552,6 @@ function getBlocks() {
             isNotFor: ['arduinoDisconnected'],
             events: {},
         },
-        // arduino_download_connector: {
-        //     skeleton: 'clickable_text',
-        //     skeletonOptions: {
-        //         box: {
-        //             offsetX: 3,
-        //         },
-        //     },
-        //     isNotFor: ['arduinoDisconnected'],
-        //     color: EntryStatic.colorSet.common.TRANSPARENT,
-        //     class: 'arduino_default',
-        //     params: [
-        //         {
-        //             type: 'Text',
-        //             text: Lang.Blocks.ARDUINO_download_connector,
-        //             color: EntryStatic.colorSet.common.TEXT,
-        //             align: 'center',
-        //         },
-        //     ],
-        //     events: {
-        //         mousedown: [
-        //             function () {
-        //                 Entry.hw.downloadConnector();
-        //             },
-        //         ],
-        //     },
-        // },
-        // download_guide: {
-        //     skeleton: 'clickable_text',
-        //     skeletonOptions: {
-        //         box: {
-        //             offsetX: 3,
-        //         },
-        //     },
-        //     isNotFor: ['arduinoDisconnected'],
-        //     color: EntryStatic.colorSet.common.TRANSPARENT,
-        //     class: 'arduino_default',
-        //     params: [
-        //         {
-        //             type: 'Text',
-        //             text: Lang.Blocks.download_guide,
-        //             color: EntryStatic.colorSet.common.TEXT,
-        //             align: 'center',
-        //         },
-        //     ],
-        //     events: {
-        //         mousedown: [
-        //             function() {
-        //                 Entry.hw.downloadGuide();
-        //             },
-        //         ],
-        //     },
-        // },
-        // arduino_download_source: {
-        //     skeleton: 'clickable_text',
-        //     skeletonOptions: {
-        //         box: {
-        //             offsetX: 3,
-        //         },
-        //     },
-        //     isNotFor: ['arduinoDisconnected'],
-        //     color: EntryStatic.colorSet.common.TRANSPARENT,
-        //     params: [
-        //         {
-        //             type: 'Text',
-        //             text: Lang.Blocks.ARDUINO_download_source,
-        //             color: EntryStatic.colorSet.common.TEXT,
-        //             align: 'center',
-        //         },
-        //     ],
-        //     class: 'arduino_default',
-        //     events: {
-        //         mousedown: [
-        //             function () {
-        //                 Entry.hw.downloadSource();
-        //             },
-        //         ],
-        //     },
-        // },
         arduino_connected: {
             skeleton: 'basic_button',
             color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
@@ -645,22 +567,6 @@ function getBlocks() {
             events: {},
         },
 
-        // arduino_connect: {
-        //     skeleton: 'basic_text',
-        //     color: EntryStatic.colorSet.common.TRANSPARENT,
-        //     template: '%1',
-        //     isNotFor: ['arduinoConnect'],
-        //     class: 'arduino_default',
-        //     params: [
-        //         {
-        //             type: 'Text',
-        //             text: Lang.Blocks.ARDUINO_connect,
-        //             color: EntryStatic.colorSet.common.TEXT,
-        //             align: 'center',
-        //         },
-        //     ],
-        //     events: {},
-        // },
         arduino_reconnect: {
             skeleton: 'basic_button',
             color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
