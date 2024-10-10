@@ -686,7 +686,6 @@ function getBlocks() {
             skeleton: 'clickable_text',
             skeletonOptions: {
                 box: {
-                    offsetX: 60,
                     offsetY: -10,
                 },
             },
@@ -699,13 +698,16 @@ function getBlocks() {
                     type: 'Indicator',
                     img: 'question_in_round.svg',
                     size: 9,
-                    align: 'left',
+                    position: {
+                        x: -45,
+                        y: 0,
+                    },
                 },
                 {
                     type: 'Text',
                     text: Lang.Blocks.ROBOT_connect_helper,
                     color: EntryStatic.colorSet.common.BUTTON,
-                    align: 'left',
+                    align: 'center',
                     fontSize: 13,
                 },
             ],
@@ -761,7 +763,6 @@ function getBlocks() {
             skeleton: 'clickable_text',
             skeletonOptions: {
                 box: {
-                    offsetX: 70,
                     offsetY: -10,
                 },
             },
@@ -774,13 +775,16 @@ function getBlocks() {
                     type: 'Indicator',
                     img: 'question_in_round.svg',
                     size: 9,
-                    align: 'left',
+                    position: {
+                        x: -55,
+                        y: 0,
+                    },
                 },
                 {
                     type: 'Text',
                     text: Lang.Blocks.hardware_connect_helper,
                     color: EntryStatic.colorSet.common.BUTTON,
-                    align: 'left',
+                    align: 'center',
                     fontSize: 13,
                 },
             ],
