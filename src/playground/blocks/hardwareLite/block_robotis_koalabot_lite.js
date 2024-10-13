@@ -3391,7 +3391,7 @@ let camera_id_for_use = 0;
                                 [Lang.Blocks.robotis_rgee, '-1'],
                                 [Lang.Blocks.robotis_kkokdu, '1'],
                             ],
-                            value: '1',
+                            value: '0',
                             fontSize: 11,
                             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
