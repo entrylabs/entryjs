@@ -242,7 +242,7 @@ let camera_id_for_use = 0;
                 'robotis_robotai_lite_dxl_set_rotate',
                 'robotis_robotai_lite_dxl_set_multiturn_round',
 
-                // AI 카메라 값 블록
+                // 인공지능 카메라 값 블록
                 'robotis_robotai_lite_ai_camera_connection_status',
                 'robotis_robotai_lite_ai_camera_if_detected',
 
@@ -471,12 +471,12 @@ let camera_id_for_use = 0;
                         robotis_robotai_lite_turn_at_line: '교차로에서 %1 하고 멈추기 %2',
                         robotis_robotai_lite_drive_stop: '정지하기 %1',
 
-                        robotis_robotai_lite_securitybot_init: '보안로봇 초기화 %1',
-                        robotis_robotai_lite_securitybot_hi: '보안로봇 위아래로 흔들기 %1',
-                        robotis_robotai_lite_securitybot_alert: '보안로봇 좌우로 흔들기 %1',
+                        robotis_robotai_lite_securitybot_init: '보안 로봇 초기화 %1',
+                        robotis_robotai_lite_securitybot_hi: '보안 로봇 위아래로 흔들기 %1',
+                        robotis_robotai_lite_securitybot_alert: '보안 로봇 좌우로 흔들기 %1',
 
-                        robotis_robotai_lite_petbot_happy: '반려로봇 웃음 %1',
-                        robotis_robotai_lite_petbot_sad: '반려로봇 화남 %1',
+                        robotis_robotai_lite_petbot_happy: '반려 로봇 웃음 %1',
+                        robotis_robotai_lite_petbot_sad: '반려 로봇 화남 %1',
 
                         robotis_robotai_lite_farmbot_init: '스마트팜 로봇 초기화 %1',
                         robotis_robotai_lite_farmbot_seek: '농작물 찾기 %1',
@@ -548,32 +548,32 @@ let camera_id_for_use = 0;
                             '%1 모터 %2 속도로 %3 바퀴 %4으로 회전 %5',
 
                         // ai_camera 값 블록
-                        robotis_robotai_lite_ai_camera_connection_status: 'AI 카메라: %1이면',
-                        robotis_robotai_lite_ai_camera_if_detected: 'AI 카메라: %1 이/가 표시되면',
+                        robotis_robotai_lite_ai_camera_connection_status: '인공지능 카메라: %1이면',
+                        robotis_robotai_lite_ai_camera_if_detected: '인공지능 카메라: %1 이/가 표시되면',
 
                         robotis_robotai_lite_ai_camera_block_value_closest_to_center:
-                            'AI 카메라: 화면 중앙과 가까운 %1의 %2',
+                            '인공지능 카메라: 화면 중앙과 가까운 %1의 %2',
                         robotis_robotai_lite_ai_camera_arrow_value_closest_to_center:
-                            'AI 카메라: 화면 중앙과 가까운 화살표의 %1',
+                            '인공지능 카메라: 화면 중앙과 가까운 화살표의 %1',
                         robotis_robotai_lite_ai_camera_number_of_learned_id:
-                            'AI 카메라: 학습한 ID의 갯수',
+                            '인공지능 카메라: 학습한 번호의 갯수',
                         robotis_robotai_lite_ai_camera_block_value_of_id:
-                            'AI 카메라: 감지된 ID가 %1인 %2의 %3',
+                            '인공지능 카메라: 감지된 번호가 %1인 %2의 %3',
                         robotis_robotai_lite_ai_camera_arrow_value_of_id:
-                            'AI 카메라: 감지된 ID가 %1인 화살표의 %2',
+                            '인공지능 카메라: 감지된 번호가 %1인 화살표의 %2',
 
                         robotis_robotai_lite_ai_camera_if_learned_id:
-                            'AI 카메라: ID가 %1인 데이터를 학습하였으면',
+                            '인공지능 카메라: 번호가 %1인 데이터를 학습하였으면',
                         robotis_robotai_lite_ai_camera_if_detected_id_type:
-                            'AI 카메라: ID가 %1인 %2데이터를 인식하였으면',
+                            '인공지능 카메라: 번호가 %1인 %2데이터를 인식하였으면',
 
-                        // AI 카메라 제어
+                        // 인공지능 카메라 제어
                         robotis_robotai_lite_ai_camera_set_mode:
-                            'AI 카메라: 모드를 %1(으)로 설정 %2',
+                            '인공지능 카메라: 모드를 %1(으)로 설정 %2',
                         robotis_robotai_lite_ai_camera_print_custom_text:
-                            'AI 카메라: 화면 위치 (%1,%2)에 %3를 보여주기%4',
+                            '인공지능 카메라: 화면 위치 (%1,%2)에 %3를 보여주기%4',
                         robotis_robotai_lite_ai_camera_clear_custom_text:
-                            'AI 카메라: 화면의 글 지우기 %1',
+                            '인공지능 카메라: 화면의 글 지우기 %1',
                     },
                     Helper: {
                         // 주행 제어
@@ -595,16 +595,16 @@ let camera_id_for_use = 0;
                         robotis_robotai_lite_drive_stop: '로봇아이 정지하기',
 
                         robotis_robotai_lite_securitybot_init:
-                            '보안로봇을 초기화합니다. 두 모터를 관절모드로 설정하고 카메라를 얼굴인식모드로 설정합니다.',
+                            '보안 로봇을 초기화합니다. 두 모터를 관절모드로 설정하고 카메라를 얼굴인식모드로 설정합니다.',
                         robotis_robotai_lite_securitybot_hi:
-                            '보안로봇이 "사용자를 확인하였습니다." 문구를 화면에 표시하고 팔을 위아래로 흔듭니다.',
+                            '보안 로봇이 "사용자를 확인하였습니다." 문구를 화면에 표시하고 팔을 위아래로 흔듭니다.',
                         robotis_robotai_lite_securitybot_alert:
-                            '보안로봇 "사용자가 아닙니다." 문구를 화면에 표시하고 몸을 좌우로 흔듭니다.',
+                            '보안 로봇이 "사용자가 아닙니다." 문구를 화면에 표시하고 몸을 좌우로 흔듭니다.',
 
                         robotis_robotai_lite_petbot_happy:
-                            '반려로봇이 웃는 표정을 하고 "즐거워요" 라고 말을 하면서 제자리에서 한바퀴 회전합니다.',
+                            '반려 로봇이 웃는 표정을 하고 "즐거워요" 라고 말을 하면서 제자리에서 한바퀴 회전합니다.',
                         robotis_robotai_lite_petbot_sad:
-                            '반려로봇이 화난 표정을 하고 "무서워요" 라고 말을 하면서 뒤로 5cm 후진합니다.',
+                            '반려 로봇이 화난 표정을 하고 "무서워요" 라고 말을 하면서 뒤로 5cm 후진합니다.',
 
                         robotis_robotai_lite_farmbot_init:
                             '스마트팜 로봇을 초기화 합니다. 1번 모터를 시작위치로 이동시키고 카메라를 색상인식모드로 설정합니다.',
@@ -691,32 +691,32 @@ let camera_id_for_use = 0;
 
                         // AI Camera 값 블록
                         robotis_robotai_lite_ai_camera_connection_status:
-                            "AI 카메라가 연결된 상태이면 '참', 아니면 '거짓'으로 판단합니다.",
+                            "인공지능 카메라가 연결된 상태이면 '참', 아니면 '거짓'으로 판단합니다.",
                         robotis_robotai_lite_ai_camera_if_detected:
-                            "AI 카메라의 LCD화면에 선택한 기호(사각형/화살표)가 표시되면 '참', 아니면 '거짓'으로 판단합니다.",
+                            "인공지능 카메라의 LCD화면에 선택한 기호(사각형/화살표)가 표시되면 '참', 아니면 '거짓'으로 판단합니다.",
 
                         robotis_robotai_lite_ai_camera_block_value_closest_to_center:
-                            'AI 카메라 화면 중앙과 가장 가까운 사각형의 X좌표/Y좌표/너비/높이/학습ID',
+                            '인공지능 카메라 화면 중앙과 가장 가까운 사각형의 X좌표/Y좌표/너비/높이/학습번호',
                         robotis_robotai_lite_ai_camera_arrow_value_closest_to_center:
-                            'AI 카메라 화면 중앙과 가장 가까운 화살표의 시작점X좌표/시작점Y좌표/끝점X좌표/끝점Y좌표/학습ID',
+                            '인공지능 카메라 화면 중앙과 가장 가까운 화살표의 시작점X좌표/시작점Y좌표/끝점X좌표/끝점Y좌표/학습번호',
                         robotis_robotai_lite_ai_camera_number_of_learned_id:
-                            'AI 카메라가 학습한 ID의 갯수',
+                            '인공지능 카메라가 학습한 번호의 갯수',
                         robotis_robotai_lite_ai_camera_block_value_of_id:
-                            'AI 카메라가 감지한 사각형중 지정한 ID의 사각형의 X좌표/Y좌표/너비/높이',
+                            '인공지능 카메라가 감지한 사각형중 지정한 번호의 사각형의 X좌표/Y좌표/너비/높이',
                         robotis_robotai_lite_ai_camera_arrow_value_of_id:
-                            'AI 카메라가 감지한 화살표중 지정한 ID의 화살표의 시작점X좌표/시작점Y좌표/끝점X좌표/끝점Y좌표',
+                            '인공지능 카메라가 감지한 화살표중 지정한 번호의 화살표의 시작점X좌표/시작점Y좌표/끝점X좌표/끝점Y좌표',
 
                         robotis_robotai_lite_ai_camera_if_learned_id:
-                            "AI 카메라가 지정한 ID인 데이터를 학습하였으면 '참', 아니면 '거짓'으로 판단합니다.",
+                            "인공지능 카메라가 지정한 번호인 데이터를 학습하였으면 '참', 아니면 '거짓'으로 판단합니다.",
                         robotis_robotai_lite_ai_camera_if_detected_id_type:
-                            "AI 카메라가 지정한 ID인 지정한 데이터(사각형/화살표)를 학습하였으면 '참', 아니면 '거짓'으로 판단합니다.",
+                            "인공지능 카메라가 지정한 번호인 지정한 데이터(사각형/화살표)를 학습하였으면 '참', 아니면 '거짓'으로 판단합니다.",
 
-                        // AI 카메라 제어
-                        robotis_robotai_lite_ai_camera_set_mode: 'AI 카메라의 모드를 설정',
+                        // 인공지능 카메라 제어
+                        robotis_robotai_lite_ai_camera_set_mode: '인공지능 카메라의 모드를 설정',
                         robotis_robotai_lite_ai_camera_print_custom_text:
-                            'AI 카메라 화면의 지정한 위치에 지정한 문구 출력\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120',
+                            '인공지능 카메라 화면의 지정한 위치에 지정한 문구 출력\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120',
                         robotis_robotai_lite_ai_camera_clear_custom_text:
-                            'AI 카메라 화면에 표시한 모든 문구 지우기',
+                            '인공지능 카메라 화면에 표시한 모든 문구 지우기',
                     },
                     Blocks: {
                         robotis_red: '빨강',
@@ -1113,7 +1113,7 @@ let camera_id_for_use = 0;
                         robotis_ai_camera_center_block_center_y: '중심 Y좌표',
                         robotis_ai_camera_center_block_width: '너비',
                         robotis_ai_camera_center_block_height: '높이',
-                        robotis_ai_camera_center_leared_id: '학습ID',
+                        robotis_ai_camera_center_leared_id: '학습번호',
                         robotis_ai_camera_center_arrow_origin_x: '시작점 X좌표',
                         robotis_ai_camera_center_arrow_origin_y: '시작점 Y좌표',
                         robotis_ai_camera_center_arrow_target_x: '끝점 X좌표',
@@ -1240,7 +1240,7 @@ let camera_id_for_use = 0;
                         robotis_robotai_lite_ai_camera_if_detected_id_type:
                             'AI Camera: If learned %2 data with ID %1',
 
-                        // AI 카메라 제어
+                        // 인공지능 카메라 제어
                         robotis_robotai_lite_ai_camera_set_mode: 'AI Camera: Set mode to %1 %2',
                         robotis_robotai_lite_ai_camera_print_custom_text:
                             'AI Camera: Display %3 at screen position (%1, %2) %4',
@@ -1397,7 +1397,7 @@ let camera_id_for_use = 0;
                         robotis_robotai_lite_ai_camera_if_detected_id_type:
                             "If the AI camera has learned the specified data (rectangle/arrow) of the specified ID, it is determined as 'true'; otherwise, 'false'.",
 
-                        // AI 카메라 제어
+                        // 인공지능 카메라 제어
                         robotis_robotai_lite_ai_camera_set_mode: 'Set the mode of the AI camera',
                         robotis_robotai_lite_ai_camera_print_custom_text:
                             'Print the specified text at the specified position on the AI camera screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120',
