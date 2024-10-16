@@ -5985,10 +5985,17 @@ Entry.Robotis_rb_koala.getBlocks = function() {
                 var x = script.getNumberValue('X', script);
                 var y = script.getNumberValue('Y', script);
                 var text = script.getStringValue('TEXT', script);
-                var text_len = text.length;
                 var data_buf = [];
                 var i = 0;
 
+                // Encode the text as UTF-8
+                let encoder = new TextEncoder();
+                let utf8Array = encoder.encode(text);
+
+                // utf8Array is now a Uint8Array containing the UTF-8 bytes of the text
+                let text_len = utf8Array.length;
+
+                if (text_len > 45) text_len = 45;
                 
                 if (x < -160) x = 160;
                 else if (x > 160) x = 160;
@@ -6006,7 +6013,7 @@ Entry.Robotis_rb_koala.getBlocks = function() {
                 data_buf.push(0);
                 data_buf.push(0);
                 for (i = 0; i < text_len; i++) {
-                    data_buf.push(text[i]);
+                    data_buf.push(utf8Array[i]);
                 }
 
                 var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
