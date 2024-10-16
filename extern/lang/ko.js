@@ -5541,7 +5541,6 @@ Lang.Workspace = {
     confirm_firmware_hwlite_block_download: '펌웨어 다운로드',
     confirm_firmware_hwlite_block_usb_connect: 'USB 연결',
     confirm_firmware_hwlite_block_pass: '이미 설치함',
-    confirm_firmware_hwlite_block_usb_connect: 'USB 연결',
     progress_firmware_hwlite_title: '펌웨어 설치',
     progress_firmware_hwlite_step1_title: 'USB 연결 확인',
     progress_firmware_hwlite_step1_content1: 'USB로 기기와 PC를 연결하고 아래 버튼을 눌러 주세요.',
