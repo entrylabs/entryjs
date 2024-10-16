@@ -1,7 +1,7 @@
 'use strict';
 
 Entry.ProboTechnic = {
-    id: ['FA.1', 'FA.2'],
+    id: ['63.2', '63.3'], // 파워: 63.2, 일반: 63.3
     name: 'ProboTechnic',
     url: 'https://www.aluxonline.com',
     imageName: 'ProboConnect.png',
