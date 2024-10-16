@@ -5436,8 +5436,7 @@ Lang.Workspace = {
     progress_firmware_hwlite_button_install: 'Install firmware',
     progress_firmware_hwlite_button_connect_device: 'Connect device',
     progress_firmware_hwlite_button_retry: 'Retry',
-    usbconnect_fail_alert:
-        "기기 연결에 실패했습니다. 연결 상태를 확인하고 '다시 선택'을 눌러 주세요.",
+    usbconnect_fail_alert: "USB connection failed. Check the connection status and click 'Retry'.",
     select_hwlite_block_duplicated: 'Please select only one hardware device.',
     select_hwlite_block_none: 'Please select the hardware device to connect.',
     select_firmware_hwlite_title: 'Download Firmware',
