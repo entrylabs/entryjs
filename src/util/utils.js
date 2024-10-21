@@ -2108,8 +2108,9 @@ Entry.Utils.stopProjectWithToast = _throttle(
         }
 
         if (error) {
-            error.message = `${message}: ${error.message}`;
-            throw error;
+            const newError = new Error(`${message}: ${error.message}`);
+            newError.stack = error.stack;
+            throw newError;
         }
 
         throw new Error(message);
