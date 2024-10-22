@@ -192,8 +192,8 @@ const EVENT_INTERVAL = 150;
             this.url = 'http://microbit.org/ko/';
             this.imageName = 'microbit2lite.png';
             this.title = {
-                en: 'Microbit',
-                ko: '마이크로비트',
+                en: 'Microbit V2',
+                ko: '마이크로비트 V2',
             };
             this.name = 'Microbit2lite';
             this.digitalPins = [

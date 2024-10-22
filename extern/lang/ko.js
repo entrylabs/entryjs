@@ -318,6 +318,7 @@ Lang.Blocks = {
     hardware_noti_not_installed: '프로그램 설치 없이 연결할 때',
     hardware_program_download: '연결 프로그램 다운로드',
     hardware_device_name_title: '연결한 하드웨어:',
+    hardware_device_name_title_robot: '연결한 로봇:',
     hardware_device_name_content: '없음',
     hardware_connected_noti: '하드웨어 연결 프로그램을\n확인해 주세요.',
     arduino_noti_text:
@@ -5541,7 +5542,6 @@ Lang.Workspace = {
     confirm_firmware_hwlite_block_download: '펌웨어 다운로드',
     confirm_firmware_hwlite_block_usb_connect: 'USB 연결',
     confirm_firmware_hwlite_block_pass: '이미 설치함',
-    confirm_firmware_hwlite_block_usb_connect: 'USB 연결',
     progress_firmware_hwlite_title: '펌웨어 설치',
     progress_firmware_hwlite_step1_title: 'USB 연결 확인',
     progress_firmware_hwlite_step1_content1: 'USB로 기기와 PC를 연결하고 아래 버튼을 눌러 주세요.',
