@@ -350,7 +350,7 @@ Entry.ZumiMini.getBlocks = function() {
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                { type: 'Indicator', img: 'block_icon/zumiMini/led.svg', size: 14 },
+                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 14 },
             ],
             def: {
                 params: ['BLUE', 'ON', null],
@@ -361,7 +361,7 @@ Entry.ZumiMini.getBlocks = function() {
                 ACTION: 1,
             },
             class: "base",
-            //isNotFor: ['zumi_mini'],
+            isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
 
                 const Z_WAIT = 0;
@@ -467,7 +467,7 @@ Entry.ZumiMini.getBlocks = function() {
             params: [
                 {
                     type: "Indicator",
-                    img: "block_icon/zumiMini/motion_stop.svg",
+                    img: 'block_icon/hardware_icon.svg',
                     size: 14,
                 }
             ],
@@ -475,7 +475,7 @@ Entry.ZumiMini.getBlocks = function() {
                 type: "motion_stop"
             },
             class: "base",
-            //isNotFor: ['zumi_mini'],
+            isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
 
                 const Z_WAIT = 0;
@@ -593,7 +593,7 @@ Entry.ZumiMini.getBlocks = function() {
                 },               
                 {
                     type: "Indicator",
-                    img: "block_icon/zumiMini/move_straight.svg",
+                    img: 'block_icon/hardware_icon.svg',
                     size: 14
                 },
             ],
@@ -607,7 +607,7 @@ Entry.ZumiMini.getBlocks = function() {
                 DIST: 2,
             },
             class: "base",
-            //isNotFor: ['zumi_mini'],
+            isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
 
                 const Z_WAIT = 0;
@@ -737,7 +737,7 @@ Entry.ZumiMini.getBlocks = function() {
                 },
                 {
                     type: "Indicator",
-                    img: "block_icon/zumiMini/line_infinite.svg",
+                    img: 'block_icon/hardware_icon.svg',
                     size: 14,
                 },
             ],
@@ -749,7 +749,7 @@ Entry.ZumiMini.getBlocks = function() {
                 SPD: 0,
             },
             class: "base",
-            //isNotFor: ['zumi_mini'],
+            isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
 
                 const COMMAND_TRACE_INFINITE = 30;
@@ -800,7 +800,7 @@ Entry.ZumiMini.getBlocks = function() {
                 },              
                 {
                     type: "Indicator",
-                    img: "block_icon/zumiMini/go_infinite.svg",
+                    img: 'block_icon/hardware_icon.svg',
                     size: 14,
                 },
             ],
@@ -813,7 +813,7 @@ Entry.ZumiMini.getBlocks = function() {
                 SPD: 1,
             },
             class: "base",
-            //isNotFor: ['zumi_mini'],
+            isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
 
                 const COMMAND_GO_INFINITE = 29;
@@ -864,7 +864,7 @@ Entry.ZumiMini.getBlocks = function() {
                 },
                 {
                     type: "Indicator",
-                    img: "block_icon/zumiMini/line_dist.svg",
+                    img: 'block_icon/hardware_icon.svg',
                     size: 14
                 },
             ],
@@ -877,7 +877,7 @@ Entry.ZumiMini.getBlocks = function() {
                 DIST: 1,
             },
             class: "base",
-            //isNotFor: ['zumi_mini'],
+            isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
 
                 const Z_WAIT = 0;
@@ -1013,7 +1013,7 @@ Entry.ZumiMini.getBlocks = function() {
                 },
                 {
                     type: "Indicator",
-                    img: "block_icon/zumiMini/move_turn.svg",
+                    img: 'block_icon/hardware_icon.svg',
                     size: 14
                 },
             ],
@@ -1027,7 +1027,7 @@ Entry.ZumiMini.getBlocks = function() {
                 DEG: 2,
             },
             class: "base",
-            //isNotFor: ['zumi_mini'],
+            isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
 
                 const Z_WAIT = 0;
@@ -1146,7 +1146,7 @@ Entry.ZumiMini.getBlocks = function() {
             params: [
                 {
                     type: "Indicator",                
-                    img: "block_icon/zumiMini/gogo.svg",
+                    img: 'block_icon/hardware_icon.svg',
                     size: 14
                 }
             ],
@@ -1154,7 +1154,7 @@ Entry.ZumiMini.getBlocks = function() {
                 type: "go_forward"
             },
             class: "base",
-            //isNotFor: ['zumi_mini'],
+            isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
                 
                 const Z_WAIT = 0;
@@ -1245,7 +1245,7 @@ Entry.ZumiMini.getBlocks = function() {
             params: [
                 {
                     type: "Indicator",
-                    img: "block_icon/zumiMini/go_back.svg",
+                    img: 'block_icon/hardware_icon.svg',
                     size: 14
                 }
             ],
@@ -1253,7 +1253,7 @@ Entry.ZumiMini.getBlocks = function() {
                 type: "go_back"
             },
             class: "base",
-            //isNotFor: ['zumi_mini'],
+            isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
 
                 const Z_WAIT = 0;
@@ -1342,7 +1342,7 @@ Entry.ZumiMini.getBlocks = function() {
             params: [
                 {
                     type: "Indicator",
-                    img: "block_icon/zumiMini/turn_left.svg",
+                    img: 'block_icon/hardware_icon.svg',
                     size: 14
                 }
             ],
@@ -1350,7 +1350,7 @@ Entry.ZumiMini.getBlocks = function() {
                 type: "turn_left"
             },
             class: "base",
-            //isNotFor: ['zumi_mini'],
+            isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
 
                 const Z_WAIT = 0;
@@ -1441,7 +1441,7 @@ Entry.ZumiMini.getBlocks = function() {
             params: [
                 {
                     type: "Indicator",
-                    img: "block_icon/zumiMini/turn_right.svg",
+                    img: 'block_icon/hardware_icon.svg',
                     size: 14
                 }
             ],
@@ -1449,7 +1449,7 @@ Entry.ZumiMini.getBlocks = function() {
                 type: "turn_right"
             },
             class: "base",
-            //isNotFor: ['zumi_mini'],
+            isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
 
                 const Z_WAIT = 0;
@@ -1541,7 +1541,7 @@ Entry.ZumiMini.getBlocks = function() {
             params: [
                 {
                     type: "Indicator",
-                    img: "block_icon/zumiMini/go_until.svg",
+                    img: 'block_icon/hardware_icon.svg',
                     size: 14
                 }
             ],
@@ -1549,7 +1549,7 @@ Entry.ZumiMini.getBlocks = function() {
                 type: "going_forward_until_sensing"
             },
             class: "base",
-            //isNotFor: ['zumi_mini'],
+            isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
 
                 const Z_WAIT = 0;
@@ -1638,7 +1638,7 @@ Entry.ZumiMini.getBlocks = function() {
             params: [
                 {
                     type: "Indicator", 
-                    img: "block_icon/zumiMini/line_until.svg",
+                    img: 'block_icon/hardware_icon.svg',
                     size: 14,
                 }
             ],
@@ -1646,7 +1646,7 @@ Entry.ZumiMini.getBlocks = function() {
                 type: "following_line_until_sensing"
             },
             class: "base",
-            //isNotFor: ['zumi_mini'],
+            isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
 
                 const Z_WAIT = 0;
@@ -1747,7 +1747,7 @@ Entry.ZumiMini.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/zumiMini/front_sensor.svg',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 14,
                 },
             ],
@@ -1759,7 +1759,7 @@ Entry.ZumiMini.getBlocks = function() {
                 DIR: 0,
             },
             class: 'output',
-            //isNotFor: ['zumi_mini'],
+            isNotFor: ['zumi_mini'],
             func: function(sprite, script) {
                 const sen = script.getStringField('DIR', script);
                 return Entry.hw.portData.inputData.irSensor[sen];
@@ -1785,7 +1785,7 @@ Entry.ZumiMini.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/zumiMini/bottom_sensor.svg',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 14,
                 },
             ],
@@ -1797,7 +1797,7 @@ Entry.ZumiMini.getBlocks = function() {
                 B_DIR: 0,
             },
             class: 'output',
-            //isNotFor: ['zumi_mini'],
+            isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
                 const sen = script.getStringField('B_DIR', script);
                 return Entry.hw.portData.inputData.irSensor[sen];
@@ -1812,7 +1812,7 @@ Entry.ZumiMini.getBlocks = function() {
             params: [               
                 {
                     type: 'Indicator',
-                    img: 'block_icon/zumiMini/button_input.svg',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1820,7 +1820,7 @@ Entry.ZumiMini.getBlocks = function() {
                 type: 'button_input',
             },           
             class: 'output',
-            //isNotFor: ['zumi_mini'],
+            isNotFor: ['zumi_mini'],
             func: function (sprite, script) {                
                 
                 var bStat =  Entry.hw.portData.inputData.euler['ROLL'];
@@ -1853,7 +1853,7 @@ Entry.ZumiMini.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/zumiMini/face_detector.svg',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 14,
                 },
             ],
@@ -1865,7 +1865,7 @@ Entry.ZumiMini.getBlocks = function() {
                 PARAM: 0,
             },
             class: 'output',
-            //isNotFor: ['zumi_mini'],
+            isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
                 
                 const REQUEST_FACE_DETECTION = 0x01;
@@ -1899,7 +1899,7 @@ Entry.ZumiMini.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/zumiMini/cat_detector.svg',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 14,
                 },
             ],
@@ -1911,7 +1911,7 @@ Entry.ZumiMini.getBlocks = function() {
                 PARAM: 0,
             },
             class: 'output',
-            //isNotFor: ['zumi_mini'],
+            isNotFor: ['zumi_mini'],
             func: function (sprite, script) {           
                 
                 const REQUEST_USER_DEFINED = 0x10;
@@ -1946,7 +1946,7 @@ Entry.ZumiMini.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/zumiMini/color_detector.svg',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 14,
                 },
             ],
@@ -1958,7 +1958,7 @@ Entry.ZumiMini.getBlocks = function() {
                 PARAM: 0,
             },
             class: 'output',
-            //isNotFor: ['zumi_mini'],
+            isNotFor: ['zumi_mini'],
             func: function (sprite, script) { 
 
                 const REQUEST_COLOR_DETECTION = 0x02;
@@ -2002,7 +2002,7 @@ Entry.ZumiMini.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/zumiMini/april_detector.svg',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 14,
                 },
             ],
@@ -2014,7 +2014,7 @@ Entry.ZumiMini.getBlocks = function() {
                 A_INFO: 0,
             },
             class: 'output',
-            //isNotFor: ['zumi_mini'],
+            isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
 
                 const REQUEST_APRIL_DETECTION = 0x04;
@@ -2062,7 +2062,7 @@ Entry.ZumiMini.getBlocks = function() {
                 EULER: 0,
             },
             class: 'output',
-            //isNotFor: ['zumi_mini'],
+            isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
 
                 const REQUEST_IMU_DETECTION = 0x08;
@@ -2092,7 +2092,7 @@ Entry.ZumiMini.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/zumiMini/screen_toggle.svg',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 14,
                 },
             ],
@@ -2104,7 +2104,7 @@ Entry.ZumiMini.getBlocks = function() {
                 TYPE: 0,
             },
             class: 'base',
-            //isNotFor: ['zumi_mini'],
+            isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
 
                 const COMMAND_SCREEN_TOGGLE = 240;
@@ -2150,7 +2150,7 @@ Entry.ZumiMini.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/zumiMini/emotion.svg',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 14,
                 },
             ],
@@ -2162,7 +2162,7 @@ Entry.ZumiMini.getBlocks = function() {
                 TYPE: 0,
             },
             class: 'base',
-            //isNotFor: ['zumi_mini'],
+            isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
 
                 const COMMAND_EMOTION_CHANGE = 241;
@@ -2237,7 +2237,7 @@ Entry.ZumiMini.getBlocks = function() {
                 TYPE: 0,
             },
             class: 'base',
-            //isNotFor: ['zumi_mini'],
+            isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
 
                 const COMMAND_PLAY_SOUND = 242;
@@ -2314,7 +2314,7 @@ Entry.ZumiMini.getBlocks = function() {
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                { type: 'Indicator', img: 'block_icon/zumiMini/led.svg', size: 14 },
+                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 14 },
             ],
             def: {
                 params: ['WHITE', 'NORMAL', 'ON', null],
@@ -2326,7 +2326,7 @@ Entry.ZumiMini.getBlocks = function() {
                 ACTION: 2,
             },
             class: "base",
-            //isNotFor: ['zumi_mini'],
+            isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
 
                 const Z_WAIT = 0;
@@ -2490,7 +2490,7 @@ Entry.ZumiMini.getBlocks = function() {
                 },
                 {
                     type: "Indicator",
-                    img: "block_icon/zumiMini/motor_control.svg",
+                    img: 'block_icon/hardware_icon.svg',
                     size: 14
                 },
             ],
@@ -2504,7 +2504,7 @@ Entry.ZumiMini.getBlocks = function() {
                 SPD: 2,
             },
             class: "base",
-            //isNotFor: ['zumi_mini'],
+            isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
 
                 const Z_WAIT = 0;
