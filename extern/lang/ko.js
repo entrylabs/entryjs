@@ -318,6 +318,7 @@ Lang.Blocks = {
     hardware_noti_not_installed: '프로그램 설치 없이 연결할 때',
     hardware_program_download: '연결 프로그램 다운로드',
     hardware_device_name_title: '연결한 하드웨어:',
+    hardware_device_name_title_robot: '연결한 로봇:',
     hardware_device_name_content: '없음',
     hardware_connected_noti: '하드웨어 연결 프로그램을\n확인해 주세요.',
     arduino_noti_text:

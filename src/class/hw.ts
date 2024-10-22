@@ -345,7 +345,7 @@ export default class Hardware {
             return;
         }
         this.communicationType = this.hwModule.communicationType || 'auto';
-        Entry.block.changeBlockText('hardware_device_name_content', this.hwModule.title.ko);
+        this.setDeviceNameContent(true);
         this._banClassAllHardware();
         Entry.dispatchEvent('hwChanged');
 
@@ -360,6 +360,23 @@ export default class Hardware {
             Entry.dispatchEvent('openHardWareDownloadModal');
         } else {
             this.popupHelper.show('hwDownload', true);
+        }
+    }
+
+    // INFO: 블록메뉴의 '연결한 하드웨어:' 블럭의 값을 세팅하는 함수.
+    // setName이 true이면 연결된 하드웨어명을, false이면 기본값(없음)으로 세팅한다.
+    setDeviceNameContent(setName: boolean) {
+        const deviceName = setName
+            ? this.hwModule.title[Lang.type]
+            : Lang.Blocks.hardware_device_name_content;
+        console.log('deviceName : ', deviceName);
+        if (this.hwModule?.hasPracticalCourse && EntryStatic.isPracticalCourse) {
+            Entry.block.changeBlockText('hardware_device_name_content_sensor', deviceName);
+            Entry.block.changeBlockText('hardware_device_name_content_motor', deviceName);
+            Entry.block.changeBlockText('hardware_device_name_content_led', deviceName);
+            Entry.block.changeBlockText('hardware_device_name_content_melody', deviceName);
+        } else {
+            Entry.block.changeBlockText('hardware_device_name_content', deviceName);
         }
     }
 
@@ -596,10 +613,7 @@ export default class Hardware {
             Entry.propertyPanel && Entry.propertyPanel.removeMode('hw');
             this.currentDeviceKey = undefined;
             this.hwModule = undefined;
-            Entry.block.changeBlockText(
-                'hardware_device_name_content',
-                Lang.Blocks.hardware_device_name_content
-            );
+            this.setDeviceNameContent(false);
             Entry.dispatchEvent('hwChanged');
             Entry.toast.alert(
                 Lang.Msgs.hw_connection_termination_title,

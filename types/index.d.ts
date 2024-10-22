@@ -19,9 +19,7 @@ export declare interface ISkeleton {
     morph?: ['prev', 'next']; // for pebble
     dropdownHeight?: number; // for pebble
     path: (blockView: any) => string; // svg path string
-    box: (
-        blockView: any
-    ) => {
+    box: (blockView: any) => {
         offsetX: number;
         offsetY: number;
         width: number;
@@ -30,9 +28,7 @@ export declare interface ISkeleton {
         topFieldHeight?: number;
     };
     contentPos: (blockView: any) => Point;
-    magnets?: (
-        blockView: any
-    ) => {
+    magnets?: (blockView: any) => {
         next?: Point;
         previous?: Point;
         boolean?: {};
@@ -187,6 +183,7 @@ export declare interface EntryHardwareBlockModule extends EntryBlockModule {
     monitorTemplate?: UnknownAny;
     communicationType?: string;
     sendMessage?: (hw: import('../src/class/hw').default) => void;
+    hasPracticalCourse?: boolean;
 
     // 필수 함수 목록
     setZero: () => void;

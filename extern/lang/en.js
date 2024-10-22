@@ -587,6 +587,7 @@ Lang.Blocks = {
     hardware_noti_installed: 'When using connection program',
     hardware_noti_not_installed: 'When using web browser',
     hardware_device_name_title: 'Name:',
+    hardware_device_name_title_robot: 'Name:',
     hardware_device_name_content: 'None',
     hardware_program_download: 'Download program',
     hardware_connected_noti: 'Please check connection program.',

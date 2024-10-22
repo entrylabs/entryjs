@@ -448,6 +448,36 @@ function getBlocks() {
             ],
             events: {},
         },
+        hardware_device_name_title_robot: {
+            parent: 'hardware_device_name_title',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.hardware_device_name_title_robot,
+                    color: EntryStatic.colorSet.common.TEXT,
+                    align: 'center',
+                    fontWeight: '100',
+                },
+            ],
+            isNotFor: [
+                'arduinoConnect',
+                'arduinoConnected',
+                'arduinoLiteConnectFailed',
+                'arduinoLiteConnected',
+            ],
+        },
+        hardware_device_name_title_sensor: {
+            parent: 'hardware_device_name_title_robot',
+        },
+        hardware_device_name_title_motor: {
+            parent: 'hardware_device_name_title_robot',
+        },
+        hardware_device_name_title_led: {
+            parent: 'hardware_device_name_title_robot',
+        },
+        hardware_device_name_title_melody: {
+            parent: 'hardware_device_name_title_robot',
+        },
         hardware_device_name_content: {
             skeleton: 'basic_text',
             skeletonOptions: {
@@ -473,6 +503,18 @@ function getBlocks() {
                 'arduinoLiteConnected',
             ],
             events: {},
+        },
+        hardware_device_name_content_sensor: {
+            parent: 'hardware_device_name_content',
+        },
+        hardware_device_name_content_motor: {
+            parent: 'hardware_device_name_content',
+        },
+        hardware_device_name_content_led: {
+            parent: 'hardware_device_name_content',
+        },
+        hardware_device_name_content_melody: {
+            parent: 'hardware_device_name_content',
         },
         hardware_connected_noti: {
             skeleton: 'basic_text',
