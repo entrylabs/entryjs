@@ -369,7 +369,6 @@ export default class Hardware {
         const deviceName = setName
             ? this.hwModule.title[Lang.type]
             : Lang.Blocks.hardware_device_name_content;
-        console.log('deviceName : ', deviceName);
         if (this.hwModule?.hasPracticalCourse && EntryStatic.isPracticalCourse) {
             Entry.block.changeBlockText('hardware_device_name_content_sensor', deviceName);
             Entry.block.changeBlockText('hardware_device_name_content_motor', deviceName);
