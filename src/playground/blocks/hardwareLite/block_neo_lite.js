@@ -211,10 +211,10 @@
                 'neo_lite_auto_driving_sensor_start',
                 'neo_lite_auto_driving_stop',
                 // auto parking
-                'neo_lite_auto_parking_title',
-                'neo_lite_auto_parking_start',
+                // 'neo_lite_auto_parking_title',
+                // 'neo_lite_auto_parking_start',
                 // line tracer
-                'neo_lite_line_tracer_title',
+                // 'neo_lite_line_tracer_title',
                 'neo_lite_line_tracer_start',
                 'neo_lite_line_cross_move',
                 'neo_lite_line_cross_turn',
@@ -1080,7 +1080,7 @@
                         neo_lite_color_white: '흰색',
                         neo_lite_color_red: '빨강',
                         neo_lite_color_yellow: '노랑',
-                        neo_lite_color_green: '녹색',
+                        neo_lite_color_green: '초록',
                         neo_lite_color_blue: '파랑',
 
                         neo_lite_button_1: '버튼1',
@@ -2225,7 +2225,7 @@
                         SPEED: 0,
                         DURATION: 1,
                     },
-                    class: 'neo_lite_line_tracer',
+                    class: 'neo_lite_auto_driving',
                     isNotFor: ['NeoLite'],
                     func: (sprite, script) => {
                         if (!script.exec_phase) {
@@ -2310,7 +2310,7 @@
                     paramsKeyMap: {
                         COUNT: 0,
                     },
-                    class: 'neo_lite_line_tracer',
+                    class: 'neo_lite_auto_driving',
                     isNotFor: ['NeoLite'],
                     func: (sprite, script) => {
                         if (!script.exec_phase) {
@@ -2360,7 +2360,7 @@
                     paramsKeyMap: {
                         DIRECTION: 0,
                     },
-                    class: 'neo_lite_line_tracer',
+                    class: 'neo_lite_auto_driving',
                     isNotFor: ['NeoLite'],
                     func: (sprite, script) => {
                         if (!script.exec_phase) {
@@ -2392,7 +2392,7 @@
                         type: 'neo_lite_line_cross_reached',
                     },
                     paramsKeyMap: {},
-                    class: 'neo_lite_line_tracer',
+                    class: 'neo_lite_auto_driving',
                     isNotFor: ['NeoLite'],
                     func: (sprite, script) => {
                         const sensorData = this.sensorValues;
