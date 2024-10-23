@@ -476,7 +476,7 @@ let camera_id_for_use = 0;
                         robotis_robotai_lite_securitybot_alert: '보안 로봇 부정적 행동하기 %1',
 
                         robotis_robotai_lite_petbot_happy: '반려 로봇 행복한 행동하기 %1',
-                        robotis_robotai_lite_petbot_sad: '반려 로봇 화난 행동하기 %1',      
+                        robotis_robotai_lite_petbot_sad: '반려 로봇 화난 행동하기 %1',
 
                         robotis_robotai_lite_farmbot_init: '스마트팜 로봇 초기화 %1',
                         robotis_robotai_lite_farmbot_seek: '농작물 찾기 %1',
@@ -486,7 +486,7 @@ let camera_id_for_use = 0;
                         // 값 블록
                         robotis_robotai_lite_cm_ir_value: '%1 적외선센서 값',
                         robotis_robotai_lite_cm_ir_compare: '%1 적외선센서 값이 %2 보다 %3',
-                        robotis_robotai_lite_detectFrontObj: '적외선센서의 %1에 물체가 있으면', // 거리센서를 사용하지 않을 경우
+                        robotis_robotai_lite_detectFrontObj: '적외선센서의 %1에 물체가 있으면',
                         robotis_robotai_lite_cm_btn_value: '제어기의 %1 버튼을 클릭했을때',
                         robotis_robotai_lite_cm_joystick_value:
                             '제어기의 노랑 조이스틱 위치가 %1 이면',
@@ -548,8 +548,10 @@ let camera_id_for_use = 0;
                             '%1 모터 %2 속도로 %3 바퀴 %4으로 회전 %5',
 
                         // ai_camera 값 블록
-                        robotis_robotai_lite_ai_camera_connection_status: '인공지능 카메라가 %1이면',
-                        robotis_robotai_lite_ai_camera_if_detected: '인공지능 카메라에 %1 이/가 표시되면',
+                        robotis_robotai_lite_ai_camera_connection_status:
+                            '인공지능 카메라가 %1이면',
+                        robotis_robotai_lite_ai_camera_if_detected:
+                            '인공지능 카메라에 %1 이/가 표시되면',
 
                         robotis_robotai_lite_ai_camera_block_value_closest_to_center:
                             '인공지능 카메라가 인식한 %1의 %2',
@@ -7342,7 +7344,7 @@ let camera_id_for_use = 0;
                         // Encode the text as UTF-8
                         let encoder = new TextEncoder();
                         let utf8Array = encoder.encode(text);
-        
+
                         // utf8Array is now a Uint8Array containing the UTF-8 bytes of the text
                         let text_len = utf8Array.length;
 
