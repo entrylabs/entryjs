@@ -7325,11 +7325,11 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     type: 'Dropdown',
                     options: [
                         [Lang.Blocks.robotis_huskylens_mode_face_recognition, '0'],
+                        [Lang.Blocks.robotis_huskylens_mode_expression_recognition, '9'],
                         [Lang.Blocks.robotis_huskylens_mode_line_tracking, '3'],
                         [Lang.Blocks.robotis_huskylens_mode_color_recognition, '4'],
                         [Lang.Blocks.robotis_huskylens_mode_tag_recognition, '5'],
                         [Lang.Blocks.robotis_huskylens_mode_object_classification, '6'],
-                        [Lang.Blocks.robotis_huskylens_mode_expression_recognition, '9'],
                     ],
                     value: '0',
                     fontSize: 11,
