@@ -472,11 +472,11 @@ let camera_id_for_use = 0;
                         robotis_robotai_lite_drive_stop: '정지하기 %1',
 
                         robotis_robotai_lite_securitybot_init: '보안 로봇 초기화 %1',
-                        robotis_robotai_lite_securitybot_hi: '보안 로봇 위아래로 흔들기 %1',
-                        robotis_robotai_lite_securitybot_alert: '보안 로봇 좌우로 흔들기 %1',
+                        robotis_robotai_lite_securitybot_hi: '보안 로봇 긍정적 행동하기 %1',
+                        robotis_robotai_lite_securitybot_alert: '보안 로봇 부정적 행동하기 %1',
 
-                        robotis_robotai_lite_petbot_happy: '반려 로봇 웃음 %1',
-                        robotis_robotai_lite_petbot_sad: '반려 로봇 화남 %1',
+                        robotis_robotai_lite_petbot_happy: '반려 로봇 행복한 행동하기 %1',
+                        robotis_robotai_lite_petbot_sad: '반려 로봇 화난 행동하기 %1',      
 
                         robotis_robotai_lite_farmbot_init: '스마트팜 로봇 초기화 %1',
                         robotis_robotai_lite_farmbot_seek: '농작물 찾기 %1',
@@ -512,7 +512,7 @@ let camera_id_for_use = 0;
                         robotis_robotai_lite_playRecord: '소리 %1번을 재생하기 %2',
 
                         // LCD 제어
-                        robotis_robotai_lite_screen: '화면 표정을 %1 %2 (으)로 정하기 %3',
+                        robotis_robotai_lite_screen: '화면을 %1 %2 (으)로 정하기 %3',
                         robotis_robotai_lite_anim_screen:
                             '화면 애니메이션을 %1 %2 (으)로 정하기 %3',
                         robotis_robotai_lite_icon_screen_food_plant:
@@ -548,32 +548,32 @@ let camera_id_for_use = 0;
                             '%1 모터 %2 속도로 %3 바퀴 %4으로 회전 %5',
 
                         // ai_camera 값 블록
-                        robotis_robotai_lite_ai_camera_connection_status: '인공지능 카메라: %1이면',
-                        robotis_robotai_lite_ai_camera_if_detected: '인공지능 카메라: %1 이/가 표시되면',
+                        robotis_robotai_lite_ai_camera_connection_status: '인공지능 카메라가 %1이면',
+                        robotis_robotai_lite_ai_camera_if_detected: '인공지능 카메라에 %1 이/가 표시되면',
 
                         robotis_robotai_lite_ai_camera_block_value_closest_to_center:
-                            '인공지능 카메라: 화면 중앙과 가까운 %1의 %2',
+                            '인공지능 카메라가 인식한 %1의 %2',
                         robotis_robotai_lite_ai_camera_arrow_value_closest_to_center:
-                            '인공지능 카메라: 화면 중앙과 가까운 화살표의 %1',
+                            '인공지능 카메라가 인식한 화살표의 %1',
                         robotis_robotai_lite_ai_camera_number_of_learned_id:
-                            '인공지능 카메라: 학습한 번호의 갯수',
+                            '인공지능 카메라가 학습한 클래스의 갯수',
                         robotis_robotai_lite_ai_camera_block_value_of_id:
-                            '인공지능 카메라: 감지된 번호가 %1인 %2의 %3',
+                            '인공지능 카메라가 감지한 클래스가 %1인 %2의 %3',
                         robotis_robotai_lite_ai_camera_arrow_value_of_id:
-                            '인공지능 카메라: 감지된 번호가 %1인 화살표의 %2',
+                            '인공지능 카메라가 감지한 클래스가 %1인 화살표의 %2',
 
                         robotis_robotai_lite_ai_camera_if_learned_id:
-                            '인공지능 카메라: 번호가 %1인 데이터를 학습하였으면',
+                            '인공지능 카메라가 클래스가 %1인 데이터를 학습하였으면',
                         robotis_robotai_lite_ai_camera_if_detected_id_type:
-                            '인공지능 카메라: 번호가 %1인 %2데이터를 인식하였으면',
+                            '인공지능 카메라가 클래스가 %1인 %2데이터를 인식하였으면',
 
                         // 인공지능 카메라 제어
                         robotis_robotai_lite_ai_camera_set_mode:
-                            '인공지능 카메라: 모드를 %1(으)로 설정 %2',
+                            '인공지능 카메라의 작동 방식을 %1(으)로 설정 %2',
                         robotis_robotai_lite_ai_camera_print_custom_text:
-                            '인공지능 카메라: 화면 위치 (%1,%2)에 %3를 보여주기%4',
+                            '인공지능 카메라의 화면 위치 (%1,%2)에 %3를 보여주기%4',
                         robotis_robotai_lite_ai_camera_clear_custom_text:
-                            '인공지능 카메라: 화면의 글 지우기 %1',
+                            '인공지능 카메라의 화면의 글 지우기 %1',
                     },
                     Helper: {
                         // 주행 제어
@@ -595,7 +595,7 @@ let camera_id_for_use = 0;
                         robotis_robotai_lite_drive_stop: '로봇아이 정지하기',
 
                         robotis_robotai_lite_securitybot_init:
-                            '보안 로봇을 초기화합니다. 두 모터를 관절모드로 설정하고 카메라를 얼굴인식모드로 설정합니다.',
+                            '보안 로봇을 초기화합니다. 두 모터를 관절모드로 설정하고 카메라를 얼굴 인식모드로 설정합니다.',
                         robotis_robotai_lite_securitybot_hi:
                             '보안 로봇이 "사용자를 확인하였습니다." 문구를 화면에 표시하고 팔을 위아래로 흔듭니다.',
                         robotis_robotai_lite_securitybot_alert:
@@ -696,9 +696,9 @@ let camera_id_for_use = 0;
                             "인공지능 카메라의 LCD화면에 선택한 기호(사각형/화살표)가 표시되면 '참', 아니면 '거짓'으로 판단합니다.",
 
                         robotis_robotai_lite_ai_camera_block_value_closest_to_center:
-                            '인공지능 카메라 화면 중앙과 가장 가까운 사각형의 X좌표/Y좌표/너비/높이/학습번호',
+                            '인공지능 카메라 화면 중앙과 가장 가까운 사각형의 X좌표/Y좌표/너비/높이/클래스',
                         robotis_robotai_lite_ai_camera_arrow_value_closest_to_center:
-                            '인공지능 카메라 화면 중앙과 가장 가까운 화살표의 시작점X좌표/시작점Y좌표/끝점X좌표/끝점Y좌표/학습번호',
+                            '인공지능 카메라 화면 중앙과 가장 가까운 화살표의 시작점X좌표/시작점Y좌표/끝점X좌표/끝점Y좌표/클래스',
                         robotis_robotai_lite_ai_camera_number_of_learned_id:
                             '인공지능 카메라가 학습한 번호의 갯수',
                         robotis_robotai_lite_ai_camera_block_value_of_id:
@@ -873,7 +873,7 @@ let camera_id_for_use = 0;
                         robotis_pitch: '앞뒤 회전각 (pitch)',
                         robotis_direction_forward: '전진방향',
                         robotis_direction_backward: '후진방향',
-                        robotis_stMotion1: '기본자세',
+                        robotis_stMotion1: '기본 자세',
                         robotis_stMotion2: '전진',
                         robotis_stMotion3: '우전진',
                         robotis_stMotion4: '좌전진',
@@ -1095,13 +1095,12 @@ let camera_id_for_use = 0;
 
                         robotis_connected: '연결',
                         robotis_disconnected: '없음',
-                        robotis_ai_camera_mode_face_recognition: '얼굴인식',
-                        robotis_ai_camera_mode_object_tracking: '물체추적',
-                        robotis_ai_camera_mode_object_recognition: '물체인식',
-                        robotis_ai_camera_mode_line_tracking: '라인인식',
-                        robotis_ai_camera_mode_color_recognition: '색상인식',
-                        robotis_ai_camera_mode_tag_recognition: '태그인식',
-                        robotis_ai_camera_mode_object_classification: '물체분류',
+                        robotis_ai_camera_mode_face_recognition: '얼굴 인식',
+                        robotis_ai_camera_mode_line_tracking: '라인 인식',
+                        robotis_ai_camera_mode_color_recognition: '색상 인식',
+                        robotis_ai_camera_mode_tag_recognition: '태그 인식',
+                        robotis_ai_camera_mode_object_classification: '사물 분류',
+                        robotis_ai_camera_mode_expression_recognition: '표정 인식',
                         robotis_ai_camera_target_face: '얼굴',
                         robotis_ai_camera_target_object: '사물',
                         robotis_ai_camera_target_color: '색상',
@@ -1113,7 +1112,7 @@ let camera_id_for_use = 0;
                         robotis_ai_camera_center_block_center_y: '중심 Y좌표',
                         robotis_ai_camera_center_block_width: '너비',
                         robotis_ai_camera_center_block_height: '높이',
-                        robotis_ai_camera_center_leared_id: '학습번호',
+                        robotis_ai_camera_center_leared_id: '클래스',
                         robotis_ai_camera_center_arrow_origin_x: '시작점 X좌표',
                         robotis_ai_camera_center_arrow_origin_y: '시작점 Y좌표',
                         robotis_ai_camera_center_arrow_target_x: '끝점 X좌표',
@@ -1785,6 +1784,7 @@ let camera_id_for_use = 0;
                         robotis_ai_camera_mode_color_recognition: 'Color recognition',
                         robotis_ai_camera_mode_tag_recognition: 'Tag recognition',
                         robotis_ai_camera_mode_object_classification: 'Object classification',
+                        robotis_ai_camera_mode_expression_recognition: 'Expression recognition',
                         robotis_ai_camera_target_block: 'Rectangle',
                         robotis_ai_camera_target_arrow: 'Arrow',
                         robotis_ai_camera_center_block_center_x: 'Center X',
@@ -7235,12 +7235,11 @@ let camera_id_for_use = 0;
                             type: 'Dropdown',
                             options: [
                                 [Lang.Blocks.robotis_ai_camera_mode_face_recognition, '0'],
-                                [Lang.Blocks.robotis_ai_camera_mode_object_tracking, '1'],
-                                [Lang.Blocks.robotis_ai_camera_mode_object_recognition, '2'],
                                 [Lang.Blocks.robotis_ai_camera_mode_line_tracking, '3'],
                                 [Lang.Blocks.robotis_ai_camera_mode_color_recognition, '4'],
                                 [Lang.Blocks.robotis_ai_camera_mode_tag_recognition, '5'],
                                 [Lang.Blocks.robotis_ai_camera_mode_object_classification, '6'],
+                                [Lang.Blocks.robotis_ai_camera_mode_expression_recognition, '9'],
                             ],
                             value: '0',
                             fontSize: 11,
