@@ -676,8 +676,6 @@ Lang.Blocks = {
     "dplay_analog_number_3": "A3",
     "dplay_analog_number_4": "A4",
     "dplay_analog_number_5": "A5",
-    
-    
     "ARDUINO_arduino_get_string_1": "신호",
     "ARDUINO_arduino_get_string_2": "의 글자 결괏값",
     "ARDUINO_arduino_send_1": "신호",
@@ -2858,7 +2856,6 @@ Lang.Menus = {
     "e_sensor": "E 센서보드",
     "e_sensor_board": "E 센서보드",
     "e_sensor_robot": "E 센서로봇",
-    "avatarbot": "avatarbot",
     "arduino": "아두이노",
     "arduinoext": "아두이노 Uno 확장모드",
     "arduinonano": "아두이노 Nano",
@@ -5885,10 +5882,6 @@ Lang.template = {
     "albert_clear_led": "Entry.Hamster.clearLed(' %1 ') %2",
     "albert_change_wheels_by": "%1 %2 %3",
     "albert_set_wheels_to": "%1 %2 %3",
-    
-    
-    
-    
     "arduino_text": "%1",
     "arduino_get_sensor_number": "%1  ",
     "arduino_get_port_number": "%1  ",

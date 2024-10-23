@@ -671,7 +671,6 @@ Lang.Blocks = {
     "dplay_analog_number_3": "A3",
     "dplay_analog_number_4": "A4",
     "dplay_analog_number_5": "A5",
-    
     "ARDUINO_arduino_get_string_1": "string result of signal",
     "ARDUINO_arduino_get_string_2": "",
     "ARDUINO_arduino_send_1": "Send signal",
@@ -2859,7 +2858,6 @@ Lang.Menus = {
     "e_sensor": "Eセンサーボード",
     "e_sensor_board": "Eセンサーボード",
     "e_sensor_robot": "Eセンサーロボット",
-    "avatarbot": "avatarbot",
     "arduino": "Arduino",
     "arduinoext": "ArduinoExt Uno",
     "arduinonano": "Arduino Nano",
@@ -5889,9 +5887,6 @@ Lang.template = {
     "albert_clear_led": "clear %1 led %2",
     "albert_change_wheels_by": "%1 %2 %3",
     "albert_set_wheels_to": "%1 %2 %3",
-    
-    
-    
     "arduino_text": "%1",
     "arduino_get_sensor_number": "%1  ",
     "arduino_get_port_number": "%1  ",

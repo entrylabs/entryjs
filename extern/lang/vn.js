@@ -2857,7 +2857,6 @@ Lang.Menus = {
     "e_sensor": "E Sensorboard",
     "e_sensor_board": "E Sensor-board",
     "e_sensor_robot": "E Sensor-robot",
-    "avatarbot": 'avatarbot',
     "arduino": "Arduino",
     "arduinoext": "ArduinoExt Uno",
     "arduinonano": "Arduino Nano",
@@ -5887,8 +5886,6 @@ Lang.template = {
     "albert_clear_led": "xóa %1 %2",
     "albert_change_wheels_by": "%1 %2 %3",
     "albert_set_wheels_to": "%1 %2 %3",
-    
-    
     "arduino_text": "%1",
     "arduino_get_sensor_number": "%1  ",
     "arduino_get_port_number": "%1  ",
