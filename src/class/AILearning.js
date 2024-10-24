@@ -412,10 +412,11 @@ function createDataTable(classes, name) {
         const [{ samples }] = classes;
         const [sample = {}] = samples || [];
         let data = sample.data;
+        data.id = data.id || data._id;
         if (typeof data === 'string') {
             data = JSON.parse(data);
         }
-        if (data && data.id && !DataTable.getSource(data.id)) {
+        if (data && data?.id && !DataTable.getSource(data?.id)) {
             DataTable.addSource(data, false);
         }
         return data;
