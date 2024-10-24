@@ -33,7 +33,6 @@ class NumberClassification {
     #fields = [];
     #predictField = [];
     #loadModel;
-    
     constructor(params = {}) {
         this.#view = new LearningView({ name: params.name || '', status: 0 });
         // 정지시 data 초기화.
