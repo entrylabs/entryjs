@@ -170,11 +170,11 @@ Entry.Neo = new (class Neo {
             'neo_auto_driving_sensor_start',
             'neo_auto_driving_stop',
             // auto parking
-            'neo_auto_parking_title',
-            'neo_auto_parking_start',
+            // 'neo_auto_parking_title',
+            // 'neo_auto_parking_start',
 
             // line tracer
-            'neo_line_tracer_title',
+            // 'neo_line_tracer_title',
             'neo_line_tracer_start',
             'neo_line_cross_move',
             'neo_line_cross_turn',
@@ -689,7 +689,7 @@ Entry.Neo = new (class Neo {
                     neo_color_white: '흰색',
                     neo_color_red: '빨강',
                     neo_color_yellow: '노랑',
-                    neo_color_green: '녹색',
+                    neo_color_green: '초록',
                     neo_color_blue: '파랑',
 
                     neo_button_1: '버튼1',
@@ -1830,7 +1830,7 @@ Entry.Neo = new (class Neo {
                     SPEED: 0,
                     DURATION: 1,
                 },
-                class: 'neo_line_tracer',
+                class: 'neo_auto_driving',
                 isNotFor: ['neo'],
                 func: (sprite, script) => {
                     if (!script.exec_phase) {
@@ -1913,7 +1913,7 @@ Entry.Neo = new (class Neo {
                 paramsKeyMap: {
                     COUNT: 0,
                 },
-                class: 'neo_line_tracer',
+                class: 'neo_auto_driving',
                 isNotFor: ['neo'],
                 func: (sprite, script) => {
                     if (!script.exec_phase) {
@@ -1963,7 +1963,7 @@ Entry.Neo = new (class Neo {
                 paramsKeyMap: {
                     DIRECTION: 0,
                 },
-                class: 'neo_line_tracer',
+                class: 'neo_auto_driving',
                 isNotFor: ['neo'],
                 func: (sprite, script) => {
                     if (!script.exec_phase) {
@@ -1995,7 +1995,7 @@ Entry.Neo = new (class Neo {
                     type: 'neo_line_cross_reached',
                 },
                 paramsKeyMap: {},
-                class: 'neo_line_tracer',
+                class: 'neo_auto_driving',
                 isNotFor: ['neo'],
                 func: (sprite, script) => {
                     const sensorData = Entry.hw.portData['sensor'];

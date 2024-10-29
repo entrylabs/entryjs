@@ -436,6 +436,9 @@ Entry.Robotis_rb_koala.setLanguage = function() {
                 robotis_moveRG2: "앉기",
                 robotis_moveRG3: "발버둥",
                 robotis_moveRG4: "발들기",
+                robotis_fast: '빠른',
+                robotis_normal: '보통',
+                robotis_slow: '느린',
                 robotis_stop: "정지",
                 robotis_roll: "좌우 회전각 (roll)",
                 robotis_pitch: "앞뒤 회전각 (pitch)",
@@ -966,6 +969,9 @@ Entry.Robotis_rb_koala.setLanguage = function() {
                 robotis_moveRG2: "Sit",
                 robotis_moveRG3: "Struggle",
                 robotis_moveRG4: "RaiseFeet",
+                robotis_fast: 'Fast',
+                robotis_normal: 'Normal',
+                robotis_slow: 'Slow',
                 robotis_stop: "Stop",
                 robotis_roll: "Left-right rotate angle (roll)",
                 robotis_pitch: "Forward-backward rotate angle (pitch)",
@@ -1560,7 +1566,7 @@ Entry.Robotis_rb_koala.getBlocks = function() {
                     leftSpeed = 127; // 속도제어 안함
                     rightSpeed = wheelSpeed;
                 } else {
-                    leftSpeed = wheelSpeed; // 속도제어 안함
+                    leftSpeed = wheelSpeed;
                     rightSpeed = wheelSpeed;
                 }
 
@@ -1721,7 +1727,7 @@ Entry.Robotis_rb_koala.getBlocks = function() {
                     type: 'Dropdown',
                     options: [
                         [Lang.Blocks.robotis_moveF, '1'],
-                        [Lang.Blocks.robotis_moveB, '-1'], //Lang.Blocks.robotis_common_green_color
+                        [Lang.Blocks.robotis_moveB, '-1'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -1881,10 +1887,9 @@ Entry.Robotis_rb_koala.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['느린', '1'],
-                        ['보통', '2'],
-                        ['빠른', '3'],
-
+                        [Lang.Blocks.robotis_slow, '1'],
+                        [Lang.Blocks.robotis_normal, '2'],
+                        [Lang.Blocks.robotis_fast, '3'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -3118,7 +3123,7 @@ Entry.Robotis_rb_koala.getBlocks = function() {
 
                 var data_sendqueue = [
                     [data_instruction, data_address, data_length, data_value],
-                    [3, 162, 1, 1]
+                    [Entry.Robotis_rb.INSTRUCTION.WRITE, 162, 1, 1]
                 ];
               
 
@@ -3296,7 +3301,7 @@ Entry.Robotis_rb_koala.getBlocks = function() {
 
                 var data_sendqueue = [
                     [data_instruction, data_address, data_length, data_value],
-                    [3, 162, 1, 1]
+                    [Entry.Robotis_rb.INSTRUCTION.WRITE, 162, 1, 1]
                 ];
               
 
@@ -4395,7 +4400,7 @@ Entry.Robotis_rb_koala.getBlocks = function() {
                         data_length,
                         data_value,
                     ],
-                    [3, 162, 1, 1]
+                    [Entry.Robotis_rb.INSTRUCTION.WRITE, 162, 1, 1]
                 ];
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
@@ -5980,10 +5985,17 @@ Entry.Robotis_rb_koala.getBlocks = function() {
                 var x = script.getNumberValue('X', script);
                 var y = script.getNumberValue('Y', script);
                 var text = script.getStringValue('TEXT', script);
-                var text_len = text.length;
                 var data_buf = [];
                 var i = 0;
 
+                // Encode the text as UTF-8
+                let encoder = new TextEncoder();
+                let utf8Array = encoder.encode(text);
+
+                // utf8Array is now a Uint8Array containing the UTF-8 bytes of the text
+                let text_len = utf8Array.length;
+
+                if (text_len > 45) text_len = 45;
                 
                 if (x < -160) x = 160;
                 else if (x > 160) x = 160;
@@ -6001,7 +6013,7 @@ Entry.Robotis_rb_koala.getBlocks = function() {
                 data_buf.push(0);
                 data_buf.push(0);
                 for (i = 0; i < text_len; i++) {
-                    data_buf.push(text[i]);
+                    data_buf.push(utf8Array[i]);
                 }
 
                 var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;

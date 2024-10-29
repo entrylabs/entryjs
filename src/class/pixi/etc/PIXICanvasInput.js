@@ -771,6 +771,7 @@ import * as PIXI from 'pixi.js';
 
             // add support for mobile
             const isMobile = typeof window.orientation !== 'undefined';
+            var hasHiddenFocus = false;
             if (
                 isMobile &&
                 !isChromeMobile &&
@@ -789,12 +790,23 @@ import * as PIXI from 'pixi.js';
                     (self._canvas ? self._canvas.offsetTop : 0)}px`;
                 input.style.width = self._width;
                 input.style.height = 0;
-                document.body.appendChild(input);
+                const form = document.createElement('form');
+                form.appendChild(input);
+                document.body.appendChild(form);
                 input.focus();
                 input.addEventListener(
                     'blur',
                     () => {
-                        self.blur(self);
+                        if (!hasHiddenFocus) {
+                            self.blur(self);
+                        }
+                    },
+                    false
+                );
+                input.addEventListener(
+                    'focus',
+                    () => {
+                        self.focus();
                     },
                     false
                 );
@@ -804,7 +816,9 @@ import * as PIXI from 'pixi.js';
 
             // move the real focus to the hidden input
             const hasSelection = self._selection[0] > 0 || self._selection[1] > 0;
+            hasHiddenFocus = true;
             self._hiddenInput.focus();
+            hasHiddenFocus = false;
             self._hiddenInput.selectionStart = hasSelection ? self._selection[0] : self._cursorPos;
             self._hiddenInput.selectionEnd = hasSelection ? self._selection[1] : self._cursorPos;
 

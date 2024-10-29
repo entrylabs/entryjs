@@ -152,7 +152,7 @@ Entry.AltinoLite.setLanguage = function() {
                 altino_lite_sound: '소리 %1 %2 %3',
                 altino_lite_steering_hex: '조향 %1%2',
                 altino_lite_steering: '조향 %1°%2',
-                altino_lite_ir_reset: '알티노 라이트 IR 센서 초기화',
+                altino_lite_ir_reset: '알티노 라이트 IR 센서 초기화%1',
             },
         },
         en: {
@@ -233,7 +233,7 @@ Entry.AltinoLite.setLanguage = function() {
                 altino_lite_sound: 'Sound %1 %2 %3',
                 altino_lite_steering_hex: 'Steering %1%2',
                 altino_lite_steering: 'Steering %1°%2',
-                altino_lite_ir_reset: 'Reset Altino lite IR Sensor',
+                altino_lite_ir_reset: 'Reset Altino lite IR Sensor%1',
             },
         },
     };
@@ -1416,8 +1416,6 @@ Entry.AltinoLite.getBlocks = function() {
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
 
-                // sq.rightWheel = 300;//script.getNumberValue('rightWheel');
-                // sq.leftWheel = 300;//script.getNumberValue('leftWheel');
                 sq.ir = 6;
                 return script.callReturn();
             },

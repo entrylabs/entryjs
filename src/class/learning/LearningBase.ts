@@ -55,7 +55,7 @@ class LearningBase {
 
     setTable() {
         const tableSource = DataTable.getSource(this.table.id);
-        if (this.table.fieldsInfo.length !== tableSource.fields.length) {
+        if (this.table?.fieldsInfo?.length !== tableSource?.fields?.length) {
             Entry.toast.alert(Lang.Msgs.warn, Lang.AiLearning.train_param_error);
             throw Error(Lang.AiLearning.train_param_error);
         }

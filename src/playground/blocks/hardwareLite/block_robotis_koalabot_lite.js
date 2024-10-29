@@ -159,106 +159,85 @@ let beat_per_minute = 75;
 let camera_id_for_use = 0;
 
 (function () {
-    Entry.RobotisRobotaiLite = new (class RobotisRobotaiLite {
+    Entry.RobotisKoalabotLite = new (class RobotisKoalabotLite {
         constructor() {
-            this.id = '070B01';
+            this.id = '070C01';
             this.url = 'http://www.robotis.com';
-            this.imageName = 'robotis_robotai_lite.png';
-            this.name = 'RobotisRobotaiLite';
+            this.imageName = 'robotis_koalabot_lite.png';
+            this.name = 'RobotisKoalabotLite';
             this.blockMenuBlocks = [
                 // 주행 제어
-                'robotis_robotai_lite_drive_simple',
-                'robotis_robotai_lite_drive_advanced',
-                'robotis_robotai_lite_drive_seperate',
-                'robotis_robotai_lite_drive_angle',
-                'robotis_robotai_lite_go_distance',
-                'robotis_robotai_lite_turn_angle',
-                'robotis_robotai_lite_follow_line',
-                'robotis_robotai_lite_stop_at_cross',
-                'robotis_robotai_lite_turn_at_line',
-                'robotis_robotai_lite_drive_stop',
-
-                'robotis_robotai_lite_securitybot_init',
-                'robotis_robotai_lite_securitybot_hi',
-                'robotis_robotai_lite_securitybot_alert',
-
-                'robotis_robotai_lite_petbot_happy',
-                'robotis_robotai_lite_petbot_sad',
-
-                'robotis_robotai_lite_farmbot_init',
-                'robotis_robotai_lite_farmbot_seek',
-                'robotis_robotai_lite_farmbot_plant_type',
-                'robotis_robotai_lite_farmbot_harvest_or_not_and_go',
+                'robotis_koalabot_lite_drive_simple',
+                'robotis_koalabot_lite_drive_advanced',
+                'robotis_koalabot_lite_drive_seperate',
+                'robotis_koalabot_lite_drive_angle',
+                'robotis_koalabot_lite_go_distance',
+                'robotis_koalabot_lite_turn_angle',
+                'robotis_koalabot_lite_follow_line',
+                'robotis_koalabot_lite_stop_at_cross',
+                'robotis_koalabot_lite_turn_at_line',
+                'robotis_koalabot_lite_drive_stop',
 
                 // 값 블록
-                'robotis_robotai_lite_cm_ir_value',
-                'robotis_robotai_lite_detectFrontObj',
-                'robotis_robotai_lite_cm_ir_compare',
-                'robotis_robotai_lite_cm_btn_value',
-                'robotis_robotai_lite_cm_joystick_value',
-                'robotis_robotai_lite_mic',
-                'robotis_robotai_lite_detectSound_compare',
-                'robotis_robotai_lite_imu',
-                'robotis_robotai_lite_roll_pitch',
-                'robotis_robotai_lite_environment_value',
-                'robotis_robotai_lite_line_cross_compare',
-                //'robotis_robotai_lite_distance_compare',
-                'robotis_robotai_lite_environment_compare',
-                'robotis_robotai_lite_dxl_value',
+                'robotis_koalabot_lite_cm_ir_value',
+                'robotis_koalabot_lite_cm_ir_compare',
+                'robotis_koalabot_lite_detectFrontObj',
+                'robotis_koalabot_lite_cm_btn_value',
+                'robotis_koalabot_lite_cm_joystick_value',
+                'robotis_koalabot_lite_mic',
+                'robotis_koalabot_lite_detectSound_compare',
+                'robotis_koalabot_lite_imu',
+                'robotis_koalabot_lite_roll_pitch',
+                'robotis_koalabot_lite_distance_value',
+                'robotis_koalabot_lite_distance_compare',
+                'robotis_koalabot_lite_dxl_value',
+                'robotis_koalabot_lite_line_cross_compare',
 
                 // 소리
-                'robotis_robotai_lite_scale_simple',
-                'robotis_robotai_lite_scale_advanced',
-                'robotis_robotai_lite_rest_simple',
-                'robotis_robotai_lite_rest_advanced',
-                'robotis_robotai_lite_beat_per_minute',
-                'robotis_robotai_lite_Hello',
-                'robotis_robotai_lite_effectSound',
-                'robotis_robotai_lite_record',
-                'robotis_robotai_lite_playRecord',
+                'robotis_koalabot_lite_scale_simple',
+                'robotis_koalabot_lite_scale_advanced',
+                'robotis_koalabot_lite_rest_simple',
+                'robotis_koalabot_lite_rest_advanced',
+                'robotis_koalabot_lite_beat_per_minute',
+                'robotis_koalabot_lite_Hello',
+                'robotis_koalabot_lite_effectSound',
+                'robotis_koalabot_lite_record',
+                'robotis_koalabot_lite_playRecord',
 
                 // LCD 제어
-                'robotis_robotai_lite_screen',
-                'robotis_robotai_lite_anim_screen',
-                'robotis_robotai_lite_icon_screen_food_plant',
-                'robotis_robotai_lite_icon_screen_animal_human',
-                'robotis_robotai_lite_icon_screen_object_tool',
-                'robotis_robotai_lite_icon_screen_vehicle_number',
-                'robotis_robotai_lite_text_screen',
-                'robotis_robotai_lite_text_screen_redraw',
-                'robotis_robotai_lite_pixel',
-                'robotis_robotai_lite_LCDColor',
-                'robotis_robotai_lite_LCD_Flash',
-                'robotis_robotai_lite_LCDBright',
+                'robotis_koalabot_lite_screen',
+                'robotis_koalabot_lite_anim_screen',
+                'robotis_koalabot_lite_icon_screen_food_plant',
+                'robotis_koalabot_lite_icon_screen_animal_human',
+                'robotis_koalabot_lite_icon_screen_object_tool',
+                'robotis_koalabot_lite_icon_screen_vehicle_number',
+                'robotis_koalabot_lite_text_screen',
+                'robotis_koalabot_lite_text_screen_redraw',
+                'robotis_koalabot_lite_pixel',
+                'robotis_koalabot_lite_LCDColor',
+                'robotis_koalabot_lite_LCDBright',
 
                 // LED 제어
-                'robotis_robotai_lite_cm_led',
-                'robotis_robotai_lite_cm_led_pattern',
+                'robotis_koalabot_lite_cm_led',
+                'robotis_koalabot_lite_cm_led_pattern',
 
-                // 다이나믹셀 제어
-                'robotis_robotai_lite_dxl_set_mode',
-                'robotis_robotai_lite_dxl_each_control',
-                'robotis_robotai_lite_dxl_set_position',
-                'robotis_robotai_lite_dxl_set_rotate',
-                'robotis_robotai_lite_dxl_set_multiturn_round',
+                // AI 카메라 값 블록
+                'robotis_koalabot_lite_ai_camera_connection_status',
+                'robotis_koalabot_lite_ai_camera_if_detected',
 
-                // 인공지능 카메라 값 블록
-                'robotis_robotai_lite_ai_camera_connection_status',
-                'robotis_robotai_lite_ai_camera_if_detected',
+                'robotis_koalabot_lite_ai_camera_block_value_closest_to_center',
+                'robotis_koalabot_lite_ai_camera_arrow_value_closest_to_center',
+                'robotis_koalabot_lite_ai_camera_number_of_learned_id',
+                'robotis_koalabot_lite_ai_camera_block_value_of_id',
+                'robotis_koalabot_lite_ai_camera_arrow_value_of_id',
 
-                'robotis_robotai_lite_ai_camera_block_value_closest_to_center',
-                'robotis_robotai_lite_ai_camera_arrow_value_closest_to_center',
-                'robotis_robotai_lite_ai_camera_number_of_learned_id',
-                'robotis_robotai_lite_ai_camera_block_value_of_id',
-                'robotis_robotai_lite_ai_camera_arrow_value_of_id',
-
-                'robotis_robotai_lite_ai_camera_if_learned_id',
-                'robotis_robotai_lite_ai_camera_if_detected_id_type',
+                'robotis_koalabot_lite_ai_camera_if_learned_id',
+                'robotis_koalabot_lite_ai_camera_if_detected_id_type',
 
                 // AI Camera 제어
-                'robotis_robotai_lite_ai_camera_set_mode',
-                'robotis_robotai_lite_ai_camera_print_custom_text',
-                'robotis_robotai_lite_ai_camera_clear_custom_text',
+                'robotis_koalabot_lite_ai_camera_set_mode',
+                'robotis_koalabot_lite_ai_camera_print_custom_text',
+                'robotis_koalabot_lite_ai_camera_clear_custom_text',
             ];
             this.portData = {
                 baudRate: 115200,
@@ -458,267 +437,214 @@ let camera_id_for_use = 0;
                 ko: {
                     template: {
                         // 주행 제어
-                        robotis_robotai_lite_drive_simple: '속도 %1 (으)로 %2 하기 %3',
-                        robotis_robotai_lite_drive_advanced:
-                            '왼쪽바퀴 %1 속도로 %2 하기, 오른쪽바퀴 %3 속도로 %4 하기 %5',
-                        robotis_robotai_lite_drive_seperate:
+                        robotis_koalabot_lite_drive_simple: '속도 %1 (으)로 %2 하기 %3',
+                        robotis_koalabot_lite_drive_advanced:
+                            '왼쪽바퀴 %1 속도로 %2, 오른쪽바퀴 %3 속도로 %4 %5',
+                        robotis_koalabot_lite_drive_seperate:
                             '%1 바퀴 %2 속도로 %3 으로 회전하기 %4',
-                        robotis_robotai_lite_drive_angle: '%1 바퀴 %2 도만큼 %3 으로 회전하기 %4',
-                        robotis_robotai_lite_go_distance: '%1 cm %2 하기 %3',
-                        robotis_robotai_lite_turn_angle: '%1 도 %2 하기%3',
-                        robotis_robotai_lite_follow_line: '%1 속도로 라인 따라가기 %2',
-                        robotis_robotai_lite_stop_at_cross: '교차로 %1 에서 멈추기 %2',
-                        robotis_robotai_lite_turn_at_line: '교차로에서 %1 하고 멈추기 %2',
-                        robotis_robotai_lite_drive_stop: '정지하기 %1',
-
-                        robotis_robotai_lite_securitybot_init: '보안 로봇 초기화 %1',
-                        robotis_robotai_lite_securitybot_hi: '보안 로봇 긍정적 행동하기 %1',
-                        robotis_robotai_lite_securitybot_alert: '보안 로봇 부정적 행동하기 %1',
-
-                        robotis_robotai_lite_petbot_happy: '반려 로봇 행복한 행동하기 %1',
-                        robotis_robotai_lite_petbot_sad: '반려 로봇 화난 행동하기 %1',
-
-                        robotis_robotai_lite_farmbot_init: '스마트팜 로봇 초기화 %1',
-                        robotis_robotai_lite_farmbot_seek: '농작물 찾기 %1',
-                        robotis_robotai_lite_farmbot_plant_type: '%1 농작물이면',
-                        robotis_robotai_lite_farmbot_harvest_or_not_and_go: '농작물 %1 돌아가기 %2',
+                        robotis_koalabot_lite_drive_angle:
+                            '양쪽 바퀴 %1 도만큼 %2 으로 회전하기 %3',
+                        robotis_koalabot_lite_go_distance: '%1 cm %2 하기 %3',
+                        robotis_koalabot_lite_turn_angle: '로봇 %1 도 %2 하기%3',
+                        robotis_koalabot_lite_follow_line: '%1 속도로 라인 따라가기 %2',
+                        robotis_koalabot_lite_stop_at_cross: '교차로 %1 에서 멈추기 %2',
+                        robotis_koalabot_lite_turn_at_line: '교차로에서 %1 하고 멈추기 %2',
+                        robotis_koalabot_lite_drive_stop: '정지하기 %1',
 
                         // 값 블록
-                        robotis_robotai_lite_cm_ir_value: '%1 적외선센서 값',
-                        robotis_robotai_lite_cm_ir_compare: '%1 적외선센서 값이 %2 보다 %3',
-                        robotis_robotai_lite_detectFrontObj: '적외선센서의 %1에 물체가 있으면',
-                        robotis_robotai_lite_cm_btn_value: '제어기의 %1 버튼을 클릭했을때',
-                        robotis_robotai_lite_cm_joystick_value:
-                            '제어기의 노랑 조이스틱 위치가 %1 이면',
-                        robotis_robotai_lite_mic: '소리의 크기(dB)',
-                        robotis_robotai_lite_detectSound_compare: '소리가 제어기의 %1에서 들리면',
-                        robotis_robotai_lite_imu: '%1축의 %2 값',
-                        robotis_robotai_lite_roll_pitch: '제어기의 %1 값',
-                        robotis_robotai_lite_line_cross_compare: '교차로 모양이 %1이면',
-                        robotis_robotai_lite_environment_value: '%1 값',
-                        robotis_robotai_lite_environment_compare: '%1 값이 %2보다 %3',
-                        robotis_robotai_lite_dxl_value: '%1의 각도값',
+                        robotis_koalabot_lite_cm_ir_value: '%1 적외선센서 값',
+                        robotis_koalabot_lite_cm_ir_compare: '%1 적외선센서 값이 %2 보다 %3',
+                        robotis_koalabot_lite_detectFrontObj: '%1의 앞에 물체가 있으면',
+                        robotis_koalabot_lite_cm_btn_value: '로봇의 %1 버튼을 눌렀을 때',
+                        robotis_koalabot_lite_cm_joystick_value:
+                            '로봇의 노랑 조이스틱 위치가 %1 이면',
+                        robotis_koalabot_lite_mic: '소리의 크기(dB)',
+                        robotis_koalabot_lite_detectSound_compare: '소리가 로봇의 %1에서 들리면',
+                        robotis_koalabot_lite_imu: '%1축의 %2 값',
+                        robotis_koalabot_lite_roll_pitch: '로봇의 %1 값',
+                        robotis_koalabot_lite_distance_value: '%1 값',
+                        robotis_koalabot_lite_distance_compare: '%1 값이 %2보다 %3',
+                        robotis_koalabot_lite_line_cross_compare: '교차로 모양이 %1이면',
+                        robotis_koalabot_lite_dxl_value: '%1의 각도값',
 
                         // 소리
-                        robotis_robotai_lite_scale_simple: '옥타브%1 로 %2 음을 %3로 연주하기 %4',
-                        robotis_robotai_lite_scale_advanced:
+                        robotis_koalabot_lite_scale_simple: '옥타브%1 로 %2 음을 %3로 연주하기 %4',
+                        robotis_koalabot_lite_scale_advanced:
                             '옥타브%1 로 %2 음을 %3박자 연주하기 %4',
-                        robotis_robotai_lite_rest_simple: '%1 %2',
-                        robotis_robotai_lite_rest_advanced: '쉼표 %1 박자 %2',
-                        robotis_robotai_lite_beat_per_minute: '연주 빠르기를 %1 (으)로 정하기 %2',
-                        robotis_robotai_lite_Hello: '로봇 %1 말하기 %2',
-                        robotis_robotai_lite_effectSound: '효과음 %1 재생하기 %2',
-                        robotis_robotai_lite_record: '소리 %1번에 녹음하기 %2',
-                        robotis_robotai_lite_playRecord: '소리 %1번을 재생하기 %2',
+                        robotis_koalabot_lite_rest_simple: '%1 %2',
+                        robotis_koalabot_lite_rest_advanced: '쉼표 %1 박자 %2',
+                        robotis_koalabot_lite_beat_per_minute: '연주 빠르기를 %1 (으)로 정하기 %2',
+                        robotis_koalabot_lite_Hello: '로봇 %1 말하기 %2',
+                        robotis_koalabot_lite_effectSound: '효과음 %1 재생하기 %2',
+                        robotis_koalabot_lite_record: '소리 %1번에 녹음하기 %2',
+                        robotis_koalabot_lite_playRecord: '소리 %1번을 재생하기 %2',
 
                         // LCD 제어
-                        robotis_robotai_lite_screen: '화면을 %1 %2 (으)로 정하기 %3',
-                        robotis_robotai_lite_anim_screen:
+                        robotis_koalabot_lite_screen: '화면 표정을 %1 %2 (으)로 정하기 %3',
+                        robotis_koalabot_lite_anim_screen:
                             '화면 애니메이션을 %1 %2 (으)로 정하기 %3',
-                        robotis_robotai_lite_icon_screen_food_plant:
-                            '화면에 [음식/식물]중 %1를 (%2, %3)위치에 %4 크기로 표시 %5',
-                        robotis_robotai_lite_icon_screen_animal_human:
-                            '화면에 [동물/사람]중 %1를 (%2, %3)위치에 %4 크기로 표시 %5',
-                        robotis_robotai_lite_icon_screen_object_tool:
-                            '화면에 [물건/도구]중 %1를 (%2, %3)위치에 %4 크기로 표시 %5',
-                        robotis_robotai_lite_icon_screen_vehicle_number:
-                            '화면에 [탈것/숫자]중 %1를 (%2, %3)위치에 %4 크기로 표시 %5',
-                        robotis_robotai_lite_text_screen:
-                            '화면에 %1를 (%2, %3)위치에 %4 로 %5으로 표시 %6',
-                        robotis_robotai_lite_pixel: '화면 (%1, %2)위치에 %3 색 점 표시 %4',
-                        robotis_robotai_lite_text_screen_redraw:
-                            '화면에 %1를 (%2, %3)위치에 %4으로 새로 표시 %5',
-                        robotis_robotai_lite_LCDColor: '화면 색상을 %1 (으)로 정하기 %2',
-                        robotis_robotai_lite_LCD_Flash:
-                            '화면을 %1과 %2으로 %3초 간격으로 깜박이기 %4',
-                        robotis_robotai_lite_LCDBright: '화면 밝기를 %1 (으)로 정하기 %2',
+                        robotis_koalabot_lite_icon_screen_food_plant:
+                            '화면에 [음식/식물]중 %1 (%2, %3)위치에 %4 크기로 표시 %5',
+                        robotis_koalabot_lite_icon_screen_animal_human:
+                            '화면에 [동물/사람]중 %1 (%2, %3)위치에 %4 크기로 표시 %5',
+                        robotis_koalabot_lite_icon_screen_object_tool:
+                            '화면에 [물건/도구]중 %1 (%2, %3)위치에 %4 크기로 표시 %5',
+                        robotis_koalabot_lite_icon_screen_vehicle_number:
+                            '화면에 [탈것/숫자]중 %1 (%2, %3)위치에 %4 크기로 표시 %5',
+                        robotis_koalabot_lite_text_screen:
+                            '화면에 %1 (%2, %3)위치에 %4 로 %5으로 표시 %6',
+                        robotis_koalabot_lite_text_screen_redraw:
+                            '화면에 %1 (%2, %3)위치에 %4으로 새로 표시 %5',
+                        robotis_koalabot_lite_pixel: '화면 (%1, %2)위치에 %3 색 점 표시 %4',
+                        robotis_koalabot_lite_LCDBright: '화면 밝기를 %1 (으)로 정하기 %2',
+                        robotis_koalabot_lite_LCDColor: '화면 색상을 %1 (으)로 정하기 %2',
 
                         // LED 제어
-                        robotis_robotai_lite_cm_led: '로봇 %1 LED %2 %3',
-                        robotis_robotai_lite_cm_led_pattern: 'LED %1 %2로 깜박이기 %3',
+                        robotis_koalabot_lite_cm_led: '로봇 %1 LED %2 %3',
+                        robotis_koalabot_lite_cm_led_pattern: 'LED %1 %2로 깜박이기 %3',
 
-                        // DXL 제어
-                        robotis_robotai_lite_dxl_set_mode: '%1 모터 %2 모드로 설정 %3',
-                        robotis_robotai_lite_dxl_each_control:
-                            '%1 모터 %2°로 %3 초 동안 움직이기 %4',
-                        robotis_robotai_lite_dxl_set_position:
-                            '%1 모터 %2 속도로 %3° 위치로 회전 %4',
-                        robotis_robotai_lite_dxl_set_rotate: '%1 모터 %2 속도로 %3 으로 %4 %5',
-                        robotis_robotai_lite_dxl_set_multiturn_round:
-                            '%1 모터 %2 속도로 %3 바퀴 %4으로 회전 %5',
+                        // AI Camera 값 블록
+                        robotis_koalabot_lite_ai_camera_connection_status: 'AI 카메라 %1이면',
+                        robotis_koalabot_lite_ai_camera_if_detected: 'AI 카메라 %1 이/가 표시되면',
 
-                        // ai_camera 값 블록
-                        robotis_robotai_lite_ai_camera_connection_status:
-                            '인공지능 카메라가 %1이면',
-                        robotis_robotai_lite_ai_camera_if_detected:
-                            '인공지능 카메라에 %1 이/가 표시되면',
+                        robotis_koalabot_lite_ai_camera_block_value_closest_to_center:
+                            'AI 카메라 화면 중앙과 가장 가까운 사각형의 %1',
+                        robotis_koalabot_lite_ai_camera_arrow_value_closest_to_center:
+                            'AI 카메라 화면 중앙과 가장 가까운 화살표의 %1',
+                        robotis_koalabot_lite_ai_camera_number_of_learned_id:
+                            'AI 카메라 학습한 ID의 갯수',
+                        robotis_koalabot_lite_ai_camera_block_value_of_id:
+                            'AI 카메라 감지된 ID가 %1인 사각형의 %2',
+                        robotis_koalabot_lite_ai_camera_arrow_value_of_id:
+                            'AI 카메라 감지된 ID가 %1인 화살표의 %2',
 
-                        robotis_robotai_lite_ai_camera_block_value_closest_to_center:
-                            '인공지능 카메라가 인식한 %1의 %2',
-                        robotis_robotai_lite_ai_camera_arrow_value_closest_to_center:
-                            '인공지능 카메라가 인식한 화살표의 %1',
-                        robotis_robotai_lite_ai_camera_number_of_learned_id:
-                            '인공지능 카메라가 학습한 클래스의 갯수',
-                        robotis_robotai_lite_ai_camera_block_value_of_id:
-                            '인공지능 카메라가 감지한 클래스가 %1인 %2의 %3',
-                        robotis_robotai_lite_ai_camera_arrow_value_of_id:
-                            '인공지능 카메라가 감지한 클래스가 %1인 화살표의 %2',
+                        robotis_koalabot_lite_ai_camera_if_learned_id:
+                            'AI 카메라 ID가 %1인 데이터를 학습하였으면',
+                        robotis_koalabot_lite_ai_camera_if_detected_id_type:
+                            'AI 카메라 ID가 %1인 %2데이터를 인식하였으면',
 
-                        robotis_robotai_lite_ai_camera_if_learned_id:
-                            '인공지능 카메라가 클래스가 %1인 데이터를 학습하였으면',
-                        robotis_robotai_lite_ai_camera_if_detected_id_type:
-                            '인공지능 카메라가 클래스가 %1인 %2데이터를 인식하였으면',
-
-                        // 인공지능 카메라 제어
-                        robotis_robotai_lite_ai_camera_set_mode:
-                            '인공지능 카메라의 작동 방식을 %1(으)로 설정 %2',
-                        robotis_robotai_lite_ai_camera_print_custom_text:
-                            '인공지능 카메라의 화면 위치 (%1,%2)에 %3를 보여주기%4',
-                        robotis_robotai_lite_ai_camera_clear_custom_text:
-                            '인공지능 카메라의 화면의 글 지우기 %1',
+                        // AI 카메라 제어
+                        robotis_koalabot_lite_ai_camera_set_mode:
+                            'AI 카메라 모드를 %1(으)로 설정 %2',
+                        robotis_koalabot_lite_ai_camera_print_custom_text:
+                            'AI 카메라 화면 위치 (%1,%2)에 %3를 보여주기%4',
+                        robotis_koalabot_lite_ai_camera_clear_custom_text:
+                            'AI 카메라 화면의 글 지우기 %1',
                     },
                     Helper: {
                         // 주행 제어
-                        robotis_robotai_lite_drive_simple:
-                            '로봇아이를 지정한 속도와 방향으로 주행\n속도범위: -100 ~ 100\n속도단위: %',
-                        robotis_robotai_lite_drive_advanced:
-                            '로봇아이의 좌,우 바퀴를 각각 지정한 속도와 방향으로 회전\n속도범위: -100 ~ 100\n속도단위: %',
-                        robotis_robotai_lite_drive_seperate:
-                            '로봇아이의 지정한 바퀴를 지정한 속도와 방향으로 회전\n속도범위: -100 ~ 100\n속도단위: %',
-                        robotis_robotai_lite_drive_angle:
-                            '로봇아이의 지정한 바퀴를 지정한 방향과 지정한 각도만큼 회전\n각도범위: -5760 ~ 5760\n각도단위: 도',
-                        robotis_robotai_lite_go_distance:
+                        robotis_koalabot_lite_drive_simple:
+                            '코알라봇을 지정한 속도와 방향으로 주행\n속도범위: -100 ~ 100\n속도단위: %',
+                        robotis_koalabot_lite_drive_advanced:
+                            '코알라봇의 좌,우 바퀴를 각각 지정한 속도와 방향으로 회전\n속도범위: -100 ~ 100\n속도단위: %',
+                        robotis_koalabot_lite_drive_seperate:
+                            '코알라봇의 지정한 바퀴를 지정한 속도와 방향으로 회전\n속도범위: -100 ~ 100\n속도단위: %',
+                        robotis_koalabot_lite_drive_angle:
+                            '코알라봇의 지정한 바퀴를 지정한 방향과 지정한 각도만큼 회전\n각도범위: -5760 ~ 5760\n각도단위: 도',
+                        robotis_koalabot_lite_go_distance:
                             '지정거리만큼 앞 또는 뒤로 이동\n거리범위: -1000 ~ 1000\n거리단위: mm',
-                        robotis_robotai_lite_turn_angle:
+                        robotis_koalabot_lite_turn_angle:
                             '지정한 각도와 방향으로 제자리회전\n각도범위: -360 ~ 360\n각도단위: 도',
-                        robotis_robotai_lite_follow_line: '지정한 수준의 속도로 라인 따라가기 시작',
-                        robotis_robotai_lite_stop_at_cross: '지정한 교차로에서 멈추기',
-                        robotis_robotai_lite_turn_at_line: '교차로에서 지정한 회전을 하고 멈추기',
-                        robotis_robotai_lite_drive_stop: '로봇아이 정지하기',
-
-                        robotis_robotai_lite_securitybot_init:
-                            '보안 로봇을 초기화합니다. 두 모터를 관절모드로 설정하고 카메라를 얼굴 인식모드로 설정합니다.',
-                        robotis_robotai_lite_securitybot_hi:
-                            '보안 로봇이 "사용자를 확인하였습니다." 문구를 화면에 표시하고 팔을 위아래로 흔듭니다.',
-                        robotis_robotai_lite_securitybot_alert:
-                            '보안 로봇이 "사용자가 아닙니다." 문구를 화면에 표시하고 몸을 좌우로 흔듭니다.',
-
-                        robotis_robotai_lite_petbot_happy:
-                            '반려 로봇이 웃는 표정을 하고 "즐거워요" 라고 말을 하면서 제자리에서 한바퀴 회전합니다.',
-                        robotis_robotai_lite_petbot_sad:
-                            '반려 로봇이 화난 표정을 하고 "무서워요" 라고 말을 하면서 뒤로 5cm 후진합니다.',
-
-                        robotis_robotai_lite_farmbot_init:
-                            '스마트팜 로봇을 초기화 합니다. 1번 모터를 시작위치로 이동시키고 카메라를 색상인식모드로 설정합니다.',
-                        robotis_robotai_lite_farmbot_seek: '농작물을 발견하면 가까이로 이동합니다.',
-                        robotis_robotai_lite_farmbot_plant_type: '농작물의 유형을 판단합니다.',
-                        robotis_robotai_lite_farmbot_harvest_or_not_and_go:
-                            '농작물을 수확하거나 수확하지 않습니다. 그 이후 우측으로 회전합니다.',
+                        robotis_koalabot_lite_follow_line:
+                            '지정한 수준의 속도로 라인 따라가기 시작',
+                        robotis_koalabot_lite_stop_at_cross: '지정한 교차로에서 멈추기',
+                        robotis_koalabot_lite_turn_at_line: '교차로에서 지정한 회전을 하고 멈추기',
+                        robotis_koalabot_lite_drive_stop: '코알라봇 정지하기',
 
                         // 값 블록
-                        robotis_robotai_lite_cm_ir_value: '지정한 번호의 IR 센서 값(범위: 0 ~ 200)',
-                        robotis_robotai_lite_cm_ir_compare:
+                        robotis_koalabot_lite_cm_ir_value:
+                            '지정한 번호의 IR 센서 값(범위: 0 ~ 200)',
+                        robotis_koalabot_lite_cm_ir_compare:
                             "지정한 번호의 IR 센서 값과 지정한 값의 비교식이 맞으면 '참', 아니면 '거짓'으로 판단합니다.",
-                        robotis_robotai_lite_detectFrontObj:
-                            "지정한 방향의 적외선센서에 물체가 감지되면 '참', 아니면 '거짓'으로 판단합니다.",
-                        robotis_robotai_lite_cm_btn_value:
-                            "지정한 버튼이 지정한 상태이면 '참', 아니면 '거짓'으로 판단합니다.",
-                        robotis_robotai_lite_cm_joystick_value:
-                            "조이스틱 위치가 지정한 상태이면 '참', 아니면 '거짓'으로 판단합니다.",
-                        robotis_robotai_lite_mic:
+                        robotis_koalabot_lite_detectFrontObj:
+                            "지정한 센서 앞에 물체가 감지되면 '참', 아니면 '거짓'으로 판단합니다.",
+                        robotis_koalabot_lite_cm_btn_value:
+                            "지정한 버튼이 눌렸다가 해제되면 '참', 아니면 '거짓'으로 판단합니다.",
+                        robotis_koalabot_lite_cm_joystick_value:
+                            "조이스틱 위치가 지정한 상태이면 '참', 아니면 '거짓'으로 판단합니다..",
+                        robotis_koalabot_lite_mic:
                             '마이크로 감지된 소리의 세기를 데시벨(dB)로 표시합니다.',
-                        robotis_robotai_lite_detectSound_compare:
+                        robotis_koalabot_lite_detectSound_compare:
                             "소리가 나는 방향이 지정한 방향과 동일하면 '참', 아니면 '거짓'으로 판단합니다.",
-                        robotis_robotai_lite_imu:
+                        robotis_koalabot_lite_imu:
                             '지정한 축의 지정한 가속도센서/자이로센서의 값\n범위: -100 ~ 100',
-                        robotis_robotai_lite_roll_pitch:
+                        robotis_koalabot_lite_roll_pitch:
                             'roll/pitch 값\nroll: -180° ~ 180°, pitch: -90° ~ 90°',
-                        robotis_robotai_lite_environment_value:
-                            '지정한 센서값\n움직임센서: 0(움직임 없음) / 1(움직임 있음)\n밝기범위: 0 ~ 100%\n온도범위: -25°C ~ 85°C',
-                        robotis_robotai_lite_environment_compare:
+                        robotis_koalabot_lite_distance_value:
+                            '지정한 센서값\n거리범위: 0 ~ 1000mm\n밝기범위: 0 ~ 100%\n버튼센서: 0(눌리지 않음) / 1(눌림)',
+                        robotis_koalabot_lite_distance_compare:
                             "지정한 센서값의 지정한 수식이 맞으면 '참', 아니면 '거짓'으로 판단합니다.",
-                        robotis_robotai_lite_line_cross_compare:
+                        robotis_koalabot_lite_line_cross_compare:
                             "지정한 교차로 모양이면 '참', 아니면 '거짓'으로 판단합니다.",
-                        robotis_robotai_lite_dxl_value:
+                        robotis_koalabot_lite_dxl_value:
                             '지정한 모터의 위치 각도값\n범위: -180° ~ 180°',
 
                         // 소리
-                        robotis_robotai_lite_scale_simple: '지정한 옥타브, 음계, 음표로 연주하기',
-                        robotis_robotai_lite_scale_advanced: '지정한 옥타브, 음계, 박자로 연주하기',
-                        robotis_robotai_lite_rest_simple: '지정한 쉼표 쉬기',
-                        robotis_robotai_lite_rest_advanced: '지정한 박자 쉬기',
-                        robotis_robotai_lite_beat_per_minute:
+                        robotis_koalabot_lite_scale_simple: '지정한 옥타브, 음계, 음표로 연주하기',
+                        robotis_koalabot_lite_scale_advanced:
+                            '지정한 옥타브, 음계, 박자로 연주하기',
+                        robotis_koalabot_lite_rest_simple: '지정한 쉼표 쉬기',
+                        robotis_koalabot_lite_rest_advanced: '지정한 박자 쉬기',
+                        robotis_koalabot_lite_beat_per_minute:
                             '연주 빠르기를 지정하기 (BPM)\n범위: 10 ~ 600',
-                        robotis_robotai_lite_Hello: '로봇이 지정한 말소리를 재생하기',
-                        robotis_robotai_lite_effectSound: '로봇이 지정한 효과음을 재생하기',
-                        robotis_robotai_lite_record: '지정번호 보관함에 녹음하여 저장하기',
-                        robotis_robotai_lite_playRecord: '지정번호 보관함의 녹음음성을 재생하기',
+                        robotis_koalabot_lite_Hello: '로봇이 지정한 말소리를 재생하기',
+                        robotis_koalabot_lite_effectSound: '로봇이 지정한 효과음을 재생하기',
+                        robotis_koalabot_lite_record: '지정번호 보관함에 녹음하여 저장하기',
+                        robotis_koalabot_lite_playRecord: '지정번호 보관함의 녹음음성을 재생하기',
 
                         // LCD 제어
-                        robotis_robotai_lite_screen: '제어기 화면배경의 캐릭터와 표정을 설정',
-                        robotis_robotai_lite_anim_screen:
+                        robotis_koalabot_lite_screen: '제어기 화면배경의 캐릭터와 표정을 설정',
+                        robotis_koalabot_lite_anim_screen:
                             '제어기 화면 애니메이션의 캐릭터와 표정을 설정',
-                        robotis_robotai_lite_icon_screen_food_plant:
+                        robotis_koalabot_lite_icon_screen_food_plant:
                             '화면에 [음식/식물]중 특정 아이콘을 표시할 위치와 크기를 설정\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120\n크기: 0 ~ 200',
-                        robotis_robotai_lite_icon_screen_animal_human:
+                        robotis_koalabot_lite_icon_screen_animal_human:
                             '화면에 [동물/사람]중 특정 아이콘을 표시할 위치와 크기를 설정\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120\n크기: 0 ~ 200',
-                        robotis_robotai_lite_icon_screen_object_tool:
+                        robotis_koalabot_lite_icon_screen_object_tool:
                             '화면에 [물건/도구]중 특정 아이콘을 표시할 위치와 크기를 설정\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120\n크기: 0 ~ 200',
-                        robotis_robotai_lite_icon_screen_vehicle_number:
+                        robotis_koalabot_lite_icon_screen_vehicle_number:
                             '화면에 [탈것/숫자]중 특정 아이콘을 표시할 위치와 크기를 설정\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120\n크기: 0 ~ 200',
-                        robotis_robotai_lite_text_screen:
+                        robotis_koalabot_lite_text_screen:
                             '화면에 지정한 문구를 표시할 위치와 폰트크기, 색상을 설정\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120',
-                        robotis_robotai_lite_text_screen_redraw:
+                        robotis_koalabot_lite_text_screen_redraw:
                             '화면에 지정한 문구를 새롭게(문구의 배경 지움) 표시할 위치와 색상을 설정\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120\n크기: 0 ~ 200',
-                        robotis_robotai_lite_pixel:
+                        robotis_koalabot_lite_pixel:
                             '화면에 표시할 점의 위치와 색상을 설정\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120',
-                        robotis_robotai_lite_LCDBright: '화면 밝기를 설정\n밝기범위: 1% ~ 100%',
-                        robotis_robotai_lite_LCDColor: '화면 색상을 설정',
-                        robotis_robotai_lite_LCD_Flash: '화면이 깜박이는 2가지 색상과 간격을 지정',
+                        robotis_koalabot_lite_LCDBright: '화면 밝기를 설정\n밝기범위: 1% ~ 100%',
+                        robotis_koalabot_lite_LCDColor: '화면 색상을 설정',
 
                         // LED 제어
-                        robotis_robotai_lite_cm_led: '제어기의 지정한 LED를 켜거나 끄기',
-                        robotis_robotai_lite_cm_led_pattern: '제어기의 LED의 깜박임 패턴 설정',
-
-                        // DXL 제어
-                        robotis_robotai_lite_dxl_set_mode: '지정한 ID의 모터의 동작모드를 설정',
-                        robotis_robotai_lite_dxl_each_control:
-                            '지정한 ID의 모터가 지정한 각도로 지정한 시간(초)동안 움직이도록 설정',
-                        robotis_robotai_lite_dxl_set_position:
-                            '지정한 ID의 모터가 지정한 속도로 지정한 각도로 움직이도록 설정',
-                        robotis_robotai_lite_dxl_set_rotate:
-                            '지정한 ID의 모터의 회전 속도와 방향을 설정',
-                        robotis_robotai_lite_dxl_set_multiturn_round:
-                            '지정한 ID의 모터가 지정한 속도와 방향으로 지정한 바퀴만큼 회전',
+                        robotis_koalabot_lite_cm_led: '제어기의 지정한 LED를 켜거나 끄기',
+                        robotis_koalabot_lite_cm_led_pattern: '제어기의 LED의 깜박임 패턴 설정',
 
                         // AI Camera 값 블록
-                        robotis_robotai_lite_ai_camera_connection_status:
-                            "인공지능 카메라가 연결된 상태이면 '참', 아니면 '거짓'으로 판단합니다.",
-                        robotis_robotai_lite_ai_camera_if_detected:
-                            "인공지능 카메라의 LCD화면에 선택한 기호(사각형/화살표)가 표시되면 '참', 아니면 '거짓'으로 판단합니다.",
+                        robotis_koalabot_lite_ai_camera_connection_status:
+                            "AI 카메라가 연결된 상태이면 '참', 아니면 '거짓'으로 판단합니다.",
+                        robotis_koalabot_lite_ai_camera_if_detected:
+                            "AI 카메라의 LCD화면에 선택한 기호(사각형/화살표)가 표시되면 '참', 아니면 '거짓'으로 판단합니다.",
 
-                        robotis_robotai_lite_ai_camera_block_value_closest_to_center:
-                            '인공지능 카메라 화면 중앙과 가장 가까운 사각형의 X좌표/Y좌표/너비/높이/클래스',
-                        robotis_robotai_lite_ai_camera_arrow_value_closest_to_center:
-                            '인공지능 카메라 화면 중앙과 가장 가까운 화살표의 시작점X좌표/시작점Y좌표/끝점X좌표/끝점Y좌표/클래스',
-                        robotis_robotai_lite_ai_camera_number_of_learned_id:
-                            '인공지능 카메라가 학습한 번호의 갯수',
-                        robotis_robotai_lite_ai_camera_block_value_of_id:
-                            '인공지능 카메라가 감지한 사각형중 지정한 번호의 사각형의 X좌표/Y좌표/너비/높이',
-                        robotis_robotai_lite_ai_camera_arrow_value_of_id:
-                            '인공지능 카메라가 감지한 화살표중 지정한 번호의 화살표의 시작점X좌표/시작점Y좌표/끝점X좌표/끝점Y좌표',
+                        robotis_koalabot_lite_ai_camera_block_value_closest_to_center:
+                            'AI 카메라 화면 중앙과 가장 가까운 사각형의 X좌표/Y좌표/너비/높이/학습ID',
+                        robotis_koalabot_lite_ai_camera_arrow_value_closest_to_center:
+                            'AI 카메라 화면 중앙과 가장 가까운 화살표의 시작점X좌표/시작점Y좌표/끝점X좌표/끝점Y좌표/학습ID',
+                        robotis_koalabot_lite_ai_camera_number_of_learned_id:
+                            'AI 카메라가 학습한 ID의 갯수',
+                        robotis_koalabot_lite_ai_camera_block_value_of_id:
+                            'AI 카메라가 감지한 사각형중 지정한 ID의 사각형의 X좌표/Y좌표/너비/높이',
+                        robotis_koalabot_lite_ai_camera_arrow_value_of_id:
+                            'AI 카메라가 감지한 화살표중 지정한 ID의 화살표의 시작점X좌표/시작점Y좌표/끝점X좌표/끝점Y좌표',
 
-                        robotis_robotai_lite_ai_camera_if_learned_id:
-                            "인공지능 카메라가 지정한 번호인 데이터를 학습하였으면 '참', 아니면 '거짓'으로 판단합니다.",
-                        robotis_robotai_lite_ai_camera_if_detected_id_type:
-                            "인공지능 카메라가 지정한 번호인 지정한 데이터(사각형/화살표)를 학습하였으면 '참', 아니면 '거짓'으로 판단합니다.",
+                        robotis_koalabot_lite_ai_camera_if_learned_id:
+                            "AI 카메라가 지정한 ID인 데이터를 학습하였으면 '참', 아니면 '거짓'으로 판단합니다.",
+                        robotis_koalabot_lite_ai_camera_if_detected_id_type:
+                            "AI 카메라가 지정한 ID인 지정한 데이터(사각형/화살표)를 학습하였으면 '참', 아니면 '거짓'으로 판단합니다.",
 
-                        // 인공지능 카메라 제어
-                        robotis_robotai_lite_ai_camera_set_mode: '인공지능 카메라의 모드를 설정',
-                        robotis_robotai_lite_ai_camera_print_custom_text:
-                            '인공지능 카메라 화면의 지정한 위치에 지정한 문구 출력\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120',
-                        robotis_robotai_lite_ai_camera_clear_custom_text:
-                            '인공지능 카메라 화면에 표시한 모든 문구 지우기',
+                        // AI 카메라 제어
+                        robotis_koalabot_lite_ai_camera_set_mode: 'AI 카메라의 모드를 설정',
+                        robotis_koalabot_lite_ai_camera_print_custom_text:
+                            'AI 카메라 화면의 지정한 위치에 지정한 문구 출력\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120',
+                        robotis_koalabot_lite_ai_camera_clear_custom_text:
+                            'AI 카메라 화면에 표시한 모든 문구 지우기',
                     },
                     Blocks: {
                         robotis_red: '빨강',
@@ -846,15 +772,9 @@ let camera_id_for_use = 0;
                         robotis_face22: '목욕',
                         robotis_face23: '햐트뿅뿅',
 
-                        robotis_flashing1: '깜박임1',
-                        robotis_flashing2: '깜박임2',
-                        robotis_flashing3: '깜박임3',
-                        robotis_flashing4: '깜박임4',
-                        robotis_flashing5: '깜박임5',
-                        robotis_flashing6: '깜박임6',
-                        robotis_flashing7: '깜박임7',
-                        robotis_flashing8: '깜박임8',
-                        robotis_flashing9: '깜박임9',
+                        robotis_pattern1: '패턴1',
+                        robotis_pattern2: '패턴2',
+                        robotis_pattern3: '패턴3',
                         robotis_moveF: '전진',
                         robotis_moveB: '후진',
                         robotis_moveL: '좌회전',
@@ -875,7 +795,7 @@ let camera_id_for_use = 0;
                         robotis_pitch: '앞뒤 회전각 (pitch)',
                         robotis_direction_forward: '전진방향',
                         robotis_direction_backward: '후진방향',
-                        robotis_stMotion1: '기본 자세',
+                        robotis_stMotion1: '기본자세',
                         robotis_stMotion2: '전진',
                         robotis_stMotion3: '우전진',
                         robotis_stMotion4: '좌전진',
@@ -1084,326 +1004,250 @@ let camera_id_for_use = 0;
                         robotis_line_cross_type_11: '¦',
                         robotis_line_cross_type_12: '︙',
 
-                        robotis_dxl_mode_joint: '관절',
-                        robotis_dxl_mode_wheel: '바퀴',
-                        robotis_dxl_mode_multi_turn: '여러바퀴회전',
-                        robotis_dxl_move_rotate: '회전',
-                        robotis_dxl_move_stop: '정지',
-                        robotis_dxl_rotate_cw: '시계방향',
-                        robotis_dxl_rotate_ccw: '반시계방향',
-                        robotis_dxl_value_angle: '각도',
-                        robotis_dxl_value_velocity: '속도',
-                        robotis_dxl_value_moving: '움직임',
-
                         robotis_connected: '연결',
                         robotis_disconnected: '없음',
-                        robotis_ai_camera_mode_face_recognition: '얼굴 인식',
-                        robotis_ai_camera_mode_line_tracking: '라인 인식',
-                        robotis_ai_camera_mode_color_recognition: '색상 인식',
-                        robotis_ai_camera_mode_tag_recognition: '태그 인식',
-                        robotis_ai_camera_mode_object_classification: '사물 분류',
-                        robotis_ai_camera_mode_expression_recognition: '표정 인식',
-                        robotis_ai_camera_target_face: '얼굴',
-                        robotis_ai_camera_target_object: '사물',
-                        robotis_ai_camera_target_color: '색상',
-                        robotis_ai_camera_target_tag: '태그',
-                        robotis_ai_camera_target_qr: 'QR코드',
-                        robotis_ai_camera_target_block: '사각형',
-                        robotis_ai_camera_target_arrow: '화살표',
+                        robotis_ai_camera_mode_face_recognition: '얼굴인식',
+                        robotis_ai_camera_mode_object_tracking: '물체추적',
+                        robotis_ai_camera_mode_object_recognition: '물체인식',
+                        robotis_ai_camera_mode_line_tracking: '라인인식',
+                        robotis_ai_camera_mode_color_recognition: '색상인식',
+                        robotis_ai_camera_mode_tag_recognition: '태그인식',
+                        robotis_ai_camera_mode_object_classification: '물체분류',
+                        robotis_ai_camera_block: '사각형',
+                        robotis_ai_camera_arrow: '화살표',
                         robotis_ai_camera_center_block_center_x: '중심 X좌표',
                         robotis_ai_camera_center_block_center_y: '중심 Y좌표',
                         robotis_ai_camera_center_block_width: '너비',
                         robotis_ai_camera_center_block_height: '높이',
-                        robotis_ai_camera_center_leared_id: '클래스',
+                        robotis_ai_camera_center_leared_id: '학습ID',
                         robotis_ai_camera_center_arrow_origin_x: '시작점 X좌표',
                         robotis_ai_camera_center_arrow_origin_y: '시작점 Y좌표',
                         robotis_ai_camera_center_arrow_target_x: '끝점 X좌표',
                         robotis_ai_camera_center_arrow_target_y: '끝점 Y좌표',
-
-                        robotis_plant_ripe: '빨간색으로 잘 익은',
-                        robotis_plant_unripe: '초록색으로 덜 익은',
-                        robotis_harvest: '수확하고',
-                        robotis_not_harvest: '수확하지 않고',
                     },
                 },
                 en: {
                     template: {
                         // 주행 제어
-                        robotis_robotai_lite_drive_simple: 'Move %2 with velocity %1 %3',
-                        robotis_robotai_lite_drive_advanced:
+                        robotis_koalabot_lite_drive_simple: 'Move %2 with velocity %1 %3',
+                        robotis_koalabot_lite_drive_advanced:
                             'Left wheel %2 with velocity %1, right wheel %4 with velocity %3 %5',
-                        robotis_robotai_lite_drive_seperate:
+                        robotis_koalabot_lite_drive_seperate:
                             '%1 wheel rotate %3 with velocity %2 %4',
-                        robotis_robotai_lite_drive_angle: 'Rotate %1 wheel %2 degree %3 %4',
-                        robotis_robotai_lite_go_distance: 'Moves %2 %1 cm %3',
-                        robotis_robotai_lite_turn_angle: 'Rotates %1 degree(s) %2 in place %3',
-                        robotis_robotai_lite_follow_line: 'Follow line with %1 speed %2',
-                        robotis_robotai_lite_stop_at_cross: 'Stop at cross %1 %2',
-                        robotis_robotai_lite_turn_at_line: '%1 at cross and stop %2',
-                        robotis_robotai_lite_drive_stop: 'Stop %1',
-
-                        robotis_robotai_lite_securitybot_init: 'Security robot init %1',
-                        robotis_robotai_lite_securitybot_hi: 'Security robot shake up and down %1',
-                        robotis_robotai_lite_securitybot_alert:
-                            'Security robot shake left and right %1',
-
-                        robotis_robotai_lite_petbot_happy: 'Petbot laugh %1',
-                        robotis_robotai_lite_petbot_sad: 'Petbot angry %1',
-
-                        robotis_robotai_lite_farmbot_init: 'SmartFarm Robot init %1',
-                        robotis_robotai_lite_farmbot_seek: 'Look for plant %1',
-                        robotis_robotai_lite_farmbot_plant_type: 'If it is %1 plant',
-                        robotis_robotai_lite_farmbot_harvest_or_not_and_go:
-                            '%1 the plant and go back %2',
+                        robotis_koalabot_lite_drive_angle: 'Both wheels rotate %1 degree %2 %3',
+                        robotis_koalabot_lite_go_distance: 'Moves %2 %1 cm %3',
+                        robotis_koalabot_lite_turn_angle: 'Rotates %1 degree(s) %2 in place %3',
+                        robotis_koalabot_lite_follow_line: 'Follow line with %1 speed %2',
+                        robotis_koalabot_lite_stop_at_cross: 'Stop at cross %1 %2',
+                        robotis_koalabot_lite_turn_at_line: '%1 at cross and stop %2',
+                        robotis_koalabot_lite_drive_stop: 'Stop %1',
 
                         // 값 블록
-                        robotis_robotai_lite_cm_ir_value: 'Value of %1 IR Sensor',
-                        robotis_robotai_lite_cm_ir_compare:
+                        robotis_koalabot_lite_cm_ir_value: 'Value of %1 IR Sensor',
+                        robotis_koalabot_lite_cm_ir_compare:
                             'If the number %1 IR sensor value is %3 than %2',
-                        robotis_robotai_lite_detectFrontObj: 'If %1 IR sensor detected an object',
-                        robotis_robotai_lite_cm_btn_value:
-                            "When the controller's %1 button is clicked",
-                        robotis_robotai_lite_cm_joystick_value:
-                            "If the controller's yellow joystick position is %1",
-                        robotis_robotai_lite_mic: 'MIC volume(dB)',
-                        robotis_robotai_lite_detectSound_compare:
+                        robotis_koalabot_lite_detectFrontObj:
+                            'If there is an object in front of %1',
+                        robotis_koalabot_lite_cm_btn_value: "When the robot's %1 button is pressed",
+                        robotis_koalabot_lite_cm_joystick_value:
+                            "If the robot's yellow joystick position is %1",
+                        robotis_koalabot_lite_mic: 'MIC volume(dB)',
+                        robotis_koalabot_lite_detectSound_compare:
                             'If sound is detected from %1 of the robot',
-                        robotis_robotai_lite_imu: "%1 axis' %2 value",
-                        robotis_robotai_lite_roll_pitch: '%1 value of the controller',
-                        robotis_robotai_lite_environment_value: '%1 value',
-                        robotis_robotai_lite_environment_compare: 'If %1 value is %3 than %2',
-                        robotis_robotai_lite_line_cross_compare: 'If the type of cross is %1',
-                        robotis_robotai_lite_dxl_value: 'The angle of ID %1',
+                        robotis_koalabot_lite_imu: "%1 axis' %2 value",
+                        robotis_koalabot_lite_roll_pitch: '%1 value of the controller',
+                        robotis_koalabot_lite_distance_value: '%1 value',
+                        robotis_koalabot_lite_distance_compare: 'If %1 value is %3 than %2',
+                        robotis_koalabot_lite_line_cross_compare: 'If the type of cross is %1',
+                        robotis_koalabot_lite_dxl_value: 'The angle of ID %1',
 
                         // 소리
-                        robotis_robotai_lite_scale_simple: 'Play the note %2 as %3 in octave %1 %4',
-                        robotis_robotai_lite_scale_advanced:
+                        robotis_koalabot_lite_scale_simple:
+                            'Play the note %2 as %3 in octave %1 %4',
+                        robotis_koalabot_lite_scale_advanced:
                             'Play the note %2 in octave %1 for %3 beat %4',
-                        robotis_robotai_lite_rest_simple: '%1 %2',
-                        robotis_robotai_lite_rest_advanced: 'Rest %1 beat %2',
-                        robotis_robotai_lite_beat_per_minute: 'Set playing speed to %1 %2',
-                        robotis_robotai_lite_Hello: 'Robot speaks %1 %2',
-                        robotis_robotai_lite_effectSound: 'Play sound effect %1 %2',
-                        robotis_robotai_lite_record: 'Record to sound slot %1 %2',
-                        robotis_robotai_lite_playRecord: 'Play sound from slot %1 %2',
+                        robotis_koalabot_lite_rest_simple: '%1 %2',
+                        robotis_koalabot_lite_rest_advanced: 'Rest %1 beat %2',
+                        robotis_koalabot_lite_beat_per_minute: 'Set playing speed to %1 %2',
+                        robotis_koalabot_lite_Hello: 'Robot speaks %1 %2',
+                        robotis_koalabot_lite_effectSound: 'Play sound effect %1 %2',
+                        robotis_koalabot_lite_record: 'Record to sound slot %1 %2',
+                        robotis_koalabot_lite_playRecord: 'Play sound from slot %1 %2',
 
                         // LCD 제어
-                        robotis_robotai_lite_screen: 'Set screen expression to %1 %2 %3',
-                        robotis_robotai_lite_anim_screen: 'Set screen animation to %1 %2 %3',
-                        robotis_robotai_lite_icon_screen_food_plant:
+                        robotis_koalabot_lite_screen: 'Set screen expression to %1 %2 %3',
+                        robotis_koalabot_lite_anim_screen: 'Set screen animation to %1 %2 %3',
+                        robotis_koalabot_lite_icon_screen_food_plant:
                             'Display %1 from [Food/Plants] at position (%2, %3) in size %4 %5',
-                        robotis_robotai_lite_icon_screen_animal_human:
+                        robotis_koalabot_lite_icon_screen_animal_human:
                             'Display %1 from [Animal/Human] at position (%2, %3) in size %4 %5',
-                        robotis_robotai_lite_icon_screen_object_tool:
+                        robotis_koalabot_lite_icon_screen_object_tool:
                             'Display %1 from [Object/Tool] at position (%2, %3) in size %4 %5',
-                        robotis_robotai_lite_icon_screen_vehicle_number:
+                        robotis_koalabot_lite_icon_screen_vehicle_number:
                             'Display %1 from [Vehicle/Number] at position (%2, %3) in size %4 %5',
-                        robotis_robotai_lite_text_screen:
+                        robotis_koalabot_lite_text_screen:
                             'Display %1 in %5 in %4 at (%2, %3) on the screen %6',
-                        robotis_robotai_lite_text_screen_redraw:
+                        robotis_koalabot_lite_text_screen_redraw:
                             'Newly display %1 in %4 at (%2, %3) %5',
-                        robotis_robotai_lite_pixel: 'Display %3 colored dot at (%1, %2) %4',
-                        robotis_robotai_lite_LCDColor: 'Set screen color as %1 %2',
-                        robotis_robotai_lite_LCD_Flash:
-                            'Blink the screen with %1 and %2 at intervals of %3 seconds %4',
-                        robotis_robotai_lite_LCDBright: 'Set screen brightness as %1 %2',
+                        robotis_koalabot_lite_pixel: 'Display %3 colored dot at (%1, %2) %4',
+                        robotis_koalabot_lite_LCDBright: 'Set screen brightness as %1 %2',
+                        robotis_koalabot_lite_LCDColor: 'Set screen color as %1 %2',
 
                         // LED 제어
-                        robotis_robotai_lite_cm_led: "%2 the robot's %1 LED %3",
-                        robotis_robotai_lite_cm_led_pattern: 'LED %1 blinks at a %2 speed %3',
-
-                        // DXL 제어
-                        robotis_robotai_lite_dxl_set_mode: 'Set ID %1 motor as %2 mode %3',
-                        robotis_robotai_lite_dxl_each_control: 'Move %1th motor %2° for %3 second',
-                        robotis_robotai_lite_dxl_set_position:
-                            'Rotate ID %1 motor to angle %3° at speed %2 %4',
-                        robotis_robotai_lite_dxl_set_rotate: '%4 ID %1 motor %3 at speed %2 %4',
-                        robotis_robotai_lite_dxl_set_multiturn_round:
-                            'Rotate ID %1 motor %3 times %4 at speed %2 %5',
+                        robotis_koalabot_lite_cm_led: "%2 the robot's %1 LED %3",
+                        robotis_koalabot_lite_cm_led_pattern: 'LED %1 blinks at a %2 speed %3',
 
                         // AI Camera 값 블록
-                        robotis_robotai_lite_ai_camera_connection_status: 'AI Camera: If %1',
-                        robotis_robotai_lite_ai_camera_if_detected: 'AI Camera: If %1 is displayed',
+                        robotis_koalabot_lite_ai_camera_connection_status: 'AI Camera: If %1',
+                        robotis_koalabot_lite_ai_camera_if_detected:
+                            'AI Camera: If %1 is displayed',
 
-                        robotis_robotai_lite_ai_camera_block_value_closest_to_center:
-                            'AI Camera: %2 of the %1 closest to the center of the screen',
-                        robotis_robotai_lite_ai_camera_arrow_value_closest_to_center:
+                        robotis_koalabot_lite_ai_camera_block_value_closest_to_center:
+                            'AI Camera: %1 of the rectangle closest to the center of the screen',
+                        robotis_koalabot_lite_ai_camera_arrow_value_closest_to_center:
                             'AI Camera: %1 of the arrow closest to the center of the screen',
-                        robotis_robotai_lite_ai_camera_number_of_learned_id:
+                        robotis_koalabot_lite_ai_camera_number_of_learned_id:
                             'AI Camera: the number of learned ID',
-                        robotis_robotai_lite_ai_camera_block_value_of_id:
-                            'AI Camera: %3 of %2 with detected ID %1',
-                        robotis_robotai_lite_ai_camera_arrow_value_of_id:
+                        robotis_koalabot_lite_ai_camera_block_value_of_id:
+                            'AI Camera: %2 of rectangle with detected ID %1',
+                        robotis_koalabot_lite_ai_camera_arrow_value_of_id:
                             'AI Camera: %2 of arrow with detected ID %1',
 
-                        robotis_robotai_lite_ai_camera_if_learned_id:
+                        robotis_koalabot_lite_ai_camera_if_learned_id:
                             'AI Camera: If learned data with ID %1',
-                        robotis_robotai_lite_ai_camera_if_detected_id_type:
+                        robotis_koalabot_lite_ai_camera_if_detected_id_type:
                             'AI Camera: If learned %2 data with ID %1',
 
-                        // 인공지능 카메라 제어
-                        robotis_robotai_lite_ai_camera_set_mode: 'AI Camera: Set mode to %1 %2',
-                        robotis_robotai_lite_ai_camera_print_custom_text:
+                        // AI 카메라 제어
+                        robotis_koalabot_lite_ai_camera_set_mode: 'AI Camera: Set mode to %1 %2',
+                        robotis_koalabot_lite_ai_camera_print_custom_text:
                             'AI Camera: Display %3 at screen position (%1, %2) %4',
-                        robotis_robotai_lite_ai_camera_clear_custom_text:
+                        robotis_koalabot_lite_ai_camera_clear_custom_text:
                             'AI Camera: Clear screen text %1',
                     },
                     Blocks: {
-                        // 주행 제어
-                        robotis_robotai_lite_drive_simple:
+                        // Driving Control
+                        robotis_koalabot_lite_drive_simple:
                             'Drive the robot at the specified speed and direction\nSpeed range: -100 ~ 100\nSpeed unit: %',
-                        robotis_robotai_lite_drive_advanced:
+                        robotis_koalabot_lite_drive_advanced:
                             'Rotate the left and right wheels of the robot at the specified speed and direction\nSpeed range: -100 ~ 100\nSpeed unit: %',
-                        robotis_robotai_lite_drive_seperate:
+                        robotis_koalabot_lite_drive_seperate:
                             'Rotate the specified wheel of the robot at the specified speed and direction\nSpeed range: -100 ~ 100\nSpeed unit: %',
-                        robotis_robotai_lite_drive_angle:
-                            'Rotate the specified wheel of the robot in the specified direction and by the specified angle\nAngle range: -5760 ~ 5760\nAngle unit: degrees',
-                        robotis_robotai_lite_go_distance:
+                        robotis_koalabot_lite_drive_angle:
+                            'Rotate the two wheels of the robot in the specified direction and by the specified angle\nAngle range: -5760 ~ 5760\nAngle unit: degrees',
+                        robotis_koalabot_lite_go_distance:
                             'Move forward or backward by the specified distance\nDistance range: -1000 ~ 1000\nDistance unit: mm',
-                        robotis_robotai_lite_turn_angle:
+                        robotis_koalabot_lite_turn_angle:
                             'Rotate in place by the specified angle and direction\nAngle range: -360 ~ 360\nAngle unit: degrees',
-                        robotis_robotai_lite_follow_line:
+                        robotis_koalabot_lite_follow_line:
                             'Start following the line at the specified speed',
-                        robotis_robotai_lite_stop_at_cross: 'Stop at the specified intersection',
-                        robotis_robotai_lite_turn_at_line:
+                        robotis_koalabot_lite_stop_at_cross: 'Stop at the specified intersection',
+                        robotis_koalabot_lite_turn_at_line:
                             'Make the specified turn at the intersection and stop',
-                        robotis_robotai_lite_drive_stop: 'Stop the robot',
+                        robotis_koalabot_lite_drive_stop: 'Stop the robot',
 
-                        robotis_robotai_lite_securitybot_init:
-                            'Initializes the security robot. Sets both motors to joint mode and the camera to face recognition mode.',
-                        robotis_robotai_lite_securitybot_hi:
-                            'The security robot displays the message "User identified" on the screen and waves its arms up and down.',
-                        robotis_robotai_lite_securitybot_alert:
-                            'The security robot displays the message "Not a user" on the screen and shakes its body from side to side.',
-
-                        robotis_robotai_lite_petbot_happy:
-                            'The pet robot makes a smiling face, says "I’m happy," and spins around in place.',
-                        robotis_robotai_lite_petbot_sad:
-                            'The pet robot makes an angry face, says "I’m scared," and moves 5cm backward.',
-
-                        robotis_robotai_lite_farmbot_init:
-                            'Initializes the smart farm robot. Moves motor 1 to the starting position and sets the camera to color recognition mode.',
-                        robotis_robotai_lite_farmbot_seek: 'Moves closer when it detects crops.',
-                        robotis_robotai_lite_farmbot_plant_type: 'Identifies the type of crop.',
-                        robotis_robotai_lite_farmbot_harvest_or_not_and_go:
-                            'Decides whether to harvest the crop or not, then rotates to the right.',
-
-                        // 값 블록
-                        robotis_robotai_lite_cm_ir_value:
+                        // Value Blocks
+                        robotis_koalabot_lite_cm_ir_value:
                             'IR sensor value of the specified number (range: 0 ~ 200)',
-                        robotis_robotai_lite_cm_ir_compare:
+                        robotis_koalabot_lite_cm_ir_compare:
                             "If the IR sensor value of the specified number matches the specified value, it is determined as 'true'; otherwise, 'false'.",
-                        robotis_robotai_lite_detectFrontObj:
-                            "It returns 'true' if an object is detected by the infrared sensor in the specified direction; otherwise, it returns 'false'.",
-                        robotis_robotai_lite_cm_btn_value:
+                        robotis_koalabot_lite_detectFrontObj:
+                            "If an object is detected in front of the specified sensor, it is determined as 'true'; otherwise, 'false'.",
+                        robotis_koalabot_lite_cm_btn_value:
                             "If the specified button is clicked, it is determined as 'true'; otherwise, 'false'.",
-                        robotis_robotai_lite_cm_joystick_value:
+                        robotis_koalabot_lite_cm_joystick_value:
                             "If the joystick position is in the specified state, it is determined as 'true'; otherwise, 'false'.",
-                        robotis_robotai_lite_mic:
+                        robotis_koalabot_lite_mic:
                             'Displays the intensity of the sound detected by the microphone in decibels (dB).',
-                        robotis_robotai_lite_detectSound_compare:
+                        robotis_koalabot_lite_detectSound_compare:
                             "If the direction of the sound matches the specified direction, it is determined as 'true'; otherwise, 'false'.",
-                        robotis_robotai_lite_imu:
+                        robotis_koalabot_lite_imu:
                             'Value of the specified accelerometer/gyro sensor on the specified axis\nRange: -100 ~ 100',
-                        robotis_robotai_lite_roll_pitch:
+                        robotis_koalabot_lite_roll_pitch:
                             'roll/pitch value\nroll: -180° ~ 180°, pitch: -90° ~ 90°',
-                        robotis_robotai_lite_environment_value:
-                            'Value of the specified sensor\nMotion sensor: 0 (no movement) / 1 (movement)\nBrightness range: 0 ~ 100%\nTemperature range: -25°C ~ 85°C',
-                        robotis_robotai_lite_environment_compare:
+                        robotis_koalabot_lite_distance_value:
+                            'Value of the specified sensor\nDistance range: 0 ~ 1000mm\nIlluminance range: 0 ~ 100%\nButton sensor: 0 (not pressed) / 1 (pressed)',
+                        robotis_koalabot_lite_distance_compare:
                             "If the specified equation of the specified sensor value is correct, it is determined as 'true'; otherwise, 'false'.",
-                        robotis_robotai_lite_line_cross_compare:
+                        robotis_koalabot_lite_line_cross_compare:
                             "If the specified intersection shape is correct, it is determined as 'true'; otherwise, 'false'.",
-                        robotis_robotai_lite_dxl_value:
+                        robotis_koalabot_lite_dxl_value:
                             'Position angle value of the specified motor\nRange: -180° ~ 180°',
 
-                        // 소리
-                        robotis_robotai_lite_scale_simple:
+                        // Sound
+                        robotis_koalabot_lite_scale_simple:
                             'Play with the specified octave, scale, and note',
-                        robotis_robotai_lite_scale_advanced:
+                        robotis_koalabot_lite_scale_advanced:
                             'Play with the specified octave, scale, and beat',
-                        robotis_robotai_lite_rest_simple: 'Rest for the specified rest note',
-                        robotis_robotai_lite_rest_advanced: 'Rest for the specified beat',
-                        robotis_robotai_lite_beat_per_minute:
+                        robotis_koalabot_lite_rest_simple: 'Rest for the specified rest note',
+                        robotis_koalabot_lite_rest_advanced: 'Rest for the specified beat',
+                        robotis_koalabot_lite_beat_per_minute:
                             'Set the playing speed (BPM)\nRange: 10 ~ 600',
-                        robotis_robotai_lite_Hello: 'Play the specified voice of the robot',
-                        robotis_robotai_lite_effectSound:
+                        robotis_koalabot_lite_Hello: 'Play the specified voice of the robot',
+                        robotis_koalabot_lite_effectSound:
                             'Play the specified sound effect of the robot',
-                        robotis_robotai_lite_record:
+                        robotis_koalabot_lite_record:
                             'Record and save to the specified number storage',
-                        robotis_robotai_lite_playRecord:
+                        robotis_koalabot_lite_playRecord:
                             'Play the recorded voice in the specified number storage',
 
-                        // LCD 제어
-                        robotis_robotai_lite_screen:
+                        // LCD Control
+                        robotis_koalabot_lite_screen:
                             'Set the character and expression of the controller screen background',
-                        robotis_robotai_lite_anim_screen:
+                        robotis_koalabot_lite_anim_screen:
                             'Set the character and expression of the controller screen animation',
-                        robotis_robotai_lite_icon_screen_food_plant:
+                        robotis_koalabot_lite_icon_screen_food_plant:
                             'Set the position and size of a specific icon in [food/plant] on the screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120\nSize: 0 ~ 200',
-                        robotis_robotai_lite_icon_screen_animal_human:
+                        robotis_koalabot_lite_icon_screen_animal_human:
                             'Set the position and size of a specific icon in [animal/human] on the screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120\nSize: 0 ~ 200',
-                        robotis_robotai_lite_icon_screen_object_tool:
+                        robotis_koalabot_lite_icon_screen_object_tool:
                             'Set the position and size of a specific icon in [object/tool] on the screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120\nSize: 0 ~ 200',
-                        robotis_robotai_lite_icon_screen_vehicle_number:
+                        robotis_koalabot_lite_icon_screen_vehicle_number:
                             'Set the position and size of a specific icon in [vehicle/number] on the screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120\nSize: 0 ~ 200',
-                        robotis_robotai_lite_text_screen:
+                        robotis_koalabot_lite_text_screen:
                             'Set the position, font size, and color of the specified text on the screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120',
-                        robotis_robotai_lite_text_screen_redraw:
+                        robotis_koalabot_lite_text_screen_redraw:
                             'Set the position and color of the specified text to be newly displayed (clearing the background of the text) on the screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120\nSize: 0 ~ 200',
-                        robotis_robotai_lite_pixel:
+                        robotis_koalabot_lite_pixel:
                             'Set the position and color of the dot to be displayed on the screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120',
-                        robotis_robotai_lite_LCDBright:
+                        robotis_koalabot_lite_LCDBright:
                             'Set the screen brightness\nBrightness range: 0% ~ 100%',
-                        robotis_robotai_lite_LCDColor: 'Set the screen color',
-                        robotis_robotai_lite_LCD_Flash:
-                            'Specify two colors and the interval for the screen to blink.',
+                        robotis_koalabot_lite_LCDColor: 'Set the screen color',
 
-                        // LED 제어
-                        robotis_robotai_lite_cm_led:
+                        // LED Control
+                        robotis_koalabot_lite_cm_led:
                             'Turn the specified LED of the controller on or off',
-                        robotis_robotai_lite_cm_led_pattern:
+                        robotis_koalabot_lite_cm_led_pattern:
                             'Set the blinking pattern of LEDs of the controller',
 
-                        // DXL 제어
-                        robotis_robotai_lite_dxl_set_mode:
-                            'Set the operating mode of the motor with the specified ID',
-                        robotis_robotai_lite_dxl_each_control:
-                            'Set the motor with the specified ID to move to the specified angle for the specified time (seconds)',
-                        robotis_robotai_lite_dxl_set_position:
-                            'Set the motor with the specified ID to move to the specified angle at the specified speed',
-                        robotis_robotai_lite_dxl_set_rotate:
-                            'Set the rotation speed and direction of the motor with the specified ID',
-                        robotis_robotai_lite_dxl_set_multiturn_round:
-                            'Set the motor with the specified ID to rotate the specified number of turns at the specified speed and direction',
-
-                        // AI Camera 값 블록
-                        robotis_robotai_lite_ai_camera_connection_status:
+                        // AI Camera Value Blocks
+                        robotis_koalabot_lite_ai_camera_connection_status:
                             "If the AI camera is connected, it is determined as 'true'; otherwise, 'false'.",
-                        robotis_robotai_lite_ai_camera_if_detected:
+                        robotis_koalabot_lite_ai_camera_if_detected:
                             "If the selected symbol (rectangle/arrow) is displayed on the LCD screen of the AI camera, it is determined as 'true'; otherwise, 'false'.",
 
-                        robotis_robotai_lite_ai_camera_block_value_closest_to_center:
+                        robotis_koalabot_lite_ai_camera_block_value_closest_to_center:
                             'X coordinate/Y coordinate/width/height/learning ID of the rectangle closest to the center of the AI camera screen',
-                        robotis_robotai_lite_ai_camera_arrow_value_closest_to_center:
+                        robotis_koalabot_lite_ai_camera_arrow_value_closest_to_center:
                             'Starting point X coordinate/starting point Y coordinate/end point X coordinate/end point Y coordinate/learning ID of the arrow closest to the center of the AI camera screen',
-                        robotis_robotai_lite_ai_camera_number_of_learned_id:
+                        robotis_koalabot_lite_ai_camera_number_of_learned_id:
                             'Number of IDs learned by the AI camera',
-                        robotis_robotai_lite_ai_camera_block_value_of_id:
+                        robotis_koalabot_lite_ai_camera_block_value_of_id:
                             'X coordinate/Y coordinate/width/height of the rectangle with the specified ID detected by the AI camera',
-                        robotis_robotai_lite_ai_camera_arrow_value_of_id:
+                        robotis_koalabot_lite_ai_camera_arrow_value_of_id:
                             'Starting point X coordinate/starting point Y coordinate/end point X coordinate/end point Y coordinate of the arrow with the specified ID detected by the AI camera',
 
-                        robotis_robotai_lite_ai_camera_if_learned_id:
-                            "If the AI camera has learned the data of the specified ID, it is determined as 'true'; otherwise, 'false'.",
-                        robotis_robotai_lite_ai_camera_if_detected_id_type:
-                            "If the AI camera has learned the specified data (rectangle/arrow) of the specified ID, it is determined as 'true'; otherwise, 'false'.",
+                        robotis_koalabot_lite_ai_camera_if_learned_id:
+                            "If the AI camera has learned data with the specified ID, it is determined as 'true'; otherwise, 'false'.",
+                        robotis_koalabot_lite_ai_camera_if_detected_id_type:
+                            "If the AI camera has learned the specified data (rectangle/arrow) with the specified ID, it is determined as 'true'; otherwise, 'false'.",
 
-                        // 인공지능 카메라 제어
-                        robotis_robotai_lite_ai_camera_set_mode: 'Set the mode of the AI camera',
-                        robotis_robotai_lite_ai_camera_print_custom_text:
+                        // AI Camera Control
+                        robotis_koalabot_lite_ai_camera_set_mode: 'Set the mode of the AI camera',
+                        robotis_koalabot_lite_ai_camera_print_custom_text:
                             'Print the specified text at the specified position on the AI camera screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120',
-                        robotis_robotai_lite_ai_camera_clear_custom_text:
-                            'Clear all the text displayed on the AI camera screen',
+                        robotis_koalabot_lite_ai_camera_clear_custom_text:
+                            'Clear all texts displayed on the AI camera screen',
                     },
 
                     Blocks: {
@@ -1488,10 +1332,10 @@ let camera_id_for_use = 0;
                         robotis_chicken: 'Rooster',
                         robotis_tiger: 'Tiger',
                         robotis_mouse: 'Mouse',
+                        robotis_whistle: 'Whistle',
                         robotis_ambul: 'Ambulance',
                         robotis_Horn: 'CarHorn',
                         robotis_siren: 'Siren',
-                        robotis_whistle: 'Whistle',
                         robotis_gun: 'Gunshot',
                         robotis_clap: 'Clap',
                         robotis_melody1: 'Melody1',
@@ -1531,15 +1375,10 @@ let camera_id_for_use = 0;
                         robotis_face21: 'Cry',
                         robotis_face22: 'Bath',
                         robotis_face23: 'Heart-Eyes',
-                        robotis_flashing1: 'Flashing1',
-                        robotis_flashing2: 'Flashing2',
-                        robotis_flashing3: 'Flashing3',
-                        robotis_flashing4: 'Flashing4',
-                        robotis_flashing5: 'Flashing5',
-                        robotis_flashing6: 'Flashing6',
-                        robotis_flashing7: 'Flashing7',
-                        robotis_flashing8: 'Flashing8',
-                        robotis_flashing9: 'Flashing9',
+
+                        robotis_pattern1: 'Pattern1',
+                        robotis_pattern2: 'Pattern2',
+                        robotis_pattern3: 'Pattern3',
                         robotis_moveF: 'Forward',
                         robotis_moveB: 'Backward',
                         robotis_moveL: 'LeftTurn',
@@ -1587,16 +1426,6 @@ let camera_id_for_use = 0;
                         robotis_screen1: 'Sissor',
                         robotis_screen2: 'Rock',
                         robotis_screen3: 'Paper',
-                        robotis_dxl_mode_joint: 'Joint',
-                        robotis_dxl_mode_wheel: 'Wheel',
-                        robotis_dxl_mode_multi_turn: 'Multi-turn',
-                        robotis_dxl_move_rotate: 'Rotate',
-                        robotis_dxl_move_stop: 'Stop',
-                        robotis_dxl_rotate_cw: 'clockwise',
-                        robotis_dxl_rotate_ccw: 'counter clockwise',
-                        robotis_dxl_value_angle: 'angle',
-                        robotis_dxl_value_velocity: 'velocity',
-                        robotis_dxl_value_moving: 'moving',
                         robotis_icon_food_plant_1: 'Milk',
                         robotis_icon_food_plant_2: 'Tree',
                         robotis_icon_food_plant_3: 'Soup',
@@ -1779,37 +1608,31 @@ let camera_id_for_use = 0;
                         robotis_line_cross_type_12: '︙',
                         robotis_connected: 'Connected',
                         robotis_disconnected: 'Not connected',
-                        robotis_ai_camera_mode_face_recognition: 'Face recognition',
-                        robotis_ai_camera_mode_object_tracking: 'Object tracking',
-                        robotis_ai_camera_mode_object_recognition: 'Object recognition',
-                        robotis_ai_camera_mode_line_recognition: 'Line tracking',
-                        robotis_ai_camera_mode_color_recognition: 'Color recognition',
-                        robotis_ai_camera_mode_tag_recognition: 'Tag recognition',
-                        robotis_ai_camera_mode_object_classification: 'Object classification',
-                        robotis_ai_camera_mode_expression_recognition: 'Expression recognition',
-                        robotis_ai_camera_target_block: 'Rectangle',
-                        robotis_ai_camera_target_arrow: 'Arrow',
-                        robotis_ai_camera_center_block_center_x: 'Center X',
-                        robotis_ai_camera_center_block_center_y: 'Center Y',
+                        robotis_ai_camera_mode_face_recognition: 'Face Recognition',
+                        robotis_ai_camera_mode_object_tracking: 'Object Tracking',
+                        robotis_ai_camera_mode_object_recognition: 'Object Recognition',
+                        robotis_ai_camera_mode_line_tracking: 'Line Tracking',
+                        robotis_ai_camera_mode_color_recognition: 'Color Recognition',
+                        robotis_ai_camera_mode_tag_recognition: 'Tag Recognition',
+                        robotis_ai_camera_mode_object_classification: 'Object Classification',
+                        robotis_ai_camera_block: 'Block',
+                        robotis_ai_camera_arrow: 'Arrow',
+                        robotis_ai_camera_center_block_center_x: 'Center X Coordinate',
+                        robotis_ai_camera_center_block_center_y: 'Center Y Coordinate',
                         robotis_ai_camera_center_block_width: 'Width',
                         robotis_ai_camera_center_block_height: 'Height',
                         robotis_ai_camera_center_leared_id: 'Learned ID',
-                        robotis_ai_camera_center_arrow_origin_x: 'Origin X',
-                        robotis_ai_camera_center_arrow_origin_y: 'Origin Y',
-                        robotis_ai_camera_center_arrow_target_x: 'Target X',
-                        robotis_ai_camera_center_arrow_target_y: 'Target Y',
-
-                        robotis_plant_ripe: 'ripe in red',
-                        robotis_plant_unripe: 'green and unripe',
-                        robotis_harvest: 'Harvest',
-                        robotis_not_harvest: 'Skip harvesting',
+                        robotis_ai_camera_center_arrow_origin_x: 'Start X Coordinate',
+                        robotis_ai_camera_center_arrow_origin_y: 'Start Y Coordinate',
+                        robotis_ai_camera_center_arrow_target_x: 'End X Coordinate',
+                        robotis_ai_camera_center_arrow_target_y: 'End Y Coordinate',
                     },
                 },
             };
         }
         getBlocks() {
             return {
-                robotis_robotai_lite_drive_simple: {
+                robotis_koalabot_lite_drive_simple: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -1841,14 +1664,14 @@ let camera_id_for_use = 0;
                     events: {},
                     def: {
                         params: [5, null, null],
-                        type: 'robotis_robotai_lite_drive_simple',
+                        type: 'robotis_koalabot_lite_drive_simple',
                     },
                     paramsKeyMap: {
                         SPEED: 0,
                         DIRECTION: 1,
                     },
-                    class: 'robotis_robotai_lite_move',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_move',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         // instruction / address / length / value / default length
                         const speed = script.getNumberValue('SPEED', script);
@@ -1880,7 +1703,7 @@ let camera_id_for_use = 0;
                         const data_sendqueue = [
                             [data_instruction, data_address, data_length, data_value],
                         ];
-                        return Entry.RobotisRobotaiLite.postCallReturn(
+                        return Entry.RobotisKoalabotLite.postCallReturn(
                             script,
                             data_sendqueue,
                             DEFAULT_DELAY
@@ -1888,10 +1711,10 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.go_simple(%1, %2)'],
+                        py: ['Koalabot.go_simple(%1, %2)'],
                     },
                 },
-                robotis_robotai_lite_drive_advanced: {
+                robotis_koalabot_lite_drive_advanced: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -1947,7 +1770,7 @@ let camera_id_for_use = 0;
                             },
                             null,
                         ],
-                        type: 'robotis_robotai_lite_drive_advanced',
+                        type: 'robotis_koalabot_lite_drive_advanced',
                     },
                     paramsKeyMap: {
                         LEFT_SPEED: 0,
@@ -1955,8 +1778,8 @@ let camera_id_for_use = 0;
                         RIGHT_SPEED: 2,
                         RIGHT_DIRECTION: 3,
                     },
-                    class: 'robotis_robotai_lite_move',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_move',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         // instruction / address / length / value / default length
                         let leftSpeed = script.getNumberValue('LEFT_SPEED', script);
@@ -2000,7 +1823,7 @@ let camera_id_for_use = 0;
                         let data_sendqueue = [
                             [data_instruction, data_address, data_length, data_value],
                         ];
-                        return Entry.RobotisRobotaiLite.postCallReturn(
+                        return Entry.RobotisKoalabotLite.postCallReturn(
                             script,
                             data_sendqueue,
                             DEFAULT_DELAY
@@ -2008,10 +1831,10 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.go_advanced(%1, %2)'],
+                        py: ['Koalabot.go_advanced(%1, %2)'],
                     },
                 },
-                robotis_robotai_lite_drive_seperate: {
+                robotis_koalabot_lite_drive_seperate: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -2060,15 +1883,15 @@ let camera_id_for_use = 0;
                             },
                             null,
                         ],
-                        type: 'robotis_robotai_lite_drive_seperate',
+                        type: 'robotis_koalabot_lite_drive_seperate',
                     },
                     paramsKeyMap: {
                         WHEEL_SIDE: 0,
                         WHEEL_SPEED: 1,
                         WHEEL_DIRECTION: 2,
                     },
-                    class: 'robotis_robotai_lite_move',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_move',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         // instruction / address / length / value / default length
                         let wheelSide = script.getNumberValue('WHEEL_SIDE', script);
@@ -2109,7 +1932,7 @@ let camera_id_for_use = 0;
                         let data_sendqueue = [
                             [data_instruction, data_address, data_length, data_value],
                         ];
-                        return Entry.RobotisRobotaiLite.postCallReturn(
+                        return Entry.RobotisKoalabotLite.postCallReturn(
                             script,
                             data_sendqueue,
                             25 //DEFAULT_DELAY
@@ -2117,26 +1940,15 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.go_seperate(%1, %2)'],
+                        py: ['Koalabot.go_seperate(%1, %2)'],
                     },
                 },
-                robotis_robotai_lite_drive_angle: {
+                robotis_koalabot_lite_drive_angle: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
                     statements: [],
                     params: [
-                        {
-                            type: 'Dropdown',
-                            options: [
-                                [Lang.Blocks.robotis_left, '1'],
-                                [Lang.Blocks.robotis_right, '0'],
-                            ],
-                            value: '1',
-                            fontSize: 11,
-                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                        },
                         {
                             type: 'Block',
                             accept: 'string',
@@ -2161,25 +1973,22 @@ let camera_id_for_use = 0;
                     events: {},
                     def: {
                         params: [
-                            null,
                             {
                                 type: 'number',
-                                params: ['15'],
+                                params: ['180'],
                             },
                             null,
                         ],
-                        type: 'robotis_robotai_lite_drive_angle',
+                        type: 'robotis_koalabot_lite_drive_angle',
                     },
                     paramsKeyMap: {
-                        WHEEL_SIDE: 0,
-                        WHEEL_ANGLE: 1,
-                        WHEEL_DIRECTION: 2,
+                        WHEEL_ANGLE: 0,
+                        WHEEL_DIRECTION: 1,
                     },
-                    class: 'robotis_robotai_lite_move',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_move',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         // instruction / address / length / value / default length
-                        let wheelSide = script.getNumberValue('WHEEL_SIDE', script);
                         let wheelAngle = script.getNumberValue('WHEEL_ANGLE', script);
                         let wheelDirection = script.getNumberValue('WHEEL_DIRECTION', script);
 
@@ -2187,10 +1996,10 @@ let camera_id_for_use = 0;
                         let data_address = 580;
                         let data_length = 8;
                         let angleValue = 0;
-                        let id = 51 + wheelSide;
-                        let data_buf = [];
+                        let data_buf_left = [];
+                        let data_buf_right = [];
                         let i = 0;
-                        let speed = 150;
+                        let speed = 50;
 
                         if (wheelDirection == '2') {
                             wheelAngle = -wheelAngle;
@@ -2208,25 +2017,39 @@ let camera_id_for_use = 0;
                         if (wheelAngle < 0) {
                             angleValue = 65536 + angleValue;
                         }
-
-                        data_buf.push(id);
-                        data_buf.push(0);
-                        data_buf.push(speed % 256);
-                        data_buf.push(Math.floor(speed / 256));
-                        data_buf.push(angleValue % 256);
-                        data_buf.push(Math.floor(angleValue / 256) % 256);
+                        data_buf_left.push(35);
+                        data_buf_left.push(0);
+                        data_buf_left.push(speed % 256);
+                        data_buf_left.push(Math.floor(speed / 256));
+                        data_buf_left.push(angleValue % 256);
+                        data_buf_left.push(Math.floor(angleValue / 256) % 256);
                         if (wheelAngle >= 0) {
-                            data_buf.push(0);
-                            data_buf.push(0);
+                            data_buf_left.push(0);
+                            data_buf_left.push(0);
                         } else {
-                            data_buf.push(0xff);
-                            data_buf.push(0xff);
+                            data_buf_left.push(0xff);
+                            data_buf_left.push(0xff);
+                        }
+
+                        data_buf_right.push(36);
+                        data_buf_right.push(0);
+                        data_buf_right.push(speed % 256);
+                        data_buf_right.push(Math.floor(speed / 256));
+                        data_buf_right.push(angleValue % 256);
+                        data_buf_right.push(Math.floor(angleValue / 256) % 256);
+                        if (wheelAngle >= 0) {
+                            data_buf_right.push(0);
+                            data_buf_right.push(0);
+                        } else {
+                            data_buf_right.push(0xff);
+                            data_buf_right.push(0xff);
                         }
 
                         let data_sendqueue = [
-                            [data_instruction, data_address, data_length, data_buf],
+                            [data_instruction, data_address, data_length, data_buf_left],
+                            [data_instruction, data_address, data_length, data_buf_right],
                         ];
-                        return Entry.RobotisRobotaiLite.postCallReturn(
+                        return Entry.RobotisKoalabotLite.postCallReturn(
                             script,
                             data_sendqueue,
                             DEFAULT_DELAY
@@ -2234,10 +2057,10 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.go_angle(%1, %2)'],
+                        py: ['Koalabot.go_angle(%1, %2)'],
                     },
                 },
-                robotis_robotai_lite_go_distance: {
+                robotis_koalabot_lite_go_distance: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -2273,15 +2096,15 @@ let camera_id_for_use = 0;
                             },
                             null,
                         ],
-                        type: 'robotis_robotai_lite_go_distance',
+                        type: 'robotis_koalabot_lite_go_distance',
                     },
 
                     paramsKeyMap: {
                         DISTANCE: 0,
                         DIRECTION: 1,
                     },
-                    class: 'robotis_robotai_lite_move',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_move',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(entity, script) {
                         let distance = script.getNumberValue('DISTANCE', script);
                         let direction = script.getField('DIRECTION', script);
@@ -2303,17 +2126,17 @@ let camera_id_for_use = 0;
 
                         data_sendqueue.push([data_instruction, 66, 2, 50491]);
 
-                        return Entry.RobotisRobotaiLite.postCallReturn(
+                        return Entry.RobotisKoalabotLite.postCallReturn(
                             script,
                             data_sendqueue,
                             DEFAULT_DELAY + 150 * Math.abs(distance) + 1200
                             //DEFAULT_DELAY
                         );
                     },
-                    syntax: { js: [], py: ['Robotailite.dxl_each_control(%1)'] },
+                    syntax: { js: [], py: ['Koalabot.dxl_each_control(%1)'] },
                 },
 
-                robotis_robotai_lite_turn_angle: {
+                robotis_koalabot_lite_turn_angle: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -2349,25 +2172,25 @@ let camera_id_for_use = 0;
                             },
                             null,
                         ],
-                        type: 'robotis_robotai_lite_turn_angle',
+                        type: 'robotis_koalabot_lite_turn_angle',
                     },
 
                     paramsKeyMap: {
                         ANGLE: 0,
                         DIRECTION: 1,
                     },
-                    class: 'robotis_robotai_lite_move',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_move',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(entity, script) {
                         let angle = script.getNumberValue('ANGLE', script);
                         let direction = script.getNumberValue('DIRECTION', script);
 
                         angle *= direction;
 
-                        if (angle > 720) {
-                            angle = 720;
-                        } else if (angle < -720) {
-                            angle = -720;
+                        if (angle > 360) {
+                            angle = 360;
+                        } else if (angle < -360) {
+                            angle = -360;
                         }
 
                         let data_instruction = INST_WRITE;
@@ -2381,16 +2204,16 @@ let camera_id_for_use = 0;
 
                         data_sendqueue.push([data_instruction, 66, 2, 50492]);
 
-                        return Entry.RobotisRobotaiLite.postCallReturn(
+                        return Entry.RobotisKoalabotLite.postCallReturn(
                             script,
                             data_sendqueue,
                             DEFAULT_DELAY + Math.abs(angle) * 16 + 1500
                             //DEFAULT_DELAY
                         );
                     },
-                    syntax: { js: [], py: ['Robotailite.dxl_each_control(%1)'] },
+                    syntax: { js: [], py: ['Koalabot.dxl_each_control(%1)'] },
                 },
-                robotis_robotai_lite_follow_line: {
+                robotis_koalabot_lite_follow_line: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -2417,13 +2240,13 @@ let camera_id_for_use = 0;
                     events: {},
                     def: {
                         params: [null, null],
-                        type: 'robotis_robotai_lite_follow_line',
+                        type: 'robotis_koalabot_lite_follow_line',
                     },
                     paramsKeyMap: {
                         SPEED: 0,
                     },
-                    class: 'robotis_robotai_lite_move',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_move',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         // instruction / address / length / value / default length
                         let speed_level = script.getNumberValue('SPEED', script);
@@ -2435,7 +2258,7 @@ let camera_id_for_use = 0;
                         let data_sendqueue = [
                             [data_instruction, data_address, data_length, speed_level],
                         ];
-                        return Entry.RobotisRobotaiLite.postCallReturn(
+                        return Entry.RobotisKoalabotLite.postCallReturn(
                             script,
                             data_sendqueue,
                             DEFAULT_DELAY
@@ -2443,10 +2266,10 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.follow_line(%1)'],
+                        py: ['Koalabot.follow_line(%1)'],
                     },
                 },
-                robotis_robotai_lite_stop_at_cross: {
+                robotis_koalabot_lite_stop_at_cross: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -2474,13 +2297,13 @@ let camera_id_for_use = 0;
                     events: {},
                     def: {
                         params: [null, null],
-                        type: 'robotis_robotai_lite_stop_at_cross',
+                        type: 'robotis_koalabot_lite_stop_at_cross',
                     },
                     paramsKeyMap: {
                         CROSS: 0,
                     },
-                    class: 'robotis_robotai_lite_move',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_move',
+                    isNotFor: ['RobotisKoalabotLite'],
                     async func(sprite, script) {
                         // instruction / address / length / value / default length
                         let cross_type = script.getNumberValue('CROSS', script);
@@ -2489,7 +2312,7 @@ let camera_id_for_use = 0;
                         // max 10 seconds
                         for (let i = 0; i < 100; i++) {
                             await Entry.Utils.sleep(100);
-                            if (Entry.RobotisRobotaiLite.dataBuffer[data_address] == cross_type) {
+                            if (Entry.RobotisKoalabotLite.dataBuffer[data_address] == cross_type) {
                                 break;
                             }
                             if (Entry.engine.isState('stop') == true) {
@@ -2499,7 +2322,7 @@ let camera_id_for_use = 0;
 
                         let data_sendqueue = [[INST_WRITE, 5200, 1, 0]];
 
-                        return Entry.RobotisRobotaiLite.postCallReturn(
+                        return Entry.RobotisKoalabotLite.postCallReturn(
                             script,
                             data_sendqueue,
                             DEFAULT_DELAY
@@ -2507,10 +2330,10 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.stop_at_cross(%1)'],
+                        py: ['Koalabot.stop_at_cross(%1)'],
                     },
                 },
-                robotis_robotai_lite_turn_at_line: {
+                robotis_koalabot_lite_turn_at_line: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -2537,13 +2360,13 @@ let camera_id_for_use = 0;
                     events: {},
                     def: {
                         params: [null, null],
-                        type: 'robotis_robotai_lite_turn_at_line',
+                        type: 'robotis_koalabot_lite_turn_at_line',
                     },
                     paramsKeyMap: {
                         TURN_TYPE: 0,
                     },
-                    class: 'robotis_robotai_lite_move',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_move',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         // instruction / address / length / value / default length
                         let turn_type = script.getNumberValue('TURN_TYPE', script);
@@ -2551,22 +2374,34 @@ let camera_id_for_use = 0;
                         let data_instruction = INST_WRITE;
                         let data_address = 66;
                         let data_length = 2;
+                        let extra_delay = 0;
+
+                        switch (turn_type) {
+                            case 0:
+                            case 1:
+                                extra_delay = 2000;
+                                break;
+
+                            case 2:
+                                extra_delay = 3500;
+                                break;
+                        }
 
                         let data_sendqueue = [
                             [data_instruction, data_address, data_length, 50045 + turn_type],
                         ];
-                        return Entry.RobotisRobotaiLite.postCallReturn(
+                        return Entry.RobotisKoalabotLite.postCallReturn(
                             script,
                             data_sendqueue,
-                            DEFAULT_DELAY
+                            DEFAULT_DELAY + extra_delay
                         );
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.turn_at_line(%1)'],
+                        py: ['Koalabot.turn_at_line(%1)'],
                     },
                 },
-                robotis_robotai_lite_drive_stop: {
+                robotis_koalabot_lite_drive_stop: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -2581,13 +2416,13 @@ let camera_id_for_use = 0;
                     events: {},
                     def: {
                         params: [null],
-                        type: 'robotis_robotai_lite_drive_stop',
+                        type: 'robotis_koalabot_lite_drive_stop',
                     },
                     paramsKeyMap: {
                         DIRECTION: 0,
                     },
-                    class: 'robotis_robotai_lite_move',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_move',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         // instruction / address / length / value / default length
 
@@ -2600,7 +2435,7 @@ let camera_id_for_use = 0;
                             [data_instruction, 5200, 1, 0],
                             [data_instruction, data_address, data_length, data_value],
                         ];
-                        return Entry.RobotisRobotaiLite.postCallReturn(
+                        return Entry.RobotisKoalabotLite.postCallReturn(
                             script,
                             data_sendqueue,
                             DEFAULT_DELAY
@@ -2608,360 +2443,11 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.stop(%1, %2)'],
-                    },
-                },
-                robotis_robotai_lite_securitybot_init: {
-                    color: EntryStatic.colorSet.block.default.HARDWARE,
-                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                    skeleton: 'basic',
-                    statements: [],
-                    params: [
-                        {
-                            type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
-                            size: 12,
-                        },
-                    ],
-                    events: {},
-                    def: {
-                        params: [null],
-                        type: 'robotis_robotai_lite_securitybot_init',
-                    },
-                    paramsKeyMap: {},
-                    class: 'robotis_robotai_lite_special',
-                    isNotFor: ['RobotisRobotaiLite'],
-                    func(sprite, script) {
-                        // instruction / address / length / value / default length
-
-                        let data_sendqueue = [[INST_WRITE, 2110, 1, 1]];
-                        return Entry.RobotisRobotaiLite.postCallReturn(
-                            script,
-                            data_sendqueue,
-                            1100
-                        );
-                    },
-                    syntax: {
-                        js: [],
-                        py: ['Robotailite.securitybot_init()'],
-                    },
-                },
-                robotis_robotai_lite_securitybot_hi: {
-                    color: EntryStatic.colorSet.block.default.HARDWARE,
-                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                    skeleton: 'basic',
-                    statements: [],
-                    params: [
-                        {
-                            type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
-                            size: 12,
-                        },
-                    ],
-                    events: {},
-                    def: {
-                        params: [null],
-                        type: 'robotis_robotai_lite_securitybot_hi',
-                    },
-                    paramsKeyMap: {},
-                    class: 'robotis_robotai_lite_special',
-                    isNotFor: ['RobotisRobotaiLite'],
-                    func(sprite, script) {
-                        // instruction / address / length / value / default length
-
-                        let data_sendqueue = [[INST_WRITE, 2111, 1, 1]];
-                        return Entry.RobotisRobotaiLite.postCallReturn(
-                            script,
-                            data_sendqueue,
-                            3000
-                        );
-                    },
-                    syntax: {
-                        js: [],
-                        py: ['Robotailite.securitybot_hi()'],
-                    },
-                },
-                robotis_robotai_lite_securitybot_alert: {
-                    color: EntryStatic.colorSet.block.default.HARDWARE,
-                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                    skeleton: 'basic',
-                    statements: [],
-                    params: [
-                        {
-                            type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
-                            size: 12,
-                        },
-                    ],
-                    events: {},
-                    def: {
-                        params: [null],
-                        type: 'robotis_robotai_lite_securitybot_alert',
-                    },
-                    paramsKeyMap: {},
-                    class: 'robotis_robotai_lite_special',
-                    isNotFor: ['RobotisRobotaiLite'],
-                    func(sprite, script) {
-                        // instruction / address / length / value / default length
-
-                        let data_sendqueue = [[INST_WRITE, 2112, 1, 1]];
-                        return Entry.RobotisRobotaiLite.postCallReturn(
-                            script,
-                            data_sendqueue,
-                            3000
-                        );
-                    },
-                    syntax: {
-                        js: [],
-                        py: ['Robotailite.securitybot_alert()'],
-                    },
-                },
-                robotis_robotai_lite_petbot_happy: {
-                    color: EntryStatic.colorSet.block.default.HARDWARE,
-                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                    skeleton: 'basic',
-                    statements: [],
-                    params: [
-                        {
-                            type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
-                            size: 12,
-                        },
-                    ],
-                    events: {},
-                    def: {
-                        params: [null],
-                        type: 'robotis_robotai_lite_petbot_happy',
-                    },
-                    paramsKeyMap: {},
-                    class: 'robotis_robotai_lite_special',
-                    isNotFor: ['RobotisRobotaiLite'],
-                    func(sprite, script) {
-                        // instruction / address / length / value / default length
-
-                        let data_sendqueue = [[INST_WRITE, 2121, 1, 1]];
-                        return Entry.RobotisRobotaiLite.postCallReturn(
-                            script,
-                            data_sendqueue,
-                            7100
-                        );
-                    },
-                    syntax: {
-                        js: [],
-                        py: ['Robotailite.petbot_happy()'],
-                    },
-                },
-                robotis_robotai_lite_petbot_sad: {
-                    color: EntryStatic.colorSet.block.default.HARDWARE,
-                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                    skeleton: 'basic',
-                    statements: [],
-                    params: [
-                        {
-                            type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
-                            size: 12,
-                        },
-                    ],
-                    events: {},
-                    def: {
-                        params: [null],
-                        type: 'robotis_robotai_lite_petbot_sad',
-                    },
-                    paramsKeyMap: {},
-                    class: 'robotis_robotai_lite_special',
-                    isNotFor: ['RobotisRobotaiLite'],
-                    func(sprite, script) {
-                        // instruction / address / length / value / default length
-
-                        let data_sendqueue = [[INST_WRITE, 2122, 1, 1]];
-                        return Entry.RobotisRobotaiLite.postCallReturn(
-                            script,
-                            data_sendqueue,
-                            2500
-                        );
-                    },
-                    syntax: {
-                        js: [],
-                        py: ['Robotailite.petbot_sad()'],
+                        py: ['Koalabot.stop(%1, %2)'],
                     },
                 },
 
-                robotis_robotai_lite_farmbot_init: {
-                    color: EntryStatic.colorSet.block.default.HARDWARE,
-                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                    skeleton: 'basic',
-                    statements: [],
-                    params: [
-                        {
-                            type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
-                            size: 12,
-                        },
-                    ],
-                    events: {},
-                    def: {
-                        params: [null],
-                        type: 'robotis_robotai_lite_farmbot_init',
-                    },
-                    paramsKeyMap: {},
-                    class: 'robotis_robotai_lite_special',
-                    isNotFor: ['RobotisRobotaiLite'],
-                    func(sprite, script) {
-                        let data_sendqueue = [[INST_WRITE, 2130, 1, 1]];
-                        return Entry.RobotisRobotaiLite.postCallReturn(
-                            script,
-                            data_sendqueue,
-                            3000
-                        );
-                    },
-                    syntax: {
-                        js: [],
-                        py: ['Robotis.farmbot_init()'],
-                    },
-                },
-                robotis_robotai_lite_farmbot_seek: {
-                    color: EntryStatic.colorSet.block.default.HARDWARE,
-                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                    skeleton: 'basic',
-                    statements: [],
-                    params: [
-                        {
-                            type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
-                            size: 12,
-                        },
-                    ],
-                    events: {},
-                    def: {
-                        params: [null],
-                        type: 'robotis_robotai_lite_farmbot_seek',
-                    },
-                    paramsKeyMap: {},
-                    class: 'robotis_robotai_lite_special',
-                    isNotFor: ['RobotisRobotaiLite'],
-                    func(sprite, script) {
-                        // instruction / address / length / value / default length
-
-                        let data_sendqueue = [[INST_WRITE, 2131, 1, 1]];
-                        return Entry.RobotisRobotaiLite.postCallReturn(script, data_sendqueue, 200);
-                    },
-                    syntax: {
-                        js: [],
-                        py: ['Robotis.farmbot_seek()'],
-                    },
-                },
-                robotis_robotai_lite_farmbot_plant_type: {
-                    color: EntryStatic.colorSet.block.default.HARDWARE,
-                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                    fontColor: '#fff',
-                    skeleton: 'basic_boolean_field',
-                    statements: [],
-                    params: [
-                        {
-                            type: 'Dropdown',
-                            options: [
-                                [Lang.Blocks.robotis_plant_ripe, '1'],
-                                [Lang.Blocks.robotis_plant_unripe, '2'],
-                            ],
-                            value: '1',
-                            fontSize: 11,
-                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                        },
-                    ],
-                    events: {},
-                    def: {
-                        params: [null],
-                        type: 'robotis_robotai_lite_farmbot_plant_type',
-                    },
-                    paramsKeyMap: {
-                        TYPE: 0,
-                    },
-                    class: 'robotis_robotai_lite_special',
-                    isNotFor: ['RobotisRobotaiLite'],
-                    func(sprite, script) {
-                        let compareValue = script.getNumberValue('TYPE');
-
-                        let result = Entry.RobotisRobotaiLite.dataBuffer[2134];
-
-                        if (result == undefined) {
-                            return false;
-                        }
-
-                        return result == compareValue;
-                    },
-                    syntax: {
-                        js: [],
-                        py: ['Robotis.farmbot_is_type(%1)'],
-                    },
-                },
-                robotis_robotai_lite_farmbot_harvest_or_not_and_go: {
-                    color: EntryStatic.colorSet.block.default.HARDWARE,
-                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                    skeleton: 'basic',
-                    statements: [],
-                    params: [
-                        {
-                            type: 'Dropdown',
-                            options: [
-                                [Lang.Blocks.robotis_harvest, '1'],
-                                [Lang.Blocks.robotis_not_harvest, '2'],
-                            ],
-                            value: '1',
-                            fontSize: 11,
-                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                        },
-                        {
-                            type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
-                            size: 12,
-                        },
-                    ],
-                    events: {},
-                    def: {
-                        params: [null, null],
-                        type: 'robotis_robotai_lite_farmbot_harvest_or_not_and_go',
-                    },
-                    paramsKeyMap: {
-                        ACTION: 0,
-                    },
-                    class: 'robotis_robotai_lite_special',
-                    isNotFor: ['RobotisRobotaiLite'],
-                    func(sprite, script) {
-                        // instruction / address / length / value / default length
-
-                        let action = script.getNumberValue('ACTION', script);
-                        let address = 2132;
-                        let wait_time = 6000;
-
-                        switch (action) {
-                            case 1:
-                                address = 2132;
-                                wait_time = 6500;
-                                break;
-
-                            case 2:
-                                address = 2133;
-                                wait_time = 2100;
-                                break;
-                        }
-
-                        let data_sendqueue = [[INST_WRITE, address, 1, 1]];
-                        return Entry.RobotisRobotaiLite.postCallReturn(
-                            script,
-                            data_sendqueue,
-                            wait_time
-                        );
-                    },
-                    syntax: {
-                        js: [],
-                        py: ['Robotis.farmbot_harvest_or_not_and_go(%1)'],
-                    },
-                },
-
-                robotis_robotai_lite_cm_ir_value: {
+                robotis_koalabot_lite_cm_ir_value: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -2987,19 +2473,19 @@ let camera_id_for_use = 0;
                     events: {},
                     def: {
                         params: [null],
-                        type: 'robotis_robotai_lite_cm_ir_value',
+                        type: 'robotis_koalabot_lite_cm_ir_value',
                     },
                     paramsKeyMap: {
                         VALUE: 0,
                     },
-                    class: 'robotis_robotai_lite_value',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_value',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         const scope = script.executor.scope;
 
                         const data_default_address = script.getNumberValue('VALUE');
 
-                        let result = Entry.RobotisRobotaiLite.dataBuffer[data_default_address];
+                        let result = Entry.RobotisKoalabotLite.dataBuffer[data_default_address];
                         if (result == undefined) {
                             result = rb100_last_valid_value[data_default_address];
                         } else {
@@ -3012,10 +2498,10 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.ir_value(%1)'],
+                        py: ['Koalabot.ir_value(%1)'],
                     },
                 },
-                robotis_robotai_lite_cm_ir_compare: {
+                robotis_koalabot_lite_cm_ir_compare: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -3056,22 +2542,22 @@ let camera_id_for_use = 0;
                     events: {},
                     def: {
                         params: [null, 50, null],
-                        type: 'robotis_robotai_lite_cm_ir_compare',
+                        type: 'robotis_koalabot_lite_cm_ir_compare',
                     },
                     paramsKeyMap: {
                         VALUE: 0,
                         COMPARE_VAL: 1,
                         COMPARE_OP: 2,
                     },
-                    class: 'robotis_robotai_lite_value',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_value',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         let scope = script.executor.scope;
                         let data_address = script.getNumberValue('VALUE');
                         let compareValue = script.getNumberValue('COMPARE_VAL');
                         let compareOP = script.getNumberValue('COMPARE_OP');
 
-                        let result = Entry.RobotisRobotaiLite.dataBuffer[data_address];
+                        let result = Entry.RobotisKoalabotLite.dataBuffer[data_address];
 
                         if (result == undefined) {
                             return false;
@@ -3090,10 +2576,10 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.ir_compare(%1)'],
+                        py: ['Koalabot.ir_compare(%1)'],
                     },
                 },
-                robotis_robotai_lite_detectFrontObj: {
+                robotis_koalabot_lite_detectFrontObj: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -3103,9 +2589,8 @@ let camera_id_for_use = 0;
                         {
                             type: 'Dropdown',
                             options: [
-                                [Lang.Blocks.robotis_front, '0'],
-                                [Lang.Blocks.robotis_right, '1'],
-                                [Lang.Blocks.robotis_left, '2'],
+                                [Lang.Blocks.robotis_front_ir_sensor, '0'],
+                                [Lang.Blocks.robotis_distance_sensor, '1'],
                             ],
                             value: '0',
                             fontSize: 11,
@@ -3116,24 +2601,24 @@ let camera_id_for_use = 0;
                     events: {},
                     def: {
                         params: [null],
-                        type: 'robotis_robotai_lite_detectFrontObj',
+                        type: 'robotis_koalabot_lite_detectFrontObj',
                     },
                     paramsKeyMap: {
-                        DIRECTION: 0,
+                        SENSOR: 0,
                     },
-                    class: 'robotis_robotai_lite_value',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_value',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         let scope = script.executor.scope;
 
                         // instruction / address / length / value / default length
-                        let direction = script.getNumberValue('DIRECTION');
+                        let sensorType = script.getNumberValue('SENSOR');
                         let ir_1 = 0;
                         let ir_2 = 0;
 
-                        if (direction == 0) {
-                            ir_1 = Entry.RobotisRobotaiLite.dataBuffer[360];
-                            ir_2 = Entry.RobotisRobotaiLite.dataBuffer[362];
+                        if (sensorType == 0) {
+                            ir_1 = Entry.RobotisKoalabotLite.dataBuffer[360];
+                            ir_2 = Entry.RobotisKoalabotLite.dataBuffer[362];
                             if (ir_1 == undefined) {
                                 ir_1 = 0;
                             }
@@ -3141,26 +2626,21 @@ let camera_id_for_use = 0;
                                 ir_2 = 0;
                             }
                             return ir_1 > 100 || ir_2 > 100;
-                        } else if (direction == 1) {
-                            ir_1 = Entry.RobotisRobotaiLite.dataBuffer[368];
-                            if (ir_1 == undefined) {
-                                ir_1 = 0;
+                        } else if (sensorType == 1) {
+                            result = Entry.RobotisKoalabotLite.distanceDistance[0];
+                            if (result == undefined) {
+                                return false;
+                            } else {
+                                return result < 200;
                             }
-                            return ir_1 > 100;
-                        } else if (direction == 2) {
-                            ir_1 = Entry.RobotisRobotaiLite.dataBuffer[370];
-                            if (ir_1 == undefined) {
-                                ir_1 = 0;
-                            }
-                            return ir_1 > 100;
                         }
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.detectFrontObj()'],
+                        py: ['Koalabot.detectFrontObj()'],
                     },
                 },
-                robotis_robotai_lite_cm_btn_value: {
+                robotis_koalabot_lite_cm_btn_value: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -3182,19 +2662,19 @@ let camera_id_for_use = 0;
                     events: {},
                     def: {
                         params: [null],
-                        type: 'robotis_robotai_lite_cm_btn_value',
+                        type: 'robotis_koalabot_lite_cm_btn_value',
                     },
                     paramsKeyMap: {
                         VALUE: 0,
                     },
-                    class: 'robotis_robotai_lite_value',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_value',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         let scope = script.executor.scope;
                         let data_address = script.getNumberValue('VALUE');
                         let compareValue = 1;
 
-                        let result = Entry.RobotisRobotaiLite.dataBuffer[data_address];
+                        let result = Entry.RobotisKoalabotLite.dataBuffer[data_address];
                         if (result == undefined) {
                             return false;
                         }
@@ -3203,10 +2683,10 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.btn_value(%1)'],
+                        py: ['Koalabot.btn_value(%1)'],
                     },
                 },
-                robotis_robotai_lite_cm_joystick_value: {
+                robotis_koalabot_lite_cm_joystick_value: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -3235,19 +2715,19 @@ let camera_id_for_use = 0;
                     events: {},
                     def: {
                         params: [null],
-                        type: 'robotis_robotai_lite_cm_joystick_value',
+                        type: 'robotis_koalabot_lite_cm_joystick_value',
                     },
                     paramsKeyMap: {
                         COMPARE_VAL: 0,
                     },
-                    class: 'robotis_robotai_lite_value',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_value',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         let scope = script.executor.scope;
                         let data_address = 50;
                         let compareValue = script.getNumberValue('COMPARE_VAL', script);
 
-                        let result = Entry.RobotisRobotaiLite.dataBuffer[data_address];
+                        let result = Entry.RobotisKoalabotLite.dataBuffer[data_address];
                         if (result == undefined) {
                             return false;
                         }
@@ -3256,10 +2736,10 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.joystick_value()'],
+                        py: ['Koalabot.joystick_value()'],
                     },
                 },
-                robotis_robotai_lite_mic: {
+                robotis_koalabot_lite_mic: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -3269,18 +2749,18 @@ let camera_id_for_use = 0;
                     events: {},
                     def: {
                         params: [null],
-                        type: 'robotis_robotai_lite_mic',
+                        type: 'robotis_koalabot_lite_mic',
                     },
                     paramsKeyMap: {
                         VALUE: 0,
                     },
-                    class: 'robotis_robotai_lite_value',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_value',
+                    isNotFor: ['RobotisKoalabotLite'],
                     async func(sprite, script) {
                         let scope = script.executor.scope;
                         let data_address = 119;
 
-                        let result = Entry.RobotisRobotaiLite.dataBuffer[data_address];
+                        let result = Entry.RobotisKoalabotLite.dataBuffer[data_address];
 
                         if (typeof result == 'undefined') {
                             return 0;
@@ -3289,10 +2769,10 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.mic()'],
+                        py: ['Koalabot.mic()'],
                     },
                 },
-                robotis_robotai_lite_detectSound_compare: {
+                robotis_koalabot_lite_detectSound_compare: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -3315,19 +2795,19 @@ let camera_id_for_use = 0;
                     events: {},
                     def: {
                         params: [null],
-                        type: 'robotis_robotai_lite_detectSound_compare',
+                        type: 'robotis_koalabot_lite_detectSound_compare',
                     },
                     paramsKeyMap: {
                         VALUE: 0,
                     },
-                    class: 'robotis_robotai_lite_value',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_value',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         let scope = script.executor.scope;
                         let data_address = 5031;
                         let compareValue = script.getNumberValue('VALUE');
 
-                        let result = Entry.RobotisRobotaiLite.dataBuffer[data_address];
+                        let result = Entry.RobotisKoalabotLite.dataBuffer[data_address];
                         if (result == undefined) {
                             return false;
                         }
@@ -3336,10 +2816,10 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.detectSound_compare(%1)'],
+                        py: ['Koalabot.detectSound_compare(%1)'],
                     },
                 },
-                robotis_robotai_lite_imu: {
+                robotis_koalabot_lite_imu: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -3373,20 +2853,20 @@ let camera_id_for_use = 0;
                     events: {},
                     def: {
                         params: [null, null],
-                        type: 'robotis_robotai_lite_imu',
+                        type: 'robotis_koalabot_lite_imu',
                     },
                     paramsKeyMap: {
                         AXIS: 0,
                         MODE: 1,
                     },
-                    class: 'robotis_robotai_lite_value',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_value',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         let scope = script.executor.scope;
                         let data_address =
                             script.getField('AXIS', script) - script.getField('MODE', script);
 
-                        let result = Entry.RobotisRobotaiLite.dataBuffer[data_address];
+                        let result = Entry.RobotisKoalabotLite.dataBuffer[data_address];
 
                         if (typeof result == 'undefined') {
                             return 0;
@@ -3395,10 +2875,10 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.imu()'],
+                        py: ['Koalabot.imu()'],
                     },
                 },
-                robotis_robotai_lite_roll_pitch: {
+                robotis_koalabot_lite_roll_pitch: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -3420,18 +2900,18 @@ let camera_id_for_use = 0;
                     events: {},
                     def: {
                         params: [null],
-                        type: 'robotis_robotai_lite_roll_pitch',
+                        type: 'robotis_koalabot_lite_roll_pitch',
                     },
                     paramsKeyMap: {
                         AXIS: 0,
                     },
-                    class: 'robotis_robotai_lite_value',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_value',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         let scope = script.executor.scope;
                         let data_address = script.getNumberValue('AXIS');
 
-                        let result = Entry.RobotisRobotaiLite.dataBuffer[data_address];
+                        let result = Entry.RobotisKoalabotLite.dataBuffer[data_address];
 
                         if (typeof result == 'undefined') {
                             return 0;
@@ -3440,10 +2920,10 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.roll_pitch(%1)'],
+                        py: ['Koalabot.roll_pitch(%1)'],
                     },
                 },
-                robotis_robotai_lite_environment_value: {
+                robotis_koalabot_lite_distance_value: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -3453,12 +2933,11 @@ let camera_id_for_use = 0;
                         {
                             type: 'Dropdown',
                             options: [
-                                [Lang.Blocks.robotis_sensing_temperature, '28'],
-                                [Lang.Blocks.robotis_sensing_humidity, '29'],
+                                [Lang.Blocks.robotis_sensing_distance, '25'],
+                                [Lang.Blocks.robotis_sensing_button, '24'],
                                 [Lang.Blocks.robotis_sensing_brightness, '30'],
-                                [Lang.Blocks.robotis_sensing_motion, '27'],
                             ],
-                            value: '28',
+                            value: '25',
                             fontSize: 11,
                             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -3467,13 +2946,13 @@ let camera_id_for_use = 0;
                     events: {},
                     def: {
                         params: [null],
-                        type: 'robotis_robotai_lite_environment_value',
+                        type: 'robotis_koalabot_lite_distance_value',
                     },
                     paramsKeyMap: {
                         ADDR: 0,
                     },
-                    class: 'robotis_robotai_lite_value',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_value',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         let scope = script.executor.scope;
                         let data_address = script.getNumberValue('ADDR');
@@ -3481,42 +2960,34 @@ let camera_id_for_use = 0;
                         let result = 0;
 
                         switch (data_address) {
-                            case 28:
-                                result = Entry.RobotisRobotaiLite.pirTemperature[0];
+                            case 25:
+                                result = Entry.RobotisKoalabotLite.distanceDistance[0];
                                 break;
 
-                            case 29:
-                                result = Entry.RobotisRobotaiLite.pirHumidity[0];
+                            case 24:
+                                result = Entry.RobotisKoalabotLite.distanceButton[0];
                                 break;
 
                             case 30:
-                                result = Entry.RobotisRobotaiLite.pirBrightness[0];
-                                break;
-
-                            case 27:
-                                result = Entry.RobotisRobotaiLite.pirPir[0];
+                                result = Entry.RobotisKoalabotLite.distanceBrightness[0];
                                 break;
                         }
 
                         if (typeof result == 'undefined') {
                             return 0;
-                        } else {
-                            // temperature
-                            if (data_address == 28) {
-                                result = result % 256;
-                                if (result > 128) {
-                                    result = result - 256;
-                                }
-                            }
+                        }
+
+                        if (data_address == 25) {
+                            if (result > 1000) result = 1000;
                         }
                         return result;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.environment_value(%1)'],
+                        py: ['Koalabot.distance_value(%1)'],
                     },
                 },
-                robotis_robotai_lite_environment_compare: {
+                robotis_koalabot_lite_distance_compare: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -3526,12 +2997,11 @@ let camera_id_for_use = 0;
                         {
                             type: 'Dropdown',
                             options: [
-                                [Lang.Blocks.robotis_sensing_temperature, '28'],
-                                [Lang.Blocks.robotis_sensing_humidity, '29'],
+                                [Lang.Blocks.robotis_sensing_distance, '25'],
+                                [Lang.Blocks.robotis_sensing_button, '24'],
                                 [Lang.Blocks.robotis_sensing_brightness, '30'],
-                                [Lang.Blocks.robotis_sensing_motion, '27'],
                             ],
-                            value: '28',
+                            value: '25',
                             fontSize: 11,
                             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -3546,7 +3016,6 @@ let camera_id_for_use = 0;
                             options: [
                                 [Lang.Blocks.robotis_if_greater, '0'],
                                 [Lang.Blocks.robotis_if_smaller, '1'],
-                                [Lang.Blocks.robotis_if_equal, '2'],
                             ],
                             value: '0',
                             fontSize: 11,
@@ -3564,15 +3033,15 @@ let camera_id_for_use = 0;
                             },
                             null,
                         ],
-                        type: 'robotis_robotai_lite_environment_compare',
+                        type: 'robotis_koalabot_lite_distance_compare',
                     },
                     paramsKeyMap: {
                         ADDR: 0,
                         COMPARE_VAL: 1,
                         COMPARE_OP: 2,
                     },
-                    class: 'robotis_robotai_lite_value',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_value',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         let scope = script.executor.scope;
 
@@ -3583,25 +3052,25 @@ let camera_id_for_use = 0;
                         let result = 0;
 
                         switch (data_address) {
-                            case 28:
-                                result = Entry.RobotisRobotaiLite.pirTemperature[0];
+                            case 25:
+                                result = Entry.RobotisKoalabotLite.distanceDistance[0];
                                 break;
 
-                            case 29:
-                                result = Entry.RobotisRobotaiLite.pirHumidity[0];
+                            case 24:
+                                result = Entry.RobotisKoalabotLite.distanceButton[0];
                                 break;
 
                             case 30:
-                                result = Entry.RobotisRobotaiLite.pirBrightness[0];
-                                break;
-
-                            case 27:
-                                result = Entry.RobotisRobotaiLite.pirPir[0];
+                                result = Entry.RobotisKoalabotLite.distanceBrightness[0];
                                 break;
                         }
 
                         if (typeof result == 'undefined') {
                             return false;
+                        }
+
+                        if (data_address == 25) {
+                            if (result > 1000) result = 1000;
                         }
 
                         switch (compareOP) {
@@ -3617,10 +3086,10 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.environment_compare(%1)'],
+                        py: ['Koalabot.distance_compare(%1)'],
                     },
                 },
-                robotis_robotai_lite_dxl_value: {
+                robotis_koalabot_lite_dxl_value: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -3630,18 +3099,10 @@ let camera_id_for_use = 0;
                         {
                             type: 'Dropdown',
                             options: [
-                                [Lang.Blocks.robotis_left_wheel, '52'],
-                                [Lang.Blocks.robotis_right_wheel, '51'],
-                                ['ID 1', '1'],
-                                ['ID 2', '2'],
-                                ['ID 3', '3'],
-                                ['ID 4', '4'],
-                                ['ID 5', '5'],
-                                ['ID 6', '6'],
-                                ['ID 7', '7'],
-                                ['ID 8', '8'],
+                                [Lang.Blocks.robotis_left_wheel, '36'],
+                                [Lang.Blocks.robotis_right_wheel, '35'],
                             ],
-                            value: '52',
+                            value: '36',
                             fontSize: 11,
                             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -3660,22 +3121,22 @@ let camera_id_for_use = 0;
                     ],
                     events: {},
                     def: {
-                        params: [52, null],
-                        type: 'robotis_robotai_lite_dxl_value',
+                        params: [36, null],
+                        type: 'robotis_koalabot_lite_dxl_value',
                     },
                     paramsKeyMap: {
                         ID: 0,
                         TYPE: 1,
                     },
-                    class: 'robotis_robotai_lite_value',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_value',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         let scope = script.executor.scope;
 
                         let dxl_id = script.getNumberValue('ID');
                         //var data_type = script.getNumberValue('TYPE');
 
-                        let result = Entry.RobotisRobotaiLite.dxlPositions[dxl_id];
+                        let result = Entry.RobotisKoalabotLite.dxlPositions[dxl_id];
 
                         if (typeof result == 'undefined') {
                             return 0;
@@ -3692,10 +3153,10 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.get_dxl_value(%1)'],
+                        py: ['Koalabot.get_dxl_value(%1)'],
                     },
                 },
-                robotis_robotai_lite_line_cross_compare: {
+                robotis_koalabot_lite_line_cross_compare: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -3719,19 +3180,19 @@ let camera_id_for_use = 0;
                     events: {},
                     def: {
                         params: [null],
-                        type: 'robotis_robotai_lite_line_cross_compare',
+                        type: 'robotis_koalabot_lite_line_cross_compare',
                     },
                     paramsKeyMap: {
                         VALUE: 0,
                     },
-                    class: 'robotis_robotai_lite_value',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_value',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         let scope = script.executor.scope;
                         let data_address = 5201;
                         let compareValue = script.getNumberValue('VALUE');
 
-                        let result = Entry.RobotisRobotaiLite.dataBuffer[data_address];
+                        let result = Entry.RobotisKoalabotLite.dataBuffer[data_address];
 
                         if (result == undefined) {
                             return false;
@@ -3741,11 +3202,11 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.line_cross_compare(%1)'],
+                        py: ['Koalabot.line_cross_compare(%1)'],
                     },
                 },
 
-                robotis_robotai_lite_screen: {
+                robotis_koalabot_lite_screen: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -3754,11 +3215,11 @@ let camera_id_for_use = 0;
                         {
                             type: 'Dropdown',
                             options: [
-                                [Lang.Blocks.robotis_kkokdu, '3'],
                                 [Lang.Blocks.robotis_rla, '2'],
                                 [Lang.Blocks.robotis_rgee, '0'],
+                                [Lang.Blocks.robotis_kkokdu, '3'],
                             ],
-                            value: '3',
+                            value: '2',
                             fontSize: 11,
                             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -3803,14 +3264,14 @@ let camera_id_for_use = 0;
                     events: {},
                     def: {
                         params: [null, null],
-                        type: 'robotis_robotai_lite_screen',
+                        type: 'robotis_koalabot_lite_screen',
                     },
                     paramsKeyMap: {
                         ROBOT_TYPE: 0,
                         BACKGROUND: 1,
                     },
-                    class: 'robotis_robotai_lite_lcd',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_lcd',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         // instruction / address / length / value / default length
                         let robotType = script.getNumberValue('ROBOT_TYPE', script);
@@ -3908,16 +3369,16 @@ let camera_id_for_use = 0;
                             [INST_WRITE, 162, 1, 1],
                         ];
 
-                        return Entry.RobotisRobotaiLite.postCallReturn(
+                        return Entry.RobotisKoalabotLite.postCallReturn(
                             script,
                             data_sendqueue,
                             DEFAULT_DELAY + 200
                         );
                     },
-                    syntax: { js: [], py: ['Robotailite.screen(%1)'] },
+                    syntax: { js: [], py: ['Koalabot.screen(%1)'] },
                 },
 
-                robotis_robotai_lite_anim_screen: {
+                robotis_koalabot_lite_anim_screen: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -3926,11 +3387,11 @@ let camera_id_for_use = 0;
                         {
                             type: 'Dropdown',
                             options: [
-                                [Lang.Blocks.robotis_kkokdu, '1'],
                                 [Lang.Blocks.robotis_rla, '0'],
                                 [Lang.Blocks.robotis_rgee, '-1'],
+                                [Lang.Blocks.robotis_kkokdu, '1'],
                             ],
-                            value: '1',
+                            value: '0',
                             fontSize: 11,
                             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -3975,14 +3436,14 @@ let camera_id_for_use = 0;
                     events: {},
                     def: {
                         params: [null, null],
-                        type: 'robotis_robotai_lite_anim_screen',
+                        type: 'robotis_koalabot_lite_anim_screen',
                     },
                     paramsKeyMap: {
                         ROBOT_TYPE: 0,
                         BACKGROUND: 1,
                     },
-                    class: 'robotis_robotai_lite_lcd',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_lcd',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         // instruction / address / length / value / default length
                         let robotType = script.getNumberValue('ROBOT_TYPE', script);
@@ -4081,15 +3542,15 @@ let camera_id_for_use = 0;
                             [INST_WRITE, 162, 1, 1],
                         ];
 
-                        return Entry.RobotisRobotaiLite.postCallReturn(
+                        return Entry.RobotisKoalabotLite.postCallReturn(
                             script,
                             data_sendqueue,
                             DEFAULT_DELAY //+ 1000
                         );
                     },
-                    syntax: { js: [], py: ['Robotailite.animation_screen(%1)'] },
+                    syntax: { js: [], py: ['Koalabot.animation_screen(%1)'] },
                 },
-                robotis_robotai_lite_icon_screen_food_plant: {
+                robotis_koalabot_lite_icon_screen_food_plant: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -4161,7 +3622,7 @@ let camera_id_for_use = 0;
                             50,
                             null,
                         ],
-                        type: 'robotis_robotai_lite_icon_screen_food_plant',
+                        type: 'robotis_koalabot_lite_icon_screen_food_plant',
                     },
                     paramsKeyMap: {
                         ICON: 0,
@@ -4169,8 +3630,8 @@ let camera_id_for_use = 0;
                         Y: 2,
                         SIZE: 3,
                     },
-                    class: 'robotis_robotai_lite_lcd',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_lcd',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         // instruction / address / length / value / default length
                         let iconNum = script.getField('ICON', script);
@@ -4211,7 +3672,7 @@ let camera_id_for_use = 0;
                             [INST_WRITE, 162, 1, 1],
                         ];
 
-                        return Entry.RobotisRobotaiLite.postCallReturn(
+                        return Entry.RobotisKoalabotLite.postCallReturn(
                             script,
                             data_sendqueue,
                             DEFAULT_DELAY + 200
@@ -4219,10 +3680,10 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.icon_screen_food_and_plant(%1,%2,%3,%4)'],
+                        py: ['Koalabot.icon_screen_food_and_plant(%1,%2,%3,%4)'],
                     },
                 },
-                robotis_robotai_lite_icon_screen_animal_human: {
+                robotis_koalabot_lite_icon_screen_animal_human: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -4304,7 +3765,7 @@ let camera_id_for_use = 0;
                             50,
                             null,
                         ],
-                        type: 'robotis_robotai_lite_icon_screen_animal_human',
+                        type: 'robotis_koalabot_lite_icon_screen_animal_human',
                     },
                     paramsKeyMap: {
                         ICON: 0,
@@ -4312,8 +3773,8 @@ let camera_id_for_use = 0;
                         Y: 2,
                         SIZE: 3,
                     },
-                    class: 'robotis_robotai_lite_lcd',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_lcd',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         // instruction / address / length / value / default length
                         let iconNum = script.getField('ICON', script);
@@ -4354,7 +3815,7 @@ let camera_id_for_use = 0;
                             [INST_WRITE, 162, 1, 1],
                         ];
 
-                        return Entry.RobotisRobotaiLite.postCallReturn(
+                        return Entry.RobotisKoalabotLite.postCallReturn(
                             script,
                             data_sendqueue,
                             DEFAULT_DELAY + 200
@@ -4362,10 +3823,10 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.icon_screen_animal_and_human(%1,%2,%3,%4)'],
+                        py: ['Koalabot.icon_screen_animal_and_human(%1,%2,%3,%4)'],
                     },
                 },
-                robotis_robotai_lite_icon_screen_object_tool: {
+                robotis_koalabot_lite_icon_screen_object_tool: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -4449,7 +3910,7 @@ let camera_id_for_use = 0;
                             50,
                             null,
                         ],
-                        type: 'robotis_robotai_lite_icon_screen_object_tool',
+                        type: 'robotis_koalabot_lite_icon_screen_object_tool',
                     },
                     paramsKeyMap: {
                         ICON: 0,
@@ -4457,8 +3918,8 @@ let camera_id_for_use = 0;
                         Y: 2,
                         SIZE: 3,
                     },
-                    class: 'robotis_robotai_lite_lcd',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_lcd',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         // instruction / address / length / value / default length
                         let iconNum = script.getField('ICON', script);
@@ -4499,7 +3960,7 @@ let camera_id_for_use = 0;
                             [INST_WRITE, 162, 1, 1],
                         ];
 
-                        return Entry.RobotisRobotaiLite.postCallReturn(
+                        return Entry.RobotisKoalabotLite.postCallReturn(
                             script,
                             data_sendqueue,
                             DEFAULT_DELAY + 200
@@ -4507,10 +3968,10 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.icon_screen_object_and_tool(%1,%2,%3,%4)'],
+                        py: ['Koalabot.icon_screen_object_and_tool(%1,%2,%3,%4)'],
                     },
                 },
-                robotis_robotai_lite_icon_screen_vehicle_number: {
+                robotis_koalabot_lite_icon_screen_vehicle_number: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -4596,7 +4057,7 @@ let camera_id_for_use = 0;
                             50,
                             null,
                         ],
-                        type: 'robotis_robotai_lite_icon_screen_vehicle_number',
+                        type: 'robotis_koalabot_lite_icon_screen_vehicle_number',
                     },
                     paramsKeyMap: {
                         ICON: 0,
@@ -4604,8 +4065,8 @@ let camera_id_for_use = 0;
                         Y: 2,
                         SIZE: 3,
                     },
-                    class: 'robotis_robotai_lite_lcd',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_lcd',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         // instruction / address / length / value / default length
                         let iconNum = script.getField('ICON', script);
@@ -4646,7 +4107,7 @@ let camera_id_for_use = 0;
                             [INST_WRITE, 162, 1, 1],
                         ];
 
-                        return Entry.RobotisRobotaiLite.postCallReturn(
+                        return Entry.RobotisKoalabotLite.postCallReturn(
                             script,
                             data_sendqueue,
                             DEFAULT_DELAY + 200
@@ -4654,10 +4115,10 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.icon_screen_vehicle_and_number(%1,%2,%3,%4)'],
+                        py: ['Koalabot.icon_screen_vehicle_and_number(%1,%2,%3,%4)'],
                     },
                 },
-                robotis_robotai_lite_text_screen: {
+                robotis_koalabot_lite_text_screen: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -4726,7 +4187,7 @@ let camera_id_for_use = 0;
                             null,
                             null,
                         ],
-                        type: 'robotis_robotai_lite_text_screen',
+                        type: 'robotis_koalabot_lite_text_screen',
                     },
                     paramsKeyMap: {
                         TEXT: 0,
@@ -4735,8 +4196,8 @@ let camera_id_for_use = 0;
                         FONT: 3,
                         COLOR: 4,
                     },
-                    class: 'robotis_robotai_lite_lcd',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_lcd',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         // instruction / address / length / value / default length
                         let text = script.getStringValue('TEXT', script);
@@ -4786,7 +4247,7 @@ let camera_id_for_use = 0;
                             [INST_WRITE, 162, 1, 1],
                         ];
 
-                        return Entry.RobotisRobotaiLite.postCallReturn(
+                        return Entry.RobotisKoalabotLite.postCallReturn(
                             script,
                             data_sendqueue,
                             DEFAULT_DELAY + 200
@@ -4794,10 +4255,10 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.text_screen(%1,%2,%3,%4,%5)'],
+                        py: ['Koalabot.text_screen(%1,%2,%3,%4,%5)'],
                     },
                 },
-                robotis_robotai_lite_pixel: {
+                robotis_koalabot_lite_pixel: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -4849,15 +4310,15 @@ let camera_id_for_use = 0;
                             },
                             null,
                         ],
-                        type: 'robotis_robotai_lite_pixel',
+                        type: 'robotis_koalabot_lite_pixel',
                     },
                     paramsKeyMap: {
                         X: 0,
                         Y: 1,
                         COLOR: 2,
                     },
-                    class: 'robotis_robotai_lite_lcd',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_lcd',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         // instruction / address / length / value / default length
                         let x = script.getNumberValue('X', script);
@@ -4898,7 +4359,7 @@ let camera_id_for_use = 0;
                             [INST_WRITE, 161, 2, 1 * 256 + 8],
                         ];
 
-                        return Entry.RobotisRobotaiLite.postCallReturn(
+                        return Entry.RobotisKoalabotLite.postCallReturn(
                             script,
                             data_sendqueue,
                             DEFAULT_DELAY + 100
@@ -4906,10 +4367,10 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.pixel(%1,%2,%3)'],
+                        py: ['Koalabot.pixel(%1,%2,%3)'],
                     },
                 },
-                robotis_robotai_lite_text_screen_redraw: {
+                robotis_koalabot_lite_text_screen_redraw: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -4966,7 +4427,7 @@ let camera_id_for_use = 0;
                             },
                             null,
                         ],
-                        type: 'robotis_robotai_lite_text_screen_redraw',
+                        type: 'robotis_koalabot_lite_text_screen_redraw',
                     },
                     paramsKeyMap: {
                         TEXT: 0,
@@ -4974,8 +4435,8 @@ let camera_id_for_use = 0;
                         Y: 2,
                         COLOR: 3,
                     },
-                    class: 'robotis_robotai_lite_lcd',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_lcd',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         // instruction / address / length / value / default length
                         let text = script.getStringValue('TEXT', script);
@@ -5023,7 +4484,7 @@ let camera_id_for_use = 0;
                             [INST_WRITE, 162, 1, 1],
                         ];
 
-                        return Entry.RobotisRobotaiLite.postCallReturn(
+                        return Entry.RobotisKoalabotLite.postCallReturn(
                             script,
                             data_sendqueue,
                             DEFAULT_DELAY + 100
@@ -5031,10 +4492,10 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.text_screen_redraw(%1,%2,%3,%4)'],
+                        py: ['Koalabot.text_screen_redraw(%1,%2,%3,%4)'],
                     },
                 },
-                robotis_robotai_lite_LCDBright: {
+                robotis_koalabot_lite_LCDBright: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -5053,13 +4514,13 @@ let camera_id_for_use = 0;
                     events: {},
                     def: {
                         params: [50],
-                        type: 'robotis_robotai_lite_LCDBright',
+                        type: 'robotis_koalabot_lite_LCDBright',
                     },
                     paramsKeyMap: {
                         BRIGHT: 0,
                     },
-                    class: 'robotis_robotai_lite_lcd',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_lcd',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         // instruction / address / length / value / default length
                         let bright = script.getNumberValue('BRIGHT', script);
@@ -5076,7 +4537,7 @@ let camera_id_for_use = 0;
                         let data_sendqueue = [
                             [data_instruction, data_address, data_length, data_value],
                         ];
-                        return Entry.RobotisRobotaiLite.postCallReturn(
+                        return Entry.RobotisKoalabotLite.postCallReturn(
                             script,
                             data_sendqueue,
                             DEFAULT_DELAY
@@ -5084,10 +4545,10 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.LCDBright(%1)'],
+                        py: ['Koalabot.LCDBright(%1)'],
                     },
                 },
-                robotis_robotai_lite_LCDColor: {
+                robotis_koalabot_lite_LCDColor: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -5121,13 +4582,13 @@ let camera_id_for_use = 0;
                     events: {},
                     def: {
                         params: [null],
-                        type: 'robotis_robotai_lite_LCDColor',
+                        type: 'robotis_koalabot_lite_LCDColor',
                     },
                     paramsKeyMap: {
                         COLOR: 0,
                     },
-                    class: 'robotis_robotai_lite_lcd',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_lcd',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         // instruction / address / length / value / default length
                         let color = script.getNumberValue('COLOR', script);
@@ -5141,11 +4602,10 @@ let camera_id_for_use = 0;
                         bg_color = color;
 
                         let data_sendqueue = [
-                            [INST_WRITE, 163, 2, 2817],
                             [data_instruction, data_address, data_length, data_value],
                             [INST_WRITE, 162, 1, 1],
                         ];
-                        return Entry.RobotisRobotaiLite.postCallReturn(
+                        return Entry.RobotisKoalabotLite.postCallReturn(
                             script,
                             data_sendqueue,
                             DEFAULT_DELAY + 100
@@ -5153,127 +4613,11 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.LCDColor(%1)'],
-                    },
-                },
-                robotis_robotai_lite_LCD_Flash: {
-                    color: EntryStatic.colorSet.block.default.HARDWARE,
-                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                    skeleton: 'basic',
-                    statements: [],
-                    params: [
-                        {
-                            type: 'Dropdown',
-                            options: [
-                                [Lang.Blocks.robotis_red, '224'],
-                                [Lang.Blocks.robotis_orange, '244'],
-                                [Lang.Blocks.robotis_yellow, '252'],
-                                [Lang.Blocks.robotis_green, '28'],
-                                [Lang.Blocks.robotis_blue, '3'],
-                                [Lang.Blocks.robotis_darkblue, '2'],
-                                [Lang.Blocks.robotis_purple, '130'],
-                                [Lang.Blocks.robotis_brown, '173'],
-                                [Lang.Blocks.robotis_black, '0'],
-                                [Lang.Blocks.robotis_white, '255'],
-                            ],
-                            value: '224',
-                            fontSize: 11,
-                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                        },
-                        {
-                            type: 'Dropdown',
-                            options: [
-                                [Lang.Blocks.robotis_red, '224'],
-                                [Lang.Blocks.robotis_orange, '244'],
-                                [Lang.Blocks.robotis_yellow, '252'],
-                                [Lang.Blocks.robotis_green, '28'],
-                                [Lang.Blocks.robotis_blue, '3'],
-                                [Lang.Blocks.robotis_darkblue, '2'],
-                                [Lang.Blocks.robotis_purple, '130'],
-                                [Lang.Blocks.robotis_brown, '173'],
-                                [Lang.Blocks.robotis_black, '0'],
-                                [Lang.Blocks.robotis_white, '255'],
-                            ],
-                            value: '0',
-                            fontSize: 11,
-                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                        },
-                        {
-                            type: 'Dropdown',
-                            options: [
-                                [0.3, '3'],
-                                [0.4, '4'],
-                                [0.5, '5'],
-                                [0.6, '6'],
-                                [0.7, '7'],
-                                [0.8, '8'],
-                                [0.9, '9'],
-                                [1.0, '10'],
-                                [1.1, '11'],
-                                [1.2, '12'],
-                                [1.3, '13'],
-                                [1.4, '14'],
-                                [1.5, '15'],
-                                [1.6, '16'],
-                                [1.7, '17'],
-                                [1.8, '18'],
-                                [1.9, '19'],
-                                [2.0, '20'],
-                            ],
-                            value: '5',
-                            fontSize: 11,
-                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                        },
-                        {
-                            type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
-                            size: 12,
-                        },
-                    ],
-                    events: {},
-                    def: {
-                        params: [null],
-                        type: 'robotis_robotai_lite_LCD_Flash',
-                    },
-                    paramsKeyMap: {
-                        COLOR_ON: 0,
-                        COLOR_OFF: 1,
-                        PERIOD: 2,
-                    },
-                    class: 'robotis_robotai_lite_lcd',
-                    isNotFor: ['RobotisRobotaiLite'],
-                    func(sprite, script) {
-                        // instruction / address / length / value / default length
-                        const color_on = script.getNumberValue('COLOR_ON', script);
-                        const color_off = script.getNumberValue('COLOR_OFF', script);
-                        const period = script.getNumberValue('PERIOD', script);
-                        const colors = color_on + (color_off << 8);
-
-                        // 0x8000: use flashing mode,
-                        // (period << 8): on time (0.1 sec)
-                        // period: off time (0.1 sec)
-                        const time_parameter = 0x8000 + (period << 8) + period;
-
-                        let data_sendqueue = [
-                            [INST_WRITE, 158, 2, colors],
-                            [INST_WRITE, 163, 2, time_parameter],
-                        ];
-                        return Entry.RobotisRobotaiLite.postCallReturn(
-                            script,
-                            data_sendqueue,
-                            DEFAULT_DELAY + 100
-                        );
-                    },
-                    syntax: {
-                        js: [],
-                        py: ['Robotailite.LCD_Flash(%1, %2, %3)'],
+                        py: ['Koalabot.LCDColor(%1)'],
                     },
                 },
 
-                robotis_robotai_lite_cm_led: {
+                robotis_koalabot_lite_cm_led: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -5311,14 +4655,14 @@ let camera_id_for_use = 0;
                     events: {},
                     def: {
                         params: [null, null, null],
-                        type: 'robotis_robotai_lite_cm_led',
+                        type: 'robotis_koalabot_lite_cm_led',
                     },
                     paramsKeyMap: {
                         RB_LED: 0,
                         VALUE: 1,
                     },
-                    class: 'robotis_robotai_lite_led',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_led',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         // instruction / address / length / value / default length
                         let cmLed = script.getField('RB_LED', script);
@@ -5346,15 +4690,15 @@ let camera_id_for_use = 0;
                             [data_instruction, data_address, data_length, data_value],
                         ];
 
-                        return Entry.RobotisRobotaiLite.postCallReturn(
+                        return Entry.RobotisKoalabotLite.postCallReturn(
                             script,
                             data_sendqueue,
                             DEFAULT_DELAY
                         );
                     },
-                    syntax: { js: [], py: ['Robotailite.led(%1, %2)'] },
+                    syntax: { js: [], py: ['Koalabot.led(%1, %2)'] },
                 },
-                robotis_robotai_lite_cm_led_pattern: {
+                robotis_koalabot_lite_cm_led_pattern: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -5393,14 +4737,14 @@ let camera_id_for_use = 0;
                     events: {},
                     def: {
                         params: [null, null, null],
-                        type: 'robotis_robotai_lite_cm_led_pattern',
+                        type: 'robotis_koalabot_lite_cm_led_pattern',
                     },
                     paramsKeyMap: {
                         PATTERN: 0,
                         SPEED: 1,
                     },
-                    class: 'robotis_robotai_lite_led',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_led',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         // instruction / address / length / value / default length
                         let pattern = script.getNumberValue('PATTERN', script);
@@ -5417,601 +4761,16 @@ let camera_id_for_use = 0;
                             [data_instruction, data_address, data_length, data_value],
                         ];
 
-                        return Entry.RobotisRobotaiLite.postCallReturn(
+                        return Entry.RobotisKoalabotLite.postCallReturn(
                             script,
                             data_sendqueue,
                             DEFAULT_DELAY
                         );
                     },
-                    syntax: { js: [], py: ['Robotailite.led_pattern(%1, %2)'] },
+                    syntax: { js: [], py: ['Koalabot.led_pattern(%1, %2)'] },
                 },
 
-                robotis_robotai_lite_dxl_set_mode: {
-                    color: EntryStatic.colorSet.block.default.HARDWARE,
-                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                    skeleton: 'basic',
-                    statements: [],
-                    params: [
-                        {
-                            type: 'Dropdown',
-                            options: [
-                                [Lang.Blocks.robotis_left_wheel, '52'],
-                                [Lang.Blocks.robotis_right_wheel, '51'],
-                                ['ID 1', '1'],
-                                ['ID 2', '2'],
-                                ['ID 3', '3'],
-                                ['ID 4', '4'],
-                                ['ID 5', '5'],
-                                ['ID 6', '6'],
-                                ['ID 7', '7'],
-                                ['ID 8', '8'],
-                            ],
-                            value: '52',
-                            fontSize: 11,
-                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                        },
-                        {
-                            type: 'Dropdown',
-                            options: [
-                                [Lang.Blocks.robotis_dxl_mode_joint, '3'],
-                                [Lang.Blocks.robotis_dxl_mode_wheel, '1'],
-                                [Lang.Blocks.robotis_dxl_mode_multi_turn, '4'],
-                            ],
-                            value: '3',
-                            fontSize: 11,
-                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                        },
-                        {
-                            type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
-                            size: 12,
-                        },
-                    ],
-                    events: {},
-                    def: {
-                        params: ['52', null, null],
-                        type: 'robotis_robotai_lite_dxl_set_mode',
-                    },
-                    paramsKeyMap: {
-                        DXL_ID: 0,
-                        DXL_MODE: 1,
-                    },
-                    class: 'robotis_robotai_lite_dxl',
-                    isNotFor: ['RobotisRobotaiLite'],
-                    func(sprite, script) {
-                        // instruction / address / length / value / default length
-                        let dxl_id = script.getNumberValue('DXL_ID', script);
-                        let dxl_mode = script.getField('DXL_MODE', script);
-
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.BYPASS_WRITE;
-                        let data_address = 0;
-                        let data_length = 0;
-                        let data_value = 0;
-
-                        data_address = Entry.Robotis_rb.CONTROL_TABLE.DXL_OPERATING_MODE[0];
-                        data_length = Entry.Robotis_rb.CONTROL_TABLE.DXL_OPERATING_MODE[1];
-
-                        data_value = dxl_mode;
-
-                        let data_sendqueue = [
-                            [
-                                data_instruction,
-                                Entry.Robotis_rb.CONTROL_TABLE.DXL_TORQUE_ENABLE[0],
-                                Entry.Robotis_rb.CONTROL_TABLE.DXL_TORQUE_ENABLE[1],
-                                dxl_id,
-                                0,
-                            ],
-                            [data_instruction, data_address, data_length, dxl_id, data_value],
-                            [
-                                data_instruction,
-                                Entry.Robotis_rb.CONTROL_TABLE.DXL_TORQUE_ENABLE[0],
-                                Entry.Robotis_rb.CONTROL_TABLE.DXL_TORQUE_ENABLE[1],
-                                dxl_id,
-                                1,
-                            ],
-                        ];
-
-                        return Entry.RobotisRobotaiLite.postCallReturn(
-                            script,
-                            data_sendqueue,
-                            DEFAULT_DELAY
-                        );
-                    },
-                    syntax: {
-                        js: [],
-                        py: ['Robotailite.set_dxl_mode(%1, %2)'],
-                    },
-                },
-                robotis_robotai_lite_dxl_each_control: {
-                    color: EntryStatic.colorSet.block.default.HARDWARE,
-                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                    skeleton: 'basic',
-                    statements: [],
-                    params: [
-                        {
-                            type: 'Dropdown',
-                            options: [
-                                [Lang.Blocks.robotis_left_wheel, '52'],
-                                [Lang.Blocks.robotis_right_wheel, '51'],
-                                ['ID 1', '1'],
-                                ['ID 2', '2'],
-                                ['ID 3', '3'],
-                                ['ID 4', '4'],
-                                ['ID 5', '5'],
-                                ['ID 6', '6'],
-                                ['ID 7', '7'],
-                                ['ID 8', '8'],
-                            ],
-                            value: '52',
-                            fontSize: 11,
-                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                        },
-                        {
-                            type: 'Block',
-                            accept: 'string',
-                        },
-                        {
-                            type: 'Block',
-                            accept: 'string',
-                        },
-                        {
-                            type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
-                            size: 12,
-                        },
-                    ],
-                    events: {},
-                    def: {
-                        params: [
-                            '52',
-                            {
-                                type: 'number',
-                                params: ['0'],
-                            },
-                            {
-                                type: 'number',
-                                params: ['1'],
-                            },
-                        ],
-                        type: 'robotis_robotai_lite_dxl_each_control',
-                    },
-
-                    paramsKeyMap: {
-                        DXLNUM: 0,
-                        ANGLE: 1,
-                        TIME: 2,
-                    },
-                    class: 'robotis_robotai_lite_dxl',
-                    isNotFor: ['RobotisRobotaiLite'],
-                    func(entity, script) {
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.BYPASS_WRITE;
-                        let data_address = 0;
-                        let data_length = 0;
-
-                        data_address = Entry.Robotis_rb.CONTROL_TABLE.DXL_PROFILE_VELOCITY[0];
-                        data_length =
-                            Entry.Robotis_rb.CONTROL_TABLE.DXL_PROFILE_VELOCITY[1] +
-                            Entry.Robotis_rb.CONTROL_TABLE.DXL_GOAL_POSITION[1];
-
-                        let dxlID = script.getField('DXLNUM', script);
-                        let angle = script.getNumberValue('ANGLE', script);
-                        let time = script.getNumberValue('TIME', script) * 1000;
-                        let data_buf = [];
-
-                        let engValue = 2048;
-                        engValue = Math.floor(2048 - Math.round(angle * 4096) / 360);
-                        let velocity = 0;
-
-                        if (time == 0) {
-                            velocity = 0;
-                        } else {
-                            velocity = Math.round(
-                                Math.floor(
-                                    (60 *
-                                        Math.abs(
-                                            engValue - Entry.RobotisRobotaiLite.dxlPositions[dxlID]
-                                        ) *
-                                        1000) /
-                                        4096 /
-                                        time
-                                ) / 0.229
-                            );
-                        }
-
-                        data_buf.push(velocity % 256);
-                        data_buf.push(Math.floor(velocity / 256));
-                        data_buf.push(0);
-                        data_buf.push(0);
-
-                        data_buf.push(engValue % 256);
-                        data_buf.push(Math.floor(engValue / 256));
-                        data_buf.push(0);
-                        data_buf.push(0);
-
-                        let data_sendqueue = [
-                            [data_instruction, data_address, data_length, dxlID, data_buf],
-                        ];
-
-                        return Entry.RobotisRobotaiLite.postCallReturn(
-                            script,
-                            data_sendqueue,
-                            time + DEFAULT_DELAY
-                            //DEFAULT_DELAY
-                        );
-                    },
-                    syntax: { js: [], py: ['Robotailite.dxl_each_control(%1,%2,%3)'] },
-                },
-                robotis_robotai_lite_dxl_set_position: {
-                    color: EntryStatic.colorSet.block.default.HARDWARE,
-                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                    skeleton: 'basic',
-                    statements: [],
-                    params: [
-                        {
-                            type: 'Dropdown',
-                            options: [
-                                [Lang.Blocks.robotis_left_wheel, '52'],
-                                [Lang.Blocks.robotis_right_wheel, '51'],
-                                ['ID 1', '1'],
-                                ['ID 2', '2'],
-                                ['ID 3', '3'],
-                                ['ID 4', '4'],
-                                ['ID 5', '5'],
-                                ['ID 6', '6'],
-                                ['ID 7', '7'],
-                                ['ID 8', '8'],
-                            ],
-                            value: '52',
-                            fontSize: 11,
-                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                        },
-                        {
-                            type: 'Block',
-                            accept: 'string',
-                        },
-                        {
-                            type: 'Block',
-                            accept: 'string',
-                        },
-                        {
-                            type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
-                            size: 12,
-                        },
-                    ],
-                    events: {},
-                    def: {
-                        params: ['52', '50', '0', null],
-                        type: 'robotis_robotai_lite_dxl_set_position',
-                    },
-                    paramsKeyMap: {
-                        DXL_ID: 0,
-                        DXL_SPEED: 1,
-                        DXL_ANGLE: 2,
-                    },
-                    class: 'robotis_robotai_lite_dxl',
-                    isNotFor: ['RobotisRobotaiLite'],
-                    func(sprite, script) {
-                        // instruction / address / length / value / default length
-                        let dxl_id = script.getNumberValue('DXL_ID', script);
-                        let dxl_speed = script.getNumberValue('DXL_SPEED', script);
-                        let dxl_angle = script.getNumberValue('DXL_ANGLE', script);
-
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.BYPASS_WRITE;
-                        let data_address = 0;
-                        let data_length = 0;
-                        let data_buf = [];
-
-                        data_address = Entry.Robotis_rb.CONTROL_TABLE.DXL_PROFILE_VELOCITY[0];
-                        data_length =
-                            Entry.Robotis_rb.CONTROL_TABLE.DXL_PROFILE_VELOCITY[1] +
-                            Entry.Robotis_rb.CONTROL_TABLE.DXL_GOAL_POSITION[1];
-
-                        if (dxl_speed < 0) {
-                            dxl_speed = 0;
-                        } else if (dxl_speed > 100) {
-                            dxl_speed = 100;
-                        }
-
-                        data_buf.push((dxl_speed * 10) % 256);
-                        data_buf.push(Math.floor((dxl_speed * 10) / 256));
-                        data_buf.push(0);
-                        data_buf.push(0);
-
-                        if (dxl_angle < -179) {
-                            dxl_angle = -179;
-                        } else if (dxl_angle > 180) {
-                            dxl_angle = 180;
-                        }
-
-                        dxl_angle = 180 - dxl_angle;
-
-                        data_buf.push(Math.floor((dxl_angle * 4096) / 360) % 256);
-                        data_buf.push(Math.floor((dxl_angle * 4096) / 360 / 256));
-                        data_buf.push(0);
-                        data_buf.push(0);
-
-                        let data_sendqueue = [
-                            [data_instruction, data_address, data_length, dxl_id, data_buf],
-                        ];
-
-                        return Entry.RobotisRobotaiLite.postCallReturn(
-                            script,
-                            data_sendqueue,
-                            DEFAULT_DELAY
-                        );
-                    },
-                    syntax: {
-                        js: [],
-                        py: ['Robotailite.set_dxl_position(%1, %2, %3)'],
-                    },
-                },
-                robotis_robotai_lite_dxl_set_rotate: {
-                    color: EntryStatic.colorSet.block.default.HARDWARE,
-                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                    skeleton: 'basic',
-                    statements: [],
-                    params: [
-                        {
-                            type: 'Dropdown',
-                            options: [
-                                [Lang.Blocks.robotis_left_wheel, '52'],
-                                [Lang.Blocks.robotis_right_wheel, '51'],
-                                ['ID 1', '1'],
-                                ['ID 2', '2'],
-                                ['ID 3', '3'],
-                                ['ID 4', '4'],
-                                ['ID 5', '5'],
-                                ['ID 6', '6'],
-                                ['ID 7', '7'],
-                                ['ID 8', '8'],
-                            ],
-                            value: '52',
-                            fontSize: 11,
-                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                        },
-                        {
-                            type: 'Block',
-                            accept: 'string',
-                        },
-                        {
-                            type: 'Dropdown',
-                            options: [
-                                [Lang.Blocks.robotis_dxl_rotate_cw, '1'],
-                                [Lang.Blocks.robotis_dxl_rotate_ccw, '2'],
-                            ],
-                            value: '1',
-                            fontSize: 11,
-                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                        },
-                        {
-                            type: 'Dropdown',
-                            options: [
-                                [Lang.Blocks.robotis_dxl_move_rotate, '1'],
-                                [Lang.Blocks.robotis_dxl_move_stop, '0'],
-                            ],
-                            value: '1',
-                            fontSize: 11,
-                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                        },
-                        {
-                            type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
-                            size: 12,
-                        },
-                    ],
-                    events: {},
-                    def: {
-                        params: ['52', '50', null, null, null],
-                        type: 'robotis_robotai_lite_dxl_set_rotate',
-                    },
-                    paramsKeyMap: {
-                        DXL_ID: 0,
-                        DXL_SPEED: 1,
-                        DXL_DIRECTION: 2,
-                        DXL_MOVE: 3,
-                    },
-                    class: 'robotis_robotai_lite_dxl',
-                    isNotFor: ['RobotisRobotaiLite'],
-                    func(sprite, script) {
-                        // instruction / address / length / value / default length
-                        let dxl_id = script.getNumberValue('DXL_ID', script);
-                        let dxl_speed = script.getNumberValue('DXL_SPEED', script);
-                        let dxl_direction = script.getNumberValue('DXL_DIRECTION', script);
-                        let dxl_move = script.getNumberValue('DXL_MOVE', script);
-
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.BYPASS_WRITE;
-                        let data_address = 0;
-                        let data_length = 0;
-                        let data_value = 0;
-
-                        data_address = Entry.Robotis_rb.CONTROL_TABLE.DXL_GOAL_VELOCITY[0];
-                        data_length = Entry.Robotis_rb.CONTROL_TABLE.DXL_GOAL_VELOCITY[1];
-
-                        if (dxl_speed < 0) {
-                            dxl_speed = 0;
-                        } else if (dxl_speed > 100) {
-                            dxl_speed = 100;
-                        }
-
-                        data_value = dxl_speed * 10;
-
-                        // cw일 경우 음수처리
-                        if (dxl_direction == 1) {
-                            data_value = -data_value;
-                        }
-
-                        // 바퀴형 로봇 우측 바퀴인 경우 reverse mode이므로 방향 반대
-                        if (dxl_id == 33 || dxl_id == 35 || dxl_id == 51) {
-                            data_value = -data_value;
-                        }
-
-                        data_value = data_value * dxl_move;
-
-                        let data_sendqueue = [
-                            [data_instruction, data_address, data_length, dxl_id, data_value],
-                        ];
-
-                        return Entry.RobotisRobotaiLite.postCallReturn(
-                            script,
-                            data_sendqueue,
-                            DEFAULT_DELAY
-                        );
-                    },
-                    syntax: {
-                        js: [],
-                        py: ['Robotailite.set_dxl_rotate(%1, %2, %3, %4)'],
-                    },
-                },
-                robotis_robotai_lite_dxl_set_multiturn_round: {
-                    color: EntryStatic.colorSet.block.default.HARDWARE,
-                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                    skeleton: 'basic',
-                    statements: [],
-                    params: [
-                        {
-                            type: 'Dropdown',
-                            options: [
-                                [Lang.Blocks.robotis_left_wheel, '52'],
-                                [Lang.Blocks.robotis_right_wheel, '51'],
-                                ['ID 1', '1'],
-                                ['ID 2', '2'],
-                                ['ID 3', '3'],
-                                ['ID 4', '4'],
-                                ['ID 5', '5'],
-                                ['ID 6', '6'],
-                                ['ID 7', '7'],
-                                ['ID 8', '8'],
-                            ],
-                            value: '52',
-                            fontSize: 11,
-                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                        },
-                        {
-                            type: 'Block',
-                            accept: 'string',
-                        },
-                        {
-                            type: 'Block',
-                            accept: 'string',
-                        },
-                        {
-                            type: 'Dropdown',
-                            options: [
-                                [Lang.Blocks.robotis_dxl_rotate_cw, '1'],
-                                [Lang.Blocks.robotis_dxl_rotate_ccw, '2'],
-                            ],
-                            value: '1',
-                            fontSize: 11,
-                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                        },
-                        {
-                            type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
-                            size: 12,
-                        },
-                    ],
-                    events: {},
-                    def: {
-                        params: ['52', '50', '1', null, null],
-                        type: 'robotis_robotai_lite_dxl_set_multiturn_round',
-                    },
-                    paramsKeyMap: {
-                        DXL_ID: 0,
-                        DXL_SPEED: 1,
-                        DXL_ROUND: 2,
-                        DXL_DIRECTION: 3,
-                    },
-                    class: 'robotis_robotai_lite_dxl',
-                    isNotFor: ['RobotisRobotaiLite'],
-                    func(sprite, script) {
-                        // instruction / address / length / value / default length
-                        let dxl_id = script.getNumberValue('DXL_ID', script);
-                        let dxl_speed = script.getNumberValue('DXL_SPEED', script);
-                        let dxl_round = script.getNumberValue('DXL_ROUND', script);
-                        let dxl_direction = script.getNumberValue('DXL_DIRECTION', script);
-
-                        let data_instruction = INST_WRITE;
-                        let data_address_1 = 0;
-                        let data_length_1 = 0;
-                        let data_value_1 = 0;
-                        let data_address_2 = 0;
-                        let data_length_2 = 0;
-                        let data_value_2 = 0;
-                        let data_address_3 = 0;
-                        let data_length_3 = 0;
-                        let data_value_3 = 0;
-
-                        let data_sendqueue = [];
-                        let result = undefined;
-
-                        if (dxl_id == 0 || dxl_speed == 0 || dxl_round == 0) {
-                            return;
-                        }
-
-                        data_address_1 = Entry.Robotis_rb.CONTROL_TABLE.CM_DXL_MULTITURN_ID[0];
-                        data_length_1 = Entry.Robotis_rb.CONTROL_TABLE.CM_DXL_MULTITURN_ID[1];
-
-                        data_address_2 = Entry.Robotis_rb.CONTROL_TABLE.CM_DXL_MULTITURN_SPEED[0];
-                        data_length_2 = Entry.Robotis_rb.CONTROL_TABLE.CM_DXL_MULTITURN_SPEED[1];
-
-                        if (dxl_speed < 0) {
-                            dxl_speed = 0;
-                        } else if (dxl_speed > 100) {
-                            dxl_speed = 100;
-                        }
-
-                        data_value_2 = dxl_speed * 10;
-
-                        data_address_3 =
-                            Entry.Robotis_rb.CONTROL_TABLE.CM_DXL_MULTITURN_DISTANCE[0];
-                        data_length_3 = Entry.Robotis_rb.CONTROL_TABLE.CM_DXL_MULTITURN_DISTANCE[1];
-
-                        if (dxl_round < 0) {
-                            dxl_round = 0;
-                        } else if (dxl_round > 100) {
-                            dxl_round = 100;
-                        }
-
-                        // 바퀴형 로봇 우측 바퀴인 경우 reverse mode이므로 방향 반대
-                        if (dxl_id == 33 || dxl_id == 35 || dxl_id == 51) {
-                            dxl_round = -dxl_round;
-                        }
-
-                        data_value_3 = dxl_round * 4096;
-
-                        if (dxl_direction == 1) {
-                            data_value_3 = -data_value_3;
-                        }
-
-                        data_sendqueue = [
-                            [data_instruction, data_address_1, data_length_1, dxl_id],
-                            [data_instruction, data_address_2, data_length_2, data_value_2],
-                            [data_instruction, data_address_3, data_length_3, data_value_3],
-                        ];
-
-                        return Entry.RobotisRobotaiLite.postCallReturn(
-                            script,
-                            data_sendqueue,
-                            DEFAULT_DELAY
-                        );
-                    },
-                    syntax: {
-                        js: [],
-                        py: ['Robotailite.set_dxl_multiturn_round(%1, %2, %3, %4)'],
-                    },
-                },
-
-                robotis_robotai_lite_scale_simple: {
+                robotis_koalabot_lite_scale_simple: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -6078,15 +4837,15 @@ let camera_id_for_use = 0;
                     events: {},
                     def: {
                         params: [null, null, null, null],
-                        type: 'robotis_robotai_lite_scale_simple',
+                        type: 'robotis_koalabot_lite_scale_simple',
                     },
                     paramsKeyMap: {
                         CM_BUZZER_OCTAV: 0,
                         CM_BUZZER_INDEX: 1,
                         CM_BUZZER_NOTE: 2,
                     },
-                    class: 'robotis_robotai_lite_sound',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_sound',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         // instruction / address / length / value / default length
                         let cmBuzzerIndex = script.getNumberValue('CM_BUZZER_INDEX', script);
@@ -6160,7 +4919,7 @@ let camera_id_for_use = 0;
                         // console.log("buzzer send");
                         let data_sendqueue = [[data_instruction, data_address, 3, data_buf]];
 
-                        return Entry.RobotisRobotaiLite.postCallReturn(
+                        return Entry.RobotisKoalabotLite.postCallReturn(
                             script,
                             data_sendqueue,
                             cmBuzzerTime + interval
@@ -6168,10 +4927,10 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.scale_simple(%1, %2, %3)'],
+                        py: ['Koalabot.scale_simple(%1, %2, %3)'],
                     },
                 },
-                robotis_robotai_lite_scale_advanced: {
+                robotis_koalabot_lite_scale_advanced: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -6225,15 +4984,15 @@ let camera_id_for_use = 0;
                     events: {},
                     def: {
                         params: [null, null, 1, null],
-                        type: 'robotis_robotai_lite_scale_advanced',
+                        type: 'robotis_koalabot_lite_scale_advanced',
                     },
                     paramsKeyMap: {
                         CM_BUZZER_OCTAV: 0,
                         CM_BUZZER_INDEX: 1,
                         CM_BUZZER_BEAT: 2,
                     },
-                    class: 'robotis_robotai_lite_sound',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_sound',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         // instruction / address / length / value / default length
                         let cmBuzzerIndex = script.getNumberValue('CM_BUZZER_INDEX', script);
@@ -6276,7 +5035,7 @@ let camera_id_for_use = 0;
                             [data_instruction, data_address_2, data_length_2, data_value_2],
                         ];
 
-                        return Entry.RobotisRobotaiLite.postCallReturn(
+                        return Entry.RobotisKoalabotLite.postCallReturn(
                             script,
                             data_sendqueue,
                             cmBuzzerTime + interval
@@ -6284,10 +5043,10 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.scale_advanced(%1, %2, %3)'],
+                        py: ['Koalabot.scale_advanced(%1, %2, %3)'],
                     },
                 },
-                robotis_robotai_lite_rest_simple: {
+                robotis_koalabot_lite_rest_simple: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -6315,13 +5074,13 @@ let camera_id_for_use = 0;
                     events: {},
                     def: {
                         params: [null, null],
-                        type: 'robotis_robotai_lite_rest_simple',
+                        type: 'robotis_koalabot_lite_rest_simple',
                     },
                     paramsKeyMap: {
                         CM_BUZZER_NOTE: 0,
                     },
-                    class: 'robotis_robotai_lite_sound',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_sound',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         // instruction / address / length / value / default length
                         let cmBuzzerNote = script.getNumberValue('CM_BUZZER_NOTE', script);
@@ -6349,7 +5108,7 @@ let camera_id_for_use = 0;
 
                         let data_sendqueue = [];
 
-                        return Entry.RobotisRobotaiLite.postCallReturn(
+                        return Entry.RobotisKoalabotLite.postCallReturn(
                             script,
                             data_sendqueue,
                             cmBuzzerTime + interval
@@ -6357,10 +5116,10 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.rest_simple(%1)'],
+                        py: ['Koalabot.rest_simple(%1)'],
                     },
                 },
-                robotis_robotai_lite_rest_advanced: {
+                robotis_koalabot_lite_rest_advanced: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -6379,13 +5138,13 @@ let camera_id_for_use = 0;
                     events: {},
                     def: {
                         params: [1, null],
-                        type: 'robotis_robotai_lite_rest_advanced',
+                        type: 'robotis_koalabot_lite_rest_advanced',
                     },
                     paramsKeyMap: {
                         CM_BUZZER_BEAT: 0,
                     },
-                    class: 'robotis_robotai_lite_sound',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_sound',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         // instruction / address / length / value / default length
                         let cmBuzzerBeat = script.getNumberValue('CM_BUZZER_BEAT', script);
@@ -6399,7 +5158,7 @@ let camera_id_for_use = 0;
 
                         let data_sendqueue = [];
 
-                        return Entry.RobotisRobotaiLite.postCallReturn(
+                        return Entry.RobotisKoalabotLite.postCallReturn(
                             script,
                             data_sendqueue,
                             cmBuzzerTime + interval
@@ -6407,10 +5166,10 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.rest_advanced(%1)'],
+                        py: ['Koalabot.rest_advanced(%1)'],
                     },
                 },
-                robotis_robotai_lite_beat_per_minute: {
+                robotis_koalabot_lite_beat_per_minute: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -6429,13 +5188,13 @@ let camera_id_for_use = 0;
                     events: {},
                     def: {
                         params: [75, null],
-                        type: 'robotis_robotai_lite_beat_per_minute',
+                        type: 'robotis_koalabot_lite_beat_per_minute',
                     },
                     paramsKeyMap: {
                         CM_BUZZER_BPM: 0,
                     },
-                    class: 'robotis_robotai_lite_sound',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_sound',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         // instruction / address / length / value / default length
                         let cmBuzzerBpm = script.getNumberValue('CM_BUZZER_BPM', script);
@@ -6445,15 +5204,15 @@ let camera_id_for_use = 0;
                         // console.log("buzzer send");
                         let data_sendqueue = [];
 
-                        return Entry.RobotisRobotaiLite.postCallReturn(script, data_sendqueue, 0);
+                        return Entry.RobotisKoalabotLite.postCallReturn(script, data_sendqueue, 0);
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.set_bpm(%1)'],
+                        py: ['Koalabot.set_bpm(%1)'],
                     },
                 },
 
-                robotis_robotai_lite_Hello: {
+                robotis_koalabot_lite_Hello: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -6537,13 +5296,13 @@ let camera_id_for_use = 0;
                     events: {},
                     def: {
                         params: [null],
-                        type: 'robotis_robotai_lite_Hello',
+                        type: 'robotis_koalabot_lite_Hello',
                     },
                     paramsKeyMap: {
                         HELLO: 0,
                     },
-                    class: 'robotis_robotai_lite_sound',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_sound',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         // instruction / address / length / value / default length
                         let cmHello = script.getField('HELLO', script);
@@ -6566,7 +5325,7 @@ let camera_id_for_use = 0;
                             extraTime = 2000;
                         }
 
-                        return Entry.RobotisRobotaiLite.postCallReturn(
+                        return Entry.RobotisKoalabotLite.postCallReturn(
                             script,
                             data_sendqueue,
                             2000 + extraTime
@@ -6574,10 +5333,10 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.speak(%1)'],
+                        py: ['Koalabot.speak(%1)'],
                     },
                 },
-                robotis_robotai_lite_effectSound: {
+                robotis_koalabot_lite_effectSound: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -6619,13 +5378,13 @@ let camera_id_for_use = 0;
                     events: {},
                     def: {
                         params: [null],
-                        type: 'robotis_robotai_lite_effectSound',
+                        type: 'robotis_koalabot_lite_effectSound',
                     },
                     paramsKeyMap: {
                         HELLO: 0,
                     },
-                    class: 'robotis_robotai_lite_sound',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_sound',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         // instruction / address / length / value / default length
                         let cmHello = script.getField('HELLO', script);
@@ -6656,7 +5415,7 @@ let camera_id_for_use = 0;
                                 extraTime += 500;
                             }
                         }
-                        return Entry.RobotisRobotaiLite.postCallReturn(
+                        return Entry.RobotisKoalabotLite.postCallReturn(
                             script,
                             data_sendqueue,
                             3000 + extraTime
@@ -6664,10 +5423,10 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.effect_sound(%1)'],
+                        py: ['Koalabot.effect_sound(%1)'],
                     },
                 },
-                robotis_robotai_lite_record: {
+                robotis_koalabot_lite_record: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -6696,13 +5455,13 @@ let camera_id_for_use = 0;
                     events: {},
                     def: {
                         params: [null],
-                        type: 'robotis_robotai_lite_record',
+                        type: 'robotis_koalabot_lite_record',
                     },
                     paramsKeyMap: {
                         ROOM: 0,
                     },
-                    class: 'robotis_robotai_lite_sound',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_sound',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         // instruction / address / length / value / default length
                         let roomNum = script.getField('ROOM', script);
@@ -6718,7 +5477,7 @@ let camera_id_for_use = 0;
                             [data_instruction, data_address, data_length, data_value],
                         ];
 
-                        return Entry.RobotisRobotaiLite.postCallReturn(
+                        return Entry.RobotisKoalabotLite.postCallReturn(
                             script,
                             data_sendqueue,
                             6000
@@ -6726,10 +5485,10 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.record(%1)'],
+                        py: ['Koalabot.record(%1)'],
                     },
                 },
-                robotis_robotai_lite_playRecord: {
+                robotis_koalabot_lite_playRecord: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -6758,13 +5517,13 @@ let camera_id_for_use = 0;
                     events: {},
                     def: {
                         params: [null],
-                        type: 'robotis_robotai_lite_playRecord',
+                        type: 'robotis_koalabot_lite_playRecord',
                     },
                     paramsKeyMap: {
                         ROOM: 0,
                     },
-                    class: 'robotis_robotai_lite_sound',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_sound',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         // instruction / address / length / value / default length
                         let roomNum = script.getField('ROOM', script);
@@ -6780,7 +5539,7 @@ let camera_id_for_use = 0;
                             [data_instruction, data_address, data_length, data_value],
                         ];
 
-                        return Entry.RobotisRobotaiLite.postCallReturn(
+                        return Entry.RobotisKoalabotLite.postCallReturn(
                             script,
                             data_sendqueue,
                             6000
@@ -6788,31 +5547,17 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.playRecord(%1)'],
+                        py: ['Koalabot.playRecord(%1)'],
                     },
                 },
 
-                robotis_robotai_lite_ai_camera_block_value_closest_to_center: {
+                robotis_koalabot_lite_ai_camera_block_value_closest_to_center: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
                     skeleton: 'basic_string_field',
                     statements: [],
                     params: [
-                        {
-                            type: 'Dropdown',
-                            options: [
-                                [Lang.Blocks.robotis_ai_camera_target_face, '0'],
-                                [Lang.Blocks.robotis_ai_camera_target_object, '1'],
-                                [Lang.Blocks.robotis_ai_camera_target_color, '2'],
-                                [Lang.Blocks.robotis_ai_camera_target_tag, '3'],
-                                [Lang.Blocks.robotis_ai_camera_target_qr, '4'],
-                            ],
-                            value: '0',
-                            fontSize: 11,
-                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                        },
                         {
                             type: 'Dropdown',
                             options: [
@@ -6830,21 +5575,20 @@ let camera_id_for_use = 0;
                     ],
                     events: {},
                     def: {
-                        params: [null, null],
-                        type: 'robotis_robotai_lite_ai_camera_block_value_closest_to_center',
+                        params: [null],
+                        type: 'robotis_koalabot_lite_ai_camera_block_value_closest_to_center',
                     },
                     paramsKeyMap: {
-                        TARGET: 0,
-                        DATA_TYPE: 1,
+                        DATA_TYPE: 0,
                     },
-                    class: 'robotis_robotai_lite_ai_camera_value',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_ai_camera_value',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         let scope = script.executor.scope;
                         let data_address = 4009;
                         let data_type = script.getNumberValue('DATA_TYPE');
                         data_address += data_type * 2;
-                        let result = Entry.RobotisRobotaiLite.dataBuffer[data_address];
+                        let result = Entry.RobotisKoalabotLite.dataBuffer[data_address];
                         if (typeof result == 'undefined') {
                             return 0;
                         }
@@ -6853,10 +5597,10 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.ai_camera_block_value_closest_to_center(%1)'],
+                        py: ['Koalabot.ai_camera_block_value_closest_to_center(%1)'],
                     },
                 },
-                robotis_robotai_lite_ai_camera_arrow_value_closest_to_center: {
+                robotis_koalabot_lite_ai_camera_arrow_value_closest_to_center: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -6881,19 +5625,19 @@ let camera_id_for_use = 0;
                     events: {},
                     def: {
                         params: [null],
-                        type: 'robotis_robotai_lite_ai_camera_arrow_value_closest_to_center',
+                        type: 'robotis_koalabot_lite_ai_camera_arrow_value_closest_to_center',
                     },
                     paramsKeyMap: {
                         DATA_TYPE: 0,
                     },
-                    class: 'robotis_robotai_lite_ai_camera_value',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_ai_camera_value',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         let scope = script.executor.scope;
                         let data_address = 4019;
                         let data_type = script.getNumberValue('DATA_TYPE');
                         data_address += data_type * 2;
-                        let result = Entry.RobotisRobotaiLite.dataBuffer[data_address];
+                        let result = Entry.RobotisKoalabotLite.dataBuffer[data_address];
 
                         if (typeof result == 'undefined') {
                             return 0;
@@ -6903,10 +5647,10 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.ai_camera_arrow_value_closest_to_center(%1)'],
+                        py: ['Koalabot.ai_camera_arrow_value_closest_to_center(%1)'],
                     },
                 },
-                robotis_robotai_lite_ai_camera_number_of_learned_id: {
+                robotis_koalabot_lite_ai_camera_number_of_learned_id: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -6916,15 +5660,15 @@ let camera_id_for_use = 0;
                     events: {},
                     def: {
                         params: [],
-                        type: 'robotis_robotai_lite_ai_camera_number_of_learned_id',
+                        type: 'robotis_koalabot_lite_ai_camera_number_of_learned_id',
                     },
                     paramsKeyMap: {},
-                    class: 'robotis_robotai_lite_ai_camera_value',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_ai_camera_value',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         let scope = script.executor.scope;
                         let data_address = 4003;
-                        let result = Entry.RobotisRobotaiLite.dataBuffer[data_address];
+                        let result = Entry.RobotisKoalabotLite.dataBuffer[data_address];
                         if (typeof result == 'undefined') {
                             return 0;
                         }
@@ -6933,10 +5677,10 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.ai_camera_number_of_learned_id()'],
+                        py: ['Koalabot.ai_camera_number_of_learned_id()'],
                     },
                 },
-                robotis_robotai_lite_ai_camera_block_value_of_id: {
+                robotis_koalabot_lite_ai_camera_block_value_of_id: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -6963,20 +5707,6 @@ let camera_id_for_use = 0;
                         {
                             type: 'Dropdown',
                             options: [
-                                [Lang.Blocks.robotis_ai_camera_target_face, '0'],
-                                [Lang.Blocks.robotis_ai_camera_target_object, '1'],
-                                [Lang.Blocks.robotis_ai_camera_target_color, '2'],
-                                [Lang.Blocks.robotis_ai_camera_target_tag, '3'],
-                                [Lang.Blocks.robotis_ai_camera_target_qr, '4'],
-                            ],
-                            value: '0',
-                            fontSize: 11,
-                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                        },
-                        {
-                            type: 'Dropdown',
-                            options: [
                                 [Lang.Blocks.robotis_ai_camera_center_block_center_x, '0'],
                                 [Lang.Blocks.robotis_ai_camera_center_block_center_y, '1'],
                                 [Lang.Blocks.robotis_ai_camera_center_block_width, '2'],
@@ -6990,16 +5720,15 @@ let camera_id_for_use = 0;
                     ],
                     events: {},
                     def: {
-                        params: [null, null, null],
-                        type: 'robotis_robotai_lite_ai_camera_block_value_of_id',
+                        params: [null, null],
+                        type: 'robotis_koalabot_lite_ai_camera_block_value_of_id',
                     },
                     paramsKeyMap: {
                         ID: 0,
-                        TARGET: 1,
-                        TYPE: 2,
+                        TYPE: 1,
                     },
-                    class: 'robotis_robotai_lite_ai_camera_value',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_ai_camera_value',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         let scope = script.executor.scope;
 
@@ -7014,7 +5743,7 @@ let camera_id_for_use = 0;
                                 [data_instruction, data_address, data_length, data_value],
                             ];
 
-                            Entry.RobotisRobotaiLite.postCallReturn(
+                            Entry.RobotisKoalabotLite.postCallReturn(
                                 script,
                                 data_sendqueue,
                                 DEFAULT_DELAY
@@ -7026,7 +5755,7 @@ let camera_id_for_use = 0;
 
                         data_address += script.getNumberValue('TYPE') * 2;
 
-                        let result = Entry.RobotisRobotaiLite.dataBuffer[data_address];
+                        let result = Entry.RobotisKoalabotLite.dataBuffer[data_address];
 
                         if (typeof result == 'undefined') {
                             return 0;
@@ -7036,10 +5765,10 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.ai_camera_block_value_of_id(%1, %2)'],
+                        py: ['Koalabot.ai_camera_block_value_of_id(%1, %2)'],
                     },
                 },
-                robotis_robotai_lite_ai_camera_arrow_value_of_id: {
+                robotis_koalabot_lite_ai_camera_arrow_value_of_id: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -7080,14 +5809,14 @@ let camera_id_for_use = 0;
                     events: {},
                     def: {
                         params: [null, null],
-                        type: 'robotis_robotai_lite_ai_camera_arrow_value_of_id',
+                        type: 'robotis_koalabot_lite_ai_camera_arrow_value_of_id',
                     },
                     paramsKeyMap: {
                         ID: 0,
                         TYPE: 1,
                     },
-                    class: 'robotis_robotai_lite_ai_camera_value',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_ai_camera_value',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         let scope = script.executor.scope;
 
@@ -7102,7 +5831,7 @@ let camera_id_for_use = 0;
                                 [data_instruction, data_address, data_length, data_value],
                             ];
 
-                            Entry.RobotisRobotaiLite.postCallReturn(
+                            Entry.RobotisKoalabotLite.postCallReturn(
                                 script,
                                 data_sendqueue,
                                 DEFAULT_DELAY
@@ -7113,7 +5842,7 @@ let camera_id_for_use = 0;
                         data_address = 4044; // ARROW_RESULT_BY_ID_X_ORIGIN
 
                         data_address += script.getNumberValue('TYPE') * 2;
-                        let result = Entry.RobotisRobotaiLite.dataBuffer[data_address];
+                        let result = Entry.RobotisKoalabotLite.dataBuffer[data_address];
 
                         if (typeof result == 'undefined') {
                             return 0;
@@ -7123,10 +5852,10 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.ai_camera_arrow_value_of_id(%1, %2)'],
+                        py: ['Koalabot.ai_camera_arrow_value_of_id(%1, %2)'],
                     },
                 },
-                robotis_robotai_lite_ai_camera_connection_status: {
+                robotis_koalabot_lite_ai_camera_connection_status: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -7148,18 +5877,18 @@ let camera_id_for_use = 0;
                     events: {},
                     def: {
                         params: [null],
-                        type: 'robotis_robotai_lite_ai_camera_connection_status',
+                        type: 'robotis_koalabot_lite_ai_camera_connection_status',
                     },
                     paramsKeyMap: {
                         STATUS: 0,
                     },
-                    class: 'robotis_robotai_lite_ai_camera_value',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_ai_camera_value',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         let scope = script.executor.scope;
                         let data_address = 4000;
                         let compareValue = script.getNumberValue('STATUS');
-                        let result = Entry.RobotisRobotaiLite.dataBuffer[data_address];
+                        let result = Entry.RobotisKoalabotLite.dataBuffer[data_address];
 
                         if (result == undefined) {
                             return false;
@@ -7169,10 +5898,10 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.ai_camera_connection_status(%1)'],
+                        py: ['Koalabot.ai_camera_connection_status(%1)'],
                     },
                 },
-                robotis_robotai_lite_ai_camera_if_detected: {
+                robotis_koalabot_lite_ai_camera_if_detected: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -7182,12 +5911,8 @@ let camera_id_for_use = 0;
                         {
                             type: 'Dropdown',
                             options: [
-                                [Lang.Blocks.robotis_ai_camera_target_face, '0'],
-                                [Lang.Blocks.robotis_ai_camera_target_object, '1'],
-                                [Lang.Blocks.robotis_ai_camera_target_color, '2'],
-                                [Lang.Blocks.robotis_ai_camera_target_tag, '3'],
-                                [Lang.Blocks.robotis_ai_camera_target_qr, '4'],
-                                [Lang.Blocks.robotis_ai_camera_target_arrow, '5'],
+                                [Lang.Blocks.robotis_ai_camera_block, '0'],
+                                [Lang.Blocks.robotis_ai_camera_arrow, '1'],
                             ],
                             value: '0',
                             fontSize: 11,
@@ -7198,23 +5923,23 @@ let camera_id_for_use = 0;
                     events: {},
                     def: {
                         params: [null],
-                        type: 'robotis_robotai_lite_ai_camera_if_detected',
+                        type: 'robotis_koalabot_lite_ai_camera_if_detected',
                     },
                     paramsKeyMap: {
                         DETECT_TYPE: 0,
                     },
-                    class: 'robotis_robotai_lite_ai_camera_value',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_ai_camera_value',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         let scope = script.executor.scope;
                         let data_address = 4005; // block
                         let detect_type = script.getNumberValue('DETECT_TYPE');
 
-                        if (detect_type == 5) {
+                        if (detect_type == 1) {
                             data_address = 4006;
                         } // arrow
 
-                        let result = Entry.RobotisRobotaiLite.dataBuffer[data_address];
+                        let result = Entry.RobotisKoalabotLite.dataBuffer[data_address];
 
                         if (result == undefined) {
                             return false;
@@ -7224,10 +5949,10 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.ai_camera_if_detected(%1)'],
+                        py: ['Koalabot.ai_camera_if_detected(%1)'],
                     },
                 },
-                robotis_robotai_lite_ai_camera_set_mode: {
+                robotis_koalabot_lite_ai_camera_set_mode: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -7237,7 +5962,8 @@ let camera_id_for_use = 0;
                             type: 'Dropdown',
                             options: [
                                 [Lang.Blocks.robotis_ai_camera_mode_face_recognition, '0'],
-                                [Lang.Blocks.robotis_ai_camera_mode_expression_recognition, '9'],
+                                [Lang.Blocks.robotis_ai_camera_mode_object_tracking, '1'],
+                                [Lang.Blocks.robotis_ai_camera_mode_object_recognition, '2'],
                                 [Lang.Blocks.robotis_ai_camera_mode_line_tracking, '3'],
                                 [Lang.Blocks.robotis_ai_camera_mode_color_recognition, '4'],
                                 [Lang.Blocks.robotis_ai_camera_mode_tag_recognition, '5'],
@@ -7257,13 +5983,13 @@ let camera_id_for_use = 0;
                     events: {},
                     def: {
                         params: [null],
-                        type: 'robotis_robotai_lite_ai_camera_set_mode',
+                        type: 'robotis_koalabot_lite_ai_camera_set_mode',
                     },
                     paramsKeyMap: {
                         AI_CAMERA_MODE: 0,
                     },
-                    class: 'robotis_robotai_lite_ai_camera_set',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_ai_camera_set',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         // instruction / address / length / value / default length
                         let ai_camera_mode = script.getField('AI_CAMERA_MODE', script);
@@ -7276,7 +6002,7 @@ let camera_id_for_use = 0;
                             [data_instruction, data_address, data_length, ai_camera_mode],
                         ];
 
-                        return Entry.RobotisRobotaiLite.postCallReturn(
+                        return Entry.RobotisKoalabotLite.postCallReturn(
                             script,
                             data_sendqueue,
                             DEFAULT_DELAY
@@ -7284,10 +6010,10 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.set_ai_camera_mode(%1)'],
+                        py: ['Koalabot.set_ai_camera_mode(%1)'],
                     },
                 },
-                robotis_robotai_lite_ai_camera_print_custom_text: {
+                robotis_koalabot_lite_ai_camera_print_custom_text: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -7324,15 +6050,15 @@ let camera_id_for_use = 0;
                             },
                             'Hello!',
                         ],
-                        type: 'robotis_robotai_lite_ai_camera_print_custom_text',
+                        type: 'robotis_koalabot_lite_ai_camera_print_custom_text',
                     },
                     paramsKeyMap: {
                         X: 0,
                         Y: 1,
                         TEXT: 2,
                     },
-                    class: 'robotis_robotai_lite_ai_camera_set',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_ai_camera_set',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         // instruction / address / length / value / default length
                         let x = script.getNumberValue('X', script);
@@ -7344,7 +6070,7 @@ let camera_id_for_use = 0;
                         // Encode the text as UTF-8
                         let encoder = new TextEncoder();
                         let utf8Array = encoder.encode(text);
-
+        
                         // utf8Array is now a Uint8Array containing the UTF-8 bytes of the text
                         let text_len = utf8Array.length;
 
@@ -7387,7 +6113,7 @@ let camera_id_for_use = 0;
                             [data_instruction, data_address, data_length, data_buf],
                         ];
 
-                        return Entry.RobotisRobotaiLite.postCallReturn(
+                        return Entry.RobotisKoalabotLite.postCallReturn(
                             script,
                             data_sendqueue,
                             DEFAULT_DELAY
@@ -7395,10 +6121,10 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.ai_camera_print_custom_text(%1,%2,%3)'],
+                        py: ['Koalabot.ai_camera_print_custom_text(%1,%2,%3)'],
                     },
                 },
-                robotis_robotai_lite_ai_camera_clear_custom_text: {
+                robotis_koalabot_lite_ai_camera_clear_custom_text: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -7413,11 +6139,11 @@ let camera_id_for_use = 0;
                     events: {},
                     def: {
                         params: [],
-                        type: 'robotis_robotai_lite_ai_camera_clear_custom_text',
+                        type: 'robotis_koalabot_lite_ai_camera_clear_custom_text',
                     },
                     paramsKeyMap: {},
-                    class: 'robotis_robotai_lite_ai_camera_set',
-                    isNotFor: ['RobotisRobotaiLite'],
+                    class: 'robotis_koalabot_lite_ai_camera_set',
+                    isNotFor: ['RobotisKoalabotLite'],
                     func(sprite, script) {
                         // instruction / address / length / value / default length
 
@@ -7427,7 +6153,7 @@ let camera_id_for_use = 0;
 
                         let data_sendqueue = [[data_instruction, data_address, data_length, 1]];
 
-                        return Entry.RobotisRobotaiLite.postCallReturn(
+                        return Entry.RobotisKoalabotLite.postCallReturn(
                             script,
                             data_sendqueue,
                             DEFAULT_DELAY
@@ -7435,7 +6161,7 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.ai_camera_clear_custom_text()'],
+                        py: ['Koalabot.ai_camera_clear_custom_text()'],
                     },
                 },
             };
@@ -7705,4 +6431,4 @@ let camera_id_for_use = 0;
     })();
 })();
 
-module.exports = Entry.RobotisRobotaiLite;
+module.exports = Entry.RobotisKoalabotLite;
