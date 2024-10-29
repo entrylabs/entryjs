@@ -42,9 +42,10 @@ class NumberClassification {
         this.init({ ...params });
     }
 
-    init({ name, url, table, trainParam, modelId, loadModel }) {
+    init({ name, url, table, trainParam, modelId, loadModel, result }) {
         this.#name = name;
         this.#table = table;
+        this.result = result;
         this.#trainCallback = (value) => {
             this.#view.setValue(value);
         };
@@ -68,7 +69,7 @@ class NumberClassification {
 
     setTable() {
         const tableSource = DataTable.getSource(this.#table.id);
-        if (this.#table.fieldsInfo.length !== tableSource.fields.length) {
+        if (this.#table?.fieldsInfo?.length !== tableSource?.fields?.length) {
             Entry.toast.alert(Lang.Msgs.warn, Lang.AiLearning.train_param_error);
             throw Error(Lang.AiLearning.train_param_error);
         }
@@ -146,6 +147,10 @@ class NumberClassification {
 
     getResult() {
         return this.#predictResult;
+    }
+
+    getTrainResult() {
+        return this.result;
     }
 
     getLabels() {
