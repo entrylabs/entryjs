@@ -434,30 +434,38 @@ EntryStatic.getAllBlocks = function () {
         {
             category: 'hw_sensor',
             visible: false,
-            blocks: ['practical_course_dummy'].concat(
-                EntryStatic.DynamicPracticalHardwareBlocks['hw_sensor']
-            ),
+            blocks: [
+                'practical_course_dummy',
+                'hardware_device_name_title_sensor',
+                'hardware_device_name_content_sensor',
+            ].concat(EntryStatic.DynamicPracticalHardwareBlocks['hw_sensor']),
         },
         {
             category: 'hw_motor',
             visible: false,
-            blocks: ['practical_course_dummy'].concat(
-                EntryStatic.DynamicPracticalHardwareBlocks['hw_motor']
-            ),
+            blocks: [
+                'practical_course_dummy',
+                'hardware_device_name_title_motor',
+                'hardware_device_name_content_motor',
+            ].concat(EntryStatic.DynamicPracticalHardwareBlocks['hw_motor']),
         },
         {
             category: 'hw_led',
             visible: false,
-            blocks: ['practical_course_dummy'].concat(
-                EntryStatic.DynamicPracticalHardwareBlocks['hw_led']
-            ),
+            blocks: [
+                'practical_course_dummy',
+                'hardware_device_name_title_led',
+                'hardware_device_name_content_led',
+            ].concat(EntryStatic.DynamicPracticalHardwareBlocks['hw_led']),
         },
         {
             category: 'hw_melody',
             visible: false,
-            blocks: ['practical_course_dummy'].concat(
-                EntryStatic.DynamicPracticalHardwareBlocks['hw_melody']
-            ),
+            blocks: [
+                'practical_course_dummy',
+                'hardware_device_name_title_melody',
+                'hardware_device_name_content_melody',
+            ].concat(EntryStatic.DynamicPracticalHardwareBlocks['hw_melody']),
         },
         {
             category: 'hw_robot',
@@ -467,10 +475,8 @@ EntryStatic.getAllBlocks = function () {
                 'arduino_open',
                 'arduino_connect',
                 'hardware_program_download',
-                // 'arduino_download_connector',
-                // 'download_guide',
                 'arduino_connected',
-                'hardware_device_name_title',
+                'hardware_device_name_title_robot',
                 'hardware_device_name_content',
                 'hardware_connected_noti',
                 'robot_noti',

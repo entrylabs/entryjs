@@ -2199,12 +2199,13 @@ Entry.nemo.getBlocks = function() {
             isNotFor: ['nemo'],
             func: function(sprite, script) {
                 return Entry.nemo.setProcessor(script, Entry.nemo.delayTime, function() {
-                    const type = script.getNumberValue('TYPE');    
+                    const type = script.getNumberValue('TYPE');   
+                    const sensorIndex = type <= 2 ? type + 1 : type + 2;
                     Entry.hw.sendQueue['NEMO_EXTENSION'] = {
                         id: Math.random(),
                         index: 0,
                         setExpansion: {
-                            type: type,
+                            type: sensorIndex,
                         },
                     };
                     return false;
@@ -2291,8 +2292,8 @@ Entry.nemo.getBlocks = function() {
             isNotFor: ['nemo'],
             func: function(sprite, script) {
                 const state = script.getNumberValue('STATE') + 4;
-                const expansion = Entry.hw.portData['NEMO_DEVICE_EX'].expansion;
-                return expansion.state[state];
+                const exPort = Entry.hw.portData['NEMO_DEVICE_EX'].exPort;
+                return exPort.state[state];
             }
         },
         nemo_block_extension_field_expension_anlog_value: {
@@ -2346,8 +2347,8 @@ Entry.nemo.getBlocks = function() {
             isNotFor: ['nemo'],
             func: function(sprite, script) {
                 const type = script.getNumberValue('TYPE');
-                const expansion = Entry.hw.portData['NEMO_DEVICE_EX'].expansion;
-                return expansion.state[type];
+                const exPort = Entry.hw.portData['NEMO_DEVICE_EX'].exPort;
+                return exPort.state[type];
             }
         },        
         nemo_block_extension_basic_set_compass_value: {

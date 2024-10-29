@@ -242,7 +242,7 @@ let camera_id_for_use = 0;
                 'robotis_robotai_lite_dxl_set_rotate',
                 'robotis_robotai_lite_dxl_set_multiturn_round',
 
-                // AI 카메라 값 블록
+                // 인공지능 카메라 값 블록
                 'robotis_robotai_lite_ai_camera_connection_status',
                 'robotis_robotai_lite_ai_camera_if_detected',
 
@@ -471,12 +471,12 @@ let camera_id_for_use = 0;
                         robotis_robotai_lite_turn_at_line: '교차로에서 %1 하고 멈추기 %2',
                         robotis_robotai_lite_drive_stop: '정지하기 %1',
 
-                        robotis_robotai_lite_securitybot_init: '보안로봇 초기화 %1',
-                        robotis_robotai_lite_securitybot_hi: '보안로봇 위아래로 흔들기 %1',
-                        robotis_robotai_lite_securitybot_alert: '보안로봇 좌우로 흔들기 %1',
+                        robotis_robotai_lite_securitybot_init: '보안 로봇 초기화 %1',
+                        robotis_robotai_lite_securitybot_hi: '보안 로봇 긍정적 행동하기 %1',
+                        robotis_robotai_lite_securitybot_alert: '보안 로봇 부정적 행동하기 %1',
 
-                        robotis_robotai_lite_petbot_happy: '반려로봇 웃음 %1',
-                        robotis_robotai_lite_petbot_sad: '반려로봇 화남 %1',
+                        robotis_robotai_lite_petbot_happy: '반려 로봇 행복한 행동하기 %1',
+                        robotis_robotai_lite_petbot_sad: '반려 로봇 화난 행동하기 %1',
 
                         robotis_robotai_lite_farmbot_init: '스마트팜 로봇 초기화 %1',
                         robotis_robotai_lite_farmbot_seek: '농작물 찾기 %1',
@@ -486,7 +486,7 @@ let camera_id_for_use = 0;
                         // 값 블록
                         robotis_robotai_lite_cm_ir_value: '%1 적외선센서 값',
                         robotis_robotai_lite_cm_ir_compare: '%1 적외선센서 값이 %2 보다 %3',
-                        robotis_robotai_lite_detectFrontObj: '적외선센서의 %1에 물체가 있으면', // 거리센서를 사용하지 않을 경우
+                        robotis_robotai_lite_detectFrontObj: '적외선센서의 %1에 물체가 있으면',
                         robotis_robotai_lite_cm_btn_value: '제어기의 %1 버튼을 클릭했을때',
                         robotis_robotai_lite_cm_joystick_value:
                             '제어기의 노랑 조이스틱 위치가 %1 이면',
@@ -512,7 +512,7 @@ let camera_id_for_use = 0;
                         robotis_robotai_lite_playRecord: '소리 %1번을 재생하기 %2',
 
                         // LCD 제어
-                        robotis_robotai_lite_screen: '화면 표정을 %1 %2 (으)로 정하기 %3',
+                        robotis_robotai_lite_screen: '화면을 %1 %2 (으)로 정하기 %3',
                         robotis_robotai_lite_anim_screen:
                             '화면 애니메이션을 %1 %2 (으)로 정하기 %3',
                         robotis_robotai_lite_icon_screen_food_plant:
@@ -548,32 +548,34 @@ let camera_id_for_use = 0;
                             '%1 모터 %2 속도로 %3 바퀴 %4으로 회전 %5',
 
                         // ai_camera 값 블록
-                        robotis_robotai_lite_ai_camera_connection_status: 'AI 카메라: %1이면',
-                        robotis_robotai_lite_ai_camera_if_detected: 'AI 카메라: %1 이/가 표시되면',
+                        robotis_robotai_lite_ai_camera_connection_status:
+                            '인공지능 카메라가 %1이면',
+                        robotis_robotai_lite_ai_camera_if_detected:
+                            '인공지능 카메라에 %1 이/가 표시되면',
 
                         robotis_robotai_lite_ai_camera_block_value_closest_to_center:
-                            'AI 카메라: 화면 중앙과 가까운 %1의 %2',
+                            '인공지능 카메라가 인식한 %1의 %2',
                         robotis_robotai_lite_ai_camera_arrow_value_closest_to_center:
-                            'AI 카메라: 화면 중앙과 가까운 화살표의 %1',
+                            '인공지능 카메라가 인식한 화살표의 %1',
                         robotis_robotai_lite_ai_camera_number_of_learned_id:
-                            'AI 카메라: 학습한 ID의 갯수',
+                            '인공지능 카메라가 학습한 클래스의 갯수',
                         robotis_robotai_lite_ai_camera_block_value_of_id:
-                            'AI 카메라: 감지된 ID가 %1인 %2의 %3',
+                            '인공지능 카메라가 감지한 클래스가 %1인 %2의 %3',
                         robotis_robotai_lite_ai_camera_arrow_value_of_id:
-                            'AI 카메라: 감지된 ID가 %1인 화살표의 %2',
+                            '인공지능 카메라가 감지한 클래스가 %1인 화살표의 %2',
 
                         robotis_robotai_lite_ai_camera_if_learned_id:
-                            'AI 카메라: ID가 %1인 데이터를 학습하였으면',
+                            '인공지능 카메라가 클래스가 %1인 데이터를 학습하였으면',
                         robotis_robotai_lite_ai_camera_if_detected_id_type:
-                            'AI 카메라: ID가 %1인 %2데이터를 인식하였으면',
+                            '인공지능 카메라가 클래스가 %1인 %2데이터를 인식하였으면',
 
-                        // AI 카메라 제어
+                        // 인공지능 카메라 제어
                         robotis_robotai_lite_ai_camera_set_mode:
-                            'AI 카메라: 모드를 %1(으)로 설정 %2',
+                            '인공지능 카메라의 작동 방식을 %1(으)로 설정 %2',
                         robotis_robotai_lite_ai_camera_print_custom_text:
-                            'AI 카메라: 화면 위치 (%1,%2)에 %3를 보여주기%4',
+                            '인공지능 카메라의 화면 위치 (%1,%2)에 %3를 보여주기%4',
                         robotis_robotai_lite_ai_camera_clear_custom_text:
-                            'AI 카메라: 화면의 글 지우기 %1',
+                            '인공지능 카메라의 화면의 글 지우기 %1',
                     },
                     Helper: {
                         // 주행 제어
@@ -595,16 +597,16 @@ let camera_id_for_use = 0;
                         robotis_robotai_lite_drive_stop: '로봇아이 정지하기',
 
                         robotis_robotai_lite_securitybot_init:
-                            '보안로봇을 초기화합니다. 두 모터를 관절모드로 설정하고 카메라를 얼굴인식모드로 설정합니다.',
+                            '보안 로봇을 초기화합니다. 두 모터를 관절모드로 설정하고 카메라를 얼굴 인식모드로 설정합니다.',
                         robotis_robotai_lite_securitybot_hi:
-                            '보안로봇이 "사용자를 확인하였습니다." 문구를 화면에 표시하고 팔을 위아래로 흔듭니다.',
+                            '보안 로봇이 "사용자를 확인하였습니다." 문구를 화면에 표시하고 팔을 위아래로 흔듭니다.',
                         robotis_robotai_lite_securitybot_alert:
-                            '보안로봇 "사용자가 아닙니다." 문구를 화면에 표시하고 몸을 좌우로 흔듭니다.',
+                            '보안 로봇이 "사용자가 아닙니다." 문구를 화면에 표시하고 몸을 좌우로 흔듭니다.',
 
                         robotis_robotai_lite_petbot_happy:
-                            '반려로봇이 웃는 표정을 하고 "즐거워요" 라고 말을 하면서 제자리에서 한바퀴 회전합니다.',
+                            '반려 로봇이 웃는 표정을 하고 "즐거워요" 라고 말을 하면서 제자리에서 한바퀴 회전합니다.',
                         robotis_robotai_lite_petbot_sad:
-                            '반려로봇이 화난 표정을 하고 "무서워요" 라고 말을 하면서 뒤로 5cm 후진합니다.',
+                            '반려 로봇이 화난 표정을 하고 "무서워요" 라고 말을 하면서 뒤로 5cm 후진합니다.',
 
                         robotis_robotai_lite_farmbot_init:
                             '스마트팜 로봇을 초기화 합니다. 1번 모터를 시작위치로 이동시키고 카메라를 색상인식모드로 설정합니다.',
@@ -676,7 +678,7 @@ let camera_id_for_use = 0;
 
                         // LED 제어
                         robotis_robotai_lite_cm_led: '제어기의 지정한 LED를 켜거나 끄기',
-                        robotis_robotai_lite_cm_led_pattern: '제어기의 깜박임 패턴 설정',
+                        robotis_robotai_lite_cm_led_pattern: '제어기의 LED의 깜박임 패턴 설정',
 
                         // DXL 제어
                         robotis_robotai_lite_dxl_set_mode: '지정한 ID의 모터의 동작모드를 설정',
@@ -691,32 +693,32 @@ let camera_id_for_use = 0;
 
                         // AI Camera 값 블록
                         robotis_robotai_lite_ai_camera_connection_status:
-                            "AI 카메라가 연결된 상태이면 '참', 아니면 '거짓'으로 판단합니다.",
+                            "인공지능 카메라가 연결된 상태이면 '참', 아니면 '거짓'으로 판단합니다.",
                         robotis_robotai_lite_ai_camera_if_detected:
-                            "AI 카메라의 LCD화면에 선택한 기호(사각형/화살표)가 표시되면 '참', 아니면 '거짓'으로 판단합니다.",
+                            "인공지능 카메라의 LCD화면에 선택한 기호(사각형/화살표)가 표시되면 '참', 아니면 '거짓'으로 판단합니다.",
 
                         robotis_robotai_lite_ai_camera_block_value_closest_to_center:
-                            'AI 카메라 화면 중앙과 가장 가까운 사각형의 X좌표/Y좌표/너비/높이/학습ID',
+                            '인공지능 카메라 화면 중앙과 가장 가까운 사각형의 X좌표/Y좌표/너비/높이/클래스',
                         robotis_robotai_lite_ai_camera_arrow_value_closest_to_center:
-                            'AI 카메라 화면 중앙과 가장 가까운 화살표의 시작점X좌표/시작점Y좌표/끝점X좌표/끝점Y좌표/학습ID',
+                            '인공지능 카메라 화면 중앙과 가장 가까운 화살표의 시작점X좌표/시작점Y좌표/끝점X좌표/끝점Y좌표/클래스',
                         robotis_robotai_lite_ai_camera_number_of_learned_id:
-                            'AI 카메라가 학습한 ID의 갯수',
+                            '인공지능 카메라가 학습한 번호의 갯수',
                         robotis_robotai_lite_ai_camera_block_value_of_id:
-                            'AI 카메라가 감지한 사각형중 지정한 ID의 사각형의 X좌표/Y좌표/너비/높이',
+                            '인공지능 카메라가 감지한 사각형중 지정한 번호의 사각형의 X좌표/Y좌표/너비/높이',
                         robotis_robotai_lite_ai_camera_arrow_value_of_id:
-                            'AI 카메라가 감지한 화살표중 지정한 ID의 화살표의 시작점X좌표/시작점Y좌표/끝점X좌표/끝점Y좌표',
+                            '인공지능 카메라가 감지한 화살표중 지정한 번호의 화살표의 시작점X좌표/시작점Y좌표/끝점X좌표/끝점Y좌표',
 
                         robotis_robotai_lite_ai_camera_if_learned_id:
-                            "AI 카메라가 지정한 ID인 데이터를 학습하였으면 '참', 아니면 '거짓'으로 판단합니다.",
+                            "인공지능 카메라가 지정한 번호인 데이터를 학습하였으면 '참', 아니면 '거짓'으로 판단합니다.",
                         robotis_robotai_lite_ai_camera_if_detected_id_type:
-                            "AI 카메라가 지정한 ID인 지정한 데이터(사각형/화살표)를 학습하였으면 '참', 아니면 '거짓'으로 판단합니다.",
+                            "인공지능 카메라가 지정한 번호인 지정한 데이터(사각형/화살표)를 학습하였으면 '참', 아니면 '거짓'으로 판단합니다.",
 
-                        // AI 카메라 제어
-                        robotis_robotai_lite_ai_camera_set_mode: 'AI 카메라의 모드를 설정',
+                        // 인공지능 카메라 제어
+                        robotis_robotai_lite_ai_camera_set_mode: '인공지능 카메라의 모드를 설정',
                         robotis_robotai_lite_ai_camera_print_custom_text:
-                            'AI 카메라 화면의 지정한 위치에 지정한 문구 출력\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120',
+                            '인공지능 카메라 화면의 지정한 위치에 지정한 문구 출력\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120',
                         robotis_robotai_lite_ai_camera_clear_custom_text:
-                            'AI 카메라 화면에 표시한 모든 문구 지우기',
+                            '인공지능 카메라 화면에 표시한 모든 문구 지우기',
                     },
                     Blocks: {
                         robotis_red: '빨강',
@@ -865,12 +867,15 @@ let camera_id_for_use = 0;
                         robotis_moveRG2: '앉기',
                         robotis_moveRG3: '발버둥',
                         robotis_moveRG4: '발들기',
+                        robotis_fast: '빠른',
+                        robotis_normal: '보통',
+                        robotis_slow: '느린',
                         robotis_stop: '정지',
                         robotis_roll: '좌우 회전각 (roll)',
                         robotis_pitch: '앞뒤 회전각 (pitch)',
                         robotis_direction_forward: '전진방향',
                         robotis_direction_backward: '후진방향',
-                        robotis_stMotion1: '기본자세',
+                        robotis_stMotion1: '기본 자세',
                         robotis_stMotion2: '전진',
                         robotis_stMotion3: '우전진',
                         robotis_stMotion4: '좌전진',
@@ -1092,13 +1097,12 @@ let camera_id_for_use = 0;
 
                         robotis_connected: '연결',
                         robotis_disconnected: '없음',
-                        robotis_ai_camera_mode_face_recognition: '얼굴인식',
-                        robotis_ai_camera_mode_object_tracking: '물체추적',
-                        robotis_ai_camera_mode_object_recognition: '물체인식',
-                        robotis_ai_camera_mode_line_tracking: '라인인식',
-                        robotis_ai_camera_mode_color_recognition: '색상인식',
-                        robotis_ai_camera_mode_tag_recognition: '태그인식',
-                        robotis_ai_camera_mode_object_classification: '물체분류',
+                        robotis_ai_camera_mode_face_recognition: '얼굴 인식',
+                        robotis_ai_camera_mode_line_tracking: '라인 인식',
+                        robotis_ai_camera_mode_color_recognition: '색상 인식',
+                        robotis_ai_camera_mode_tag_recognition: '태그 인식',
+                        robotis_ai_camera_mode_object_classification: '사물 분류',
+                        robotis_ai_camera_mode_expression_recognition: '표정 인식',
                         robotis_ai_camera_target_face: '얼굴',
                         robotis_ai_camera_target_object: '사물',
                         robotis_ai_camera_target_color: '색상',
@@ -1110,7 +1114,7 @@ let camera_id_for_use = 0;
                         robotis_ai_camera_center_block_center_y: '중심 Y좌표',
                         robotis_ai_camera_center_block_width: '너비',
                         robotis_ai_camera_center_block_height: '높이',
-                        robotis_ai_camera_center_leared_id: '학습ID',
+                        robotis_ai_camera_center_leared_id: '클래스',
                         robotis_ai_camera_center_arrow_origin_x: '시작점 X좌표',
                         robotis_ai_camera_center_arrow_origin_y: '시작점 Y좌표',
                         robotis_ai_camera_center_arrow_target_x: '끝점 X좌표',
@@ -1237,7 +1241,7 @@ let camera_id_for_use = 0;
                         robotis_robotai_lite_ai_camera_if_detected_id_type:
                             'AI Camera: If learned %2 data with ID %1',
 
-                        // AI 카메라 제어
+                        // 인공지능 카메라 제어
                         robotis_robotai_lite_ai_camera_set_mode: 'AI Camera: Set mode to %1 %2',
                         robotis_robotai_lite_ai_camera_print_custom_text:
                             'AI Camera: Display %3 at screen position (%1, %2) %4',
@@ -1394,7 +1398,7 @@ let camera_id_for_use = 0;
                         robotis_robotai_lite_ai_camera_if_detected_id_type:
                             "If the AI camera has learned the specified data (rectangle/arrow) of the specified ID, it is determined as 'true'; otherwise, 'false'.",
 
-                        // AI 카메라 제어
+                        // 인공지능 카메라 제어
                         robotis_robotai_lite_ai_camera_set_mode: 'Set the mode of the AI camera',
                         robotis_robotai_lite_ai_camera_print_custom_text:
                             'Print the specified text at the specified position on the AI camera screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120',
@@ -1548,6 +1552,9 @@ let camera_id_for_use = 0;
                         robotis_moveRG2: 'Sit',
                         robotis_moveRG3: 'Struggle',
                         robotis_moveRG4: 'RaiseFeet',
+                        robotis_fast: 'Fast',
+                        robotis_normal: 'Normal',
+                        robotis_slow: 'Slow',
                         robotis_stop: 'Stop',
                         robotis_roll: 'Left-right rotate angle (roll)',
                         robotis_pitch: 'Forward-backward rotate angle (pitch)',
@@ -1779,6 +1786,7 @@ let camera_id_for_use = 0;
                         robotis_ai_camera_mode_color_recognition: 'Color recognition',
                         robotis_ai_camera_mode_tag_recognition: 'Tag recognition',
                         robotis_ai_camera_mode_object_classification: 'Object classification',
+                        robotis_ai_camera_mode_expression_recognition: 'Expression recognition',
                         robotis_ai_camera_target_block: 'Rectangle',
                         robotis_ai_camera_target_arrow: 'Arrow',
                         robotis_ai_camera_center_block_center_x: 'Center X',
@@ -1846,7 +1854,7 @@ let camera_id_for_use = 0;
                         const speed = script.getNumberValue('SPEED', script);
                         const direction = script.getField('DIRECTION', script);
 
-                        const data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        const data_instruction = INST_WRITE;
                         const data_address = 710;
                         const data_length = 2;
                         let data_value = 0;
@@ -1881,51 +1889,6 @@ let camera_id_for_use = 0;
                     syntax: {
                         js: [],
                         py: ['Robotailite.go_simple(%1, %2)'],
-                    },
-                },
-                robotis_robotai_lite_drive_stop: {
-                    color: EntryStatic.colorSet.block.default.HARDWARE,
-                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                    skeleton: 'basic',
-                    statements: [],
-                    params: [
-                        {
-                            type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
-                            size: 12,
-                        },
-                    ],
-                    events: {},
-                    def: {
-                        params: [null],
-                        type: 'robotis_robotai_lite_drive_stop',
-                    },
-                    paramsKeyMap: {
-                        DIRECTION: 0,
-                    },
-                    class: 'robotis_robotai_lite_move',
-                    isNotFor: ['RobotisRobotaiLite'],
-                    func(sprite, script) {
-                        // instruction / address / length / value / default length
-
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
-                        let data_address = 710;
-                        let data_length = 2;
-                        let data_value = 0;
-
-                        let data_sendqueue = [
-                            [data_instruction, 5200, 1, 0],
-                            [data_instruction, data_address, data_length, data_value],
-                        ];
-                        return Entry.RobotisRobotaiLite.postCallReturn(
-                            script,
-                            data_sendqueue,
-                            DEFAULT_DELAY
-                        );
-                    },
-                    syntax: {
-                        js: [],
-                        py: ['Robotailite.stop(%1, %2)'],
                     },
                 },
                 robotis_robotai_lite_drive_advanced: {
@@ -2001,7 +1964,7 @@ let camera_id_for_use = 0;
                         let rightSpeed = script.getNumberValue('RIGHT_SPEED', script);
                         const rightDirection = script.getField('RIGHT_DIRECTION', script);
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 710;
                         let data_length = 2;
                         let data_value = 0;
@@ -2059,6 +2022,7 @@ let camera_id_for_use = 0;
                             options: [
                                 [Lang.Blocks.robotis_left, '1'],
                                 [Lang.Blocks.robotis_right, '0'],
+                                [Lang.Blocks.robotis_both, '2'],
                             ],
                             value: '1',
                             fontSize: 11,
@@ -2113,7 +2077,7 @@ let camera_id_for_use = 0;
 
                         let leftSpeed = 0;
                         let rightSpeed = 0;
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 710;
                         let data_length = 2;
                         let data_value = 0;
@@ -2132,8 +2096,11 @@ let camera_id_for_use = 0;
                         if (wheelSide == 1) {
                             leftSpeed = wheelSpeed;
                             rightSpeed = 127; // 속도제어 안함
-                        } else {
+                        } else if (wheelSide == 0) {
                             leftSpeed = 127; // 속도제어 안함
+                            rightSpeed = wheelSpeed;
+                        } else {
+                            leftSpeed = wheelSpeed;
                             rightSpeed = wheelSpeed;
                         }
 
@@ -2216,7 +2183,7 @@ let camera_id_for_use = 0;
                         let wheelAngle = script.getNumberValue('WHEEL_ANGLE', script);
                         let wheelDirection = script.getNumberValue('WHEEL_DIRECTION', script);
 
-                        const data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        const data_instruction = INST_WRITE;
                         let data_address = 580;
                         let data_length = 8;
                         let angleValue = 0;
@@ -2302,7 +2269,7 @@ let camera_id_for_use = 0;
                         params: [
                             {
                                 type: 'number',
-                                params: ['10'],
+                                params: ['5'],
                             },
                             null,
                         ],
@@ -2325,7 +2292,7 @@ let camera_id_for_use = 0;
                             distance = -1000;
                         }
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 270;
                         let data_length = 4;
                         let data_value = Math.floor(10 * distance * direction);
@@ -2403,7 +2370,7 @@ let camera_id_for_use = 0;
                             angle = -720;
                         }
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 270;
                         let data_length = 4;
                         let data_value = Math.floor(angle);
@@ -2432,9 +2399,9 @@ let camera_id_for_use = 0;
                         {
                             type: 'Dropdown',
                             options: [
-                                ['느린', '1'],
-                                ['보통', '2'],
-                                ['빠른', '3'],
+                                [Lang.Blocks.robotis_slow, '1'],
+                                [Lang.Blocks.robotis_normal, '2'],
+                                [Lang.Blocks.robotis_fast, '3'],
                             ],
                             value: '1',
                             fontSize: 11,
@@ -2461,7 +2428,7 @@ let camera_id_for_use = 0;
                         // instruction / address / length / value / default length
                         let speed_level = script.getNumberValue('SPEED', script);
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 5200;
                         let data_length = 1;
 
@@ -2530,7 +2497,7 @@ let camera_id_for_use = 0;
                             }
                         }
 
-                        let data_sendqueue = [[Entry.Robotis_rb.INSTRUCTION.WRITE, 5200, 1, 0]];
+                        let data_sendqueue = [[INST_WRITE, 5200, 1, 0]];
 
                         return Entry.RobotisRobotaiLite.postCallReturn(
                             script,
@@ -2581,7 +2548,7 @@ let camera_id_for_use = 0;
                         // instruction / address / length / value / default length
                         let turn_type = script.getNumberValue('TURN_TYPE', script);
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 66;
                         let data_length = 2;
 
@@ -2596,7 +2563,52 @@ let camera_id_for_use = 0;
                     },
                     syntax: {
                         js: [],
-                        py: ['Robotailite.follow_line(%1)'],
+                        py: ['Robotailite.turn_at_line(%1)'],
+                    },
+                },
+                robotis_robotai_lite_drive_stop: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [null],
+                        type: 'robotis_robotai_lite_drive_stop',
+                    },
+                    paramsKeyMap: {
+                        DIRECTION: 0,
+                    },
+                    class: 'robotis_robotai_lite_move',
+                    isNotFor: ['RobotisRobotaiLite'],
+                    func(sprite, script) {
+                        // instruction / address / length / value / default length
+
+                        let data_instruction = INST_WRITE;
+                        let data_address = 710;
+                        let data_length = 2;
+                        let data_value = 0;
+
+                        let data_sendqueue = [
+                            [data_instruction, 5200, 1, 0],
+                            [data_instruction, data_address, data_length, data_value],
+                        ];
+                        return Entry.RobotisRobotaiLite.postCallReturn(
+                            script,
+                            data_sendqueue,
+                            DEFAULT_DELAY
+                        );
+                    },
+                    syntax: {
+                        js: [],
+                        py: ['Robotailite.stop(%1, %2)'],
                     },
                 },
                 robotis_robotai_lite_securitybot_init: {
@@ -2622,7 +2634,7 @@ let camera_id_for_use = 0;
                     func(sprite, script) {
                         // instruction / address / length / value / default length
 
-                        let data_sendqueue = [[Entry.Robotis_rb.INSTRUCTION.WRITE, 2110, 1, 1]];
+                        let data_sendqueue = [[INST_WRITE, 2110, 1, 1]];
                         return Entry.RobotisRobotaiLite.postCallReturn(
                             script,
                             data_sendqueue,
@@ -2657,7 +2669,7 @@ let camera_id_for_use = 0;
                     func(sprite, script) {
                         // instruction / address / length / value / default length
 
-                        let data_sendqueue = [[Entry.Robotis_rb.INSTRUCTION.WRITE, 2111, 1, 1]];
+                        let data_sendqueue = [[INST_WRITE, 2111, 1, 1]];
                         return Entry.RobotisRobotaiLite.postCallReturn(
                             script,
                             data_sendqueue,
@@ -2692,7 +2704,7 @@ let camera_id_for_use = 0;
                     func(sprite, script) {
                         // instruction / address / length / value / default length
 
-                        let data_sendqueue = [[Entry.Robotis_rb.INSTRUCTION.WRITE, 2112, 1, 1]];
+                        let data_sendqueue = [[INST_WRITE, 2112, 1, 1]];
                         return Entry.RobotisRobotaiLite.postCallReturn(
                             script,
                             data_sendqueue,
@@ -2727,7 +2739,7 @@ let camera_id_for_use = 0;
                     func(sprite, script) {
                         // instruction / address / length / value / default length
 
-                        let data_sendqueue = [[Entry.Robotis_rb.INSTRUCTION.WRITE, 2121, 1, 1]];
+                        let data_sendqueue = [[INST_WRITE, 2121, 1, 1]];
                         return Entry.RobotisRobotaiLite.postCallReturn(
                             script,
                             data_sendqueue,
@@ -2762,7 +2774,7 @@ let camera_id_for_use = 0;
                     func(sprite, script) {
                         // instruction / address / length / value / default length
 
-                        let data_sendqueue = [[Entry.Robotis_rb.INSTRUCTION.WRITE, 2122, 1, 1]];
+                        let data_sendqueue = [[INST_WRITE, 2122, 1, 1]];
                         return Entry.RobotisRobotaiLite.postCallReturn(
                             script,
                             data_sendqueue,
@@ -2796,7 +2808,7 @@ let camera_id_for_use = 0;
                     class: 'robotis_robotai_lite_special',
                     isNotFor: ['RobotisRobotaiLite'],
                     func(sprite, script) {
-                        let data_sendqueue = [[Entry.Robotis_rb.INSTRUCTION.WRITE, 2130, 1, 1]];
+                        let data_sendqueue = [[INST_WRITE, 2130, 1, 1]];
                         return Entry.RobotisRobotaiLite.postCallReturn(
                             script,
                             data_sendqueue,
@@ -2831,7 +2843,7 @@ let camera_id_for_use = 0;
                     func(sprite, script) {
                         // instruction / address / length / value / default length
 
-                        let data_sendqueue = [[Entry.Robotis_rb.INSTRUCTION.WRITE, 2131, 1, 1]];
+                        let data_sendqueue = [[INST_WRITE, 2131, 1, 1]];
                         return Entry.RobotisRobotaiLite.postCallReturn(script, data_sendqueue, 200);
                     },
                     syntax: {
@@ -2936,7 +2948,7 @@ let camera_id_for_use = 0;
                                 break;
                         }
 
-                        let data_sendqueue = [[Entry.Robotis_rb.INSTRUCTION.WRITE, address, 1, 1]];
+                        let data_sendqueue = [[INST_WRITE, address, 1, 1]];
                         return Entry.RobotisRobotaiLite.postCallReturn(
                             script,
                             data_sendqueue,
@@ -3527,7 +3539,7 @@ let camera_id_for_use = 0;
                         {
                             type: 'Block',
                             accept: 'string',
-                            value: 'asdfasdf',
+                            value: '',
                         },
                         {
                             type: 'Dropdown',
@@ -3804,7 +3816,7 @@ let camera_id_for_use = 0;
                         let robotType = script.getNumberValue('ROBOT_TYPE', script);
                         let screenValue = script.getNumberValue('BACKGROUND', script);
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 163;
                         let data_length = 2;
                         let data_value = screenValue + robotType * 256;
@@ -3893,7 +3905,7 @@ let camera_id_for_use = 0;
 
                         let data_sendqueue = [
                             [data_instruction, data_address, data_length, data_value],
-                            [3, 162, 1, 1],
+                            [INST_WRITE, 162, 1, 1],
                         ];
 
                         return Entry.RobotisRobotaiLite.postCallReturn(
@@ -3976,7 +3988,7 @@ let camera_id_for_use = 0;
                         let robotType = script.getNumberValue('ROBOT_TYPE', script);
                         let screenValue = script.getNumberValue('BACKGROUND', script);
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 163;
                         let data_length = 2;
                         let data_value = screenValue;
@@ -4066,7 +4078,7 @@ let camera_id_for_use = 0;
 
                         let data_sendqueue = [
                             [data_instruction, data_address, data_length, data_value],
-                            [3, 162, 1, 1],
+                            [INST_WRITE, 162, 1, 1],
                         ];
 
                         return Entry.RobotisRobotaiLite.postCallReturn(
@@ -4166,7 +4178,7 @@ let camera_id_for_use = 0;
                         let y = script.getNumberValue('Y', script);
                         let size = script.getNumberValue('SIZE', script) * 2;
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 166;
                         let data_length = 2;
                         let data_value = 10496;
@@ -4192,11 +4204,11 @@ let camera_id_for_use = 0;
                         data_value = iconNum;
 
                         let data_sendqueue = [
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 130, 2, x],
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 132, 2, y],
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 149, 2, size],
+                            [INST_WRITE, 130, 2, x],
+                            [INST_WRITE, 132, 2, y],
+                            [INST_WRITE, 149, 2, size],
                             [data_instruction, data_address, data_length, data_value],
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 162, 1, 1],
+                            [INST_WRITE, 162, 1, 1],
                         ];
 
                         return Entry.RobotisRobotaiLite.postCallReturn(
@@ -4309,7 +4321,7 @@ let camera_id_for_use = 0;
                         let y = script.getNumberValue('Y', script);
                         let size = script.getNumberValue('SIZE', script) * 2;
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 166;
                         let data_length = 2;
                         let data_value = 10496;
@@ -4335,11 +4347,11 @@ let camera_id_for_use = 0;
                         data_value = iconNum;
 
                         let data_sendqueue = [
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 130, 2, x],
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 132, 2, y],
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 149, 2, size],
+                            [INST_WRITE, 130, 2, x],
+                            [INST_WRITE, 132, 2, y],
+                            [INST_WRITE, 149, 2, size],
                             [data_instruction, data_address, data_length, data_value],
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 162, 1, 1],
+                            [INST_WRITE, 162, 1, 1],
                         ];
 
                         return Entry.RobotisRobotaiLite.postCallReturn(
@@ -4454,7 +4466,7 @@ let camera_id_for_use = 0;
                         let y = script.getNumberValue('Y', script);
                         let size = script.getNumberValue('SIZE', script) * 2;
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 166;
                         let data_length = 2;
                         let data_value = 10496;
@@ -4480,11 +4492,11 @@ let camera_id_for_use = 0;
                         data_value = iconNum;
 
                         let data_sendqueue = [
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 130, 2, x],
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 132, 2, y],
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 149, 2, size],
+                            [INST_WRITE, 130, 2, x],
+                            [INST_WRITE, 132, 2, y],
+                            [INST_WRITE, 149, 2, size],
                             [data_instruction, data_address, data_length, data_value],
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 162, 1, 1],
+                            [INST_WRITE, 162, 1, 1],
                         ];
 
                         return Entry.RobotisRobotaiLite.postCallReturn(
@@ -4601,7 +4613,7 @@ let camera_id_for_use = 0;
                         let y = script.getNumberValue('Y', script);
                         let size = script.getNumberValue('SIZE', script) * 2;
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 166;
                         let data_length = 2;
                         let data_value = 10496;
@@ -4627,11 +4639,11 @@ let camera_id_for_use = 0;
                         data_value = iconNum;
 
                         let data_sendqueue = [
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 130, 2, x],
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 132, 2, y],
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 149, 2, size],
+                            [INST_WRITE, 130, 2, x],
+                            [INST_WRITE, 132, 2, y],
+                            [INST_WRITE, 149, 2, size],
                             [data_instruction, data_address, data_length, data_value],
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 162, 1, 1],
+                            [INST_WRITE, 162, 1, 1],
                         ];
 
                         return Entry.RobotisRobotaiLite.postCallReturn(
@@ -4735,7 +4747,7 @@ let camera_id_for_use = 0;
                         let data_buf = [];
                         let i = 0;
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 900;
                         let data_length = 2;
 
@@ -4771,7 +4783,7 @@ let camera_id_for_use = 0;
 
                         let data_sendqueue = [
                             [data_instruction, data_address, data_length, data_buf],
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 162, 1, 1],
+                            [INST_WRITE, 162, 1, 1],
                         ];
 
                         return Entry.RobotisRobotaiLite.postCallReturn(
@@ -4853,7 +4865,7 @@ let camera_id_for_use = 0;
                         let color = script.getNumberValue('COLOR', script);
                         let data_buf = [];
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 130;
                         let data_length = 11;
 
@@ -4883,7 +4895,7 @@ let camera_id_for_use = 0;
 
                         let data_sendqueue = [
                             [data_instruction, data_address, data_length, data_buf],
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 161, 2, 1 * 256 + 8],
+                            [INST_WRITE, 161, 2, 1 * 256 + 8],
                         ];
 
                         return Entry.RobotisRobotaiLite.postCallReturn(
@@ -5002,13 +5014,13 @@ let camera_id_for_use = 0;
                             data_buf.push(byteArray[i]);
                         }
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 900;
                         let data_length = 9 + byteArray.length;
 
                         let data_sendqueue = [
                             [data_instruction, data_address, data_length, data_buf],
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 162, 1, 1],
+                            [INST_WRITE, 162, 1, 1],
                         ];
 
                         return Entry.RobotisRobotaiLite.postCallReturn(
@@ -5052,7 +5064,7 @@ let camera_id_for_use = 0;
                         // instruction / address / length / value / default length
                         let bright = script.getNumberValue('BRIGHT', script);
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 180;
                         let data_length = 1;
                         let data_value = 0;
@@ -5120,7 +5132,7 @@ let camera_id_for_use = 0;
                         // instruction / address / length / value / default length
                         let color = script.getNumberValue('COLOR', script);
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 163;
                         let data_length = 2;
                         let data_value = 0;
@@ -5129,9 +5141,9 @@ let camera_id_for_use = 0;
                         bg_color = color;
 
                         let data_sendqueue = [
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 163, 2, 2817],
+                            [INST_WRITE, 163, 2, 2817],
                             [data_instruction, data_address, data_length, data_value],
-                            [3, 162, 1, 1],
+                            [INST_WRITE, 162, 1, 1],
                         ];
                         return Entry.RobotisRobotaiLite.postCallReturn(
                             script,
@@ -5246,8 +5258,8 @@ let camera_id_for_use = 0;
                         const time_parameter = 0x8000 + (period << 8) + period;
 
                         let data_sendqueue = [
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 158, 2, colors],
-                            [Entry.Robotis_rb.INSTRUCTION.WRITE, 163, 2, time_parameter],
+                            [INST_WRITE, 158, 2, colors],
+                            [INST_WRITE, 163, 2, time_parameter],
                         ];
                         return Entry.RobotisRobotaiLite.postCallReturn(
                             script,
@@ -5312,7 +5324,7 @@ let camera_id_for_use = 0;
                         let cmLed = script.getField('RB_LED', script);
                         let value = script.getField('VALUE', script);
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 40;
                         let data_length = 1;
                         let data_value = 0;
@@ -5394,7 +5406,7 @@ let camera_id_for_use = 0;
                         let pattern = script.getNumberValue('PATTERN', script);
                         let speed = script.getNumberValue('SPEED', script);
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 40;
                         let data_length = 1;
                         let data_value = 0;
@@ -5928,7 +5940,7 @@ let camera_id_for_use = 0;
                         let dxl_round = script.getNumberValue('DXL_ROUND', script);
                         let dxl_direction = script.getNumberValue('DXL_DIRECTION', script);
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address_1 = 0;
                         let data_length_1 = 0;
                         let data_value_1 = 0;
@@ -6082,7 +6094,7 @@ let camera_id_for_use = 0;
                         let cmBuzzerNote = script.getNumberValue('CM_BUZZER_NOTE', script);
                         let cmBuzzerTime = 0;
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 0;
                         let data_value = 0;
                         let interval = 0;
@@ -6231,7 +6243,7 @@ let camera_id_for_use = 0;
 
                         cmBuzzerBeat = Math.min(Math.max(cmBuzzerBeat, 0), 100);
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address_1 = 0;
                         let data_length_1 = 0;
                         let data_value_1 = 0;
@@ -6536,7 +6548,7 @@ let camera_id_for_use = 0;
                         // instruction / address / length / value / default length
                         let cmHello = script.getField('HELLO', script);
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 110;
                         let data_length = 2;
                         let data_value = 0;
@@ -6618,7 +6630,7 @@ let camera_id_for_use = 0;
                         // instruction / address / length / value / default length
                         let cmHello = script.getField('HELLO', script);
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 110;
                         let data_length = 2;
                         let data_value = 0;
@@ -6695,7 +6707,7 @@ let camera_id_for_use = 0;
                         // instruction / address / length / value / default length
                         let roomNum = script.getField('ROOM', script);
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 115;
                         let data_length = 1;
                         let data_value = 0;
@@ -6757,7 +6769,7 @@ let camera_id_for_use = 0;
                         // instruction / address / length / value / default length
                         let roomNum = script.getField('ROOM', script);
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 116;
                         let data_length = 1;
                         let data_value = 0;
@@ -6992,7 +7004,7 @@ let camera_id_for_use = 0;
                         let scope = script.executor.scope;
 
                         // instruction / address / length / value / default length
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 4029; // ID_FOR_USE
                         let data_length = 2;
                         let data_value = script.getNumberValue('ID');
@@ -7080,7 +7092,7 @@ let camera_id_for_use = 0;
                         let scope = script.executor.scope;
 
                         // instruction / address / length / value / default length
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 4029; // ID_FOR_USE
                         let data_length = 2;
                         let data_value = script.getNumberValue('ID');
@@ -7225,8 +7237,7 @@ let camera_id_for_use = 0;
                             type: 'Dropdown',
                             options: [
                                 [Lang.Blocks.robotis_ai_camera_mode_face_recognition, '0'],
-                                [Lang.Blocks.robotis_ai_camera_mode_object_tracking, '1'],
-                                [Lang.Blocks.robotis_ai_camera_mode_object_recognition, '2'],
+                                [Lang.Blocks.robotis_ai_camera_mode_expression_recognition, '9'],
                                 [Lang.Blocks.robotis_ai_camera_mode_line_tracking, '3'],
                                 [Lang.Blocks.robotis_ai_camera_mode_color_recognition, '4'],
                                 [Lang.Blocks.robotis_ai_camera_mode_tag_recognition, '5'],
@@ -7257,7 +7268,7 @@ let camera_id_for_use = 0;
                         // instruction / address / length / value / default length
                         let ai_camera_mode = script.getField('AI_CAMERA_MODE', script);
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 4001;
                         let data_length = 1;
 
@@ -7327,9 +7338,17 @@ let camera_id_for_use = 0;
                         let x = script.getNumberValue('X', script);
                         let y = script.getNumberValue('Y', script);
                         let text = script.getStringValue('TEXT', script);
-                        let text_len = text.length;
                         let data_buf = [];
                         let i = 0;
+
+                        // Encode the text as UTF-8
+                        let encoder = new TextEncoder();
+                        let utf8Array = encoder.encode(text);
+
+                        // utf8Array is now a Uint8Array containing the UTF-8 bytes of the text
+                        let text_len = utf8Array.length;
+
+                        if (text_len > 45) text_len = 45;
 
                         if (x < -160) {
                             x = 160;
@@ -7357,10 +7376,10 @@ let camera_id_for_use = 0;
                         data_buf.push(0);
                         data_buf.push(0);
                         for (i = 0; i < text_len; i++) {
-                            data_buf.push(text[i]);
+                            data_buf.push(utf8Array[i]);
                         }
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 4200;
                         let data_length = 6 + text_len;
 
@@ -7402,7 +7421,7 @@ let camera_id_for_use = 0;
                     func(sprite, script) {
                         // instruction / address / length / value / default length
 
-                        let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                        let data_instruction = INST_WRITE;
                         let data_address = 4250;
                         let data_length = 1;
 

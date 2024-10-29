@@ -17,6 +17,7 @@ Entry.Altino = {
         dot6: 0,
         dot7: 0,
         dot8: 0,
+        command: 0,
     },
     setZero: function() {
         var portMap = Entry.Altino.PORT_MAP;
@@ -69,6 +70,7 @@ Entry.Altino.blockMenuBlocks = [
     'altino_dot_display_hex',
     'altino_dot_display_matrix_on',
     'altino_dot_display_matrix_off',
+    'altino_ir_reset',
 ];
 
 Entry.Altino.setLanguage = function() {
@@ -154,7 +156,7 @@ Entry.Altino.setLanguage = function() {
             },
             template: {
                 altino_analogValue: '알티노 %1 센서값',
-                altino_stopAll: '정지 %1°%2',
+                altino_stopAll: '정지 %1%2',
                 altino_dot_display: '표시하기 %1 %2',
                 altino_dot_display_line: '표시하기 %1 %2 %3 %4 %5 %6 %7 %8 %9 %10',
                 altino_dot_display_hex: '표시하기 %1 %2 %3 %4 %5 %6 %7 %8 %9',
@@ -167,6 +169,7 @@ Entry.Altino.setLanguage = function() {
                 altino_sound: '소리 %1 %2 %3',
                 altino_steering_hex: '조향 %1%2',
                 altino_steering: '조향 %1°%2',
+                altino_ir_reset: '알티노 IR 센서 초기화%1',
             },
         },
         en: {
@@ -250,7 +253,7 @@ Entry.Altino.setLanguage = function() {
             },
             template: {
                 altino_analogValue: 'Altino %1 sensor value',
-                altino_stopAll: 'Stop %1°%2',
+                altino_stopAll: 'Stop %1%2',
                 altino_dot_display: 'Display %1 %2',
                 altino_dot_display_line: 'Display %1 %2 %3 %4 %5 %6 %7 %8 %9 %10',
                 altino_dot_display_hex: 'Display %1 %2 %3 %4 %5 %6 %7 %8 %9',
@@ -263,6 +266,7 @@ Entry.Altino.setLanguage = function() {
                 altino_sound: 'Sound %1 %2 %3',
                 altino_steering_hex: 'Steering %1%2',
                 altino_steering: 'Steering %1°%2',
+                altino_ir_reset: 'Reset Altino IR Sensor%1',
             },
         },
     };
@@ -1456,6 +1460,38 @@ Entry.Altino.getBlocks = function() {
                 return script.callReturn();
             },
             syntax: { js: [], py: ['Altino.dot_display_hex(%1, %2, %3, %4, %5, %6, %7, %8)'] },
+        },
+        altino_ir_reset: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                ],
+                type: 'altino_ir_reset',
+            },
+            paramsKeyMap: {
+                DEVICE : 0,
+            },
+            class: 'altino_output',
+            isNotFor: ['altino'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+
+                sq.command = 252;
+                return script.callReturn();
+            },
+            syntax: { js: [], py: ['Altino.ir_reset'] },
         },
         //endregion Altino 알티노
     };
