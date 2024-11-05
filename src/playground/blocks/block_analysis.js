@@ -2,6 +2,7 @@
 import _isNumber from 'lodash/isNumber';
 import DataTable from '../../class/DataTable';
 import { toNumber } from '../../util/common';
+import { template } from 'lodash';
 
 module.exports = {
     getBlocks() {
@@ -41,7 +42,7 @@ module.exports = {
                 },
                 events: {
                     mousedown: [
-                        function() {
+                        function () {
                             Entry.playground.dataTable.show();
                         },
                     ],
@@ -393,6 +394,8 @@ module.exports = {
                     const tableId = script.getField('MATRIX', script);
                     const row = script.getNumberValue('NUMBER', script) - 1;
                     const col = DataTable.getColumnIndex(script.getValue('FIELD', script));
+
+                    console.log(row, col);
                     const value = script.getValue('VALUE', script);
                     const table = DataTable.getSource(tableId, sprite);
                     if (table.isExist([row, col])) {
@@ -1042,6 +1045,107 @@ module.exports = {
                     const y = DataTable.getColumnIndex(script.getValue('FIELD2', script));
                     const table = DataTable.getSource(tableId, sprite);
                     return table.getCoefficient(x - 1, y - 1);
+                },
+                syntax: {
+                    js: [],
+                    py: [],
+                },
+            },
+            set_value_from_cell: {
+                template: '테이블 %1 의 %2 셀 값을 %3(으)로 바꾸기 %4',
+                color: EntryStatic.colorSet.block.default.ANALYSIS,
+                outerLine: EntryStatic.colorSet.block.darken.ANALYSIS,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'DropdownDynamic',
+                        value: null,
+                        menuName: 'tables',
+                        dropdownSync: 'dataTables',
+                        fontSize: 10,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/block_analysis.svg',
+                        size: 11,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [
+                        null,
+                        {
+                            type: 'text',
+                            params: ['2'],
+                        },
+                        {
+                            type: 'get_table_fields',
+                        },
+                        {
+                            type: 'text',
+                            params: ['10'],
+                        },
+                        null,
+                    ],
+                    type: 'set_value_from_cell',
+                },
+                pyHelpDef: {
+                    params: [
+                        {
+                            type: 'text',
+                            params: ['D&value'],
+                        },
+                        {
+                            type: 'text',
+                            params: ['C&value'],
+                        },
+                        {
+                            type: 'text',
+                            params: ['B&value'],
+                        },
+                        {
+                            type: 'text',
+                            params: ['A&value'],
+                        },
+                        null,
+                    ],
+                    type: 'set_value_from_cell',
+                },
+                paramsKeyMap: {
+                    MATRIX: 0,
+                    CELL: 1,
+                    VALUE: 2,
+                },
+                class: 'analysis',
+                isNotFor: ['analysis'],
+                func(sprite, script) {
+                    const tableId = script.getField('MATRIX', script);
+                    const row = script.getNumberValue('NUMBER', script) - 1;
+                    const col = DataTable.getColumnIndex(script.getValue('FIELD', script));
+                    const value = script.getValue('VALUE', script);
+                    const table = DataTable.getSource(tableId, sprite);
+                    if (table.isExist([row, col])) {
+                        table.replaceValue([row, col], value);
+                    }
+                    return script.callReturn();
                 },
                 syntax: {
                     js: [],

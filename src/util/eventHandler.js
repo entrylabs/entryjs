@@ -3,7 +3,7 @@
  * @param {!string} eventName
  * @param {function} fn
  */
-Entry.addEventListener = function(eventName, fn) {
+Entry.addEventListener = function (eventName, fn) {
     if (!this.events_) {
         this.events_ = {};
     }
@@ -23,7 +23,7 @@ Entry.addEventListener = function(eventName, fn) {
  * @param {!string} eventName
  * @param {*} args
  */
-Entry.dispatchEvent = function(eventName, ...args) {
+Entry.dispatchEvent = function (eventName, ...args) {
     if (!this.events_) {
         this.events_ = {};
         return;
@@ -35,14 +35,14 @@ Entry.dispatchEvent = function(eventName, ...args) {
     }
 
     events.forEach((func) => func.apply(window, args));
-};
+}.bind(Entry);
 
 /**
  * Remove event listener
  * @param {!string} eventName
  * @param {function} fn
  */
-Entry.removeEventListener = function(eventName, fn) {
+Entry.removeEventListener = function (eventName, fn) {
     const events = this.events_[eventName];
     if (_.isEmpty(events)) {
         return;
@@ -54,7 +54,7 @@ Entry.removeEventListener = function(eventName, fn) {
  * Remove event listener
  * @param {!string} eventName
  */
-Entry.removeAllEventListener = function(eventName) {
+Entry.removeAllEventListener = function (eventName) {
     if (!this.events_ || !this.events_[eventName]) {
         return;
     }
