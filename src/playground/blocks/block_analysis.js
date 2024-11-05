@@ -2,7 +2,6 @@
 import _isNumber from 'lodash/isNumber';
 import DataTable from '../../class/DataTable';
 import { toNumber } from '../../util/common';
-import { template } from 'lodash';
 
 module.exports = {
     getBlocks() {
@@ -1070,17 +1069,10 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
-                        defaultType: 'number',
                     },
                     {
                         type: 'Block',
                         accept: 'string',
-                        defaultType: 'number',
-                    },
-                    {
-                        type: 'Block',
-                        accept: 'string',
-                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
@@ -1094,10 +1086,7 @@ module.exports = {
                         null,
                         {
                             type: 'text',
-                            params: ['2'],
-                        },
-                        {
-                            type: 'get_table_fields',
+                            params: ['A2'],
                         },
                         {
                             type: 'text',
@@ -1138,13 +1127,15 @@ module.exports = {
                 isNotFor: ['analysis'],
                 func(sprite, script) {
                     const tableId = script.getField('MATRIX', script);
-                    const row = script.getNumberValue('NUMBER', script) - 1;
-                    const col = DataTable.getColumnIndex(script.getValue('FIELD', script));
+                    const cell = script.getValue('CELL', script) || '';
                     const value = script.getValue('VALUE', script);
                     const table = DataTable.getSource(tableId, sprite);
+
+                    const { col, row } = Entry.Utils.cellToRowCol(cell.toUpperCase());
                     if (table.isExist([row, col])) {
                         table.replaceValue([row, col], value);
                     }
+
                     return script.callReturn();
                 },
                 syntax: {

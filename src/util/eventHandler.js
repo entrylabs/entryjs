@@ -35,7 +35,7 @@ Entry.dispatchEvent = function (eventName, ...args) {
     }
 
     events.forEach((func) => func.apply(window, args));
-}.bind(Entry);
+};
 
 /**
  * Remove event listener
