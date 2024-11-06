@@ -278,6 +278,8 @@ EntryStatic.getAllBlocks = function () {
                 'close_table_chart',
                 'get_coefficient',
                 'set_value_from_cell',
+                'get_value_from_cell',
+                'get_value_v_lookup',
             ],
         },
         {

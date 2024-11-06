@@ -394,7 +394,6 @@ module.exports = {
                     const row = script.getNumberValue('NUMBER', script) - 1;
                     const col = DataTable.getColumnIndex(script.getValue('FIELD', script));
 
-                    console.log(row, col);
                     const value = script.getValue('VALUE', script);
                     const table = DataTable.getSource(tableId, sprite);
                     if (table.isExist([row, col])) {
@@ -1051,7 +1050,6 @@ module.exports = {
                 },
             },
             set_value_from_cell: {
-                template: '테이블 %1 의 %2 셀 값을 %3(으)로 바꾸기 %4',
                 color: EntryStatic.colorSet.block.default.ANALYSIS,
                 outerLine: EntryStatic.colorSet.block.darken.ANALYSIS,
                 skeleton: 'basic',
@@ -1096,28 +1094,6 @@ module.exports = {
                     ],
                     type: 'set_value_from_cell',
                 },
-                pyHelpDef: {
-                    params: [
-                        {
-                            type: 'text',
-                            params: ['D&value'],
-                        },
-                        {
-                            type: 'text',
-                            params: ['C&value'],
-                        },
-                        {
-                            type: 'text',
-                            params: ['B&value'],
-                        },
-                        {
-                            type: 'text',
-                            params: ['A&value'],
-                        },
-                        null,
-                    ],
-                    type: 'set_value_from_cell',
-                },
                 paramsKeyMap: {
                     MATRIX: 0,
                     CELL: 1,
@@ -1137,6 +1113,140 @@ module.exports = {
                     }
 
                     return script.callReturn();
+                },
+                syntax: {
+                    js: [],
+                    py: [],
+                },
+            },
+            get_value_from_cell: {
+                color: EntryStatic.colorSet.block.default.ANALYSIS,
+                outerLine: EntryStatic.colorSet.block.darken.ANALYSIS,
+                skeleton: 'basic_string_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'DropdownDynamic',
+                        value: null,
+                        menuName: 'tables',
+                        dropdownSync: 'dataTables',
+                        fontSize: 10,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [
+                        null,
+                        {
+                            type: 'text',
+                            params: ['A2'],
+                        },
+                    ],
+                    type: 'get_value_from_cell',
+                },
+                paramsKeyMap: {
+                    MATRIX: 0,
+                    CELL: 1,
+                },
+                class: 'analysis',
+                isNotFor: ['analysis'],
+                func(sprite, script) {
+                    const tableId = script.getField('MATRIX', script);
+                    const cell = script.getValue('CELL', script) || '';
+                    const { col, row } = Entry.Utils.cellToRowCol(cell.toUpperCase());
+                    const table = DataTable.getSource(tableId, sprite);
+
+                    if (table.isExist([row, col])) {
+                        return table.getValue([row, col]);
+                    }
+                    return null;
+                },
+                syntax: {
+                    js: [],
+                    py: [],
+                },
+            },
+            get_value_v_lookup: {
+                color: EntryStatic.colorSet.block.default.ANALYSIS,
+                outerLine: EntryStatic.colorSet.block.darken.ANALYSIS,
+                skeleton: 'basic_string_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'DropdownDynamic',
+                        value: null,
+                        menuName: 'tables',
+                        dropdownSync: 'dataTables',
+                        fontSize: 10,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [
+                        null,
+                        {
+                            type: 'get_table_fields',
+                        },
+                        {
+                            type: 'text',
+                            params: ['10'],
+                        },
+                        {
+                            type: 'get_table_fields',
+                        },
+                    ],
+                    type: 'get_value_v_lookup',
+                },
+                paramsKeyMap: {
+                    MATRIX: 0,
+                    FIELD: 1,
+                    VALUE: 2,
+                    RETURN: 3,
+                },
+                class: 'analysis',
+                isNotFor: ['analysis'],
+                func(sprite, script) {
+                    const tableId = script.getField('MATRIX', script);
+                    const col = DataTable.getColumnIndex(script.getValue('FIELD', script));
+                    const returnCol = DataTable.getColumnIndex(script.getValue('RETURN', script));
+                    const value = script.getValue('VALUE', script);
+                    const table = DataTable.getSource(tableId, sprite);
+                    const { origin } = table;
+
+                    let foundIndex;
+                    for (let i = 0; i < origin.length; i++) {
+                        if (table.getValue([i, col]) === value) {
+                            foundIndex = i;
+                            break;
+                        }
+                    }
+
+                    if (table.isExist([foundIndex, returnCol])) {
+                        return table.getValue([foundIndex, returnCol]);
+                    }
+                    return null;
                 },
                 syntax: {
                     js: [],
