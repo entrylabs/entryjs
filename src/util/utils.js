@@ -3107,3 +3107,15 @@ Entry.Utils.getDeviceType = (target) => {
     const result = parser.getResult();
     return result.device.type;
 };
+
+Entry.Utils.cellToRowCol = (cell) => {
+    let col = 0;
+    let i = 0;
+    while (i < cell.length && isNaN(cell[i])) {
+        col = col * 26 + (cell.charCodeAt(i) - 'A'.charCodeAt(0) + 1);
+        i++;
+    }
+
+    const row = parseInt(cell.slice(i), 10) - 1;
+    return { col, row };
+};
