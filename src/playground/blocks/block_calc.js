@@ -745,20 +745,15 @@ module.exports = {
                 class: 'calc',
                 isNotFor: [],
                 func(sprite, script) {
-                    let value = script.getNumberValue('LEFTHAND', script);
+                    const value = script.getNumberValue('LEFTHAND', script);
                     let operator = script.getField('VALUE', script);
                     const xRangeCheckList = ['asin_radian', 'acos_radian'];
                     if (xRangeCheckList.indexOf(operator) > -1 && (value > 1 || value < -1)) {
                         throw new Error('x range exceeded');
                     }
 
-                    const needToConvertList = ['sin', 'cos', 'tan'];
                     if (operator.indexOf('_')) {
                         operator = operator.split('_')[0];
-                    }
-
-                    if (needToConvertList.indexOf(operator) > -1) {
-                        value = Entry.toRadian(value);
                     }
 
                     let returnVal = 0;
@@ -782,6 +777,11 @@ module.exports = {
                         case 'acos':
                         case 'atan':
                             returnVal = Entry.toDegrees(Math[operator](value));
+                            break;
+                        case 'sin':
+                        case 'cos':
+                        case 'tan':
+                            returnVal = Entry.preciseTrig(value, operator);
                             break;
                         case 'unnatural': {
                             returnVal = new BigNumber(value).minus(Math.floor(value));
