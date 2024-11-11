@@ -1431,6 +1431,79 @@ Entry.toDegrees = function (radians) {
     return (radians * 180) / Math.PI;
 };
 
+const TRIG_VALUES = {
+    sin: {
+        0: 0,
+        30: 0.5,
+        45: Math.SQRT2 / 2,
+        60: Math.SQRT3 / 2,
+        90: 1,
+        120: Math.SQRT3 / 2,
+        135: Math.SQRT2 / 2,
+        150: 0.5,
+        180: 0,
+        210: -0.5,
+        225: -Math.SQRT2 / 2,
+        240: -Math.SQRT3 / 2,
+        270: -1,
+        300: -Math.SQRT3 / 2,
+        315: -Math.SQRT2 / 2,
+        330: -0.5,
+        360: 0,
+    },
+    cos: {
+        0: 1,
+        30: Math.SQRT3 / 2,
+        45: Math.SQRT2 / 2,
+        60: 0.5,
+        90: 0,
+        120: -0.5,
+        135: -Math.SQRT2 / 2,
+        150: -Math.SQRT3 / 2,
+        180: -1,
+        210: -Math.SQRT3 / 2,
+        225: -Math.SQRT2 / 2,
+        240: -0.5,
+        270: 0,
+        300: 0.5,
+        315: Math.SQRT2 / 2,
+        330: Math.SQRT3 / 2,
+        360: 1,
+    },
+    tan: {
+        0: 0,
+        30: Math.sqrt(3) / 3,
+        45: 1,
+        60: Math.sqrt(3),
+        90: Infinity,
+        120: -Math.sqrt(3),
+        135: -1,
+        150: -Math.sqrt(3) / 3,
+        180: 0,
+        210: Math.sqrt(3) / 3,
+        225: 1,
+        240: Math.sqrt(3),
+        270: -Infinity,
+        300: -Math.sqrt(3),
+        315: -1,
+        330: -Math.sqrt(3) / 3,
+        360: 0,
+    },
+};
+
+Entry.preciseTrig = (degrees, operator) => {
+    const angle = degrees % 360;
+
+    if (
+        TRIG_VALUES[operator] &&
+        Object.prototype.hasOwnProperty.call(TRIG_VALUES[operator], angle)
+    ) {
+        return TRIG_VALUES[operator][angle];
+    }
+
+    return Math[operator](Entry.toRadian(angle));
+};
+
 Entry.getPicturesJSON = function (pictures = [], isClone) {
     return pictures.reduce((acc, p) => {
         const o = {};
