@@ -124,6 +124,16 @@ EntryStatic.searchProjectOption = [
     },
 ];
 
+EntryStatic.variableBlockList = [
+    'get_variable',
+    'change_variable',
+    'set_variable',
+    'show_variable',
+    'hide_variable',
+];
+
+EntryStatic.messageBlockList = ['when_message_cast', 'message_cast', 'message_cast_wait'];
+
 EntryStatic.getAllBlocks = function () {
     return [
         {
@@ -134,8 +144,10 @@ EntryStatic.getAllBlocks = function () {
                 'mouse_clicked',
                 'mouse_click_cancled',
                 'when_object_click',
+                'when_object_click_canceled',
                 'when_message_cast',
                 'message_cast',
+                'message_cast_wait',
             ],
         },
         {
