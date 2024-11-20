@@ -15,7 +15,7 @@ const convertPresetImageToLedState = (preset) => {
     return result;
 };
 
-(function() {
+(function () {
     Entry.Microbit2BleLite = new (class Microbit2LiteBle {
         constructor() {
             this.webapiType = 'ble';
@@ -333,6 +333,9 @@ const convertPresetImageToLedState = (preset) => {
                 '99000:99099:09090:09990:00000',
             ];
             this.digitalPins = [
+                ['P0', 0],
+                ['P1', 1],
+                ['P2', 2],
                 ['P8', 8],
                 ['P9', 9],
                 ['P12', 12],
@@ -482,9 +485,9 @@ const convertPresetImageToLedState = (preset) => {
                         microbit2blelite_get_digital: '핀 %1 번 디지털 값',
                         microbit2blelite_set_digital: '핀 %1 에 디지털 값 %2 를 출력하기 %3',
                         microbit2blelite_screen_toggle: 'LED 기능 %1 %2',
-                        microbit2blelite_set_led: 'LED의 X: %1 Y: %2 를 밝기 %3 (으)로 켜기 %4',
+                        microbit2blelite_set_led: 'LED의 X: %1 Y: %2 를 밝기 %3 (으)로 밝히기 %4',
                         microbit2blelite_get_led: 'LED의 X: %1 Y: %2 밝기 값',
-                        microbit2blelite_show_preset_image: 'LED에 %1 모양 나타내기 %2',
+                        microbit2blelite_show_preset_image: 'LED를 %1 모양으로 밝히기 %2',
                         microbit2blelite_show_custom_image: 'LED %1 켜기 %2',
                         microbit2blelite_show_string: 'LED에 %1 을(를) 나타내기 %2',
                         microbit2blelite_reset_screen: 'LED 모두 지우기 %1',
@@ -573,7 +576,7 @@ const convertPresetImageToLedState = (preset) => {
                         microbit_2_ANGRY: '화남',
                         microbit_2_ASLEEP: '졸림',
                         microbit_2_SURPRISED: '놀람',
-                        microbit_2_SILLY: '멍청함',
+                        microbit_2_SILLY: '메롱',
                         microbit_2_FABULOUS: '환상적인',
                         microbit_2_MEH: '별로',
                         microbit_2_YES: '예스',
@@ -593,7 +596,7 @@ const convertPresetImageToLedState = (preset) => {
                         microbit_2_PITCHFORK: '쇠스랑',
                         microbit_2_XMAS: '크리스마스 트리',
                         microbit_2_PACMAN: '팩맨',
-                        microbit_2_TARGET: '목표',
+                        microbit_2_TARGET: '표적',
                         microbit_2_TSHIRT: '티셔츠',
                         microbit_2_ROLLERSKATE: '롤러스케이트',
                         microbit_2_DUCK: '오리',
@@ -683,13 +686,13 @@ const convertPresetImageToLedState = (preset) => {
                 en: {
                     template: {
                         microbit2blelite_get_analog: 'analog read pin %1',
-                        microbit2blelite_set_analog: 'analog write pin %1 to %2 %3',
+                        microbit2blelite_set_analog: 'Set analog pin %1 to %2 %3',
                         microbit2blelite_get_digital: 'digital read pin %1',
                         microbit2blelite_set_digital: 'digital write pin %1 to %2 %3',
-                        microbit2blelite_screen_toggle: '%1 LED',
-                        microbit2blelite_set_led: 'plot X: %1 Y:%2 brightness %3 %4',
-                        microbit2blelite_get_led: 'point X: %1 Y: %2 brightness of LED',
-                        microbit2blelite_show_preset_image: 'show icon %1 on LED %2',
+                        microbit2blelite_screen_toggle: '%1 LED screen %2',
+                        microbit2blelite_set_led: 'Light X: %1 Y:%2 LED to brightness %3 %4',
+                        microbit2blelite_get_led: 'brightness of X: %1 Y: %2 LED %3',
+                        microbit2blelite_show_preset_image: 'Light %1 icon on LED %2',
                         microbit2blelite_show_custom_image: 'Show %1 on LED %2',
                         microbit2blelite_show_string: 'show string %1 on LED %2',
                         microbit2blelite_reset_screen: 'clear LED screen %1',
@@ -768,71 +771,71 @@ const convertPresetImageToLedState = (preset) => {
                         YAWN: 'YAWN',
                         plot: 'plot',
                         unplot: 'unplot',
-                        on: 'turn on',
-                        off: 'turn off',
-                        microbit_2_HEART: 'HEART',
-                        microbit_2_HEART_SMALL: 'HEART_SMALL',
-                        microbit_2_HAPPY: 'HAPPY',
-                        microbit_2_SMILE: 'SMILE',
-                        microbit_2_SAD: 'SAD',
-                        microbit_2_CONFUSED: 'CONFUSEd',
-                        microbit_2_ANGRY: 'ANGRY',
-                        microbit_2_ASLEEP: 'ASLEEP',
-                        microbit_2_SURPRISED: 'SURPRISED',
-                        microbit_2_SILLY: 'SILLY',
-                        microbit_2_FABULOUS: 'FABULOUS',
-                        microbit_2_MEH: 'MEH',
-                        microbit_2_YES: 'YES',
-                        microbit_2_NO: 'NO',
-                        microbit_2_TRIANGLE: 'TRIANGLE',
-                        microbit_2_TRIANGLE_LEFT: 'TRIANGLE LEFT',
-                        microbit_2_CHESSBOARD: 'CHESSBOARD',
-                        microbit_2_DIAMOND: 'DIAMOND',
-                        microbit_2_DIAMOND_SMALL: 'DIAMOND SMALL',
-                        microbit_2_SQUARE: 'SQUARE',
-                        microbit_2_SQUARE_SMALL: 'SQUARE SMALL',
-                        microbit_2_RABBIT: 'RABBIT',
-                        microbit_2_COW: 'COW',
-                        microbit_2_MUSIC_CROTCHET: 'CROCHET',
-                        microbit_2_MUSIC_QUAVER: 'QUAVER',
-                        microbit_2_MUSIC_QUAVERS: 'QUAVERS',
-                        microbit_2_PITCHFORK: 'PITCHFORK',
-                        microbit_2_XMAS: 'XMAS',
-                        microbit_2_PACMAN: 'PACMAN',
-                        microbit_2_TARGET: 'TARGET',
-                        microbit_2_TSHIRT: 'TSHIRT',
-                        microbit_2_ROLLERSKATE: 'ROLLERSKATE',
-                        microbit_2_DUCK: 'DUCK',
-                        microbit_2_HOUSE: 'HOUSE',
-                        microbit_2_TORTOISE: 'TORTOISE',
-                        microbit_2_BUTTERFLY: 'BUTTERFLY',
-                        microbit_2_STICKFIGURE: 'STICKFIGURE',
-                        microbit_2_GHOST: 'GHOST',
-                        microbit_2_SWORD: 'SWORD',
-                        microbit_2_GIRAFFE: 'GIRAFFE',
-                        microbit_2_SKULL: 'SKULL',
-                        microbit_2_UMBRELLA: 'UMBRELLA',
-                        microbit_2_SNAKE: 'SNAKE',
-                        microbit_2_CLOCK1: 'CLOCK 1',
-                        microbit_2_CLOCK2: 'CLOCK 2',
-                        microbit_2_CLOCK3: 'CLOCK 3',
-                        microbit_2_CLOCK4: 'CLOCK 4',
-                        microbit_2_CLOCK5: 'CLOCK 5',
-                        microbit_2_CLOCK6: 'CLOCK 6',
-                        microbit_2_CLOCK7: 'CLOCK 7',
-                        microbit_2_CLOCK8: 'CLOCK 8',
-                        microbit_2_CLOCK9: 'CLOCK 9',
-                        microbit_2_CLOCK10: 'CLOCK 10',
-                        microbit_2_CLOCK11: 'CLOCK 11',
-                        microbit_2_CLOCK12: 'CLOCK 12',
-                        microbit_2_ARROW_N: 'ARROW_N',
-                        microbit_2_ARROW_NE: 'ARROW_NE',
-                        microbit_2_ARROW_E: 'ARROW_E',
-                        microbit_2_ARROW_SE: 'ARROW_SE',
-                        microbit_2_ARROW_S: 'ARROW_S',
-                        microbit_2_ARROW_SW: 'ARROW_SW',
-                        microbit_2_ARROW_W: 'ARROW_W',
-                        microbit_2_ARROW_NW: 'ARROW_NW',
+                        on: 'Turn on',
+                        off: 'Turn off',
+                        microbit_2_HEART: 'heart',
+                        microbit_2_HEART_SMALL: 'small heart',
+                        microbit_2_HAPPY: 'happy',
+                        microbit_2_SMILE: 'smile',
+                        microbit_2_SAD: 'sad',
+                        microbit_2_CONFUSED: 'confused',
+                        microbit_2_ANGRY: 'angry',
+                        microbit_2_ASLEEP: 'asleep',
+                        microbit_2_SURPRISED: 'surprised',
+                        microbit_2_SILLY: 'silly',
+                        microbit_2_FABULOUS: 'fabulous',
+                        microbit_2_MEH: 'meh',
+                        microbit_2_YES: 'yes',
+                        microbit_2_NO: 'no',
+                        microbit_2_TRIANGLE: 'triangle',
+                        microbit_2_TRIANGLE_LEFT: 'left triangle',
+                        microbit_2_CHESSBOARD: 'chessboard',
+                        microbit_2_DIAMOND: 'diamond',
+                        microbit_2_DIAMOND_SMALL: 'small diamond',
+                        microbit_2_SQUARE: 'square',
+                        microbit_2_SQUARE_SMALL: 'small square',
+                        microbit_2_RABBIT: 'rabbit',
+                        microbit_2_COW: 'cow',
+                        microbit_2_MUSIC_CROTCHET: 'crotchet',
+                        microbit_2_MUSIC_QUAVER: 'quaver',
+                        microbit_2_MUSIC_QUAVERS: 'quavers',
+                        microbit_2_PITCHFORK: 'pitchfork',
+                        microbit_2_XMAS: 'xmas',
+                        microbit_2_PACMAN: 'pacman',
+                        microbit_2_TARGET: 'target',
+                        microbit_2_TSHIRT: 'tshirt',
+                        microbit_2_ROLLERSKATE: 'rollerskate',
+                        microbit_2_DUCK: 'duck',
+                        microbit_2_HOUSE: 'house',
+                        microbit_2_TORTOISE: 'tortoise',
+                        microbit_2_BUTTERFLY: 'butterfly',
+                        microbit_2_STICKFIGURE: 'stickfigure',
+                        microbit_2_GHOST: 'ghost',
+                        microbit_2_SWORD: 'sword',
+                        microbit_2_GIRAFFE: 'giraffe',
+                        microbit_2_SKULL: 'skull',
+                        microbit_2_UMBRELLA: 'umbrella',
+                        microbit_2_SNAKE: 'snake',
+                        microbit_2_CLOCK1: "1 o'clock",
+                        microbit_2_CLOCK2: "2 o'clock",
+                        microbit_2_CLOCK3: "3 o'clock",
+                        microbit_2_CLOCK4: "4 o'clock",
+                        microbit_2_CLOCK5: "5 o'clock",
+                        microbit_2_CLOCK6: "6 o'clock",
+                        microbit_2_CLOCK7: "7 o'clock",
+                        microbit_2_CLOCK8: "8 o'clock",
+                        microbit_2_CLOCK9: "9 o'clock",
+                        microbit_2_CLOCK10: "10 o'clock",
+                        microbit_2_CLOCK11: "11 o'clock",
+                        microbit_2_CLOCK12: "12 o'clock",
+                        microbit_2_ARROW_N: 'north',
+                        microbit_2_ARROW_NE: 'northeast',
+                        microbit_2_ARROW_E: 'east',
+                        microbit_2_ARROW_SE: 'southeast',
+                        microbit_2_ARROW_S: 'south',
+                        microbit_2_ARROW_SW: 'southwest',
+                        microbit_2_ARROW_W: 'west',
+                        microbit_2_ARROW_NW: 'northwest',
                     },
                     Helper: {
                         microbit2blelite_get_analog:
@@ -840,16 +843,16 @@ const convertPresetImageToLedState = (preset) => {
                         microbit2blelite_set_analog:
                             'Writes an analog signal to the pin you choose. (0 ~ 1023)',
                         microbit2blelite_get_digital:
-                            'Reads a digital signal from the pin you choose. (0 ~ 1)',
+                            'Reads a digital signal from the pin you choose. (0 ~ 1023)',
                         microbit2blelite_set_digital:
                             'Writes a digital signal to the pin you choose. (0 ~ 1)',
                         microbit2blelite_screen_toggle: 'Turns on or turns off the LED screen.',
                         microbit2blelite_set_led:
-                            'Turns on the LED light of the entered X, Y coordinate with the selected brightness.',
+                            'Lights the selected LED with X and Y coordinates to the selected brightness.',
                         microbit2blelite_get_led:
-                            'The LED light brightness value of the entered X, Y coordinate.',
+                            'Brightness of the selected LED with X and Y coordinates',
                         microbit2blelite_show_preset_image:
-                            'Shows the selected icon on the LED screen.',
+                            'Lights the selected icon on the LED screen.',
                         microbit2blelite_show_custom_image:
                             'Shows the selected LED and brightness. You can manipulate all the LEDs at once.',
                         microbit2blelite_show_string:
@@ -1100,7 +1103,7 @@ const convertPresetImageToLedState = (preset) => {
             };
         }
 
-        getBlocks = function() {
+        getBlocks = function () {
             return {
                 microbit2blelite_common_title: {
                     skeleton: 'basic_text',
@@ -1296,8 +1299,8 @@ const convertPresetImageToLedState = (preset) => {
                         {
                             type: 'Dropdown',
                             options: [
-                                [Lang.Blocks.plot, this.functionKeys.DISPLAY_ON],
-                                [Lang.Blocks.unplot, this.functionKeys.DISPLAY_OFF],
+                                [Lang.Blocks.on, this.functionKeys.DISPLAY_ON],
+                                [Lang.Blocks.off, this.functionKeys.DISPLAY_OFF],
                             ],
                             value: this.functionKeys.DISPLAY_ON,
                             fontSize: 11,
@@ -2053,7 +2056,8 @@ const convertPresetImageToLedState = (preset) => {
                     func: async (sprite, script) => {
                         const axis = script.getField('AXIS');
                         // eslint-disable-next-line max-len
-                        const deviceAccData = await this.services.AccelerometerService.readAccelerometerData();
+                        const deviceAccData =
+                            await this.services.AccelerometerService.readAccelerometerData();
                         if (axis === 'mag') {
                             return deviceAccData.x + deviceAccData.y + deviceAccData.z;
                         } else {
@@ -2164,7 +2168,8 @@ const convertPresetImageToLedState = (preset) => {
                     func: async (sprite, script) => {
                         const axis = script.getField('AXIS');
                         // eslint-disable-next-line max-len
-                        const deviceMagnetData = await this.services.MagnetometerService.readMagnetometerData();
+                        const deviceMagnetData =
+                            await this.services.MagnetometerService.readMagnetometerData();
                         if (axis === 'mag') {
                             return deviceMagnetData.x + deviceMagnetData.y + deviceMagnetData.z;
                         } else {
@@ -2209,7 +2214,8 @@ const convertPresetImageToLedState = (preset) => {
                     paramsKeyMap: {},
                     func: async (sprite, script) => {
                         // eslint-disable-next-line max-len
-                        const temperature = await this.services.TemperatureService.readTemperature();
+                        const temperature =
+                            await this.services.TemperatureService.readTemperature();
                         return temperature;
                     },
                 },
