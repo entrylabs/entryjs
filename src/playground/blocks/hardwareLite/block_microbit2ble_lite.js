@@ -333,9 +333,6 @@ const convertPresetImageToLedState = (preset) => {
                 '99000:99099:09090:09990:00000',
             ];
             this.digitalPins = [
-                ['P0', 0],
-                ['P1', 1],
-                ['P2', 2],
                 ['P8', 8],
                 ['P9', 9],
                 ['P12', 12],

@@ -197,9 +197,6 @@ const EVENT_INTERVAL = 150;
             };
             this.name = 'Microbit2lite';
             this.digitalPins = [
-                ['P0', 0],
-                ['P1', 1],
-                ['P2', 2],
                 ['P8', 8],
                 ['P9', 9],
                 ['P12', 12],

@@ -187,9 +187,6 @@ Entry.Microbit2 = new (class Microbit2 {
         this.commandStatus = {};
         this.commandValue = {};
         this.digitalPins = [
-            ['P0', 0],
-            ['P1', 1],
-            ['P2', 2],
             ['P8', 8],
             ['P9', 9],
             ['P12', 12],
