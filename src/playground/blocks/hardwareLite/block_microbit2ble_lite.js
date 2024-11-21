@@ -505,7 +505,7 @@ const convertPresetImageToLedState = (preset) => {
                         microbit2blelite_get_direction: '나침반 방향',
                         microbit2blelite_get_field_strength_axis: '%1 의 자기장 세기 값',
                         microbit2blelite_get_light_level: '빛 센서 값',
-                        microbit2blelite_get_temperature: '온도 값',
+                        microbit2blelite_get_temperature: '온도',
                         microbit2blelite_get_sound_level: '마이크 소리 크기 값',
                         microbit2blelite_set_servo: '핀 %1 에 서보 모터 각도를 %2 로 정하기 %3',
                         microbit2blelite_set_pwm: '핀 %1 에 서보 펄스 폭을 %2 %3초로 정하기 %4',
