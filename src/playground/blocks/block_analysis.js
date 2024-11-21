@@ -1237,7 +1237,7 @@ module.exports = {
 
                     let foundIndex;
                     for (let i = 0; i < origin.length; i++) {
-                        if (table.getValue([i, col]) === value) {
+                        if (table.getValue([i, col]) == value) {
                             foundIndex = i;
                             break;
                         }
