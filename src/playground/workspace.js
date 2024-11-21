@@ -514,7 +514,7 @@ Entry.Workspace = class Workspace {
                         !blockView.isInBlockMenu &&
                         blockView.block.isDeletable()
                     ) {
-                        (function(block) {
+                        (function (block) {
                             block.copyToClipboard();
                             Entry.do('destroyBlockBelow', block);
                             blockView.getBoard().setSelectedBlock(null);
