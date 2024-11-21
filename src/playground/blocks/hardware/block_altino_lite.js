@@ -25,8 +25,8 @@ Entry.AltinoLite = {
             sq[port] = portMap[port];
         }
         Entry.hw.update();
-        var Altino = Entry.Altino;
-        Altino.removeAllTimeouts();
+        // var Altino = Entry.Altino;
+        // Altino.removeAllTimeouts();
     },
     timeouts: [],
     removeTimeout: function(id) {
@@ -291,7 +291,7 @@ Entry.AltinoLite.getBlocks = function() {
             statements: [],
             params: [
                 {
-                    type: 'DropdownDynamic',
+                    type: 'Dropdown',
                     options: [
                         [Lang.Blocks.altino_lite_stopAll, 'All'],
                         [Lang.Blocks.altino_lite_stopDrive, 'Drive'],
