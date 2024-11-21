@@ -7,7 +7,7 @@ import metadata from '../hardwareLite/metadata_whalesbot_drone_lite.json';
 Entry.WhalesbotEagle1001 = {
     id: '62.1',
     name: 'whalesbot_eagle_1001',
-    url: '', 
+    url: '',
     imageName: '',
     title: {
         ko: 'Whalesbot Eagle 1001',
@@ -90,6 +90,8 @@ Entry.WhalesbotEagle1001.setLanguage = function() {
             },
             Blocks: {
                 whalesbot_eagle_1001_toast_status_title: "드론 상태",
+                whalesbot_eagle_1001_toast_prepare_download: "다운로드 준비...",
+                whalesbot_eagle_1001_toast_downloading_code: "코드 다운로드...",
                 whalesbot_eagle_1001_toast_download_success: "다운로드 코드가 성공했습니다",
                 whalesbot_eagle_1001_toast_download_failed: "다운로드 코드가 실패했습니다",
                 whalesbot_eagle_1001_toast_clean_failed: "깨끗한 코드가 실패했습니다",
@@ -136,7 +138,9 @@ Entry.WhalesbotEagle1001.setLanguage = function() {
             },
             Blocks: {
                 whalesbot_eagle_1001_toast_status_title: "Drone Status",
-                whalesbot_eagle_1001_toast_download_success: "Download code successed",
+                whalesbot_eagle_1001_toast_prepare_download: "Prepare Downloading...",
+                whalesbot_eagle_1001_toast_downloading_code: "Downloading Code...",
+                whalesbot_eagle_1001_toast_download_success: "Download Code Successed",
                 whalesbot_eagle_1001_toast_download_failed: "Download code failed",
                 whalesbot_eagle_1001_toast_clean_failed: "Clean code failed",
                 whalesbot_eagle_1001_toast_clean_success: "Clean code success",
@@ -174,11 +178,11 @@ Entry.WhalesbotEagle1001.blockMenuBlocks = [
     'whalesbot_eagle_1001_set_the_steering_gear',
     'whalesbot_eagle_1001_execute_script',
     'whalesbot_eagle_1001_clean',
-    'whalesbot_eagle_1001_restart'   
+    'whalesbot_eagle_1001_restart'
 ];
 
 // 블록 생성
-Entry.WhalesbotEagle1001.getBlocks = function() {   
+Entry.WhalesbotEagle1001.getBlocks = function() {
     let _this = this;
     let sourceCode;
 
@@ -315,7 +319,7 @@ Entry.WhalesbotEagle1001.getBlocks = function() {
 
             // HARDWARE
             case 'whalesbot_eagle_1001_entering_pitch_mode':
-                return '\tfly_unlock();\n'; 
+                return '\tfly_unlock();\n';
 
             case 'whalesbot_eagle_1001_exit_pitch_mode':
                 return '\tfly_lock();\n';
@@ -409,7 +413,7 @@ Entry.WhalesbotEagle1001.getBlocks = function() {
 
             case 'whalesbot_eagle_1001_stop_moving_and_hover':
                 return `\tfly_hover();\n`;
-                
+
             case 'whalesbot_eagle_1001_hover_at_specified_altitude':
                 let hoverSpecifiedAltitude = (_getParameter(block.params[0]) == "" || _getParameter(block.params[0]) < 20) ? "20" : _getParameter(block.params[0]);
                 hoverSpecifiedAltitude = (_getParameter(block.params[0]) > 200) ? "200" : _getParameter(block.params[0]);
@@ -453,7 +457,7 @@ Entry.WhalesbotEagle1001.getBlocks = function() {
 
     return {
         whalesbot_eagle_1001_openning_3d_simulator: {
-            color: EntryStatic.colorSet.block.default.HARDWARE, 
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_without_next',
@@ -486,7 +490,7 @@ Entry.WhalesbotEagle1001.getBlocks = function() {
             syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_openning_3d_simulator()'] },
         },
         whalesbot_eagle_1001_restart: {
-            color: EntryStatic.colorSet.block.default.HARDWARE, 
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_without_next',
@@ -518,7 +522,7 @@ Entry.WhalesbotEagle1001.getBlocks = function() {
             syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_restart()'] },
         },
         whalesbot_eagle_1001_clean: {
-            color: EntryStatic.colorSet.block.default.HARDWARE, 
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_without_next',
@@ -547,14 +551,14 @@ Entry.WhalesbotEagle1001.getBlocks = function() {
             func (sprite, script) {
                 _this.sendCmd('stopCode');
                 Entry.toast.success(
-                    Lang.Blocks.whalesbot_eagle_1001_toast_status_title, 
+                    Lang.Blocks.whalesbot_eagle_1001_toast_status_title,
                     Lang.Blocks.whalesbot_eagle_1001_toast_clean_success
                 );
             },
             syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_clean()'] },
         },
         whalesbot_eagle_1001_entering_pitch_mode: {
-            color: EntryStatic.colorSet.block.default.HARDWARE, 
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
@@ -624,7 +628,7 @@ Entry.WhalesbotEagle1001.getBlocks = function() {
 
                 if (openedSimulatorPopup()) {
                     Entry.toast.success(
-                        Lang.Blocks.whalesbot_eagle_1001_toast_status_title,         
+                        Lang.Blocks.whalesbot_eagle_1001_toast_status_title,
                         Lang.Blocks.whalesbot_eagle_1001_toast_download_success
                     );
                     return;
@@ -633,9 +637,21 @@ Entry.WhalesbotEagle1001.getBlocks = function() {
                 _this.sendCmd(sourceCode);
 
                 Entry.toast.success(
-                    Lang.Blocks.whalesbot_drone_toast_status_title, 
-                    Lang.Blocks.whalesbot_drone_toast_download_success
+                    Lang.Blocks.whalesbot_eagle_1001_toast_status_title,
+                    Lang.Blocks.whalesbot_eagle_1001_toast_prepare_download
                 );
+                setTimeout(() => {
+                    Entry.toast.success(
+                        Lang.Blocks.whalesbot_eagle_1001_toast_status_title,
+                        Lang.Blocks.whalesbot_eagle_1001_toast_downloading_code
+                    );
+                    setTimeout(() => {
+                        Entry.toast.success(
+                            Lang.Blocks.whalesbot_eagle_1001_toast_status_title,
+                            Lang.Blocks.whalesbot_eagle_1001_toast_download_success
+                        );
+                    }, 3000);
+                }, 4000);
             },
             syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_exit_pitch_mode()'] },
         },
