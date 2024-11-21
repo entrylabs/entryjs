@@ -710,8 +710,8 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_distance_sensor: "거리센서",
                 robotis_front: "앞",
                 robotis_right: "오른쪽",
-                robotis_left_wheel: "왼쪽바퀴",
-                robotis_right_wheel: "오른쪽바퀴",
+                robotis_left_wheel: "왼쪽바퀴(52)",
+                robotis_right_wheel: "오른쪽바퀴(51)",
                 // https://namu.wiki/w/%EC%9D%8C%ED%91%9C
                 robotis_beat_sound_8th_note: "8분음표 (♪)",
                 robotis_beat_sound_dotted_8th_note: "점8분음표 (♪.)",
@@ -760,6 +760,7 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_huskylens_mode_object_classification: "사물 분류",
                 robotis_huskylens_mode_expression_recognition: '표정 인식',
                 robotis_huskylens_target_face: "얼굴",
+                robotis_huskylens_target_expression: "표정",
                 robotis_huskylens_target_object: "사물",
                 robotis_huskylens_target_color: "색상",
                 robotis_huskylens_target_tag: "태그",
@@ -1154,6 +1155,12 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_huskylens_mode_tag_recognition: "Tag recognition",
                 robotis_huskylens_mode_object_classification: "Object classification",
                 robotis_huskylens_mode_expression_recognition: 'Expression recognition',
+                robotis_huskylens_target_face: "Face",
+                robotis_huskylens_target_expression: "Expression",
+                robotis_huskylens_target_object: "Object",
+                robotis_huskylens_target_color: "Color",
+                robotis_huskylens_target_tag: "Tag",
+                robotis_huskylens_target_qr: "QR",
                 robotis_huskylens_target_block: "Rectangle",
                 robotis_huskylens_target_arrow: "Arrow",
                 robotis_huskylens_center_block_center_x: "Center X",
@@ -6862,10 +6869,11 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     type: 'Dropdown',
                     options: [
                         [Lang.Blocks.robotis_huskylens_target_face, '0'],
-                        [Lang.Blocks.robotis_huskylens_target_object, '1'],
-                        [Lang.Blocks.robotis_huskylens_target_color, '2'],
-                        [Lang.Blocks.robotis_huskylens_target_tag, '3'],
-                        [Lang.Blocks.robotis_huskylens_target_qr, '4'],
+                        [Lang.Blocks.robotis_huskylens_target_expression, '1'],
+                        [Lang.Blocks.robotis_huskylens_target_object, '2'],
+                        [Lang.Blocks.robotis_huskylens_target_color, '3'],
+                        [Lang.Blocks.robotis_huskylens_target_tag, '4'],
+                        [Lang.Blocks.robotis_huskylens_target_qr, '5'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -7031,10 +7039,11 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                         type: 'Dropdown',
                         options: [
                             [Lang.Blocks.robotis_huskylens_target_face, '0'],
-                            [Lang.Blocks.robotis_huskylens_target_object, '1'],
-                            [Lang.Blocks.robotis_huskylens_target_color, '2'],
-                            [Lang.Blocks.robotis_huskylens_target_tag, '3'],
-                            [Lang.Blocks.robotis_huskylens_target_qr, '4'],
+                            [Lang.Blocks.robotis_huskylens_target_expression, '1'],
+                            [Lang.Blocks.robotis_huskylens_target_object, '2'],
+                            [Lang.Blocks.robotis_huskylens_target_color, '3'],
+                            [Lang.Blocks.robotis_huskylens_target_tag, '4'],
+                            [Lang.Blocks.robotis_huskylens_target_qr, '5'],
                         ],
                         value: '0',
                         fontSize: 11,
@@ -7270,11 +7279,12 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                     type: 'Dropdown',
                     options: [
                         [Lang.Blocks.robotis_huskylens_target_face, '0'],
-                        [Lang.Blocks.robotis_huskylens_target_object, '1'],
-                        [Lang.Blocks.robotis_huskylens_target_color, '2'],
-                        [Lang.Blocks.robotis_huskylens_target_tag, '3'],
-                        [Lang.Blocks.robotis_huskylens_target_qr, '4'],
-                        [Lang.Blocks.robotis_huskylens_target_arrow, '5'],
+                        [Lang.Blocks.robotis_huskylens_target_expression, '1'],
+                        [Lang.Blocks.robotis_huskylens_target_object, '2'],
+                        [Lang.Blocks.robotis_huskylens_target_color, '3'],
+                        [Lang.Blocks.robotis_huskylens_target_tag, '4'],
+                        [Lang.Blocks.robotis_huskylens_target_qr, '5'],
+                        [Lang.Blocks.robotis_huskylens_target_arrow, '6'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -7299,7 +7309,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
                 var data_address = 4005; // block
                 var detect_type = script.getNumberValue('DETECT_TYPE');
 
-                if (detect_type == 5) data_address = 4006; // arrow
+                if (detect_type == 6) data_address = 4006; // arrow
 
                 var result = Entry.hw.portData[data_address];
 
