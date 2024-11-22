@@ -564,6 +564,8 @@ const convertPresetImageToLedState = (preset) => {
                         unplot: '끄기',
                         on: '켜기',
                         off: '끄기',
+                        remove: '지우기',
+                        light: '밝히기',
                         microbit_2_HEART: '하트',
                         microbit_2_HEART_SMALL: '작은 하트',
                         microbit_2_HAPPY: '행복',
@@ -1631,6 +1633,17 @@ const convertPresetImageToLedState = (preset) => {
                     statements: [],
                     params: [
                         {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.remove, 'remove'],
+                                [Lang.Blocks.light, 'light'],
+                            ],
+                            value: 'remove',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
                             type: 'Indicator',
                             img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
@@ -1642,9 +1655,15 @@ const convertPresetImageToLedState = (preset) => {
                     def: {
                         type: 'microbit2blelite_reset_screen',
                     },
-                    paramsKeyMap: {},
+                    paramsKeyMap: { LED_STATUS: 0 },
                     func: async (sprite, script) => {
-                        this.ledState = getInitialLedState();
+                        const ledStatus = script.getField('LED_STATUS');
+                        if (ledStatus === 'light') {
+                            const defaultLed = '99999:99999:99999:99999:99999';
+                            this.ledState = convertPresetImageToLedState(defaultLed);
+                        } else {
+                            this.ledState = getInitialLedState();
+                        }
                         await this.services.LedService.writeMatrixState(this.ledState);
                     },
                 },

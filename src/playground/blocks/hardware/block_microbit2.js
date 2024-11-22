@@ -453,6 +453,8 @@ Entry.Microbit2 = new (class Microbit2 {
                     unplot: '끄기',
                     on: '켜기',
                     off: '끄기',
+                    remove: '지우기',
+                    light: '밝히기',
                     microbit_2_HEART: '하트',
                     microbit_2_HEART_SMALL: '작은 하트',
                     microbit_2_HAPPY: '행복',
@@ -1527,6 +1529,17 @@ Entry.Microbit2 = new (class Microbit2 {
                 statements: [],
                 params: [
                     {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.remove, 'remove'],
+                            [Lang.Blocks.light, 'light'],
+                        ],
+                        value: 'remove',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
                         type: 'Indicator',
                         img: 'block_icon/hardware_icon.svg',
                         size: 12,
@@ -1538,12 +1551,24 @@ Entry.Microbit2 = new (class Microbit2 {
                 def: {
                     type: 'microbit2_reset_screen',
                 },
-                paramsKeyMap: {},
+                paramsKeyMap: { LED_STATUS: 0 },
                 func: (sprite, script) => {
-                    const reqOptions = {
-                        id: script.entity.id,
-                        command: this.functionKeys.RESET_SCREEN,
-                    };
+                    const ledStatus = script.getField('LED_STATUS');
+                    let reqOptions;
+                    if (ledStatus === 'light') {
+                        const defaultLed = '99999:99999:99999:99999:99999';
+                        reqOptions = {
+                            id: script.entity.id,
+                            command: this.functionKeys.SET_CUSTOM_IMAGE,
+                            payload: defaultLed,
+                        };
+                    } else {
+                        reqOptions = {
+                            id: script.entity.id,
+                            command: this.functionKeys.RESET_SCREEN,
+                        };
+                    }
+
                     this.requestCommandWithResponse(reqOptions);
                     const parsedResponse = this.getResponse(reqOptions);
                 },

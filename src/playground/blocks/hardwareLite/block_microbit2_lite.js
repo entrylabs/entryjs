@@ -493,6 +493,8 @@ const EVENT_INTERVAL = 150;
                         unplot: '끄기',
                         on: '켜기',
                         off: '끄기',
+                        remove: '지우기',
+                        light: '밝히기',
                         microbit_2_HEART: '하트',
                         microbit_2_HEART_SMALL: '작은 하트',
                         microbit_2_HAPPY: '행복',
@@ -1566,6 +1568,17 @@ const EVENT_INTERVAL = 150;
                     statements: [],
                     params: [
                         {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.remove, 'remove'],
+                                [Lang.Blocks.light, 'light'],
+                            ],
+                            value: 'remove',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
                             type: 'Indicator',
                             img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
@@ -1577,11 +1590,20 @@ const EVENT_INTERVAL = 150;
                     def: {
                         type: 'microbit2lite_reset_screen',
                     },
-                    paramsKeyMap: {},
+                    paramsKeyMap: { LED_STATUS: 0 },
                     func: async (sprite, script) => {
-                        const response = await this.getResponseWithSync(
-                            `${this.functionKeys.RESET_SCREEN};`
-                        );
+                        const ledStatus = script.getField('LED_STATUS');
+                        let response;
+                        if (ledStatus === 'light') {
+                            const defaultLed = '99999:99999:99999:99999:99999';
+                            response = await this.getResponseWithSync(
+                                `${this.functionKeys.SET_CUSTOM_IMAGE};${defaultLed}`
+                            );
+                        } else {
+                            response = await this.getResponseWithSync(
+                                `${this.functionKeys.RESET_SCREEN};`
+                            );
+                        }
                         return this.getResponse(response);
                     },
                 },
