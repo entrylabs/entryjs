@@ -1054,8 +1054,8 @@ let camera_id_for_use = 0;
                         robotis_distance_sensor: '거리센서',
                         robotis_front: '앞',
                         robotis_right: '오른쪽',
-                        robotis_left_wheel: '왼쪽바퀴',
-                        robotis_right_wheel: '오른쪽바퀴',
+                        robotis_left_wheel: '왼쪽바퀴(52)',
+                        robotis_right_wheel: '오른쪽바퀴(51)',
                         // https://namu.wiki/w/%EC%9D%8C%ED%91%9C
                         robotis_beat_sound_8th_note: '8분음표 (♪)',
                         robotis_beat_sound_dotted_8th_note: '점8분음표 (♪.)',
@@ -1104,6 +1104,7 @@ let camera_id_for_use = 0;
                         robotis_ai_camera_mode_object_classification: '사물 분류',
                         robotis_ai_camera_mode_expression_recognition: '표정 인식',
                         robotis_ai_camera_target_face: '얼굴',
+                        robotis_ai_camera_target_expression: '표정',
                         robotis_ai_camera_target_object: '사물',
                         robotis_ai_camera_target_color: '색상',
                         robotis_ai_camera_target_tag: '태그',
@@ -1787,6 +1788,12 @@ let camera_id_for_use = 0;
                         robotis_ai_camera_mode_tag_recognition: 'Tag recognition',
                         robotis_ai_camera_mode_object_classification: 'Object classification',
                         robotis_ai_camera_mode_expression_recognition: 'Expression recognition',
+                        robotis_ai_camera_target_face: 'Face',
+                        robotis_ai_camera_target_expression: 'Expression',
+                        robotis_ai_camera_target_object: 'Object',
+                        robotis_ai_camera_target_color: 'Color',
+                        robotis_ai_camera_target_tag: 'Tag',
+                        robotis_ai_camera_target_qr: 'QR',
                         robotis_ai_camera_target_block: 'Rectangle',
                         robotis_ai_camera_target_arrow: 'Arrow',
                         robotis_ai_camera_center_block_center_x: 'Center X',
@@ -6803,10 +6810,11 @@ let camera_id_for_use = 0;
                             type: 'Dropdown',
                             options: [
                                 [Lang.Blocks.robotis_ai_camera_target_face, '0'],
-                                [Lang.Blocks.robotis_ai_camera_target_object, '1'],
-                                [Lang.Blocks.robotis_ai_camera_target_color, '2'],
-                                [Lang.Blocks.robotis_ai_camera_target_tag, '3'],
-                                [Lang.Blocks.robotis_ai_camera_target_qr, '4'],
+                                [Lang.Blocks.robotis_ai_camera_target_expression, '1'],
+                                [Lang.Blocks.robotis_ai_camera_target_object, '2'],
+                                [Lang.Blocks.robotis_ai_camera_target_color, '3'],
+                                [Lang.Blocks.robotis_ai_camera_target_tag, '4'],
+                                [Lang.Blocks.robotis_ai_camera_target_qr, '5'],
                             ],
                             value: '0',
                             fontSize: 11,
@@ -6964,10 +6972,11 @@ let camera_id_for_use = 0;
                             type: 'Dropdown',
                             options: [
                                 [Lang.Blocks.robotis_ai_camera_target_face, '0'],
-                                [Lang.Blocks.robotis_ai_camera_target_object, '1'],
-                                [Lang.Blocks.robotis_ai_camera_target_color, '2'],
-                                [Lang.Blocks.robotis_ai_camera_target_tag, '3'],
-                                [Lang.Blocks.robotis_ai_camera_target_qr, '4'],
+                                [Lang.Blocks.robotis_ai_camera_target_expression, '1'],
+                                [Lang.Blocks.robotis_ai_camera_target_object, '2'],
+                                [Lang.Blocks.robotis_ai_camera_target_color, '3'],
+                                [Lang.Blocks.robotis_ai_camera_target_tag, '4'],
+                                [Lang.Blocks.robotis_ai_camera_target_qr, '5'],
                             ],
                             value: '0',
                             fontSize: 11,
@@ -7183,11 +7192,12 @@ let camera_id_for_use = 0;
                             type: 'Dropdown',
                             options: [
                                 [Lang.Blocks.robotis_ai_camera_target_face, '0'],
-                                [Lang.Blocks.robotis_ai_camera_target_object, '1'],
-                                [Lang.Blocks.robotis_ai_camera_target_color, '2'],
-                                [Lang.Blocks.robotis_ai_camera_target_tag, '3'],
-                                [Lang.Blocks.robotis_ai_camera_target_qr, '4'],
-                                [Lang.Blocks.robotis_ai_camera_target_arrow, '5'],
+                                [Lang.Blocks.robotis_ai_camera_target_expression, '1'],
+                                [Lang.Blocks.robotis_ai_camera_target_object, '2'],
+                                [Lang.Blocks.robotis_ai_camera_target_color, '3'],
+                                [Lang.Blocks.robotis_ai_camera_target_tag, '4'],
+                                [Lang.Blocks.robotis_ai_camera_target_qr, '5'],
+                                [Lang.Blocks.robotis_ai_camera_target_arrow, '6'],
                             ],
                             value: '0',
                             fontSize: 11,
@@ -7210,7 +7220,7 @@ let camera_id_for_use = 0;
                         let data_address = 4005; // block
                         let detect_type = script.getNumberValue('DETECT_TYPE');
 
-                        if (detect_type == 5) {
+                        if (detect_type == 6) {
                             data_address = 4006;
                         } // arrow
 

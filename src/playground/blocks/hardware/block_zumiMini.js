@@ -102,6 +102,13 @@ Entry.ZumiMini.setLanguage = function () {
                 BM: '가운데',
                 BR: '오른쪽',
                 COLOR: '색상',
+                AI_RED: '빨강',
+                AI_ORANGE: '주황',
+                AI_YELLOW: '노랑',
+                AI_GREEN: '녹색',
+                AI_CYAN: '청록',
+                AI_BLUE: '파랑',
+                AI_PURPLE: '보라',
                 RED: '빨강',
                 GREEN: '녹색',
                 BLUE: '파랑',
@@ -118,8 +125,8 @@ Entry.ZumiMini.setLanguage = function () {
                 LED_RAINBOW: '무지개',
                 ON: '켜기',
                 OFF: '끄기',
-                CAT: '고양이',
-                HUMAN: '사람',
+                CAT: '고양이얼굴',
+                HUMAN: '사람얼굴',
                 DETECT: '감지',
                 CX: 'X좌표',
                 CY: 'Y좌표',
@@ -159,9 +166,15 @@ Entry.ZumiMini.setLanguage = function () {
                 SND_SIREN: '사이렌',
                 M1: '왼쪽 모터',
                 M2: '오른쪽 모터',
-                CW: '정방향',
-                CCW: '역방향',
-                STOP: '멈춤',                
+                CW: '전진방향',
+                CCW: '후진방향',
+                STOP: '멈춤', 
+                RED_BTN: '빨강버튼',
+                BLUE_BTN: '파랑버튼',
+                YELLOW_BTN: '노랑버튼',
+                GREEN_BTN: '녹색버튼',
+                PRESSED: '눌렀을 때',
+                RELEASED: '눌리지 않았을 때',               
             },
             template: {
                 go_forward:'앞으로 가기(10cm) %1',
@@ -174,10 +187,14 @@ Entry.ZumiMini.setLanguage = function () {
                 front_sensor:  '앞 센서 %1 %2',
                 bottom_sensor: '바닥 센서 %1 %2',
                 button_input: '버튼 입력 %1',
+                button_boolean_input: '%1 이 %2',
                 face_detector: 'AI 얼굴 %1 %2',
                 cat_face_detector: 'AI 고양이 얼굴 %1 %2',
-                color_detector: 'AI 컬러 감지 %1 %2', 
-                april_detector: '에이프릴 텍 감지 %1 %2',
+                face_boolean_detector: '%1 이 감지 되었을 때',
+                color_detector: 'AI 컬러 감지 %1 %2',
+                color_boolean_detector:'%1 이 감지되었을 때', 
+                april_detector: '마커 감지 %1 %2',
+                april_boolean_detector: '마커 %1 이 감지되었을 때',
                 IMU_sensor: '자세 측정 %1 %2',
                 move_straight: '이동하기 방향 %1 속도 %2 거리 %3cm %4',
                 move_turn: '회전하기 방향 %1 속도 %2 각도 %3도 %4',
@@ -189,7 +206,8 @@ Entry.ZumiMini.setLanguage = function () {
                 emotion: '표정 변화 %1 %2', 
                 play_sound: '소리내기 %1 %2',  
                 LED_control: 'LED 불빛 %1 효과 %2 동작 %3 %4',
-                motor_control: '모터 %1 방향 %2 속도 %3 %4',             
+                motor_control: '모터 %1 방향 %2 속도 %3 %4',
+                power_info: '배터리 %1',           
             },
         },       
 
@@ -200,7 +218,14 @@ Entry.ZumiMini.setLanguage = function () {
                 BL: 'left',
                 BM: 'middle',
                 BR: 'right',
-                COLOR: '색상',
+                COLOR: 'color',
+                AI_RED: 'red',
+                AI_ORANGE: 'orange',
+                AI_YELLOW: 'yellow',
+                AI_GREEN: 'green',
+                AI_CYAN: 'cyan',
+                AI_BLUE: 'blue',
+                AI_PURPLE: 'purple',
                 RED: 'red',
                 GREEN: 'green',
                 BLUE: 'blue',
@@ -257,9 +282,15 @@ Entry.ZumiMini.setLanguage = function () {
                 SND_SIREN: 'siren',
                 M1: 'left motor',
                 M2: 'right motor',
-                CW: 'clock wise',
-                CCW: 'counter clock wise', 
-                STOP: 'stop',              
+                CW: 'forward',
+                CCW: 'backward', 
+                STOP: 'stop', 
+                RED_BTN: 'red button',
+                BLUE_BTN: 'blue button',
+                YELLOW_BTN: 'yellow button',
+                GREEN_BTN: 'green button',
+                PRESSED: 'pressed',
+                RELEASED: 'released',                      
             },
             template: {
                 go_forward:'going forward(10cm) %1',
@@ -272,10 +303,14 @@ Entry.ZumiMini.setLanguage = function () {
                 front_sensor: 'front sensor %1 %2',
                 bottom_sensor: 'bottom sensor %1 %2',
                 button_inpput: 'button input %1',
+                button_boolean_input: 'when %1 %2',
                 face_detector: 'AI face %1 %2',
                 cat_face_detector: 'AI cat face %1 %2',
+                face_boolean_detector: 'when %1 is detected',
                 color_detector: 'AI color detection %1 %2',
-                april_detector: 'apriltag detection %1 %2', 
+                color_boolean_detector:'when %1 is detected',
+                april_detector: 'apriltag detection %1 %2',
+                april_boolean_detector: 'when apriltag %1 is detected', 
                 IMU_sensor: ' inertial mesurement %1 %2',
                 move_straight: 'move direction %1 speed %2 distance %3 cm %4',
                 move_turn: 'turn %1 speed %2 degree %3 %4',
@@ -287,37 +322,47 @@ Entry.ZumiMini.setLanguage = function () {
                 emotion: 'change emotion  %1 %2',
                 play_sound: 'play sound %1 %2', 
                 LED_control: 'LED light %1 effect %2 acttion %3 %4', 
-                motor_control: 'motor %1 direction %2 speed %3 %4',   
+                motor_control: 'motor %1 direction %2 speed %3 %4',  
+                power_info: 'battery %1',   
             },
         },        
     };
 };
 
 Entry.ZumiMini.blockMenuBlocks = [
-    'go_forward',
-    'go_back',
-    'turn_left',
-    'turn_right',
+         
+    'motor_control',     
+    'move_straight',       
+    'move_straight_infinite',    
+    'move_turn', 
+    'motion_stop',
+
     'going_forward_until_sensing',
-    'following_line_until_sensing',
+    'following_line_until_sensing',     
+    'following_line_dist',
+    'following_line_infinite',            
+    
     'LED_color',
-    'front_sensor', 
+    'LED_control',
+
+    'button_boolean_input',
+
+    'screen_toggle',
+    'emotion', 
+    
+    'face_boolean_detector',
+    'color_boolean_detector',
+    'april_boolean_detector',    
+
+
+    'front_sensor',
     'bottom_sensor',
     'button_input',
     'face_detector',
     'cat_face_detector',
     'color_detector',
     'april_detector',
-    'move_straight',    
-    'move_turn',
-    'following_line_dist',
-    'move_straight_infinite',
-    'following_line_infinite',
-    'motion_stop',
-    'screen_toggle',
-    'emotion',    
-    'LED_control',
-    'motor_control',
+    'power_info',   
 ];
 
 
@@ -360,7 +405,7 @@ Entry.ZumiMini.getBlocks = function() {
                 COLOR: 0,
                 ACTION: 1,
             },
-            class: "base",
+            class: "led",
             isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
 
@@ -474,7 +519,7 @@ Entry.ZumiMini.getBlocks = function() {
             def: {
                 type: "motion_stop"
             },
-            class: "base",
+            class: "move",
             isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
 
@@ -606,7 +651,7 @@ Entry.ZumiMini.getBlocks = function() {
                 SPD: 1,
                 DIST: 2,
             },
-            class: "base",
+            class: "move",
             isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
 
@@ -748,7 +793,7 @@ Entry.ZumiMini.getBlocks = function() {
             paramsKeyMap: {
                 SPD: 0,
             },
-            class: "base",
+            class: "sense",
             isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
 
@@ -812,7 +857,7 @@ Entry.ZumiMini.getBlocks = function() {
                 DIR: 0,
                 SPD: 1,
             },
-            class: "base",
+            class: "move",
             isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
 
@@ -876,7 +921,7 @@ Entry.ZumiMini.getBlocks = function() {
                 SPD: 0,
                 DIST: 1,
             },
-            class: "base",
+            class: "sense",
             isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
 
@@ -1026,7 +1071,7 @@ Entry.ZumiMini.getBlocks = function() {
                 SPD: 1,
                 DEG: 2,
             },
-            class: "base",
+            class: "move",
             isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
 
@@ -1548,7 +1593,7 @@ Entry.ZumiMini.getBlocks = function() {
             def: {
                 type: "going_forward_until_sensing"
             },
-            class: "base",
+            class: "sense",
             isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
 
@@ -1645,7 +1690,7 @@ Entry.ZumiMini.getBlocks = function() {
             def: {
                 type: "following_line_until_sensing"
             },
-            class: "base",
+            class: "sense",
             isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
 
@@ -1758,7 +1803,7 @@ Entry.ZumiMini.getBlocks = function() {
             paramsKeyMap: {
                 DIR: 0,
             },
-            class: 'output',
+            class: 'info',
             isNotFor: ['zumi_mini'],
             func: function(sprite, script) {
                 const sen = script.getStringField('DIR', script);
@@ -1796,11 +1841,34 @@ Entry.ZumiMini.getBlocks = function() {
             paramsKeyMap: {
                 B_DIR: 0,
             },
-            class: 'output',
+            class: 'info',
             isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
                 const sen = script.getStringField('B_DIR', script);
                 return Entry.hw.portData.inputData.irSensor[sen];
+            },
+        },
+
+        power_info: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#ffffff',
+            skeleton: 'basic_string_field',
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            def: {
+                type: 'power_info',
+            },
+            class: 'info',
+            isNotFor: ['zumi_mini'],
+            func: function (sprite, script) {                
+                var vol = Entry.hw.portData.inputData.euler['PITCH'];
+                return vol;
             },
         },
 
@@ -1819,7 +1887,7 @@ Entry.ZumiMini.getBlocks = function() {
             def: {
                 type: 'button_input',
             },           
-            class: 'output',
+            class: 'info',
             isNotFor: ['zumi_mini'],
             func: function (sprite, script) {                
                 
@@ -1831,6 +1899,73 @@ Entry.ZumiMini.getBlocks = function() {
                 else bStat = 'N';
                 
                 return bStat;
+            },
+        },
+
+        button_boolean_input: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#ffffff',
+            skeleton: 'basic_boolean_field',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.RED_BTN, 'RED_BTN'],
+                        [Lang.Blocks.BLUE_BTN, 'BLUE_BTN'],
+                        [Lang.Blocks.GREEN_BTN, 'GREEN_BTN'],
+                        [Lang.Blocks.YELLOW_BTN, 'YELLOW_BTN'],
+                    ],
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.PRESSED, 'PRESS'],
+                        [Lang.Blocks.RELEASED, 'RELEASE'],                       
+                    ],
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },               
+            ],
+            def: {
+                params: ['RED_BTN','PRESS'],
+                type: 'button_boolean_input',
+            },
+            paramsKeyMap: {
+                BUTTON: 0,
+                STATUS: 1,
+            },
+            class: 'boolean',
+            isNotFor: ['zumi_mini'],
+            func: function (sprite, script) {
+
+                const btn = script.getStringField('BUTTON', script);
+                const stat = script.getStringField('STATUS', script);
+                var bStat = Entry.hw.portData.inputData.euler['ROLL'];
+                var result = false;
+                
+                if (stat == 'PRESS') 
+                {
+                    if((btn == 'RED_BTN')&&(bStat == 8)) result = true;
+                    else if((btn == 'BLUE_BTN') && (bStat == 4)) result = true;
+                    else if((btn == 'GREEN_BTN') && (bStat == 2)) result = true;
+                    else if((btn == 'YELLOW_BTN') && (bStat == 1)) result = true;
+                    else result = false;
+                }
+                else if (stat == 'RELEASE') 
+                {
+                    if ((btn == 'RED_BTN') && (bStat == 8)) result = false;
+                    else if ((btn == 'BLUE_BTN') && (bStat == 4)) result = false;
+                    else if ((btn == 'GREEN_BTN') && (bStat == 2)) result = false;
+                    else if ((btn == 'YELLOW_BTN') && (bStat == 1)) result = false;
+                    else result = true;
+                }              
+               
+                return result;
             },
         },
 
@@ -1864,7 +1999,7 @@ Entry.ZumiMini.getBlocks = function() {
             paramsKeyMap: {
                 PARAM: 0,
             },
-            class: 'output',
+            class: 'info',
             isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
                 
@@ -1872,9 +2007,18 @@ Entry.ZumiMini.getBlocks = function() {
                 Entry.hw.sendQueue['req'] |= REQUEST_FACE_DETECTION;
                 const sen = script.getStringField('PARAM', script);
                 var result =  Entry.hw.portData.inputData.faceDetect[sen];
-                        
-                if ((result == 0x00)&&(sen == 'CX')) result = -1;
-                else if ((result == 0x00) && (sen == 'CY')) result = -1;               
+
+                var Xg = Entry.hw.portData.inputData.faceDetect['CX'];
+                var Yg = Entry.hw.portData.inputData.faceDetect['CY'];
+
+                if (sen == 'CX') {
+                    if (result == 0x00) result = -999;
+                    else result = ((200 / 2) - Xg) + 10;
+                }
+                else if (sen == 'CY') {
+                    if (result == 0x00) result = -999;
+                    else result = (200 / 2) - Yg;
+                }             
                
                 return result;
             },
@@ -1910,7 +2054,7 @@ Entry.ZumiMini.getBlocks = function() {
             paramsKeyMap: {
                 PARAM: 0,
             },
-            class: 'output',
+            class: 'info',
             isNotFor: ['zumi_mini'],
             func: function (sprite, script) {           
                 
@@ -1919,10 +2063,73 @@ Entry.ZumiMini.getBlocks = function() {
                 const sen = script.getStringField('PARAM', script);
                 var result = Entry.hw.portData.inputData.userDefined[sen];
 
-                if ((result == 0x00) && (sen == 'CX')) result = -1;
-                else if ((result == 0x00) && (sen == 'CY')) result = -1;
+                var Xg = Entry.hw.portData.inputData.userDefined['CX'];
+                var Yg = Entry.hw.portData.inputData.userDefined['CY'];
+
+                if (sen == 'CX') {
+                    if (result == 0x00) result = -999;
+                    else result = ((200 / 2) - Xg) + 20;
+                }
+                else if (sen == 'CY') {
+                    if (result == 0x00) result = -999;
+                    else result = ((200 / 2) - Yg) + 20;
+                }
 
                 return result;                
+            },
+        },
+
+        face_boolean_detector: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#ffffff',
+            skeleton: 'basic_boolean_field',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.HUMAN, 'HUMAN'],
+                        [Lang.Blocks.CAT, 'CAT'],
+                    ],
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },               
+            ],
+            def: {
+                params: ['HUMAN'],
+                type: 'face_boolean_detector',
+            },
+            paramsKeyMap: {
+                FACE: 0,
+            },
+            class: 'boolean',
+            isNotFor: ['zumi_mini'],
+            func: function (sprite, script) {
+
+                var result = false;
+
+                const REQUEST_FACE_DETECTION = 0x01;   //humanface
+                const REQUEST_USER_DEFINED = 0x10;     //catface         
+                               
+                const sen = script.getStringField('FACE', script);
+                
+                if(sen == 'HUMAN')
+                {
+                    Entry.hw.sendQueue['req'] |= REQUEST_FACE_DETECTION;
+                    var humanResult = Entry.hw.portData.inputData.faceDetect['DETECT'];
+                    if(humanResult != 0) result = true;
+                    else result = false;                   
+                }
+                else if(sen == 'CAT')
+                {
+                    Entry.hw.sendQueue['req'] |= REQUEST_USER_DEFINED;
+                    var catResult = Entry.hw.portData.inputData.userDefined['DETECT'];
+                    if(catResult != 0) result = true;
+                    else result = false;                   
+                }      
+
+                return result;
             },
         },
 
@@ -1957,7 +2164,7 @@ Entry.ZumiMini.getBlocks = function() {
             paramsKeyMap: {
                 PARAM: 0,
             },
-            class: 'output',
+            class: 'info',
             isNotFor: ['zumi_mini'],
             func: function (sprite, script) { 
 
@@ -1974,14 +2181,80 @@ Entry.ZumiMini.getBlocks = function() {
                 else if ((result == 0x03) && (sen == 'COLOR')) result = 'GREEN';
                 else if ((result == 0x04) && (sen == 'COLOR')) result = 'CYAN';
                 else if ((result == 0x05) && (sen == 'COLOR')) result = 'BLUE';
-                else if ((result == 0x06) && (sen == 'COLOR')) result = 'PURPLE';
+                else if ((result == 0x06) && (sen == 'COLOR')) result = 'PURPLE';                
 
-                if ((result == 0x00) && (sen == 'CX')) result = -1;
-                else if ((result == 0x00) && (sen == 'CY')) result = -1;
+                var Xg = Entry.hw.portData.inputData.colorDetect['CX'];
+                var Yg = Entry.hw.portData.inputData.colorDetect['CY'];
+
+                if (sen == 'CX') {
+                    if (result == 0x00) result = -999;
+                    else result = ((200 / 2) - Xg);
+                }
+                else if (sen == 'CY') {
+                    if (result == 0x00) result = -999;
+                    else result = ((200 / 2) - Yg);
+                }             
 
                 return result;
             },
         },
+
+        color_boolean_detector: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#ffffff',
+            skeleton: 'basic_boolean_field',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.AI_RED, 'RED'],
+                        [Lang.Blocks.AI_ORANGE, 'ORANGE'],
+                        [Lang.Blocks.AI_YELLOW, 'YELLOW'],
+                        [Lang.Blocks.AI_GREEN, 'GREEN'],
+                        [Lang.Blocks.AI_CYAN, 'CYAN'],
+                        [Lang.Blocks.AI_BLUE, 'BLUE'],
+                        [Lang.Blocks.AI_PURPLE, 'PURPLE'],
+                    ],
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },             
+            ],
+            def: {
+                params: ['RED'],
+                type: 'color_boolean_detector',
+            },
+            paramsKeyMap: {
+                PARAM: 0,
+            },
+            class: 'boolean',
+            isNotFor: ['zumi_mini'],
+            func: function (sprite, script) { 
+
+                var result = false;
+                
+                const REQUEST_COLOR_DETECTION = 0x02;
+                Entry.hw.sendQueue['req'] |= REQUEST_COLOR_DETECTION;
+                
+                const sen = script.getStringField('PARAM', script);
+                var result = Entry.hw.portData.inputData.colorDetect['COLOR'];
+
+                //if(result == 0xFE) result = false;
+
+                if ((result == 0x00) && (sen == 'RED')) result = true;
+                else if ((result == 0x01) && (sen == 'ORANGE')) result = true;
+                else if ((result == 0x02) && (sen == 'YELLOW')) result = true;
+                else if ((result == 0x03) && (sen == 'GREEN')) result = true;
+                else if ((result == 0x04) && (sen == 'CYAN')) result = true;
+                else if ((result == 0x05) && (sen == 'BLUE')) result = true;
+                else if ((result == 0x06) && (sen == 'PURPLE')) result = true;
+                else result = false;              
+
+                return result;
+            },
+        },
+        
 
         april_detector: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -2013,9 +2286,11 @@ Entry.ZumiMini.getBlocks = function() {
             paramsKeyMap: {
                 A_INFO: 0,
             },
-            class: 'output',
+            class: 'info',
             isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
+
+                var result = 0;
 
                 const REQUEST_APRIL_DETECTION = 0x04;
                 Entry.hw.sendQueue['req'] |= REQUEST_APRIL_DETECTION;
@@ -2023,9 +2298,61 @@ Entry.ZumiMini.getBlocks = function() {
                 const sen = script.getStringField('A_INFO', script);
                 var result = Entry.hw.portData.inputData.aprilDetect[sen];
 
-                if((result == 0xFE) && (sen == 'ID')) result = -1;
-                if ((result == 0x00) && (sen == 'CX')) result = -1;
-                else if ((result == 0x00) && (sen == 'CY')) result = -1;
+                var Xg = Entry.hw.portData.inputData.aprilDetect['CX'];
+                var Yg = Entry.hw.portData.inputData.aprilDetect['CY'];
+
+                
+                if(sen == 'ID')
+                {
+                    if(result == 0xFE) result = -1;
+                }                
+                else if(sen == 'CX')
+                {
+                    if(result == 0x00) result = -999;
+                    else result = (200 / 2) - Xg;
+                }
+                else if (sen == 'CY') 
+                {
+                    if (result == 0x00) result = -999;
+                    else result = (100 / 2) - Yg;
+                }                
+              
+                return result;
+            },
+        },
+
+        april_boolean_detector: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#ffffff',
+            skeleton: 'basic_boolean_field',
+            params: [               
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
+            def: {
+                params: [20],
+                type: 'april_boolean_detector',
+            },
+            paramsKeyMap: {
+                NUM: 0,
+            },
+            class: 'boolean',
+            isNotFor: ['zumi_mini'],
+            func: function (sprite, script) {
+
+                var result = false;
+
+                const REQUEST_APRIL_DETECTION = 0x04;
+                Entry.hw.sendQueue['req'] |= REQUEST_APRIL_DETECTION;
+
+                var _num = script.getNumberValue('NUM');                
+                var result = Entry.hw.portData.inputData.aprilDetect['ID'];
+
+                if(_num == result) result = true;
+                else result = false;              
 
                 return result;
             },
@@ -2061,7 +2388,7 @@ Entry.ZumiMini.getBlocks = function() {
             paramsKeyMap: {
                 EULER: 0,
             },
-            class: 'output',
+            class: 'info',
             isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
 
@@ -2103,7 +2430,7 @@ Entry.ZumiMini.getBlocks = function() {
             paramsKeyMap: {
                 TYPE: 0,
             },
-            class: 'base',
+            class: 'screen',
             isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
 
@@ -2161,7 +2488,7 @@ Entry.ZumiMini.getBlocks = function() {
             paramsKeyMap: {
                 TYPE: 0,
             },
-            class: 'base',
+            class: 'screen',
             isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
 
@@ -2325,7 +2652,7 @@ Entry.ZumiMini.getBlocks = function() {
                 EFFECT: 1,
                 ACTION: 2,
             },
-            class: "base",
+            class: "led",
             isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
 
@@ -2503,7 +2830,7 @@ Entry.ZumiMini.getBlocks = function() {
                 DIR: 1,
                 SPD: 2,
             },
-            class: "base",
+            class: "move",
             isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
 
@@ -2541,9 +2868,16 @@ Entry.ZumiMini.getBlocks = function() {
 
                 var _dirInt = 0;
 
-                if (_dir == 'CW') _dirInt = DIR_LEFT;
-                else if (_dir == 'CCW') _dirInt = DIR_RIGHT;
-                else if (_dir == 'STOP') _dirInt = DIR_STOP;
+                if(_num == 'LEFT') {
+                    if (_dir == 'CW') _dirInt = DIR_RIGHT;
+                    else if (_dir == 'CCW') _dirInt = DIR_LEFT;
+                    else if (_dir == 'STOP') _dirInt = DIR_STOP;
+                }
+                if (_num == 'RIGHT') {
+                    if (_dir == 'CW') _dirInt = DIR_LEFT;
+                    else if (_dir == 'CCW') _dirInt = DIR_RIGHT;
+                    else if (_dir == 'STOP') _dirInt = DIR_STOP;
+                }                
 
                 if (_spd < 0) _spd = 0; else if (_spd > 10) _spd = 10;
                 
