@@ -72,8 +72,8 @@ class Classification {
         this.model = await tf.loadLayersModel(url);
     }
 
-    async reload() {
-        this.model = await tf.loadLayersModel(this.#url);
+    async reload(url) {
+        this.model = await tf.loadLayersModel(url || this.#url);
         this.isLoaded = true;
     }
 }
