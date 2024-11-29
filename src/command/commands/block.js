@@ -920,7 +920,7 @@ import isFunction from 'lodash/isFunction';
             block = this.editor.board.findBlock(block);
             block.doDestroyBelow(true);
             if (block.isParamBlockType()) {
-                block.thread.updateValueBlock();
+                block.thread?.updateValueBlock?.();
             }
         },
         state(block) {
