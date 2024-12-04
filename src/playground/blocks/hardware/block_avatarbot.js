@@ -2317,7 +2317,7 @@ Entry.avatarbot.getBlocks = function() {
                     null,
                     {
                         type: 'number',
-                        params: ['0'],
+                        params: ['50'],
                     },
                     // null,
                     {
@@ -2471,11 +2471,11 @@ Entry.avatarbot.getBlocks = function() {
                 params: [
                     {
                         type: 'number',
-                        params: ['0'],
+                        params: ['90'],
                     },
                     {
                         type: 'number',
-                        params: ['0'],
+                        params: ['180'],
                     },
                     {
                         type: 'number',
@@ -2642,21 +2642,21 @@ Entry.avatarbot.getBlocks = function() {
                     null,
                     {
                         type: 'number',
-                        params: ['0'],
+                        params: ['50'],
                     },
                     {
                         type: 'number',
-                        params: ['0'],
+                        params: ['50'],
                     },
                     // back
                     null,
                     {
                         type: 'number',
-                        params: ['0'],
+                        params: ['50'],
                     },
                     {
                         type: 'number',
-                        params: ['0'],
+                        params: ['50'],
                     },
                     // on/off
                     {
