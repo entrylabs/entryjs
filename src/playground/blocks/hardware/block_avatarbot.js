@@ -287,7 +287,10 @@ Entry.avatarbot = {
 		En3:0,
 		CCW3:0
 	},
-	
+    //
+    dc_lineCar_index: new Array(16).fill(0), // 4(control)*4(index)
+	dc_lineCar_ir_index: new Array(2).fill(0),
+    //
 	Board_MPU6050 : {
 		En:0,
 		// get value list
@@ -320,6 +323,7 @@ Entry.avatarbot = {
 		ch1_cm: 0,
 		ch2_inch: 0
 	},
+    
 	/*
     monitorTemplate: {
         imgPath: 'hardware/avatarbot.png',
@@ -459,7 +463,17 @@ Entry.avatarbot.setLanguage = function() {
                 //
                 avatarbot_func_on: '시작',
     			avatarbot_func_off: '정지',
-    			
+    			//
+                avatarbot_DC_LINECAR_STOP: '정지',
+                avatarbot_DC_LINECAR_RUN: '전진',
+                avatarbot_DC_LINECAR_BACK: '후진',
+                avatarbot_DC_LINECAR_LEFT: '왼쪽',
+                avatarbot_DC_LINECAR_RIGHT: '오른쪽',
+                //
+                avatarbot_DC_LINECAR_DETECTION_BOTH: '라인 둘 다 감지',
+                avatarbot_DC_LINECAR_DETECTION_LEFT: '라인 왼쪽 감지',
+                avatarbot_DC_LINECAR_DETECTION_RIGHT: '라인 오른쪽 감지',
+                avatarbot_DC_LINECAR_DETECTION_NONE: '라인 잃어버림',
 				//
 			   	// avatarbot_hw_test: 'AvatarBot HW Test %1 번 값 ',
                 //
@@ -474,12 +488,19 @@ Entry.avatarbot.setLanguage = function() {
                 avatarbot_servo: '서보 모터 %1 을 시간(us) %2 ~ %3로 %4 ° %5 ',
                 avatarbot_dc: 'DC 모터 %1 을 %2 방향으로 %3 % %4 동작 ',
                 avatarbot_robot_arm: '로봇 팔 몸통 %1°, 팔[축1 %2°, 축2 %3°], 헤드[축1 %4°, 축2 %5°], 집게 %6°',
-                avatarbot_dc_car: '자동차 앞 바퀴 %1 방향[왼쪽 %2 %, 오른쪽 %3 %], 뒷 바퀴 %4 방향[왼쪽 %5 %, 오른쪽 %6 %] %7 동작',
+                avatarbot_dc_car: '자동차 앞[%1 방향, 속도(좌 %2 %, 우 %3 %)], 뒷[%4 방향, 속도(좌 %5 %, 우 %6 %)] %7 동작',
+                //
+                avatarbot_line_car_ir_init: '라인트레이서 좌측 센서 %1 %, 우측 센서 %2 % 감도 설정',
+                avatarbot_line_car_motor_init: '라인트레이서 %1 조건일 때 앞[좌 %2 %, 우 %3 %], 뒷[좌 %4 %, 우 %5 %] 속도 설정',
+                avatarbot_line_car: '라인트레이서 %1',
                 //
                 avatarbot_buzzer_sample: '부저 샘플 %1 %2 초 동안 시작 ',
                 avatarbot_buzzer: '부저 %1 소리로 %2 초 동안 시작 ',
-                avatarbot_led_strip_sample: 'LED 스트립 샘플 %1 ',
+                //
+                avatarbot_led_strip_sample: 'LED 스트립 샘플 %1 동작',
                 avatarbot_led_strip_set: 'LED 스트립 LED %1 개, 밝기 %2 % 설정 ',
+                avatarbot_led_strip_indexOn: 'LED 스트립 LED %1 번 R %2, G %3, B %4 %5',
+
                 // avatarbot_ir_remote: '리모컨 %1 (으)로 동작 ',
                 avatarbot_get_mpu6050: '자이로 가속도 센서 %1 정보 확인 ',
                 avatarbot_get_mpu6050_detail: '자이로 가속도 센서 %1 의 %2 값 가져오기 ',
@@ -537,11 +558,16 @@ Entry.avatarbot.blockMenuBlocks = [
     'avatarbot_robot_arm',
     'avatarbot_dc_car',
     //
+    'avatarbot_line_car_ir_init',
+    'avatarbot_line_car_motor_init',
+    'avatarbot_line_car',
+    //
     'avatarbot_buzzer_sample',
     'avatarbot_buzzer',
     
     'avatarbot_led_strip_sample',
     'avatarbot_led_strip_set',
+    'avatarbot_led_strip_indexOn',
     // 'avatarbot_led_strip',
     
     // 'avatarbot_ir_remote',
@@ -2176,7 +2202,7 @@ Entry.avatarbot.getBlocks = function() {
                 VALUE4: 3,
                 RUN:4,
             },
-            class: 'avatarbot',
+            class: 'avatarbot_serbo',
             isNotFor: ['avatarbot'],
             func(sprite, script) {
 				if (!Entry.hw.sendQueue.CMD) {
@@ -2333,7 +2359,7 @@ Entry.avatarbot.getBlocks = function() {
                 // RUN:3,
                 TIME: 3,
             },
-            class: 'avatarbot',
+            class: 'avatarbot_dc',
             isNotFor: ['avatarbot'],
             func(sprite, script) {
 				if (!Entry.hw.sendQueue.CMD) {
@@ -2504,7 +2530,7 @@ Entry.avatarbot.getBlocks = function() {
                 VALUE5: 4,
                 VALUE6: 5,
             },
-            class: 'avatarbot',
+            class: 'avatarbot_robotArm',
             isNotFor: ['avatarbot'],
             func(sprite, script) {
 				if (!Entry.hw.sendQueue.CMD) {
@@ -2677,7 +2703,7 @@ Entry.avatarbot.getBlocks = function() {
                 // on/off - timer
                 TIME: 6,
             },
-            class: 'avatarbot',
+            class: 'avatarbot_dcCar',
             isNotFor: ['avatarbot'],
             func(sprite, script) {
 				if (!Entry.hw.sendQueue.CMD) {
@@ -2722,16 +2748,16 @@ Entry.avatarbot.getBlocks = function() {
                 cw[2] = b_cw;
                 cw[3] = (b_cw==0)?1:0;
                 
-                let index = 2 + Entry.avatarbot.BoardFunType.DC_M; // base+2,4,6,8
+                let index = Entry.avatarbot.BoardFunType.DC_M; // base+0,2,4,6
                 Entry.hw.sendQueue.CMD[index+1] = f_speed_l&0xff;
                 
-                index = 4 + Entry.avatarbot.BoardFunType.DC_M; // base+2,4,6,8
+                index = 2 + Entry.avatarbot.BoardFunType.DC_M; // base+0,2,4,6
                 Entry.hw.sendQueue.CMD[index+1] = f_speed_r&0xff;
                 
-                index = 6 + Entry.avatarbot.BoardFunType.DC_M; // base+2,4,6,8
+                index = 4 + Entry.avatarbot.BoardFunType.DC_M; // base+0,2,4,6
                 Entry.hw.sendQueue.CMD[index+1] = b_speed_l&0xff;
                 
-                index = 8 + Entry.avatarbot.BoardFunType.DC_M; // base+2,4,6,8
+                index = 6 + Entry.avatarbot.BoardFunType.DC_M; // base+0,2,4,6
                 Entry.hw.sendQueue.CMD[index+1] = b_speed_r&0xff;
 
                 for (let i = 0; i < 4; i++) { // 0 ~ 3
@@ -2746,7 +2772,7 @@ Entry.avatarbot.getBlocks = function() {
                         Entry.avatarbot.dc_m_index[i] = 0; // 0
                     }
 
-                    index = (i*2) + Entry.avatarbot.BoardFunType.DC_M; // base+2,4,6,8
+                    index = (i*2) + Entry.avatarbot.BoardFunType.DC_M; // base+0,2,4,6
                     // 
                     Entry.hw.sendQueue.CMD[index] = (on + (cw[i]<<1) + (Entry.avatarbot.dc_m_index[i]<<2) + (time<<4))&0xff; // ch en
                 }
@@ -2811,6 +2837,418 @@ Entry.avatarbot.getBlocks = function() {
                                 accept: 'string',
                             },
 
+                        ],
+                    },
+                ],
+            },
+        },
+        //---------------------------------------------------------------
+        avatarbot_line_car_ir_init: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'number',
+                        params: ['50'],
+                    },
+                    {
+                        type: 'number',
+                        params: ['50'],
+                    },
+                ],
+                type: 'avatarbot_line_car_ir_init',
+            },
+            paramsKeyMap: {
+                VALUE1: 0,
+                VALUE2: 1,
+            },
+            class: 'avatarbot_LineCar',
+            isNotFor: ['avatarbot'],
+            func(sprite, script) {
+				if (!Entry.hw.sendQueue.CMD) {
+                    Entry.avatarbot.dataTableReset();
+                }
+                let ir1 = script.getNumberValue('VALUE1', script);
+                let ir2 = script.getNumberValue('VALUE2', script);
+                
+                let result = ir1;
+                result = Math.min(100, result);
+                result = Math.max(0, result);
+                Entry.avatarbot.dc_lineCar_ir_index[0] = Math.round(result*4095/100); // 0 ~ 100 -> 0 ~ 4095
+                //
+                result = ir2;
+                result = Math.min(100, result);
+                result = Math.max(0, result);
+                Entry.avatarbot.dc_lineCar_ir_index[1] = Math.round(result*4095/100); // 0 ~ 100 -> 0 ~ 4095
+                
+                // ir adc sensor on
+                // Entry.hw.sendQueue.CMD[Entry.avatarbot.BoardFunType.ADC] = 1;
+                // Entry.hw.sendQueue.CMD[Entry.avatarbot.BoardFunType.ADC + 1] = 1;
+                Entry.hw.update();
+                
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'avatarbot.dc_lineCar_ir_init(%1, %2)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        //---------------------------------------------------------------
+        avatarbot_line_car_motor_init: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.template.avatarbot_DC_LINECAR_DETECTION_BOTH, '0'],
+                        [Lang.template.avatarbot_DC_LINECAR_DETECTION_LEFT, '1'],
+                        [Lang.template.avatarbot_DC_LINECAR_DETECTION_RIGHT, '2'],
+                        [Lang.template.avatarbot_DC_LINECAR_DETECTION_NONE, '3'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                ],
+                type: 'avatarbot_line_car_motor_init',
+            },
+            paramsKeyMap: {
+                VALUE1: 0,
+                VALUE2: 1,
+                VALUE3: 2,
+                VALUE4: 3,
+                VALUE5: 4,
+            },
+            class: 'avatarbot_LineCar',
+            isNotFor: ['avatarbot'],
+            func(sprite, script) {
+				if (!Entry.hw.sendQueue.CMD) {
+                    Entry.avatarbot.dataTableReset();
+                }
+                //
+                let i = 0;
+                let result = 0;
+                let speed = [0, 0, 0, 0];
+                
+                let type = script.getNumberValue('VALUE1', script);
+                speed[0] = script.getNumberValue('VALUE2', script); // f_speed_l
+                speed[1] = script.getNumberValue('VALUE3', script); // f_speed_r
+                speed[2] = script.getNumberValue('VALUE4', script); // b_speed_l
+                speed[3] = script.getNumberValue('VALUE5', script); // b_speed_r
+                
+                let index = type*4; // type = 0 ~ 3 => 0, 4, 8, 12+a
+                for(i=0; i<4; i++)
+                {
+                    result = speed[i];
+                    result = Math.min(100, result);
+                    result = Math.max(0, result);
+                    Entry.avatarbot.dc_lineCar_index[index+i] = result;
+                } 
+                //
+                Entry.hw.update();
+                
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'avatarbot.dc_lineCar_motor_init(%1, %2, %3, %4, %5)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.template.avatarbot_DC_LINECAR_DETECTION_BOTH, '0'],
+                                    [Lang.template.avatarbot_DC_LINECAR_DETECTION_LEFT, '1'],
+                                    [Lang.template.avatarbot_DC_LINECAR_DETECTION_RIGHT, '2'],
+                                    [Lang.template.avatarbot_DC_LINECAR_DETECTION_NONE, '3'],
+                                ],
+                                value: '0',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                                defaultType: 'number',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                                defaultType: 'number',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                                defaultType: 'number',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                                defaultType: 'number',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        //---------------------------------------------------------------
+        avatarbot_line_car: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.template.avatarbot_func_off, '0'],
+                        [Lang.template.avatarbot_func_on, '1'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                ],
+                type: 'avatarbot_line_car',
+            },
+            paramsKeyMap: {
+                VALUE1: 0
+            },
+            class: 'avatarbot_LineCar',
+            isNotFor: ['avatarbot'],
+            func(sprite, script) {
+				if (!Entry.hw.sendQueue.CMD) {
+                    Entry.avatarbot.dataTableReset();
+                }
+                //
+                const lineCar_On = script.getNumberValue('VALUE1', script);
+                
+                if(lineCar_On == 0)
+                {
+                    // stop ir adc sensor
+                    Entry.hw.sendQueue.CMD[Entry.avatarbot.BoardFunType.ADC] = 0;
+                    Entry.hw.sendQueue.CMD[Entry.avatarbot.BoardFunType.ADC + 1] = 0;
+                    
+                    // stop motor
+                    Entry.hw.sendQueue.CMD[Entry.avatarbot.BoardFunType.DC_M] = (0)&0xff; // ch en
+                    Entry.hw.sendQueue.CMD[Entry.avatarbot.BoardFunType.DC_M + 2] = (0)&0xff; // ch en
+                    Entry.hw.sendQueue.CMD[Entry.avatarbot.BoardFunType.DC_M + 4] = (0)&0xff; // ch en
+                    Entry.hw.sendQueue.CMD[Entry.avatarbot.BoardFunType.DC_M + 6] = (0)&0xff; // ch en
+
+                    Entry.hw.update();
+                    return script.callReturn();
+                }
+
+                let i = 0;
+                let ir_index =[0, 0];
+                let ir_sensorData = [0, 0];
+                ir_index[0] = Entry.avatarbot.BoardFunType.ADC;
+                ir_index[1] = Entry.avatarbot.BoardFunType.ADC + 2;
+                for(i=0; i<2; i++)
+                {
+                    let sensorData_low = Entry.hw.portData.CMD[ir_index[i] + 6]; // low
+                    let sensorData_high = Entry.hw.portData.CMD[ir_index[i] + 7]<<8; // high
+                    ir_sensorData[i] = sensorData_low + sensorData_high;
+                }
+
+                // lineCar ir init 에서 on
+                Entry.hw.sendQueue.CMD[Entry.avatarbot.BoardFunType.ADC] = 1;
+                Entry.hw.sendQueue.CMD[Entry.avatarbot.BoardFunType.ADC + 1] = 1;
+                //
+                const time = 2; // default time set.
+                const on = time>0? 1:0; // 100ms ~ 1s = 1, 0ms = 0
+
+                let f_cw = 0; // 0 = front, 1 = back
+                let b_cw = 0; // 0 = front, 1 = back
+
+                let f_speed_l = 0;
+                let f_speed_r = 0;
+                let b_speed_l = 0;
+                let b_speed_r = 0;
+                
+                if(ir_sensorData[0] > Entry.avatarbot.dc_lineCar_ir_index[0] && ir_sensorData[1] > Entry.avatarbot.dc_lineCar_ir_index[1])
+                {
+                    // 라인 감지
+                    f_cw = 0;
+                    b_cw = 0;
+                    f_speed_l = Entry.avatarbot.dc_lineCar_index[0];
+                    f_speed_r = Entry.avatarbot.dc_lineCar_index[1];
+                    b_speed_l = Entry.avatarbot.dc_lineCar_index[2];
+                    b_speed_r = Entry.avatarbot.dc_lineCar_index[3];
+                }else if(ir_sensorData[0] > Entry.avatarbot.dc_lineCar_ir_index[0]){
+                    // 왼쪽 센서 감지
+                    f_cw = 0;
+                    b_cw = 0;
+                    f_speed_l = Entry.avatarbot.dc_lineCar_index[4];
+                    f_speed_r = Entry.avatarbot.dc_lineCar_index[5];
+                    b_speed_l = Entry.avatarbot.dc_lineCar_index[6];
+                    b_speed_r = Entry.avatarbot.dc_lineCar_index[7];
+                }else if(ir_sensorData[1] > Entry.avatarbot.dc_lineCar_ir_index[1]){
+                    // 오른쪽 센서 감지
+                    f_cw = 0;
+                    b_cw = 0;
+                    f_speed_l = Entry.avatarbot.dc_lineCar_index[8];
+                    f_speed_r = Entry.avatarbot.dc_lineCar_index[9];
+                    b_speed_l = Entry.avatarbot.dc_lineCar_index[10];
+                    b_speed_r = Entry.avatarbot.dc_lineCar_index[11];
+                }else{
+                    // 라인을 잃음.
+                    f_cw = 0;
+                    b_cw = 0;
+                    f_speed_l = Entry.avatarbot.dc_lineCar_index[12];
+                    f_speed_r = Entry.avatarbot.dc_lineCar_index[13];
+                    b_speed_l = Entry.avatarbot.dc_lineCar_index[14];
+                    b_speed_r = Entry.avatarbot.dc_lineCar_index[15];
+                }
+
+                // 백터
+                let cw = [0, 0, 0, 0];
+                cw[0] = f_cw;
+                cw[1] = (f_cw==0)?1:0;
+                cw[2] = b_cw;
+                cw[3] = (b_cw==0)?1:0;
+
+                // speed setting. base = 160
+                let index = Entry.avatarbot.BoardFunType.DC_M; // base+0,2,4,6
+                Entry.hw.sendQueue.CMD[index+1] = f_speed_l&0xff;
+                
+                index = 2 + Entry.avatarbot.BoardFunType.DC_M; // base+0,2,4,6
+                Entry.hw.sendQueue.CMD[index+1] = f_speed_r&0xff;
+                
+                index = 4 + Entry.avatarbot.BoardFunType.DC_M; // base+0,2,4,6
+                Entry.hw.sendQueue.CMD[index+1] = b_speed_l&0xff;
+                
+                index = 6 + Entry.avatarbot.BoardFunType.DC_M; // base+0,2,4,6
+                Entry.hw.sendQueue.CMD[index+1] = b_speed_r&0xff;
+
+                // dc motor run
+                for (let i = 0; i < 4; i++) { // 0 ~ 3
+                    Entry.avatarbot.dc_m_index[i] += 1; // 0 ~ 3 => 1 ~ 4
+                    if(Entry.avatarbot.dc_m_index[i] > 3) 
+                    {
+                        Entry.avatarbot.dc_m_index[i] = 0; // 3, 4 => 0
+                    }
+                    
+                    if(on == 0)
+                    {
+                        Entry.avatarbot.dc_m_index[i] = 0; // 0
+                    }
+
+                    index = (i*2) + Entry.avatarbot.BoardFunType.DC_M; // base+0,2,4,6
+                    // 
+                    Entry.hw.sendQueue.CMD[index] = (on + (cw[i]<<1) + (Entry.avatarbot.dc_m_index[i]<<2) + (time<<4))&0xff; // ch en
+                }
+                //
+                Entry.hw.update();
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'avatarbot.dc_lineCar(%1)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.template.avatarbot_func_off, '0'],
+                                    [Lang.template.avatarbot_func_on, '1'],
+                                ],
+                                value: '0',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                            },
                         ],
                     },
                 ],
@@ -3264,6 +3702,166 @@ Entry.avatarbot.getBlocks = function() {
             },
         },
         //---------------------------------------------------------------
+        avatarbot_led_strip_indexOn: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.template.avatarbot_func_on, '1'],
+                        [Lang.template.avatarbot_func_off, '0'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'avatarbot_text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'avatarbot_text',
+                        params: ['255'],
+                    },
+                    {
+                        type: 'avatarbot_text',
+                        params: ['255'],
+                    },
+                    {
+                        type: 'avatarbot_text',
+                        params: ['255'],
+                    },
+                    null,
+                ],
+                type: 'avatarbot_led_strip_indexOn',
+            },
+            paramsKeyMap: {
+                VALUE1: 0,
+             	VALUE2: 1,
+                VALUE3: 2,
+             	VALUE4: 3,
+                RUN: 4,
+            },
+            class: 'avatarbot_led_indexOn',
+            isNotFor: ['avatarbot'],
+            func(sprite, script) {
+				if (!Entry.hw.sendQueue.CMD) {
+                    Entry.avatarbot.dataTableReset();
+                }
+
+                //
+                let i = 0;
+                let ledNum = script.getNumberValue('VALUE1'); // led number
+                let ledRGB = [0,0,0];
+                ledRGB[0] = script.getNumberValue('VALUE2'); // Red
+                ledRGB[1] = script.getNumberValue('VALUE3'); // Green
+                ledRGB[2] = script.getNumberValue('VALUE4'); // Blue
+                let on = script.getNumberValue('RUN', script);
+                //
+                ledNum = Math.round(ledNum);
+                ledNum = Math.max(ledNum, 0);
+                ledNum = Math.min(ledNum, 99);
+                
+                if(on == 1)
+                {
+                    for(i=0; i<3; i++)
+                    {
+                        ledRGB[i] = Math.round(ledRGB[i]);
+                        ledRGB[i] = Math.max(ledRGB[i], 0);
+                        ledRGB[i] = Math.min(ledRGB[i], 255);
+                    }    
+                }else{
+                    ledRGB[0] = 0;
+                    ledRGB[1] = 0;
+                    ledRGB[2] = 0;
+                }
+                
+                //
+                let index = Entry.avatarbot.BoardFunType.LED_Strip;
+                
+                Entry.hw.sendQueue.CMD[index] = 1; // 1; // led strip on
+                Entry.hw.sendQueue.CMD[index+1] = 2; // sample type 2
+                Entry.hw.sendQueue.CMD[index+3] = ledNum; // led number.
+                Entry.hw.sendQueue.CMD[index+4] = ledRGB[0]; // red
+                Entry.hw.sendQueue.CMD[index+5] = ledRGB[1]; // green
+                Entry.hw.sendQueue.CMD[index+6] = ledRGB[2]; // blue
+                
+                Entry.hw.update();
+                
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'avatarbot.set_led_strip_indexOn(%1 %2 %3 %4 %5)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                                defaultType: 'number',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                                defaultType: 'number',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                                defaultType: 'number',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                                defaultType: 'number',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.template.avatarbot_func_on, '1'],
+                                    [Lang.template.avatarbot_func_off, '0'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                            },
+                        ],
+                        
+                    },
+                ],
+            },
+        },
+        //---------------------------------------------------------------
         avatarbot_get_mpu6050: {
             color: EntryStatic.colorSet.block.default.HARDWARE, //블록 색상
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE, //경계선 색상
@@ -3398,7 +3996,7 @@ Entry.avatarbot.getBlocks = function() {
                 VALUE2: 1,
                 
             },
-            class: 'avatarbot_mpu_detail',
+            class: 'avatarbot_mpu',
             isNotFor: ['avatarbot'],
             func(sprite, script) { // 블록 기능정의
             	if (!Entry.hw.sendQueue.CMD) {
@@ -3576,7 +4174,7 @@ Entry.avatarbot.getBlocks = function() {
                 VALUE1: 0,
                 VALUE2: 1,
             },
-            class: 'avatarbot_sonic_detail',
+            class: 'avatarbot_sonic',
             isNotFor: ['avatarbot'],
             func(sprite, script) { // 블록 기능정의
             	if (!Entry.hw.sendQueue.CMD) {
