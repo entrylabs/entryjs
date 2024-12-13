@@ -76,8 +76,12 @@ Entry.avatarbot = {
 		Entry.hw.sendQueue.CMD[index+6] = (Entry.avatarbot.Board_PCA9568.Osci>>8)&0xff;
 		Entry.hw.sendQueue.CMD[index+7] = (Entry.avatarbot.Board_PCA9568.Osci>>16)&0xff;
 		Entry.hw.sendQueue.CMD[index+8] = (Entry.avatarbot.Board_PCA9568.Osci>>24)&0xff;
+
+        this.servo_on.fill(0);
+        this.servo_init.fill(0);
+        this.servo_speed.fill(3);
 		
-		// servo moter
+        // servo moter
 		for(var i=0; i<8; i++)
 		{
 			index = Entry.avatarbot.BoardFunType.Servo_M0 + (i*10);
@@ -205,13 +209,26 @@ Entry.avatarbot = {
 		Freq: 50
 	},
 	
+    // default - sg90
+    servo_on: new Array(8).fill(0),
+    servo_init: new Array(8).fill(0),
+    servo_speed: new Array(8).fill(3),
 	Board_Servo : {
 		Pulse_Min: 150,
 		Pulse_Max: 600,
 		us_Min: 400,
 		us_Max: 2100
 	},
-	
+
+	Board_Servo_SelectType : {
+		// sg90
+        sg90_us_min: 400,
+		sg90_us_max: 2100,
+        // mg996r
+        mg996r_us_min: 400,
+		mg996r_us_max: 2360,
+	},
+    //
 	Board_Servo_M0 : {
 		En:0,
 		Pulse_Min: 150,
@@ -442,6 +459,7 @@ Entry.avatarbot.setLanguage = function() {
 			    avatarbot_get_pwm_port_number: '%1  ',
 			    avatarbot_get_buzzer_tone_number: '%1 ',
 			    avatarbot_get_buzzer_time_number: '%1 ',
+                avatarbot_get_servo_speed_number: '%1 ',
 			    avatarbot_get_sensor_number: '%1  ',
 			    avatarbot_get_port_number: '%1  ',
 			    avatarbot_get_digital_toggle: '%1  ',
@@ -474,6 +492,9 @@ Entry.avatarbot.setLanguage = function() {
                 avatarbot_DC_LINECAR_DETECTION_LEFT: '라인 왼쪽 감지',
                 avatarbot_DC_LINECAR_DETECTION_RIGHT: '라인 오른쪽 감지',
                 avatarbot_DC_LINECAR_DETECTION_NONE: '라인 잃어버림',
+                //
+                avatarbot_servo_type_sg90: 'SG90',
+    			avatarbot_servo_type_mg996r: 'MG996R',
 				//
 			   	// avatarbot_hw_test: 'AvatarBot HW Test %1 번 값 ',
                 //
@@ -485,9 +506,12 @@ Entry.avatarbot.setLanguage = function() {
                 avatarbot_toggle_pwm: 'PWM %1 번 핀을 %2 % 로 %3 ',
                 //
                 // avatarbot_pca9568: '모터 컨트롤 주파수 %1 와 오실레이터 %2 (으)로 설정 ',
-                avatarbot_servo: '서보 모터 %1 을 시간(us) %2 ~ %3로 %4 ° %5 ',
+                avatarbot_servo: '서보 모터 %1 을 %2 속도, PWM 시간(us) %3 ~ %4 로 %5 ° %6 ',
+                avatarbot_servo_sample: '서보 모터 %1 을 %2 속도, %3 로 %4 ° %5 ',
                 avatarbot_dc: 'DC 모터 %1 을 %2 방향으로 %3 % %4 동작 ',
-                avatarbot_robot_arm: '로봇 팔 몸통 %1°, 팔[축1 %2°, 축2 %3°], 헤드[축1 %4°, 축2 %5°], 집게 %6°',
+                avatarbot_robot_arm_on: '로봇 팔 %1(주의! 시작 전 초기 위치에 각 관절을 위치해주세요.)',
+                avatarbot_robot_arm_speed: '로봇 팔 몸통 %1, 팔[축1 %2, 축2 %3], 헤드[축1 %4, 축2 %5], 집게 %6 속도 설정',
+                avatarbot_robot_arm: '로봇 팔 몸통 %1°, 팔[축1 %2°, 축2 %3°], 헤드[축1 %4°, 축2 %5°], 집게 %6° 동작',            
                 avatarbot_dc_car: '자동차 앞[%1 방향, 속도(좌 %2 %, 우 %3 %)], 뒷[%4 방향, 속도(좌 %5 %, 우 %6 %)] %7 동작',
                 //
                 avatarbot_line_car_ir_init: '라인트레이서 좌측 센서 %1 %, 우측 센서 %2 % 감도 설정',
@@ -554,7 +578,10 @@ Entry.avatarbot.blockMenuBlocks = [
     //
     // 'avatarbot_pca9568',
     'avatarbot_servo',
+    'avatarbot_servo_sample',
     'avatarbot_dc',
+    'avatarbot_robot_arm_on',
+    'avatarbot_robot_arm_speed',
     'avatarbot_robot_arm',
     'avatarbot_dc_car',
     //
@@ -974,6 +1001,70 @@ Entry.avatarbot.getBlocks = function() {
                             },
                         ],
                         keyOption: 'avatarbot_get_buzzer_time_number',
+                    },
+                ],
+            },
+        },
+        //---------------------------------------------------------------
+        avatarbot_get_servo_speed_number: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+						['1단계', '1'],
+                        ['2단계', '2'],
+                        ['3단계', '3'],
+                        ['4단계', '4'],
+                        ['5단계', '5'],
+                        ['6단계', '6'],
+                        ['7단계', '7'],
+                        ['8단계', '8'],
+                    ],
+                    value: '3',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                SPEED: 0,
+            },
+            func(sprite, script) {
+                return script.getStringField('SPEED');
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: '%1',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+									['1단계', '1'],
+                                    ['2단계', '2'],
+                                    ['3단계', '3'],
+                                    ['4단계', '4'],
+                                    ['5단계', '5'],
+                                    ['6단계', '6'],
+                                    ['7단계', '7'],
+                                    ['8단계', '8'],
+                                ],
+                                value: '3',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                            },
+                        ],
+                        keyOption: 'avatarbot_get_servo_speed_number',
                     },
                 ],
             },
@@ -2162,6 +2253,11 @@ Entry.avatarbot.getBlocks = function() {
                     defaultType: 'number',
                 },
                 {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
                     type: 'Dropdown',
                     options: [
                         [Lang.template.avatarbot_func_on, '1'],
@@ -2178,6 +2274,9 @@ Entry.avatarbot.getBlocks = function() {
                 params: [
                     {
                         type: 'avatarbot_get_serve_number',
+                    },
+                    {
+                        type: 'avatarbot_get_servo_speed_number', 
                     },
                     {
                         type: 'number',
@@ -2197,10 +2296,11 @@ Entry.avatarbot.getBlocks = function() {
             },
             paramsKeyMap: {
                 VALUE1: 0,
-                VALUE2: 1,
-                VALUE3: 2,
-                VALUE4: 3,
-                RUN:4,
+                SPEED:1,
+                VALUE2: 2,
+                VALUE3: 3,
+                VALUE4: 4,
+                RUN:5,
             },
             class: 'avatarbot_serbo',
             isNotFor: ['avatarbot'],
@@ -2208,7 +2308,7 @@ Entry.avatarbot.getBlocks = function() {
 				if (!Entry.hw.sendQueue.CMD) {
                     Entry.avatarbot.dataTableReset();
                 }
-                
+                const speed = script.getNumberValue('SPEED', script);
                 const signal = script.getNumberValue('VALUE1', script);
                 let us_min = script.getNumberValue('VALUE2', script);
                 let us_max = script.getNumberValue('VALUE3', script);
@@ -2228,11 +2328,13 @@ Entry.avatarbot.getBlocks = function() {
                 
                 value = Math.max(value, 0); //150 
                 value = Math.min(value, 180); // 600
-                
+
+                Entry.avatarbot.servo_speed[signal] = speed&0xf;
+
                 let index = (signal*10) + Entry.avatarbot.BoardFunType.Servo_M0; // base+10,20,30,...n
                 
                 // digital setting
-                Entry.hw.sendQueue.CMD[index] = on; // 1; // ch en
+                Entry.hw.sendQueue.CMD[index] = on + (Entry.avatarbot.servo_speed[signal]<<4); // 1; // ch en
                 // Entry.hw.sendQueue.CMD[index+1] = 0; // pulse min low
                 // Entry.hw.sendQueue.CMD[index+2] = 0; // pulse min high
                 // Entry.hw.sendQueue.CMD[index+3] = 0; // pulse max low
@@ -2250,7 +2352,7 @@ Entry.avatarbot.getBlocks = function() {
                 js: [],
                 py: [
                     {
-                        syntax: 'avatarbot.servo(%1, %2, %3, %4)',
+                        syntax: 'avatarbot.servo(%1, %2, %3, %4, %5, %6)',
                         blockType: 'param',
                         textParams: [
                             {
@@ -2264,6 +2366,182 @@ Entry.avatarbot.getBlocks = function() {
                             {
                                 type: 'Block',
                                 accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.template.avatarbot_func_on, '1'],
+                                    [Lang.template.avatarbot_func_off, '0'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        //---------------------------------------------------------------
+		avatarbot_servo_sample: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.template.avatarbot_servo_type_sg90, '0'],
+                        [Lang.template.avatarbot_servo_type_mg996r, '1'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.template.avatarbot_func_on, '1'],
+                        [Lang.template.avatarbot_func_off, '0'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'avatarbot_get_serve_number',
+                    },
+                    {
+                        type: 'avatarbot_get_servo_speed_number',
+                    },
+                    null,
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                    null,
+                ],
+                type: 'avatarbot_servo_sample',
+            },
+            paramsKeyMap: {
+                VALUE1: 0,
+                SPEED:1,
+                VALUE2: 2,
+                VALUE3: 3,
+                RUN:4,
+            },
+            class: 'avatarbot_serbo_sample',
+            isNotFor: ['avatarbot'],
+            func(sprite, script) {
+				if (!Entry.hw.sendQueue.CMD) {
+                    Entry.avatarbot.dataTableReset();
+                }
+
+                const speed = script.getNumberValue('SPEED', script);
+                const signal = script.getNumberValue('VALUE1', script);
+                let servo_type = script.getNumberValue('VALUE2', script);
+                let value = script.getNumberValue('VALUE3', script);
+                const run = script.getField('RUN');
+                const on = run == '1' ? 1 : 0;
+                let us_min = Entry.avatarbot.Board_Servo_SelectType.sg90_us_min;
+                let us_max = Entry.avatarbot.Board_Servo_SelectType.sg90_us_max;
+
+                value = Math.round(value);
+                value = Math.max(value, 0); //150 
+                value = Math.min(value, 180); // 600
+                
+                switch(servo_type)
+                {
+                    case 0: // sg90 servo motor
+                        us_min = Entry.avatarbot.Board_Servo_SelectType.sg90_us_min;
+                        us_max = Entry.avatarbot.Board_Servo_SelectType.sg90_us_max;
+                        break;
+                    case 1: // mg996r servo motor
+                        us_min = Entry.avatarbot.Board_Servo_SelectType.mg996r_us_min;
+                        us_max = Entry.avatarbot.Board_Servo_SelectType.mg996r_us_max;
+                        break;
+                    default:
+                        break;
+                }
+                Entry.avatarbot.servo_speed[signal] = speed&0xf;
+
+                let index = (signal*10) + Entry.avatarbot.BoardFunType.Servo_M0; // base+10,20,30,...n
+                
+                // digital setting
+                // Entry.hw.sendQueue.CMD[index] = on; // 1; // ch en
+                Entry.hw.sendQueue.CMD[index] = on + (Entry.avatarbot.servo_speed[signal]<<4); // 1; // ch en
+                // Entry.hw.sendQueue.CMD[index+1] = 0; // pulse min low
+                // Entry.hw.sendQueue.CMD[index+2] = 0; // pulse min high
+                // Entry.hw.sendQueue.CMD[index+3] = 0; // pulse max low
+                // Entry.hw.sendQueue.CMD[index+4] = 0; // pulse max high
+                Entry.hw.sendQueue.CMD[index+5] = (us_min)&0xff; // us min low
+                Entry.hw.sendQueue.CMD[index+6] = (us_min>>8)&0xff; // us min high
+                Entry.hw.sendQueue.CMD[index+7] = (us_max)&0xff; // us max low
+                Entry.hw.sendQueue.CMD[index+8] = (us_max>>8)&0xff; // us max high
+                Entry.hw.sendQueue.CMD[index+9] = (value)&0xff; // angle value. 0 ~ 180
+                Entry.hw.update();
+                
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'avatarbot.servo_sample(%1, %2, %3, %4, %5)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                                defaultType: 'number',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.template.avatarbot_servo_type_sg90, '0'],
+                                    [Lang.template.avatarbot_servo_type_mg996r, '1'],
+                                ],
+                                value: '0',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                             },
                             {
                                 type: 'Block',
@@ -2454,6 +2732,274 @@ Entry.avatarbot.getBlocks = function() {
             },
         },
         //---------------------------------------------------------------
+        avatarbot_robot_arm_on: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.template.avatarbot_func_on, '1'],
+                        [Lang.template.avatarbot_func_off, '0'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                ],
+                type: 'avatarbot_robot_arm_on',
+            },
+            paramsKeyMap: {
+                VALUE1: 0,
+            },
+            class: 'avatarbot_robotArm',
+            isNotFor: ['avatarbot'],
+            func(sprite, script) {
+				if (!Entry.hw.sendQueue.CMD) {
+                    Entry.avatarbot.dataTableReset();
+                }
+                const on = script.getNumberValue('VALUE1', script);
+
+                //
+                let value =  [90,    180,  180,   90,    0,    0];
+                let us_min = [400,   400,  400,  400,  400,  400];
+                let us_max = [2360, 2360, 2360, 2100, 2100, 2100];
+
+                for (let i = 0; i < 6; i++) {
+                    // Entry.avatarbot.servo_on[i] = on;
+                    Entry.avatarbot.servo_on[i] = 0;
+
+                    value[i] = Math.round(value[i]);
+                    value[i] = Math.max(value[i], 0); //150 
+                    value[i] = Math.min(value[i], 180); // 600
+                    let index = (i*10) + Entry.avatarbot.BoardFunType.Servo_M0; // base+10,20,30,...n
+                    
+                    // digital setting
+                    // Entry.hw.sendQueue.CMD[index] = 1; // 1; // ch en
+                    if(Entry.avatarbot.servo_init[i] == 0)
+                    {
+                        Entry.hw.sendQueue.CMD[index] = Entry.avatarbot.servo_on[i] + (1<<1) + (Entry.avatarbot.servo_speed[i]<<4); // 1; // ch en
+                    }else{
+                        Entry.hw.sendQueue.CMD[index] = Entry.avatarbot.servo_on[i] + (Entry.avatarbot.servo_speed[i]<<4); // 1; // ch en
+                    }
+                    Entry.avatarbot.servo_init[i] = 1;
+                    Entry.hw.sendQueue.CMD[index+5] = (us_min[i])&0xff; // us min low
+                    Entry.hw.sendQueue.CMD[index+6] = (us_min[i]>>8)&0xff; // us min high
+                    Entry.hw.sendQueue.CMD[index+7] = (us_max[i])&0xff; // us max low
+                    Entry.hw.sendQueue.CMD[index+8] = (us_max[i]>>8)&0xff; // us max high
+                    Entry.hw.sendQueue.CMD[index+9] = (value[i])&0xff; // angle value. 0 ~ 180
+                }
+                //
+                Entry.hw.update();
+                /*
+                setTimeout(() => {
+                    for (let i = 0; i < 6; i++) {
+                        Entry.avatarbot.servo_on[i] = on;
+                        value[i] = Math.round(value[i]);
+                        value[i] = Math.max(value[i], 0); //150 
+                        value[i] = Math.min(value[i], 180); // 600
+                        let index = (i*10) + Entry.avatarbot.BoardFunType.Servo_M0; // base+10,20,30,...n
+                        Entry.hw.sendQueue.CMD[index] = Entry.avatarbot.servo_on[i] + (Entry.avatarbot.servo_speed[i]<<4); // 1; // ch en
+                    }
+                    Entry.hw.update();
+                    script.callReturn();
+                }, 3000); // 1000ms = 1초
+                
+                // return script.callReturn();
+                return;
+                */
+
+                if (!script.isStart) {
+                    // 스크립트 시작 플래그 설정
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    
+                    // 3000ms 대기 설정
+                    setTimeout(() => {
+                        script.timeFlag = 0; // 대기 종료
+                    }, 3000);
+                    return script;
+                } else if (script.timeFlag === 1) {
+                    // 대기 중인 경우, 스크립트를 멈춤 상태로 유지
+                    return script;
+                } else {
+                    // 대기 종료 후, 다음 블록 실행
+                    delete script.isStart;
+                    delete script.timeFlag;
+                    for (let i = 0; i < 6; i++) 
+                    {
+                        Entry.avatarbot.servo_on[i] = on;
+                        value[i] = Math.round(value[i]);
+                        value[i] = Math.max(value[i], 0);
+                        value[i] = Math.min(value[i], 180);
+                        let index = (i * 10) + Entry.avatarbot.BoardFunType.Servo_M0;
+                        Entry.hw.sendQueue.CMD[index] = Entry.avatarbot.servo_on[i] + (Entry.avatarbot.servo_speed[i] << 4);
+                    }
+                    Entry.hw.update();
+                    return script.callReturn();
+                }
+
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'avatarbot.robot_arm_on(%1)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.template.avatarbot_func_on, '1'],
+                                    [Lang.template.avatarbot_func_off, '0'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        //---------------------------------------------------------------
+        avatarbot_robot_arm_speed: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'avatarbot_get_servo_speed_number',
+                    },
+                    {
+                        type: 'avatarbot_get_servo_speed_number',
+                    },
+                    {
+                        type: 'avatarbot_get_servo_speed_number',
+                    },
+                    {
+                        type: 'avatarbot_get_servo_speed_number',
+                    },
+                    {
+                        type: 'avatarbot_get_servo_speed_number',
+                    },
+                    {
+                        type: 'avatarbot_get_servo_speed_number',
+                    },
+                ],
+                type: 'avatarbot_robot_arm_speed',
+            },
+            paramsKeyMap: {
+                VALUE1: 0,
+                VALUE2: 1,
+                VALUE3: 2,
+                VALUE4: 3,
+                VALUE5: 4,
+                VALUE6: 5,
+            },
+            class: 'avatarbot_robotArm',
+            isNotFor: ['avatarbot'],
+            func(sprite, script) {
+				if (!Entry.hw.sendQueue.CMD) {
+                    Entry.avatarbot.dataTableReset();
+                }
+                
+                for (let i = 0; i < 6; i++) {
+                    Entry.avatarbot.servo_speed[i] = script.getNumberValue(`VALUE${i + 1}`, script);
+                    let index = (i*10) + Entry.avatarbot.BoardFunType.Servo_M0; // base+10,20,30,...n
+                    // digital setting
+                    // Entry.hw.sendQueue.CMD[index] = 1; // 1; // ch en
+                    Entry.hw.sendQueue.CMD[index] = Entry.avatarbot.servo_on[i] + (Entry.avatarbot.servo_speed[i]<<4); // 1; // ch en
+                }
+
+                Entry.hw.update();
+                
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'avatarbot.robot_arm_speed(%1, %2, %3, %4, %5, %6)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        //---------------------------------------------------------------
         avatarbot_robot_arm: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2505,11 +3051,11 @@ Entry.avatarbot.getBlocks = function() {
                     },
                     {
                         type: 'number',
-                        params: ['0'],
+                        params: ['180'],
                     },
                     {
                         type: 'number',
-                        params: ['0'],
+                        params: ['90'],
                     },
                     {
                         type: 'number',
@@ -2554,7 +3100,8 @@ Entry.avatarbot.getBlocks = function() {
                     value[i] = Math.min(value[i], 180); // 600
                     let index = (i*10) + Entry.avatarbot.BoardFunType.Servo_M0; // base+10,20,30,...n
                     // digital setting
-                    Entry.hw.sendQueue.CMD[index] = 1; // 1; // ch en
+                    // Entry.hw.sendQueue.CMD[index] = 1; // 1; // ch en
+                    Entry.hw.sendQueue.CMD[index] = Entry.avatarbot.servo_on[i] + (Entry.avatarbot.servo_speed[i]<<4); // 1; // ch en
                     Entry.hw.sendQueue.CMD[index+5] = (us_min[i])&0xff; // us min low
                     Entry.hw.sendQueue.CMD[index+6] = (us_min[i]>>8)&0xff; // us min high
                     Entry.hw.sendQueue.CMD[index+7] = (us_max[i])&0xff; // us max low
