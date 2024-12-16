@@ -96,6 +96,8 @@ Entry.avatarbot = {
 			
 			Entry.hw.sendQueue.CMD[index+7] = (Entry.avatarbot.Board_Servo.us_Max)&0xff;	
 			Entry.hw.sendQueue.CMD[index+8] = (Entry.avatarbot.Board_Servo.us_Max>>8)&0xff;	
+
+            Entry.hw.sendQueue.CMD[index+9] = (Entry.avatarbot.Board_Servo.angle)&0xff;
 		}
 		
 		// led 
@@ -217,7 +219,8 @@ Entry.avatarbot = {
 		Pulse_Min: 150,
 		Pulse_Max: 600,
 		us_Min: 400,
-		us_Max: 2100
+		us_Max: 2100,
+        angle: 90
 	},
 
 	Board_Servo_SelectType : {
@@ -234,7 +237,8 @@ Entry.avatarbot = {
 		Pulse_Min: 150,
 		Pulse_Max: 600,
 		us_Min: 400,
-		us_Max: 2100
+		us_Max: 2100,
+        angle: 90
 	},
 	
 	Board_Servo_M1 : {
@@ -242,7 +246,8 @@ Entry.avatarbot = {
 		Pulse_Min: 150,
 		Pulse_Max: 600,
 		us_Min: 400,
-		us_Max: 2100
+		us_Max: 2100,
+        angle: 90
 	},
 	
 	Board_Servo_M2 : {
@@ -250,7 +255,8 @@ Entry.avatarbot = {
 		Pulse_Min: 150,
 		Pulse_Max: 600,
 		us_Min: 400,
-		us_Max: 2100
+		us_Max: 2100,
+        angle: 90
 	},
 	
 	Board_Servo_M3 : {
@@ -258,7 +264,8 @@ Entry.avatarbot = {
 		Pulse_Min: 150,
 		Pulse_Max: 600,
 		us_Min: 400,
-		us_Max: 2100
+		us_Max: 2100,
+        angle: 90
 	},
 	
 	Board_Servo_M4 : {
@@ -266,7 +273,8 @@ Entry.avatarbot = {
 		Pulse_Min: 150,
 		Pulse_Max: 600,
 		us_Min: 400,
-		us_Max: 2100
+		us_Max: 2100,
+        angle: 90
 	},
 	
 	Board_Servo_M5 : {
@@ -274,7 +282,8 @@ Entry.avatarbot = {
 		Pulse_Min: 150,
 		Pulse_Max: 600,
 		us_Min: 400,
-		us_Max: 2100
+		us_Max: 2100,
+        angle: 90
 	},
 	
 	Board_Servo_M6 : {
@@ -282,7 +291,8 @@ Entry.avatarbot = {
 		Pulse_Min: 150,
 		Pulse_Max: 600,
 		us_Min: 400,
-		us_Max: 2100
+		us_Max: 2100,
+        angle: 90
 	},
 	
 	Board_Servo_M7 : {
@@ -290,7 +300,8 @@ Entry.avatarbot = {
 		Pulse_Min: 150,
 		Pulse_Max: 600,
 		us_Min: 400,
-		us_Max: 2100
+		us_Max: 2100,
+        angle: 90
 	},
 	
     dc_m_index: new Array(4).fill(0),
