@@ -2242,12 +2242,12 @@ module.exports = {
                 class: 'calc_string',
                 isNotFor: [],
                 func(sprite, script) {
-                    const oldWord2 = script
+                    const oldWord = script
                         .getStringValue('OLD_WORD', script)
                         .replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                     const newWord = script.getStringValue('NEW_WORD', script);
                     const originalString = script.getStringValue('STRING', script);
-                    return originalString.split(oldWord2).join(newWord);
+                    return originalString.split(oldWord).join(newWord);
                 },
                 syntax: {
                     js: [],
