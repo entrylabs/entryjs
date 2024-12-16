@@ -1093,8 +1093,8 @@ Entry.avatarbot.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['0', '0'],
-                        ['1', '1'],
+                        ['1', '0'],
+                        ['2', '1'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -1121,8 +1121,8 @@ Entry.avatarbot.getBlocks = function() {
                             {
                                 type: 'Dropdown',
                                 options: [
-			                        ['0', '0'],
-			                        ['1', '1'],
+			                        ['1', '0'],
+			                        ['2', '1'],
                                 ],
                                 value: '0',
                                 fontSize: 11,
@@ -1223,10 +1223,10 @@ Entry.avatarbot.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['0', '0'],
-                        ['1', '1'],
-                        ['2', '2'],
-                        ['3', '3'],
+                        ['1', '0'],
+                        ['2', '1'],
+                        ['3', '2'],
+                        ['4', '3'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -1253,10 +1253,10 @@ Entry.avatarbot.getBlocks = function() {
                             {
                                 type: 'Dropdown',
                                 options: [
-			                        ['0', '0'],
-			                        ['1', '1'],
-			                        ['2', '2'],
-			                        ['3', '3'],
+			                        ['1', '0'],
+			                        ['2', '1'],
+			                        ['3', '2'],
+			                        ['4', '3'],
                                 ],
                                 value: '0',
                                 fontSize: 11,
@@ -1279,14 +1279,14 @@ Entry.avatarbot.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['0', '0'],
-                        ['1', '1'],
-                        ['2', '2'],
-                        ['3', '3'],
-                        ['4', '4'],
-                        ['5', '5'],
-                        ['6', '6'],
-                        ['7', '7'],
+                        ['1', '0'],
+                        ['2', '1'],
+                        ['3', '2'],
+                        ['4', '3'],
+                        ['5', '4'],
+                        ['6', '5'],
+                        ['7', '6'],
+                        ['8', '7'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -1313,14 +1313,14 @@ Entry.avatarbot.getBlocks = function() {
                             {
                                 type: 'Dropdown',
                                 options: [
-			                        ['0', '0'],
-			                        ['1', '1'],
-			                        ['2', '2'],
-			                        ['3', '3'],
-			                        ['4', '4'],
-			                        ['5', '5'],
-                                    ['6', '6'],
-                                    ['7', '7'],
+			                        ['1', '0'],
+			                        ['2', '1'],
+			                        ['3', '2'],
+			                        ['4', '3'],
+			                        ['5', '4'],
+			                        ['6', '5'],
+                                    ['7', '6'],
+                                    ['8', '7'],
                                 ],
                                 value: '0',
                                 fontSize: 11,
@@ -2299,7 +2299,7 @@ Entry.avatarbot.getBlocks = function() {
                     },
                     {
                         type: 'number',
-                        params: ['0'],
+                        params: ['90'],
                     },
                     null,
                 ],
@@ -2461,7 +2461,7 @@ Entry.avatarbot.getBlocks = function() {
                     null,
                     {
                         type: 'number',
-                        params: ['0'],
+                        params: ['90'],
                     },
                     null,
                 ],
@@ -3226,21 +3226,21 @@ Entry.avatarbot.getBlocks = function() {
                     null,
                     {
                         type: 'number',
-                        params: ['50'],
+                        params: ['100'],
                     },
                     {
                         type: 'number',
-                        params: ['50'],
+                        params: ['100'],
                     },
                     // back
                     null,
                     {
                         type: 'number',
-                        params: ['50'],
+                        params: ['100'],
                     },
                     {
                         type: 'number',
-                        params: ['50'],
+                        params: ['100'],
                     },
                     // on/off
                     {
@@ -3424,11 +3424,11 @@ Entry.avatarbot.getBlocks = function() {
                 params: [
                     {
                         type: 'number',
-                        params: ['50'],
+                        params: ['30'],
                     },
                     {
                         type: 'number',
-                        params: ['50'],
+                        params: ['30'],
                     },
                 ],
                 type: 'avatarbot_line_car_ir_init',
@@ -3531,19 +3531,19 @@ Entry.avatarbot.getBlocks = function() {
                     null,
                     {
                         type: 'number',
-                        params: ['0'],
+                        params: ['100'],
                     },
                     {
                         type: 'number',
-                        params: ['0'],
+                        params: ['100'],
                     },
                     {
                         type: 'number',
-                        params: ['0'],
+                        params: ['100'],
                     },
                     {
                         type: 'number',
-                        params: ['0'],
+                        params: ['100'],
                     },
                 ],
                 type: 'avatarbot_line_car_motor_init',
