@@ -2588,7 +2588,6 @@ module.exports = {
                 },
                 func(sprite, script) {
                     const bool = script.getValue('BOOLEAN', script);
-                    console.log('bool', bool);
                     if (Boolean(bool)) {
                         return 'TRUE';
                     }
