@@ -222,7 +222,7 @@ Entry.Dalgona.setLanguage = function() {
                 dalgona_lcd_clear: 'LCD 화면 지우기 %1',
                 dalgona_get_dht: 'DHT11 온습도센서(out %1)의 %2값',
                 dalgona_dht_temp: '온도(°C)',
-                dalgona_dht_humi: '습도도(%)',
+                dalgona_dht_humi: '습도(%)',
 
                 dalgona_set_mp3_init: 'mp3 초기화 ( tx: %1, rx: %2 ) %3',
                 dalgona_set_mp3_play: 'mp3 %1 번 파일 재생 %2',
