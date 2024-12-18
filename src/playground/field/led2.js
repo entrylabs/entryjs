@@ -7,6 +7,8 @@ import { LedPicker } from '@entrylabs/tool';
 /*
  *
  */
+const DEFAULT_LED_SIZE = 5;
+
 Entry.FieldLed2 = class FieldLed2 extends Entry.Field {
     constructor(content, blockView, index) {
         super(content, blockView, index);
@@ -35,6 +37,7 @@ Entry.FieldLed2 = class FieldLed2 extends Entry.Field {
                 [0, 9, 9, 9, 0],
             ]
         );
+        this.ledSize = this.getValue().length || DEFAULT_LED_SIZE;
         /*
 
         */
@@ -46,8 +49,8 @@ Entry.FieldLed2 = class FieldLed2 extends Entry.Field {
 
     renderLed() {
         const ledStatus = this.getValue();
-        const ledDist = 3;
-        const ledOffset = 0.5;
+        const ledDist = 3 * (DEFAULT_LED_SIZE / this.ledSize);
+        const ledOffset = 0.5 * (DEFAULT_LED_SIZE / this.ledSize);
         const currentStatus = ledStatus.params || ledStatus;
         currentStatus.map((leds, x_pos) => {
             return leds.map((led, y_pos) => {
@@ -107,7 +110,7 @@ Entry.FieldLed2 = class FieldLed2 extends Entry.Field {
             fill: '#008380',
         });
 
-        this._rect = [[], [], [], [], []];
+        this._rect = Array.from({ length: this.ledSize }, () => []);
         this.renderLed();
         this._arrow = this.svgGroup.elem('path', {
             d: `M 30.79 -1.182
