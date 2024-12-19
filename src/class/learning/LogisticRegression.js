@@ -77,6 +77,11 @@ class LogisticRegression extends LearningBase {
         model.dispose();
     }
 
+    async reload(url) {
+        this.model = await tf.loadLayersModel(url || this.url);
+        this.isLoaded = true;
+    }
+
     async train() {
         this.setTable();
         this.trained = false;

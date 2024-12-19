@@ -4,7 +4,7 @@
 'use strict';
 import isFunction from 'lodash/isFunction';
 
-(function(c) {
+(function (c) {
     const COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
     let obj;
 
@@ -22,7 +22,10 @@ import isFunction from 'lodash/isFunction';
             if (blocks instanceof Entry.Thread) {
                 blocks = blocks.toJSON();
             }
-            return [['blocks', blocks], ['index', index]];
+            return [
+                ['blocks', blocks],
+                ['index', index],
+            ];
         },
         undo: 'destroyThread',
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
@@ -31,7 +34,7 @@ import isFunction from 'lodash/isFunction';
     };
 
     obj = _.clone(c[COMMAND_TYPES.addThread]);
-    obj.showMe = function(restrictor) {
+    obj.showMe = function (restrictor) {
         if (restrictor.isTooltipFaded()) {
             return;
         }
@@ -54,7 +57,7 @@ import isFunction from 'lodash/isFunction';
         });
     };
     obj.followCmd = true;
-    obj.restrict = function(data, domQuery, callback, restrictor) {
+    obj.restrict = function (data, domQuery, callback, restrictor) {
         const nextCmd = restrictor.requestNextData().content;
         if (nextCmd[0] === Entry.STATIC.COMMAND_TYPES.insertBlockFromBlockMenu) {
             Entry.Command.editor.board.scrollToPointer(nextCmd[2][1]);
@@ -161,7 +164,10 @@ import isFunction from 'lodash/isFunction';
         },
         log(block, pointer) {
             block = this.editor.board.findBlock(block.id);
-            return [['block', block], ['pointer', pointer]];
+            return [
+                ['block', block],
+                ['pointer', pointer],
+            ];
         },
         undo: 'destroyBlock',
     };
@@ -319,7 +325,7 @@ import isFunction from 'lodash/isFunction';
     c[COMMAND_TYPES.insertBlockFollowSeparate] = obj;
 
     obj = _.clone(c[COMMAND_TYPES.insertBlock]);
-    obj.restrict = function(data, domQuery, callback, restrictor) {
+    obj.restrict = function (data, domQuery, callback, restrictor) {
         if (restrictor.toolTipRender) {
             if (restrictor.toolTipRender) {
                 const target = Entry.Command.editor.board.code.getByPointer(data.content[2][1]);
@@ -408,7 +414,11 @@ import isFunction from 'lodash/isFunction';
                 block = block.view;
             }
 
-            return [['block', blockPointer], ['x', block.x], ['y', block.y]];
+            return [
+                ['block', blockPointer],
+                ['x', block.x],
+                ['y', block.y],
+            ];
         },
         restrict(data, domQuery, callback, restrictor) {
             Entry.Command.editor.board.scrollToPointer(data.content[1][1]);
@@ -469,7 +479,7 @@ import isFunction from 'lodash/isFunction';
     };
 
     obj = _.clone(c[COMMAND_TYPES.separateBlock]);
-    obj.restrict = function(data, domQuery, callback, restrictor) {
+    obj.restrict = function (data, domQuery, callback, restrictor) {
         Entry.Command.editor.board.scrollToPointer(data.content[1][1]);
         let isDone = false;
         if (restrictor.toolTipRender) {
@@ -517,7 +527,7 @@ import isFunction from 'lodash/isFunction';
         );
         return tooltip;
     };
-    obj.showMe = function(restrictor) {
+    obj.showMe = function (restrictor) {
         if (restrictor.isTooltipFaded()) {
             return;
         }
@@ -598,7 +608,11 @@ import isFunction from 'lodash/isFunction';
                 console.error('moveBlock: target not exist ', block);
                 return [];
             }
-            return [['block', block.pointer()], ['x', block.view.x], ['y', block.view.y]];
+            return [
+                ['block', block.pointer()],
+                ['x', block.view.x],
+                ['y', block.view.y],
+            ];
         },
         undo: 'moveBlock',
         dom: ['playground', 'board', '&0'],
@@ -606,7 +620,7 @@ import isFunction from 'lodash/isFunction';
 
     obj = _.clone(c[COMMAND_TYPES.moveBlock]);
     obj.followCmd = true;
-    obj.restrict = function(data, domQuery, callback, restrictor) {
+    obj.restrict = function (data, domQuery, callback, restrictor) {
         Entry.Command.editor.board.scrollToPointer(data.content[1][1]);
         let isDone = false;
         if (restrictor.toolTipRender) {
@@ -657,7 +671,7 @@ import isFunction from 'lodash/isFunction';
     c[COMMAND_TYPES.moveBlockForDestroy] = obj;
 
     obj = _.clone(c[COMMAND_TYPES.moveBlock]);
-    obj.restrict = function(data, domQuery, callback) {
+    obj.restrict = function (data, domQuery, callback) {
         callback();
         return new Entry.Tooltip(
             [
@@ -693,7 +707,10 @@ import isFunction from 'lodash/isFunction';
             return [-dx, -dy];
         },
         log(dx, dy) {
-            return [['dx', dx], ['dy', dy]];
+            return [
+                ['dx', dx],
+                ['dy', dy],
+            ];
         },
         recordable: Entry.STATIC.RECORDABLE.SKIP,
         undo: 'scrollBoard',
@@ -722,7 +739,10 @@ import isFunction from 'lodash/isFunction';
             return [pointer, field._startValue || field.getValue()];
         },
         log(pointer, value) {
-            return [['pointer', pointer], ['value', value]];
+            return [
+                ['pointer', pointer],
+                ['value', value],
+            ];
         },
         restrict(data, domQuery, callback, restrictor) {
             let isDone = false;
@@ -899,6 +919,9 @@ import isFunction from 'lodash/isFunction';
         do(block) {
             block = this.editor.board.findBlock(block);
             block.doDestroyBelow(true);
+            if (block.isParamBlockType()) {
+                block.thread?.updateValueBlock?.();
+            }
         },
         state(block) {
             block = this.editor.board.findBlock(block);

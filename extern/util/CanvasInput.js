@@ -62,7 +62,6 @@
         self._selection = [0, 0];
         self._wasOver = false;
         self._topPosition = o.topPosition; // parse box shadow
-
         self.boxShadow(self._boxShadow, true); // calculate the full width and height with padding, borders and shadows
 
         self._calcWH(); // setup the off-DOM canvas
@@ -741,7 +740,7 @@
                 nav.indexOf('android') >= 0; // add support for mobile
 
             var isMobile = typeof window.orientation !== 'undefined';
-
+            var hasHiddenFocus = false;
             if (
                 isMobile &&
                 !isChromeMobile &&
@@ -762,12 +761,23 @@
                 );
                 input.style.width = self._width;
                 input.style.height = 0;
-                document.body.appendChild(input);
+                const form = document.createElement('form');
+                form.appendChild(input);
+                document.body.appendChild(form);
                 input.focus();
                 input.addEventListener(
                     'blur',
                     function() {
-                        self.blur(self);
+                        if (!hasHiddenFocus) {
+                            self.blur(self);
+                        }
+                    },
+                    false
+                );
+                input.addEventListener(
+                    'focus',
+                    () => {
+                        self.focus();
                     },
                     false
                 );
@@ -776,11 +786,12 @@
             } // move the real focus to the hidden input
 
             var hasSelection = self._selection[0] > 0 || self._selection[1] > 0;
-
+            hasHiddenFocus = true;
             self._hiddenInput.focus();
-
+            hasHiddenFocus = false;
             self._hiddenInput.selectionStart = hasSelection ? self._selection[0] : self._cursorPos;
             self._hiddenInput.selectionEnd = hasSelection ? self._selection[1] : self._cursorPos;
+
             return self.render();
         },
 

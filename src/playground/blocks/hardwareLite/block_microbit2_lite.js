@@ -192,8 +192,8 @@ const EVENT_INTERVAL = 150;
             this.url = 'http://microbit.org/ko/';
             this.imageName = 'microbit2lite.png';
             this.title = {
-                en: 'Microbit',
-                ko: '마이크로비트',
+                en: 'Microbit V2',
+                ko: '마이크로비트 V2',
             };
             this.name = 'Microbit2lite';
             this.digitalPins = [
@@ -1026,6 +1026,7 @@ const EVENT_INTERVAL = 150;
                     skeleton: 'basic_text',
                     color: EntryStatic.colorSet.common.TRANSPARENT,
                     fontColor: '#333333',
+                    template: '%1',
                     params: [
                         {
                             type: 'Text',
@@ -1037,7 +1038,7 @@ const EVENT_INTERVAL = 150;
                     def: {
                         type: 'microbit2lite_common_title',
                     },
-                    class: 'microbit2lite_title',
+                    class: 'microbit2litePin',
                     isNotFor: ['Microbit2lite'],
                     events: {},
                 },
@@ -2310,6 +2311,7 @@ const EVENT_INTERVAL = 150;
                     skeleton: 'basic_text',
                     color: EntryStatic.colorSet.common.TRANSPARENT,
                     fontColor: '#333333',
+                    template: '%1',
                     params: [
                         {
                             type: 'Text',
@@ -2321,7 +2323,7 @@ const EVENT_INTERVAL = 150;
                     def: {
                         type: 'microbit2lite_v2_title',
                     },
-                    class: 'microbit2lite_title',
+                    class: 'microbit2litev2',
                     isNotFor: ['Microbit2lite'],
                     events: {},
                 },
