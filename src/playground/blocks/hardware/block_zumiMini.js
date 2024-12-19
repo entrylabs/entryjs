@@ -183,7 +183,6 @@ Entry.ZumiMini.setLanguage = function () {
                 turn_right: '오른쪽으로 회전 %1',
                 going_forward_until_sensing : '물체 감지할 때까지 앞으로 가기 %1',
                 following_line_until_sensing : '교차로 만날 때까지 선 따라가기 %1',
-                LED_color: 'LED 불빛 %1 동작 %2 %3',
                 front_sensor:  '앞 센서 %1 %2',
                 bottom_sensor: '바닥 센서 %1 %2',
                 button_input: '버튼 입력 %1',
@@ -299,7 +298,6 @@ Entry.ZumiMini.setLanguage = function () {
                 turn_right : 'turning right %1',
                 going_forward_until_sensing: 'going forward until sensing the object %1',
                 following_line_until_sensing: 'following the line until meet the intersection %1',
-                LED_color: 'LED light color %1 action %2 %3',
                 front_sensor: 'front sensor %1 %2',
                 bottom_sensor: 'bottom sensor %1 %2',
                 button_inpput: 'button input %1',
@@ -342,7 +340,6 @@ Entry.ZumiMini.blockMenuBlocks = [
     'following_line_dist',
     'following_line_infinite',            
     
-    'LED_color',
     'LED_control',
 
     'button_boolean_input',
@@ -367,143 +364,7 @@ Entry.ZumiMini.blockMenuBlocks = [
 
 
 Entry.ZumiMini.getBlocks = function() {
-    return {
-        LED_color: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.RED, 'RED'],
-                        [Lang.Blocks.GREEN, 'GREEN'],
-                        [Lang.Blocks.BLUE, 'BLUE']
-                    ],
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.ON, 'ON'],
-                        [Lang.Blocks.OFF, 'OFF']
-                    ],
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 14 },
-            ],
-            def: {
-                params: ['BLUE', 'ON', null],
-                type: 'LED_color',
-            },
-            paramsKeyMap: {
-                COLOR: 0,
-                ACTION: 1,
-            },
-            class: "led",
-            isNotFor: ['zumi_mini'],
-            func: function (sprite, script) {
-
-                const Z_WAIT = 0;
-                const Z_SEND_PACKET = 1;
-                const Z_MOVING = 2;
-
-                const READY = 0;
-                const PROCESS = 1;
-
-                const COMMAND_LED_RED = 11;
-                const COMMAND_LED_BLUE = 12;
-                const COMMAND_LED_GREEN = 13;
-                const COMMAND_LED_OFF = 14;
-
-                //var exTime = new Date();
-                //var firstCheck = true;
-                var pStep = Z_WAIT;
-                var iter = 0;
-                var _exit = false;
-
-                console.log("LED block Start!");
-
-                var _col = script.getStringField('COLOR', script);
-                var _act = script.getStringField('ACTION', script);
-
-                return new Promise(resolve => {
-
-                    new Promise(resolve => {
-                        setTimeout(function () {
-                            console.log("exCnt: " + exCnt + " tempCnt:" + tempCnt);
-                            if (exCnt == tempCnt) {
-                                _exit = true;
-                
-                            }
-                            resolve();
-                        }, 200);
-                    })
-                    .then(() => {
-
-                        return new Promise(resolve => {
-                            var ttt = setInterval(() => {
-                                
-                                if(_exit == true) { 
-                                    console.log("block skip!");
-                                    resolve(); 
-                                    clearInterval(ttt); 
-                                }
-
-                                var _stat = Entry.hw.portData.inputData['pStat'];
-
-                                if ((pStep == Z_WAIT) && (_stat == READY)) pStep = Z_SEND_PACKET;
-                                else if ((pStep == Z_WAIT) && (_stat == PROCESS)) pStep = Z_WAIT;    //wait until other action ends.                       
-
-                                if ((pStep == Z_SEND_PACKET) && (_stat == READY)) {    //send command until hardware start to action.
-
-                                    if (iter < 5) {
-                                        if ((_col == 'RED') && (_act == 'ON')) Entry.hw.sendQueue['com'] = COMMAND_LED_RED;
-                                        else if ((_col == 'BLUE') && (_act == 'ON')) Entry.hw.sendQueue['com'] = COMMAND_LED_BLUE;
-                                        else if ((_col == 'GREEN') && (_act == 'ON')) Entry.hw.sendQueue['com'] = COMMAND_LED_GREEN;
-
-                                        if (_act == 'OFF') Entry.hw.sendQueue['com'] = COMMAND_LED_OFF;
-
-                                        console.log("send protocol!");
-                                    }
-                                    else Entry.hw.sendQueue['com'] = 0x00;
-
-                                    pStep = Z_SEND_PACKET;
-                                    //iter++;
-                                }
-                                else if ((pStep == Z_SEND_PACKET) && (_stat == PROCESS)) {
-                                    pStep = Z_MOVING;
-                                    Entry.hw.sendQueue['com'] = 0x00;
-                                }
-
-                                if ((pStep == Z_MOVING) && (_stat == READY)) {
-
-                                    console.log("block exit!");
-                                    Entry.hw.sendQueue['com'] = 0x00;
-                                    pStep = Z_WAIT;
-                                    resolve();
-                                    clearInterval(ttt);
-                                }
-                                else if ((pStep == Z_MOVING) && (_stat == PROCESS)) pStep = Z_MOVING;  //wait until the action ends.                     
-
-                            }, 50);                       
-                        
-                        });
-
-                    })
-                    .then(() => {
-                        resolve();
-                    })
-                   
-                });                        
-            },
-        },
-
+    return {    
         motion_stop: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -643,7 +504,7 @@ Entry.ZumiMini.getBlocks = function() {
                 },
             ],
             def: {
-                params: ['FORWARD', 'MID', 20, null],
+                params: ['FORWARD', 'MID', 10, null],
                 type: 'move_straight',
             },
             paramsKeyMap: {
@@ -722,7 +583,7 @@ Entry.ZumiMini.getBlocks = function() {
                                         else if (_spd == 'MID') Entry.hw.sendQueue['speed'] = SPEED_MID;
                                         else if (_spd == 'SLOW') Entry.hw.sendQueue['speed'] = SPEED_LOW;
 
-                                        if (_dist < 20) _dist = 20; else if (_dist > 200) _dist = 200;
+                                      //  if (_dist < 20) _dist = 20; else if (_dist > 200) _dist = 200;
                                         Entry.hw.sendQueue['dist'] = _dist;
 
                                         console.log("send protocol!");
@@ -2333,7 +2194,7 @@ Entry.ZumiMini.getBlocks = function() {
                 },
             ],
             def: {
-                params: [20],
+                params: [18],
                 type: 'april_boolean_detector',
             },
             paramsKeyMap: {
