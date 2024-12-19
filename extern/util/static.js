@@ -27,7 +27,7 @@ EntryStatic.variableBlockList = [
 
 EntryStatic.messageBlockList = ['when_message_cast', 'message_cast', 'message_cast_wait'];
 
-EntryStatic.getAllBlocks = function () {
+EntryStatic.getAllBlocks = function() {
     return [
         {
             category: 'start',
@@ -118,8 +118,6 @@ EntryStatic.getAllBlocks = function () {
                 'erase_all_effects',
                 'change_scale_size',
                 'set_scale_size',
-                'stretch_scale_size',
-                'reset_scale_size',
                 'flip_x',
                 'flip_y',
                 'change_object_index',
@@ -190,8 +188,6 @@ EntryStatic.getAllBlocks = function () {
                 'boolean_and_or',
                 'boolean_not',
                 'is_boost_mode',
-                'is_current_device_type',
-                'is_touch_supported',
             ],
         },
         {
@@ -222,7 +218,6 @@ EntryStatic.getAllBlocks = function () {
                 'get_block_count',
                 'change_rgb_to_hex',
                 'change_hex_to_rgb',
-                'get_boolean_value',
             ],
         },
         {
@@ -277,9 +272,6 @@ EntryStatic.getAllBlocks = function () {
                 'open_table_chart',
                 'close_table_chart',
                 'get_coefficient',
-                'set_value_from_cell',
-                'get_value_from_cell',
-                'get_value_v_lookup',
             ],
         },
         {
@@ -455,18 +447,6 @@ EntryStatic.getAllBlocks = function () {
             blocks: [
                 'expansionBlockAddButton',
                 'weather_title',
-                'get_cur_weather',
-                'get_cur_wind',
-                'get_cur_weather_data',
-                'check_cur_weather',
-                'check_cur_finddust',
-                'get_day_weather',
-                'get_day_weather_data',
-                'check_day_weather',
-                'get_time_weather',
-                'get_time_weather_data',
-                'check_time_weather',
-
                 'check_weather',
                 'check_finedust',
                 'get_weather_data',
@@ -491,20 +471,18 @@ EntryStatic.getAllBlocks = function () {
         {
             category: 'arduino',
             blocks: [
-                'hardware_connect_helper',
-                'hardware_noti_installed',
                 'arduino_reconnect',
                 'arduino_open',
-                'hardware_program_download',
                 'arduino_cloud_pc_open',
+                'arduino_connect',
                 'arduino_lite_disconnect',
-                'hardware_device_name_title',
-                'hardware_device_name_content',
-                'hardware_connected_noti',
+                'arduino_lite_device_name',
                 'arduino_lite_connected_noti',
                 'arduino_lite_reconnect',
-                'hardware_noti_not_installed',
                 'arduino_lite_download_firmware',
+                'arduino_download_connector',
+                // 'download_guide',
+                'arduino_download_source',
                 'arduino_lite_connect',
                 'arduino_lite_guide',
                 'arduino_noti',
@@ -516,7 +494,7 @@ EntryStatic.getAllBlocks = function () {
 
 /* eslint-disable */
 Object.defineProperty(EntryStatic, 'fonts', {
-    get: function () {
+    get: function() {
         return [
             {
                 name: Lang.Fonts.batang,
@@ -786,7 +764,6 @@ EntryStatic.colorSet = {
     common: {
         WHITE: '#FFFFFF',
         DARK: '#000000',
-        GRAY: '#6c8696',
         TRANSPARENT: 'transparent',
         BUTTON: '#4f80ff',
         BUTTON_BACKGROUND: '#eee',
@@ -797,7 +774,7 @@ EntryStatic.colorSet = {
     },
 };
 
-EntryStatic.getDefaultFontFamily = function () {
+EntryStatic.getDefaultFontFamily = function() {
     const localLang = Lang || {};
     const type = localLang.type;
     const fallbackType = localLang.fallbackType;
@@ -808,7 +785,7 @@ EntryStatic.getDefaultFontFamily = function () {
     }
 };
 
-EntryStatic.getCategoryByBlock = function (blockName) {
+EntryStatic.getCategoryByBlock = function(blockName) {
     if (!blockName) {
         return false;
     }

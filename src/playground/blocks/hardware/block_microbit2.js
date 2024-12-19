@@ -179,8 +179,8 @@ Entry.Microbit2 = new (class Microbit2 {
         this.url = 'http://microbit.org/ko/';
         this.imageName = 'microbit2.png';
         this.title = {
-            en: 'Microbit V2',
-            ko: '마이크로비트 V2',
+            en: 'Microbit v2',
+            ko: '마이크로비트 v2',
         };
         this.name = 'microbit2';
         this.communicationType = 'manual';
@@ -973,7 +973,6 @@ Entry.Microbit2 = new (class Microbit2 {
                 skeleton: 'basic_text',
                 color: EntryStatic.colorSet.common.TRANSPARENT,
                 fontColor: '#333333',
-                template: '%1',
                 params: [
                     {
                         type: 'Text',
@@ -985,7 +984,7 @@ Entry.Microbit2 = new (class Microbit2 {
                 def: {
                     type: 'microbit2_common_title',
                 },
-                class: 'microbit2Pin',
+                class: 'microbit2_title',
                 isNotFor: ['microbit2'],
                 events: {},
             },
@@ -993,7 +992,6 @@ Entry.Microbit2 = new (class Microbit2 {
                 skeleton: 'basic_text',
                 color: EntryStatic.colorSet.common.TRANSPARENT,
                 fontColor: '#333333',
-                template: '%1',
                 params: [
                     {
                         type: 'Text',
@@ -1005,7 +1003,7 @@ Entry.Microbit2 = new (class Microbit2 {
                 def: {
                     type: 'microbit2_v2_title',
                 },
-                class: 'microbit2v2',
+                class: 'microbit2_title',
                 isNotFor: ['microbit2'],
                 events: {},
             },

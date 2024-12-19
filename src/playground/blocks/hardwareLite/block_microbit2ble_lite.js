@@ -160,8 +160,8 @@ const convertPresetImageToLedState = (preset) => {
             this.url = 'http://microbit.org/ko/';
             this.imageName = 'microbit2blelite.png';
             this.title = {
-                en: 'Microbit V2',
-                ko: '마이크로비트 V2',
+                en: 'Microbit',
+                ko: '마이크로비트',
             };
             this.name = 'Microbit2BleLite';
             this.functionKeys = {
@@ -1107,7 +1107,6 @@ const convertPresetImageToLedState = (preset) => {
                 microbit2blelite_common_title: {
                     skeleton: 'basic_text',
                     color: EntryStatic.colorSet.common.TRANSPARENT,
-                    template: '%1',
                     fontColor: '#333333',
                     params: [
                         {
@@ -1120,7 +1119,7 @@ const convertPresetImageToLedState = (preset) => {
                     def: {
                         type: 'microbit2blelite_common_title',
                     },
-                    class: 'microbit2bleliteLed',
+                    class: 'microbit2blelite_title',
                     isNotFor: ['Microbit2BleLite'],
                     events: {},
                 },
@@ -2353,7 +2352,6 @@ const convertPresetImageToLedState = (preset) => {
                     skeleton: 'basic_text',
                     color: EntryStatic.colorSet.common.TRANSPARENT,
                     fontColor: '#333333',
-                    template: '%1',
                     params: [
                         {
                             type: 'Text',
@@ -2365,7 +2363,7 @@ const convertPresetImageToLedState = (preset) => {
                     def: {
                         type: 'microbit2blelite_v2_title',
                     },
-                    class: 'microbit2blelitev2',
+                    class: 'microbit2blelite_title',
                     isNotFor: ['Microbit2BleLite'],
                     events: {},
                 },
