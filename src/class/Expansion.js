@@ -1,8 +1,8 @@
 import ExtraBlockUtils from '../util/extrablockUtils';
 import '../playground/blocks/block_expansion_weather';
 import '../playground/blocks/block_expansion_festival';
-// import '../playground/blocks/block_expansion_behaviorconduct_disaster';
-// import '../playground/blocks/block_expansion_behaviorconduct_lifesafety';
+import '../playground/blocks/block_expansion_behaviorconduct_disaster';
+import '../playground/blocks/block_expansion_behaviorconduct_lifesafety';
 import '../playground/blocks/block_expansion_emergencyActionGuidelines';
 
 export default class Expansion {
@@ -13,7 +13,9 @@ export default class Expansion {
     async init() {
         const blockObject = {};
         Object.entries(Entry.EXPANSION_BLOCK).forEach(([key, value]) => {
-            Entry.EXPANSION_BLOCK_LIST[key] = value;
+            if (!value.disabled) {
+                Entry.EXPANSION_BLOCK_LIST[key] = value;
+            }
             if ('getBlocks' in value) {
                 Object.assign(blockObject, value.getBlocks());
             }
