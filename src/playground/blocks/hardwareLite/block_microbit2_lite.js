@@ -1488,6 +1488,13 @@ const EVENT_INTERVAL = 150;
                     params: [
                         {
                             type: 'Led2',
+                            value: [
+                                [0, 0, 0, 0, 0],
+                                [0, 9, 0, 9, 0],
+                                [0, 0, 0, 0, 0],
+                                [9, 0, 0, 0, 9],
+                                [0, 9, 9, 9, 0],
+                            ],
                         },
                         {
                             type: 'Indicator',
