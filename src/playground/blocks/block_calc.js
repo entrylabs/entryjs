@@ -2060,15 +2060,7 @@ module.exports = {
                 func(sprite, script) {
                     const originStr = script.getStringValue('STRING', script);
                     const targetStr = script.getStringValue('TARGET', script);
-
-                    let count = 0;
-                    const substrLength = targetStr.length;
-                    for (let i = 0; i <= originStr.length - substrLength; i++) {
-                        if (originStr.substring(i, i + substrLength) === targetStr) {
-                            count++;
-                        }
-                    }
-                    return count;
+                    return originStr.split(targetStr).length - 1;
                 },
                 syntax: {
                     js: [],
@@ -2253,13 +2245,9 @@ module.exports = {
                     const oldWord = script
                         .getStringValue('OLD_WORD', script)
                         .replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-
-                    return script
-                        .getStringValue('STRING', script)
-                        .replace(
-                            new RegExp(oldWord, 'gm'),
-                            script.getStringValue('NEW_WORD', script)
-                        );
+                    const newWord = script.getStringValue('NEW_WORD', script);
+                    const originalString = script.getStringValue('STRING', script);
+                    return originalString.split(oldWord).join(newWord);
                 },
                 syntax: {
                     js: [],
@@ -2600,7 +2588,6 @@ module.exports = {
                 },
                 func(sprite, script) {
                     const bool = script.getValue('BOOLEAN', script);
-                    console.log('bool', bool);
                     if (Boolean(bool)) {
                         return 'TRUE';
                     }

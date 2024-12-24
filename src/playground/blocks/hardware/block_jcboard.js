@@ -745,7 +745,7 @@ Entry.JCBoard.getBlocks = function() {
                 const what = script.getNumberValue('BUTTON_WHAT', script);
                 sensorData = sensorData[0] == 0x26 ? sensorData : oldSensorData;
                 oldSensorData = sensorData;
-                return !!(sensorData[Entry.JCBoard.Sensor.SENSOR_BUTTON] & (0x01 << what));
+                return (sensorData[Entry.JCBoard.Sensor.SENSOR_BUTTON] & (0x01 << what))!=0? 1 : 0;
             },
             syntax: { js: [], py: [] },
         },
