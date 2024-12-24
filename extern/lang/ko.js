@@ -465,7 +465,7 @@ Lang.Blocks = {
     emergencyActionGuidelines02020: '유도선',
     emergencyActionGuidelines02020001: '이용객 금지 행위',
     emergencyActionGuidelines02020002: '사고 발생 시',
-    emergencyActionGuidelines02021: '유도선',
+    emergencyActionGuidelines02021: '수난사고',
     emergencyActionGuidelines02021001: '하천이나 계곡물',
     emergencyActionGuidelines02021002: '무릎 이상의 깊은 급류',
     emergencyActionGuidelines02021003: '물에 빠졌을 때',
