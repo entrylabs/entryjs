@@ -7793,7 +7793,7 @@ Lang.template = {
     count_social_disaster_guideline: '사회재난 %1 %2 의 행동요령 수',
     get_social_disaster_guideline: '사회재난 %1 %2 의 행동요령 %3 번째 항목',
     count_safety_accident_guideline: '생활안전 %1 %2 의 행동요령 수',
-    get_safety_accident_guideline: '생활안전 %1 중 %2 의 행동요령 %3 번째 항목',
+    get_safety_accident_guideline: '생활안전 %1 %2 의 행동요령 %3 번째 항목',
     tts_title_text: '읽어주기',
     hamster_hand_found: '손 찾음?',
     hamster_value: '%1',
