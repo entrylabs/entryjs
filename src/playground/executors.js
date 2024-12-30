@@ -224,6 +224,22 @@ class Executor {
         return Entry.STATIC.PASS;
     }
 
+    continueLoop() {
+        console.log('exec1');
+        if (this._callStack.length) {
+            this.scope = this._callStack.pop();
+        }
+        while (this._callStack.length) {
+            const schema = Entry.block[this.scope.block.type];
+            if (schema.class === 'repeat') {
+                continue;
+            }
+            this.scope = this._callStack.pop();
+        }
+        return Entry.STATIC.CONTINUE;
+    }
+
+
     end() {
         Entry.dispatchEvent('blockExecuteEnd', this.scope.block && this.scope.block.view);
         this.scope.block = null;
