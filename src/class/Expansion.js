@@ -4,6 +4,7 @@ import '../playground/blocks/block_expansion_festival';
 import '../playground/blocks/block_expansion_behaviorconduct_disaster';
 import '../playground/blocks/block_expansion_behaviorconduct_lifesafety';
 import '../playground/blocks/block_expansion_emergencyActionGuidelines';
+import '../playground/blocks/block_expansion_emergencyMessage';
 
 export default class Expansion {
     constructor(playground) {

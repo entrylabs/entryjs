@@ -486,6 +486,10 @@ EntryStatic.getAllBlocks = function () {
                 'get_social_disaster_guideline',
                 'count_safety_accident_guideline',
                 'get_safety_accident_guideline',
+                'emergency_message_title',
+                'count_emergency_message',
+                'get_emergency_message',
+                'check_emergency_message',
             ],
         },
         {
