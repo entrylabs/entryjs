@@ -225,7 +225,6 @@ class Executor {
     }
 
     continueLoop() {
-        console.log('exec1');
         if (this._callStack.length) {
             this.scope = this._callStack.pop();
         }
