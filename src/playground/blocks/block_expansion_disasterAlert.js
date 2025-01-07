@@ -28,7 +28,7 @@ const EMERGENCY_CATEGORY_MAP = {
     info: Lang.Blocks.disasterAlertTypeInfo,
     exigency: Lang.Blocks.disasterAlertTypeExigency,
     urgency: Lang.Blocks.disasterAlertTypeUrgency,
-}
+};
 
 const getDisasterAlert = (params, defaultValue) => {
     const now = new Date();
@@ -49,13 +49,12 @@ const getDisasterAlert = (params, defaultValue) => {
                         if (category) {
                             items = items.filter((item) => item.EMRG_STEP_NM === category);
                         }
-                        console.log('items', items, params, result?.data);
                         switch (params.command) {
                             case 'count':
                                 return resolve(items?.length || 0);
                             case 'get':
-                                const result = items[params.index]?.[params.option];
-                                if (params.option === 'REG_YMD') {
+                                const result = items?.[params?.index - 1]?.[params.option];
+                                if (params?.option === 'REG_YMD') {
                                     return resolve(new Date(result).toLocaleString());
                                 }
                                 return resolve(result);
@@ -75,7 +74,7 @@ const getDisasterAlert = (params, defaultValue) => {
     return job;
 };
 
-Entry.EXPANSION_BLOCK.emergencyActionGuidelines.getBlocks = function () {
+Entry.EXPANSION_BLOCK.disasterAlert.getBlocks = function () {
     // 전체, 안전안내, 긴급재난, 위급재난
     const DisasterAlertCategory = {
         type: 'Dropdown',
@@ -148,10 +147,13 @@ Entry.EXPANSION_BLOCK.emergencyActionGuidelines.getBlocks = function () {
             isNotFor: ['disasterAlert'],
             func(sprite, script) {
                 const category = script.getField('CATEGORY', script);
-                return getDisasterAlert({
-                    command: 'count',
-                    category,
-                }, 0);
+                return getDisasterAlert(
+                    {
+                        command: 'count',
+                        category,
+                    },
+                    0
+                );
             },
             syntax: {
                 js: [],
