@@ -3,44 +3,44 @@
 const PromiseManager = require('../../core/promiseManager');
 const { callApi } = require('../../util/common');
 
-Entry.EXPANSION_BLOCK.emergencyMessage = {
-    name: 'emergencyMessage',
-    imageName: 'emergencyMessage.png',
+Entry.EXPANSION_BLOCK.disasterAlert = {
+    name: 'disasterAlert',
+    imageName: 'disasterAlert.png',
     title: {
         ko: '재난문자',
         en: 'Disaster alert',
     },
-    titleKey: 'template.emergency_message_title_text',
-    description: Lang.Msgs.expansion_emergencyMessage_description,
-    descriptionKey: 'Msgs.expansion_emergencyMessage_description',
+    titleKey: 'template.disaster_alert_title_text',
+    description: Lang.Msgs.expansion_disasterAlert_description,
+    descriptionKey: 'Msgs.expansion_disasterAlert_description',
     isInitialized: false,
     init() {
         if (this.isInitialized) {
             return;
         }
-        Entry.EXPANSION_BLOCK.emergencyMessage.isInitialized = true;
+        Entry.EXPANSION_BLOCK.disasterAlert.isInitialized = true;
     },
-    api: '/api/expansionBlock/emergencyMessage',
+    api: '/api/expansionBlock/disasterAlert',
     apiType: '01',
 };
 
 const EMERGENCY_CATEGORY_MAP = {
-    info: Lang.Blocks.emergencyMessageTypeInfo,
-    exigency: Lang.Blocks.emergencyMessageTypeExigency,
-    urgency: Lang.Blocks.emergencyMessageTypeUrgency,
+    info: Lang.Blocks.disasterAlertTypeInfo,
+    exigency: Lang.Blocks.disasterAlertTypeExigency,
+    urgency: Lang.Blocks.disasterAlertTypeUrgency,
 }
 
-const getEmergencyMessage = (params, defaultValue) => {
+const getDisasterAlert = (params, defaultValue) => {
     const now = new Date();
     const hour = now.getHours();
     const day = now.getDay();
-    const key = `emergencyMessage-${day}-${hour}`;
+    const key = `disasterAlert-${day}-${hour}`;
     const promiseManager = new PromiseManager();
     const job = promiseManager
         // eslint-disable-next-line new-cap
         .Promise((resolve) => {
             callApi(key, {
-                url: `${Entry.EXPANSION_BLOCK.emergencyMessage.api}`,
+                url: `${Entry.EXPANSION_BLOCK.disasterAlert.api}`,
             })
                 .then((result) => {
                     if (result) {
@@ -77,13 +77,13 @@ const getEmergencyMessage = (params, defaultValue) => {
 
 Entry.EXPANSION_BLOCK.emergencyActionGuidelines.getBlocks = function () {
     // 전체, 안전안내, 긴급재난, 위급재난
-    const EmergencyMessageCategory = {
+    const DisasterAlertCategory = {
         type: 'Dropdown',
         options: [
-            [Lang.Blocks.emergencyMessageTypeAll, 'all'],
-            [Lang.Blocks.emergencyMessageTypeInfo, 'info'],
-            [Lang.Blocks.emergencyMessageTypeExigency, 'exigency'],
-            [Lang.Blocks.emergencyMessageTypeUrgency, 'urgency'],
+            [Lang.Blocks.disasterAlertTypeAll, 'all'],
+            [Lang.Blocks.disasterAlertTypeInfo, 'info'],
+            [Lang.Blocks.disasterAlertTypeExigency, 'exigency'],
+            [Lang.Blocks.disasterAlertTypeUrgency, 'urgency'],
         ],
         value: 'all',
         fontSize: 11,
@@ -91,14 +91,14 @@ Entry.EXPANSION_BLOCK.emergencyActionGuidelines.getBlocks = function () {
         arrowColor: EntryStatic.colorSet.common.WHITE,
     };
     // 내용, 수신지역, 긴급단계, 재해구분, 생성일시
-    const EmergencyMessageOptions = {
+    const DisasterAlertOptions = {
         type: 'Dropdown',
         options: [
-            [Lang.Blocks.emergencyMessageContents, 'MSG_CN'],
-            [Lang.Blocks.emergencyMessageRegeion, 'RCPTN_RGN_NM'],
-            [Lang.Blocks.emergencyMessageStep, 'EMRG_STEP_NM'],
-            [Lang.Blocks.emergencyMessageDisaster, 'DST_SE_NM'],
-            [Lang.Blocks.emergencyMessageRegisterDate, 'REG_YMD'],
+            [Lang.Blocks.disasterAlertContents, 'MSG_CN'],
+            [Lang.Blocks.disasterAlertRegeion, 'RCPTN_RGN_NM'],
+            [Lang.Blocks.disasterAlertStep, 'EMRG_STEP_NM'],
+            [Lang.Blocks.disasterAlertDisaster, 'DST_SE_NM'],
+            [Lang.Blocks.disasterAlertRegisterDate, 'REG_YMD'],
         ],
         value: 'MSG_CN',
         fontSize: 11,
@@ -107,48 +107,48 @@ Entry.EXPANSION_BLOCK.emergencyActionGuidelines.getBlocks = function () {
     };
 
     return {
-        emergency_message_title: {
+        disaster_alert_title: {
             template: '%1',
             skeleton: 'basic_text',
             color: EntryStatic.colorSet.common.TRANSPARENT,
             params: [
                 {
                     type: 'Text',
-                    text: Lang.template.emergency_message_title_text,
+                    text: Lang.template.disaster_alert_title_text,
                     color: EntryStatic.colorSet.common.TEXT,
                     align: 'center',
                 },
             ],
             def: {
-                type: 'emergency_message_title',
+                type: 'disaster_alert_title',
             },
-            class: 'emergencyMessage',
-            isNotFor: ['emergencyMessage'],
+            class: 'disasterAlert',
+            isNotFor: ['disasterAlert'],
             events: {},
         },
-        count_emergency_message: {
+        count_disaster_alert: {
             color: EntryStatic.colorSet.block.default.EXPANSION,
             outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
             skeleton: 'basic_string_field',
             statements: [],
-            params: [EmergencyMessageCategory],
+            params: [DisasterAlertCategory],
             events: {},
             def: {
-                params: [EmergencyMessageCategory.value],
-                type: 'count_emergency_message',
+                params: [DisasterAlertCategory.value],
+                type: 'count_disaster_alert',
             },
             pyHelpDef: {
                 params: ['A&value'],
-                type: 'count_emergency_message',
+                type: 'count_disaster_alert',
             },
             paramsKeyMap: {
                 CATEGORY: 0,
             },
-            class: 'emergencyMessage',
-            isNotFor: ['emergencyMessage'],
+            class: 'disasterAlert',
+            isNotFor: ['disasterAlert'],
             func(sprite, script) {
                 const category = script.getField('CATEGORY', script);
-                return getEmergencyMessage({
+                return getDisasterAlert({
                     command: 'count',
                     category,
                 }, 0);
@@ -158,41 +158,41 @@ Entry.EXPANSION_BLOCK.emergencyActionGuidelines.getBlocks = function () {
                 py: [],
             },
         },
-        get_emergency_message: {
+        get_disaster_alert: {
             color: EntryStatic.colorSet.block.default.EXPANSION,
             outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
-                EmergencyMessageCategory,
+                DisasterAlertCategory,
                 {
                     type: 'Block',
                     accept: 'string',
                     defaultType: 'number',
                 },
-                EmergencyMessageOptions,
+                DisasterAlertOptions,
             ],
             events: {},
             def: {
-                params: [EmergencyMessageCategory.value, null, EmergencyMessageOptions.value],
-                type: 'get_emergency_message',
+                params: [DisasterAlertCategory.value, null, DisasterAlertOptions.value],
+                type: 'get_disaster_alert',
             },
             pyHelpDef: {
                 params: ['A&value', 'B&value', 'C&value'],
-                type: 'get_emergency_message',
+                type: 'get_disaster_alert',
             },
             paramsKeyMap: {
                 CATEGORY: 0,
                 NUMBER: 1,
                 OPTION: 2,
             },
-            class: 'emergencyMessage',
-            isNotFor: ['emergencyMessage'],
+            class: 'disasterAlert',
+            isNotFor: ['disasterAlert'],
             func(sprite, script) {
                 const number = script.getStringValue('NUMBER', script);
                 const category = script.getField('CATEGORY', script);
                 const option = script.getField('OPTION', script);
-                return getEmergencyMessage({
+                return getDisasterAlert({
                     command: 'get',
                     category,
                     index: number,
@@ -204,29 +204,29 @@ Entry.EXPANSION_BLOCK.emergencyActionGuidelines.getBlocks = function () {
                 py: [],
             },
         },
-        check_emergency_message: {
+        check_disaster_alert: {
             color: EntryStatic.colorSet.block.default.EXPANSION,
             outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
             skeleton: 'basic_boolean_field',
             statements: [],
-            params: [EmergencyMessageCategory],
+            params: [DisasterAlertCategory],
             events: {},
             def: {
-                params: [EmergencyMessageCategory.value],
-                type: 'check_emergency_message',
+                params: [DisasterAlertCategory.value],
+                type: 'check_disaster_alert',
             },
             pyHelpDef: {
                 params: ['B&value', null],
-                type: 'check_emergency_message',
+                type: 'check_disaster_alert',
             },
             paramsKeyMap: {
                 CATEGORY: 0,
             },
-            class: 'emergencyMessage',
-            isNotFor: ['emergencyMessage'],
+            class: 'disasterAlert',
+            isNotFor: ['disasterAlert'],
             async func(sprite, script) {
                 const category = script.getField('CATEGORY', script);
-                return getEmergencyMessage({
+                return getDisasterAlert({
                     command: 'exist',
                     category,
                 });
