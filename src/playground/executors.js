@@ -239,7 +239,6 @@ class Executor {
         return Entry.STATIC.CONTINUE;
     }
 
-
     end() {
         Entry.dispatchEvent('blockExecuteEnd', this.scope.block && this.scope.block.view);
         this.scope.block = null;
