@@ -51,9 +51,12 @@ const getDisasterAlert = (params, defaultValue) => {
                         }
                         switch (params.command) {
                             case 'count':
-                                return resolve(items?.length || 0);
+                                return resolve(items?.length || defaultValue || 0);
                             case 'get':
                                 const result = items?.[params?.index - 1]?.[params.option];
+                                if (!result) {
+                                    return resolve(defaultValue);
+                                }
                                 if (params?.option === 'REG_YMD') {
                                     return resolve(new Date(result).toLocaleString());
                                 }
@@ -62,7 +65,6 @@ const getDisasterAlert = (params, defaultValue) => {
                                 return resolve(items?.length > 0);
                             default:
                                 return resolve(defaultValue);
-                                break;
                         }
                     }
                     return resolve(defaultValue);
