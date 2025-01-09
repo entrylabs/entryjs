@@ -178,7 +178,7 @@ Entry.EXPANSION_BLOCK.disasterAlert.getBlocks = function () {
             ],
             events: {},
             def: {
-                params: [DisasterAlertCategory.value, null, DisasterAlertOptions.value],
+                params: [DisasterAlertCategory.value, 1, DisasterAlertOptions.value],
                 type: 'get_disaster_alert',
             },
             pyHelpDef: {
