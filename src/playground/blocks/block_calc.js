@@ -2242,9 +2242,7 @@ module.exports = {
                 class: 'calc_string',
                 isNotFor: [],
                 func(sprite, script) {
-                    const oldWord = script
-                        .getStringValue('OLD_WORD', script)
-                        .replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                    const oldWord = script.getStringValue('OLD_WORD', script);
                     const newWord = script.getStringValue('NEW_WORD', script);
                     const originalString = script.getStringValue('STRING', script);
                     return originalString.split(oldWord).join(newWord);
