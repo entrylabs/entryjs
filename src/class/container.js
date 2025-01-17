@@ -196,6 +196,9 @@ Entry.Container = class Container {
                         border: 'solid 1px #728997',
                     },
                     onDragActionChange: (isDragging, key) => {
+                        if (!Entry.objectEditable) {
+                            return;
+                        }
                         Entry.ContextMenu.hide();
                         if (isDragging) {
                             this.selectedObject.setObjectFold(isDragging, true);
@@ -207,6 +210,9 @@ Entry.Container = class Container {
                         this.isObjectDragging = isDragging;
                     },
                     onChangeList: (newIndex, oldIndex) => {
+                        if (!Entry.objectEditable) {
+                            return;
+                        }
                         if (newIndex !== oldIndex) {
                             Entry.do('objectReorder', newIndex, oldIndex);
                         }
