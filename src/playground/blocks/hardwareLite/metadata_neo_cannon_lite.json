@@ -1,0 +1,9 @@
+{
+    "name": "NeoCannonLite",
+    "version": "1.0.0",
+    "type": "robot",
+    "title": "네오캐논",
+    "description": "NeoCannon",
+    "imageName": "neocannonlite",
+    "moduleId": "410201"
+}

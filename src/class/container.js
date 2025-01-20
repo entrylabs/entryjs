@@ -1,10 +1,13 @@
 /**
  * @fileoverview Container handle all object in entry.
  */
+
 'use strict';
 
-import EntryTool from 'entry-tool';
-
+import { Draggable } from '@entrylabs/tool';
+import { GEHelper } from '../graphicEngine/GEHelper';
+import DataTable from './DataTable';
+import { getInputList } from '@entrylabs/legacy-video';
 /**
  * Class for a container.
  * This have view for objects.
@@ -24,35 +27,35 @@ Entry.Container = class Container {
          */
         this.cachedPicture = {};
 
+        this.selectedObject = null;
+
         /**
          * variable for canvas input
          * @type {String}
          */
         this.inputValue = {};
-
+        this.sttValue = {};
         /**
          * object model store copied object by context menu
          * @type {object model}
          */
         this.copiedObject = null;
 
+        this.isObjectDragging = false;
         /**
          * Array for storing current scene objects
          * @type {Array.<object model>}
          */
         this.currentObjects_ = null;
         this._extensionObjects = [];
-        Entry.addEventListener(
-            'workspaceChangeMode',
-            function() {
-                const ws = Entry.getMainWS();
-                if (ws && ws.getMode() === Entry.Workspace.MODE_VIMBOARD) {
-                    this.objects_.forEach(function({ script }) {
-                        script && script.destroyView();
-                    });
-                }
-            }.bind(this)
-        );
+        Entry.addEventListener('workspaceChangeMode', () => {
+            const ws = Entry.getMainWS();
+            if (ws && ws.getMode() === Entry.Workspace.MODE_VIMBOARD) {
+                this.objects_.forEach(({ script }) => {
+                    script && script.destroyView();
+                });
+            }
+        });
 
         Entry.addEventListener('run', this.disableSort.bind(this));
         Entry.addEventListener('stop', this.enableSort.bind(this));
@@ -61,7 +64,6 @@ Entry.Container = class Container {
     /**
      * Control bar view generator.
      * @param {!Element} containerView containerView from Entry.
-     * @param {?string} option for choose type of view.
      */
     generateView(containerView) {
         this._view = containerView;
@@ -74,7 +76,7 @@ Entry.Container = class Container {
             .bindOnClick(() => {
                 Entry.dispatchEvent('openSpriteManager');
             });
-        addButton.innerHTML = Lang.Workspace.add_object;
+        addButton.textContent = Lang.Workspace.add_object;
 
         const ulWrapper = Entry.createElement('div');
         this._view.appendChild(ulWrapper);
@@ -88,24 +90,7 @@ Entry.Container = class Container {
         scrollWrapper.addClass(baseClass);
         Entry.Utils.disableContextmenu(scrollWrapper);
 
-        /*
-         * 오른쪽 버튼 클릭 시 컨텍스트메뉴 발생
-         */
-        scrollWrapper.addEventListener('mousedown', (e) => {
-            if (Entry.Utils.isRightButton(e)) {
-                e.stopPropagation();
-                this._rightClick(e);
-            }
-        });
-
-        /*
-         * 터치 디바이스의 롱클릭 대응. touch 1초간 유지시 컨텍스트메뉴 발생.
-         * 현재위치에서 일정 범위 이상 벗어난 경우취소
-         */
-        scrollWrapper.addEventListener('touchstart', (e) => {
-            if (e.eventFromEntryObject) {
-                return;
-            }
+        const longPressEvent = (e) => {
             let longPressTimer = null;
             const doc = $(document);
 
@@ -145,6 +130,32 @@ Entry.Container = class Container {
                     longPressTimer = null;
                 }
             });
+        };
+        /*
+         * 오른쪽 버튼 클릭 시 컨텍스트메뉴 발생
+         */
+        scrollWrapper.addEventListener('mousedown', (e) => {
+            if (Entry.Utils.isRightButton(e)) {
+                e.stopPropagation();
+                this._rightClick(e);
+            }
+
+            if (Entry.isMobile()) {
+                e.stopPropagation();
+                longPressEvent(e);
+            }
+        });
+
+        /*
+         * 터치 디바이스의 롱클릭 대응. touch 1초간 유지시 컨텍스트메뉴 발생.
+         * 현재위치에서 일정 범위 이상 벗어난 경우취소
+         */
+        scrollWrapper.addEventListener('touchstart', (e) => {
+            if (e.eventFromEntryObject) {
+                return;
+            }
+
+            longPressEvent(e);
         });
 
         const extensionListView = Entry.createElement('ul');
@@ -166,17 +177,48 @@ Entry.Container = class Container {
                 disabled: false,
             });
         } else {
-            this.sortableListViewWidget = new EntryTool({
-                type: 'sortableWidget',
+            const draggableOption = {};
+            if (Entry.isMobile()) {
+                draggableOption.lockAxis = 'y';
+                draggableOption.distance = 50;
+            }
+            this.sortableListViewWidget = new Draggable({
                 data: {
-                    height: '100%',
+                    ...draggableOption,
+                    canSortable: true,
                     sortableTarget: ['entryObjectThumbnailWorkspace'],
-                    lockAxis: 'y',
                     items: this._getSortableObjectList(),
+                    itemShadowStyle: {
+                        position: 'absolute',
+                        height: '100%',
+                        width: '100%',
+                        backgroundColor: '#8aa3b2',
+                        border: 'solid 1px #728997',
+                    },
+                    onDragActionChange: (isDragging, key) => {
+                        if (!Entry.objectEditable) {
+                            return;
+                        }
+                        Entry.ContextMenu.hide();
+                        if (isDragging) {
+                            this.selectedObject.setObjectFold(isDragging, true);
+                        } else {
+                            this.selectedObject.resetObjectFold();
+                        }
+                        Entry.playground.setBackpackPointEvent(isDragging);
+                        this.dragObjectKey = key;
+                        this.isObjectDragging = isDragging;
+                    },
+                    onChangeList: (newIndex, oldIndex) => {
+                        if (!Entry.objectEditable) {
+                            return;
+                        }
+                        if (newIndex !== oldIndex) {
+                            Entry.do('objectReorder', newIndex, oldIndex);
+                        }
+                    },
                 },
                 container: this.listView_,
-            }).on('change', ([newIndex, oldIndex]) => {
-                this.moveElement(newIndex, oldIndex);
             });
         }
     }
@@ -191,9 +233,11 @@ Entry.Container = class Container {
         const targetObjects = objects || this.currentObjects_ || [];
 
         return targetObjects.map((value) => {
+            const { id, view_, thumbUrl } = value;
             return {
-                key: value.id,
-                item: value.view_,
+                key: id,
+                item: view_,
+                image: thumbUrl,
             };
         });
     }
@@ -223,17 +267,13 @@ Entry.Container = class Container {
 
         let objs = this.getCurrentObjects().slice();
 
-        const ret = objs.filter(({ index }) => {
-            return index !== undefined;
-        });
+        const ret = objs.filter(({ index }) => index !== undefined);
 
         if (ret.length === objs.length) {
-            objs = objs.sort((a, b) => {
-                return a.index - b.index;
-            });
+            objs = objs.sort((a, b) => a.index - b.index);
         }
 
-        objs.forEach(function(obj) {
+        objs.forEach((obj) => {
             !obj.view_ && obj.generateView();
         });
 
@@ -242,20 +282,18 @@ Entry.Container = class Container {
         return true;
     }
 
-    /**
-     * Set objects
-     * @param {!Array.<object model>} objectModels
-     */
     setObjects(objectModels) {
-        for (const i in objectModels) {
-            const object = new Entry.EntryObject(objectModels[i]);
-            this.objects_.push(object);
-        }
+        objectModels.forEach((model) => {
+            if (model) {
+                const object = new Entry.EntryObject(model);
+                this.objects_.push(object);
+            }
+        });
         this.updateObjectsOrder();
         this.updateListView();
         Entry.variableContainer.updateViews();
         const type = Entry.type;
-        if (type === 'workspace' || type === 'phone') {
+        if (type === 'workspace' || type === 'phone' || type === 'playground') {
             const target = this.getCurrentObjects()[0];
             target && this.selectObject(target.id);
         }
@@ -280,14 +318,20 @@ Entry.Container = class Container {
      */
     setPicture(picture) {
         const pictures = this.getObject(picture.objectId).pictures;
-        const index = _.findIndex(pictures, ({ id }) => {
-            return id === picture.id;
-        });
+        const index = _.findIndex(pictures, ({ id }) => id === picture.id);
         if (!~index) {
             throw new Error('No picture found');
         }
         pictures[index] = Object.assign(
-            _.pick(picture, ['dimension', 'id', 'filename', 'fileurl', 'name']),
+            _.pick(picture, [
+                'dimension',
+                'id',
+                'filename',
+                'fileurl',
+                'thumbUrl',
+                'name',
+                'imageType',
+            ]),
             { view: pictures[index].view }
         );
     }
@@ -303,9 +347,22 @@ Entry.Container = class Container {
             object.selectedPicture = picture_;
             object.entity.setImage(picture_);
             object.updateThumbnailView();
+            this.sortableListViewWidget.setData({
+                items: this._getSortableObjectList(),
+            });
             return object.id;
         }
         throw new Error('No picture found');
+    }
+
+    selectSound(soundId, objectId) {
+        const object = this.getObject(objectId);
+        const sound = object.getSound(soundId);
+        if (sound) {
+            object.selectedSound = sound;
+            return object.id;
+        }
+        throw new Error('No sound found');
     }
 
     /**
@@ -316,10 +373,13 @@ Entry.Container = class Container {
      */
     addObject(objectModel, ...rest) {
         let target;
-        if (objectModel.sprite.name) {
+        if ('name' in objectModel.sprite) {
             target = objectModel.sprite;
-        } else if (objectModel.name) {
+        } else {
             target = objectModel;
+            if (!target.name) {
+                target.name = 'untitled';
+            }
         }
         target.name = Entry.getOrderedName(target.name, this.objects_);
         objectModel.id = objectModel.id || Entry.generateHash();
@@ -327,9 +387,9 @@ Entry.Container = class Container {
     }
 
     addObjectFunc(objectModel, index, isNotRender) {
+        delete objectModel.scene;
         const object = new Entry.EntryObject(objectModel);
-
-        object.scene = object.scene || Entry.scene.selectedScene;
+        object.scene = Entry.scene.selectedScene;
 
         let isBackground = objectModel.sprite.category || {};
         isBackground = isBackground.main === 'background';
@@ -416,11 +476,6 @@ Entry.Container = class Container {
         }
     }
 
-    /**
-     * Delete object
-     * @param {!Entry.EntryObject} object
-     * @return {Entry.State}
-     */
     removeObject(id, isPass) {
         const objects = this.objects_;
 
@@ -430,6 +485,7 @@ Entry.Container = class Container {
         object.destroy();
         objects.splice(index, 1);
         Entry.variableContainer.removeLocalVariables(object.id);
+        Entry.engine.hideProjectTimer();
 
         if (isPass === true) {
             return;
@@ -441,11 +497,13 @@ Entry.Container = class Container {
         if (first) {
             this.selectObject(first.id);
         } else {
-            this.selectObject();
+            Entry.stage.selectObject(null);
             Entry.playground.flushPlayground();
         }
 
+        this.updateListView();
         Entry.playground.reloadPlayground();
+        GEHelper.resManager.imageRemoved('container::removeObject');
     }
 
     /**
@@ -453,9 +511,12 @@ Entry.Container = class Container {
      * @param {string} objectId
      */
     selectObject(objectId, changeScene) {
+        if (!objectId) {
+            return;
+        }
         const object = this.getObject(objectId);
         const workspace = Entry.getMainWS();
-
+        const isSelected = object && object.isSelected();
         if (changeScene && object) {
             Entry.scene.selectScene(object.scene);
         }
@@ -470,6 +531,7 @@ Entry.Container = class Container {
                     view.addClass(className);
                 } else {
                     view.removeClass(className);
+                    o.setObjectFold(false);
                 }
             }
 
@@ -521,11 +583,13 @@ Entry.Container = class Container {
         }
 
         if (Entry.playground) {
-            Entry.playground.injectObject(object);
+            object ? Entry.playground.injectObject(object) : Entry.playground.injectEmptyObject();
         }
-        if (Entry.type != 'minimize' && Entry.engine.isState('stop')) {
+        if (Entry.type !== 'minimize' && Entry.engine.isState('stop')) {
             Entry.stage.selectObject(object);
         }
+        this.selectedObject = object;
+        !isSelected && object && object.updateCoordinateView();
     }
 
     /**
@@ -592,40 +656,27 @@ Entry.Container = class Container {
      * @param {boolean?} isCallFromState
      * @return {Entry.State}
      */
-    moveElement(start, end, isCallFromState) {
+    moveElement(end, start) {
         const objs = this.getCurrentObjects();
         const startIndex = this.getAllObjects().indexOf(objs[start]);
         const endIndex = this.getAllObjects().indexOf(objs[end]);
-
-        if (!isCallFromState && Entry.stateManager) {
-            Entry.stateManager.addCommand(
-                'reorder object',
-                this,
-                this.moveElement,
-                endIndex,
-                startIndex,
-                true
-            );
-        }
-
         this.objects_.splice(endIndex, 0, this.objects_.splice(startIndex, 1)[0]);
         this.setCurrentObjects();
         this.updateListView();
         Entry.requestUpdate = true;
-        return new Entry.State(this, this.moveElement, endIndex, startIndex, true);
     }
 
     /**
      * generate list for dropdown dynamic
+     * obj param for renderview.changeCode
      * @param {string} menuName
+     * @param {string} obj
      */
-    getDropdownList(menuName) {
+    async getDropdownList(menuName, obj) {
         let result = [];
         switch (menuName) {
             case 'sprites':
-                result = this.getCurrentObjects().map(({ name, id }) => {
-                    return [name, id];
-                });
+                result = this.getCurrentObjects().map(({ name, id }) => [name, id]);
                 break;
             case 'allSprites':
                 result = this.getAllObjects().map(({ name, id, scene = {} }) => {
@@ -634,15 +685,11 @@ Entry.Container = class Container {
                 });
                 break;
             case 'spritesWithMouse':
-                result = this.getCurrentObjects().map(({ name, id }) => {
-                    return [name, id];
-                });
+                result = this.getCurrentObjects().map(({ name, id }) => [name, id]);
                 result.push([Lang.Blocks.mouse_pointer, 'mouse']);
                 break;
             case 'spritesWithSelf':
-                result = this.getCurrentObjects().map(({ name, id }) => {
-                    return [name, id];
-                });
+                result = this.getCurrentObjects().map(({ name, id }) => [name, id]);
                 result.push([Lang.Blocks.self, 'self']);
                 break;
             case 'textBoxWithSelf': {
@@ -660,9 +707,7 @@ Entry.Container = class Container {
             case 'collision':
                 result = [
                     [Lang.Blocks.mouse_pointer, 'mouse'],
-                    ...this.getCurrentObjects().map(({ name, id }) => {
-                        return [name, id];
-                    }),
+                    ...this.getCurrentObjects().map(({ name, id }) => [name, id]),
                     [Lang.Blocks.wall, 'wall'],
                     [Lang.Blocks.wall_up, 'wall_up'],
                     [Lang.Blocks.wall_down, 'wall_down'],
@@ -671,70 +716,81 @@ Entry.Container = class Container {
                 ];
                 break;
             case 'pictures': {
-                const object = Entry.playground.object || object;
+                const object = Entry.playground.object || obj;
                 if (!object) {
                     break;
                 }
-                result = (object.pictures || []).map(({ name, id }) => {
-                    return [name, id];
-                });
+                result = (object.pictures || []).map(({ name, id }) => [name, id]);
                 break;
             }
             case 'messages':
-                result = Entry.variableContainer.messages_.map(({ name, id }) => {
-                    return [name, id];
-                });
+                result = Entry.variableContainer.messages_.map(({ name, id }) => [name, id]);
                 break;
-            case 'variables':
+            case 'variables': {
+                const object = Entry.playground.object || obj;
+                if (!object) {
+                    break;
+                }
                 Entry.variableContainer.variables_.forEach((variable) => {
                     if (
                         variable.object_ &&
-                        Entry.playground.object &&
-                        variable.object_ != Entry.playground.object.id
+                        object &&
+                        (variable.object_ != object.id || Entry.Func.isEdit)
                     ) {
                         return;
                     }
                     result.push([variable.getName(), variable.getId()]);
                 });
                 if (!result || result.length === 0) {
-                    result.push([Lang.Blocks.VARIABLE_variable, 'null']);
+                    // result.push([Lang.Blocks.VARIABLE_variable, 'null']);
+                    result = [];
                 }
                 break;
+            }
             case 'lists': {
-                const object = Entry.playground.object || object;
+                const object = Entry.playground.object || obj;
+                if (!object) {
+                    break;
+                }
                 Entry.variableContainer.lists_.forEach((list) => {
-                    if (list.object_ && object && list.object_ != object.id) {
+                    if (
+                        list.object_ &&
+                        object &&
+                        (list.object_ != object.id || Entry.Func.isEdit)
+                    ) {
                         return;
                     }
                     result.push([list.getName(), list.getId()]);
                 });
 
                 if (!result || result.length === 0) {
-                    result.push([Lang.Blocks.VARIABLE_list, 'null']);
+                    // result.push([Lang.Blocks.VARIABLE_list, 'null']);
+                    result = [];
+                }
+                break;
+            }
+            case 'tables': {
+                const { tables } = DataTable;
+                if (tables) {
+                    result = tables.map((table) => [table.name, table.id]);
                 }
                 break;
             }
             case 'scenes':
-                result = Entry.scene.getScenes().map(({ name, id }) => {
-                    return [name, id];
-                });
+                result = Entry.scene.getScenes().map(({ name, id }) => [name, id]);
                 break;
             case 'sounds': {
-                const object = Entry.playground.object || object;
+                const object = Entry.playground.object || obj;
                 if (!object) {
                     break;
                 }
-                result = (object.sounds || []).map(({ name, id }) => {
-                    return [name, id];
-                });
+                result = (object.sounds || []).map(({ name, id }) => [name, id]);
                 break;
             }
             case 'clone':
                 result = [
                     [Lang.Blocks.oneself, 'self'],
-                    ...this.getCurrentObjects().map(({ name, id }) => {
-                        return [name, id];
-                    }),
+                    ...this.getCurrentObjects().map(({ name, id }) => [name, id]),
                 ];
                 break;
             case 'objectSequence':
@@ -742,6 +798,30 @@ Entry.Container = class Container {
                     result.push([(i + 1).toString(), i.toString()]);
                 }
                 break;
+            case 'fonts':
+                result = EntryStatic.fonts
+                    .filter((x) => x.visible)
+                    .map((font) => [font.name, font.family]);
+                break;
+            case 'connectedCameras': {
+                const inputList = await getInputList();
+                result = [].concat(
+                    inputList
+                        .filter((input) => input.kind === 'videoinput')
+                        .map((item, index) => [
+                            item.label || `Unspecified Device-${index + 1}`,
+                            index,
+                        ])
+                );
+                break;
+            }
+            case 'blockCount':
+                result = [
+                    [Lang.Blocks.this_project, 'all'],
+                    [Lang.Blocks.this_object, 'self'],
+                    ...this.getCurrentObjects().map(({ name, id }) => [name, `object-${id}`]),
+                    ...Entry.scene.getScenes().map(({ name, id }) => [name, `scene-${id}`]),
+                ];
         }
         if (!result.length) {
             result = [[Lang.Blocks.no_target, 'null']];
@@ -775,15 +855,15 @@ Entry.Container = class Container {
      * @param {} param
      */
     mapObject(mapFunction, param) {
-        return [...this._extensionObjects, ...this.objects_].map((object) => {
-            return mapFunction(object, param);
-        });
+        return [...this._extensionObjects, ...this.objects_].map((object) =>
+            mapFunction(object, param)
+        );
     }
 
     mapObjectOnScene(mapFunction, param) {
-        return [...this._extensionObjects, ...this.getCurrentObjects()].map((object) => {
-            return mapFunction(object, param);
-        });
+        return [...this._extensionObjects, ...this.getCurrentObjects()].map((object) =>
+            mapFunction(object, param)
+        );
     }
 
     /**
@@ -794,15 +874,11 @@ Entry.Container = class Container {
      * @param {} param
      */
     mapEntity(mapFunction, param) {
-        return this.objects_.map(({ entity }) => {
-            return mapFunction(entity, param);
-        });
+        return this.objects_.map(({ entity }) => mapFunction(entity, param));
     }
 
     mapEntityOnScene(mapFunction, param) {
-        return this.getCurrentObjects().map(({ entity }) => {
-            return mapFunction(entity, param);
-        });
+        return this.getCurrentObjects().map(({ entity }) => mapFunction(entity, param));
     }
 
     /**
@@ -843,7 +919,7 @@ Entry.Container = class Container {
             const object = objects[i];
             output.push(mapFunction(object.entity, param));
 
-            object.getClonedEntities().forEach(function(entity) {
+            object.getClonedEntities().forEach((entity) => {
                 output.push(mapFunction(entity, param));
             });
         }
@@ -851,6 +927,7 @@ Entry.Container = class Container {
     }
 
     /**
+     * @deprecated 새로운 리소스 관리자 생겨서 이제 사용안함
      * Get cached picture
      * @param {!string} pictureId
      * @return {?createjs.Image}
@@ -861,6 +938,7 @@ Entry.Container = class Container {
     }
 
     /**
+     * @deprecated 새로운 리소스 관리자 생겨서 이제 사용안함
      * cache picture
      * @param {!picture object} pictureModel
      */
@@ -868,6 +946,12 @@ Entry.Container = class Container {
         this.cachedPicture[pictureId] = image;
     }
 
+    /**
+     * @deprecated 새로운 리소스 관리자 생겨서 이제 사용안함
+     * @param entity
+     * @param pictures
+     * @param isClone
+     */
     unCachePictures(entity, pictures, isClone) {
         if (!entity || !pictures) {
             return;
@@ -894,9 +978,7 @@ Entry.Container = class Container {
      * @return {JSON}
      */
     toJSON() {
-        return this.objects_.map((object) => {
-            return object.toJSON();
-        });
+        return this.objects_.map((object) => object.toJSON());
     }
 
     /**
@@ -936,6 +1018,10 @@ Entry.Container = class Container {
         return this.inputValue.getValue();
     }
 
+    getSttValue() {
+        return this.sttValue.getValue();
+    }
+
     /**
      * set canvas inputValue
      * @param {String} inputValue from canvas
@@ -957,6 +1043,24 @@ Entry.Container = class Container {
         this.inputValue.complete = true;
     }
 
+    setSttValue(inputValue) {
+        if (this.sttValue.complete) {
+            return;
+        }
+        if (!inputValue) {
+            this.sttValue.setValue('');
+        } else {
+            this.sttValue.setValue(inputValue);
+        }
+        Entry.dispatchEvent('sttSubmitted');
+
+        this.sttValue.complete = true;
+    }
+
+    enableSttValue() {
+        this.sttValue.complete = false;
+    }
+
     resetSceneDuringRun() {
         if (!Entry.engine.isState('run')) {
             return;
@@ -974,9 +1078,9 @@ Entry.Container = class Container {
     }
 
     updateObjectsOrder() {
-        this.objects_ = Entry.scene.getScenes().reduce((objs, scene) => {
-            return [...objs, ...this.getSceneObjects(scene)];
-        }, []);
+        this.objects_ = Entry.scene
+            .getScenes()
+            .reduce((objs, scene) => [...objs, ...this.getSceneObjects(scene)], []);
     }
 
     /**
@@ -991,9 +1095,7 @@ Entry.Container = class Container {
         }
 
         const sceneId = scene.id;
-        return this.getAllObjects().filter(({ scene: { id } }) => {
-            return id === sceneId;
-        });
+        return this.getAllObjects().filter(({ scene: { id } }) => id === sceneId);
     }
 
     /**
@@ -1001,6 +1103,11 @@ Entry.Container = class Container {
      */
     setCurrentObjects() {
         this.currentObjects_ = this.getSceneObjects();
+        if (this.currentObjects_.length) {
+            Entry.playground.hidePictureCurtain();
+        } else {
+            Entry.playground.showPictureCurtain();
+        }
     }
 
     /**
@@ -1028,9 +1135,7 @@ Entry.Container = class Container {
 
     blurAllInputs() {
         this.getSceneObjects().map(({ view_ }) => {
-            $(view_)
-                .find('input')
-                .blur();
+            $(view_).find('input').blur();
         });
     }
 
@@ -1041,9 +1146,45 @@ Entry.Container = class Container {
         }
         answer.setVisible(true);
     }
+    showSttAnswer() {
+        const answer = this.sttValue;
+        if (!answer) {
+            return;
+        }
+        answer.setVisible(true);
+    }
 
     hideProjectAnswer(removeBlock, notIncludeSelf) {
         const answer = this.inputValue;
+        if (!answer || !answer.isVisible() || Entry.engine.isState('run')) {
+            return;
+        }
+
+        const objects = this.getAllObjects();
+        const answerTypes = ['ask_and_wait', 'get_canvas_input_value', 'set_visible_answer'];
+
+        for (let i = 0, len = objects.length; i < len; i++) {
+            const code = objects[i].script;
+            for (let j = 0; j < answerTypes.length; j++) {
+                const blocks = code.getBlockList(false, answerTypes[j]);
+                if (notIncludeSelf) {
+                    const index = blocks.indexOf(removeBlock);
+                    if (~index) {
+                        blocks.splice(index, 1);
+                    }
+                }
+                if (blocks.length) {
+                    return;
+                }
+            }
+        }
+
+        //answer related blocks not found
+        //hide canvas answer view
+        answer.setVisible(false);
+    }
+    hideSttAnswer(removeBlock, notIncludeSelf) {
+        const answer = this.sttValue;
         if (!answer || !answer.isVisible() || Entry.engine.isState('run')) {
             return;
         }
@@ -1106,7 +1247,7 @@ Entry.Container = class Container {
             x: touchEvent.clientX,
             y: touchEvent.clientY,
         });
-    }
+    };
 
     removeFuncBlocks(functionType) {
         this.objects_.forEach(({ script }) => {
@@ -1115,14 +1256,12 @@ Entry.Container = class Container {
     }
 
     clear() {
-        [...this.objects_, ...this._extensionObjects].forEach((o) => {
-            return o.destroy();
-        });
+        [...this.objects_, ...this._extensionObjects].forEach((o) => o.destroy());
         this.objects_ = [];
         // INFO : clear 시도할때 _extensionObjects 초기화
         this._extensionObjects = [];
         // TODO: clear 때 this._extensionListView 도 비워 줘야 하는지 확인 필요.
-        Entry.playground.flushPlayground();
+        Entry.playground.clear();
     }
 
     selectNeighborObject(option) {
@@ -1177,16 +1316,15 @@ Entry.Container = class Container {
             return;
         }
         const that = this;
-        newIds.forEach(function(newId) {
-            that
-                .getObject(newId)
+        newIds.forEach((newId) => {
+            that.getObject(newId)
                 .script.getBlockList()
-                .forEach(function(b) {
+                .forEach((b) => {
                     if (!b || !b.params) {
                         return;
                     }
                     let changed = false;
-                    const ret = b.params.map(function(p) {
+                    const ret = b.params.map((p) => {
                         if (typeof p !== 'string') {
                             return p;
                         }
@@ -1203,11 +1341,7 @@ Entry.Container = class Container {
     }
 
     getBlockList() {
-        return _.flatten(
-            this.objects_.map(({ script }) => {
-                return script.getBlockList();
-            })
-        );
+        return _.flatten(this.objects_.map(({ script }) => script.getBlockList()));
     }
 
     scrollToObject(ObjectId) {
@@ -1215,5 +1349,42 @@ Entry.Container = class Container {
 
         view_ && view_.scrollIntoView();
         document.body.scrollIntoView();
+    }
+
+    setSound(sound) {
+        const sounds = this.getObject(sound.objectId).sounds;
+        const index = _.findIndex(sounds, ({ id }) => id === sound.id);
+        if (!~index) {
+            throw new Error('No sound found');
+        }
+        const path =
+            sound.fileurl ||
+            `${Entry.defaultPath}/uploads/${sound.filename.substring(
+                0,
+                2
+            )}/${sound.filename.substring(2, 4)}/${Entry.soundPath}${sound.filename}${
+                sound.ext || '.mp3'
+            }`;
+        sounds[index] = Object.assign(
+            _.pick(sound, [
+                'duration',
+                'ext',
+                'fileurl',
+                'filename',
+                'id',
+                'label',
+                'name',
+                'path',
+            ]),
+            {
+                view: sounds[index].view,
+                path,
+            }
+        );
+        return sounds[index];
+    }
+
+    destroy() {
+        // 우선 interface 만 정의함.
     }
 };

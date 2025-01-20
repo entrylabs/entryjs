@@ -68,7 +68,11 @@ module.exports = {
                     },
                     {
                         type: 'Dropdown',
-                        options: [[Lang.Blocks.speak, 'speak']],
+                        options: [
+                            [Lang.Blocks.speak, 'speak'],
+                            [Lang.Blocks.think, 'think'],
+                            // [Lang.Blocks.yell, 'yell'],
+                        ],
                         value: 'speak',
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.LOOKS,
@@ -106,7 +110,10 @@ module.exports = {
                             type: 'number',
                             params: ['B&value'],
                         },
-                        null,
+                        {
+                            type: 'text',
+                            params: ['C&value'],
+                        },
                         null,
                     ],
                     type: 'dialog_time',
@@ -117,7 +124,7 @@ module.exports = {
                     OPTION: 2,
                 },
                 class: 'say',
-                isNotFor: ['textBox'],
+                isNotFor: [],
                 func(sprite, script) {
                     if (!script.isStart) {
                         let [timeValue, message] = script.getValues(['SECOND', 'VALUE'], script);
@@ -136,30 +143,27 @@ module.exports = {
                         message = Entry.convertToRoundedDecimals(message, 3);
                         new Entry.Dialog(sprite, message, mode);
                         sprite.syncDialogVisible(sprite.getVisible());
-                        setTimeout(function() {
+                        let timeoutId = 0;
+                        const stopDialog = () => {
                             script.timeFlag = 0;
-                        }, timeValue * 1000);
+                            if (timeoutId) {
+                                clearTimeout(timeoutId);
+                                timeoutId = 0;
+                            }
+                        };
+                        sprite.stopDialog = stopDialog;
+                        timeoutId = setTimeout(stopDialog, timeValue * 1000);
                     }
                     if (script.timeFlag == 0) {
                         delete script.timeFlag;
                         delete script.isStart;
                         if (sprite.dialog) {
                             sprite.dialog.remove();
+                            sprite.stopDialog = undefined;
                         }
                         return script.callReturn();
-                    } else {
-                        if (!sprite.dialog) {
-                            let message = script.getStringValue('VALUE', script);
-                            const mode = script.getField('OPTION', script);
-                            if (!message && typeof message !== 'number') {
-                                message = '    ';
-                            }
-                            message = Entry.convertToRoundedDecimals(message, 3);
-                            new Entry.Dialog(sprite, message, mode);
-                            sprite.syncDialogVisible(sprite.getVisible());
-                        }
-                        return script;
                     }
+                    return script;
                 },
                 syntax: {
                     js: [],
@@ -178,7 +182,11 @@ module.exports = {
                                 },
                                 {
                                     type: 'Dropdown',
-                                    options: [[Lang.Blocks.speak, 'speak']],
+                                    options: [
+                                        [Lang.Blocks.speak, 'speak'],
+                                        [Lang.Blocks.think, 'think'],
+                                        // [Lang.Blocks.yell, 'yell'],
+                                    ],
                                     value: 'speak',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.colorSet.arrow.default.LOOKS,
@@ -201,7 +209,11 @@ module.exports = {
                     },
                     {
                         type: 'Dropdown',
-                        options: [[Lang.Blocks.speak, 'speak']],
+                        options: [
+                            [Lang.Blocks.speak, 'speak'],
+                            [Lang.Blocks.think, 'think'],
+                            // [Lang.Blocks.yell, 'yell'],
+                        ],
                         value: 'speak',
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.LOOKS,
@@ -231,7 +243,10 @@ module.exports = {
                             type: 'text',
                             params: ['A&value'],
                         },
-                        null,
+                        {
+                            type: 'text',
+                            params: ['B&value'],
+                        },
                         null,
                     ],
                     type: 'dialog',
@@ -241,7 +256,7 @@ module.exports = {
                     OPTION: 1,
                 },
                 class: 'say',
-                isNotFor: ['textBox'],
+                isNotFor: [],
                 func(sprite, script) {
                     let message = script.getValue('VALUE', script);
                     if (message === '') {
@@ -285,8 +300,11 @@ module.exports = {
                     type: 'remove_dialog',
                 },
                 class: 'say',
-                isNotFor: ['textBox'],
+                isNotFor: [],
                 func(sprite, script) {
+                    if (sprite.stopDialog) {
+                        sprite.stopDialog();
+                    }
                     if (sprite.dialog) {
                         sprite.dialog.remove();
                     }
@@ -700,6 +718,8 @@ module.exports = {
                 func(sprite, script) {
                     const sizeValue = script.getNumberValue('VALUE', script);
                     sprite.setSize(sprite.getSize() + sizeValue);
+                    // sprite.setWidth(sprite.getWidth() * 2);
+                    // sprite.setScaleX(sprite.getScaleX() * 2);
                     return script.callReturn();
                 },
                 syntax: { js: [], py: ['Entry.add_size(%1)'] },
@@ -753,6 +773,88 @@ module.exports = {
                     return script.callReturn();
                 },
                 syntax: { js: [], py: ['Entry.set_size(%1)'] },
+            },
+            stretch_scale_size: {
+                color: EntryStatic.colorSet.block.default.LOOKS,
+                outerLine: EntryStatic.colorSet.block.darken.LOOKS,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.width, 'WIDTH'],
+                            [Lang.Blocks.height, 'HEIGHT'],
+                        ],
+                        value: 'WIDTH',
+                        fontSize: 10,
+                        bgColor: EntryStatic.colorSet.block.darken.LOOKS,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/looks_icon.svg',
+                        size: 11,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [
+                        null,
+                        {
+                            type: 'number',
+                            params: ['10'],
+                        },
+                        null,
+                    ],
+                    type: 'stretch_scale_size',
+                },
+                paramsKeyMap: {
+                    DIMENSION: 0,
+                    VALUE: 1,
+                },
+                class: 'scale',
+                isNotFor: [],
+                func(sprite, script) {
+                    const dimension = script.getValue('DIMENSION', script);
+                    const sizeValue = script.getNumberValue('VALUE', script);
+                    if (dimension === 'WIDTH') {
+                        sprite.setXSize(sprite.getSize() + sizeValue);
+                    } else {
+                        sprite.setYSize(sprite.getSize() + sizeValue);
+                    }
+                    return script.callReturn();
+                },
+            },
+            reset_scale_size: {
+                color: EntryStatic.colorSet.block.default.LOOKS,
+                outerLine: EntryStatic.colorSet.block.darken.LOOKS,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/looks_icon.svg',
+                        size: 11,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null],
+                    type: 'reset_scale_size',
+                },
+                paramsKeyMap: {},
+                class: 'scale',
+                isNotFor: [],
+                func(sprite, script) {
+                    sprite.resetSize();
+                    return script.callReturn();
+                },
             },
             flip_x: {
                 color: EntryStatic.colorSet.block.default.LOOKS,
@@ -859,22 +961,30 @@ module.exports = {
                                 break;
                             }
 
-                            const frontEntity = selectedObjectContainer.getChildAt(currentIndex + 1)
-                                .entity;
-                            targetIndex +=
-                                (frontEntity.shapes.length ? 2 : 1) + frontEntity.stamps.length;
+                            const frontEntity = selectedObjectContainer.getChildAt(
+                                currentIndex + 1
+                            ).entity;
+
+                            const offsetCount =
+                                1 +
+                                (sprite.shapes.length ? 1 : 0) +
+                                (sprite.paintShapes.length ? 1 : 0);
+                            targetIndex += offsetCount + frontEntity.stamps.length;
                             break;
                         }
                         case 'BACKWARD': {
-                            targetIndex -= (sprite.shapes.length ? 2 : 1) + sprite.stamps.length;
-                            let backEntity = selectedObjectContainer.getChildAt(targetIndex);
+                            const offsetCount =
+                                1 +
+                                (sprite.shapes.length ? 1 : 0) +
+                                (sprite.paintShapes.length ? 1 : 0);
+                            const backIndex = targetIndex - offsetCount + sprite.stamps.length;
+                            let backEntity = selectedObjectContainer.getChildAt(backIndex);
                             if (!backEntity) {
                                 targetIndex = 0;
                                 break;
                             }
                             backEntity = backEntity.entity;
-                            targetIndex -=
-                                (backEntity.shapes.length ? 1 : 0) + backEntity.stamps.length;
+                            targetIndex -= offsetCount + backEntity.stamps.length;
                             break;
                         }
                         case 'BACK':

@@ -5,16 +5,9 @@
     border-top: 1pt solid #ebeff1;
 }
 
-.entryEngineMinimize {
-    height: 35px;
-    width: 100%;
-    background-color: white;
-    border-top: 1pt solid #ebeff1;
-}
-
 .entryEngineWorkspace_w {
     position: relative;
-    // height: 225px;
+    overflow: hidden;
     width: 270px;
     background-color: white;
     border: 1px solid #d6e9f4;
@@ -107,12 +100,19 @@
     height: 48px;
     border-top: 1px solid #d6e9f4;
     box-sizing: border-box;
+    margin-top: 0;
 }
 
 .entryPopupWindow > .entryEngineWorkspace_w > .entryEngineButtonWrapper .entryRunButtonWorkspace_w,
 .entryPopupWindow > .entryEngineWorkspace_w > .entryEngineButtonWrapper .entryStopButtonWorkspace_w,
-.entryPopupWindow > .entryEngineWorkspace_w > .entryEngineButtonWrapper .entryPauseButtonWorkspace_full,
-.entryPopupWindow > .entryEngineWorkspace_w > .entryEngineButtonWrapper .entryRestartButtonWorkspace_full {
+.entryPopupWindow
+    > .entryEngineWorkspace_w
+    > .entryEngineButtonWrapper
+    .entryPauseButtonWorkspace_full,
+.entryPopupWindow
+    > .entryEngineWorkspace_w
+    > .entryEngineButtonWrapper
+    .entryRestartButtonWorkspace_full {
     display: inline-block;
     overflow: hidden;
     flex: none;
@@ -138,7 +138,7 @@
     display: inline-block;
     width: 14px;
     height: 18px;
-    margin-right: 8px;
+    margin: 0 8px 0 0;
     vertical-align: middle;
     background-image: url('@{image_url}layers_icon_button_play_norx2.png');
     background-repeat: no-repeat;
@@ -152,7 +152,7 @@
     display: inline-block;
     width: 16px;
     height: 16px;
-    margin-right: 8px;
+    margin: 0 8px 0 0;
     vertical-align: middle;
     background-image: url('@{image_url}layers_icon_button_stop_norx2.png');
     background-repeat: no-repeat;
@@ -193,52 +193,6 @@
     background-color: transparent;
     background-repeat: no-repeat;
     background-position: center;
-}
-
-.entryEngineButtonMinimize {
-    border: none;
-    outline: none;
-    width: 25px;
-    height: 35px;
-    background-color: transparent;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
-.entryRunButtonBigMinimize {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 111px;
-    height: 111px;
-    margin: -55px 0 0 -55px;
-    border: none;
-    padding: 0;
-    background-image: url('@{image_url}play_btn.png');
-    background-repeat: no-repeat;
-    background-position: 40px center;
-    background-color: rgba(0, 0, 0, 0.5);
-    .border-radius(55px);
-    z-index: 100;
-    cursor: pointer;
-}
-
-.hidePlayBtn .entryRunButtonBigMinimize {
-    display: none;
-}
-
-@media screen and (max-width: 500px) {
-    .entryRunButtonBigMinimize {
-        width: 80px;
-        height: 80px;
-        margin: -40px 0 0 -40px;
-        background-position: 32px center;
-        background-size: 25px;
-    }
-}
-
-.entryRunButtonBigMinimize:hover {
-    opacity: 0.8;
 }
 
 .entryEngineButtonWorkspace_w {
@@ -306,15 +260,6 @@
     text-align: center;
 }
 
-.entryMouseViewMinimize {
-    font-size: 9pt;
-    margin: 0 auto;
-    width: 40%;
-    color: @lightBora;
-    line-height: 35px;
-    text-align: center;
-}
-
 .entryMouseViewWorkspace_w {
     height: 32px;
     font-size: 12px;
@@ -327,11 +272,11 @@
     line-height: 14px;
 
     > input {
-        font-size: 12px;
-        line-height: 14px;
+        font-size: 10px;
+        line-height: 11px;
         border: none;
         font-weight: bold;
-        color: #4f80ff;
+        color: #555;
         text-align: center;
         letter-spacing: -0.4px;
         user-select: none;
@@ -346,18 +291,6 @@
     float: left;
     margin-left: 5px;
     .backgroundImage('fullscreen_edit.png');
-}
-
-.entryMaximizeButtonMinimize {
-    float: right;
-    margin-right: 5px;
-    background-image: url('@{image_url}zoom_in_btn.png');
-}
-
-.entryPopupWindow > .entryEngineMinimize > .entryMaximizeButtonMinimize {
-    float: right;
-    margin-right: 5px;
-    background-image: url('@{image_url}zoom_out_btn.png');
 }
 
 .entryMaximizeButtonPhone {
@@ -501,11 +434,6 @@
     .backgroundImage('coordinates_edit.png');
 }
 
-.entryCoordinateButtonMinimize {
-    float: right;
-    .backgroundImage('grid.png');
-}
-
 .entryCoordinateButtonWorkspace_w {
     float: right;
     margin-top: 4px;
@@ -528,9 +456,7 @@
 .entryEngineButtonWrapper {
     display: flex;
     margin: 0 -1px -1px;
-    // :not([style*='display:none']):not([style*='display: none']):not(:first-child) {
-    //     border-left: 0;
-    // }
+    margin-top: 12px;
 }
 
 .entryRunButtonWorkspace {
@@ -544,47 +470,69 @@
     .backgroundImage('playbutton_edit.png');
 }
 
-.entryRunButtonMinimize {
-    display: none;
-    float: left;
-    width: 65px;
-    font-size: 9pt;
-    color: @lightBora;
-}
-
-.entryAddButtonWorkspace_w {
-    flex: 2;
-    position: relative;
-    // top: 192px;
-    // left: -1px;
-    width: 157px;
-    height: 32px;
-    padding: 0;
-    border: 1px solid @baseblue;
-    border-radius: 0 0 0 5px;
-    background: #fff no-repeat 50% 50%;
-    background-size: 14px auto;
-    font-size: 0;
+.entryAddButtonWorkspace_w,
+.entryPauseButtonWorkspace_w,
+.entryRestartButtonWorkspace_w {
+    flex: none;
+    width: 50%;
+    height: 36px;
+    border: 1px solid #4f80ff;
+    border-radius: 4px;
+    background-color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    color: #4f80ff;
+    letter-spacing: -0.43px;
+    line-height: 34px;
     text-align: center;
-    .backgroundImage('layers_icon_button_plus_nor.png');
+    &:before {
+        .backgroundImage('layers_icon_button_plus_nor.png');
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        margin: 11px 2px 0 0;
+        background-size: 12px auto;
+        vertical-align: top;
+        content: '';
+    }
+}
+.entryRestartButtonWorkspace_w {
+    background-color: #4f80ff;
+    color: #fff;
+}
+.entryPauseButtonWorkspace_w:before {
+    .backgroundImage('layers_icon_button_pause_nor.png');
+}
+.entryRestartButtonWorkspace_w:before {
+    .backgroundImage('layers_icon_button_play_nor_1.png');
+    margin-right: 4px;
 }
 
 .entryRunButtonWorkspace_w {
-    flex: 1;
+    flex: 1 1 auto;
     position: relative;
-    // top: 192px;
-    // left: 155px;
-    width: 114px;
-    height: 32px;
+    height: 36px;
     padding: 0;
-    border: 1px solid @baseblue;
-    border-left: 0;
-    border-radius: 0 0 5px 0;
-    background: #fff no-repeat 50% 50%;
+    margin-left: 4px;
+    border: 1px solid #4f80ff;
+    border-radius: 4px;
+    background-color: #4f80ff;
     background-size: 10px auto;
-    font-size: 0;
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
     text-align: center;
-    .backgroundImage('layers_icon_button_play_nor_1.png');
+    line-height: 34px;
+    &:before {
+        .backgroundImage('layers_icon_button_play_nor_1.png');
+        display: inline-block;
+        width: 11px;
+        height: 12px;
+        background-size: 11px auto;
+        margin: 11px 4px 0 0;
+        vertical-align: top;
+        content: '';
+    }
 }
 
 .collapsed > .entryRunButtonWorkspace_w {
@@ -613,32 +561,31 @@
     .backgroundImage('stopbutton_pause.png');
 }
 
-.entryStopButtonMinimize {
-    float: left;
-    width: 80px;
-    background-position: 7px 50%;
-    padding-right: 10px;
-    text-align: right;
-    font-size: 9pt;
-    color: @lightBora;
-    .backgroundImage('stop_btn.png');
-}
-
 .entryStopButtonWorkspace_w {
-    flex: 1;
-    order: 5;
-    width: 114px;
-    height: 32px;
-    font-size: 0;
-    border: 1px solid #4f80ff;
-    border-left: 0;
-    border-radius: 0 0 5px 0;
+    flex: 1 1 auto;
+    position: relative;
+    height: 36px;
     padding: 0;
-    font-size: 0;
+    margin-left: 4px;
+    border: 1px solid #4f80ff;
+    border-radius: 4px;
+    background-color: #fff;
+    background-size: 10px auto;
+    font-size: 12px;
+    font-weight: 600;
+    color: #4f80ff;
     text-align: center;
-    background: #fff no-repeat 50% 50%;
-    background-size: 12px auto;
-    .backgroundImage('layers_icon_button_stop_nor_2.png');
+    line-height: 34px;
+    &:before {
+        .backgroundImage('layers_icon_button_stop_nor_2.png');
+        background-size: 12px auto;
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        margin: 10px 4px 0 0;
+        vertical-align: top;
+        content: '';
+    }
 }
 .entryStopButtonWorkspace_w2 {
     display: none;
@@ -676,16 +623,6 @@
 
 .entryPopupWindow .entryEngineBigButtonMinimize_popup {
     display: block;
-}
-
-.entryPauseButtonWorkspace_w:extend(.entryAddButtonWorkspace_w) {
-    background-size: 12px auto;
-    .backgroundImage('layers_icon_button_pause_nor.png');
-}
-
-.entryRestartButtonWorkspace_w:extend(.entryAddButtonWorkspace_w) {
-    background-size: 10px auto;
-    .backgroundImage('layers_icon_button_play_nor_1.png');
 }
 
 .entryPopupWindow .entryPauseButtonWorkspace_w {
@@ -737,16 +674,6 @@
     border: 1px solid #b4b4b4 !important;
 }
 
-.entryPauseButtonMinimize {
-    float: left;
-    background-image: url('@{image_url}pause_btn.png');
-    width: auto;
-    background-position: left;
-    padding-left: 17px;
-    color: #6c5af2;
-    font-size: 9pt;
-}
-
 .tablet {
     .entrySpeedButtonWorkspace {
         width: 27px;
@@ -783,20 +710,129 @@
 
 .practical_course_mode {
     .entryRunButtonWorkspace_w {
-        .backgroundImage('layers_icon_button_play_nor_1_practical_course_mode.png');
         border-color: @basePurple;
+        &:before {
+            .backgroundImage('layers_icon_button_play_nor_1.png');
+        }
     }
     .entryAddButtonWorkspace_w {
-        .backgroundImage('layers_icon_button_plus_nor_practical_course_mode.png');
         border-color: @basePurple;
+        &:before {
+            .backgroundImage('layers_icon_button_plus_nor_practical_course_mode.png');
+        }
     }
     .entryPauseButtonWorkspace_w {
-        .backgroundImage('layers_icon_button_pause_nor_practical_course_mode.png');
         border-color: @basePurple;
+        &:before {
+            .backgroundImage('layers_icon_button_pause_nor_practical_course_mode.png');
+        }
     }
 
     .entryStopButtonWorkspace_w {
-        .backgroundImage('layers_icon_button_stop_nor_2_practical_course_mode.png');
         border-color: @basePurple;
+        &:before {
+            .backgroundImage('layers_icon_button_stop_nor_2_practical_course_mode.png');
+        }
+    }
+}
+
+//audioShade
+.audioShadeCirclebox {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    background: rgba(255, 255, 255, 0.5);
+    text-align: center;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    -moz-flex-direction: column;
+    width: 100%;
+    height: calc(100%-32px);
+}
+.audioShadeCircle {
+    margin: auto;
+    margin-bottom: 6%;
+    padding: 0;
+    position: relative;
+    display: inline-block;
+    height: 34%;
+    width: auto;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    background-color: #32d27d;
+    vertical-align: top;
+}
+.audioShadeInner {
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 60%;
+    height: 60%;
+    margin: auto;
+    background-color: #32d27d;
+    border-radius: 50%;
+    transform: scale(0.5);
+    transform-origin: center center;
+    animation: ani 3s linear infinite;
+    content: '';
+}
+.audioShadeInner:nth-of-type(2) {
+    animation-delay: 1s;
+}
+.audioShadeInner:nth-of-type(3) {
+    animation-delay: 2s;
+}
+.audioShadeInner:nth-of-type(4) {
+    animation-delay: 3s;
+}
+.audioShadeImg {
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    left: 23%;
+    top: 23%;
+    width: 54%;
+    height: 54%;
+    z-index: 10;
+}
+.audioShadeText {
+    width: 100%;
+    height: 20%;
+    font-family: NanumGothic, 'Nanum Gothic';
+    font-size: 1.1em;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: center;
+}
+.audioProgress {
+    width: 64%;
+    height: 64%;
+    position: absolute;
+    left: 18%;
+    top: 18%;
+}
+
+@keyframes ani {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    50% {
+        opacity: 0.1;
+    }
+    70% {
+        opacity: 0.09;
+    }
+    100% {
+        transform: scale(3);
+        opacity: 0;
     }
 }

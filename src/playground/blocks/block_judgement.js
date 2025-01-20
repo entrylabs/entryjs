@@ -1,3 +1,6 @@
+import { GEHelper } from '../../graphicEngine/GEHelper';
+import { keyInputList } from './inputs/keyboard';
+
 module.exports = {
     getBlocks() {
         return {
@@ -33,6 +36,34 @@ module.exports = {
                     ],
                 },
             },
+            is_object_clicked: {
+                color: EntryStatic.colorSet.block.default.JUDGE,
+                outerLine: EntryStatic.colorSet.block.darken.JUDGE,
+                skeleton: 'basic_boolean_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'Text',
+                        text: Lang.Blocks.JUDGEMENT_is_object_clicked,
+                        color: '#FFF',
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null],
+                    type: 'is_object_clicked',
+                },
+                class: 'boolean_input',
+                isNotFor: ['python_disable'],
+                func(sprite, script) {
+                    const objId = sprite.id;
+                    if (Entry.stage.clickedObjectId == objId) {
+                        return true;
+                    }
+                    return false;
+                },
+                syntax: { js: [], py: [] },
+            },
             is_press_some_key: {
                 color: EntryStatic.colorSet.block.default.JUDGE,
                 outerLine: EntryStatic.colorSet.block.darken.JUDGE,
@@ -40,57 +71,8 @@ module.exports = {
                 statements: [],
                 params: [
                     {
-                        type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.START_press_some_key_up, '38'],
-                            [Lang.Blocks.START_press_some_key_down, '40'],
-                            [Lang.Blocks.START_press_some_key_right, '39'],
-                            [Lang.Blocks.START_press_some_key_left, '37'],
-                            [Lang.Blocks.START_press_some_key_space, '32'],
-                            [Lang.Blocks.START_press_some_key_enter, '13'],
-                            ['ctrl', '17'],
-                            ['shift', '16'],
-                            ['alt', '18'],
-                            ['tab', '9'],
-                            ['esc', '27'],
-                            ['back-space', '8'],
-                            ['0', '48'],
-                            ['1', '49'],
-                            ['2', '50'],
-                            ['3', '51'],
-                            ['4', '52'],
-                            ['5', '53'],
-                            ['6', '54'],
-                            ['7', '55'],
-                            ['8', '56'],
-                            ['9', '57'],
-                            ['a', '65'],
-                            ['b', '66'],
-                            ['c', '67'],
-                            ['d', '68'],
-                            ['e', '69'],
-                            ['f', '70'],
-                            ['g', '71'],
-                            ['h', '72'],
-                            ['i', '73'],
-                            ['j', '74'],
-                            ['k', '75'],
-                            ['l', '76'],
-                            ['m', '77'],
-                            ['n', '78'],
-                            ['o', '79'],
-                            ['p', '80'],
-                            ['q', '81'],
-                            ['r', '82'],
-                            ['s', '83'],
-                            ['t', '84'],
-                            ['u', '85'],
-                            ['v', '86'],
-                            ['w', '87'],
-                            ['x', '88'],
-                            ['y', '89'],
-                            ['z', '90'],
-                        ],
+                        type: 'Keyboard',
+                        options: keyInputList,
                         value: 'next',
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.JUDGE,
@@ -130,57 +112,7 @@ module.exports = {
                                 {
                                     type: 'Dropdown',
                                     value: 'next',
-                                    options: [
-                                        [Lang.Blocks.START_press_some_key_up, '38'],
-                                        [Lang.Blocks.START_press_some_key_down, '40'],
-                                        [Lang.Blocks.START_press_some_key_right, '39'],
-                                        [Lang.Blocks.START_press_some_key_left, '37'],
-                                        [Lang.Blocks.START_press_some_key_space, '32'],
-                                        [Lang.Blocks.START_press_some_key_enter, '13'],
-                                        ['ctrl', '17'],
-                                        ['shift', '16'],
-                                        ['alt', '18'],
-                                        ['tab', '9'],
-                                        ['esc', '27'],
-                                        ['back-space', '8'],
-                                        ['0', '48'],
-                                        ['1', '49'],
-                                        ['2', '50'],
-                                        ['3', '51'],
-                                        ['4', '52'],
-                                        ['5', '53'],
-                                        ['6', '54'],
-                                        ['7', '55'],
-                                        ['8', '56'],
-                                        ['9', '57'],
-                                        ['a', '65'],
-                                        ['b', '66'],
-                                        ['c', '67'],
-                                        ['d', '68'],
-                                        ['e', '69'],
-                                        ['f', '70'],
-                                        ['g', '71'],
-                                        ['h', '72'],
-                                        ['i', '73'],
-                                        ['j', '74'],
-                                        ['k', '75'],
-                                        ['l', '76'],
-                                        ['m', '77'],
-                                        ['n', '78'],
-                                        ['o', '79'],
-                                        ['p', '80'],
-                                        ['q', '81'],
-                                        ['r', '82'],
-                                        ['s', '83'],
-                                        ['t', '84'],
-                                        ['u', '85'],
-                                        ['v', '86'],
-                                        ['w', '87'],
-                                        ['x', '88'],
-                                        ['y', '89'],
-                                        ['z', '90'],
-                                    ],
-                                    arrowColor: EntryStatic.colorSet.arrow.default.JUDGE,
+                                    options: keyInputList,
                                     converter: Entry.block.converters.keyboardCode,
                                 },
                             ],
@@ -257,14 +189,12 @@ module.exports = {
                                 return !!collision(object, wall.left, ath, false);
                         }
                     } else if (targetSpriteId === 'mouse') {
-                        const stage = Entry.stage.canvas;
-                        const pt = object.globalToLocal(stage.mouseX, stage.mouseY);
-                        return object.hitTest(pt.x, pt.y);
+                        return GEHelper.hitTestMouse(object);
                     } else {
                         const targetSprite = Entry.container.getEntity(targetSpriteId);
                         if (targetSprite.type === 'textBox' || sprite.type === 'textBox') {
-                            const targetBound = targetSprite.object.getTransformedBounds();
-                            const bound = object.getTransformedBounds();
+                            const targetBound = GEHelper.getTransformedBounds(targetSprite.object);
+                            const bound = GEHelper.getTransformedBounds(object);
                             if (Entry.checkCollisionRect(bound, targetBound)) {
                                 return true;
                             }
@@ -277,7 +207,7 @@ module.exports = {
                                 if (
                                     Entry.checkCollisionRect(
                                         bound,
-                                        entity.object.getTransformedBounds()
+                                        GEHelper.getTransformedBounds(entity.object)
                                     )
                                 ) {
                                     return true;
@@ -317,13 +247,76 @@ module.exports = {
                                     value: null,
                                     menuName: 'collision',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.colorSet.arrow.default.JUDGE,
                                     converter: Entry.block.converters.returnObjectOrStringValue,
                                     codeMap: 'Entry.CodeMap.Entry.reach_something[1]',
                                 },
                             ],
                         },
                     ],
+                },
+            },
+            is_type: {
+                color: EntryStatic.colorSet.block.default.JUDGE,
+                outerLine: EntryStatic.colorSet.block.darken.JUDGE,
+                skeleton: 'basic_boolean_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                    },
+                    {
+                        type: 'Text',
+                        text: Lang.Blocks.JUDGEMENT_is_type_1,
+                        color: '#FFF',
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.is_type_number, 'number'],
+                            [Lang.Blocks.is_type_en, 'en'],
+                            [Lang.Blocks.is_type_ko, 'ko'],
+                        ],
+                        value: 'number',
+                        fontSize: 10,
+                        bgColor: EntryStatic.colorSet.block.darken.JUDGE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                    },
+                    {
+                        type: 'Text',
+                        text: Lang.Blocks.JUDGEMENT_is_type_2,
+                        color: '#FFF',
+                    },
+                ],
+                events: {},
+                def: {
+                    params: ['10', null, 'number', null],
+                    type: 'is_type',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                    TYPE: 2,
+                },
+                class: 'boolean_type',
+                isNotFor: ['python_disable'],
+                func(sprite, script) {
+                    const value = script.getStringValue('VALUE', script);
+                    const type = script.getField('TYPE', script);
+
+                    if (type === 'number') {
+                        return Entry.Utils.isNumber(value);
+                    } else if (type === 'en') {
+                        const pattern = /^[a-zA-Z]+$/;
+                        return pattern.test(value);
+                    } else if (type === 'ko') {
+                        const pattern = /^[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]+$/;
+                        return pattern.test(value);
+                    }
+                    return false;
+                },
+                syntax: {
+                    js: [],
+                    py: [],
                 },
             },
             boolean_basic_operator: {
@@ -335,12 +328,12 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
-                        defaultType: 'number',
                     },
                     {
                         type: 'Dropdown',
                         options: [
                             ['=', 'EQUAL'],
+                            ['!=', 'NOT_EQUAL'],
                             ['>', 'GREATER'],
                             ['<', 'LESS'],
                             ['≥', 'GREATER_OR_EQUAL'],
@@ -354,7 +347,6 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
-                        defaultType: 'number',
                     },
                 ],
                 events: {},
@@ -394,6 +386,20 @@ module.exports = {
                                 params: ['10'],
                             },
                             'EQUAL',
+                            {
+                                type: 'text',
+                                params: ['10'],
+                            },
+                        ],
+                        type: 'boolean_basic_operator',
+                    },
+                    {
+                        params: [
+                            {
+                                type: 'text',
+                                params: ['10'],
+                            },
+                            'NOT_EQUAL',
                             {
                                 type: 'text',
                                 params: ['10'],
@@ -467,22 +473,36 @@ module.exports = {
                 isNotFor: [],
                 func(sprite, script) {
                     const operator = script.getField('OPERATOR', script);
-                    const [leftValue, rightValue] = script.getValues(
+                    let [leftValue, rightValue] = script.getValues(
                         ['LEFTHAND', 'RIGHTHAND'],
                         script
                     );
+                    if (typeof leftValue === 'string' && leftValue.length) {
+                        const leftNumber = Number(leftValue);
+                        if (!isNaN(leftNumber)) {
+                            leftValue = leftNumber;
+                        }
+                    }
+                    if (typeof rightValue === 'string' && rightValue.length) {
+                        const rightNumber = Number(rightValue);
+                        if (!isNaN(rightNumber)) {
+                            rightValue = rightNumber;
+                        }
+                    }
 
                     switch (operator) {
                         case 'EQUAL':
-                            return leftValue == rightValue;
+                            return leftValue === rightValue;
+                        case 'NOT_EQUAL':
+                            return leftValue != rightValue;
                         case 'GREATER':
-                            return Number(leftValue) > Number(rightValue);
+                            return leftValue > rightValue;
                         case 'LESS':
-                            return Number(leftValue) < Number(rightValue);
+                            return leftValue < rightValue;
                         case 'GREATER_OR_EQUAL':
-                            return Number(leftValue) >= Number(rightValue);
+                            return leftValue >= rightValue;
                         case 'LESS_OR_EQUAL':
-                            return Number(leftValue) <= Number(rightValue);
+                            return leftValue <= rightValue;
                     }
                 },
                 syntax: {
@@ -502,6 +522,7 @@ module.exports = {
                                     type: 'Dropdown',
                                     options: [
                                         ['=', 'EQUAL'],
+                                        ['!=', 'NOT_EQUAL'],
                                         ['>', 'GREATER'],
                                         ['<', 'LESS'],
                                         ['≥', 'GREATER_OR_EQUAL'],
@@ -679,6 +700,134 @@ module.exports = {
                                     accept: 'Boolean',
                                 },
                             ],
+                        },
+                    ],
+                },
+            },
+            is_boost_mode: {
+                color: EntryStatic.colorSet.block.default.JUDGE,
+                outerLine: EntryStatic.colorSet.block.darken.JUDGE,
+                skeleton: 'basic_boolean_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'Text',
+                        text: Lang.Blocks.JUDGEMENT_is_boost_mode,
+                        color: '#FFF',
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null],
+                    type: 'is_boost_mode',
+                },
+                class: 'boolean_input',
+                isNotFor: [],
+                func() {
+                    return !!Entry.options.useWebGL;
+                },
+                syntax: {
+                    js: [],
+                    py: [
+                        {
+                            syntax: 'Entry.is_boost_mode()',
+                            blockType: 'param',
+                        },
+                    ],
+                },
+            },
+            is_current_device_type: {
+                color: EntryStatic.colorSet.block.default.JUDGE,
+                outerLine: EntryStatic.colorSet.block.darken.JUDGE,
+                skeleton: 'basic_boolean_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.desktop, 'desktop'],
+                            [Lang.Blocks.tablet, 'tablet'],
+                            [Lang.Blocks.smartphone, 'mobile'],
+                        ],
+                        value: 'desktop',
+                        fontSize: 10,
+                        bgColor: EntryStatic.colorSet.block.darken.JUDGE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null],
+                    type: 'is_current_device_type',
+                },
+                pyHelpDef: {
+                    params: ['A&value'],
+                    type: 'is_current_device_type',
+                },
+                class: 'boolean_device',
+                isNotFor: [],
+                paramsKeyMap: {
+                    DEVICE: 0,
+                },
+                func(sprite, script) {
+                    const device = script.getField('DEVICE', script);
+                    const deviceType = Entry.Utils.getDeviceType();
+                    if (device !== 'desktop') {
+                        return deviceType === device;
+                    } else if (deviceType !== 'mobile' && deviceType !== 'tablet') {
+                        return true;
+                    }
+                    return false;
+                },
+                syntax: {
+                    js: [],
+                    py: [
+                        {
+                            syntax: 'Entry.is_current_device_type(%1)',
+                            blockType: 'param',
+                            textParams: [
+                                {
+                                    type: 'Dropdown',
+                                    options: [
+                                        [Lang.Blocks.desktop, 'desktop'],
+                                        [Lang.Blocks.tablet, 'tablet'],
+                                        [Lang.Blocks.smartphone, 'mobile'],
+                                    ],
+                                    value: 'desktop',
+                                    fontSize: 11,
+                                    converter: Entry.block.converters.returnStringValue,
+                                },
+                            ],
+                        },
+                    ],
+                },
+            },
+            is_touch_supported: {
+                color: EntryStatic.colorSet.block.default.JUDGE,
+                outerLine: EntryStatic.colorSet.block.darken.JUDGE,
+                skeleton: 'basic_boolean_field',
+                statements: [],
+                params: [],
+                events: {},
+                def: {
+                    params: [null],
+                    type: 'is_touch_supported',
+                },
+                class: 'boolean_device',
+                isNotFor: [],
+                func() {
+                    return (
+                        'ontouchstart' in window ||
+                        navigator.maxTouchPoints > 0 ||
+                        navigator.msMaxTouchPoints > 0
+                    );
+                },
+                syntax: {
+                    js: [],
+                    py: [
+                        {
+                            syntax: 'Entry.is_touch_supported()',
+                            blockType: 'param',
                         },
                     ],
                 },

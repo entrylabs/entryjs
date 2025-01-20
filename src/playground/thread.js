@@ -40,6 +40,7 @@ Entry.Thread = class Thread {
         if (codeView) {
             this.createView(codeView.board, mode);
         }
+        this.resetEvent();
         return this;
     }
 
@@ -69,9 +70,7 @@ Entry.Thread = class Thread {
 
     destroyView() {
         this.view = null;
-        this._data.map((b) => {
-            return b.destroyView();
-        });
+        this._data.map((b) => b.destroyView());
     }
 
     separate(block, count, index) {
@@ -80,11 +79,13 @@ Entry.Thread = class Thread {
         }
 
         this._code.createThread(this._data.splice(this._data.indexOf(block), count), index);
+        this.resetEvent();
         this.changeEvent.notify();
     }
 
     cut(block) {
         const splicedData = this._data.splice(this._data.indexOf(block));
+        this.resetEvent();
         this.changeEvent.notify();
         return splicedData;
     }
@@ -95,21 +96,21 @@ Entry.Thread = class Thread {
             newBlocks[i].setThread(this);
         }
         this._data.splice(...[index + 1, 0].concat(newBlocks));
+        this.resetEvent();
         this.changeEvent.notify();
     }
 
     insertToTop(newBlock) {
         newBlock.setThread(this);
         this._data.unshift.apply(this._data, [newBlock]);
+        this.resetEvent();
         this.changeEvent.notify();
     }
 
     clone(code, mode) {
         const newThread = new Entry.Thread([], code || this._code);
         return newThread.load(
-            this.getBlocks().reduce((acc, block) => {
-                return [...acc, block.clone(newThread)];
-            }, []),
+            this.getBlocks().reduce((acc, block) => [...acc, block.clone(newThread)], []),
             mode
         );
     }
@@ -139,9 +140,7 @@ Entry.Thread = class Thread {
 
         this.getBlocks()
             .reverse()
-            .forEach((block) => {
-                return block.destroy(animate, null, isNotForce);
-            });
+            .forEach((block) => block.destroy(animate, null, isNotForce));
 
         if (!this._data.length) {
             this._code.destroyThread(this, false);
@@ -164,9 +163,10 @@ Entry.Thread = class Thread {
 
             count++;
 
-            return (block.statements || []).reduce((count, statement) => {
-                return (count += statement.countBlock());
-            }, count);
+            return (block.statements || []).reduce(
+                (count, statement) => (count += statement.countBlock()),
+                count
+            );
         }, 0);
     }
 
@@ -186,6 +186,7 @@ Entry.Thread = class Thread {
 
     spliceBlock(block) {
         this._data.remove(block);
+        this.resetEvent();
         this.changeEvent.notify();
     }
 
@@ -218,11 +219,13 @@ Entry.Thread = class Thread {
         return false;
 
         function inspectBlock(block) {
-            if (type == block.type) {
+            if (Array.isArray(type) && type.includes(block.type)) {
+                return true;
+            } else if (type === block.type) {
                 return true;
             }
 
-            const params = block.params;
+            const params = block.params || [];
             for (let k = 0; k < params.length; k++) {
                 const param = params[k];
                 if (param && param.constructor == Entry.Block) {
@@ -274,21 +277,32 @@ Entry.Thread = class Thread {
         return parent.pointer(pointer);
     }
 
-    getBlockList(excludePrimitive, type) {
+    getBlockIndex(block) {
+        return this.getBlocks().indexOf(block);
+    }
+
+    getBlockList(excludePrimitive, type, index) {
         return _.chain(this._data)
             .map((block) => {
                 if (block.constructor !== Entry.Block) {
                     return;
                 }
-                return block.getBlockList(excludePrimitive, type);
+                if (Array.isArray(type)) {
+                    return type.reduce(
+                        (acc, type) => acc.concat(block.getBlockList(excludePrimitive, type)),
+                        []
+                    );
+                } else {
+                    return block.getBlockList(excludePrimitive, type);
+                }
             })
             .flatten()
             .compact()
             .value();
     }
 
-    stringify(excludeData) {
-        return JSON.stringify(this.toJSON(undefined, undefined, excludeData));
+    stringify(excludeData, isNew, index) {
+        return JSON.stringify(this.toJSON(isNew, index, excludeData));
     }
 
     isInOrigin() {
@@ -317,5 +331,16 @@ Entry.Thread = class Thread {
 
     isGlobal() {
         return this._code === this.parent;
+    }
+
+    hasData() {
+        return Boolean(this._data.length);
+    }
+
+    resetEvent() {
+        const block = this.getFirstBlock();
+        if (block && this._event !== block?._schema?.event) {
+            this._event = block?._schema?.event;
+        }
     }
 };

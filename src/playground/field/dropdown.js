@@ -1,6 +1,6 @@
 'use strict';
 
-import EntryTool from 'entry-tool';
+import { Dropdown } from '@entrylabs/tool';
 
 Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
     constructor(content, blockView, index, renderMode, i, isDynamic) {
@@ -43,8 +43,6 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
 
     renderStart() {
         const blockView = this._blockView;
-        const X_PADDING = 20;
-        const X_PADDING_SUBT = 10;
         const that = this;
         const CONTENT_HEIGHT = this._CONTENT_HEIGHT;
         const arrowInfo = this.getArrow();
@@ -80,7 +78,7 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
                 fill: this._textColor,
                 'font-size': `${+that._font_size}px`,
                 'font-weight': 'bold',
-                'font-family': 'NanumGothic',
+                'font-family': EntryStatic.fontFamily || 'NanumGothic',
             });
         }
 
@@ -99,41 +97,17 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
                 stroke: arrowInfo.color,
             });
         }
-
+        let promise;
         if (this instanceof Entry.FieldDropdownDynamic) {
-            this._updateValue();
+            promise = this._updateValue();
+            if (promise instanceof Promise) {
+                promise.then(() => {
+                    this._updateTextRender();
+                });
+            }
         }
-
-        this._setTextValue();
-
-        const bBox = this.getTextBBox();
-
-        this.textElement.attr({
-            y: bBox.height * 0.27,
-        });
-
-        let width = bBox.width + X_PADDING;
-
-        if (this._noArrow) {
-            width -= X_PADDING_SUBT;
-        }
-
-        this._header.attr({ width });
-
-        if (!this._noArrow) {
-            this._arrow.attr({
-                transform: `translate(${width - arrowInfo.width - 5},${-arrowInfo.height / 2})`,
-            });
-        }
-
-        this._bindRenderOptions();
-
-        this.box.set({
-            x: 0,
-            y: 0,
-            width,
-            height: CONTENT_HEIGHT,
-        });
+        this._updateTextRender();
+        return promise;
     }
 
     resize() {
@@ -156,7 +130,7 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
         });
 
         this.box.set({ width });
-        this._block.view.dAlignContent();
+        this._block.view?.dAlignContent();
     }
 
     _attachDisposeEvent(func) {
@@ -179,7 +153,7 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
         const convertedOptions = options.map(([key, value]) => {
             return [this._convert(key, value), value];
         });
-        this.dropdownWidget = new EntryTool({
+        this.dropdownWidget = new Dropdown({
             type: 'dropdownWidget',
             data: {
                 eventTypes: ['mousedown', 'touchstart', 'wheel'],
@@ -193,10 +167,12 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
         }).on('select', (item) => {
             this.applyValue(item[1]);
             this.destroyOption();
-            $(this._blockView.contentSvgGroup).trigger('optionChanged', {
-                block: this._block,
-                value: this.getValue(),
-            });
+            const { view = {} } = this._block.getThread();
+            if (view.reDraw) {
+                view.reDraw();
+            } else {
+                this._block.view.reDraw();
+            }
         });
         this.optionDomCreated();
     }
@@ -254,6 +230,43 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
         if (this.getTextValue() !== newValue) {
             this.textElement.textContent = newValue;
         }
+    }
+
+    _updateTextRender() {
+        const X_PADDING = 20;
+        const X_PADDING_SUBT = 10;
+        const CONTENT_HEIGHT = this._CONTENT_HEIGHT;
+        const arrowInfo = this.getArrow();
+        this._setTextValue();
+
+        const bBox = this.getTextBBox();
+
+        this.textElement.attr({
+            y: bBox.height * 0.27,
+        });
+
+        let width = bBox.width + X_PADDING;
+
+        if (this._noArrow) {
+            width -= X_PADDING_SUBT;
+        }
+
+        this._header.attr({ width });
+
+        if (!this._noArrow) {
+            this._arrow.attr({
+                transform: `translate(${width - arrowInfo.width - 5},${-arrowInfo.height / 2})`,
+            });
+        }
+
+        this._bindRenderOptions();
+
+        this.box.set({
+            x: 0,
+            y: 0,
+            width,
+            height: CONTENT_HEIGHT,
+        });
     }
 
     getTextValue() {

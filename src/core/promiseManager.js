@@ -49,22 +49,6 @@ module.exports = class PromiseManager {
     }
 
     /**
-     * TimeWaitManager 를 통해 일시정지기능이 포함된 sleep.
-     * 재시작시 남은 시간만큼 이어서 시작한다.
-     * 
-     * @param time 일시정지할 ms
-     * @param blockId 해당 블럭의 id. script.block.id 로 가져올 수 있다.
-     */
-    sleepWithPause(time, blockId) {
-        return this.Promise((resolve) => {
-            Entry.TimeWaitManager.add(blockId, () => {
-                Entry.engine.isContinue = false;
-                resolve();
-            }, time);
-        });
-    }
-
-    /**
      * sample code
      * Entry.addEventListener('callApi', ({url}, resolve, reject) => {
      *     $.ajax(url).then((...args) => {

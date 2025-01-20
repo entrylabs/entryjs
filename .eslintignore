@@ -1,0 +1,4 @@
+src/playground/blocks/hardware/**/*.js
+extern
+test
+test_util

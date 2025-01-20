@@ -1,15 +1,12 @@
 'use strict';
 
-
-
-Entry.PopupList = function(dom) {
-    this.view = dom;
-};
-
-(function(p) {
-    p.getView = function() {
+Entry.PopupList = class PopupList {
+    constructor(dom) {
+        this.view = dom;
+    }
+    getView() {
         return this.view;
-    };
+    }
 
-    p.resize = function() {}
-})(Entry.PopupList.prototype)
+    resize() {}
+};

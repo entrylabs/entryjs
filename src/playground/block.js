@@ -15,6 +15,7 @@ Entry.Block = class Block {
         emphasized: false,
         readOnly: null,
         copyable: true,
+        assemble: true,
         events: {},
         extensions: [],
     };
@@ -222,11 +223,13 @@ Entry.Block = class Block {
 
         const statements = this._schema.statements || [];
         for (let i = 0; i < statements.length; i++) {
-            this.statements.splice(
-                i,
-                1,
-                new Entry.Thread(this.statements[i], that.getCode(), this)
-            );
+            if (!(this.statements[i] instanceof Entry.Thread)) {
+                this.statements.splice(
+                    i,
+                    1,
+                    new Entry.Thread(this.statements[i], that.getCode(), this)
+                );
+            }
         }
 
         return true;
@@ -252,6 +255,10 @@ Entry.Block = class Block {
 
     getThread() {
         return this.thread;
+    }
+
+    getStatements() {
+        return this.statements[0];
     }
 
     insertAfter(blocks) {
@@ -333,7 +340,7 @@ Entry.Block = class Block {
         });
 
         if (this._backupParams) {
-            json._backupParams = this._backupParams.map(function(p) {
+            json._backupParams = this._backupParams.map(function (p) {
                 if (p instanceof Entry.Block) {
                     return p.toJSON();
                 } else {
@@ -547,6 +554,9 @@ Entry.Block = class Block {
 
     doDestroy(animate) {
         this.destroy(animate);
+        if (this.thread && this.thread.updateValueBlock) {
+            this.thread.updateValueBlock();
+        }
         this.getCode().changeEvent.notify();
         return this;
     }
@@ -603,6 +613,10 @@ Entry.Block = class Block {
     }
 
     replace(targetBlock) {
+        if (!targetBlock) {
+            console.error('replace error: target not exist');
+            return;
+        }
         this.thread.cut(this);
         targetBlock.getThread().replace(this);
         this.getCode().changeEvent.notify();
@@ -614,6 +628,10 @@ Entry.Block = class Block {
 
     getNextBlock() {
         return this.thread.getNextBlock(this) || null;
+    }
+
+    getFirstBlock() {
+        return this.thread.getFirstBlock();
     }
 
     getLastBlock() {
@@ -775,6 +793,8 @@ Entry.Block = class Block {
             } else {
                 let l = this.params[i];
                 let r = target.params[i];
+                //entry-js로 변경되며서 null로 오던 것이 undefined로 와서 맞춰 줌.
+                if (l === undefined) l = null;
                 l = typeof l === 'number' ? `${l}` : l;
                 r = typeof r === 'number' ? `${r}` : r;
                 if (l === 'positive') {
@@ -848,6 +868,8 @@ Entry.Block = class Block {
             } else if (parent instanceof Entry.Block) {
                 //statement
                 block = thread.parent;
+            } else if (parent instanceof Entry.FieldBlock) {
+                break;
             } else {
                 block = undefined;
             }

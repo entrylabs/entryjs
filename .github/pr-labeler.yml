@@ -1,0 +1,4 @@
+feature: feature/*
+security: security/*
+issue: [issue/*, Issue/*]
+hotfix: hotfix/*

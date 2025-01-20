@@ -3,6 +3,42 @@
 @image_url2: '../images/';
 
 html,
+body {
+    touch-action: none;
+    // position: fixed;
+    overflow: hidden;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+img,
+fieldset,
+button {
+    border: 0;
+}
+
+.blind {
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: -1px;
+    padding: 0;
+    width: 1px;
+    height: 1px;
+    border: 0;
+    clip: rect(0, 0, 0, 0);
+}
+
+#__next {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+
+html,
 body,
 .wrapper,
 .entry {
@@ -72,6 +108,15 @@ body,
     background-color: #767676;
 }
 
+.table-modal {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 1000;
+}
+
 #entryInputForComputeWidth {
     visibility: hidden;
     position: fixed;
@@ -79,11 +124,11 @@ body,
     top: -9999px;
 }
 
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
     -webkit-appearance: none;
 }
 
-input[type=number] {
+input[type='number'] {
     -moz-appearance: textfield;
 }

@@ -4,8 +4,13 @@
  */
 'use strict';
 
-import EntryTool from 'entry-tool';
+import { Backpack, ColorPicker, Dropdown, Sortable } from '@entrylabs/tool';
 import Toast from '../playground/toast';
+import EntryEvent from '@entrylabs/event';
+import { Destroyer } from '../util/destroyer/Destroyer';
+import DataTable from './DataTable';
+import SoundEditor from './sound';
+import _get from 'lodash/get';
 
 const Entry = require('../entry');
 
@@ -14,10 +19,12 @@ const Entry = require('../entry');
  * This manage all view related with block.
  * @constructor
  */
-Entry.Playground = class {
+Entry.Playground = class Playground {
     constructor() {
+        this._destroyer = this._destroyer || new Destroyer();
+        this._destroyer.destroy();
         this.isTextBGMode_ = false;
-        this.enableArduino = false;
+        this.dataTable = DataTable;
 
         /**
          * playground's current view type
@@ -28,10 +35,11 @@ Entry.Playground = class {
         Entry.addEventListener('textEdited', () => {
             this.injectText();
         });
-        Entry.addEventListener('hwChanged', () => {
-            this.updateHW();
-        });
         Entry.addEventListener('commentVisibleChanged', this.toggleCommentButtonVisible.bind(this));
+
+        Entry.addEventListener('workspaceChangeMode', this.updateSelectedObjectTitle.bind(this));
+
+        Entry.windowResized.attach(this, this.clearClientRectMemo.bind(this));
     }
 
     setMode(mode) {
@@ -47,7 +55,7 @@ Entry.Playground = class {
         /** @type {!Element} */
         this.view_ = playgroundView;
         this.view_.addClass('entryPlayground');
-        if (option === 'workspace') {
+        if (option === 'workspace' || option === 'playground') {
             this.view_.addClass('entryPlaygroundWorkspace');
 
             const tabView = Entry.createElement('div', 'entryCategoryTab')
@@ -59,15 +67,14 @@ Entry.Playground = class {
             const tabButtonView = Entry.createElement('div', 'entryButtonTab')
                 .addClass('entryPlaygroundButtonTabWorkspace')
                 .appendTo(this.view_);
-            this.createButtonTabView(tabButtonView);
             this.tabButtonView_ = tabButtonView;
+            this.createButtonTabView(tabButtonView);
 
             const curtainView = Entry.createElement('div', 'entryCurtain')
                 .addClass('entryPlaygroundCurtainWorkspace entryRemove')
                 .appendTo(this.view_);
-            const [mentHead, mentTail = ''] = Lang.Workspace.cannot_edit_click_to_stop.split('.');
-            curtainView.innerHTML = `${mentHead}.<br/>${mentTail}`;
-            curtainView.addEventListener('click', function() {
+            curtainView.textContent = Lang.Workspace.cannot_edit_click_to_stop;
+            curtainView.addEventListener('click', () => {
                 Entry.engine.toggleStop();
             });
             this.curtainView_ = curtainView;
@@ -77,6 +84,16 @@ Entry.Playground = class {
                 .appendTo(this.view_);
             this.generatePictureView(pictureView);
             this.pictureView_ = pictureView;
+
+            const pictureCurtainView = Entry.createElement('div', 'entryPictureCurtain')
+                .addClass('entryPlaygroundPictureCurtainWorkspace entryRemove')
+                .appendTo(pictureView);
+            this.pictureCurtainView_ = pictureCurtainView;
+
+            const pictureCurtainText = Entry.createElement('span', 'entryPictureCurtainText')
+                .addClass('entryPlaygroundPictureCurtainWorkspaceText')
+                .appendTo(pictureCurtainView);
+            pictureCurtainText.textContent = Lang.Workspace.add_object_before_edit;
 
             const textView = Entry.createElement('div', 'entryText')
                 .addClass('entryPlaygroundTextWorkspace entryRemove')
@@ -103,11 +120,19 @@ Entry.Playground = class {
             this.generateCodeView(codeView);
             this.codeView_ = codeView;
 
+            const backPackView = Entry.createElement('div', 'entryBackPackView')
+                .addClass('entryPlaygroundBackPackView')
+                .appendTo(this.view_);
+            this.backPackView = backPackView;
+            this.createBackPackView(backPackView);
+
             const resizeHandle = Entry.createElement('div')
                 .addClass('entryPlaygroundResizeWorkspace', 'entryRemove')
-                .appendTo(this.view_);
+                .bindOnClick(() => {
+                    this.mainWorkspace.blockMenu.toggleBlockMenu();
+                })
+                .appendTo(codeView);
             this.resizeHandle_ = resizeHandle;
-            this.initializeResizeHandle(resizeHandle);
 
             /** @type {!Element} */
             this.codeView_ = codeView;
@@ -150,7 +175,7 @@ Entry.Playground = class {
                 Entry.do('playgroundChangeViewMode', 'code', that.selectedViewMode);
             })
             .appendTo(tabList);
-        codeTab.innerHTML = Lang.Workspace.tab_code;
+        codeTab.textContent = Lang.Workspace.tab_code;
         this.tabViewElements.code = codeTab;
         this._codeTab = codeTab;
 
@@ -160,7 +185,7 @@ Entry.Playground = class {
                 Entry.do('playgroundChangeViewMode', 'picture', that.selectedViewMode);
             })
             .appendTo(tabList);
-        pictureTab.innerHTML = Lang.Workspace.tab_picture;
+        pictureTab.textContent = Lang.Workspace.tab_picture;
         this.tabViewElements.picture = pictureTab;
         this.pictureTab = pictureTab;
 
@@ -170,7 +195,7 @@ Entry.Playground = class {
             .bindOnClick(() => {
                 Entry.do('playgroundChangeViewMode', 'text', that.selectedViewMode);
             });
-        textboxTab.innerHTML = Lang.Workspace.tab_text;
+        textboxTab.textContent = Lang.Workspace.tab_text;
         this.tabViewElements.text = textboxTab;
         this.textboxTab = textboxTab;
 
@@ -180,7 +205,7 @@ Entry.Playground = class {
             .bindOnClick(() => {
                 Entry.do('playgroundChangeViewMode', 'sound', that.selectedViewMode);
             });
-        soundTab.innerHTML = Lang.Workspace.tab_sound;
+        soundTab.textContent = Lang.Workspace.tab_sound;
         this.tabViewElements.sound = soundTab;
         this.soundTab = soundTab;
 
@@ -190,22 +215,303 @@ Entry.Playground = class {
             .bindOnClick(() => {
                 Entry.do('playgroundChangeViewMode', 'variable', that.selectedViewMode);
             });
-        variableTab.innerHTML = Lang.Workspace.tab_attribute;
+        variableTab.textContent = Lang.Workspace.tab_attribute;
         this.tabViewElements.variable = variableTab;
         this.variableTab = variableTab;
     }
 
     createButtonTabView(tabButtonView) {
-        const commentToggleButton = Entry.createElement('div')
-            .addClass('entryPlaygroundCommentButtonWorkspace showComment')
-            .appendTo(tabButtonView);
-        commentToggleButton.setAttribute('alt', Lang.Blocks.show_all_comment);
-        commentToggleButton.setAttribute('title', Lang.Blocks.show_all_comment);
+        const { options = {} } = Entry;
+        const { commentDisable, backpackDisable } = options;
 
-        this.commentToggleButton_ = commentToggleButton;
-        commentToggleButton.bindOnClick(() => {
-            this.toggleCommentButton();
+        if (!commentDisable) {
+            const commentToggleButton = Entry.createElement('div')
+                .addClass('entryPlaygroundCommentButtonWorkspace showComment enabled')
+                .appendTo(tabButtonView);
+            commentToggleButton.setAttribute('alt', Lang.Blocks.show_all_comment);
+            commentToggleButton.setAttribute('title', Lang.Blocks.show_all_comment);
+
+            this.commentToggleButton_ = commentToggleButton;
+            commentToggleButton.bindOnClick(() => {
+                this.toggleCommentButton();
+            });
+
+            const addCommentButton = Entry.createElement('div')
+                .addClass('entryPlaygroundCommentButtonWorkspace addComment enabled')
+                .appendTo(tabButtonView);
+            addCommentButton.setAttribute('alt', Lang.Blocks.add_comment);
+            addCommentButton.setAttribute('title', Lang.Blocks.add_comment);
+
+            this.addCommentButton_ = addCommentButton;
+            addCommentButton.bindOnClick(() => {
+                this.addComment();
+            });
+        }
+
+        // TODO: 백팩(나의보관함) 숨김처리
+        if (!backpackDisable) {
+            const backPackButton = Entry.createElement('div')
+                .addClass('entryPlaygroundBackPackButtonWorkspace')
+                .appendTo(tabButtonView);
+            backPackButton.setAttribute('alt', Lang.Workspace.my_storage);
+            backPackButton.setAttribute('title', Lang.Workspace.my_storage);
+
+            this.backPackButton_ = backPackButton;
+            backPackButton.bindOnClick(() => {
+                Entry.dispatchEvent('openBackPack');
+            });
+        }
+    }
+
+    createBackPackView(backPackView) {
+        this.backPack = new Backpack({
+            isShow: false,
+            data: {
+                items: [],
+                onClose: () => {
+                    Entry.dispatchEvent('closeBackPack');
+                },
+                onRemoveItem: (id) => {
+                    Entry.dispatchEvent('removeBackPackItem', id);
+                },
+                onChangeTitle: (id, title) => {
+                    Entry.dispatchEvent('changeBackPackTitle', id, title);
+                },
+                onCustomDragEnter: ({ type, value, onDragEnter }) => {
+                    if (Entry.GlobalSvg.isShow && Entry.GlobalSvg.canAddStorageBlock) {
+                        const { _view = {} } = Entry.GlobalSvg;
+                        onDragEnter({
+                            type: 'block',
+                            value: _view,
+                        });
+                    } else if (Entry.container.isObjectDragging) {
+                        onDragEnter({
+                            type: 'object',
+                            value: Entry.container.dragObjectKey,
+                        });
+                    }
+                },
+                onDropItem: ({ type, value }) => {
+                    if (type === 'object') {
+                        const object = Entry.container.getObject(value);
+                        object.addStorage();
+                    } else if (type === 'block') {
+                        if (value.addStorage) {
+                            value.addStorage();
+                        }
+                    }
+                },
+            },
+            container: this.backPackView,
         });
+        this.blockBackPackArea = Entry.Dom('div')
+            .addClass('blockBackPackDrop')
+            .appendTo(backPackView);
+        this.objectBackPackArea = Entry.Dom('div')
+            .addClass('objectBackPackDrop')
+            .appendTo(backPackView);
+        const icon = Entry.Dom('div', {
+            class: 'blockBackPackIcon',
+        });
+        const desc = Entry.Dom('div', {
+            class: 'blockBackPackDesc',
+            text: Lang.Workspace.playground_block_drop,
+        });
+        const desc2 = Entry.Dom('div', {
+            class: 'objectBackPackDesc',
+            text: Lang.Workspace.container_object_drop,
+        });
+        this.blockBackPackArea.append(icon);
+        this.blockBackPackArea.append(desc);
+        this.objectBackPackArea.append(icon.clone());
+        this.objectBackPackArea.append(desc2);
+
+        const { view: blockView } = this.board || {};
+        if (blockView) {
+            const dom = blockView[0];
+            const eventDom = new EntryEvent(dom);
+            this.blockBackPackEvent = eventDom;
+            const areaDom = new EntryEvent(this.blockBackPackArea[0]);
+            this.blockBackPackAreaEvent = areaDom;
+            areaDom.on('dropitem', (e) => {
+                const data = this.backPack.getData('data');
+                Entry.dispatchEvent('addBackPackToEntry', 'block', data);
+                this.blockBackPackArea.css({
+                    display: 'none',
+                });
+            });
+            eventDom.on('enteritem', () => {
+                const isDragging = this.backPack.getData('isDragging');
+                const type = this.backPack.getData('dragType');
+                if (isDragging && type === 'block') {
+                    const { width, height, top, left } = blockView[0].getBoundingClientRect();
+                    this.blockBackPackArea.css({
+                        width: width - 134,
+                        height,
+                        top,
+                        left,
+                        display: 'flex',
+                    });
+                }
+            });
+            areaDom.on('leaveitem', (e) => {
+                this.blockBackPackArea.css({
+                    display: 'none',
+                });
+            });
+        }
+
+        const { modes = {} } = Entry.propertyPanel || {};
+        const { object = {} } = modes;
+        const { contentDom: objectView } = object;
+        if (objectView) {
+            const dom = objectView[0];
+            const eventDom = new EntryEvent(dom);
+            this.objectBackPackEvent = eventDom;
+            const areaDom = new EntryEvent(this.objectBackPackArea[0]);
+            this.objectBackPackAreaEvent = areaDom;
+
+            areaDom.on('dropitem', (e) => {
+                const data = this.backPack.getData('data');
+                Entry.dispatchEvent('addBackPackToEntry', 'object', data);
+                this.objectBackPackArea.css({
+                    display: 'none',
+                });
+            });
+
+            eventDom.on('enteritem', () => {
+                const isDragging = this.backPack.getData('isDragging');
+                const type = this.backPack.getData('dragType');
+                if (isDragging && type === 'object') {
+                    const { width, height, top, left } = objectView[0].getBoundingClientRect();
+                    this.objectBackPackArea.css({
+                        width,
+                        height,
+                        top,
+                        left,
+                        display: 'flex',
+                    });
+                }
+            });
+
+            areaDom.on('leaveitem', (e) => {
+                this.objectBackPackArea.css({
+                    display: 'none',
+                });
+            });
+        }
+
+        const globalEvent = new EntryEvent(document);
+        globalEvent.data = {};
+        this.globalEvent = globalEvent;
+
+        this.backPack.on('onChangeDragging', (isDragging) => {
+            if (isDragging) {
+                globalEvent.off().on(
+                    'touchmove.itemdrag mousemove.itemdrag',
+                    (e) => {
+                        const isDragging = this.backPack.getData('isDragging');
+                        if (isDragging) {
+                            const point = Entry.Utils.getPosition(e);
+                            const { data } = globalEvent;
+                            const { dom: objectDom } = this.objectBackPackEvent;
+                            const { dom: blockDom } = this.blockBackPackEvent;
+                            const objectRect = this.getBoundingClientRectMemo(objectDom);
+                            const blockRect = this.getBoundingClientRectMemo(blockDom, {
+                                width: -134,
+                                right: -134,
+                            });
+                            if (
+                                !data.isObjectMouseEnter &&
+                                Entry.Utils.isPointInRect(point, objectRect)
+                            ) {
+                                data.isObjectMouseEnter = true;
+                                this.objectBackPackEvent.trigger('enteritem');
+                            } else if (
+                                data.isObjectMouseEnter &&
+                                !Entry.Utils.isPointInRect(point, objectRect)
+                            ) {
+                                data.isObjectMouseEnter = false;
+                                this.objectBackPackAreaEvent.trigger('leaveitem');
+                            }
+                            if (Entry.getMainWS().mode === Entry.Workspace.MODE_BOARD) {
+                                if (
+                                    !data.isBlockMouseEnter &&
+                                    Entry.Utils.isPointInRect(point, blockRect)
+                                ) {
+                                    data.isBlockMouseEnter = true;
+                                    this.blockBackPackEvent.trigger('enteritem');
+                                } else if (
+                                    data.isBlockMouseEnter &&
+                                    !Entry.Utils.isPointInRect(point, blockRect)
+                                ) {
+                                    data.isBlockMouseEnter = false;
+                                    this.blockBackPackAreaEvent.trigger('leaveitem');
+                                }
+                            }
+                        } else {
+                            this.objectBackPackAreaEvent.trigger('leaveitem');
+                            this.blockBackPackAreaEvent.trigger('leaveitem');
+                        }
+                    },
+                    { passive: false }
+                );
+            } else {
+                globalEvent.off();
+            }
+        });
+
+        this.backPack.data = {
+            draggableOption: {
+                lockAxis: 'y',
+                distance: 30,
+                onDropItem: (e) => {
+                    const { data } = globalEvent;
+                    if (data.isObjectMouseEnter) {
+                        data.isObjectMouseEnter = false;
+                        this.objectBackPackAreaEvent.trigger('dropitem');
+                    } else if (data.isBlockMouseEnter) {
+                        data.isBlockMouseEnter = false;
+                        this.blockBackPackAreaEvent.trigger('dropitem');
+                    }
+                },
+            },
+        };
+    }
+
+    setBackpackPointEvent(canPointEvent) {
+        this.backPack.data = {
+            canPointEvent,
+        };
+    }
+
+    getBoundingClientRectMemo = _.memoize((target, offset = {}) => {
+        const rect = target.getBoundingClientRect();
+        const result = {
+            top: rect.top,
+            bottom: rect.bottom,
+            left: rect.left,
+            right: rect.right,
+        };
+        Object.keys(offset).forEach((key) => {
+            result[key] += offset[key];
+        });
+        return result;
+    });
+
+    clearClientRectMemo() {
+        this.getBoundingClientRectMemo.cache = new _.memoize.Cache();
+    }
+
+    showBackPack(args) {
+        this.backPack.setData({ ...args });
+        this.backPack.show();
+        this.backPackView.removeClass('entryRemove');
+    }
+
+    hideBackPack() {
+        this.backPack.hide();
+        this.backPackView.addClass('entryRemove');
     }
 
     toggleCommentButton() {
@@ -219,15 +525,36 @@ Entry.Playground = class {
         this.toggleCommentButtonVisible();
     }
 
+    addComment() {
+        if (!Entry.options.commentDisable && this.board) {
+            const { svg, scale } = this.board;
+            const boardCenterX = svg.clientWidth / 2 / scale;
+            const boardCenterY = svg.clientHeight / 2 / scale;
+
+            Entry.do(
+                'createComment',
+                {
+                    id: Entry.Utils.generateId(),
+                    x: Math.max(boardCenterX - 80, 0),
+                    y: Math.max(boardCenterY - 80, 0),
+                },
+                this.board
+            );
+        }
+    }
+
     toggleCommentButtonVisible() {
         const button = this.commentToggleButton_;
+        const addButton = this.addCommentButton_;
 
         if (this.board.isVisibleComment) {
-            button.addClass('showComment');
+            addButton.addClass('enabled');
+            button.addClass('enabled');
             button.setAttribute('alt', Lang.Blocks.show_all_comment);
             button.setAttribute('title', Lang.Blocks.show_all_comment);
         } else {
-            button.removeClass('showComment');
+            addButton.removeClass('enabled');
+            button.removeClass('enabled');
             button.setAttribute('alt', Lang.Blocks.hide_all_comment);
             button.setAttribute('title', Lang.Blocks.hide_all_comment);
         }
@@ -249,6 +576,7 @@ Entry.Playground = class {
             id: 'entryWorkspaceBoard',
             class: 'entryWorkspaceBoard',
         });
+        this.boardView_ = boardView;
 
         const blockMenuView = Entry.Dom('div', {
             parent: codeView,
@@ -277,11 +605,27 @@ Entry.Playground = class {
         this.board = this.mainWorkspace.board;
         this.toast = new Toast(this.board);
         this.blockMenu.banClass('checker');
-        this.banExpansionBlock();
+        Entry.Func?.initBlock(this.blockMenu);
+        Entry.expansion?.banAllExpansionBlock();
+        Entry.aiUtilize?.banAllAIUtilizeBlock();
+        DataTable?.banAllBlock();
+        Entry.aiLearning?.banBlocks();
         this.vimBoard = this.mainWorkspace.vimBoard;
 
+        this._destroyer.add(this.mainWorkspace);
+        this._destroyer.add(this.toast);
+
         if (Entry.hw) {
-            this.updateHW();
+            Entry.hw.refreshHardwareBlockMenu();
+        }
+        if (Entry.hwLite) {
+            Entry.hwLite.refreshHardwareLiteBlockMenu();
+        }
+        if (Entry.options.expansionDisable) {
+            Entry.playground.blockMenu.banCategory('expansion');
+        }
+        if (Entry.options.aiUtilizeDisable) {
+            Entry.playground.blockMenu.banCategory('ai_utilize');
         }
     }
 
@@ -309,18 +653,34 @@ Entry.Playground = class {
                     }
                 })
                 .appendTo(pictureAdd);
-            innerPictureAdd.innerHTML = Lang.Workspace.picture_add;
+            innerPictureAdd.textContent = Lang.Workspace.picture_add;
             this._pictureAddButton = innerPictureAdd;
+
+            const innerDrawNewPicture = Entry.createElement('div', 'entryNewPictureInner')
+                .addClass('entryPlaygroundNewPictureInner')
+                .bindOnClick(() => {
+                    this.painter.newPicture();
+                })
+                .appendTo(pictureAdd);
+            innerDrawNewPicture.textContent = Lang.Workspace.draw_new;
+            this._drawNewPictureButton = innerDrawNewPicture;
 
             this.pictureListView_ = Entry.createElement('ul', 'entryPictureList')
                 .addClass('entryPlaygroundPictureList')
                 .appendTo(PictureView);
 
-            this.painter = new Entry.Painter(
-                Entry.createElement('div', 'entryPainter')
-                    .addClass('entryPlaygroundPainter')
-                    .appendTo(PictureView)
-            );
+            const painterDom = Entry.createElement('div', 'entryPainter')
+                .addClass('entryPlaygroundPainter')
+                .appendTo(PictureView);
+
+            switch (Entry.paintMode) {
+                case 'entry-paint':
+                    this.painter = new Entry.Painter(painterDom);
+                    break;
+                case 'literallycanvas':
+                    this.painter = new Entry.LiterallycanvasPainter(painterDom);
+                    break;
+            }
         }
     }
 
@@ -329,8 +689,7 @@ Entry.Playground = class {
             return;
         }
 
-        this.pictureSortableListWidget = new EntryTool({
-            type: 'sortableWidget',
+        this.pictureSortableListWidget = new Sortable({
             data: {
                 height: '100%',
                 sortableTarget: ['entryPlaygroundPictureThumbnail'],
@@ -345,23 +704,23 @@ Entry.Playground = class {
 
     updatePictureView() {
         if (this.pictureSortableListWidget) {
+            this.pictureSortableListWidget.setData({ items: [] });
             this.pictureSortableListWidget.setData({
                 items: this._getSortablePictureList(),
             });
         }
+        this.reloadPlayground();
     }
 
     _getSortablePictureList() {
         if (!this.object || !this.object.pictures) {
             return [];
         }
-
-        return this.object.pictures.map((value) => {
-            return {
-                key: value.id,
-                item: value.view,
-            };
-        });
+        const id = this.object.id;
+        return this.object.pictures.map((value) => ({
+            key: `${id}-${value.id}`,
+            item: value.view,
+        }));
     }
 
     /**
@@ -371,9 +730,7 @@ Entry.Playground = class {
      */
     generateTextView(textView) {
         const that = this;
-        const wrap = Entry.createElement('div')
-            .addClass('write_box')
-            .appendTo(textView);
+        const wrap = Entry.createElement('div').addClass('write_box').appendTo(textView);
         const writeSet = Entry.createElement('div').addClass('write_set');
         const inputArea = Entry.createElement('div').addClass('input_box');
         wrap.appendChild(writeSet);
@@ -384,10 +741,11 @@ Entry.Playground = class {
         const fontLink = Entry.createElement('a', 'entryTextBoxAttrFontName').addClass(
             'select_link imico_pop_select_arr_down'
         );
+
         fontLink.bindOnClick(() => {
-            const options = EntryStatic.fonts.map((font) => {
-                return [font.name, font];
-            });
+            const options = EntryStatic.fonts
+                .filter((font) => font.visible)
+                .map((font) => [font.name, font, font.style]);
             fontLink.addClass('imico_pop_select_arr_up');
             fontLink.removeClass('imico_pop_select_arr_down');
             this.openDropDown(
@@ -399,12 +757,18 @@ Entry.Playground = class {
                     if (that.object.entity.getLineBreak()) {
                         textValue = textEditArea.value;
                     }
-
-                    if (/[\u4E00-\u9FFF]/.exec(textValue) != null) {
-                        font = options[0][1];
-                        entrylms.alert(Lang.Menus.not_supported_text);
+                    const { options = {} } = Entry;
+                    const { textOptions = {} } = options;
+                    const { hanjaEnable } = textOptions;
+                    if (!hanjaEnable) {
+                        if (/[\u4E00-\u9FFF]/.exec(textValue) != null) {
+                            font = options[0][1];
+                            Entry.modal.alert(Lang.Menus.not_supported_text);
+                        }
                     }
                     fontLink.innerText = font.name;
+                    this.textEditArea.style.fontFamily = font.family;
+                    this.textEditInput.style.fontFamily = font.family;
                     $('#entryTextBoxAttrFontName').data('font', font);
                     this.object.entity.setFontType(font.family);
                 },
@@ -503,43 +867,39 @@ Entry.Playground = class {
         through.setAttribute('title', Lang.Workspace.font_cancel);
         styleBox.appendChild(through);
 
-        const color = Entry.createElement('a').addClass('style_link imbtn_pop_font_color');
-        color.bindOnClick(() => {
-            return this.openColourPicker(
+        const color = Entry.createElement('a').addClass('imbtn_pop_font_color');
+        color.appendChild(Entry.createElement('em'));
+        color.bindOnClick(() =>
+            this.openColourPicker(
                 color,
                 this.object.entity.getColour(),
                 false,
                 this.setTextColour.bind(this)
-            );
-        });
+            )
+        );
         color.setAttribute('title', Lang.Workspace.font_color);
         styleBox.appendChild(color);
 
-        const backgroundColor = Entry.createElement('a').addClass(
-            'style_link imbtn_pop_font_backgroundcolor'
-        );
+        const backgroundColor = Entry.createElement('a').addClass('imbtn_pop_font_backgroundcolor');
         backgroundColor.setAttribute('title', Lang.Workspace.font_fill);
-        backgroundColor.bindOnClick(() => {
-            return this.openColourPicker(
+        backgroundColor.appendChild(Entry.createElement('em'));
+        backgroundColor.bindOnClick(() =>
+            this.openColourPicker(
                 backgroundColor,
                 this.object.entity.getBGColour(),
                 true,
                 this.setBackgroundColour.bind(this)
-            );
-        });
+            )
+        );
         styleBox.appendChild(backgroundColor);
 
         const writeTypeBox = Entry.createElement('div').addClass('write_type_box');
         const singleLine = Entry.createElement('a');
         singleLine.innerText = Lang.Buttons.single_line;
-        singleLine.bindOnClick(() => {
-            return Entry.playground.toggleLineBreak(false);
-        });
+        singleLine.bindOnClick(() => Entry.playground.toggleLineBreak(false));
         const multiLine = Entry.createElement('a');
         multiLine.innerText = Lang.Buttons.multi_line;
-        multiLine.bindOnClick(() => {
-            return Entry.playground.toggleLineBreak(true);
-        });
+        multiLine.bindOnClick(() => Entry.playground.toggleLineBreak(true));
         writeTypeBox.appendChild(singleLine);
         writeTypeBox.appendChild(multiLine);
         inputArea.appendChild(writeTypeBox);
@@ -552,7 +912,7 @@ Entry.Playground = class {
         this.fontSizeWrapper = fontSizeWrapper;
 
         const fontSizeLabel = Entry.createElement('div').addClass('entryPlaygroundFontSizeLabel');
-        fontSizeLabel.innerHTML = Lang.General.font_size;
+        fontSizeLabel.textContent = Lang.General.font_size;
         fontSizeWrapper.appendChild(fontSizeLabel);
 
         const fontSizeSlider = Entry.createElement('div').addClass('entryPlaygroundFontSizeSlider');
@@ -568,7 +928,7 @@ Entry.Playground = class {
         fontSizeSlider.appendChild(fontSizeKnob);
         this.fontSizeKnob = fontSizeKnob;
 
-        $(fontSizeKnob).bind('mousedown.fontKnob touchstart.fontKnob', function() {
+        $(fontSizeKnob).bind('mousedown.fontKnob touchstart.fontKnob', () => {
             const resizeOffset = $(fontSizeSlider).offset().left;
 
             const doc = $(document);
@@ -602,16 +962,22 @@ Entry.Playground = class {
         );
         textEditInput.type = 'text';
         textEditInput.placeholder = Lang.Workspace.textbox_input;
-        const textChangeApply = function() {
+        const textChangeApply = function () {
             const object = Entry.playground.object;
             const entity = object.entity;
             const selected = $('#entryTextBoxAttrFontName').data('font');
             const defaultFont = EntryStatic.fonts[0];
-            if (selected.family === 'Nanum Pen Script' || selected.family === 'Jeju Hallasan') {
+            const { options = {} } = Entry;
+            const { textOptions = {} } = options;
+            const { hanjaEnable } = textOptions;
+            if (
+                !hanjaEnable &&
+                (selected.family === 'Nanum Pen Script' || selected.family === 'Jeju Hallasan')
+            ) {
                 if (/[\u4E00-\u9FFF]/.exec(this.value) != null) {
                     $('#entryTextBoxAttrFontName').text(defaultFont.name);
                     entity.setFontType(defaultFont.family);
-                    entrylms.alert(Lang.Menus.not_supported_text);
+                    Entry.modal.alert(Lang.Menus.not_supported_text);
                 }
             }
             object.setText(this.value);
@@ -620,10 +986,10 @@ Entry.Playground = class {
         textEditInput.onkeyup = textChangeApply;
         textEditInput.onchange = textChangeApply;
 
-        textEditInput.addEventListener('focusin', function() {
+        textEditInput.addEventListener('focusin', () => {
             textEditInput.prevText = textEditInput.value;
         });
-        textEditInput.onblur = function() {
+        textEditInput.onblur = function () {
             if (textEditInput.value !== textEditInput.prevText) {
                 Entry.do('editText', textEditInput.value, textEditInput.prevText);
             }
@@ -639,10 +1005,10 @@ Entry.Playground = class {
         textEditArea.onkeyup = textChangeApply;
         textEditArea.onchange = textChangeApply;
 
-        textEditArea.addEventListener('focusin', function() {
+        textEditArea.addEventListener('focusin', () => {
             textEditArea.prevText = textEditArea.value;
         });
-        textEditArea.onblur = function() {
+        textEditArea.onblur = function () {
             if (textEditArea.value !== textEditArea.prevText) {
                 Entry.do('editText', textEditArea.value, textEditArea.prevText);
             }
@@ -673,22 +1039,6 @@ Entry.Playground = class {
             'entryPlaygroundSoundEdit'
         );
 
-        const tempNotificationWrapper = Entry.createElement('div').addClass(
-            'entryPlaygroundSoundEditWrapper'
-        );
-
-        const tempImage = Entry.createElement('div').addClass('entryPlaygroundSoundEditImage');
-
-        const tempNotification = Entry.createElement('span').addClass(
-            'entryPlaygroundSoundEditText'
-        );
-        tempNotification.innerHTML = Lang.Menus.sound_edit_warn;
-
-        tempNotificationWrapper.appendChild(tempImage);
-        tempNotificationWrapper.appendChild(tempNotification);
-
-        soundEditView.appendChild(tempNotificationWrapper);
-
         return soundEditView;
     }
 
@@ -699,13 +1049,13 @@ Entry.Playground = class {
      * @param soundView
      */
     generateSoundView(soundView) {
-        if (Entry.type == 'workspace') {
+        if (Entry.type === 'workspace') {
             const soundAdd = Entry.createElement('div', 'entryAddSound');
             soundAdd.addClass('entryPlaygroundAddSound');
             const innerSoundAdd = Entry.createElement('div', 'entryAddSoundInner').addClass(
                 'entryPlaygroundAddSoundInner'
             );
-            innerSoundAdd.bindOnClick(function() {
+            innerSoundAdd.bindOnClick(() => {
                 if (!Entry.container || Entry.container.isSceneObjectsExist()) {
                     Entry.do('playgroundClickAddSound');
                 } else {
@@ -715,7 +1065,7 @@ Entry.Playground = class {
                     );
                 }
             });
-            innerSoundAdd.innerHTML = Lang.Workspace.sound_add;
+            innerSoundAdd.textContent = Lang.Workspace.sound_add;
             soundAdd.appendChild(innerSoundAdd);
             soundView.appendChild(soundAdd);
             const soundList = Entry.createElement('ul', 'entrySoundList').addClass(
@@ -728,6 +1078,7 @@ Entry.Playground = class {
 
             const soundEditView = this._createSoundEditView();
             soundView.appendChild(soundEditView);
+            this.soundEditor = new SoundEditor(soundEditView);
         }
     }
 
@@ -736,8 +1087,7 @@ Entry.Playground = class {
             return;
         }
 
-        this.soundSortableListWidget = new EntryTool({
-            type: 'sortableWidget',
+        this.soundSortableListWidget = new Sortable({
             data: {
                 height: '100%',
                 sortableTarget: ['entryPlaygroundSoundThumbnail'],
@@ -756,19 +1106,19 @@ Entry.Playground = class {
                 items: this._getSortableSoundList(),
             });
         }
+
+        this.reloadPlayground();
     }
 
     _getSortableSoundList() {
         if (!this.object || !this.object.sounds) {
             return [];
         }
-
-        return this.object.sounds.map((value) => {
-            return {
-                key: value.id,
-                item: value.view,
-            };
-        });
+        const id = this.object.id;
+        return this.object.sounds.map((value) => ({
+            key: `${id}-${value.id}`,
+            item: value.view,
+        }));
     }
 
     /**
@@ -778,8 +1128,8 @@ Entry.Playground = class {
     injectObject(object) {
         /** @type {Entry.Entryobject} */
         if (!object) {
+            this.object = null; //[박봉배-2018.11.12] - 아래 위치에 있으면 죽은 object의 메서드를 호출함. 그래서 위로 올림.
             this.changeViewMode('code');
-            this.object = null;
             return;
         }
         if (object === this.object) {
@@ -810,6 +1160,8 @@ Entry.Playground = class {
             }
         }
 
+        this.updateObjectTitle(object);
+
         const viewMode = this.viewMode_;
         if (viewMode === 'default') {
             this.changeViewMode('code');
@@ -825,6 +1177,14 @@ Entry.Playground = class {
 
         _.result(this.blockMenu, 'clearRendered');
         this.reloadPlayground();
+    }
+
+    /**
+     * Inject object
+     * @param {?Entry.EntryObject} object
+     */
+    injectEmptyObject() {
+        this.object = null;
     }
 
     /**
@@ -855,23 +1215,26 @@ Entry.Playground = class {
     /**
      * Inject picture
      */
-    injectPicture() {
+    injectPicture(isSelect = true) {
         const view = this.pictureListView_;
         if (!view) {
             return;
         }
 
         if (!this.object) {
-            return Entry.dispatchEvent('pictureClear');
+            this.painter.lc && this.painter.lc.pointerDown();
+            delete Entry.stage.selectedObject;
+            Entry.dispatchEvent('pictureSelected');
+        } else {
+            (this.object.pictures || []).forEach((picture, i) => {
+                !picture.view && Entry.playground.generatePictureElement(picture);
+                const element = picture.view;
+                element.orderHolder.textContent = i + 1;
+            });
+
+            isSelect && this.selectPicture(this.object.selectedPicture);
         }
 
-        (this.object.pictures || []).forEach((picture, i) => {
-            !picture.view && Entry.playground.generatePictureElement(picture);
-            const element = picture.view;
-            element.orderHolder.innerHTML = i + 1;
-        });
-
-        this.selectPicture(this.object.selectedPicture);
         this.updatePictureView();
     }
 
@@ -879,7 +1242,7 @@ Entry.Playground = class {
      * Add picture
      * @param {picture model} picture
      */
-    addPicture(picture, isNew) {
+    addPicture(picture, isNew, isSelect = true) {
         const tempPicture = _.clone(picture);
 
         if (isNew === true) {
@@ -896,9 +1259,7 @@ Entry.Playground = class {
 
         this.generatePictureElement(picture);
 
-        Entry.do('objectAddPicture', picture.objectId || this.object.id, picture);
-        this.injectPicture();
-        this.selectPicture(picture);
+        Entry.do('objectAddPicture', picture.objectId || this.object.id, picture, isSelect);
     }
 
     /**
@@ -913,8 +1274,8 @@ Entry.Playground = class {
             element.picture = picture;
 
             const thumbnailView = $element.find(`#t_${picture.id}`)[0];
-            if (picture.fileurl) {
-                thumbnailView.style.backgroundImage = `url("${picture.fileurl}")`;
+            if (picture.thumbUrl || picture.fileurl) {
+                thumbnailView.style.backgroundImage = `url("${picture.thumbUrl || picture.fileurl}")`;
             } else {
                 // deprecated
                 const fileName = picture.filename;
@@ -926,7 +1287,7 @@ Entry.Playground = class {
                 )}/thumb/${fileName}.png")`;
             }
             const sizeView = $element.find(`#s_${picture.id}`)[0];
-            sizeView.innerHTML = `${picture.dimension.width} X ${picture.dimension.height}`;
+            sizeView.textContent = `${picture.dimension.width} X ${picture.dimension.height}`;
         }
 
         Entry.container.setPicture(picture);
@@ -939,19 +1300,8 @@ Entry.Playground = class {
      */
     downloadPicture(pictureId) {
         const picture = Entry.playground.object.getPicture(pictureId);
-        if (picture.fileurl) {
-            window.open(
-                `/api/sprite/download/entryjs/${btoa(picture.fileurl)}/${encodeURIComponent(
-                    picture.name
-                )}.png`
-            );
-        } else {
-            window.open(
-                `/api/sprite/download/image/${btoa(picture.filename)}/${encodeURIComponent(
-                    picture.name
-                )}.png`
-            );
-        }
+        const { imageType = 'png' } = picture;
+        Entry.dispatchEvent('downloadPicture', picture);
     }
 
     /**
@@ -967,7 +1317,7 @@ Entry.Playground = class {
      * Select picture
      * @param {picture}
      */
-    selectPicture(picture) {
+    selectPicture(picture, removed) {
         const pictures = this.object.pictures;
         for (let i = 0, len = pictures.length; i < len; i++) {
             const target = pictures[i];
@@ -988,8 +1338,10 @@ Entry.Playground = class {
             if (!picture.objectId) {
                 picture.objectId = this.object.id;
             }
-            Entry.dispatchEvent('pictureSelected', picture);
+            Entry.dispatchEvent('pictureSelected', picture, removed);
         }
+
+        this.updateObjectTitle(this.object);
     }
 
     /**
@@ -1012,25 +1364,24 @@ Entry.Playground = class {
         if (!object) {
             return;
         }
-
         const entity = object.entity;
 
         const text = entity.getText();
         this.textEditInput.value = text;
         this.textEditArea.value = text;
 
-        const font = EntryStatic.fonts.find((font) => {
-            return font.family === entity.getFontName();
-        });
+        const font = EntryStatic.fonts
+            .filter((font) => font.visible)
+            .find((font) => font.family === entity.getFontName());
         if (font) {
             $('#entryText #entryTextBoxAttrFontName').text(font.name);
             $('#entryText #entryTextBoxAttrFontName').data('font', font);
+            this.textEditInput.style.fontFamily = font.family;
+            this.textEditArea.style.fontFamily = font.family;
+        } else {
+            $('#entryText #entryTextBoxAttrFontName').text('');
+            $('#entryText #entryTextBoxAttrFontName').data('font', EntryStatic.fonts[0]);
         }
-
-        $('.style_link.imbtn_pop_font_bold').toggleClass('on', entity.fontBold);
-        $('.style_link.imbtn_pop_font_italic').toggleClass('on', entity.fontItalic);
-        $('.style_link.imbtn_pop_font_underline').toggleClass('on', entity.getUnderLine());
-        $('.style_link.imbtn_pop_font_through').toggleClass('on', entity.getStrike());
 
         if (entity.colour) {
             this.setTextColour(entity.colour, true);
@@ -1039,6 +1390,9 @@ Entry.Playground = class {
             this.setBackgroundColour(entity.bgColor, true);
         }
 
+        this.setTextBold(entity.fontBold);
+        this.setTextItalic(entity.fontItalic);
+        this.setTextDecoration(entity);
         this.toggleLineBreak(entity.getLineBreak());
 
         if (entity.getLineBreak()) {
@@ -1051,6 +1405,7 @@ Entry.Playground = class {
         }
 
         this.setFontAlign(entity.getTextAlign());
+        Entry.stage.updateForce();
     }
 
     _setFontFontUI() {
@@ -1062,17 +1417,35 @@ Entry.Playground = class {
     /**
      * Inject sound
      */
-    injectSound() {
+    injectSound(isSelect = true) {
         const view = this.soundListView_;
-        if (!view || !this.object) {
+        if (!view) {
             return;
         }
 
-        (this.object.sounds || []).forEach((sound, i) => {
-            !sound.view && Entry.playground.generateSoundElement(sound);
-            const element = sound.view;
-            element.orderHolder.innerHTML = i + 1;
-        });
+        if (!this.object) {
+            delete Entry.stage.selectedObject;
+        } else {
+            (this.object.sounds || []).forEach((sound, i) => {
+                const soundLengthView = _get(sound, 'view.soundLengthView');
+                if (soundLengthView) {
+                    soundLengthView.textContent = `${sound.duration} ${Lang.General.second}`;
+                } else {
+                    Entry.playground.generateSoundElement(sound);
+                }
+
+                const element = sound.view;
+                element.orderHolder.textContent = i + 1;
+            });
+
+            if (isSelect) {
+                if (this.object.selectedSound) {
+                    this.selectSound(this.object.selectedSound);
+                } else {
+                    this.unselectSound();
+                }
+            }
+        }
 
         this.updateSoundsView();
     }
@@ -1090,27 +1463,41 @@ Entry.Playground = class {
         }
     }
 
-    addExpansionBlock(block, isNew) {
-        const tempBlock = _.clone(block);
-        delete tempBlock.view;
-        if (isNew === true) {
-            delete tempBlock.id;
-        }
-
-        block = Entry.Utils.copy(tempBlock);
-
-        if (!block.id) {
-            block.id = Entry.generateHash();
-        }
-
-        Entry.do('objectAddExpansionBlock', block);
+    addHardwareLiteModule(module) {
+        Entry.hwLite.addHardwareLiteModule(module);
     }
+
+    removeHardwareLiteModule() {
+        Entry.hwLite.removeHardwareLiteModule();
+    }
+
+    addExpansionBlocks(items) {
+        Entry.expansion.addExpansionBlocks(items.map(({ name }) => name));
+    }
+
+    removeExpansionBlocks(items) {
+        Entry.expansion.banExpansionBlocks(items.map(({ name }) => name));
+    }
+
+    addAIUtilizeBlocks(items) {
+        Entry.aiUtilize.addAIUtilizeBlocks(items.map(({ name }) => name));
+    }
+
+    removeAIUtilizeBlocks(items) {
+        Entry.aiUtilize.banAIUtilizeBlocks(items.map(({ name }) => name));
+    }
+
+    setAiLearningBlock(data) {
+        Entry.aiLearning.removeLearningBlocks();
+        Entry.aiLearning.load({ ...data });
+    }
+
     /**
      * Add sound
      * @param {sound model} sound
      * @param {boolean} NotForView if this is true, add element into object also.
      */
-    addSound(sound, NotForView, isNew) {
+    addSound(sound, NotForView, isNew, isSelect = true) {
         const tempSound = _.clone(sound);
         delete tempSound.view;
         if (isNew === true) {
@@ -1124,29 +1511,12 @@ Entry.Playground = class {
         sound.name = Entry.getOrderedName(sound.name, this.object.sounds);
 
         this.generateSoundElement(sound);
-        Entry.do('objectAddSound', this.object.id, sound);
-        this.injectSound();
+        Entry.do('objectAddSound', sound.objectId || this.object.id, sound, isSelect);
     }
 
     downloadSound(soundId) {
         const sound = Entry.playground.object.getSound(soundId);
-        if (sound.fileurl) {
-            if (sound.fileurl.indexOf('bark.mp3') > -1) {
-                window.open(
-                    `/api/sprite/download/entryjs/${btoa(sound.fileurl)}/${encodeURIComponent(
-                        `${sound.name}.mp3`
-                    )}`
-                );
-            } else {
-                window.open(sound.fileurl);
-            }
-        } else {
-            window.open(
-                `/api/sprite/download/sound/${encodeURIComponent(
-                    sound.filename
-                )}/${encodeURIComponent(sound.name)}`
-            );
-        }
+        Entry.dispatchEvent('downloadSound', sound);
     }
 
     /**
@@ -1154,6 +1524,10 @@ Entry.Playground = class {
      * @param {string} viewType
      */
     changeViewMode(viewType) {
+        if (!this.tabViewElements) {
+            return;
+        }
+
         for (const i in this.tabViewElements) {
             this.tabViewElements[i].removeClass('entryTabSelected');
         }
@@ -1164,7 +1538,15 @@ Entry.Playground = class {
             Entry.playground.toggleOnVariableView();
             this.tabViewElements.code.removeClass('entryTabSelected');
             this.tabViewElements[viewType].addClass('entryTabSelected');
+            this.resizeHandle_.removeClass('unfolding');
+            this.resizeHandle_.addClass('entryRemove');
+            this.boardView_.addClass('wideView');
+            Entry.windowResized.notify();
             return;
+        } else {
+            this.resizeHandle_.removeClass('entryRemove');
+            this.boardView_.removeClass('wideView');
+            Entry.windowResized.notify();
         }
         const views = this.view_.children;
         for (let i = 0; i < views.length; i++) {
@@ -1198,16 +1580,24 @@ Entry.Playground = class {
             }
         }
 
-        if (viewType === 'sound') {
-            this.initSortableSoundWidget();
-            if (!this.soundView_.object || this.soundView_.object != this.object) {
-                this.soundView_.object = this.object;
-                this.injectSound();
-            } else if (this.object && this.soundListView_ && !this.soundListView_.hasChildNodes()) {
-                const sounds = this.object.sounds;
-                if (sounds && sounds.length) {
+        if (Entry.soundEditable) {
+            if (viewType === 'sound') {
+                this.initSortableSoundWidget();
+                if (!this.soundView_.object || this.soundView_.object != this.object) {
+                    this.soundView_.object = this.object;
                     this.injectSound();
+                } else if (
+                    this.object &&
+                    this.soundListView_ &&
+                    !this.soundListView_.hasChildNodes()
+                ) {
+                    const sounds = this.object.sounds;
+                    if (sounds && sounds.length) {
+                        this.injectSound();
+                    }
                 }
+            } else {
+                this.soundEditor.hide();
             }
         }
 
@@ -1307,37 +1697,6 @@ Entry.Playground = class {
     }
 
     /**
-     * Handle is resizing playground handle.
-     * This add mouse move and mouse up event to document.
-     * @param {!Element} handle
-     */
-    initializeResizeHandle(handle) {
-        let listener;
-        const that = this;
-        $(handle).bind('mousedown touchstart', function(e) {
-            e.preventDefault();
-            that.resizing = true;
-            if (Entry.documentMousemove) {
-                listener = Entry.documentMousemove.attach(this, function({ clientX }) {
-                    if (that.resizing) {
-                        Entry.resizeElement({
-                            menuWidth: clientX - Entry.interfaceState.canvasWidth,
-                        });
-                    }
-                });
-            }
-            $(document).bind('mouseup.resizeHandle touchend.resizeHandle', function() {
-                $(document).unbind('.resizeHandle');
-                if (listener) {
-                    that.resizing = false;
-                    listener.destroy();
-                    listener = undefined;
-                }
-            });
-        });
-    }
-
-    /**
      * Reload playground
      */
     reloadPlayground() {
@@ -1357,9 +1716,13 @@ Entry.Playground = class {
         if (Entry.playground && Entry.playground.view_) {
             this.injectPicture();
             this.injectSound();
-            const board = Entry.playground.mainWorkspace.getBoard();
-            board.clear();
-            board.changeCode(null);
+
+            const mainWS = Entry.getMainWS();
+            if (mainWS) {
+                const board = mainWS.getBoard();
+                board.clear();
+                board.changeCode(null);
+            }
         }
     }
 
@@ -1374,17 +1737,87 @@ Entry.Playground = class {
         }
     }
 
+    clear() {
+        this.flushPlayground();
+        if (this.painter) {
+            this.painter.clear();
+        }
+    }
+
+    nameViewBlur() {
+        if (!Entry.playground.nameViewFocus) {
+            return;
+        }
+        if (this.nameView.value.trim() === '') {
+            Entry.modal.alert(Lang.Workspace.enter_the_name).then(() => {
+                this.nameView.focus();
+            });
+            return true;
+        }
+
+        let nameViewArray = $('.entryPlaygroundPictureName');
+        if (nameViewArray.length !== Entry.playground.object.pictures.length) {
+            nameViewArray = nameViewArray.slice(0, -1); // pop last element (드래그 시 발생하는 임시 엘리먼트임)
+        }
+
+        for (let i = 0; i < nameViewArray.length; i++) {
+            if (
+                nameViewArray.eq(i).val() == this.nameView.value &&
+                nameViewArray[i] != this.nameView
+            ) {
+                Entry.modal.alert(Lang.Workspace.name_already_exists).then(() => {
+                    this.nameView.focus();
+                });
+                return true;
+            }
+        }
+        const newValue = this.nameView.value;
+        this.nameView.picture.name = newValue;
+        const playground = Entry.playground;
+        if (playground) {
+            if (playground.object) {
+                const pic = playground.object.getPicture(this.nameView.picture.id);
+                if (pic) {
+                    pic.name = newValue;
+                }
+            }
+            const painter = playground.painter;
+            if (painter && painter.file) {
+                painter.file.name = newValue;
+            }
+
+            playground.reloadPlayground();
+        }
+        Entry.dispatchEvent('pictureNameChanged', this.nameView.picture);
+        Entry.playground.nameViewFocus = false;
+    }
+
+    isDuplicatedTableName(name, selectedIndex = -1) {
+        let nameViewArray = $('.entryPlaygroundTableName');
+        if (nameViewArray.length !== Entry.playground.dataTable.tables.length) {
+            nameViewArray = nameViewArray.slice(0, -1);
+        }
+
+        for (let i = 0; i < nameViewArray.length; i++) {
+            if (nameViewArray.eq(i).val() == name && i != selectedIndex) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     generatePictureElement(picture) {
         const element = Entry.createElement('li', picture.id)
             .addClass('entryPlaygroundPictureElement')
-            .bindOnClick(function() {
+            .bindOnClick(function () {
                 Entry.playground.selectPicture(this.picture);
             });
         picture.view = element;
         element.picture = picture;
 
         Entry.Utils.disableContextmenu(picture.view);
-        Entry.ContextMenu.onContextmenu(picture.view, function(coordinate) {
+        Entry.ContextMenu.onContextmenu(picture.view, (coordinate) => {
             const options = [
                 {
                     text: Lang.Workspace.context_rename,
@@ -1401,23 +1834,11 @@ Entry.Playground = class {
                 {
                     text: Lang.Workspace.context_remove,
                     callback() {
-                        if (Entry.playground.object.removePicture(picture.id)) {
-                            Entry.removeElement(element);
-                            Entry.dispatchEvent('removePicture', picture);
-                            Entry.toast.success(
-                                Lang.Workspace.shape_remove_ok,
-                                `${picture.name} ${Lang.Workspace.shape_remove_ok_msg}`
-                            );
-                        } else {
-                            Entry.toast.alert(
-                                Lang.Workspace.shape_remove_fail,
-                                Lang.Workspace.shape_remove_fail_msg
-                            );
-                        }
+                        Entry.playground._removePicture(picture, element);
                     },
                 },
                 {
-                    text: Lang.Workspace.context_download,
+                    text: Lang.Workspace.context_download_image,
                     callback() {
                         Entry.playground.downloadPicture(picture.id);
                     },
@@ -1434,12 +1855,23 @@ Entry.Playground = class {
             'entryPlaygroundPictureThumbnail'
         );
 
-        thumbnailView.addEventListener('touchmove', (e) => {
-            e.preventDefault();
+        let mouseDownCoordinate;
+        const moveThreshold = 5;
+        thumbnailView.addEventListener('touchstart', (e) => {
+            const event = Entry.Utils.convertMouseEvent(e);
+            mouseDownCoordinate = { y: event.clientY };
         });
 
-        if (picture.fileurl) {
-            thumbnailView.style.backgroundImage = `url("${picture.fileurl}")`;
+        thumbnailView.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            const event = Entry.Utils.convertMouseEvent(e);
+            if (Math.abs(event.clientY - mouseDownCoordinate.y) > moveThreshold) {
+                Entry.ContextMenu.hide();
+            }
+        });
+
+        if (picture.thumbUrl || picture.fileurl) {
+            thumbnailView.style.backgroundImage = `url("${picture.thumbUrl || picture.fileurl}")`;
         } else {
             // deptecated
             const fileName = picture.filename;
@@ -1456,78 +1888,27 @@ Entry.Playground = class {
             .addClass('entryEllipsis');
         nameView.picture = picture;
         nameView.value = picture.name;
-        Entry.attachEventListener(nameView, 'blur', nameViewBlur);
-
-        function nameViewBlur() {
-            if (this.value.trim() === '') {
-                Entry.deAttachEventListener(this, 'blur', nameViewBlur);
-                entrylms.alert(Lang.Workspace.enter_the_name);
-                this.focus();
-                Entry.attachEventListener(this, 'blur', nameViewBlur);
-                return;
-            }
-
-            let nameViewArray = $('.entryPlaygroundPictureName');
-            if (nameViewArray.length !== Entry.playground.object.pictures.length) {
-                nameViewArray = nameViewArray.slice(0, -1); // pop last element (드래그 시 발생하는 임시 엘리먼트임)
-            }
-
-            for (let i = 0; i < nameViewArray.length; i++) {
-                if (nameViewArray.eq(i).val() == nameView.value && nameViewArray[i] != this) {
-                    Entry.deAttachEventListener(this, 'blur', nameViewBlur);
-                    entrylms.alert(Lang.Workspace.name_already_exists);
-                    this.focus();
-                    Entry.attachEventListener(this, 'blur', nameViewBlur);
-                    return;
-                }
-            }
-            const newValue = this.value;
-            this.picture.name = newValue;
-            const playground = Entry.playground;
-            if (playground) {
-                if (playground.object) {
-                    const pic = playground.object.getPicture(this.picture.id);
-                    if (pic) {
-                        pic.name = newValue;
-                    }
-                }
-                const painter = playground.painter;
-                if (painter && painter.file) {
-                    painter.file.name = newValue;
-                }
-
-                playground.reloadPlayground();
-            }
-            Entry.dispatchEvent('pictureNameChanged', this.picture);
-        }
+        Entry.attachEventListener(nameView, 'blur', this.nameViewBlur.bind(this));
+        Entry.attachEventListener(nameView, 'focus', (e) => {
+            this.nameView = e.target;
+            this.nameViewFocus = true;
+        });
 
         nameView.onkeypress = Entry.Utils.blurWhenEnter;
         element.appendChild(nameView);
         Entry.createElement('div', `s_${picture.id}`)
             .addClass('entryPlaygroundPictureSize')
-            .appendTo(element).innerHTML = `${picture.dimension.width} X ${
-            picture.dimension.height
-        }`;
+            .appendTo(element).textContent =
+            `${picture.dimension.width} X ${picture.dimension.height}`;
 
         const removeButton = Entry.createElement('div').addClass('entryPlayground_del');
         const { Buttons = {} } = Lang || {};
         const { delete: delText = '삭제' } = Buttons;
         removeButton.appendTo(element).innerText = delText;
-        removeButton.bindOnClick(() => {
+        removeButton.bindOnClick((e) => {
             try {
-                if (Entry.playground.object.removePicture(picture.id)) {
-                    Entry.removeElement(element);
-                    Entry.dispatchEvent('removePicture', picture);
-                    Entry.toast.success(
-                        Lang.Workspace.shape_remove_ok,
-                        `${picture.name} ${Lang.Workspace.shape_remove_ok_msg}`
-                    );
-                } else {
-                    Entry.toast.alert(
-                        Lang.Workspace.shape_remove_fail,
-                        Lang.Workspace.shape_remove_fail_msg
-                    );
-                }
+                e.stopPropagation();
+                this._removePicture(picture, element);
             } catch (e) {
                 Entry.toast.alert(
                     Lang.Workspace.shape_remove_fail,
@@ -1535,6 +1916,22 @@ Entry.Playground = class {
                 );
             }
         });
+    }
+
+    _removePicture(picture, element) {
+        if (Entry.playground.object.pictures.length > 1) {
+            Entry.do('objectRemovePicture', picture.objectId, picture);
+            Entry.removeElement(element);
+            Entry.toast.success(
+                Lang.Workspace.shape_remove_ok,
+                `${picture.name} ${Lang.Workspace.shape_remove_ok_msg}`
+            );
+        } else {
+            Entry.toast.alert(
+                Lang.Workspace.shape_remove_fail,
+                Lang.Workspace.shape_remove_fail_msg
+            );
+        }
     }
 
     generateSoundElement(sound) {
@@ -1545,7 +1942,7 @@ Entry.Playground = class {
         element.sound = sound;
 
         Entry.Utils.disableContextmenu(sound.view);
-        Entry.ContextMenu.onContextmenu(sound.view, function(coordinate) {
+        Entry.ContextMenu.onContextmenu(sound.view, (coordinate) => {
             const options = [
                 {
                     text: Lang.Workspace.context_rename,
@@ -1556,7 +1953,8 @@ Entry.Playground = class {
                 {
                     text: Lang.Workspace.context_duplicate,
                     callback() {
-                        Entry.playground.addSound(sound, true, true);
+                        const newSound = Entry.playground.object.getSound(sound.id);
+                        Entry.playground.addSound(newSound, true, true);
                     },
                 },
                 {
@@ -1581,7 +1979,7 @@ Entry.Playground = class {
                     },
                 },
                 {
-                    text: Lang.Workspace.context_download,
+                    text: Lang.Workspace.context_download_sound,
                     callback() {
                         Entry.playground.downloadSound(sound.id);
                     },
@@ -1601,11 +1999,28 @@ Entry.Playground = class {
         let soundInstance;
 
         element.bindOnClick(() => {
-            this.selectSound(sound);
+            if (!this.object.sounds || !this.object.sounds.length) {
+                return;
+            }
+            const isExist = this.object.sounds.some((os) => os.id === sound.id);
+            if (isExist) {
+                this.selectSound(sound);
+            }
+        });
+
+        let mouseDownCoordinate;
+        const moveThreshold = 5;
+        thumbnailView.addEventListener('touchstart', (e) => {
+            const event = Entry.Utils.convertMouseEvent(e);
+            mouseDownCoordinate = { y: event.clientY };
         });
 
         thumbnailView.addEventListener('touchmove', (e) => {
             e.preventDefault();
+            const event = Entry.Utils.convertMouseEvent(e);
+            if (Math.abs(event.clientY - mouseDownCoordinate.y) > moveThreshold) {
+                Entry.ContextMenu.hide();
+            }
         });
 
         thumbnailView.bindOnClick(() => {
@@ -1615,16 +2030,18 @@ Entry.Playground = class {
                 isPlaying = false;
                 thumbnailView.removeClass('entryPlaygroundSoundStop');
                 thumbnailView.addClass('entryPlaygroundSoundPlay');
+                soundInstance.dispatchEvent('complete');
                 soundInstance.stop();
                 return;
             } else {
                 isPlaying = true;
                 thumbnailView.removeClass('entryPlaygroundSoundPlay');
                 thumbnailView.addClass('entryPlaygroundSoundStop');
-                soundInstance = createjs.Sound.play(sound.id);
+                soundInstance = Entry.Utils.playSound(sound.id);
+                Entry.Utils.addSoundInstances(soundInstance);
             }
 
-            soundInstance.addEventListener('complete', function() {
+            soundInstance.addEventListener('complete', () => {
                 thumbnailView.removeClass('entryPlaygroundSoundStop');
                 thumbnailView.addClass('entryPlaygroundSoundPlay');
                 isPlaying = false;
@@ -1636,15 +2053,14 @@ Entry.Playground = class {
             .appendTo(element);
         nameView.sound = sound;
         nameView.value = sound.name;
+
         Entry.attachEventListener(nameView, 'blur', nameViewBlur);
 
         function nameViewBlur() {
             if (this.value.trim() === '') {
-                Entry.deAttachEventListener(this, 'blur', nameViewBlur);
-                entrylms.alert(Lang.Workspace.enter_the_name);
-                this.focus();
-                Entry.attachEventListener(this, 'blur', nameViewBlur);
-                return;
+                return Entry.modal.alert(Lang.Workspace.enter_the_name).then(() => {
+                    nameView.focus();
+                });
             }
 
             let nameViewArray = $('.entryPlaygroundSoundName');
@@ -1654,11 +2070,9 @@ Entry.Playground = class {
 
             for (let i = 0; i < nameViewArray.length; i++) {
                 if (nameViewArray.eq(i).val() == nameView.value && nameViewArray[i] != this) {
-                    Entry.deAttachEventListener(this, 'blur', nameViewBlur);
-                    entrylms.alert(Lang.Workspace.name_already_exists);
-                    this.focus();
-                    Entry.attachEventListener(this, 'blur', nameViewBlur);
-                    return;
+                    return Entry.modal.alert(Lang.Workspace.name_already_exists).then(() => {
+                        nameView.focus();
+                    });
                 }
             }
             const newValue = this.value;
@@ -1667,15 +2081,18 @@ Entry.Playground = class {
         }
 
         nameView.onkeypress = Entry.Utils.blurWhenEnter;
-        Entry.createElement('div')
+        const soundLengthView = Entry.createElement('div')
             .addClass('entryPlaygroundSoundLength')
-            .appendTo(element).innerHTML = `${sound.duration} ${Lang.General.second}`;
+            .appendTo(element);
+        soundLengthView.textContent = `${sound.duration} ${Lang.General.second}`;
+        element.soundLengthView = soundLengthView;
         const removeButton = Entry.createElement('div').addClass('entryPlayground_del');
         const { Buttons = {} } = Lang || {};
         const { delete: delText = '삭제' } = Buttons;
         removeButton.appendTo(element).innerText = delText;
         removeButton.bindOnClick(() => {
             try {
+                Entry.Utils.forceStopSounds();
                 const result = Entry.do('objectRemoveSound', Entry.playground.object.id, sound);
                 if (result) {
                     Entry.dispatchEvent('removeSound', sound);
@@ -1694,22 +2111,34 @@ Entry.Playground = class {
     }
 
     openDropDown = (options, target, callback, closeCallback) => {
-        const dropdownWidget = new EntryTool({
-            type: 'dropdownWidget',
+        const containers = $('.entry-widget-dropdown');
+        if (containers.length > 0) {
+            closeCallback();
+            return containers.remove();
+        }
+
+        const container = Entry.Dom('div', {
+            class: 'entry-widget-dropdown',
+            parent: $('body'),
+        })[0];
+
+        const dropdownWidget = new Dropdown({
             data: {
                 items: options,
                 positionDom: target,
+                outsideExcludeDom: [target],
                 onOutsideClick: () => {
                     if (dropdownWidget) {
                         closeCallback();
                         dropdownWidget.hide();
+                        dropdownWidget.remove();
+                    }
+                    if (container) {
+                        container.remove();
                     }
                 },
             },
-            container: Entry.Dom('div', {
-                class: 'entry-widget-dropdown',
-                parent: $('body'),
-            })[0],
+            container,
         }).on('select', (item) => {
             callback(item);
             closeCallback();
@@ -1719,22 +2148,35 @@ Entry.Playground = class {
     };
 
     openColourPicker = (target, color, canTransparent, callback) => {
-        const colorPicker = new EntryTool({
-            type: 'colorPicker',
+        const containers = $('.entry-color-picker');
+        if (containers.length > 0) {
+            $(target).removeClass('on');
+            return containers.remove();
+        }
+        const container = Entry.Dom('div', {
+            class: 'entry-color-picker',
+            parent: $('body'),
+        })[0];
+        $(target).addClass('on');
+        const colorPicker = new ColorPicker({
             data: {
                 color,
                 positionDom: target,
-                canTransparent: canTransparent,
+                canTransparent,
+                outsideExcludeDom: [target],
                 onOutsideClick: (color) => {
                     if (colorPicker) {
+                        $(target).removeClass('on');
                         colorPicker.hide();
+                        colorPicker.remove();
+                    }
+
+                    if (container) {
+                        container.remove();
                     }
                 },
             },
-            container: Entry.Dom('div', {
-                class: 'entry-color-picker',
-                parent: $('body'),
-            })[0],
+            container,
         }).on('change', (color) => {
             if (color) {
                 callback(color, true);
@@ -1751,17 +2193,67 @@ Entry.Playground = class {
                 item.view.addClass('entrySoundSelected');
             }
         });
+
+        let objectId_;
+        if (sound && sound.id) {
+            objectId_ = Entry.container.selectSound(sound.id, sound.objectId);
+        }
+
+        if (this.object.id === objectId_) {
+            if (!sound.objectId) {
+                sound.objectId = this.object.id;
+            }
+            Entry.dispatchEvent('soundSelected', sound, this.object);
+        }
+    }
+
+    unselectSound() {
+        Entry.dispatchEvent('soundUnselected');
     }
 
     setTextColour(colour) {
-        $('.style_link.imbtn_pop_font_color').toggleClass('on', colour !== '#000000');
+        $('.imbtn_pop_font_color em').css('background-color', colour);
         this.object.entity.setColour(colour);
         this.textEditArea.style.color = colour;
         this.textEditInput.style.color = colour;
     }
 
+    setTextBold(bold) {
+        $('.style_link.imbtn_pop_font_bold').toggleClass('on', bold);
+        $(this.textEditInput).removeClass('bold');
+        $(this.textEditArea).removeClass('bold');
+        if (bold) {
+            $(this.textEditInput).addClass('bold');
+            $(this.textEditArea).addClass('bold');
+        }
+    }
+
+    setTextItalic(fontItalic) {
+        $('.style_link.imbtn_pop_font_italic').toggleClass('on', fontItalic);
+        $(this.textEditInput).removeClass('italic');
+        $(this.textEditArea).removeClass('italic');
+        if (fontItalic) {
+            $(this.textEditInput).addClass('italic');
+            $(this.textEditArea).addClass('italic');
+        }
+    }
+
+    setTextDecoration(entity) {
+        $('.style_link.imbtn_pop_font_underline').toggleClass('on', entity.getUnderLine());
+        $('.style_link.imbtn_pop_font_through').toggleClass('on', entity.getStrike());
+        const effect = `${entity.getStrike() ? 'line-through' : ''} ${
+            entity.getUnderLine() ? 'underline' : ''
+        }`.trim();
+        this.textEditArea.style.textDecoration = effect;
+        this.textEditInput.style.textDecoration = effect;
+    }
+
     setBackgroundColour(colour) {
-        $('.style_link.imbtn_pop_font_backgroundcolor').toggleClass('on', colour !== '#ffffff');
+        $('.imbtn_pop_font_backgroundcolor em').css('background-color', colour);
+        $('.imbtn_pop_font_backgroundcolor').toggleClass(
+            'clear',
+            colour === 'transparent' || colour === '#ffffff'
+        );
         this.object.entity.setBGColour(colour);
         this.textEditArea.style.backgroundColor = colour;
         this.textEditInput.style.backgroundColor = colour;
@@ -1807,37 +2299,29 @@ Entry.Playground = class {
         });
     }
 
-    updateHW() {
+    banAIUtilizeBlock() {
         const blockMenu = _.result(this.mainWorkspace, 'blockMenu');
         if (!blockMenu) {
             return;
         }
 
-        const hw = Entry.hw;
-        if (hw && hw.connected) {
-            blockMenu.banClass('arduinoDisconnected', true);
+        Object.values(Entry.ALL_AI_UTILIZE_BLOCK_LIST).forEach((block) => {
+            blockMenu.banClass(block.name, true);
+            blockMenu.banClass(`${block.name}_legacy`, true);
+        });
+    }
 
-            hw.banHW();
-
-            if (hw.hwModule) {
-                blockMenu.banClass('arduinoConnect', true);
-                blockMenu.unbanClass('arduinoConnected', true);
-                blockMenu.unbanClass(hw.hwModule.name);
-            } else {
-                blockMenu.banClass('arduinoConnected', true);
-                blockMenu.unbanClass('arduinoConnect', true);
-            }
-        } else {
-            blockMenu.banClass('arduinoConnected', true);
-            blockMenu.banClass('arduinoConnect', true);
-            blockMenu.unbanClass('arduinoDisconnected', true);
-
-            Entry.hw.banHW();
+    banHardwareLiteBlock() {
+        const blockMenu = _.result(this.mainWorkspace, 'blockMenu');
+        if (!blockMenu) {
+            return;
         }
 
-        blockMenu.hwCodeOutdated = true;
-        blockMenu._generateHwCode(true);
-        blockMenu.reDraw();
+        Object.values(Entry.HARDWARE_LITE_LIST).forEach((block) => {
+            blockMenu.banClass(block.name, true);
+            blockMenu.banClass(`${block.name}_legacy`, true);
+            blockMenu.banClass(`${block.name.toLowerCase()}`, true);
+        });
     }
 
     toggleLineBreak(isLineBreak) {
@@ -1850,18 +2334,14 @@ Entry.Playground = class {
         if (isLineBreak) {
             entity.setLineBreak(true);
             $('.input_inner').height('228px');
-            $('.write_type_box a')
-                .eq(1)
-                .addClass('on');
+            $('.write_type_box a').eq(1).addClass('on');
             $('.input_box .single').hide();
             $('.input_box .multi').show();
             this._setFontFontUI();
         } else {
             entity.setLineBreak(false);
             $('.input_inner').height('40px');
-            $('.write_type_box a')
-                .eq(0)
-                .addClass('on');
+            $('.write_type_box a').eq(0).addClass('on');
             $('.input_box .multi').hide();
             $('.input_box .single').show();
         }
@@ -1886,6 +2366,14 @@ Entry.Playground = class {
                 break;
         }
         this.object.entity.setTextAlign(fontAlign);
+    }
+
+    showPictureCurtain() {
+        this.pictureCurtainView_ && this.pictureCurtainView_.removeClass('entryRemove');
+    }
+
+    hidePictureCurtain() {
+        this.pictureCurtainView_ && this.pictureCurtainView_.addClass('entryRemove');
     }
 
     hideBlockMenu() {
@@ -1930,5 +2418,47 @@ Entry.Playground = class {
         if (Entry.hasVariableManager) {
             this.variableTab.removeClass('entryRemove');
         }
+    }
+
+    updateObjectTitle(object) {
+        if (this.board) {
+            this.board.updateObjectTitle(object);
+        }
+    }
+
+    updateSelectedObjectTitle() {
+        if (
+            this.board &&
+            Entry.container.selectedObject &&
+            this.board.workspace.getMode() === Entry.Workspace.MODE_BOARD
+        ) {
+            this.board.updateObjectTitle(Entry.container.selectedObject);
+            Entry.Utils.doCodeChange();
+        }
+    }
+
+    setSound(sound) {
+        const objectSound = Entry.container.setSound(sound);
+        if (objectSound?.view) {
+            objectSound.view.sound = objectSound;
+        }
+        const soundLengthView = _get(objectSound, 'view.soundLengthView');
+        if (soundLengthView) {
+            soundLengthView.textContent = `${objectSound.duration} ${Lang.General.second}`;
+        }
+        return objectSound;
+    }
+
+    destroy() {
+        this.commentToggleButton_ && this.commentToggleButton_.unBindOnClick();
+        this.addCommentButton_ && this.addCommentButton_.unBindOnClick();
+        this.backPackButton_ && this.backPackButton_.unBindOnClick();
+        this.blockBackPackEvent && this.blockBackPackEvent.off();
+        this.blockBackPackAreaEvent && this.blockBackPackAreaEvent.off();
+        this.objectBackPackEvent && this.objectBackPackEvent.off();
+        this.objectBackPackAreaEvent && this.objectBackPackAreaEvent.off();
+        this.globalEvent && this.globalEvent.destroy();
+        this.soundEditor && this.soundEditor.destory();
+        this._destroyer.destroy();
     }
 };

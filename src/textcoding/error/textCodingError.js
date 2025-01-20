@@ -11,12 +11,10 @@ Entry.TextCodingError = {};
 
     tce.MESSAGE_SYNTAX_DEFAULT = 'message_syntax_default';
     tce.MESSAGE_SYNTAX_UNEXPECTED_TOKEN = 'message_syntax_unexpected_token';
-    tce.MESSAGE_SYNTAX_UNEXPECTED_CHARACTER =
-        'message_syntax_unexpected_character';
+    tce.MESSAGE_SYNTAX_UNEXPECTED_CHARACTER = 'message_syntax_unexpected_character';
     tce.MESSAGE_SYNTAX_UNEXPECTED_INDENT = 'message_syntax_unexpected_indent';
     tce.MESSAGE_SYNTAX_RESERVED_TOKEN = 'message_syntax_reserved_token';
-    tce.MESSAGE_SYNTAX_RESERVED_TOKEN_LIST =
-        'message_syntax_reserved_token_list';
+    tce.MESSAGE_SYNTAX_RESERVED_TOKEN_LIST = 'message_syntax_reserved_token_list';
 
     tce.MESSAGE_CONV_DEFAULT = 'message_conv_default';
     tce.MESSAGE_CONV_NO_SUPPORT = 'message_conv_no_support';
@@ -24,8 +22,7 @@ Entry.TextCodingError = {};
     tce.MESSAGE_CONV_NO_LIST = 'message_conv_no_list';
     tce.MESSAGE_CONV_NO_OBJECT = 'message_conv_no_object';
     tce.MESSAGE_CONV_NO_FUNCTION = 'message_conv_no_function';
-    tce.MESSAGE_CONV_NO_ENTRY_EVENT_FUNCTION =
-        'message_conv_no_entry_event_function';
+    tce.MESSAGE_CONV_NO_ENTRY_EVENT_FUNCTION = 'message_conv_no_entry_event_function';
 
     tce.SUBJECT_SYNTAX_DEFAULT = 'subject_syntax_default';
     tce.SUBJECT_SYNTAX_TOKEN = 'subject_syntax_token';
@@ -40,11 +37,10 @@ Entry.TextCodingError = {};
     tce.SUBJECT_CONV_FUNCTION = 'subject_conv_function';
 
     //No Converting Message
-    tce.ALERT_VARIABLE_EMPTY_TEXT_ADD_CHANGE =
-        'alert_variable_empty_text_add_change';
+    tce.ALERT_VARIABLE_EMPTY_TEXT_ADD_CHANGE = 'alert_variable_empty_text_add_change';
     tce.ALERT_LIST_EMPTY_TEXT_ADD_CHANGE = 'alert_list_empty_text_add_change';
-    tce.ALERT_FUNCTION_NAME_EMPTY_TEXT_ADD_CHANGE =
-        'alert_function_name_empty_text_add_change';
+    tce.ALERT_LIST_CONTAINS_EXCEED_LENGTH_VALUE = 'alert_list_contains_exceed_length_value';
+    tce.ALERT_FUNCTION_NAME_EMPTY_TEXT_ADD_CHANGE = 'alert_function_name_empty_text_add_change';
     tce.ALERT_VARIABLE_EMPTY_TEXT = 'alert_variable_empty_text';
     tce.ALERT_LIST_EMPTY_TEXT = 'alert_list_empty_text';
     tce.ALERT_FUNCTION_NAME_FIELD_MULTI = 'alert_function_name_field_multi';
@@ -59,17 +55,11 @@ Entry.TextCodingError = {};
     tce.ALERT_NO_SAVE_ON_ERROR = 'alert_no_save_on_error';
     tce.ALERT_API_NO_SUPPORT = 'alert_api_no_support';
 
-    var error = {};
+    const error = {};
 
     tce.error = function(title, message, keyword, line, subject) {
         console.log('error control', title, message, keyword, line);
-        var errorInfo = this.getErrorInfo(
-            title,
-            message,
-            keyword,
-            line,
-            subject
-        );
+        const errorInfo = this.getErrorInfo(title, message, keyword, line, subject);
         error.title = errorInfo.title;
         error.message = errorInfo.message;
         error.line = line;
@@ -77,31 +67,28 @@ Entry.TextCodingError = {};
     };
 
     tce.getErrorInfo = function(title, message, keyword, line, subject) {
-        var info = {};
+        const info = {};
         info.title = Lang.TextCoding[title];
         var message = Lang.TextCoding[message];
 
-        var contents;
-        if (keyword) var kw = "'" + keyword + "' ";
-        else var kw = '';
+        let contents;
+        if (keyword) {
+            var kw = `'${keyword}' `;
+        } else {
+            var kw = '';
+        }
 
-        if (subject) var sj = Lang.TextCoding[subject];
-        else var sj = Lang.TextCoding[this.SUBJECT_CONV_GENERAL];
+        if (subject) {
+            var sj = Lang.TextCoding[subject];
+        } else {
+            var sj = Lang.TextCoding[this.SUBJECT_CONV_GENERAL];
+        }
 
-        if (typeof line === 'object') line = line.start.line + 2;
+        if (typeof line === 'object') {
+            line = line.start.line + 2;
+        }
 
-        contents =
-            '[' +
-            sj +
-            ']' +
-            ' ' +
-            kw +
-            ' : ' +
-            message +
-            ' ' +
-            '(line ' +
-            line +
-            ')';
+        contents = `[${sj}]` + ` ${kw} : ${message} ` + `(line ${line})`;
 
         info.message = contents;
 

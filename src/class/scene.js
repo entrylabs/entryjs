@@ -3,18 +3,20 @@
  */
 'use strict';
 
-import EntryTool from 'entry-tool';
+import { Sortable } from '@entrylabs/tool';
 
 /**
  * Class for a scene controller.
  * This have view for scenes.
  * @constructor
  */
+const STATIC_SCENES_COUNT = 30;
+
 Entry.Scene = class {
     constructor() {
         this.scenes_ = [];
         this.selectedScene = null;
-        this.maxCount = 20;
+        this.maxCount = this.getMaxSceneCount() || 30;
         $(window).on('resize', this.resize.bind(this));
 
         this.disposeEvent = Entry.disposeEvent.attach(this, (e) => {
@@ -33,7 +35,7 @@ Entry.Scene = class {
     generateView(sceneView, option) {
         this.view_ = sceneView;
         this.view_.addClass('entryScene');
-        if (!option || option == 'workspace') {
+        if (!option || option === 'workspace' || option === 'playground') {
             this.view_.addClass('entrySceneWorkspace');
 
             $(this.view_).on('mousedown touchstart', (e) => {
@@ -62,6 +64,20 @@ Entry.Scene = class {
                 const addButton = this.createAddButton();
                 this.view_.appendChild(addButton);
                 this.addButton_ = addButton;
+
+                const scenePrevButton = this.scenePrevButton();
+                const sceneNextButton = this.sceneNextButton();
+                this.view_.appendChild(scenePrevButton);
+                this.view_.appendChild(sceneNextButton);
+
+                this.scenePrevButton = scenePrevButton;
+                this.sceneNextButton = sceneNextButton;
+
+                this.prevButton_ = scenePrevButton;
+                this.nextButton_ = sceneNextButton;
+
+                this.sceneListWidth = Entry.scene.listView_.offsetWidth;
+                this.updateView();
             }
         }
     }
@@ -72,19 +88,70 @@ Entry.Scene = class {
         );
 
         addButton.bindOnClick((e) => {
-            if (Entry.engine.isState('run')) return;
+            if (Entry.engine.isState('run')) {
+                return;
+            }
             Entry.do('sceneAdd', Entry.generateHash());
         });
 
         return addButton;
     }
+    /**
+     * prev scene button
+     */
+    scenePrevButton() {
+        const prevButton = Entry.createElement('span').addClass(
+            'entrySceneElementWorkspace entryScenePrevButtonWorkspace'
+        );
+
+        const prevBtn = document.createElement('span').addClass('prevBtn');
+        prevButton.bindOnClick((e) => {
+            this.selectScene(Entry.scene.getPrevScene());
+        });
+
+        prevButton.appendChild(prevBtn);
+
+        return prevButton;
+    }
+    /**
+     * next scene, add scene button
+     */
+    sceneNextButton() {
+        const nextButton = Entry.createElement('span').addClass(
+            'entrySceneElementWorkspace entrySceneNextButtonWorkspace'
+        );
+
+        const nextBtn = document.createElement('span').addClass('nextBtn');
+        nextBtn.bindOnClick((e) => {
+            this.selectScene(Entry.scene.getNextScene());
+        });
+
+        const addButton = document.createElement('span').addClass('addButton');
+        addButton.bindOnClick((e) => {
+            if (Entry.engine.isState('run')) {
+                return;
+            }
+            this.sceneListwidth = Entry.scene.listView_.offsetWidth;
+
+            Entry.do('sceneAdd', Entry.generateHash());
+        });
+
+        this.nextAddButton_ = addButton;
+        nextButton.appendChild(nextBtn);
+        nextButton.appendChild(addButton);
+
+        return nextButton;
+    }
 
     createListView() {
         const listView = Entry.createElement('div');
         listView.addClass('entrySceneListWorkspace');
+        const observer = new ResizeObserver(() => {
+            this.updateView();
+        });
+        observer.observe(listView);
 
-        this.sceneSortableListWidget = new EntryTool({
-            type: 'sortableWidget',
+        this.sceneSortableListWidget = new Sortable({
             data: {
                 height: '100%',
                 sortableTarget: ['entrySceneRemoveButtonWorkspace', 'entrySceneInputCover'],
@@ -105,7 +172,7 @@ Entry.Scene = class {
     updateSceneView() {
         const items = this._getSortableSceneList();
         if (this.sceneSortableListWidget) {
-            setTimeout(() => this.sceneSortableListWidget.setData({ items }), 300);
+            setTimeout(() => this.sceneSortableListWidget.setData({ items }), 0);
         }
     }
 
@@ -114,12 +181,10 @@ Entry.Scene = class {
             return [];
         }
 
-        return this.scenes_.map((value) => {
-            return {
-                key: value.id,
-                item: value.view,
-            };
-        });
+        return this.scenes_.map((value) => ({
+            key: value.id,
+            item: value.view,
+        }));
     }
 
     /**
@@ -152,7 +217,7 @@ Entry.Scene = class {
                     {
                         text: Lang.Workspace.duplicate_scene,
                         enable: Entry.engine.isState('stop') && !this.isMax(),
-                        callback: function() {
+                        callback() {
                             Entry.scene.cloneScene(scene);
                         },
                     },
@@ -170,7 +235,18 @@ Entry.Scene = class {
         return Entry.createElement('button')
             .addClass('entrySceneRemoveButtonWorkspace')
             .bindOnClick((e) => {
-                if (Entry.engine.isState('run')) return;
+                if (Entry.engine.isState('run')) {
+                    return;
+                }
+                const isDeletable = Entry.scene.getScenes().length > 1;
+                if (!isDeletable) {
+                    Entry.toast.alert(
+                        Lang.Msgs.runtime_error,
+                        Lang.Workspace.Scene_delete_error,
+                        false
+                    );
+                    return;
+                }
                 Entry.do('sceneRemove', scene.id);
             })
             .appendTo(removeButtonCover);
@@ -256,12 +332,27 @@ Entry.Scene = class {
 
     updateView() {
         if (!Entry.type || Entry.type === 'workspace') {
-            // var parent = this.listView_;
-            // this.getScenes().forEach(({ view }) => parent.appendChild(view));
-
+            const addBtnWidth = 72;
+            const sceneListWidth = this.sceneListWidth + addBtnWidth + 170;
+            const browserWidth = Entry.view_.offsetWidth;
+            const maxSceneCount = Entry.scene.scenes_.length || STATIC_SCENES_COUNT;
             if (this.addButton_) {
-                if (!this.isMax()) this.addButton_.removeClass('entryRemove');
-                else this.addButton_.addClass('entryRemove');
+                if (maxSceneCount >= STATIC_SCENES_COUNT) {
+                    this.addButton_.addClass('entryRemove');
+                    this.nextAddButton_.addClass('entryRemove');
+                } else {
+                    this.addButton_.removeClass('entryRemove');
+                    this.prevButton_.removeClass('entryRemove');
+                    this.nextButton_.removeClass('entryRemove');
+
+                    if (sceneListWidth > browserWidth) {
+                        this.addButton_.addClass('entryRemove');
+                        this.nextAddButton_.removeClass('entryRemove');
+                    } else {
+                        this.nextButton_.addClass('entryRemove');
+                        this.prevButton_.addClass('entryRemove');
+                    }
+                }
             }
         }
         this.updateSceneView();
@@ -278,7 +369,9 @@ Entry.Scene = class {
             this.scenes_ = [];
             this.scenes_.push(this.createScene());
         } else {
-            for (var i = 0, len = scenes.length; i < len; i++) this.generateElement(scenes[i]);
+            for (let i = 0, len = scenes.length; i < len; i++) {
+                this.generateElement(scenes[i]);
+            }
         }
 
         this.selectScene(this.getScenes()[0]);
@@ -288,17 +381,31 @@ Entry.Scene = class {
      * @param {scene model} scene
      */
     addScene(scene, index) {
-        if (scene === undefined || typeof scene === 'string') scene = this.createScene(scene);
+        if (scene === undefined || typeof scene === 'string') {
+            scene = this.createScene(scene);
+        }
 
-        if (!scene.view) this.generateElement(scene);
+        if (!scene.view) {
+            this.generateElement(scene);
+        }
 
-        if (!index && typeof index != 'number') this.getScenes().push(scene);
-        else this.getScenes().splice(index, 0, scene);
+        if (!index && typeof index != 'number') {
+            this.getScenes().push(scene);
+        } else {
+            this.getScenes().splice(index, 0, scene);
+        }
 
         Entry.stage.objectContainers.push(Entry.stage.createObjectContainer(scene));
         this.selectScene(scene);
 
-        if (Entry.creationChangedEvent) Entry.creationChangedEvent.notify();
+        if (Entry.creationChangedEvent) {
+            Entry.creationChangedEvent.notify();
+        }
+        const { playground = {} } = Entry || {};
+        const { mainWorkspace } = playground;
+        if (mainWorkspace) {
+            mainWorkspace.reDraw();
+        }
         return scene;
     }
 
@@ -311,7 +418,7 @@ Entry.Scene = class {
             Entry.toast.alert(Lang.Msgs.runtime_error, Lang.Workspace.Scene_delete_error, false);
             return;
         }
-
+        Entry.Utils.forceStopSounds();
         scene = this.getSceneById(typeof scene === 'string' ? scene : scene.id);
 
         this.getScenes().splice(this.getScenes().indexOf(scene), 1);
@@ -321,53 +428,68 @@ Entry.Scene = class {
         Entry.stage.removeObjectContainer(scene);
         $(scene.view).remove();
         this.selectScene();
+
+        if (Entry.codeChangedEvent) {
+            Entry.codeChangedEvent.notify();
+        }
     }
 
-    /**
-     * select scene
-     * @param {scene model} scene
-     */
     selectScene(scene) {
-        scene = scene || this.getScenes()[0];
-        var container = Entry.container;
+        const targetScene = scene || this.getScenes()[0];
+        const container = Entry.container;
 
         container.resetSceneDuringRun();
 
-        if (this.selectedScene && this.selectedScene.id == scene.id) return;
+        if (this.selectedScene && this.selectedScene.id === targetScene.id) {
+            return;
+        }
+        if (
+            Entry.playground.getViewMode() === 'picture' &&
+            Entry.playground.nameViewFocus &&
+            Entry.playground.nameViewBlur()
+        ) {
+            return;
+        }
 
-        var prevSelected = this.selectedScene;
+        const prevSelected = this.selectedScene;
         if (prevSelected) {
-            var prevSelectedView = prevSelected.view;
+            const prevSelectedView = prevSelected.view;
             prevSelectedView.removeClass('selectedScene');
-            var elem = document.activeElement;
+            const elem = document.activeElement;
             elem === prevSelectedView.nameField && elem.blur();
         }
 
-        this.selectedScene = scene;
-        scene.view.addClass('selectedScene');
+        this.selectedScene = targetScene;
+        targetScene.view.addClass('selectedScene');
 
-        var stage = Entry.stage;
-        var playground = Entry.playground;
+        const stage = Entry.stage;
+        const playground = Entry.playground;
 
         container.setCurrentObjects();
 
-        stage.selectObjectContainer(scene);
+        stage.selectObjectContainer(targetScene);
 
-        var targetObject = container.getCurrentObjects()[0];
+        const targetObject = container.getCurrentObjects()[0];
+
+        if (Entry.engine.isState('run')) {
+            Entry.Utils.forceStopSounds();
+        }
 
         if (targetObject && Entry.type !== 'minimize') {
             container.selectObject(targetObject.id);
             playground.refreshPlayground();
         } else {
             if (Entry.isTextMode) {
-                var workspace = Entry.getMainWS();
-                var vimBoard = workspace && workspace.vimBoard;
+                const workspace = Entry.getMainWS();
+                const vimBoard = workspace && workspace.vimBoard;
                 if (vimBoard) {
-                    var sObject = vimBoard._currentObject;
-                    var sScene = vimBoard._currentScene;
-                    var parser = vimBoard._parser;
+                    const sObject = vimBoard._currentObject;
+                    const sScene = vimBoard._currentScene;
+                    const parser = vimBoard._parser;
                     try {
-                        if (scene.id != sScene.id) workspace._syncTextCode();
+                        if (targetScene.id != sScene.id) {
+                            workspace._syncTextCode();
+                        }
                     } catch (e) {}
 
                     if (parser._onError) {
@@ -380,11 +502,15 @@ Entry.Scene = class {
 
             stage.selectObject(null);
             playground.flushPlayground();
+            Entry.variableContainer.selected = null;
             Entry.variableContainer.updateList();
         }
         !container.listView_ && stage.sortZorder();
 
         container.updateListView();
+        if (Entry.type && Entry.type !== 'minimize' && Entry.scene.listView_) {
+            this.sceneListWidth = Entry.scene.listView_.offsetWidth;
+        }
         this.updateView();
         Entry.requestUpdate = true;
     }
@@ -449,13 +575,13 @@ Entry.Scene = class {
      * @return {scene modal} scene
      */
     createScene(sceneId) {
-        var regex = /[0-9]/;
-        var name = Entry.getOrderedName(Lang.Blocks.SCENE + ' ', this.scenes_, 'name');
+        const regex = /[0-9]/;
+        let name = Entry.getOrderedName(`${Lang.Blocks.SCENE} `, this.scenes_, 'name');
         if (!regex.test(name)) {
             name += '1';
         }
-        var scene = {
-            name: name,
+        const scene = {
+            name,
             id: sceneId || Entry.generateHash(),
         };
 
@@ -473,7 +599,7 @@ Entry.Scene = class {
             return;
         }
 
-        var clonedScene = {
+        const clonedScene = {
             name: (Lang.Workspace.cloned_scene + scene.name).substring(0, 10),
             id: Entry.generateHash(),
         };
@@ -481,21 +607,21 @@ Entry.Scene = class {
         this.generateElement(clonedScene);
         this.addScene(clonedScene);
 
-        var container = Entry.container;
-        var objects = container.getSceneObjects(scene);
+        const container = Entry.container;
+        const objects = container.getSceneObjects(scene);
 
         try {
-            var oldIds = [];
-            var newIds = [];
+            const oldIds = [];
+            const newIds = [];
             this.isSceneCloning = true;
-            for (var i = objects.length - 1; i >= 0; i--) {
-                var obj = objects[i];
-                var ret = container.addCloneObject(obj, clonedScene.id, true);
+            for (let i = objects.length - 1; i >= 0; i--) {
+                const obj = objects[i];
+                const ret = container.addCloneObject(obj, clonedScene.id, true);
                 oldIds.push(obj.id);
                 newIds.push(ret.id);
             }
             container.adjustClonedValues(oldIds, newIds);
-            var WS = Entry.getMainWS();
+            const WS = Entry.getMainWS();
             WS && WS.board && WS.board.reDraw();
             this.isSceneCloning = false;
             container.setCurrentObjects();
@@ -513,67 +639,86 @@ Entry.Scene = class {
      * @param {!scene model} scene
      */
     resize() {
-        var scenes = this.getScenes();
-        var selectedScene = this.selectedScene;
-        var addButton = this.addButton_;
-        var firstScene = scenes[0];
+        const scenes = this.getScenes();
+        const selectedScene = this.selectedScene;
+        const addButton = this.addButton_;
+        const firstScene = scenes[0];
 
-        if (scenes.length === 0 || !firstScene) return;
+        if (scenes.length === 0 || !firstScene) {
+            return;
+        }
 
-        var startPos = $(firstScene.view).offset().left;
-        var marginLeft = parseFloat($(selectedScene.view).css('margin-left'));
-        var totalWidth = Math.floor($(this.view_).width() - startPos - 5);
-        var LEFT_MARGIN = -40;
+        const startPos = $(firstScene.view).offset().left;
+        const marginLeft = parseFloat($(selectedScene.view).css('margin-left'));
+        let totalWidth = Math.floor($(this.view_).width() - startPos - 5);
+        const LEFT_MARGIN = -40;
 
-        var normWidth = startPos + 15;
-        var diff = 0;
-        var isSelectedView = false;
-        var selectedViewWidth = 0;
+        let normWidth = startPos + 15;
+        let diff = 0;
+        let isSelectedView = false;
+        let selectedViewWidth = 0;
         for (var i in scenes) {
             var scene = scenes[i];
-            var view = scene.view;
+            let view = scene.view;
             view.addClass('minValue');
             isSelectedView = view === this.selectedScene.view;
             view = $(view);
 
-            var width = parseFloat(Entry.computeInputWidth(scene.name));
-            var adjusted = (width * 10) / 9;
-            if (scene === this.selectedScene) diff = adjusted - width;
+            const width = parseFloat(Entry.computeInputWidth(scene.name));
+            const adjusted = (width * 10) / 9;
+            if (scene === this.selectedScene) {
+                diff = adjusted - width;
+            }
             // $(scene.inputWrapper).width(adjusted + 'px');
-            var viewWidth = view.width();
-            if (isSelectedView) selectedViewWidth = viewWidth;
+            const viewWidth = view.width();
+            if (isSelectedView) {
+                selectedViewWidth = viewWidth;
+            }
             normWidth += viewWidth + LEFT_MARGIN;
         }
 
-        if (normWidth > totalWidth) align();
+        if (normWidth > totalWidth) {
+            align();
+        }
 
         function align() {
-            var dummyWidth = 30.5;
-            var len = scenes.length - 1;
+            const dummyWidth = 30.5;
+            const len = scenes.length - 1;
             totalWidth =
                 totalWidth -
                 Math.round(selectedViewWidth || $(selectedScene.view).width()) -
                 dummyWidth * len -
                 diff;
 
-            var fieldWidth = Math.floor(totalWidth / len);
+            const fieldWidth = Math.floor(totalWidth / len);
             for (i in scenes) {
                 scene = scenes[i];
                 if (selectedScene.id != scene.id) {
                     scene.view.removeClass('minValue');
                     // $(scene.inputWrapper).width(fieldWidth);
-                } else scene.view.addClass('minValue');
+                } else {
+                    scene.view.addClass('minValue');
+                }
             }
         }
     }
 
+    getPrevScene() {
+        const scenes = this.getScenes();
+        return scenes[scenes.indexOf(this.selectedScene) - 1];
+    }
+
     getNextScene() {
-        var scenes = this.getScenes();
+        const scenes = this.getScenes();
         return scenes[scenes.indexOf(this.selectedScene) + 1];
     }
 
+    getMaxSceneCount() {
+        return STATIC_SCENES_COUNT;
+    }
+
     isMax() {
-        return this.scenes_.length >= this.maxCount;
+        return Entry.scene.scenes_.length >= STATIC_SCENES_COUNT;
     }
 
     clear() {
@@ -584,8 +729,10 @@ Entry.Scene = class {
     }
 
     getDom(query) {
-        var scene;
-        if (query.length > 1) scene = this.getSceneById(query[1]);
+        let scene;
+        if (query.length > 1) {
+            scene = this.getSceneById(query[1]);
+        }
 
         switch (query[0]) {
             case 'addButton':
@@ -599,5 +746,9 @@ Entry.Scene = class {
             default:
                 return;
         }
+    }
+
+    destroy() {
+        // 우선 interface 만 정의함.
     }
 };

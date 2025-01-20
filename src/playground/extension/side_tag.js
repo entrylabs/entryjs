@@ -6,27 +6,29 @@
 /*
  *
  */
-Entry.ExtSideTag = function(content, blockView, mode) {
-    this.blockView = blockView;
-    this.color = content.color ? content.color : '#EBC576';
-    this.text = content.text ? content.text : '';
-    this.height = content.height
-        ? Number(content.height)
-        : Number(content.count) * 31;
+Entry.ExtSideTag = class ExtSideTag {
+    constructor(content, blockView, mode) {
+        this.blockView = blockView;
+        this.color = content.color ? content.color : '#EBC576';
+        this.text = content.text ? content.text : '';
+        this.height = content.height ? Number(content.height) : Number(content.count) * 31;
 
-    this.render();
-    this.updatePos();
-};
+        this.render();
+        this.updatePos();
+    }
 
-(function(p) {
-    p.render = function() {
+    render() {
         this.svgGroup = this.blockView.svgGroup.elem('g');
-        $(this.svgGroup).bind('mousedown touchstart', function(e) {
-            if (e.stopPropagation) e.stopPropagation();
-            if (e.preventDefault) e.preventDefault();
+        $(this.svgGroup).bind('mousedown touchstart', (e) => {
+            if (e.stopPropagation) {
+                e.stopPropagation();
+            }
+            if (e.preventDefault) {
+                e.preventDefault();
+            }
         });
         this.path = this.svgGroup.elem('path').attr({
-            d: 'm0,2 h-9 v' + (this.height - 4) + ' h9',
+            d: `m0,2 h-9 v${this.height - 4} h9`,
             stroke: this.color,
             fill: 'transparent',
             'stroke-width': '3',
@@ -34,35 +36,33 @@ Entry.ExtSideTag = function(content, blockView, mode) {
         this.textElement = this.svgGroup.elem('text').attr({
             style: 'white-space: pre;',
             'font-size': '10px',
-            'font-family': 'NanumGothic',
+            'font-family': EntryStatic.fontFamily || 'NanumGothic',
             class: 'dragNone',
             fill: '#000000',
         });
-        var textArray = this.text.split('\n');
-        this.tspans = textArray.map(
-            function(t) {
-                var tspan = this.textElement.elem('tspan').attr({
-                    dy: '1.2em',
-                    x: '0',
-                    class: 'extension sideTagTspan',
-                });
-                tspan.textContent = t;
-                return tspan;
-            }.bind(this)
-        );
-    };
+        const textArray = this.text.split('\n');
+        this.tspans = textArray.map((t) => {
+            const tspan = this.textElement.elem('tspan').attr({
+                dy: '1.2em',
+                x: '0',
+                class: 'extension sideTagTspan',
+            });
+            tspan.textContent = t;
+            return tspan;
+        });
+    }
 
-    p.updatePos = function() {
-        var pointer = this.blockView.block.pointer();
+    updatePos() {
+        const pointer = this.blockView.block.pointer();
         this.positionX = -(pointer.length - 2) * 8;
-        this.svgGroup.attr('transform', 'translate(' + this.positionX + ',0)');
+        this.svgGroup.attr('transform', `translate(${this.positionX},0)`);
         this.textElement.attr({
             y: this.height / 2 - 12 * (this.tspans.length - 1) - 2,
         });
-        var bBox = this.textElement.getBoundingClientRect();
+        const bBox = this.textElement.getBoundingClientRect();
 
-        this.tspans.map(function(tspan) {
+        this.tspans.map((tspan) => {
             tspan.attr({ x: -bBox.width - 14 });
         });
-    };
-})(Entry.ExtSideTag.prototype);
+    }
+};

@@ -1,7 +1,7 @@
 /*
  */
 'use strict';
-import EntryTool from 'entry-tool';
+import { Dropdown } from '@entrylabs/tool';
 import _cloneDeep from 'lodash/cloneDeep';
 /*
  *
@@ -48,44 +48,94 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
         this._font_size = this.getFontSize(content.fontSize);
 
         this._ROUND = content.roundValue || 3;
-        this.renderStart(blockView);
+        this.initialize(blockView);
+    }
+
+    initialize(blockView) {
+        const promise = this.renderStart(blockView);
         if (
             blockView &&
             blockView.getBoard() &&
             blockView.getBoard().workspace &&
             blockView.getBoard().workspace.changeEvent
         ) {
-            blockView.getBoard().workspace.changeEvent.attach(this, this._updateValue);
+            blockView.getBoard().workspace.changeEvent.attach(this, () => {
+                this._updateValue(true);
+            });
         }
-        this.optionChangeTriggeredEvent();
+        if (promise instanceof Promise) {
+            promise.then(() => {
+                blockView.alignContent(false);
+            });
+        }
     }
 
-    getIndexValue() {
-        if (this._contents.targetIndex >= 0) {
-            return this._block.data.params[this._contents.targetIndex];
-        }
-        return null;
+    _isBlockInBoardWhenFunctionEdit() {
+        const view = this._block.getView() || { _board: {} };
+        return view._board.suffix === 'board' && Entry.Func.isEdit;
     }
 
-    _updateValue() {
+    getTextByValue(value) {
+        if (this._isBlockInBoardWhenFunctionEdit()) {
+            return this.textElement.textContent;
+        }
+
+        return super.getTextByValue(value);
+    }
+
+    updateValue(reDraw) {
+        return this._updateValue(reDraw);
+    }
+
+    async _updateValue(reDraw) {
         const object = this._block.getCode().object;
         let options = [];
         if (Entry.container) {
             if (this._menuName) {
-                options = Entry.container.getDropdownList(this._menuName, object);
+                options = await Entry.container.getDropdownList(this._menuName, object);
             } else {
-                options = this._menuGenerator(this.getIndexValue());
+                options = await this._menuGenerator(this._block);
+                if (options.length === 0) {
+                    options = [[Lang.Blocks.no_target, 'null']];
+                }
             }
         }
 
         this._contents.options = options;
-        let value = this.getValue();
-        if (this._blockView.isInBlockMenu || !value || value == 'null') {
-            value = options.length !== 0 ? options[0][1] : null;
-        }
-
         this._updateOptions();
-        this.setValue(value);
+
+        if (reDraw && this._menuName === 'variables' && !this._isBlockInBoardWhenFunctionEdit()) {
+            this.value = undefined;
+        }
+        this.applyValue(this.getOptionCheckedValue(), reDraw);
+    }
+
+    getTargetValue(key, useParent = false) {
+        if (!key) {
+            return;
+        }
+        const block = useParent ? this._block.thread._block : this._block;
+        const { _schema, params: values = [] } = block || {};
+        const { params = [] } = _schema || {};
+        const idx = params.findIndex(({ dropdownSync }) => dropdownSync === key);
+        return values[idx || 0];
+    }
+
+    getOptionCheckedValue() {
+        const { options = [], defaultValue } = this._contents;
+        let value = this.getValue();
+
+        if (this._blockView.isInBlockMenu || !value || value == 'null') {
+            value = options.length !== 0 && options[0] ? options[0][1] : null;
+        }
+        const matched = _.find(options, ([, cValue]) => cValue === value);
+        if (!matched && defaultValue) {
+            if (_.isFunction(defaultValue)) {
+                return defaultValue(value, options);
+            }
+            return defaultValue;
+        }
+        return value;
     }
 
     renderOptions() {
@@ -94,11 +144,8 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
             parent: $('body'),
         });
         const { options = [] } = this._contents;
-        const convertedOptions = options.map(([key, value]) => {
-           return [this._convert(key, value), value];
-        });
-        this.dropdownWidget = new EntryTool({
-            type: 'dropdownWidget',
+        const convertedOptions = options.map(([key, value]) => [this._convert(key, value), value]);
+        this.dropdownWidget = new Dropdown({
             data: {
                 eventTypes: ['mousedown', 'touchstart', 'wheel'],
                 items: convertedOptions,
@@ -111,28 +158,13 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
         }).on('select', (item) => {
             this.applyValue(item[1]);
             this.destroyOption();
-            $(this._blockView.contentSvgGroup).trigger('optionChanged', {
-                block: this._block,
-                value: this.getValue(),
-                index: this._index,
-            });
-        });
-        this.optionDomCreated();
-    }
-
-    optionChangeTriggeredEvent() {
-        const targetIndex = this._contents.targetIndex;
-
-        if (typeof targetIndex === 'undefined') {
-            return;
-        }
-
-        $(this._blockView.contentSvgGroup).on('optionChanged', (e, data) => {
-            if (this._block == data.block && targetIndex == data.index) {
-                const options = this._menuGenerator(data.value);
-                this._contents.options = options;
-                this.applyValue(options[0][1]);
+            const { view = {} } = this._block.getThread();
+            if (view.reDraw) {
+                view.reDraw();
+            } else {
+                this._block.view.reDraw();
             }
         });
+        this.optionDomCreated();
     }
 };

@@ -41,9 +41,39 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
         return _.result(this._blockView, 'getBoard');
     }
 
-    getBlockType = () => {
-        return 'field';
-    };
+    getBlockType = () => 'field';
+
+    getBlockList(excludePrimitive, type) {
+        const { value } = this;
+        try {
+            return _.chain(value.getBlockList(excludePrimitive, type))
+                .flatten()
+                .compact()
+                .value();
+        } catch (e) {
+            console.log(e);
+            return [];
+        }
+    }
+
+    stringify(excludeData, isNew) {
+        try {
+            return JSON.stringify(this.toJSON(isNew, undefined, excludeData));
+        } catch (e) {
+            console.error(e);
+            return '';
+        }
+    }
+
+    toJSON(isNew, index, excludeData, option) {
+        try {
+            const { value } = this;
+            return [value.toJSON(isNew, excludeData, option)];
+        } catch (e) {
+            console.error(e);
+            return [];
+        }
+    }
 
     renderStart(board, mode, renderMode, isReDraw) {
         if (!this.svgGroup) {
@@ -80,8 +110,10 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
 
         const blockView = _.result(this._valueBlock, 'view');
 
-        if (blockView) {
+        if (y === 0 && blockView) {
             y = blockView.height * -0.5;
+        } else if (y > 0) {
+            y = y - 10;
         }
 
         if (!(x || y)) {
@@ -148,6 +180,8 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
         if (this._originBlock) {
             blockType = this._originBlock.type;
             delete this._originBlock;
+        } else if (this._content.blockType) {
+            blockType = this._content.blockType;
         } else if (this._content.defaultType) {
             blockType = this._content.defaultType;
         } else {
@@ -339,10 +373,6 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
         return block;
     }
 
-    spliceBlock() {
-        this.updateValueBlock();
-    }
-
     _updateBG() {
         if (this.magneting) {
             this._bg = this.svgGroup.elem('path', {
@@ -406,5 +436,12 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
         }
 
         return block;
+    }
+
+    getFields() {
+        if (!this._blockView) {
+            return [];
+        }
+        return this._blockView.getFields();
     }
 };

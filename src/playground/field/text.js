@@ -1,48 +1,38 @@
-/*
- *
- */
-'use strict';
+Entry.FieldText = class FieldText extends Entry.Field {
+    constructor({ fontSize, align = 'left', text, color }, blockView, index) {
+        super();
+        this._block = blockView.block;
+        this._blockView = blockView;
+        this._index = index;
 
-/*
- *
- */
-Entry.FieldText = function({ fontSize, align = 'left', text, color }, blockView, index) {
-    this._block = blockView.block;
-    this._blockView = blockView;
-    this._index = index;
+        this.box = new Entry.BoxModel();
 
-    this.box = new Entry.BoxModel();
+        this._font_size = fontSize || blockView.getSkeleton().fontSize || 12;
+        this._color =
+            color || this._block.getSchema().fontColor || blockView.getSkeleton().color || 'white';
+        this._align = align;
+        this._text = this.getValue() || text;
+        this.setValue(null);
 
-    this._font_size = fontSize || blockView.getSkeleton().fontSize || 12;
-    this._color =
-        color || this._block.getSchema().fontColor || blockView.getSkeleton().color || 'white';
-    this._align = align;
-    this._text = this.getValue() || text;
-    this.setValue(null);
+        this.textElement = null;
 
-    this.textElement = null;
-
-    this.renderStart();
-};
-
-Entry.Utils.inherit(Entry.Field, Entry.FieldText);
-
-(function(p) {
-    p.renderStart = function() {
-        var { contentSvgGroup } = this._blockView;
+        this.renderStart();
+    }
+    renderStart() {
+        const { contentSvgGroup } = this._blockView;
 
         if (!this.textElement) {
             this.svgGroup = this.textElement = contentSvgGroup.elem('text').attr({
                 style: 'white-space: pre;',
-                'font-size': this._font_size + 'px',
+                'font-size': `${this._font_size}px`,
                 'font-weight': 'bold',
-                'font-family': 'NanumGothic',
+                'font-family': EntryStatic.fontFamily || 'NanumGothic',
                 class: 'dragNone',
                 fill: this._color,
             });
         }
 
-        var old = this.textElement.textContent;
+        const old = this.textElement.textContent;
         // this._text = this._text.replace(/(\r\n|\n|\r)/gm, ' ');
         const text = this._text || '';
         if (old !== text.replace(/(\r\n|\n|\r)/gm, '')) {
@@ -55,19 +45,20 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldText);
             // this.textElement.textContent = this._text;
         }
 
-        var { width, height } = this.getTextBBox();
+        const { width, height } = this.getTextBBox();
         const x = this._align == 'center' ? -width / 2 : 0;
+        const offsetY = EntryStatic.fontOffsetY || 0;
         this.textElement.attr({
             x,
-            y: height * 0.25,
+            y: height * 0.5 + offsetY,
         });
 
-        if(this.textElement.childElementCount > 1) {
-            const {childNodes} = this.textElement;
-            for(let i  = 0; i < childNodes.length; i++) {
+        if (this.textElement.childElementCount > 1) {
+            const { childNodes } = this.textElement;
+            for (let i = 0; i < childNodes.length; i++) {
                 childNodes[i].attr({
                     x,
-                })
+                });
             }
         }
 
@@ -77,9 +68,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldText);
             width,
             height,
         });
-    };
+    }
 
-    p.getTextValue = function() {
+    getTextValue() {
         return this._text;
-    };
-})(Entry.FieldText.prototype);
+    }
+};

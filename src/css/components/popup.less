@@ -83,3 +83,29 @@
 .entryPopup.buttonsHidden .entryEngineButtonWorkspace_w {
     display: none;
 }
+
+.entryPopup.learning_popup {
+    z-index: 7001;
+    .ai_learning {
+        overflow: hidden;
+        .learningInputPopup {
+            border: none;
+            height: 248px;
+            width: 294px;
+            background-color: #fff;
+            border-bottom-right-radius: 5px;
+            border-bottom-left-radius: 5px;
+        }
+        .learningInputPopup.text {
+            height: 165px;
+        }
+        .learningInputPopup.image {
+            height: 245px;
+        }
+        .learningInputPopup.speech {
+            height: 250px;
+        }
+    }
+}
+
+

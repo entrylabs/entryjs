@@ -50,12 +50,12 @@ module.exports = {
                         script.timeFlag = 1;
                         let timeValue = script.getNumberValue('SECOND', script);
                         const fps = Entry.FPS || 60;
-                        timeValue = 60 / fps * timeValue * 1000;
+                        timeValue = (60 / fps) * timeValue * 1000;
 
                         const blockId = script.block.id;
                         Entry.TimeWaitManager.add(
                             blockId,
-                            function() {
+                            () => {
                                 script.timeFlag = 0;
                             },
                             timeValue
@@ -325,6 +325,30 @@ module.exports = {
                     return this.executor.breakLoop();
                 },
                 syntax: { js: [], py: ['break'] },
+            },
+            continue_repeat: {
+                color: EntryStatic.colorSet.block.default.FLOW,
+                outerLine: EntryStatic.colorSet.block.darken.FLOW,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/flow_icon.svg',
+                        size: 11,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null],
+                    type: 'continue_repeat',
+                },
+                class: 'repeat',
+                isNotFor: [],
+                func(sprite, script) {
+                    return this.executor.continueLoop();
+                },
+                syntax: { js: [], py: ['continue'] },
             },
             _if: {
                 color: EntryStatic.colorSet.block.default.FLOW,
@@ -669,8 +693,9 @@ module.exports = {
                 class: 'terminate',
                 isNotFor: [],
                 func(sprite, script) {
-                    Entry.engine.toggleStop();
-                    Entry.engine.toggleRun();
+                    Entry.engine.toggleStop().then(() => {
+                        Entry.engine.toggleRun();
+                    });
                 },
                 syntax: { js: [], py: ['Entry.start_again()'] },
             },

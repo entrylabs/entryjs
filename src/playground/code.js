@@ -1,5 +1,8 @@
 'use strict';
 
+import _find from 'lodash/find';
+import _includes from 'lodash/includes';
+
 Entry.STATEMENT = 0;
 Entry.PARAM = -1;
 Entry.Code = class Code {
@@ -40,7 +43,17 @@ Entry.Code = class Code {
 
         const parseCode = Array.isArray(code) ? code : JSON.parse(code);
         parseCode.forEach((t) => {
-            return this._data.push(new Entry.Thread(t, this));
+            if (Array.isArray(t) && t.length > 1 && t?.[0].type === 'function_create') {
+                if (!t[0].statements) {
+                    t[0].statements = [];
+                }
+                t[0].statements.push(t.splice(1, t.length));
+            }
+
+            const thread = new Entry.Thread(t, this);
+            if (thread.hasData()) {
+                this._data.push(thread);
+            }
         });
 
         return this;
@@ -122,7 +135,7 @@ Entry.Code = class Code {
                 continue;
             }
             if (value === undefined || block.params.indexOf(value) > -1) {
-                const executor = new Entry.Executor(blocks[i], entity);
+                const executor = new Entry.Executor(blocks[i], entity, this);
                 this.executors.push(executor);
                 executors.push(executor);
             }
@@ -139,25 +152,35 @@ Entry.Code = class Code {
     }
 
     tick() {
+        if (Entry.isTurbo && !this.isUpdateTime) {
+            this.isUpdateTime = performance.now();
+        }
         const executors = this.executors;
         const watchEvent = this.watchEvent;
         const shouldNotifyWatch = watchEvent.hasListeners();
-        let ret;
+        let result;
         let executedBlocks = [];
+        const loopExecutor = [];
 
         const _executeEvent = _.partial(Entry.dispatchEvent, 'blockExecute');
         const _executeEndEvent = _.partial(Entry.dispatchEvent, 'blockExecuteEnd');
 
         for (let i = 0; i < executors.length; i++) {
             const executor = executors[i];
-            if (!executor.isEnd()) {
+            if (executor.isPause()) {
+                continue;
+            } else if (!executor.isEnd()) {
                 const { view } = executor.scope.block || {};
                 _executeEvent(view);
-                ret = executor.execute(true);
-                if (shouldNotifyWatch) {
-                    executedBlocks = executedBlocks.concat(ret);
+                result = executor.execute(true);
+                if (executor.isLooped) {
+                    loopExecutor.push(executor);
                 }
-            } else {
+                if (shouldNotifyWatch) {
+                    const { blocks } = result;
+                    executedBlocks = executedBlocks.concat(blocks);
+                }
+            } else if (executor.isEnd()) {
                 _executeEndEvent(this.board);
                 executors.splice(i--, 1);
                 if (_.isEmpty(executors)) {
@@ -165,7 +188,42 @@ Entry.Code = class Code {
                 }
             }
         }
+
+        if (Entry.isTurbo) {
+            for (let i = 0; i < loopExecutor.length; i++) {
+                const executor = loopExecutor[i];
+                if (executor.isPause()) {
+                    continue;
+                } else if (!executor.isEnd()) {
+                    const { view } = executor.scope.block || {};
+                    _executeEvent(view);
+                    result = executor.execute(true);
+                    if (shouldNotifyWatch) {
+                        const { blocks } = result;
+                        executedBlocks = executedBlocks.concat(blocks);
+                    }
+                } else if (executor.isEnd()) {
+                    _executeEndEvent(this.board);
+                    loopExecutor.splice(i--, 1);
+                    if (_.isEmpty(loopExecutor)) {
+                        this.executeEndEvent.notify();
+                    }
+                }
+
+                if (
+                    i === loopExecutor.length - 1 &&
+                    Entry.tickTime > performance.now() - this.isUpdateTime
+                ) {
+                    i = -1;
+                }
+            }
+        }
+
+        this.isUpdateTime = 0;
         shouldNotifyWatch && watchEvent.notify(executedBlocks);
+        if (result && result.promises) {
+            Entry.engine.addPromiseExecutor(result.promises);
+        }
     }
 
     removeExecutor(executor) {
@@ -176,9 +234,7 @@ Entry.Code = class Code {
     }
 
     clearExecutors() {
-        this.executors.forEach((e) => {
-            return e.end();
-        });
+        this.executors.forEach((e) => e.end());
         Entry.dispatchEvent('blockExecuteEnd');
         this.executors = [];
     }
@@ -254,22 +310,18 @@ Entry.Code = class Code {
             return [];
         }
 
-        return this.getThreads().filter((t) => {
-            return _.result(t.getFirstBlock(), 'category') === categoryName;
-        });
+        return this.getThreads().filter(
+            (t) => _.result(t.getFirstBlock(), 'category') === categoryName
+        );
     }
 
     toJSON(excludeData, option) {
         const params = [false, undefined, excludeData, option];
-        return this.getThreads().map((t) => {
-            return t.toJSON(...params);
-        });
+        return this.getThreads().map((t) => t.toJSON(...params));
     }
 
     countBlock() {
-        return this.getThreads().reduce((cnt, thread) => {
-            return cnt + thread.countBlock();
-        }, 0);
+        return this.getThreads().reduce((cnt, thread) => cnt + thread.countBlock(), 0);
     }
 
     moveBy(x, y) {
@@ -306,17 +358,30 @@ Entry.Code = class Code {
         const event = Entry.creationChangedEvent;
         if (board && event && board.constructor !== Entry.BlockMenu) {
             event.notify();
+            if (Entry.codeChangedEvent) {
+                Entry.codeChangedEvent.notify();
+            }
         }
     }
 
     hasBlockType(type) {
-        return this.getThreads().some((thread) => {
-            return thread.hasBlockType(type);
-        });
+        return this.getThreads().some((thread) => thread.hasBlockType(type));
     }
 
     findById(id) {
         return this._blockMap[id];
+    }
+
+    findByType(type) {
+        const id = Object.keys(this._blockMap).find((id) => {
+            const block = this._blockMap[id];
+            return block.type === type;
+        });
+        return this._blockMap[id];
+    }
+
+    findByParamId(paramId) {
+        return _find(this._blockMap, (block) => _includes(block?.params || [], paramId));
     }
 
     registerBlock(block) {
@@ -332,6 +397,10 @@ Entry.Code = class Code {
         let block = thread.getBlock(pointer.shift());
         while (pointer.length) {
             if (!(block instanceof Entry.Block)) {
+                if (!block || !block.getValueBlock) {
+                    console.error("can't get valueBlock", block);
+                    return block;
+                }
                 block = block.getValueBlock();
             }
             const type = pointer.shift();
@@ -391,27 +460,164 @@ Entry.Code = class Code {
 
     getBlockList(excludePrimitive, type) {
         return _.chain(this.getThreads())
+            .map((t) => t.getBlockList(excludePrimitive, type))
+            .flatten(true)
+            .value();
+    }
+
+    getBlockListForEventThread(excludePrimitive, type) {
+        return _.chain(this.getThreads())
             .map((t) => {
-                return t.getBlockList(excludePrimitive, type);
+                if (t._event) {
+                    return t.getBlockList(excludePrimitive, type);
+                }
+                return [];
             })
             .flatten(true)
             .value();
     }
 
     removeBlocksByType(type) {
-        this.getBlockList(false, type).forEach((b) => {
-            return b.doDestroy();
-        });
+        this.getBlockList(false, type).forEach((b) => b.doDestroy());
     }
 
     isAllThreadsInOrigin() {
-        return this.getThreads().every((thread) => {
-            return thread.isInOrigin();
-        });
+        return this.getThreads().every((thread) => thread.isInOrigin());
     }
 
     destroy() {
         this.clear();
         this.destroyView();
     }
+
+    static waitPauseState = async () => {
+        while (Entry.engine.isState('pause')) {
+            await Entry.Utils.sleep(100);
+        }
+    };
+
+    static funcAsyncExecute = async (funcCode, funcExecutor, _promises = []) => {
+        await Promise.all(_promises);
+        if (Entry.engine.isState('pause')) {
+            await this.waitPauseState();
+            return this.funcAsyncExecute(funcCode, funcExecutor, _promises);
+        } else if (!Entry.engine.isState('run')) {
+            funcCode.removeExecutor(funcExecutor);
+            return Entry.STATIC.BREAK;
+        }
+
+        return new Promise((resolve, reject) => {
+            requestAnimationFrame(async () => {
+                const result = funcExecutor.execute();
+                const { promises = [] } = result || {};
+
+                if (!funcExecutor.isEnd()) {
+                    if (promises.length) {
+                        try {
+                            return resolve(
+                                await this.funcAsyncExecute(funcCode, funcExecutor, promises)
+                            );
+                        } catch (e) {
+                            return reject(e);
+                        }
+                    } else {
+                        funcCode.callStackLength--;
+                        funcCode.removeExecutor(funcExecutor);
+                        return resolve(Entry.STATIC.CONTINUE);
+                    }
+                }
+                return resolve();
+            });
+        });
+    };
+
+    static getAsyncParamsData = async (scope) => {
+        const values = scope.getParams();
+        const isPromise = values.some((value) => value instanceof Promise);
+        if (!isPromise) {
+            scope.values = values;
+        } else {
+            scope.values = await Promise.all(values);
+        }
+        return scope.getValue('VALUE', scope);
+    };
+
+    static funcValueAsyncExecute = async (funcCode, funcExecutor, _promises = []) => {
+        await Promise.all(_promises);
+        if (Entry.engine.isState('pause')) {
+            await this.waitPauseState();
+            return this.funcValueAsyncExecute(funcCode, funcExecutor, _promises);
+        } else if (!Entry.engine.isState('run')) {
+            funcCode.removeExecutor(funcExecutor);
+            return await this.getAsyncParamsData(funcExecutor.result);
+        }
+
+        return new Promise((resolve, reject) => {
+            requestAnimationFrame(async () => {
+                try {
+                    const result = funcExecutor.execute();
+                    const { promises = [] } = result || {};
+
+                    if (!funcExecutor.isEnd()) {
+                        if (promises.length) {
+                            try {
+                                return resolve(
+                                    await this.funcValueAsyncExecute(
+                                        funcCode,
+                                        funcExecutor,
+                                        promises
+                                    )
+                                );
+                            } catch (e) {
+                                return reject(e);
+                            }
+                        } else {
+                            funcCode.callStackLength--;
+                            funcCode.removeExecutor(funcExecutor);
+                        }
+                    }
+                    resolve(await this.getAsyncParamsData(funcExecutor.result));
+                } catch (e) {
+                    reject(e);
+                }
+            });
+        });
+    };
+
+    static funcRestExecute = async (funcCode, funcExecutor) => {
+        if (!Entry.engine.isState('run')) {
+            funcCode.removeExecutor(funcExecutor);
+            return await this.getAsyncParamsData(funcExecutor.result);
+        }
+
+        return new Promise((resolve, reject) => {
+            requestAnimationFrame(async () => {
+                try {
+                    const result = funcExecutor.execute();
+                    const { promises = [] } = result || {};
+                    if (!funcExecutor.isEnd()) {
+                        if (promises.length) {
+                            try {
+                                return resolve(
+                                    await this.funcValueAsyncExecute(
+                                        funcCode,
+                                        funcExecutor,
+                                        promises
+                                    )
+                                );
+                            } catch (e) {
+                                return reject(e);
+                            }
+                        } else {
+                            return resolve(await this.funcRestExecute(funcCode, funcExecutor));
+                        }
+                    }
+                    resolve(await this.getAsyncParamsData(funcExecutor.result));
+                    funcCode.removeExecutor(funcExecutor);
+                } catch (e) {
+                    reject(e);
+                }
+            });
+        });
+    };
 };

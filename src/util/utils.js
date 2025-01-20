@@ -1,5 +1,18 @@
 'use strict';
 
+import { GEHelper } from '../graphicEngine/GEHelper';
+import _uniq from 'lodash/uniq';
+import _intersection from 'lodash/intersection';
+import _clamp from 'lodash/clamp';
+import _round from 'lodash/round';
+import _throttle from 'lodash/throttle';
+import FontFaceOnload from 'fontfaceonload';
+import DataTable from '../class/DataTable';
+import entryModuleLoader from '../class/entryModuleLoader';
+import { bignumber, chain } from 'mathjs';
+import { Scheduler } from './scheduler';
+import { UAParser } from 'ua-parser-js';
+
 Entry.Utils = {};
 
 Entry.TEXT_ALIGN_CENTER = 0;
@@ -12,36 +25,65 @@ Entry.TEXT_ALIGNS = ['center', 'left', 'right'];
 
 Entry.clipboard = null;
 
+Entry.CANVAS_MIN_WIDTH = 162;
+Entry.CANVAS_DEFAULT_WIDTH = 324;
+Entry.CANVAS_MAX_WIDTH = 640;
+
 /**
  * Load project
- * @param {?Project} project
+ * @param {*} project
  */
-Entry.loadProject = function(project) {
+Entry.loadProject = function (project) {
+    Entry.isLoadProject = false;
     if (!project) {
         project = Entry.getStartProject(Entry.mediaFilePath);
     }
-
     if (this.type === 'workspace') {
         Entry.stateManager.startIgnore();
     }
     Entry.projectId = project._id;
-    Entry.variableContainer.setVariables(project.variables);
+    Entry.variableContainer?.setVariables(Entry.Utils.combineCloudVariable(project), {
+        aiUtilizeBlocks: project.aiUtilizeBlocks,
+    });
     Entry.variableContainer.setMessages(project.messages);
+    Entry.variableContainer.setFunctions(project.functions);
+    DataTable?.setTables(project.tables);
+    Entry.aiLearning?.load(project.learning);
     Entry.scene.addScenes(project.scenes);
     Entry.stage.initObjectContainers();
-    Entry.variableContainer.setFunctions(project.functions);
     Entry.container.setObjects(project.objects);
     Entry.FPS = project.speed ? project.speed : 60;
-    createjs.Ticker.setFPS(Entry.FPS);
+    GEHelper.Ticker.setFPS(Entry.FPS);
+    Entry.aiUtilizeBlocks = project?.aiUtilizeBlocks || [];
+    if (Entry.aiUtilizeBlocks.length > 0) {
+        for (const type in Entry.ALL_AI_UTILIZE_BLOCK_LIST) {
+            if (Entry.aiUtilizeBlocks.indexOf(type) > -1) {
+                Entry.AI_UTILIZE_BLOCK[type].init();
+                if (Entry.type === 'workspace' || Entry.type === 'playground') {
+                    Entry.playground.blockMenu.unbanClass(type);
+                }
+            }
+        }
+    }
 
     Entry.expansionBlocks = project.expansionBlocks || [];
     if (Entry.expansionBlocks.length > 0) {
         for (const type in Entry.EXPANSION_BLOCK_LIST) {
             if (Entry.expansionBlocks.indexOf(type) > -1) {
                 Entry.EXPANSION_BLOCK[type].init();
-                if (Entry.type === 'workspace') {
+                if (Entry.type === 'workspace' || Entry.type === 'playground') {
                     Entry.playground.blockMenu.unbanClass(type);
                 }
+            }
+        }
+    }
+
+    Entry.hardwareLiteBlocks = project.hardwareLiteBlocks || [];
+    if (Entry.hardwareLiteBlocks.length > 0) {
+        for (const type in Entry.HARDWARE_LITE_LIST) {
+            if (Entry.hardwareLiteBlocks.indexOf(type) > -1) {
+                const module = Entry.HARDWARE_LITE_LIST[type];
+                Entry.playground.addHardwareLiteModule(module);
             }
         }
     }
@@ -89,21 +131,32 @@ Entry.loadProject = function(project) {
         Entry.loadInterfaceState(project.interface);
     }
 
-    if (window.parent && window.parent.childIframeLoaded) {
-        window.parent.childIframeLoaded();
-    }
+    try {
+        if (window.parent && window.parent.childIframeLoaded) {
+            window.parent.childIframeLoaded();
+        }
+    } catch (e) {}
+    Entry.isLoadProject = true;
     return project;
 };
 
-Entry.clearProject = function() {
-    Entry.stop();
-    Entry.projectId = null;
-    Entry.type !== 'invisible' && Entry.playground && Entry.playground.changeViewMode('code');
-    Entry.variableContainer.clear();
-    Entry.container.clear();
-    Entry.scene.clear();
-    if (Entry.Loader) {
-        Entry.Loader.loaded = false;
+Entry.clearProject = function () {
+    try {
+        Entry.stop();
+        Entry.projectId = null;
+        Entry.variableContainer.clear();
+        Entry.container.clear();
+        Entry.scene.clear();
+        Entry.stateManager.clear();
+        DataTable.clear();
+        GEHelper.resManager.clearProject();
+        Entry.Loader && (Entry.Loader.loaded = false);
+
+        if (Entry.type !== 'invisible') {
+            Entry.playground && Entry.playground.changeViewMode('code');
+        }
+    } catch (e) {
+        console.warn('clearProject fail', e);
     }
 };
 
@@ -111,7 +164,7 @@ Entry.clearProject = function() {
  * Export project
  * @param {?Project} project
  */
-Entry.exportProject = function(project) {
+Entry.exportProject = function (project) {
     if (!project) {
         project = {};
     }
@@ -125,9 +178,15 @@ Entry.exportProject = function(project) {
     project.variables = Entry.variableContainer.getVariableJSON();
     project.messages = Entry.variableContainer.getMessageJSON();
     project.functions = Entry.variableContainer.getFunctionJSON();
+    project.tables = DataTable.getTableJSON();
     project.speed = Entry.FPS;
     project.interface = Entry.captureInterfaceState();
     project.expansionBlocks = Entry.expansionBlocks;
+    project.aiUtilizeBlocks = Entry.aiUtilizeBlocks;
+    project.hardwareLiteBlocks = Entry.hardwareLiteBlocks;
+    project.learning = Entry.aiLearning?.toJSON();
+    project.externalModules = entryModuleLoader.moduleList;
+    project.externalModulesLite = entryModuleLoader.moduleListLite;
 
     if (!objects || !objects.length) {
         return false;
@@ -142,21 +201,17 @@ Entry.exportProject = function(project) {
  * @param {!string} objectType
  * @param {!xml} XML
  */
-Entry.setBlock = function(objectType, XML) {
+Entry.setBlock = function (objectType, XML) {
     Entry.playground.setMenuBlock(objectType, XML);
-};
-
-Entry.enableArduino = function() {
-    return;
 };
 
 /**
  * This method is called when window closed;
  * @param {event} e
  */
-Entry.beforeUnload = function(e) {
+Entry.beforeUnload = function (e) {
+    Entry.dispatchEvent('EntryBeforeUnload');
     Entry.hw.closeConnection();
-    Entry.variableContainer.updateCloudVariables();
     if (Entry.type === 'workspace') {
         if (localStorage && Entry.interfaceState) {
             localStorage.setItem(
@@ -170,7 +225,7 @@ Entry.beforeUnload = function(e) {
     }
 };
 
-Entry.captureInterfaceState = function() {
+Entry.captureInterfaceState = function () {
     const interfaceState = JSON.parse(JSON.stringify(Entry.interfaceState));
     const playground = Entry.playground;
     if (Entry.type === 'workspace' && playground && playground.object) {
@@ -183,7 +238,7 @@ Entry.captureInterfaceState = function() {
 /**
  * load interface state by localstorage
  */
-Entry.loadInterfaceState = function(interfaceState) {
+Entry.loadInterfaceState = function (interfaceState) {
     if (Entry.type === 'workspace') {
         if (interfaceState) {
             Entry.container.selectObject(interfaceState.object, true);
@@ -203,20 +258,20 @@ Entry.loadInterfaceState = function(interfaceState) {
 /**
  * @return {Number} return up time time stamp
  */
-Entry.getUpTime = function() {
+Entry.getUpTime = function () {
     return new Date().getTime() - this.startTime;
 };
 
 /**
  * @param {String} activityType
  */
-Entry.addActivity = function(activityType) {
+Entry.addActivity = function (activityType) {
     if (Entry.stateManager) {
         Entry.stateManager.addActivity(activityType);
     }
 };
 
-Entry.startActivityLogging = function() {
+Entry.startActivityLogging = function () {
     if (Entry.reporter) {
         Entry.reporter.start(
             Entry.projectId,
@@ -230,7 +285,7 @@ Entry.startActivityLogging = function() {
  * return activity log
  * @return {object}
  */
-Entry.getActivityLog = function() {
+Entry.getActivityLog = function () {
     const log = {};
     if (Entry.stateManager) {
         log.activityLog = Entry.stateManager.activityLog_;
@@ -242,7 +297,7 @@ Entry.DRAG_MODE_NONE = 0;
 Entry.DRAG_MODE_MOUSEDOWN = 1;
 Entry.DRAG_MODE_DRAG = 2;
 
-Entry.cancelObjectEdit = function({ target, type }) {
+Entry.cancelObjectEdit = function ({ target, type }) {
     const object = Entry.playground.object;
     if (!object) {
         return;
@@ -250,28 +305,13 @@ Entry.cancelObjectEdit = function({ target, type }) {
     const objectView = object.view_;
     const isCurrent = $(objectView).find(target).length !== 0;
     const tagName = target.tagName.toUpperCase();
-    if (!object.isEditing || ((tagName === 'INPUT' && isCurrent) || type === 'touchstart')) {
+    if (!object.isEditing || (tagName === 'INPUT' && isCurrent) || type === 'touchstart') {
         return;
     }
     object.editObjectValues(false);
 };
 
-Entry.generateFunctionSchema = function(functionId) {
-    functionId = `func_${functionId}`;
-    if (Entry.block[functionId]) {
-        return;
-    }
-    let BlockSchema = function() {};
-    const blockPrototype = Entry.block.function_general;
-    BlockSchema.prototype = blockPrototype;
-    BlockSchema = new BlockSchema();
-    BlockSchema.changeEvent = new Entry.Event();
-    BlockSchema.template = Lang.template.function_general;
-
-    Entry.block[functionId] = BlockSchema;
-};
-
-Entry.getMainWS = function() {
+Entry.getMainWS = function () {
     let ret;
     if (Entry.mainWorkspace) {
         ret = Entry.mainWorkspace;
@@ -281,7 +321,7 @@ Entry.getMainWS = function() {
     return ret;
 };
 
-Entry.getDom = function(query) {
+Entry.getDom = function (query) {
     if (!query) {
         return this.view_;
     }
@@ -294,11 +334,19 @@ Entry.getDom = function(query) {
     }
 };
 
+function toggleEngineContainer(isVisible) {
+    const splitterSelector = '.entryObjectSelectedImgWorkspace';
+    $(Entry.engineContainer)
+        .css('padding', isVisible ? '' : '0')
+        .children(`:not(${splitterSelector})`)
+        .toggleClass('entryRemove', !isVisible);
+}
+
 /**
  * Resize element's size.
  * @param {!json} interfaceModel
  */
-Entry.resizeElement = function(interfaceModel) {
+Entry.resizeElement = function (interfaceModel) {
     // 워크 스페이스에 style width / height 값을 임시로 막음.
     // return;
     const mainWorkspace = Entry.getMainWS();
@@ -315,21 +363,22 @@ Entry.resizeElement = function(interfaceModel) {
         if (!interfaceModel.canvasWidth && interfaceState.canvasWidth) {
             interfaceModel.canvasWidth = interfaceState.canvasWidth;
         }
-        if (!interfaceModel.menuWidth && this.interfaceState.menuWidth) {
-            interfaceModel.menuWidth = interfaceState.menuWidth;
-        }
 
         if (Entry.engine.speedPanelOn) {
             Entry.engine.toggleSpeedPanel();
         }
 
+        let isEngineContainerVisible = true;
         let canvasSize = interfaceModel.canvasWidth;
         if (!canvasSize) {
-            canvasSize = 324;
-        } else if (canvasSize < 324) {
-            canvasSize = 324;
-        } else if (canvasSize > 640) {
-            canvasSize = 640;
+            canvasSize = Entry.CANVAS_MIN_WIDTH;
+        } else if (canvasSize < Entry.CANVAS_MIN_WIDTH) {
+            canvasSize = 16;
+            isEngineContainerVisible = false;
+        } else if (canvasSize < Entry.CANVAS_DEFAULT_WIDTH) {
+            canvasSize = Entry.CANVAS_DEFAULT_WIDTH;
+        } else if (canvasSize > Entry.CANVAS_MAX_WIDTH) {
+            canvasSize = Entry.CANVAS_MAX_WIDTH;
         }
         interfaceModel.canvasWidth = canvasSize;
 
@@ -338,25 +387,10 @@ Entry.resizeElement = function(interfaceModel) {
         Entry.engine.view_.style.width = `${canvasSize - 24}px`;
         Entry.stage.canvas.canvas.style.width = `${canvasSize - 26}px`;
 
-        let menuWidth = interfaceModel.menuWidth;
-        if (!menuWidth) {
-            menuWidth = 258;
-        } else if (menuWidth < 258) {
-            menuWidth = 258;
-        } else if (menuWidth > 308) {
-            menuWidth = 308;
-        }
-        interfaceModel.menuWidth = menuWidth;
+        toggleEngineContainer(isEngineContainerVisible);
 
         const blockMenu = mainWorkspace.blockMenu;
         const adjust = blockMenu.hasCategory() ? -64 : 0;
-
-        $('.blockMenuContainer').css({ width: `${menuWidth + adjust}px` });
-        $('.blockMenuContainer>div').css({ width: `${menuWidth + adjust - 2}px` });
-        blockMenu.setWidth();
-        $('.entryWorkspaceBoard').css({ left: `${menuWidth - 4}px` });
-        Entry.playground.resizeHandle_.style.left = `${menuWidth - 4}px`;
-        Entry.playground.variableViewWrapper_.style.width = `${menuWidth - 4}px`;
 
         this.interfaceState = interfaceModel;
     }
@@ -367,15 +401,23 @@ Entry.resizeElement = function(interfaceModel) {
 /**
  * override native prototype to add useful method.
  */
-Entry.overridePrototype = function() {
+Entry.overridePrototype = function () {
     /** modulo include negative number */
-    Number.prototype.mod = function(n) {
-        return ((this % n) + n) % n;
+    Number.prototype.mod = function (n) {
+        try {
+            // 음수 보정을 위해서 존재하는 기능
+            // INFO : https://stackoverflow.com/questions/4467539/javascript-modulo-gives-a-negative-result-for-negative-numbers
+            const left = bignumber(this);
+            const right = bignumber(n);
+            return chain(left).mod(right).add(right).mod(right).value.toNumber();
+        } catch (e) {
+            return ((this % n) + n) % n;
+        }
     };
 
     //polyfill
     if (!String.prototype.repeat) {
-        String.prototype.repeat = function(count) {
+        String.prototype.repeat = function (count) {
             'use strict';
             if (this == null) {
                 throw new TypeError(`can't convert ${this} to object`);
@@ -422,23 +464,31 @@ Entry.overridePrototype = function() {
 // INFO: 기존에 사용하던 isNaN에는 숫자 체크의 문자가 있을수 있기때문에 regex로 체크하는 로직으로 변경
 // isNaN 문제는 https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/isNaN
 // 에서 확인.
-Entry.Utils.isNumber = function(num) {
+Entry.Utils.isNumber = function (num) {
     if (typeof num === 'number') {
         return true;
     }
     const reg = /^-?\d+\.?\d*$/;
     if (typeof num === 'string' && reg.test(num)) {
         return true;
-    } else {
-        return false;
     }
+    return false;
 };
 
-Entry.Utils.generateId = function() {
+Entry.Utils.generateId = function () {
     return `0000${((Math.random() * Math.pow(36, 4)) << 0).toString(36)}`.substr(-4);
 };
 
-Entry.Utils.isPointInMatrix = function(matrix, point, offset) {
+Entry.Utils.randomColor = function () {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+};
+
+Entry.Utils.isPointInMatrix = function (matrix, point, offset) {
     offset = offset === undefined ? 0 : offset;
     const x = matrix.offsetX ? matrix.x + matrix.offsetX : matrix.x;
     const y = matrix.offsetY ? matrix.y + matrix.offsety : matrix.y;
@@ -450,7 +500,7 @@ Entry.Utils.isPointInMatrix = function(matrix, point, offset) {
     );
 };
 
-Entry.Utils.colorDarken = function(color, factor) {
+Entry.Utils.colorDarken = function (color, factor) {
     let r;
     let g;
     let b;
@@ -479,7 +529,7 @@ Entry.Utils.colorDarken = function(color, factor) {
     return `#${r}${g}${b}`;
 };
 
-Entry.Utils.colorLighten = function(color, amount) {
+Entry.Utils.colorLighten = function (color, amount) {
     function clamp01(val) {
         return Math.min(1, Math.max(0, val));
     }
@@ -491,12 +541,12 @@ Entry.Utils.colorLighten = function(color, amount) {
     return Entry.Utils.hslToHex(hsl);
 };
 
-Entry.Utils.getEmphasizeColor = function(color) {
+Entry.Utils.getEmphasizeColor = function (color) {
     return EntryStatic.colorSet.block.emphasize[color] || color;
 };
 
 // Take input from [0, n] and return it as [0, 1]
-Entry.Utils.bound01 = function(n, max) {
+Entry.Utils.bound01 = function (n, max) {
     function isOnePointZero(n) {
         return typeof n === 'string' && n.indexOf('.') != -1 && parseFloat(n) === 1;
     }
@@ -530,7 +580,7 @@ Entry.Utils.bound01 = function(n, max) {
 // Converts an RGB color value to HSL.
 // *Assumes:* r, g, and b are contained in [0, 255] or [0, 1]
 // *Returns:* { h, s, l } in [0,1]
-Entry.Utils.hexToHsl = function(color) {
+Entry.Utils.hexToHsl = function (color) {
     let r;
     let g;
     let b;
@@ -582,7 +632,7 @@ Entry.Utils.hexToHsl = function(color) {
 // Converts an HSL color value to RGB.
 // *Assumes:* h is contained in [0, 1] or [0, 360] and s and l are contained [0, 1] or [0, 100]
 // *Returns:* { r, g, b } in the set [0, 255]
-Entry.Utils.hslToHex = function(color) {
+Entry.Utils.hslToHex = function (color) {
     let r;
     let g;
     let b;
@@ -635,21 +685,20 @@ Entry.Utils.hslToHex = function(color) {
     return `#${hex.join('')}`;
 };
 
-Entry.Utils.setSVGDom = function(SVGDom) {
+Entry.Utils.setSVGDom = function (SVGDom) {
     Entry.Utils.SVGDom = SVGDom;
 };
 
-Entry.Utils.bindIOSDeviceWatch = function() {
+Entry.Utils.bindIOSDeviceWatch = function () {
     const Agent = Entry.Utils.mobileAgentParser();
     if (Agent.apple.device) {
-        console.log('APPLE! MOBILE DEVICE');
         let lastHeight = window.innerHeight || document.documentElement.clientHeight;
         let lastSVGDomHeight = 0;
         if (Entry.Utils.SVGDom) {
             lastSVGDomHeight = Entry.Utils.SVGDom.height();
         }
 
-        setInterval(function() {
+        setInterval(() => {
             const nowHeight = window.innerHeight || document.documentElement.clientHeight;
             let SVGDomCheck = false;
             if (Entry.Utils.SVGDom) {
@@ -663,90 +712,137 @@ Entry.Utils.bindIOSDeviceWatch = function() {
             lastHeight = nowHeight;
         }, 1000);
 
-        $(window).on('orientationchange', function() {
+        $(window).on('orientationchange', () => {
             Entry.windowResized.notify();
         });
+
+        window.addEventListener('pagehide', Entry.beforeUnload);
     }
 };
 
-Entry.Utils.bindGlobalEvent = function(options) {
+function addEntryEvent(dom, event, func) {
+    if (dom && event) {
+        dom.on(event, func);
+    }
+}
+
+function removeEntryEvent(dom, event, func) {
+    if (dom && event) {
+        dom.off(event, func);
+    }
+}
+
+Entry.Utils.bindGlobalEvent = function (options) {
     const doc = $(document);
+    let parentDoc;
+    if (window.parent !== window.self) {
+        try {
+            parentDoc = $(window.parent.document);
+        } catch (e) {}
+    }
     if (options === undefined) {
         options = ['resize', 'mousedown', 'mousemove', 'keydown', 'keyup', 'dispose'];
     }
 
     if (options.indexOf('resize') > -1) {
         if (Entry.windowReszied) {
-            $(window).off('resize');
+            removeEntryEvent($(window), 'resize');
+            if (parentDoc) {
+                removeEntryEvent($(window.parent), 'resize');
+            }
             Entry.windowReszied.clear();
         }
         Entry.windowResized = new Entry.Event(window);
-        $(window).on('resize', function(e) {
+        const func = (e) => {
             Entry.windowResized.notify(e);
-        });
+        };
+        addEntryEvent($(window), 'resize', func);
+        if (parentDoc) {
+            addEntryEvent($(window.parent), 'resize', func);
+        }
         Entry.Utils.bindIOSDeviceWatch();
     }
 
     if (options.indexOf('mousedown') > -1) {
         if (Entry.documentMousedown) {
-            doc.off('mousedown');
+            removeEntryEvent(doc, 'mousedown');
+            removeEntryEvent(parentDoc, 'mousedown');
             Entry.documentMousedown.clear();
         }
         Entry.documentMousedown = new Entry.Event(window);
-        // doc.on('mousedown', function(e) {
-        //     Entry.documentMousedown.notify(e);
-        // });
+        const func = (e) => {
+            const selectedBlock = document.querySelector('.block.selected');
+            if (selectedBlock) {
+                selectedBlock.classList.remove('selected');
+            }
+        };
+        addEntryEvent(doc, 'mousedown', func);
+        addEntryEvent(parentDoc, 'mousedown', func);
     }
 
     if (options.indexOf('mousemove') > -1) {
         if (Entry.documentMousemove) {
-            doc.off('touchmove mousemove');
+            removeEntryEvent(doc, 'touchmove mousemove');
+            removeEntryEvent(parentDoc, 'touchmove mousemove');
             Entry.documentMousemove.clear();
         }
 
         Entry.mouseCoordinate = {};
         Entry.documentMousemove = new Entry.Event(window);
-        doc.on('touchmove mousemove', function(e) {
+        const func = (e) => {
             if (e.originalEvent && e.originalEvent.touches) {
                 e = e.originalEvent.touches[0];
             }
             Entry.documentMousemove.notify(e);
             Entry.mouseCoordinate.x = e.clientX;
             Entry.mouseCoordinate.y = e.clientY;
-        });
+        };
+        addEntryEvent(doc, 'touchmove mousemove', func);
+        addEntryEvent(parentDoc, 'touchmove mousemove', func);
     }
 
     if (options.indexOf('keydown') > -1) {
         if (Entry.keyPressed) {
-            doc.off('keydown');
+            removeEntryEvent(doc, 'keydown');
+            removeEntryEvent(parentDoc, 'keydown');
             Entry.keyPressed.clear();
         }
         Entry.pressedKeys = [];
         Entry.keyPressed = new Entry.Event(window);
-        doc.on('keydown', function(e) {
-            const keyCode = e.keyCode;
-
+        const func = (e) => {
+            const keyCode = Entry.Utils.inputToKeycode(e);
+            if (!keyCode) {
+                return;
+            }
             if (Entry.pressedKeys.indexOf(keyCode) < 0) {
                 Entry.pressedKeys.push(keyCode);
             }
             Entry.keyPressed.notify(e);
-        });
+        };
+        addEntryEvent(doc, 'keydown', func);
+        addEntryEvent(parentDoc, 'keydown', func);
     }
 
     if (options.indexOf('keyup') > -1) {
         if (Entry.keyUpped) {
-            doc.off('keyup');
+            removeEntryEvent(doc, 'keyup');
+            removeEntryEvent(parentDoc, 'keyup');
             Entry.keyUpped.clear();
         }
         Entry.keyUpped = new Entry.Event(window);
-        doc.on('keyup', function(e) {
-            const keyCode = e.keyCode;
+        const func = (e) => {
+            const keyCode = Entry.Utils.inputToKeycode(e);
+            if (!keyCode) {
+                return;
+            }
             const index = Entry.pressedKeys.indexOf(keyCode);
             if (index > -1) {
                 Entry.pressedKeys.splice(index, 1);
             }
             Entry.keyUpped.notify(e);
-        });
+        };
+        addEntryEvent(doc, 'keyup', func);
+        addEntryEvent(parentDoc, 'keyup', func);
     }
 
     if (options.indexOf('dispose') > -1) {
@@ -755,14 +851,29 @@ Entry.Utils.bindGlobalEvent = function(options) {
         }
         Entry.disposeEvent = new Entry.Event(window);
         if (Entry.documentMousedown) {
-            Entry.documentMousedown.attach(this, function(e) {
+            Entry.documentMousedown.attach(this, (e) => {
                 Entry.disposeEvent.notify(e);
             });
         }
     }
 };
+Entry.Utils.inputToKeycode = (e) => {
+    //https://riptutorial.com/jquery/example/21119/originalevent
+    const event = e.originalEvent || e;
+    let keyCode = event.code == undefined ? event.key : event.code;
+    if (!keyCode) {
+        return null;
+    }
+    keyCode = keyCode.replace('Digit', '');
+    keyCode = keyCode.replace('Numpad', '');
+    if (keyCode.indexOf('Shift') > -1) {
+        keyCode = keyCode.replace('Left', '');
+        keyCode = keyCode.replace('Right', '');
+    }
+    return Entry.KeyboardCode.codeToKeyCode[keyCode];
+};
 
-Entry.Utils.makeActivityReporter = function() {
+Entry.Utils.makeActivityReporter = function () {
     Entry.activityReporter = new Entry.ActivityReporter();
     if (Entry.commander) {
         Entry.commander.addReporter(Entry.activityReporter);
@@ -771,17 +882,11 @@ Entry.Utils.makeActivityReporter = function() {
 };
 
 /**
- * Sample color code for user select
- * @type {!Array<string>}
- */
-Entry.sampleColours = [];
-
-/**
  * Raise error when assert condition fail.
  * @param {!boolean} condition assert condition.
  * @param {?string} message assert message will be shown when assert fail.
  */
-Entry.assert = function(condition, message) {
+Entry.assert = function (condition, message) {
     if (!condition) {
         throw Error(message || 'Assert failed');
     }
@@ -792,7 +897,7 @@ Entry.assert = function(condition, message) {
  * @param {!string} xmlText
  * @param {xml} doc
  */
-Entry.parseTexttoXML = function(xmlText) {
+Entry.parseTexttoXML = function (xmlText) {
     let doc;
     if (window.ActiveXObject) {
         doc = new ActiveXObject('Microsoft.XMLDOM');
@@ -807,11 +912,8 @@ Entry.parseTexttoXML = function(xmlText) {
 
 /**
  * Create html element with some method
- * @param {!string} type
- * @param {string} [elementId=undefined]
- * @return {HTMLElement}
  */
-Entry.createElement = function(type, elementId) {
+Entry.createElement = function (type, elementId) {
     const element = type instanceof HTMLElement ? type : document.createElement(type);
     if (elementId) {
         element.id = elementId;
@@ -820,95 +922,12 @@ Entry.createElement = function(type, elementId) {
     return element;
 };
 
-Entry.makeAutolink = function(html) {
-    if (html) {
-        const regURL = new RegExp(
-            '(http|https|ftp|telnet|news|irc)://([-/.a-zA-Z0-9_~#%$?&=:200-377()][^)\\]}]+)',
-            'gi'
-        );
-        const regEmail = new RegExp('([xA1-xFEa-z0-9_-]+@[xA1-xFEa-z0-9-]+.[a-z0-9-]+)', 'gi');
-        return html
-            .replace(regURL, "<a href='$1://$2' target='_blank'>$1://$2</a>")
-            .replace(regEmail, "<a href='mailto:$1'>$1</a>");
-    } else {
-        return '';
-    }
-};
-
 /**
  * Generate random hash
  * @return {string}
  */
-Entry.generateHash = function(length = 4) {
-    return Math.random()
-        .toString(36)
-        .substr(2, length);
-};
-
-/**
- * Add event listener
- * @param {!string} eventName
- * @param {function} fn
- */
-Entry.addEventListener = function(eventName, fn) {
-    if (!this.events_) {
-        this.events_ = {};
-    }
-
-    if (!this.events_[eventName]) {
-        this.events_[eventName] = [];
-    }
-    if (fn instanceof Function) {
-        this.events_[eventName].push(fn);
-    }
-
-    return true;
-};
-
-/**
- * Dispatch event
- * @param {!string} eventName
- * @param {?} params
- */
-Entry.dispatchEvent = function(eventName, ...args) {
-    if (!this.events_) {
-        this.events_ = {};
-        return;
-    }
-
-    const events = this.events_[eventName];
-    if (_.isEmpty(events)) {
-        return;
-    }
-
-    events.forEach((func) => {
-        return func.apply(window, args);
-    });
-};
-
-/**
- * Remove event listener
- * @param {!string} eventName
- */
-Entry.removeEventListener = function(eventName, fn) {
-    const events = this.events_[eventName];
-    if (_.isEmpty(events)) {
-        return;
-    }
-    this.events_[eventName] = events.filter((a) => {
-        return fn !== a;
-    });
-};
-
-/**
- * Remove event listener
- * @param {!string} eventName
- */
-Entry.removeAllEventListener = function(eventName) {
-    if (!this.events_ || !this.events_[eventName]) {
-        return;
-    }
-    delete this.events_[eventName];
+Entry.generateHash = function (length = 4) {
+    return Math.random().toString(36).substr(2, length);
 };
 
 /**
@@ -919,7 +938,7 @@ Entry.removeAllEventListener = function(eventName) {
  * @param {!number} a
  * @param {!number} b
  */
-Entry.addTwoNumber = function(a, b) {
+Entry.addTwoNumber = function (a, b) {
     if (!Entry.Utils.isNumber(a) || !Entry.Utils.isNumber(b)) {
         return a + b;
     }
@@ -952,7 +971,14 @@ Entry.addTwoNumber = function(a, b) {
 /*
  * HTML hex colour code to RGB colour value
  */
-Entry.hex2rgb = function(hex) {
+Entry.hex2rgb = function (hexstr) {
+    let hex = hexstr[0] === '#' ? hexstr : `#${hexstr}`;
+    if (hex.length === 4) {
+        hex = `#${hex[1]}${hex[1]}${hex[2]}${hex[2]}${hex[3]}${hex[3]}`;
+    }
+    if (!/^#[0-9a-f]{6}?$/i.test(hex)) {
+        hex = '#000000';
+    }
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result
         ? {
@@ -966,14 +992,25 @@ Entry.hex2rgb = function(hex) {
 /*
  * RGB colour value to HTML hex colour code
  */
-Entry.rgb2hex = function(r, g, b) {
+Entry.rgb2hex = function (r, g, b) {
     return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
+};
+
+/**
+ *
+ * @param {number} r - 0~255 integer
+ * @param {number} g - 0~255 integer
+ * @param {number} b - 0~255 integer
+ * @return {number} 0~0xffffff integer
+ */
+Entry.rgb2Number = function (r, g, b) {
+    return (r << 16) + (g << 8) + Number(b);
 };
 
 /*
  * Generate random rgb color object
  */
-Entry.generateRgb = function() {
+Entry.generateRgb = function () {
     return {
         r: Math.floor(Math.random() * 256),
         g: Math.floor(Math.random() * 256),
@@ -985,7 +1022,7 @@ Entry.generateRgb = function() {
  * Adjustment input value by max and min value
  * @param {!Number} value, min, max
  */
-Entry.adjustValueWithMaxMin = function(input, min, max) {
+Entry.adjustValueWithMaxMin = function (input, min, max) {
     if (input > max) {
         return max;
     } else if (input < min) {
@@ -1002,11 +1039,11 @@ Entry.adjustValueWithMaxMin = function(input, min, max) {
  * @param {Array} arr
  * @return {boolean} return true when target value exists already
  */
-Entry.isExist = function(targetValue, identifier, arr) {
+Entry.isExist = function (targetValue, identifier, arr) {
     return !!_.find(arr, { [identifier]: targetValue });
 };
 
-Entry.getColourCodes = function() {
+Entry.getColourCodes = function () {
     return [
         'transparent',
         '#660000',
@@ -1096,7 +1133,7 @@ Entry.getColourCodes = function() {
  * @param {Element} targetElement
  * @return {boolean} return true when target element remove or not
  */
-Entry.removeElement = function(element) {
+Entry.removeElement = function (element) {
     if (element && element.parentNode) {
         element.parentNode.removeChild(element);
     }
@@ -1107,7 +1144,7 @@ Entry.removeElement = function(element) {
  * @param {String||Number} value
  * @return {Boolean||Number} arr
  */
-Entry.parseNumber = function(value) {
+Entry.parseNumber = function (value) {
     if (typeof value === 'string') {
         if (
             (Entry.Utils.isNumber(value) && value[0] === '0') ||
@@ -1130,7 +1167,7 @@ Entry.parseNumber = function(value) {
  * @param {!String} dataString
  * @return {Number}
  */
-Entry.countStringLength = function(dataString) {
+Entry.countStringLength = function (dataString) {
     let p;
     let len = 0;
     for (p = 0; p < dataString.length; p++) {
@@ -1150,7 +1187,7 @@ Entry.countStringLength = function(dataString) {
  * @param {!Number} stringLength
  * @return {String}
  */
-Entry.cutStringByLength = function(dataString, stringLength) {
+Entry.cutStringByLength = function (dataString, stringLength) {
     let p;
     let len = 0;
     for (p = 0; len < stringLength && p < dataString.length; p++) {
@@ -1169,7 +1206,7 @@ Entry.cutStringByLength = function(dataString, stringLength) {
  * @param {Element} child
  * @return {Boolean}
  */
-Entry.isChild = function(parent, child) {
+Entry.isChild = function (parent, child) {
     if (!child) {
         while (child.parentNode) {
             if ((child = child.parentNode) == parent) {
@@ -1183,7 +1220,7 @@ Entry.isChild = function(parent, child) {
 /**
  * @param {Element} child
  */
-Entry.launchFullScreen = function(element) {
+Entry.launchFullScreen = function (element) {
     if (element.requestFullscreen) {
         element.requestFullscreen();
     } else if (element.mozRequestFulScreen) {
@@ -1195,7 +1232,7 @@ Entry.launchFullScreen = function(element) {
     }
 };
 
-Entry.exitFullScreen = function() {
+Entry.exitFullScreen = function () {
     if (document.exitFullScreen) {
         document.exitFullScreen();
     } else if (document.mozCancelFullScreen) {
@@ -1205,7 +1242,7 @@ Entry.exitFullScreen = function() {
     }
 };
 
-Entry.isPhone = function() {
+Entry.isPhone = function () {
     return false;
     //if (window.screen.availWidth > 480)
     //return false;
@@ -1213,60 +1250,80 @@ Entry.isPhone = function() {
     //return true;
 };
 
-Entry.getKeyCodeMap = function() {
+Entry.getKeyCodeMap = function () {
     return {
-        '65': 'a',
-        '66': 'b',
-        '67': 'c',
-        '68': 'd',
-        '69': 'e',
-        '70': 'f',
-        '71': 'g',
-        '72': 'h',
-        '73': 'i',
-        '74': 'j',
-        '75': 'k',
-        '76': 'l',
-        '77': 'm',
-        '78': 'n',
-        '79': 'o',
-        '80': 'p',
-        '81': 'q',
-        '82': 'r',
-        '83': 's',
-        '84': 't',
-        '85': 'u',
-        '86': 'v',
-        '87': 'w',
-        '88': 'x',
-        '89': 'y',
-        '90': 'z',
-        '32': Lang.Blocks.START_press_some_key_space,
-        '37': Lang.Blocks.START_press_some_key_left,
-        '38': Lang.Blocks.START_press_some_key_up,
-        '39': Lang.Blocks.START_press_some_key_right,
-        '40': Lang.Blocks.START_press_some_key_down,
-        '48': '0',
-        '49': '1',
-        '50': '2',
-        '51': '3',
-        '52': '4',
-        '53': '5',
-        '54': '6',
-        '55': '7',
-        '56': '8',
-        '57': '9',
-        '13': Lang.Blocks.START_press_some_key_enter,
-        '27': 'esc',
-        '17': 'ctrl',
-        '18': 'alt',
-        '9': 'tab',
-        '16': 'shift',
-        '8': 'backspace',
+        8: 'backspace',
+        9: 'tab',
+        13: Lang.Blocks.START_press_some_key_enter,
+        16: 'shift',
+        17: 'ctrl',
+        18: 'alt',
+        27: 'esc',
+        32: Lang.Blocks.START_press_some_key_space,
+        37: Lang.Blocks.START_press_some_key_left,
+        38: Lang.Blocks.START_press_some_key_up,
+        39: Lang.Blocks.START_press_some_key_right,
+        40: Lang.Blocks.START_press_some_key_down,
+        48: '0',
+        49: '1',
+        50: '2',
+        51: '3',
+        52: '4',
+        53: '5',
+        54: '6',
+        55: '7',
+        56: '8',
+        57: '9',
+        65: 'a',
+        66: 'b',
+        67: 'c',
+        68: 'd',
+        69: 'e',
+        70: 'f',
+        71: 'g',
+        72: 'h',
+        73: 'i',
+        74: 'j',
+        75: 'k',
+        76: 'l',
+        77: 'm',
+        78: 'n',
+        79: 'o',
+        80: 'p',
+        81: 'q',
+        82: 'r',
+        83: 's',
+        84: 't',
+        85: 'u',
+        86: 'v',
+        87: 'w',
+        88: 'x',
+        89: 'y',
+        90: 'z',
+        //special Characters
+        186: ';',
+        187: '=',
+        188: ',',
+        189: '-',
+        190: '.',
+        191: '/',
+        192: '~',
+        219: '[',
+        220: 'Backslash',
+        221: ']',
+        222: "'",
+        // #2590 이슈 처리에 의해 주석처리
+        // '45': 'Help',
+        // '45': 'Insert',
+        // '46': 'Delete',
+        // '36': 'Home',
+        // '35': 'End',
+        // '33': 'PageUp',
+        // '34': 'PageDown',
     };
 };
 
-Entry.checkCollisionRect = function(rectA, rectB) {
+Entry.checkCollisionRect = function (rectA, rectB) {
     return !(
         rectA.y + rectA.height < rectB.y ||
         rectA.y > rectB.y + rectB.height ||
@@ -1275,24 +1332,22 @@ Entry.checkCollisionRect = function(rectA, rectB) {
     );
 };
 
-Entry.bindAnimationCallback = function(element, func) {
+Entry.bindAnimationCallback = function (element, func) {
     element.addEventListener('webkitAnimationEnd', func, false);
     element.addEventListener('animationend', func, false);
     element.addEventListener('oanimationend', func, false);
 };
 
-Entry.cloneSimpleObject = function(object) {
+Entry.cloneSimpleObject = function (object) {
     return _.clone(object);
 };
 
-Entry.computeInputWidth = (function() {
+Entry.computeInputWidth = (function () {
     let elem;
     const _cache = {};
-    return function(value) {
-        value = value
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;');
+    return function (value) {
+        // eslint-disable-next-line no-param-reassign
+        value = value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
         const cached = _cache[value];
         if (cached) {
@@ -1306,7 +1361,7 @@ Entry.computeInputWidth = (function() {
                 document.body.appendChild(elem);
             }
 
-            elem.innerHTML = value;
+            elem.textContent = value;
             const ret = `${Number(elem.offsetWidth + 10)}px`;
 
             if (window.fontLoaded) {
@@ -1317,11 +1372,11 @@ Entry.computeInputWidth = (function() {
     };
 })();
 
-Entry.isArrowOrBackspace = function(keyCode) {
-    return !!~[37, 38, 39, 40, 8].indexOf(keyCode);
+Entry.isArrowOrBackspace = function (keyCode) {
+    return !!~['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Backspace'].indexOf(keyCode);
 };
 
-Entry.hexStringToBin = function(hexString) {
+Entry.hexStringToBin = function (hexString) {
     const bytes = [];
     let str;
 
@@ -1334,7 +1389,7 @@ Entry.hexStringToBin = function(hexString) {
 };
 
 //maybe deprecated
-Entry.findObjsByKey = function(arr, keyName, key) {
+Entry.findObjsByKey = function (arr, keyName, key) {
     const result = [];
     for (let i = 0; i < arr.length; i++) {
         if (arr[i][keyName] == key) {
@@ -1344,39 +1399,114 @@ Entry.findObjsByKey = function(arr, keyName, key) {
     return result;
 };
 
-Entry.factorial = _.memoize(function(n) {
+Entry.factorial = _.memoize((n) => {
     if (n === 0 || n == 1) {
         return 1;
     }
     return Entry.factorial(n - 1) * n;
 });
 
-Entry.getListRealIndex = function(index, list) {
+Entry.getListRealIndex = function (index, list) {
     if (!Entry.Utils.isNumber(index)) {
         switch (index) {
             case 'FIRST':
                 index = 1;
                 break;
             case 'LAST':
-                index = list.array_.length;
+                index = list.getArray().length;
                 break;
             case 'RANDOM':
-                index = Math.floor(Math.random() * list.array_.length) + 1;
+                index = Math.floor(Math.random() * list.getArray().length) + 1;
                 break;
         }
     }
     return index;
 };
 
-Entry.toRadian = function(angle) {
+Entry.toRadian = function (angle) {
     return (angle * Math.PI) / 180;
 };
 
-Entry.toDegrees = function(radians) {
+Entry.toDegrees = function (radians) {
     return (radians * 180) / Math.PI;
 };
 
-Entry.getPicturesJSON = function(pictures = [], isClone) {
+const SQRT3 = Math.sqrt(3);
+
+const TRIG_VALUES = {
+    sin: {
+        0: 0,
+        30: 0.5,
+        45: Math.SQRT2 / 2,
+        60: SQRT3 / 2,
+        90: 1,
+        120: SQRT3 / 2,
+        135: Math.SQRT2 / 2,
+        150: 0.5,
+        180: 0,
+        210: -0.5,
+        225: -Math.SQRT2 / 2,
+        240: -SQRT3 / 2,
+        270: -1,
+        300: -SQRT3 / 2,
+        315: -Math.SQRT2 / 2,
+        330: -0.5,
+        360: 0,
+    },
+    cos: {
+        0: 1,
+        30: SQRT3 / 2,
+        45: Math.SQRT2 / 2,
+        60: 0.5,
+        90: 0,
+        120: -0.5,
+        135: -Math.SQRT2 / 2,
+        150: -SQRT3 / 2,
+        180: -1,
+        210: -SQRT3 / 2,
+        225: -Math.SQRT2 / 2,
+        240: -0.5,
+        270: 0,
+        300: 0.5,
+        315: Math.SQRT2 / 2,
+        330: SQRT3 / 2,
+        360: 1,
+    },
+    tan: {
+        0: 0,
+        30: SQRT3 / 3,
+        45: 1,
+        60: SQRT3,
+        90: Infinity,
+        120: -SQRT3,
+        135: -1,
+        150: -SQRT3 / 3,
+        180: 0,
+        210: SQRT3 / 3,
+        225: 1,
+        240: SQRT3,
+        270: -Infinity,
+        300: -SQRT3,
+        315: -1,
+        330: -SQRT3 / 3,
+        360: 0,
+    },
+};
+
+Entry.preciseTrig = (degrees, operator) => {
+    const angle = degrees % 360;
+
+    if (
+        TRIG_VALUES[operator] &&
+        Object.prototype.hasOwnProperty.call(TRIG_VALUES[operator], angle)
+    ) {
+        return TRIG_VALUES[operator][angle];
+    }
+
+    return Math[operator](Entry.toRadian(angle));
+};
+
+Entry.getPicturesJSON = function (pictures = [], isClone) {
     return pictures.reduce((acc, p) => {
         const o = {};
         o._id = p._id;
@@ -1384,14 +1514,16 @@ Entry.getPicturesJSON = function(pictures = [], isClone) {
         o.dimension = p.dimension;
         o.filename = p.filename;
         o.fileurl = p.fileurl;
+        o.thumbUrl = p.thumbUrl;
         o.name = p.name;
         o.scale = p.scale;
+        o.imageType = p.imageType || 'png';
         acc.push(o);
         return acc;
     }, []);
 };
 
-Entry.getSoundsJSON = function(sounds = [], isClone) {
+Entry.getSoundsJSON = function (sounds = [], isClone) {
     return sounds.reduce((acc, s) => {
         const o = {};
         o._id = s._id;
@@ -1406,11 +1538,11 @@ Entry.getSoundsJSON = function(sounds = [], isClone) {
     }, []);
 };
 
-Entry.cutDecimal = function(number) {
+Entry.cutDecimal = function (number) {
     return Math.round(number * 100) / 100;
 };
 
-Entry.getBrowserType = function() {
+Entry.getBrowserType = function () {
     if (Entry.userAgent) {
         return Entry.userAgent;
     }
@@ -1424,10 +1556,7 @@ Entry.getBrowserType = function() {
     if (M[1] === 'Chrome') {
         tem = ua.match(/\b(OPR|Edge)\/(\d+)/);
         if (tem != null) {
-            return tem
-                .slice(1)
-                .join(' ')
-                .replace('OPR', 'Opera');
+            return tem.slice(1).join(' ').replace('OPR', 'Opera');
         }
     }
     M = M[2] ? [M[1], M[2]] : [navigator.appName, navigator.appVersion, '-?'];
@@ -1439,76 +1568,104 @@ Entry.getBrowserType = function() {
     return uaResult;
 };
 
-Entry.setBasicBrush = function(sprite) {
-    const brush = new createjs.Graphics();
+Entry.setBasicBrush = function (sprite) {
+    const isWebGL = GEHelper.isWebGL;
+    const brush = GEHelper.brushHelper.newBrush();
     if (sprite.brush) {
         const parentBrush = sprite.brush;
         brush.thickness = parentBrush.thickness;
         brush.rgb = parentBrush.rgb;
-
         brush.opacity = parentBrush.opacity;
         brush.setStrokeStyle(brush.thickness);
-        brush.beginStroke(
-            `rgba(${brush.rgb.r},${brush.rgb.g},${brush.rgb.b},${1 - brush.opacity / 100})`
-        );
+
+        const rgb = brush.rgb;
+        const opacity = 1 - brush.opacity / 100;
+
+        if (isWebGL) {
+            brush.beginStrokeFast(Entry.rgb2Number(rgb.r, rgb.g, rgb.b), opacity);
+        } else {
+            brush.beginStroke(`rgba(${rgb.r},${rgb.g},${rgb.b},${opacity})`);
+        }
     } else {
         brush.thickness = 1;
         brush.rgb = Entry.hex2rgb('#ff0000');
         brush.opacity = 0;
         brush.setStrokeStyle(1);
-        brush.beginStroke('rgba(255,0,0,1)');
+        if (isWebGL) {
+            brush.beginStrokeFast(0xff0000, 1);
+        } else {
+            brush.beginStroke('rgba(255,0,0,1)');
+        }
     }
 
     brush.entity = sprite;
+    const shape = GEHelper.brushHelper.newShape(brush);
 
-    const shape = new createjs.Shape(brush);
     shape.entity = sprite;
     const selectedObjectContainer = Entry.stage.selectedObjectContainer;
     selectedObjectContainer.addChildAt(shape, selectedObjectContainer.getChildIndex(sprite.object));
 
-    if (sprite.brush) {
-        sprite.brush = null;
-    }
     sprite.brush = brush;
 
     sprite.shapes.push(shape);
 };
 
-Entry.setCloneBrush = function(sprite, parentBrush) {
-    const brush = new createjs.Graphics();
+Entry.setCloneBrush = function (sprite, parentBrush) {
+    const isWebGL = GEHelper.isWebGL;
+    const brush = GEHelper.brushHelper.newBrush();
     brush.thickness = parentBrush.thickness;
     brush.rgb = parentBrush.rgb;
-
     brush.opacity = parentBrush.opacity;
     brush.setStrokeStyle(brush.thickness);
-    brush.beginStroke(
-        `rgba(${brush.rgb.r},${brush.rgb.g},${brush.rgb.b},${1 - brush.opacity / 100})`
-    );
 
-    const shape = new createjs.Shape(brush);
+    const rgb = brush.rgb;
+    const opacity = 1 - brush.opacity / 100;
+    if (isWebGL) {
+        brush.beginStrokeFast(Entry.rgb2Number(rgb.r, rgb.g, rgb.b), opacity);
+    } else {
+        brush.beginStroke(`rgba(${rgb.r},${rgb.g},${rgb.b},${opacity})`);
+    }
+
+    const shape = GEHelper.brushHelper.newShape(brush);
     shape.entity = sprite;
     const selectedObjectContainer = Entry.stage.selectedObjectContainer;
     selectedObjectContainer.addChildAt(shape, selectedObjectContainer.getChildIndex(sprite.object));
 
     brush.stop = parentBrush.stop;
 
-    if (sprite.brush) {
-        sprite.brush = null;
-    }
     sprite.brush = brush;
 
     sprite.shapes.push(shape);
 };
 
-Entry.isFloat = function(num) {
+Entry.setBasicPaint = function (sprite) {
+    const isWebGL = GEHelper.isWebGL;
+    const paint = GEHelper.brushHelper.newPaint();
+    const shape = GEHelper.brushHelper.newShape(paint);
+    paint.entity = sprite;
+    paint.opacity = 0;
+    paint.rgb = Entry.hex2rgb('#ff0000');
+    if (isWebGL) {
+        paint.beginFillFast(0xff0000, 1);
+    } else {
+        paint.beginFill('rgba(255,0,0,1)');
+    }
+    shape.entity = sprite;
+    const selectedObjectContainer = Entry.stage.selectedObjectContainer;
+    selectedObjectContainer.addChildAt(shape, selectedObjectContainer.getChildIndex(sprite.object));
+    sprite.paint = paint;
+    sprite.paintShapes.push(shape);
+};
+
+Entry.isFloat = function (num) {
     return /\d+\.{1}\d+$/.test(num);
 };
 
-Entry.isInteger = function(value) {
+Entry.isInteger = function (value) {
     return isFinite(value) && Math.floor(value) == value;
 };
 
-Entry.getStringIndex = function(str) {
+Entry.getStringIndex = function (str) {
     if (!str) {
         return '';
     }
@@ -1537,7 +1694,7 @@ Entry.getStringIndex = function(str) {
     return result;
 };
 
-Entry.getOrderedName = function(str, objects, field) {
+Entry.getOrderedName = function (str, objects, field) {
     if (!str) {
         return 'untitled';
     }
@@ -1556,7 +1713,7 @@ Entry.getOrderedName = function(str, objects, field) {
     return str;
 };
 
-Entry.getOrderedNameNumber = function(str, objects, field) {
+Entry.getOrderedNameNumber = function (str, objects, field) {
     const source = Entry.getStringIndex(str);
     let maxNumber = 0;
     for (let i = 0, len = objects.length; i < len; i++) {
@@ -1568,7 +1725,7 @@ Entry.getOrderedNameNumber = function(str, objects, field) {
     return maxNumber;
 };
 
-Entry.changeXmlHashId = function(xmlBlock) {
+Entry.changeXmlHashId = function (xmlBlock) {
     const reg = /function_field/;
     if (reg.test(xmlBlock.getAttribute('type'))) {
         const mutations = xmlBlock.getElementsByTagName('mutation');
@@ -1579,7 +1736,7 @@ Entry.changeXmlHashId = function(xmlBlock) {
     return xmlBlock;
 };
 
-Entry.getMaxFloatPoint = function(numbers) {
+Entry.getMaxFloatPoint = function (numbers) {
     let max = 0;
     for (let i = 0, len = numbers.length; i < len; i++) {
         const n = String(numbers[i]);
@@ -1594,7 +1751,7 @@ Entry.getMaxFloatPoint = function(numbers) {
     return Math.min(max, 20);
 };
 
-Entry.convertToRoundedDecimals = function(value, decimals) {
+Entry.convertToRoundedDecimals = function (value, decimals) {
     if (!Entry.Utils.isNumber(value) || !this.isFloat(value)) {
         return value;
     } else {
@@ -1602,19 +1759,19 @@ Entry.convertToRoundedDecimals = function(value, decimals) {
     }
 };
 
-Entry.attachEventListener = function(elem, eventType, func) {
-    setTimeout(function() {
+Entry.attachEventListener = function (elem, eventType, func) {
+    setTimeout(() => {
         elem.addEventListener(eventType, func);
     }, 0);
 };
 
-Entry.deAttachEventListener = function(elem, eventType, func) {
+Entry.deAttachEventListener = function (elem, eventType, func) {
     elem.removeEventListener(eventType, func);
 };
 
 Entry.isEmpty = _.isEmpty;
 
-Entry.Utils.disableContextmenu = function(node) {
+Entry.Utils.disableContextmenu = function (node) {
     if (!node) {
         return;
     }
@@ -1622,13 +1779,13 @@ Entry.Utils.disableContextmenu = function(node) {
     $(node).on('contextmenu', this.contextPreventFunction);
 };
 
-Entry.Utils.contextPreventFunction = function(e) {
+Entry.Utils.contextPreventFunction = function (e) {
     e.stopPropagation();
     e.preventDefault();
     return false;
 };
 
-Entry.Utils.enableContextmenu = function(node) {
+Entry.Utils.enableContextmenu = function (node) {
     if (!node) {
         return;
     }
@@ -1636,30 +1793,31 @@ Entry.Utils.enableContextmenu = function(node) {
     $(node).off('contextmenu', this.contextPreventFunction);
 };
 
-Entry.Utils.isRightButton = function(e) {
+Entry.Utils.isRightButton = function (e) {
     return e.button == 2 || e.ctrlKey;
 };
 
-Entry.Utils.isTouchEvent = function({ type }) {
+Entry.Utils.isTouchEvent = function ({ type }) {
     return type.toLowerCase().includes('touch');
 };
 
-Entry.Utils.inherit = function(parent, child) {
+Entry.Utils.inherit = function (parent, child) {
     function F() {}
+
     F.prototype = parent.prototype;
     child.prototype = new F();
     return child;
 };
 
-Entry.bindAnimationCallbackOnce = function($elem, func) {
+Entry.bindAnimationCallbackOnce = function ($elem, func) {
     $elem.one('webkitAnimationEnd animationendo animationend', func);
 };
 
-Entry.Utils.isInInput = function({ target: { type } }) {
+Entry.Utils.isInInput = function ({ target: { type } }) {
     return type === 'textarea' || type === 'text' || type === 'number';
 };
 
-Entry.Utils.addFilters = function(boardSvgDom, suffix, isOnlyBlock) {
+Entry.Utils.addFilters = function (boardSvgDom, suffix, isOnlyBlock) {
     const defs = boardSvgDom.elem('defs');
 
     //trashcan filter
@@ -1781,7 +1939,7 @@ Entry.Utils.addFilters = function(boardSvgDom, suffix, isOnlyBlock) {
     }
 };
 
-Entry.Utils.addBlockPattern = function(boardSvgDom, suffix) {
+Entry.Utils.addBlockPattern = function (boardSvgDom, suffix) {
     const pattern = boardSvgDom.elem('pattern', {
         id: `blockHoverPattern_${suffix}`,
         class: 'blockHoverPattern',
@@ -1810,6 +1968,141 @@ Entry.Utils.addBlockPattern = function(boardSvgDom, suffix) {
     return { pattern };
 };
 
+function handleOptionalBlocksActive(item) {
+    const { expansionBlocks = [], aiUtilizeBlocks = [] } = item;
+    if (expansionBlocks.length > 0) {
+        Entry.expansion.addExpansionBlocks(expansionBlocks);
+    }
+    if (aiUtilizeBlocks.length > 0) {
+        Entry.aiUtilize.addAIUtilizeBlocks(aiUtilizeBlocks);
+    }
+}
+
+Entry.Utils.addNewBlock = function (item) {
+    const {
+        script,
+        functions,
+        messages,
+        variables,
+        learning = {},
+        tables = [],
+        expansionBlocks = [],
+        aiUtilizeBlocks = [],
+    } = item;
+    const parseScript = JSON.parse(script);
+    if (!parseScript) {
+        return;
+    }
+
+    if (
+        Entry.getMainWS().mode === Entry.Workspace.MODE_VIMBOARD &&
+        (!Entry.TextCodingUtil.canUsePythonVariables(variables) ||
+            !Entry.TextCodingUtil.canUsePythonFunctions(functions))
+    ) {
+        return Entry.modal.alert(Lang.Menus.object_import_syntax_error);
+    }
+
+    const objectIdMap = {};
+    variables.forEach((variable) => {
+        const { object } = variable;
+        if (object) {
+            variable.object = _.get(Entry, ['container', 'selectedObject', 'id'], '');
+        }
+    });
+    DataTable.setTables(tables);
+    if (!Entry.options.aiUtilizeDisable) {
+        Entry.aiLearning.load(learning);
+    }
+    handleOptionalBlocksActive(item);
+
+    Entry.variableContainer.appendMessages(messages);
+    Entry.variableContainer.appendVariables(variables);
+    Entry.variableContainer.appendFunctions(functions);
+    if (!Entry.container || !Entry.container.isSceneObjectsExist()) {
+        if (Entry.toast && !(this.objectAlert && Entry.toast.isOpen(this.objectAlert))) {
+            this.objectAlert = Entry.toast.alert(
+                Lang.Workspace.add_object_alert,
+                Lang.Workspace.add_object_alert_msg
+            );
+        }
+        return;
+    }
+    Entry.do(
+        'addThread',
+        parseScript.map((block) => {
+            block.id = Entry.generateHash();
+            return block;
+        })
+    );
+};
+
+Entry.Utils.addNewObject = function (sprite) {
+    if (sprite) {
+        const {
+            objects,
+            functions,
+            messages,
+            variables,
+            tables = [],
+            expansionBlocks = [],
+            aiUtilizeBlocks = [],
+        } = sprite;
+
+        if (
+            Entry.getMainWS().mode === Entry.Workspace.MODE_VIMBOARD &&
+            (!Entry.TextCodingUtil.canUsePythonVariables(variables) ||
+                !Entry.TextCodingUtil.canUsePythonFunctions(functions))
+        ) {
+            return Entry.modal.alert(Lang.Menus.object_import_syntax_error);
+        }
+        const objectIdMap = {};
+        DataTable.setTables(tables);
+        handleOptionalBlocksActive(sprite);
+        variables.forEach((variable) => {
+            const { object } = variable;
+            if (object) {
+                const id = variable.id;
+                const idMap = objectIdMap[object];
+                variable.id = Entry.generateHash();
+                if (!idMap) {
+                    variable.object = Entry.generateHash();
+                    objectIdMap[object] = {
+                        objectId: variable.object,
+                        variableOriginId: [id],
+                        variableId: [variable.id],
+                    };
+                } else {
+                    variable.object = idMap.objectId;
+                    idMap.variableOriginId.push(id);
+                    idMap.variableId.push(variable.id);
+                }
+            }
+        });
+        Entry.variableContainer.appendMessages(messages);
+        Entry.variableContainer.appendVariables(variables);
+        Entry.variableContainer.appendFunctions(functions);
+
+        objects.forEach((object) => {
+            const idMap = objectIdMap[object.id];
+            if (idMap) {
+                let script = object.script;
+                idMap.variableOriginId.forEach((id, idx) => {
+                    const regex = new RegExp(id, 'gi');
+                    script = script.replace(regex, idMap.variableId[idx]);
+                });
+                object.script = script;
+                object.id = idMap.objectId;
+            } else if (Entry.container.getObject(object.id)) {
+                object.id = Entry.generateHash();
+            }
+            if (!object.objectType) {
+                object.objectType = 'sprite';
+            }
+            Entry.container.addObject(object, 0);
+        });
+    }
+};
+
 Entry.Utils.COLLISION = {
     NONE: 0,
     UP: 1,
@@ -1818,7 +2111,7 @@ Entry.Utils.COLLISION = {
     DOWN: 4,
 };
 
-Entry.Utils.createMouseEvent = function(type, event) {
+Entry.Utils.createMouseEvent = function (type, event) {
     const e = document.createEvent('MouseEvent');
     e.initMouseEvent(
         type,
@@ -1840,125 +2133,142 @@ Entry.Utils.createMouseEvent = function(type, event) {
     return e;
 };
 
-Entry.Utils.stopProjectWithToast = function(scope, message, error) {
-    let block = scope.block;
-    message = message || '런타임 에러 발생';
+Entry.Utils.stopProjectWithToast = _throttle(
+    async (scope, message, error) => {
+        let block = scope.block;
+        message = message || 'Runtime Error';
+        const toast = error.toast;
+        const engine = Entry.engine;
 
-    const engine = Entry.engine;
-
-    engine && engine.toggleStop();
-
-    if (Entry.type === 'workspace') {
-        if (scope.block && 'funcBlock' in scope.block) {
-            block = scope.block.funcBlock;
-        } else if (scope.funcExecutor) {
-            block = scope.funcExecutor.scope.block;
-            Entry.Func.edit(scope.type);
+        if (engine && engine.isState('run')) {
+            await engine.toggleStop();
         }
-
-        if (block) {
-            const id = block.getCode().object && block.getCode().object.id;
-            if (id) {
-                Entry.container.selectObject(block.getCode().object.id, true);
+        if (Entry.type === 'workspace') {
+            if (scope.block && 'funcBlock' in scope.block) {
+                block = scope.block.funcBlock;
+            } else if (scope.funcExecutor) {
+                block = scope.funcExecutor.scope.block;
+                Entry.Func.edit(scope.type);
             }
-            const view = block.view;
-            view && view.getBoard().activateBlock(block);
+
+            if (block) {
+                const id = block.getCode().object && block.getCode().object.id;
+                if (id) {
+                    Entry.container.selectObject(block.getCode().object.id, true);
+                }
+                const view = block.view;
+                view && view.getBoard().activateBlock(block);
+            }
         }
-    }
 
-    if (Entry.toast) {
-        Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.check_runtime_error, true);
-    }
+        if (message === 'IncompatibleError' && Entry.toast) {
+            Entry.toast.alert(
+                Lang.Msgs.warn,
+                toast || [Lang.Workspace.check_runtime_error, Lang.Workspace.check_browser_error],
+                true
+            );
+            Entry.engine.hideAllAudioPanel();
+        }
+        if (message === 'OfflineError' && Entry.toast) {
+            Entry.toast.alert(
+                Lang.Msgs.warn,
+                toast || [
+                    Lang.Workspace.check_runtime_error,
+                    Lang.Workspace.offline_not_compatible_error,
+                ],
+                true
+            );
+        } else if (Entry.toast) {
+            Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.check_runtime_error, true);
+        }
 
-    if (error) {
-        error.message = `${message}: ${error.message}`;
-        throw error;
-    }
+        if (error) {
+            const newError = new Error(`${message}: ${error.message}`);
+            newError.stack = error.stack;
+            throw newError;
+        }
 
-    throw new Error(message);
-};
+        throw new Error(message);
+    },
+    300,
+    { trailing: false }
+);
 
-Entry.Utils.AsyncError = function(message) {
+Entry.Utils.AsyncError = function (message) {
     this.name = 'AsyncError';
-    this.message = message || '비동기 호출 대기';
+    this.message = message || 'Waiting for callback';
 };
 
 Entry.Utils.AsyncError.prototype = new Error();
 Entry.Utils.AsyncError.prototype.constructor = Entry.Utils.AsyncError;
 
-Entry.Utils.isChrome = function() {
+Entry.Utils.IncompatibleError = function (message, toast) {
+    this.name = 'IncompatibleError';
+    this.message = message || 'IncompatibleError';
+    this.toast = toast || null;
+};
+Entry.Utils.IncompatibleError.prototype = new Error();
+Entry.Utils.IncompatibleError.prototype.constructor = Entry.Utils.IncompatibleError;
+
+Entry.Utils.OfflineError = function (message, toast) {
+    this.name = 'OfflineError';
+    this.message = message || 'OfflineError';
+    this.toast = toast || null;
+};
+Entry.Utils.OfflineError.prototype = new Error();
+Entry.Utils.OfflineError.prototype.constructor = Entry.Utils.OfflineError;
+
+Entry.Utils.isChrome = function () {
     return /chrom(e|ium)/.test(navigator.userAgent.toLowerCase());
 };
 
-Entry.Utils.waitForWebfonts = function(fonts, callback) {
-    let loadedFonts = 0;
-    if (fonts && fonts.length) {
-        for (let i = 0, l = fonts.length; i < l; ++i) {
-            let node = document.createElement('span');
-            // Characters that vary significantly among different fonts
-            node.innerHTML = 'giItT1WQy@!-/#';
-            // Visible - so we can measure it - but not on the screen
-            node.style.position = 'absolute';
-            node.style.left = '-10000px';
-            node.style.top = '-10000px';
-            // Large font size makes even subtle changes obvious
-            node.style.fontSize = '300px';
-            // Reset any font properties
-            node.style.fontFamily = 'sans-serif';
-            node.style.fontVariant = 'normal';
-            node.style.fontStyle = 'normal';
-            node.style.fontWeight = 'normal';
-            node.style.letterSpacing = '0';
-            document.body.appendChild(node);
-
-            // Remember width with no applied web font
-            const width = node.offsetWidth;
-
-            node.style.fontFamily = fonts[i];
-
-            let interval;
-            function checkFont() {
-                // Compare current width with original width
-                if (node && node.offsetWidth != width) {
-                    ++loadedFonts;
-                    node.parentNode.removeChild(node);
-                    node = null;
-                }
-
-                // If all fonts have been loaded
-                if (loadedFonts >= fonts.length) {
-                    if (interval) {
-                        clearInterval(interval);
-                    }
-                    if (loadedFonts == fonts.length) {
-                        callback();
-                        return true;
-                    }
-                }
-            }
-
-            if (!checkFont()) {
-                interval = setInterval(checkFont, 50);
-            }
-        }
-    } else {
-        callback && callback();
-        return true;
+Entry.Utils.getUsedFonts = function (project) {
+    if (!project) {
+        return;
     }
+    const getFamily = (x) =>
+        x.entity.font
+            .split(' ')
+            .filter((t) => t.indexOf('bold') < 0 && t.indexOf('italic') < 0 && t.indexOf('px') < 0)
+            .join(' ');
+    return _uniq(project.objects.filter((x) => x.objectType === 'textBox').map(getFamily));
 };
 
-window.requestAnimFrame = (function() {
+Entry.Utils.waitForWebfonts = function (fonts, callback) {
+    return Promise.all(
+        fonts.map(
+            (font) =>
+                new Promise((resolve) => {
+                    FontFaceOnload(font, {
+                        success() {
+                            resolve();
+                        },
+                        error() {
+                            console.log('fail', font);
+                            resolve();
+                        },
+                        timeout: 5000,
+                    });
+                })
+        )
+    ).then(() => {
+        console.log('font loaded');
+        callback && callback();
+    });
+};
+
+window.requestAnimFrame = (function () {
     return (
         window.requestAnimationFrame ||
         window.webkitRequestAnimationFrame ||
         window.mozRequestAnimationFrame ||
-        function(callback) {
+        function (callback) {
             window.setTimeout(callback, 1000 / 60);
         }
     );
 })();
 
-Entry.isMobile = function() {
+Entry.isMobile = function () {
     if (Entry.device) {
         return Entry.device === 'tablet';
     }
@@ -1976,14 +2286,16 @@ Entry.isMobile = function() {
     }
 };
 
-Entry.Utils.mobileAgentParser = function(userAgent) {
+Entry.Utils.mobileAgentParser = function (userAgent) {
     const applePhone = /iPhone/i;
     const appleIpod = /iPod/i;
     const appleTablet = /iPad/i;
     const androidPhone = /(?=.*\bAndroid\b)(?=.*\bMobile\b)/i; // Match 'Android' AND 'Mobile'
     const androidTablet = /Android/i;
     const amazonPhone = /(?=.*\bAndroid\b)(?=.*\bSD4930UR\b)/i;
-    const amazonTablet = /(?=.*\bAndroid\b)(?=.*\b(?:KFOT|KFTT|KFJWI|KFJWA|KFSOWI|KFTHWI|KFTHWA|KFAPWI|KFAPWA|KFARWI|KFASWI|KFSAWI|KFSAWA)\b)/i;
+    const amazonTablet =
+        // eslint-disable-next-line max-len
+        /(?=.*\bAndroid\b)(?=.*\b(?:KFOT|KFTT|KFJWI|KFJWA|KFSOWI|KFTHWI|KFTHWA|KFAPWI|KFAPWA|KFARWI|KFASWI|KFSAWI|KFSAWA)\b)/i;
     const windowsPhone = /Windows Phone/i;
     const windowsTablet = /(?=.*\bWindows\b)(?=.*\bARM\b)/i; // Match 'Windows' AND 'ARM'
     const otherBlackberry = /BlackBerry/i;
@@ -1993,21 +2305,21 @@ Entry.Utils.mobileAgentParser = function(userAgent) {
     const otherFirefox = /(?=.*\bFirefox\b)(?=.*\bMobile\b)/i; // Match 'Firefox' AND 'Mobile'
     const sevenInch = new RegExp(
         '(?:' + // Non-capturing group
-        'Nexus 7' + // Nexus 7
-        '|' + // OR
-        'BNTV250' + // B&N Nook Tablet 7 inch
-        '|' + // OR
-        'Kindle Fire' + // Kindle Fire
-        '|' + // OR
-        'Silk' + // Kindle Fire, Silk Accelerated
-        '|' + // OR
-        'GT-P1000' + // Galaxy Tab 7 inch
+            'Nexus 7' + // Nexus 7
+            '|' + // OR
+            'BNTV250' + // B&N Nook Tablet 7 inch
+            '|' + // OR
+            'Kindle Fire' + // Kindle Fire
+            '|' + // OR
+            'Silk' + // Kindle Fire, Silk Accelerated
+            '|' + // OR
+            'GT-P1000' + // Galaxy Tab 7 inch
             ')', // End non-capturing group
 
         'i'
     ); // Case-insensitive matching
 
-    const match = function(regex, userAgent) {
+    const match = function (regex, userAgent) {
         return regex.test(userAgent);
     };
 
@@ -2086,7 +2398,7 @@ Entry.Utils.mobileAgentParser = function(userAgent) {
     return this;
 };
 
-Entry.Utils.convertMouseEvent = function(e) {
+Entry.Utils.convertMouseEvent = function (e) {
     if (e.originalEvent && e.originalEvent.touches) {
         return e.originalEvent.touches[0];
     } else if (e.changedTouches) {
@@ -2096,52 +2408,15 @@ Entry.Utils.convertMouseEvent = function(e) {
     }
 };
 
-Entry.Utils.convertIntToHex = function(num) {
-    return num.toString(16).toUpperCase();
-};
-
-Entry.Utils.hasSpecialCharacter = function(str) {
+Entry.Utils.hasSpecialCharacter = function (str) {
     const reg = /!|@|#|\$|%|\^|&|\*|\(|\)|\+|=|-|\[|\]|\\|\'|;|,|\.|\/|{|}|\||\"|:|<|>|\?/g;
     return reg.test(str);
 };
 
-Entry.Utils.debounce = _.debounce;
-
-Entry.Utils.isNewVersion = function(old_version = '', new_version = '') {
-    try {
-        if (old_version === '') {
-            return false;
-        }
-        old_version = old_version.replace('v', '');
-        new_version = new_version.replace('v', '');
-        const arrOld = old_version.split('.');
-        const arrNew = new_version.split('.');
-        const count = arrOld.length < arrNew.length ? arrOld.length : arrNew.length;
-        let isNew = false;
-        let isSame = true;
-        for (let i = 0; i < count; i++) {
-            if (Number(arrOld[i]) < Number(arrNew[i])) {
-                isNew = true;
-                isSame = false;
-            } else if (Number(arrOld[i]) > Number(arrNew[i])) {
-                isSame = false;
-            }
-        }
-
-        if (isSame && arrOld.length < arrNew.length) {
-            isNew = true;
-        }
-
-        return isNew;
-    } catch (e) {
-        return false;
-    }
-};
-
-Entry.Utils.getBlockCategory = (function() {
+Entry.Utils.getBlockCategory = (function () {
     const map = {};
     let allBlocks;
-    return function(blockType) {
+    return function (blockType) {
         if (!blockType) {
             return;
         }
@@ -2165,7 +2440,7 @@ Entry.Utils.getBlockCategory = (function() {
     };
 })();
 
-Entry.Utils.getUniqObjectsBlocks = function(objects) {
+Entry.Utils.getUniqObjectsBlocks = function (objects) {
     const _typePicker = _.partial(_.result, _, 'type');
 
     return _.chain(objects || Entry.container.objects_)
@@ -2180,9 +2455,8 @@ Entry.Utils.getUniqObjectsBlocks = function(objects) {
         .value();
 };
 
-Entry.Utils.getObjectsBlocks = function(objects) {
+Entry.Utils.getObjectsBlocks = function (objects) {
     const _typePicker = _.partial(_.result, _, 'type');
-
     return _.chain(objects || Entry.container.objects_)
         .map(({ script }) => {
             if (!(script instanceof Entry.Code)) {
@@ -2194,7 +2468,71 @@ Entry.Utils.getObjectsBlocks = function(objects) {
         .value();
 };
 
-Entry.Utils.makeCategoryDataByBlocks = function(blockArr) {
+const scheduler = new Scheduler();
+
+Entry.Utils.getObjectsBlocksBySceneId = _.memoize((sceneId) => {
+    if (!sceneId) {
+        return [];
+    }
+    const _typePicker = _.partial(_.result, _, 'type');
+    const job = new Promise((resolve) => {
+        scheduler.run(function* () {
+            const result = [];
+            const codes = Entry.container.objects_;
+            for (const code of codes) {
+                if (code?.scene?.id !== sceneId) {
+                    continue;
+                }
+                let script = code.script;
+                if (!(script instanceof Entry.Code)) {
+                    script = new Entry.Code(script);
+                }
+                result.push(script.getBlockListForEventThread(true).map(_typePicker));
+                yield;
+            }
+            resolve(_.flatten(result));
+        });
+    });
+    return job;
+});
+
+Entry.Utils.getObjectsBlocksForEventThread = _.memoize((object) => {
+    const nowScheduler = new Scheduler();
+    const _typePicker = _.partial(_.result, _, 'type');
+    const job = new Promise((resolve) => {
+        nowScheduler.run(function* () {
+            const result = [];
+            try {
+                let codes;
+                if (object) {
+                    codes = [object];
+                } else {
+                    codes = Entry.container.objects_;
+                }
+                for (const code of codes) {
+                    let script = code.script;
+                    if (!(script instanceof Entry.Code)) {
+                        script = new Entry.Code(script);
+                    }
+                    result.push(script.getBlockListForEventThread(true).map(_typePicker));
+                    yield;
+                }
+                resolve(_.flatten(result));
+            } catch (e) {
+                console.warn('blockCount : ', e);
+                resolve(_.flatten(result));
+            }
+        });
+    });
+    return job;
+});
+
+Entry.Utils.clearObjectsBlocksForEventThread = () => {
+    Entry.Utils.getObjectsBlocksForEventThread.cache = new _.memoize.Cache();
+    Entry.Utils.getObjectsBlocksBySceneId.cache = new _.memoize.Cache();
+};
+
+Entry.Utils.makeCategoryDataByBlocks = function (blockArr) {
     if (!blockArr) {
         return;
     }
@@ -2208,7 +2546,7 @@ Entry.Utils.makeCategoryDataByBlocks = function(blockArr) {
         categoryIndexMap[datum.category] = i;
     }
 
-    blockArr.forEach(function(b) {
+    blockArr.forEach((b) => {
         const category = that.getBlockCategory(b);
         const index = categoryIndexMap[category];
         if (index === undefined) {
@@ -2217,36 +2555,27 @@ Entry.Utils.makeCategoryDataByBlocks = function(blockArr) {
         data[index].blocks.push(b);
     });
 
-    const allBlocksInfo = EntryStatic.getAllBlocks();
-    for (let i = 0; i < allBlocksInfo.length; i++) {
-        const info = allBlocksInfo[i];
-        const category = info.category;
-        const blocks = info.blocks;
-        if (category === 'func') {
-            allBlocksInfo.splice(i, 1);
-            continue;
-        }
-        const selectedBlocks = data[i].blocks;
-        const sorted = [];
-
-        blocks.forEach(function(b) {
-            if (selectedBlocks.indexOf(b) > -1) {
-                sorted.push(b);
+    const allBlocks = EntryStatic.getAllBlocks();
+    return allBlocks
+        .map((block) => {
+            const { category, blocks } = block;
+            if (category === 'func') {
+                return { blocks: [] };
             }
-        });
-
-        data[i].blocks = sorted;
-    }
-
-    return data;
+            return {
+                category,
+                blocks: _intersection(blockArr, blocks),
+            };
+        })
+        .filter(({ blocks }) => blocks.length);
 };
 
-Entry.Utils.blur = function() {
+Entry.Utils.blur = function () {
     const elem = document.activeElement;
     elem && elem.blur && elem.blur();
 };
 
-Entry.Utils.getWindow = function(hashId) {
+Entry.Utils.getWindow = function (hashId) {
     if (!hashId) {
         return;
     }
@@ -2258,11 +2587,11 @@ Entry.Utils.getWindow = function(hashId) {
     }
 };
 
-Entry.Utils.restrictAction = function(exceptions = [], callback, noDispose) {
+Entry.Utils.restrictAction = function (exceptions = [], callback, noDispose) {
     const that = this;
     exceptions = exceptions.map(_.head);
 
-    const handler = function(e) {
+    const handler = function (e) {
         e = e || window.event;
         const target = e.target || e.srcElement;
         if (!that.isRightButton(e)) {
@@ -2305,7 +2634,7 @@ Entry.Utils.restrictAction = function(exceptions = [], callback, noDispose) {
     }
 };
 
-Entry.Utils.allowAction = function() {
+Entry.Utils.allowAction = function () {
     const entryDom = Entry.getDom();
     Entry.Utils.enableContextmenu(entryDom);
     if (this._restrictHandler) {
@@ -2324,7 +2653,7 @@ Entry.Utils.allowAction = function() {
     }
 };
 
-Entry.Utils.glideBlock = function(svgGroup, x, y, callback) {
+Entry.Utils.glideBlock = function (svgGroup, x, y, callback) {
     const rect = svgGroup.getBoundingClientRect();
     const svgDom = Entry.Dom(
         $(
@@ -2348,7 +2677,7 @@ Entry.Utils.glideBlock = function(svgGroup, x, y, callback) {
         {
             duration: 1200,
             complete() {
-                setTimeout(function() {
+                setTimeout(() => {
                     svgDom.remove();
                     callback();
                 }, 500);
@@ -2358,25 +2687,63 @@ Entry.Utils.glideBlock = function(svgGroup, x, y, callback) {
     );
 };
 
-Entry.Utils.getScrollPos = function() {
+Entry.Utils.getScrollPos = function () {
     return {
         left: window.pageXOffset || document.documentElement.scrollLeft,
         top: window.pageYOffset || document.documentElement.scrollTop,
     };
 };
 
-Entry.Utils.copy = function(target) {
+Entry.Utils.isPointInRect = ({ x, y }, { top, bottom, left, right }) =>
+    _.inRange(x, left, right) && _.inRange(y, top, bottom);
+
+Entry.Utils.getBoundingClientRectMemo = _.memoize((target, offset = {}) => {
+    const rect = target.getBoundingClientRect();
+    const result = {
+        top: rect.top,
+        bottom: rect.bottom,
+        left: rect.left,
+        right: rect.right,
+    };
+    Object.keys(offset).forEach((key) => {
+        result[key] += offset[key];
+    });
+    return result;
+});
+
+Entry.Utils.clearClientRectMemo = () => {
+    Entry.Utils.getBoundingClientRectMemo.cache = new _.memoize.Cache();
+};
+
+Entry.Utils.getPosition = (event) => {
+    const position = {
+        x: 0,
+        y: 0,
+    };
+    if (event.touches && event.touches[0]) {
+        const touch = event.touches[0];
+        position.x = touch.pageX;
+        position.y = touch.pageY;
+    } else {
+        position.x = event.pageX;
+        position.y = event.pageY;
+    }
+    return position;
+};
+
+Entry.Utils.copy = function (target) {
     return JSON.parse(JSON.stringify(target));
 };
 
 //helper function for development and debug
-Entry.Utils.getAllObjectsBlockList = function() {
-    return Entry.container.objects_.reduce(function(prev, { script }) {
-        return prev.concat(script.getBlockList());
-    }, []);
+Entry.Utils.getAllObjectsBlockList = function () {
+    return Entry.container.objects_.reduce(
+        (prev, { script }) => prev.concat(script.getBlockList()),
+        []
+    );
 };
 
-Entry.Utils.toFixed = function(value, len) {
+Entry.Utils.toFixed = function (value, len) {
     const length = len || 1;
     const powValue = Math.pow(10, length);
 
@@ -2393,75 +2760,89 @@ Entry.Utils.toFixed = function(value, len) {
     }
 };
 
-Entry.Utils.addSoundInstances = function(instance) {
-    Entry.soundInstances.push(instance);
-    instance.on('complete', function() {
-        const index = Entry.soundInstances.indexOf(instance);
-        if (index > -1) {
-            Entry.soundInstances.splice(index, 1);
-        }
+Entry.Utils.setVolume = function (volume) {
+    this._volume = _clamp(volume, 0, 1);
+
+    Entry.soundInstances
+        .getAllValues()
+        .filter(({ soundType }) => !soundType)
+        .forEach((instance) => {
+            instance.volume = this._volume;
+        });
+};
+
+Entry.Utils.getVolume = function () {
+    if (this._volume || this._volume === 0) {
+        return this._volume;
+    }
+    return 1;
+};
+
+Entry.Utils.playBGM = function (id, option = {}) {
+    const instance = createjs.Sound.play(id, Object.assign({ volume: 1 }, option));
+    return instance;
+};
+
+Entry.Utils.addBGMInstances = function (instance, sprite = 'global') {
+    Entry.bgmInstances.add(sprite, instance);
+    instance.on('complete', () => {
+        Entry.bgmInstances.deleteItemByKeyAndValue(sprite, instance);
     });
 };
 
-Entry.Utils.pauseSoundInstances = function() {
-    Entry.soundInstances.map(function(instance) {
+Entry.Utils.forceStopBGM = function () {
+    _.each([...Entry.bgmInstances.getAllValues()], (instance) => {
+        instance?.dispatchEvent?.('complete');
+        instance?.stop?.();
+    });
+    Entry.bgmInstances.clear();
+};
+
+Entry.Utils.forceStopSounds = function () {
+    _.each([...Entry.soundInstances.getAllValues()], (instance) => {
+        instance?.dispatchEvent?.('complete');
+        instance?.stop?.();
+    });
+    Entry.soundInstances.clear();
+};
+
+Entry.Utils.playSound = function (id, option = {}) {
+    const instance = createjs.Sound.play(id, Object.assign({ volume: this._volume }, option));
+    if (instance.sourceNode?.playbackRate) {
+        instance.sourceNode.playbackRate.value = Entry.playbackRateValue;
+    }
+    return instance;
+};
+
+Entry.Utils.addSoundInstances = function (instance, sprite = 'global') {
+    Entry.soundInstances.add(sprite, instance);
+    instance.on('complete', () => {
+        Entry.soundInstances.deleteItemByKeyAndValue(sprite, instance);
+    });
+};
+
+Entry.Utils.pauseSoundInstances = function () {
+    Entry.soundInstances.getAllValues().forEach((instance) => {
+        instance.paused = true;
+    });
+    Entry.bgmInstances.getAllValues().forEach((instance) => {
         instance.paused = true;
     });
 };
 
-Entry.Utils.recoverSoundInstances = function() {
-    Entry.soundInstances.map(function(instance) {
+Entry.Utils.recoverSoundInstances = function () {
+    Entry.soundInstances.getAllValues().forEach((instance) => {
+        instance.paused = false;
+        if (instance.sourceNode?.playbackRate) {
+            instance.sourceNode.playbackRate.value = Entry.playbackRateValue;
+        }
+    });
+    Entry.bgmInstances.getAllValues().forEach((instance) => {
         instance.paused = false;
     });
 };
 
-//add methods to HTMLElement prototype
-((p) => {
-    p.hasClass = function(className) {
-        return $(this).hasClass(className);
-    };
-
-    p.addClass = function(...classes) {
-        return _.head($(this).addClass(classes.filter(_.identity).join(' ')));
-    };
-
-    p.removeClass = function(...classes) {
-        return _.head($(this).removeClass(classes.join(' ')));
-    };
-
-    p.text = function(str) {
-        if (str) {
-            this.innerHTML = str;
-        }
-        return this;
-    };
-
-    p.bindOnClick = function(func) {
-        $(this).on('click tab', function(e) {
-            if (this.disabled) {
-                return;
-            }
-            func.call(this, e);
-        });
-        return this;
-    };
-
-    p.unBindOnClick = function() {
-        $(this).off('click tab');
-        return this;
-    };
-
-    p.appendTo = function(parent) {
-        if (parent) {
-            parent.appendChild(this);
-        }
-        return this;
-    };
-})(HTMLElement.prototype);
-
-Entry.Utils.hasClass = (elem, name) => {
-    return ` ${elem.getAttribute('class')} `.indexOf(` ${name} `) >= 0;
-};
+Entry.Utils.hasClass = (elem, name) => ` ${elem.getAttribute('class')} `.indexOf(` ${name} `) >= 0;
 
 Entry.Utils.addClass = (elem, name) => {
     if (!Entry.Utils.hasClass(elem, name)) {
@@ -2488,12 +2869,12 @@ Entry.Utils.removeClass = (elem, name) => {
     elem.setAttribute('class', result);
 };
 
-Entry.Utils.bindBlockViewHoverEvent = function(board, dom) {
+Entry.Utils.bindBlockViewHoverEvent = function (board, dom) {
     if (Entry.isMobile()) {
         return;
     }
 
-    dom.on('mouseenter mouseleave', 'path', function({ type }) {
+    dom.on('mouseenter mouseleave', 'path', function ({ type }) {
         if (this.getAttribute('class') !== 'blockPath') {
             return;
         }
@@ -2514,7 +2895,7 @@ Entry.Utils.bindBlockViewHoverEvent = function(board, dom) {
     });
 };
 
-Entry.Utils.bindBlockExecuteFocusEvents = function() {
+Entry.Utils.bindBlockExecuteFocusEvents = function () {
     Entry.addEventListener('blockExecute', (view) => {
         if (!view) {
             return;
@@ -2546,9 +2927,7 @@ Entry.Utils.focusBlockView = (() => {
             //brighten only block
             const { _path, contentSvgGroup } = blockView;
             $(_path).removeAttr('filter');
-            $(contentSvgGroup)
-                .find('*:not(g)')
-                .removeAttr('filter');
+            $(contentSvgGroup).find('*:not(g)').removeAttr('filter');
         } else {
             //brighten all
             _getAllElem(svgGroup).removeAttr('filter');
@@ -2558,30 +2937,28 @@ Entry.Utils.focusBlockView = (() => {
     };
 })();
 
-Entry.Utils.isDomActive = function(dom) {
+Entry.Utils.isDomActive = function (dom) {
     return !!(dom && document.activeElement === dom);
 };
 
-Entry.Utils.when = function(predicate, fn) {
-    return function(...args) {
+Entry.Utils.when = function (predicate, fn) {
+    return function (...args) {
         if (predicate.apply(this, args)) {
             return fn && fn.apply(this, args);
         }
     };
 };
 
-Entry.Utils.whenEnter = function(fn) {
-    return Entry.Utils.when(({ keyCode } = {}) => {
-        return keyCode === 13;
-    }, fn);
+Entry.Utils.whenEnter = function (fn) {
+    return Entry.Utils.when(({ keyCode, repeat }) => keyCode === 13 && !repeat, fn);
 };
 
-Entry.Utils.blurWhenEnter = Entry.Utils.whenEnter(function() {
+Entry.Utils.blurWhenEnter = Entry.Utils.whenEnter(function () {
     this.blur();
 });
 
-Entry.Utils.whenWithTimeout = function(predicate, fn, time = 200) {
-    return function(...args) {
+Entry.Utils.whenWithTimeout = function (predicate, fn, time = 200) {
+    return function (...args) {
         if (this._timer) {
             clearTimeout(this._timer);
             delete this._timer;
@@ -2594,8 +2971,8 @@ Entry.Utils.whenWithTimeout = function(predicate, fn, time = 200) {
     };
 };
 
-Entry.Utils.setBlurredTimer = function(func) {
-    return Entry.Utils.whenWithTimeout(function() {
+Entry.Utils.setBlurredTimer = function (func) {
+    return Entry.Utils.whenWithTimeout(function () {
         if (this._focused) {
             this._focused = false;
             return true;
@@ -2604,7 +2981,7 @@ Entry.Utils.setBlurredTimer = function(func) {
     }, func);
 };
 
-Entry.Utils.setFocused = function() {
+Entry.Utils.setFocused = function () {
     if (this._timer) {
         clearTimeout(this._timer);
         delete this._timer;
@@ -2612,7 +2989,7 @@ Entry.Utils.setFocused = function() {
     this._focused = true;
 };
 
-Entry.Utils.focusIfNotActive = function(dom) {
+Entry.Utils.focusIfNotActive = function (dom) {
     if (Array.isArray(dom)) {
         dom = Entry.getDom(dom);
     }
@@ -2625,7 +3002,7 @@ Entry.Utils.focusIfNotActive = function(dom) {
 };
 
 // 터치와 마우스의 이벤트를 맞춰주는 함수
-Entry.Utils.getMouseEvent = function(event) {
+Entry.Utils.getMouseEvent = function (event) {
     let mouseEvent;
     if (event.originalEvent && event.originalEvent.touches) {
         mouseEvent = event.originalEvent.touches[0];
@@ -2635,4 +3012,185 @@ Entry.Utils.getMouseEvent = function(event) {
         mouseEvent = event;
     }
     return mouseEvent;
+};
+
+Entry.Utils.removeBlockByType = function (blockType, callback) {
+    const objects = Entry.container.getAllObjects();
+    objects.forEach(({ id, script }) => {
+        Entry.do('selectObject', id).isPass(true);
+        script.getBlockList(false, blockType).forEach((b, index) => {
+            Entry.do('destroyBlock', b).isPass(true);
+        });
+    });
+    Entry.variableContainer.removeBlocksInFunctionByType(blockType);
+
+    if (callback) {
+        callback();
+    }
+};
+
+Entry.Utils.removeBlockByType2 = function (blockType, callback) {
+    Entry.variableContainer.removeBlocksInFunctionByType(blockType);
+    const objects = Entry.container.getAllObjects();
+    objects.forEach(({ id, script }) => {
+        script.getBlockList(false, blockType).forEach((block, index) => {
+            block.destroy();
+        });
+    });
+
+    if (callback) {
+        callback();
+    }
+};
+
+Entry.Utils.sleep = (time = 0) =>
+    new Promise((resolve) => {
+        setTimeout(resolve, time);
+    });
+
+Entry.Utils.runAsync = async (func) => {
+    await Entry.Utils.sleep();
+    await func();
+};
+
+Entry.Utils.runAsyncCurry =
+    (func, time = 0) =>
+    async (...args) => {
+        await Entry.Utils.sleep(time);
+        await func(...args);
+    };
+
+Entry.Utils.removeBlockByTypeAsync = async (blockType, callback) => {
+    Entry.dispatchEvent('removeFunctionsStart');
+    await Entry.variableContainer.removeBlocksInFunctionByTypeAsync(blockType);
+    const objects = Entry.container.getAllObjects();
+    await Promise.all(
+        objects.map(async ({ script }) => {
+            await Promise.all(
+                script.getBlockList(false, blockType).map(
+                    Entry.Utils.runAsyncCurry(async (block) => {
+                        block.destroy();
+                    })
+                )
+            );
+        })
+    );
+    Entry.dispatchEvent('removeFunctionsEnd');
+    if (callback) {
+        callback();
+    }
+};
+
+Entry.Utils.isUsedBlockType = function (blockType) {
+    const objects = Entry.container.getAllObjects();
+    const usedInObject = objects.some(
+        ({ script }) => !!script.getBlockList(false, blockType).length
+    );
+    if (usedInObject) {
+        return true;
+    }
+    return Entry.variableContainer.isUsedBlockTypeInFunction(blockType);
+};
+
+Entry.Utils.combineCloudVariable = ({ variables, cloudVariable }) => {
+    let items;
+    if (typeof cloudVariable === 'string') {
+        try {
+            items = JSON.parse(cloudVariable);
+        } catch (e) {}
+    }
+    if (!Array.isArray(items)) {
+        return variables;
+    }
+    return variables.map((variable) => {
+        const cloud = items.find(({ id }) => id === variable.id);
+        if (cloud) {
+            return { ...variable, ...cloud };
+        }
+        return variable;
+    });
+};
+
+Entry.Utils.asyncAnimationFrame = (func) => {
+    let captureTimeout = false;
+
+    const asyncFunc = () => {
+        if (!Entry.engine.isState('run')) {
+            return;
+        }
+        if (func instanceof Promise) {
+            func().then(() => {
+                captureTimeout = requestAnimationFrame(asyncFunc);
+            });
+        } else if (func instanceof Function) {
+            func();
+            captureTimeout = requestAnimationFrame(asyncFunc);
+        }
+    };
+
+    captureTimeout = requestAnimationFrame(asyncFunc);
+    return () => {
+        cancelAnimationFrame(captureTimeout);
+    };
+};
+
+Entry.Utils.stringFormat = (text, ...args) => {
+    if (!text) {
+        return text;
+    }
+    let result = text;
+    for (let i = 0; i < args.length; i++) {
+        const regexp = new RegExp(`\\{${i}\\}`, 'gi');
+        result = result.replace(regexp, args[i]);
+    }
+    return result;
+};
+
+Entry.Utils.shortenNumber = (num = 0) => {
+    if (num >= 1000000000) {
+        return `${_round(num / 1000000000, 1)}B`;
+    }
+    if (num >= 1000000) {
+        return `${_round(num / 1000000, 1)}M`;
+    }
+    if (num >= 100000) {
+        return `${_round(num / 1000, 1)}K`;
+    }
+    return num;
+};
+
+Entry.Utils.doCodeChange = () => {
+    if (Entry.codeChangedEvent) {
+        Entry.Utils.clearObjectsBlocksForEventThread();
+        Entry.codeChangedEvent.notify();
+    }
+};
+
+Entry.Utils.extractTextFromHTML = (htmlString) => {
+    const parser = new DOMParser();
+    const dom = parser.parseFromString(htmlString, 'text/html');
+    return dom.body.textContent || '';
+};
+
+Entry.Utils.getEntryjsPath = () =>
+    window.navigator.userAgent.indexOf('Electron') > -1
+        ? `file://${window.getEntryjsPath()}`
+        : `${window.location.origin}/lib/entry-js`;
+
+Entry.Utils.getDeviceType = (target) => {
+    const parser = new UAParser();
+    const result = parser.getResult();
+    return result.device.type;
+};
+
+Entry.Utils.cellToRowCol = (cell) => {
+    let col = 0;
+    let i = 0;
+    while (i < cell.length && isNaN(cell[i])) {
+        col = col * 26 + (cell.charCodeAt(i) - 'A'.charCodeAt(0) + 1);
+        i++;
+    }
+
+    const row = parseInt(cell.slice(i), 10) - 1;
+    return { col, row };
 };

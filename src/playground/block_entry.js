@@ -1,5 +1,8 @@
 'use strict';
 
+import DataTable from '../class/DataTable';
+const { getStateOptions, getCityOptions, locationData } = require('../util/location');
+
 if (typeof global.Entry !== 'object') {
     global.Entry = {};
 }
@@ -18,165 +21,143 @@ if (!Entry.block) {
     Entry.block = {};
 }
 
-if (!Entry.block.converters) {
-    Entry.block.converters = {};
-}
+function getConverters() {
+    const c = {};
+    c.keyboardCode = function (key, value) {
+        let code;
 
-if (Entry && Entry.block) {
-    (function(c) {
-        c.keyboardCode = function(key, value) {
-            let code;
+        if (key) {
+            code = key.toUpperCase();
+        }
 
-            if (key) {
-                code = key.toUpperCase();
-            }
-
-            const map = {
-                32: 'space',
-                13: 'enter',
-                38: 'up',
-                37: 'left',
-                39: 'right',
-                40: 'down',
-            };
-
-            code = map[value] || code || value;
-            if (!Entry.Utils.isNumber(code)) {
-                return code;
-            } else {
-                return '"()"'.replace('"()"', code);
-            }
+        const map = {
+            32: 'space',
+            13: 'enter',
+            38: 'up',
+            37: 'left',
+            39: 'right',
+            40: 'down',
         };
 
-        c.returnStringKey = function(key, value) {
-            if ((!value && typeof value !== 'number') || value === 'null') {
-                return 'None';
-            }
-            key = String(key);
-            if (value === 'mouse') {
-                key = 'mouse';
-            }
+        code = map[value] || code || value;
+        if (!Entry.Utils.isNumber(code)) {
+            return code;
+        } else {
+            return '"()"'.replace('"()"', code);
+        }
+    };
 
-            const name = Entry.TextCodingUtil.dropdownDynamicIdToNameConvertor(
-                value,
-                this.menuName
-            );
-            if (name) {
-                key = name;
-            }
-            if (this.codeMap) {
-                var codeMap = eval(this.codeMap);
-            }
-            const codeMapKey = value;
-            if (codeMap) {
-                const codeMapValue = codeMap[codeMapKey];
-                if (codeMapValue) {
-                    key = codeMapValue;
-                }
-            }
+    c.returnStringKey = function (key, value) {
+        if ((!value && typeof value !== 'number') || value === 'null') {
+            return 'None';
+        }
+        key = String(key);
+        if (value === 'mouse') {
+            key = 'mouse';
+        }
 
-            key = key.replace(/\"/gi, '');
-            return '"()"'.replace('()', key);
+        const name = Entry.TextCodingUtil.dropdownDynamicIdToNameConvertor(value, this.menuName);
+        if (name) {
+            key = name;
+        }
+        if (this.codeMap) {
+            var codeMap = eval(this.codeMap);
+        }
+        const codeMapKey = value;
+        if (codeMap) {
+            const codeMapValue = codeMap[codeMapKey];
+            if (codeMapValue) {
+                key = codeMapValue;
+            }
+        }
+
+        key = key.replace(/\"/gi, '');
+        return '"()"'.replace('()', key);
+    };
+
+    c.returnRawStringKey = function (key, value) {
+        if ((!value && typeof value !== 'number') || value === 'null') {
+            return 'None';
+        }
+        key = String(key);
+        if (value === 'mouse') {
+            key = value;
+        }
+        const name = Entry.TextCodingUtil.dropdownDynamicIdToNameConvertor(value, this.menuName);
+        if (name) {
+            key = name;
+        }
+        key = key.replace(/\"/gi, '');
+        return '"()"'.replace('"()"', key);
+    };
+
+    c.returnStringValue = function (key, value) {
+        if ((!value && typeof value !== 'number') || value === 'null') {
+            return 'None';
+        }
+
+        if (this.codeMap) {
+            var codeMap = eval(this.codeMap);
+        }
+        const codeMapKey = value;
+        if (codeMap) {
+            const codeMapValue = codeMap[codeMapKey];
+            if (codeMapValue) {
+                value = codeMapValue;
+            }
+        }
+        return '"()"'.replace('()', value);
+    };
+
+    c.returnOperator = function (key, value) {
+        const map = {
+            EQUAL: '==',
+            GREATER: '>',
+            LESS: '<',
+            GREATER_OR_EQUAL: '>=',
+            LESS_OR_EQUAL: '<=',
+            PLUS: '+',
+            MINUS: '-',
+            MULTI: '*',
+            DIVIDE: '/',
+            NOT_EQUAL: '!=',
+            '!=': 'NOT_EQUAL',
+            '==': 'EQUAL',
+            '>': 'GREATER',
+            '<': 'LESS',
+            '>=': 'GREATER_OR_EQUAL',
+            '<=': 'LESS_OR_EQUAL',
+            '+': 'PLUS',
+            '-': 'MINUS',
+            '*': 'MULTI',
+            '/': 'DIVIDE',
+            AND: 'and',
+            OR: 'or',
+            QUOTIENT: '//',
+            MOD: '%',
         };
+        return map[value];
+    };
 
-        c.returnRawStringKey = function(key, value) {
-            if ((!value && typeof value !== 'number') || value === 'null') {
-                return 'None';
-            }
-            key = String(key);
-            if (value === 'mouse') {
-                key = value;
-            }
-            const name = Entry.TextCodingUtil.dropdownDynamicIdToNameConvertor(
-                value,
-                this.menuName
-            );
-            if (name) {
-                key = name;
-            }
-            key = key.replace(/\"/gi, '');
-            return '"()"'.replace('"()"', key);
-        };
+    c.returnRawNumberValueByKey = function (key, value) {
+        //return String(key).replace(/\D/, '');
+        return key;
+    };
 
-        c.returnStringValue = function(key, value) {
-            if ((!value && typeof value !== 'number') || value === 'null') {
-                return 'None';
-            }
-
-            if (this.codeMap) {
-                var codeMap = eval(this.codeMap);
-            }
-            const codeMapKey = value;
-            if (codeMap) {
-                const codeMapValue = codeMap[codeMapKey];
-                if (codeMapValue) {
-                    value = codeMapValue;
-                }
-            }
+    c.returnStringOrNumberByValue = function (key, value) {
+        if (!Entry.Utils.isNumber(value)) {
+            value = value.replace(/\"/gi, '');
             return '"()"'.replace('()', value);
-        };
+        } else {
+            return value;
+        }
+    };
 
-        c.returnOperator = function(key, value) {
-            const map = {
-                EQUAL: '==',
-                GREATER: '>',
-                LESS: '<',
-                GREATER_OR_EQUAL: '>=',
-                LESS_OR_EQUAL: '<=',
-                PLUS: '+',
-                MINUS: '-',
-                MULTI: '*',
-                DIVIDE: '/',
-                '==': 'EQUAL',
-                '>': 'GREATER',
-                '<': 'LESS',
-                '>=': 'GREATER_OR_EQUAL',
-                '<=': 'LESS_OR_EQUAL',
-                '+': 'PLUS',
-                '-': 'MINUS',
-                '*': 'MULTI',
-                '/': 'DIVIDE',
-                AND: 'and',
-                OR: 'or',
-            };
-            return map[value];
-        };
-
-        c.returnRawNumberValueByKey = function(key, value) {
-            //return String(key).replace(/\D/, '');
-            return key;
-        };
-
-        c.returnStringOrNumberByValue = function(key, value) {
-            if (!Entry.Utils.isNumber(value)) {
-                value = value.replace(/\"/gi, '');
-                return '"()"'.replace('()', value);
-            } else {
-                return value;
-            }
-        };
-
-        c.returnObjectOrStringValue = function(key, value) {
-            if (Entry.container && Entry.container.getObject(value)) {
-                const objectName = Entry.container.getObject(value).name;
-                return '"()"'.replace('()', objectName);
-            } else {
-                if (this.codeMap) {
-                    var codeMap = eval(this.codeMap);
-                }
-                const codeMapKey = value;
-                if (codeMap) {
-                    const codeMapValue = codeMap[codeMapKey];
-                    if (codeMapValue) {
-                        value = codeMapValue;
-                    }
-                }
-                value = value.replace(/\"/gi, '');
-                return '"()"'.replace('()', value);
-            }
-        };
-
-        c.returnStringValueUpperCase = function(key, value) {
+    c.returnObjectOrStringValue = function (key, value) {
+        if (Entry.container && Entry.container.getObject(value)) {
+            const objectName = Entry.container.getObject(value).name;
+            return '"()"'.replace('()', objectName);
+        } else {
             if (this.codeMap) {
                 var codeMap = eval(this.codeMap);
             }
@@ -187,75 +168,137 @@ if (Entry && Entry.block) {
                     value = codeMapValue;
                 }
             }
-            return '"()"'.replace('()', value).toUpperCase();
-        };
+            value = value.replace(/\"/gi, '');
+            return '"()"'.replace('()', value);
+        }
+    };
 
-        c.returnValueUpperCase = function(key, value) {
-            if (this.codeMap) {
-                var codeMap = eval(this.codeMap);
+    c.returnStringValueUpperCase = function (key, value) {
+        if (this.codeMap) {
+            var codeMap = eval(this.codeMap);
+        }
+        const codeMapKey = value;
+        if (codeMap) {
+            const codeMapValue = codeMap[codeMapKey];
+            if (codeMapValue) {
+                value = codeMapValue;
             }
-            const codeMapKey = value;
-            if (codeMap) {
-                const codeMapValue = codeMap[codeMapKey];
-                if (codeMapValue) {
-                    value = codeMapValue;
-                }
+        }
+        return '"()"'.replace('()', value).toUpperCase();
+    };
+
+    c.returnValueUpperCase = function (key, value) {
+        if (this.codeMap) {
+            var codeMap = eval(this.codeMap);
+        }
+        const codeMapKey = value;
+        if (codeMap) {
+            const codeMapValue = codeMap[codeMapKey];
+            if (codeMapValue) {
+                value = codeMapValue;
             }
+        }
+        return value.toUpperCase();
+    };
+
+    c.returnStringValueLowerCase = function (key, value) {
+        if (this.codeMap) {
+            var codeMap = eval(this.codeMap);
+        }
+        const codeMapKey = value;
+        if (codeMap) {
+            const codeMapValue = codeMap[codeMapKey];
+            if (codeMapValue) {
+                value = codeMapValue;
+            }
+        }
+        return '"()"'.replace('()', value).toLowerCase();
+    };
+
+    c.returnValuePartialUpperCase = function (key, value) {
+        if (this.codeMap) {
+            var codeMap = eval(this.codeMap);
+        }
+        const codeMapKey = value;
+        if (codeMap) {
+            const codeMapValue = codeMap[codeMapKey];
+            if (codeMapValue) {
+                value = codeMapValue;
+            }
+        }
+        const dot = value.indexOf('.') + 1;
+        if (dot > 1) {
+            return (
+                value.charAt(0).toUpperCase() +
+                value.substring(1, dot) +
+                value.substring(dot).toUpperCase()
+            );
+        } else {
             return value.toUpperCase();
-        };
-
-        c.returnStringValueLowerCase = function(key, value) {
-            if (this.codeMap) {
-                var codeMap = eval(this.codeMap);
-            }
-            const codeMapKey = value;
-            if (codeMap) {
-                const codeMapValue = codeMap[codeMapKey];
-                if (codeMapValue) {
-                    value = codeMapValue;
-                }
-            }
-            return '"()"'.replace('()', value).toLowerCase();
-        };
-
-        c.returnValuePartialUpperCase = function(key, value) {
-            if (this.codeMap) {
-                var codeMap = eval(this.codeMap);
-            }
-            const codeMapKey = value;
-            if (codeMap) {
-                const codeMapValue = codeMap[codeMapKey];
-                if (codeMapValue) {
-                    value = codeMapValue;
-                }
-            }
-            const dot = value.indexOf('.') + 1;
-            if (dot > 1) {
-                return (
-                    value.charAt(0).toUpperCase() +
-                    value.substring(1, dot) +
-                    value.substring(dot).toUpperCase()
-                );
-            } else {
-                return value.toUpperCase();
-            }
-        };
-    })(Entry.block.converters);
+        }
+    };
+    return c;
 }
 
 const blocks = require('./blocks');
 
 function getBlocks() {
     return {
+        aiUtilizeModelTrainButton: {
+            skeleton: 'basic_button',
+            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
+            isNotFor: ['functionInit'],
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.template.load_ai_utilize_train_block,
+                    color: EntryStatic.colorSet.common.BUTTON,
+                    align: 'center',
+                },
+            ],
+            def: {
+                type: 'aiUtilizeModelTrainButton',
+            },
+            events: {
+                mousedown: [
+                    function () {
+                        Entry.aiLearning.openManager();
+                    },
+                ],
+            },
+        },
+        aiUtilizeBlockAddButton: {
+            skeleton: 'basic_button',
+            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
+            isNotFor: ['functionInit'],
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.template.load_ai_utilize_block,
+                    color: EntryStatic.colorSet.common.BUTTON,
+                    align: 'center',
+                },
+            ],
+            def: {
+                type: 'aiUtilizeBlockAddButton',
+            },
+            events: {
+                mousedown: [
+                    function () {
+                        Entry.do('playgroundClickAddAIUtilizeBlock');
+                    },
+                ],
+            },
+        },
         expansionBlockAddButton: {
             skeleton: 'basic_button',
-            color: '#eee',
+            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
             isNotFor: ['functionInit'],
             params: [
                 {
                     type: 'Text',
                     text: Lang.template.load_expansion_block,
-                    color: '#4f80ff',
+                    color: EntryStatic.colorSet.common.BUTTON,
                     align: 'center',
                 },
             ],
@@ -264,200 +307,538 @@ function getBlocks() {
             },
             events: {
                 mousedown: [
-                    function() {
+                    function () {
                         Entry.do('playgroundClickAddExpansionBlock');
                     },
                 ],
             },
         },
-        //region hardware 하드웨어 기본
+        arduino_lite_connect: {
+            skeleton: 'basic_button',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            template: '%1',
+            isNotFor: ['arduinoLiteSupported'],
+            class: 'arduino_default_not_installed',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.arduino_lite_connect,
+                    color: EntryStatic.colorSet.common.BUTTON,
+                    align: 'center',
+                },
+            ],
+            events: {
+                mousedown: [
+                    function () {
+                        Entry.do('playgroundClickAddHardwareLiteBlock');
+                    },
+                ],
+            },
+        },
+        arduino_lite_guide: {
+            skeleton: 'clickable_text',
+            skeletonOptions: {
+                box: {
+                    offsetX: 3,
+                },
+            },
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            template: '%1',
+            isNotFor: ['arduinoLiteGuide'],
+            class: 'arduino_default',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.arduino_lite_guide,
+                    color: EntryStatic.colorSet.common.TEXT,
+                    align: 'center',
+                },
+            ],
+            events: {
+                mousedown: [
+                    function () {
+                        window.open(
+                            'https://docs.playentry.org/user/block_hardware.html#POINT-%EC%95%84%EB%91%90%EC%9D%B4%EB%85%B8-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0'
+                        );
+                    },
+                ],
+            },
+        },
+        arduino_lite_reconnect: {
+            skeleton: 'basic_button',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            template: '%1',
+            isNotFor: ['arduinoLiteConnectFailed'],
+            class: 'arduino_default',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.arduino_lite_reconnect,
+                    color: EntryStatic.colorSet.common.BUTTON,
+                    align: 'center',
+                },
+            ],
+            events: {
+                mousedown: [
+                    function () {
+                        Entry.hwLite.connect();
+                    },
+                ],
+            },
+        },
+        arduino_lite_download_firmware: {
+            skeleton: 'basic_button',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            template: '%1',
+            isNotFor: ['arduinoLiteConnectFailed'],
+            class: 'arduino_default',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.arduino_lite_download_firmware,
+                    color: EntryStatic.colorSet.common.BUTTON,
+                    align: 'center',
+                },
+            ],
+            events: {
+                mousedown: [],
+            },
+        },
+        arduino_lite_disconnect: {
+            skeleton: 'basic_button',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            template: '%1',
+            isNotFor: ['arduinoLiteConnectFailed', 'arduinoLiteConnected'],
+            class: 'arduino_default',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.arduino_lite_disconnect,
+                    color: EntryStatic.colorSet.common.BUTTON,
+                    align: 'center',
+                },
+            ],
+            events: {
+                mousedown: [
+                    function () {
+                        Entry.hwLite.removeHardwareLiteModule();
+                    },
+                ],
+            },
+        },
+        hardware_device_name_title: {
+            skeleton: 'basic_text_light',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            template: '%1',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.hardware_device_name_title,
+                    color: EntryStatic.colorSet.common.TEXT,
+                    align: 'center',
+                    fontWeight: '100',
+                },
+            ],
+            class: 'hardware_device_info',
+            isNotFor: [
+                'arduinoConnect',
+                'arduinoConnected',
+                'arduinoLiteConnectFailed',
+                'arduinoLiteConnected',
+            ],
+            events: {},
+        },
+        hardware_device_name_title_robot: {
+            parent: 'hardware_device_name_title',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.hardware_device_name_title_robot,
+                    color: EntryStatic.colorSet.common.TEXT,
+                    align: 'center',
+                    fontWeight: '100',
+                },
+            ],
+            isNotFor: [
+                'arduinoConnect',
+                'arduinoConnected',
+                'arduinoLiteConnectFailed',
+                'arduinoLiteConnected',
+            ],
+        },
+        hardware_device_name_title_sensor: {
+            parent: 'hardware_device_name_title_robot',
+        },
+        hardware_device_name_title_motor: {
+            parent: 'hardware_device_name_title_robot',
+        },
+        hardware_device_name_title_led: {
+            parent: 'hardware_device_name_title_robot',
+        },
+        hardware_device_name_title_melody: {
+            parent: 'hardware_device_name_title_robot',
+        },
+        hardware_device_name_content: {
+            skeleton: 'basic_text',
+            skeletonOptions: {
+                box: {
+                    offsetY: 10,
+                },
+            },
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            template: '%1',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.hardware_device_name_content,
+                    color: EntryStatic.colorSet.common.TEXT,
+                    align: 'center',
+                },
+            ],
+            class: 'hardware_device_info',
+            isNotFor: [
+                'arduinoConnect',
+                'arduinoConnected',
+                'arduinoLiteConnectFailed',
+                'arduinoLiteConnected',
+            ],
+            events: {},
+        },
+        hardware_device_name_content_sensor: {
+            parent: 'hardware_device_name_content',
+        },
+        hardware_device_name_content_motor: {
+            parent: 'hardware_device_name_content',
+        },
+        hardware_device_name_content_led: {
+            parent: 'hardware_device_name_content',
+        },
+        hardware_device_name_content_melody: {
+            parent: 'hardware_device_name_content',
+        },
+        hardware_connected_noti: {
+            skeleton: 'basic_text',
+            skeletonOptions: {
+                box: {
+                    offsetY: 10,
+                },
+            },
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            template: '%1',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.hardware_connected_noti,
+                    color: EntryStatic.colorSet.common.ALERT,
+                    align: 'center',
+                },
+            ],
+            class: 'hardware_device_alert',
+            isNotFor: ['arduinoConnect'],
+            events: {},
+        },
+        arduino_lite_connected_noti: {
+            skeleton: 'basic_text',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            template: '%1',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.arduino_lite_connected_noti,
+                    color: EntryStatic.colorSet.common.GRAY,
+                    align: 'center',
+                },
+            ],
+            def: {
+                type: 'arduino_lite_connected_noti',
+            },
+            class: 'hardware_device_info',
+            isNotFor: ['arduinoLiteConnectFailed', 'arduinoLiteConnected'],
+            events: {},
+        },
+        arduino_lite_alert: {
+            skeleton: 'basic_text',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            template: '%1',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.arduino_lite_alert,
+                    color: EntryStatic.colorSet.common.ALERT,
+                    align: 'center',
+                },
+            ],
+            def: {
+                type: 'arduino_lite_alert',
+            },
+            class: 'arduino_lite_alert',
+            isNotFor: ['arduinoLiteConnectFailed'],
+            events: {},
+        },
         arduino_noti: {
             skeleton: 'basic_text',
-            color: '#ecf8ff',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
             template: '%1',
             params: [
                 {
                     type: 'Text',
                     text: Lang.Blocks.arduino_noti_text,
-                    color: '#333',
+                    color: EntryStatic.colorSet.common.GRAY,
                     align: 'center',
                 },
             ],
             def: {
                 type: 'arduino_noti',
             },
+            class: 'arduino_default_noti',
             isNotFor: ['arduinoDisconnected'],
             events: {},
         },
-        arduino_download_connector: {
-            skeleton: 'basic_button',
-            isNotFor: ['arduinoDisconnected'],
-            color: '#eee',
-            params: [
-                {
-                    type: 'Text',
-                    text: !Entry.isOffline
-                        ? Lang.Blocks.ARDUINO_download_connector
-                        : Lang.Blocks.ARDUINO_open_connector,
-                    color: '#4f80ff',
-                    align: 'center',
-                },
-            ],
-            events: {
-                mousedown: [
-                    function() {
-                        Entry.hw.downloadConnector();
-                    },
-                ],
-            },
-        },
-        download_guide: {
-            skeleton: 'basic_button',
-            isNotFor: ['arduinoDisconnected'],
-            color: '#eee',
-            params: [
-                {
-                    type: 'Text',
-                    text: Lang.Blocks.download_guide,
-                    color: '#4f80ff',
-                    align: 'center',
-                },
-            ],
-            events: {
-                mousedown: [
-                    function() {
-                        Entry.hw.downloadGuide();
-                    },
-                ],
-            },
-        },
-        arduino_download_source: {
-            skeleton: 'basic_button',
-            isNotFor: ['arduinoDisconnected'],
-            color: '#eee',
-            params: [
-                {
-                    type: 'Text',
-                    text: Lang.Blocks.ARDUINO_download_source,
-                    color: '#4f80ff',
-                    align: 'center',
-                },
-            ],
-            events: {
-                mousedown: [
-                    function() {
-                        Entry.hw.downloadSource();
-                    },
-                ],
-            },
-        },
         arduino_connected: {
             skeleton: 'basic_button',
-            color: '#eee',
+            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
             isNotFor: ['arduinoConnected'],
             params: [
                 {
                     type: 'Text',
                     text: Lang.Blocks.ARDUINO_connected,
-                    color: '#4f80ff',
+                    color: EntryStatic.colorSet.common.BUTTON,
                     align: 'center',
                 },
             ],
             events: {},
         },
-        arduino_connect: {
-            skeleton: 'basic_text',
-            color: '#ecf8ff',
-            template: '%1',
-            isNotFor: ['arduinoConnect'],
-            params: [
-                {
-                    type: 'Text',
-                    text: Lang.Blocks.ARDUINO_connect,
-                    color: '#333',
-                    align: 'center',
-                },
-            ],
-            events: {},
-        },
+
         arduino_reconnect: {
             skeleton: 'basic_button',
-            color: '#eee',
+            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
             isNotFor: ['arduinoDisconnected'],
             params: [
                 {
                     type: 'Text',
                     text: Lang.Blocks.ARDUINO_reconnect,
-                    color: '#4f80ff',
+                    color: EntryStatic.colorSet.common.BUTTON,
                     align: 'center',
                 },
             ],
+            class: 'arduino_default_installed',
             events: {
                 mousedown: [
-                    function() {
+                    function () {
                         Entry.hw.retryConnect();
                     },
                 ],
             },
         },
+        robot_connect_helper: {
+            skeleton: 'clickable_text',
+            skeletonOptions: {
+                box: {
+                    offsetY: -10,
+                },
+            },
+            template: '%1%2',
+            isNotFor: ['arduinoDisconnected'],
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            class: 'arduino_guide',
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'question_in_round.svg',
+                    size: 9,
+                    position: {
+                        x: -45,
+                        y: 0,
+                    },
+                },
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.ROBOT_connect_helper,
+                    color: EntryStatic.colorSet.common.BUTTON,
+                    align: 'center',
+                    fontSize: 13,
+                },
+            ],
+            events: {
+                mousedown: [
+                    function () {
+                        window.open('https://docs.playentry.org/user/block_hardware.html');
+                    },
+                ],
+            },
+        },
+        robot_noti: {
+            skeleton: 'basic_text',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            template: '%1',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.robot_noti_text,
+                    color: EntryStatic.colorSet.common.GRAY,
+                    align: 'center',
+                },
+            ],
+            def: {
+                type: 'robot_noti',
+            },
+            class: 'arduino_default_noti',
+            isNotFor: ['arduinoDisconnected'],
+            events: {},
+        },
         robot_reconnect: {
             skeleton: 'basic_button',
-            color: '#eee',
+            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
             isNotFor: ['arduinoDisconnected'],
             template: '%1',
             params: [
                 {
                     type: 'Text',
                     text: Lang.Blocks.ROBOT_reconnect,
-                    color: '#4f80ff',
+                    color: EntryStatic.colorSet.common.BUTTON,
                     align: 'center',
                 },
             ],
             events: {
                 mousedown: [
-                    function() {
+                    function () {
                         Entry.hw.retryConnect();
                     },
                 ],
             },
         },
+        hardware_connect_helper: {
+            skeleton: 'clickable_text',
+            skeletonOptions: {
+                box: {
+                    offsetY: -10,
+                },
+            },
+            template: '%1%2',
+            isNotFor: ['arduinoDisconnected'],
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            class: 'arduino_guide',
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'question_in_round.svg',
+                    size: 9,
+                    position: {
+                        x: -55,
+                        y: 0,
+                    },
+                },
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.hardware_connect_helper,
+                    color: EntryStatic.colorSet.common.BUTTON,
+                    align: 'center',
+                    fontSize: 13,
+                },
+            ],
+            events: {
+                mousedown: [
+                    function () {
+                        window.open('https://docs.playentry.org/user/block_hardware.html');
+                    },
+                ],
+            },
+        },
+        hardware_noti_installed: {
+            skeleton: 'basic_text',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            template: '%1',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.hardware_noti_installed,
+                    color: EntryStatic.colorSet.common.TEXT,
+                    align: 'center',
+                    fontSize: 14,
+                },
+            ],
+            class: 'arduino_default_installed',
+            isNotFor: ['arduinoDisconnected'],
+            events: {},
+        },
         arduino_open: {
             skeleton: 'basic_button',
-            color: '#eee',
+            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
             isNotFor: ['arduinoDisconnected'],
             template: '%1',
             params: [
                 {
                     type: 'Text',
                     text: Lang.Blocks.ARDUINO_open_connector,
-                    color: '#4f80ff',
+                    color: EntryStatic.colorSet.common.BUTTON,
                     align: 'center',
                 },
             ],
+            class: 'arduino_default_installed',
             events: {
                 mousedown: [
-                    function() {
+                    function () {
                         Entry.hw.openHardwareProgram();
                     },
                 ],
             },
         },
+        hardware_program_download: {
+            skeleton: 'basic_button',
+            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
+            isNotFor: ['arduinoDisconnected'],
+            template: '%1',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.hardware_program_download,
+                    color: EntryStatic.colorSet.common.BUTTON,
+                    align: 'center',
+                },
+            ],
+            class: 'arduino_default_installed',
+            events: {
+                mousedown: [
+                    function () {
+                        Entry.hw.downloadConnector();
+                    },
+                ],
+            },
+        },
+        hardware_noti_not_installed: {
+            skeleton: 'basic_text',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            template: '%1',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.hardware_noti_not_installed,
+                    color: EntryStatic.colorSet.common.TEXT,
+                    align: 'center',
+                    fontSize: 14,
+                },
+            ],
+            class: 'arduino_default_not_installed',
+            isNotFor: ['arduinoDisconnected'],
+            events: {},
+        },
         arduino_cloud_pc_open: {
             skeleton: 'basic_button',
-            color: '#eee',
+            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
             isNotFor: ['arduinoConnect', 'arduinoConnected'],
             template: '%1',
             params: [
                 {
                     type: 'Text',
                     text: Lang.Blocks.ARDUINO_cloud_pc_connector,
-                    color: '#4f80ff',
+                    color: EntryStatic.colorSet.common.BUTTON,
                     align: 'center',
                 },
             ],
+            class: 'arduino_default',
             events: {
                 mousedown: [
-                    function() {
+                    function () {
                         Entry.hw.openHardwareProgram();
                     },
                 ],
@@ -641,6 +1022,83 @@ function getBlocks() {
                             {
                                 type: 'Angle',
                                 converter: Entry.block.converters.returnRawNumberValueByKey,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        color: {
+            color: EntryStatic.colorSet.block.default.BRUSH,
+            outerLine: EntryStatic.colorSet.block.darken.BRUSH,
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Color',
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'color',
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            func(sprite, script) {
+                return script.getField('VALUE');
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: '%1',
+                        keyOption: 'color',
+                        textParams: [
+                            {
+                                type: 'Color',
+                                converter: Entry.block.converters.returnStringValueUpperCase,
+                                codeMap: 'Entry.CodeMap.Entry.set_color[0]',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        text_color: {
+            template: Lang.template.color,
+            color: EntryStatic.colorSet.block.default.TEXT,
+            outerLine: EntryStatic.colorSet.block.darken.TEXT,
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Color',
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'text_color',
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            func(sprite, script) {
+                return script.getField('VALUE');
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: '%1',
+                        keyOption: 'text_color',
+                        textParams: [
+                            {
+                                type: 'Color',
+                                converter: Entry.block.converters.returnStringValueUpperCase,
+                                codeMap: 'Entry.CodeMap.Entry.set_text_color[0]',
                             },
                         ],
                     },
@@ -1003,14 +1461,14 @@ function getBlocks() {
             ],
             events: {
                 viewAdd: [
-                    function() {
+                    function () {
                         if (Entry.engine) {
                             Entry.engine.showProjectTimer();
                         }
                     },
                 ],
                 viewDestroy: [
-                    function(block, notIncludeSelf) {
+                    function (block, notIncludeSelf) {
                         if (Entry.engine) {
                             Entry.engine.hideProjectTimer(block, notIncludeSelf);
                         }
@@ -1062,14 +1520,14 @@ function getBlocks() {
             ],
             events: {
                 viewAdd: [
-                    function() {
+                    function () {
                         if (Entry.engine) {
                             Entry.engine.showProjectTimer();
                         }
                     },
                 ],
                 viewDestroy: [
-                    function(block, notIncludeSelf) {
+                    function (block, notIncludeSelf) {
                         if (Entry.engine) {
                             Entry.engine.hideProjectTimer(block, notIncludeSelf);
                         }
@@ -1176,241 +1634,6 @@ function getBlocks() {
             },
             func(sprite, script) {
                 return Entry.engine.toggleStop();
-            },
-            syntax: { js: [], py: [''] },
-        },
-        function_field_label: {
-            skeleton: 'basic_param',
-            isNotFor: ['functionEdit'],
-            color: '#f9c535',
-            params: [
-                {
-                    type: 'TextInput',
-                    value: Lang.Blocks.FUNCTION_explanation_1,
-                },
-                {
-                    type: 'Output',
-                    accept: 'param',
-                },
-            ],
-            paramsKeyMap: {
-                NAME: 0,
-                NEXT: 1,
-            },
-            def: {
-                params: [Lang.Blocks.FUNCTION_explanation_1],
-                type: 'function_field_label',
-            },
-            //"syntax": {"js": [], "py": ["%1function_field_label#"]}
-            syntax: { js: [], py: ['name'] },
-        },
-        function_field_string: {
-            skeleton: 'basic_param',
-            isNotFor: ['functionEdit'],
-            color: EntryStatic.colorSet.block.lighten.CALC,
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    restore: true,
-                },
-                {
-                    type: 'Output',
-                    accept: 'param',
-                },
-            ],
-            paramsKeyMap: {
-                PARAM: 0,
-                NEXT: 1,
-            },
-            def: {
-                params: [
-                    {
-                        type: 'text',
-                        params: [Lang.template.function_param_string],
-                    },
-                ],
-                type: 'function_field_string',
-            },
-            syntax: { js: [], py: ['value'] },
-        },
-        function_field_boolean: {
-            skeleton: 'basic_param',
-            isNotFor: ['functionEdit'],
-            color: EntryStatic.colorSet.block.default.JUDGE,
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'boolean',
-                    restore: true,
-                },
-                {
-                    type: 'Output',
-                    accept: 'param',
-                },
-            ],
-            paramsKeyMap: {
-                PARAM: 0,
-                NEXT: 1,
-            },
-            def: {
-                params: [
-                    {
-                        type: 'True',
-                        params: [Lang.template.function_param_boolean],
-                    },
-                ],
-                type: 'function_field_boolean',
-            },
-            syntax: { js: [], py: ['boolean'] },
-        },
-        function_param_string: {
-            skeleton: 'basic_string_field',
-            color: EntryStatic.colorSet.block.lighten.CALC,
-            fontColor: '#000',
-            template: '%1 %2',
-            events: {
-                viewAdd: [
-                    function() {
-                        if (Entry.Func.isEdit) {
-                            Entry.Func.refreshMenuCode();
-                        }
-                    },
-                ],
-            },
-            func() {
-                return this.executor.register.params[
-                    this.executor.register.paramMap[this.block.type]
-                ];
-            },
-            syntax: { js: [], py: [''] },
-        },
-        function_param_boolean: {
-            skeleton: 'basic_boolean_field',
-            color: EntryStatic.colorSet.block.default.JUDGE,
-            template: '%1 %2',
-            events: {
-                viewAdd: [
-                    function() {
-                        if (Entry.Func.isEdit) {
-                            Entry.Func.refreshMenuCode();
-                        }
-                    },
-                ],
-            },
-            func() {
-                return this.executor.register.params[
-                    this.executor.register.paramMap[this.block.type]
-                ];
-            },
-            syntax: { js: [], py: [''] },
-        },
-        function_create: {
-            skeleton: 'basic_create',
-            color: EntryStatic.colorSet.block.default.FUNC,
-            outerLine: EntryStatic.colorSet.block.darken.FUNC,
-            event: 'funcDef',
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'param',
-                    value: {
-                        type: 'function_field_label',
-                        params: [Lang.Blocks.FUNC],
-                        copyable: false,
-                    },
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/func_icon.svg',
-                    size: 11,
-                },
-            ],
-            paramsKeyMap: {
-                FIELD: 0,
-            },
-            func() {},
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: '%1',
-                        keyOption: 'function_create',
-                    },
-                ],
-            },
-        },
-        function_general: {
-            skeleton: 'basic',
-            color: EntryStatic.colorSet.block.default.FUNC,
-            outerLine: EntryStatic.colorSet.block.darken.FUNC,
-            params: [
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/func_icon.svg',
-                    size: 11,
-                },
-            ],
-            events: {
-                dataAdd: [
-                    function(block) {
-                        const vc = Entry.variableContainer;
-                        if (vc) {
-                            vc.addRef('_functionRefs', block);
-                        }
-                    },
-                ],
-                dataDestroy: [
-                    function(block) {
-                        const vc = Entry.variableContainer;
-                        if (vc) {
-                            vc.removeRef('_functionRefs', block);
-                        }
-                    },
-                ],
-                dblclick: [
-                    function(blockView) {
-                        const mode = blockView.getBoard().workspace.getMode();
-                        if (mode !== Entry.Workspace.MODE_BOARD) {
-                            return;
-                        }
-                        if (Entry.type !== 'workspace') {
-                            return;
-                        }
-                        const block = blockView.block;
-                        const id = block.getFuncId();
-                        Entry.Func.edit(Entry.variableContainer.functions_[id]);
-                    },
-                ],
-            },
-            func(entity) {
-                if (!this.initiated) {
-                    this.initiated = true;
-                    Entry.callStackLength++;
-
-                    if (Entry.callStackLength > Entry.Executor.MAXIMUM_CALLSTACK) {
-                        Entry.toast.alert(
-                            Lang.Workspace.RecursiveCallWarningTitle,
-                            Lang.Workspace.RecursiveCallWarningContent
-                        );
-                        throw new Error();
-                    }
-
-                    const func = Entry.variableContainer.getFunction(this.block.getFuncId());
-                    this.funcCode = func.content;
-                    this.funcExecutor = this.funcCode.raiseEvent('funcDef', entity)[0];
-                    this.funcExecutor.register.params = this.getParams();
-                    this.funcExecutor.register.paramMap = func.paramMap;
-                    this.funcExecutor.parentExecutor = this.executor;
-                    this.funcExecutor.isFuncExecutor = true;
-                }
-                this.funcExecutor.execute();
-                if (!this.funcExecutor.isEnd()) {
-                    this.funcCode.removeExecutor(this.funcExecutor);
-                    return Entry.STATIC.BREAK;
-                }
-
-                Entry.callStackLength--;
             },
             syntax: { js: [], py: [''] },
         },
@@ -1714,6 +1937,7 @@ function getBlocks() {
                     type: 'DropdownDynamic',
                     value: null,
                     menuName: 'pictures',
+                    // defaultValue: 'null',
                     fontSize: 10,
                     bgColor: EntryStatic.colorSet.block.darken.LOOKS,
                     arrowColor: EntryStatic.colorSet.arrow.default.LOOKS,
@@ -1749,6 +1973,158 @@ function getBlocks() {
                 ],
             },
         },
+        get_table_fields: {
+            color: EntryStatic.colorSet.block.default.ANALYSIS,
+            outerLine: EntryStatic.colorSet.block.darken.ANALYSIS,
+            template: '%1  ',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'DropdownDynamic',
+                    value: null,
+                    menuName() {
+                        const value = this.getTargetValue('dataTables', true);
+                        if (!value) {
+                            return [[Lang.Blocks.no_target, 'null']];
+                        }
+                        const { fields = [] } = DataTable.getSource(value) || {};
+                        return fields.map((label, index) => [label, index + 1]);
+                    },
+                    needDeepCopy: true,
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                    defaultValue: (value, options) => {
+                        if (options.length) {
+                            return options[0][1];
+                        }
+                        return null;
+                    },
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            func(sprite, script) {
+                return script.getStringField('VALUE');
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: '%1',
+                        keyOption: 'get_table_fields',
+                        textParams: [
+                            {
+                                type: 'DropdownDynamic',
+                                value: null,
+                                menuName: 'fields',
+                                fontSize: 11,
+                                arrowColor: EntryStatic.colorSet.common.WHITE,
+                                converter: Entry.block.converters.returnStringKey,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+
+        get_korea_area_code: {
+            color: EntryStatic.colorSet.block.default.EXPANSION,
+            outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
+            template: '%1 %2 ',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: getStateOptions(),
+                    value: 'Seoul',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                    dropdownSync: 'weather',
+                },
+                {
+                    type: 'DropdownDynamic',
+                    value: null,
+                    menuName() {
+                        const value = this.getTargetValue('weather');
+                        if (!value) {
+                            return [[Lang.Blocks.no_target, 'null']];
+                        }
+                        return getCityOptions(value);
+                    },
+                    needDeepCopy: true,
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                    defaultValue: (value, options) => {
+                        if (options.length) {
+                            return options[0][1];
+                        }
+                        return null;
+                    },
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                STATE: 0,
+                SUB_LOC: 1,
+            },
+            func(sprite, script) {
+                return Entry.EXPANSION_BLOCK.weather.getCityCode({
+                    parent: script.getField('STATE'),
+                    sub: script.getField('SUB_LOC'),
+                });
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        type: 'Dropdown',
+                        options: getStateOptions(),
+                        value: 'Seoul',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
+                        arrowColor: EntryStatic.colorSet.common.WHITE,
+                        dropdownSync: 'weather',
+                        converter: Entry.block.converters.returnStringValue,
+                    },
+                    {
+                        type: 'DropdownDynamic',
+                        value: null,
+                        menuName() {
+                            const value = this.getTargetValue('weather');
+                            if (!value) {
+                                return [[Lang.Blocks.no_target, 'null']];
+                            }
+                            return getCityOptions(value);
+                        },
+                        needDeepCopy: true,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
+                        arrowColor: EntryStatic.colorSet.common.WHITE,
+                        defaultValue: (value, options) => {
+                            if (options.length) {
+                                return options[0][1];
+                            }
+                            return null;
+                        },
+                        converter: Entry.block.converters.returnStringValue,
+                    },
+                ],
+            },
+        },
+
         set_effect_amount: {
             color: EntryStatic.colorSet.block.default.LOOKS,
             skeleton: 'basic',
@@ -1918,7 +2294,12 @@ function getBlocks() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['45', '45'], ['90', '90'], ['135', '135'], ['180', '180']],
+                    options: [
+                        ['45', '45'],
+                        ['90', '90'],
+                        ['135', '135'],
+                        ['180', '180'],
+                    ],
                     value: '45',
                     fontSize: 11,
                 },
@@ -2013,9 +2394,9 @@ function getBlocks() {
                 const deltaX = targetEntity.getX() - sprite.getX();
                 const deltaY = targetEntity.getY() - sprite.getY();
                 if (deltaX >= 0) {
-                    sprite.setRotation(Math.atan(deltaY / deltaX) / Math.PI * 180 + 90);
+                    sprite.setRotation((Math.atan(deltaY / deltaX) / Math.PI) * 180 + 90);
                 } else {
-                    sprite.setRotation(Math.atan(deltaY / deltaX) / Math.PI * 180 + 270);
+                    sprite.setRotation((Math.atan(deltaY / deltaX) / Math.PI) * 180 + 270);
                 }
                 return script.callReturn();
             },
@@ -2231,7 +2612,7 @@ function getBlocks() {
                 const sounds = sprite.parent.sounds;
                 const isExist = Entry.isExist(soundId, 'id', sounds);
                 if (isExist) {
-                    createjs.Sound.play(soundId);
+                    Entry.Utils.playSound(soundId);
                 }
                 return script.callReturn();
             },
@@ -2282,9 +2663,9 @@ function getBlocks() {
                 const sounds = sprite.parent.sounds;
                 const isExist = Entry.isExist(soundId, 'id', sounds);
                 if (isExist) {
-                    const instance = createjs.Sound.play(soundId);
+                    const instance = Entry.Utils.playSound(soundId);
                     Entry.Utils.addSoundInstances(instance);
-                    setTimeout(function() {
+                    setTimeout(() => {
                         instance.stop();
                     }, timeValue * 1000);
                 }
@@ -2328,11 +2709,14 @@ function getBlocks() {
                     const sounds = sprite.parent.sounds;
                     const isExist = Entry.isExist(soundId, 'id', sounds);
                     if (isExist) {
-                        const instance = createjs.Sound.play(soundId);
+                        const duration = Math.floor(
+                            (sound.duration * 1000) / Entry.playbackRateValue
+                        );
+                        const instance = Entry.Utils.playSound(soundId);
                         Entry.Utils.addSoundInstances(instance);
-                        setTimeout(function() {
+                        setTimeout(() => {
                             script.playState = 0;
-                        }, sound.duration * 1000);
+                        }, duration);
                     }
                     return script;
                 } else if (script.playState === 1) {
@@ -2392,14 +2776,14 @@ function getBlocks() {
                     const sounds = sprite.parent.sounds;
                     const isExist = Entry.isExist(soundId, 'id', sounds);
                     if (isExist) {
-                        const instance = createjs.Sound.play(soundId);
+                        const instance = Entry.Utils.playSound(soundId);
                         const timeValue = script.getNumberValue('SECOND', script);
                         Entry.Utils.addSoundInstances(instance);
-                        setTimeout(function() {
+                        setTimeout(() => {
                             instance.stop();
                             script.playState = 0;
                         }, timeValue * 1000);
-                        instance.addEventListener('complete', function(e) {});
+                        instance.addEventListener('complete', (e) => {});
                     }
                     return script;
                 } else if (script.playState == 1) {
@@ -2469,7 +2853,11 @@ function getBlocks() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [['=', 'EQUAL'], ['<', 'SMALLER'], ['>', 'BIGGER']],
+                    options: [
+                        ['=', 'EQUAL'],
+                        ['<', 'SMALLER'],
+                        ['>', 'BIGGER'],
+                    ],
                     value: 'EQUAL',
                     fontSize: 11,
                 },
@@ -2862,21 +3250,21 @@ function getBlocks() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['q', '81'],
-                        ['w', '87'],
-                        ['e', '69'],
-                        ['r', '82'],
-                        ['a', '65'],
-                        ['s', '83'],
-                        ['d', '68'],
-                        ['위쪽 화살표', '38'],
-                        ['아래쪽 화살표', '40'],
-                        ['왼쪽 화살표', '37'],
-                        ['오른쪽 화살표', '39'],
-                        ['엔터', '13'],
-                        ['스페이스', '32'],
+                        ['q', 81],
+                        ['w', 87],
+                        ['e', 69],
+                        ['r', 82],
+                        ['a', 65],
+                        ['s', 83],
+                        ['d', 68],
+                        ['위쪽 화살표', 38],
+                        ['아래쪽 화살표', 40],
+                        ['왼쪽 화살표', 37],
+                        ['오른쪽 화살표', 39],
+                        ['엔터', 13],
+                        ['스페이스', 32],
                     ],
-                    value: '81',
+                    value: 81,
                     fontSize: 11,
                 },
                 {
@@ -2896,31 +3284,6 @@ function getBlocks() {
                 return script.callReturn();
             },
             syntax: { js: [], py: [''] },
-        },
-        when_some_key_click: {
-            color: EntryStatic.colorSet.block.default.START,
-            skeleton: 'basic_event',
-            statements: [],
-            params: [
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/start_icon_keyboard.png',
-                    size: 17,
-                    position: {
-                        x: 0,
-                        y: -2,
-                    },
-                },
-            ],
-            events: {},
-            def: {
-                params: [null],
-            },
-            func(sprite, script) {
-                return script.callReturn();
-            },
-            event: 'keyPress',
-            syntax: { js: [], py: ['Entry.on_key_press_down(%1)'] },
         },
         text: {
             color: EntryStatic.colorSet.block.lighten.CALC,
@@ -2967,7 +3330,11 @@ function getBlocks() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['첫번째', 'FIRST'], ['마지막', 'LAST'], ['무작위', 'RANDOM']],
+                    options: [
+                        ['첫번째', 'FIRST'],
+                        ['마지막', 'LAST'],
+                        ['무작위', 'RANDOM'],
+                    ],
                     value: 'FIRST',
                     fontSize: 11,
                 },
@@ -3091,7 +3458,7 @@ function getBlocks() {
                     this.isContinue = true;
                     this.isAction = true;
                     const self = this;
-                    const callBack = function() {
+                    const callBack = function () {
                         Ntry.dispatchEvent('getItem');
                         self.isAction = false;
                     };
@@ -3125,7 +3492,7 @@ function getBlocks() {
                     this.isContinue = true;
                     this.isAction = true;
                     const self = this;
-                    const callBack = function() {
+                    const callBack = function () {
                         Ntry.dispatchEvent('getItem');
                         self.isAction = false;
                     };
@@ -3159,9 +3526,9 @@ function getBlocks() {
                     this.isAction = true;
                     const STATIC = Ntry.STATIC;
                     const self = this;
-                    const callBack = function() {
-                        window.setTimeout(function() {
-                            Ntry.dispatchEvent('unitAction', Ntry.STATIC.WALK, function() {
+                    const callBack = function () {
+                        window.setTimeout(() => {
+                            Ntry.dispatchEvent('unitAction', Ntry.STATIC.WALK, () => {
                                 self.isAction = false;
                             });
                         }, 3);
@@ -3214,9 +3581,9 @@ function getBlocks() {
                     this.isContinue = true;
                     this.isAction = true;
                     const self = this;
-                    const callBack = function() {
-                        window.setTimeout(function() {
-                            Ntry.dispatchEvent('unitAction', STATIC.WALK, function() {
+                    const callBack = function () {
+                        window.setTimeout(() => {
+                            Ntry.dispatchEvent('unitAction', STATIC.WALK, () => {
                                 self.isAction = false;
                             });
                         }, 3);
@@ -3270,9 +3637,9 @@ function getBlocks() {
                     this.isAction = true;
                     const STATIC = Ntry.STATIC;
                     const self = this;
-                    const callBack = function() {
-                        window.setTimeout(function() {
-                            Ntry.dispatchEvent('unitAction', Ntry.STATIC.WALK, function() {
+                    const callBack = function () {
+                        window.setTimeout(() => {
+                            Ntry.dispatchEvent('unitAction', Ntry.STATIC.WALK, () => {
                                 self.isAction = false;
                             });
                         }, 3);
@@ -3326,9 +3693,9 @@ function getBlocks() {
                     this.isAction = true;
                     const STATIC = Ntry.STATIC;
                     const self = this;
-                    const callBack = function() {
-                        window.setTimeout(function() {
-                            Ntry.dispatchEvent('unitAction', STATIC.WALK, function() {
+                    const callBack = function () {
+                        window.setTimeout(() => {
+                            Ntry.dispatchEvent('unitAction', STATIC.WALK, () => {
                                 self.isAction = false;
                             });
                         }, 3);
@@ -3408,7 +3775,7 @@ function getBlocks() {
                     this.isContinue = true;
                     this.isAction = true;
                     const self = this;
-                    const callBack = function() {
+                    const callBack = function () {
                         self.isAction = false;
                     };
                     // turn direction
@@ -3439,7 +3806,7 @@ function getBlocks() {
                     this.isContinue = true;
                     this.isAction = true;
                     const self = this;
-                    const callBack = function() {
+                    const callBack = function () {
                         self.isAction = false;
                     };
 
@@ -3471,7 +3838,7 @@ function getBlocks() {
                     this.isContinue = true;
                     this.isAction = true;
                     const self = this;
-                    const callBack = function() {
+                    const callBack = function () {
                         self.isAction = false;
                     };
 
@@ -3503,7 +3870,7 @@ function getBlocks() {
                     this.isContinue = true;
                     this.isAction = true;
                     const self = this;
-                    const callBack = function() {
+                    const callBack = function () {
                         self.isAction = false;
                     };
 
@@ -3724,7 +4091,7 @@ function getBlocks() {
                     this.isContinue = true;
                     this.isAction = true;
                     const self = this;
-                    const callBack = function() {
+                    const callBack = function () {
                         self.isAction = false;
                     };
 
@@ -3746,13 +4113,13 @@ function getBlocks() {
                     this.isContinue = true;
                     this.isAction = true;
                     const self = this;
-                    const callBack = function() {
+                    const callBack = function () {
                         self.isAction = false;
                     };
 
                     const entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
                     let unitId;
-                    $.each(entities, function(id, entity) {
+                    $.each(entities, (id, entity) => {
                         unitId = id;
                     });
 
@@ -3793,7 +4160,7 @@ function getBlocks() {
                     this.isContinue = true;
                     this.isAction = true;
                     const self = this;
-                    const callBack = function() {
+                    const callBack = function () {
                         self.isAction = false;
                     };
                     const unit = Ntry.getUnit();
@@ -4317,7 +4684,7 @@ function getBlocks() {
                     this.isContinue = true;
                     this.isAction = true;
                     const self = this;
-                    const callBack = function() {
+                    const callBack = function () {
                         self.isAction = false;
                     };
                     // turn direction
@@ -4349,7 +4716,7 @@ function getBlocks() {
                     this.isContinue = true;
                     this.isAction = true;
                     const self = this;
-                    const callBack = function() {
+                    const callBack = function () {
                         self.isAction = false;
                     };
 
@@ -4382,7 +4749,7 @@ function getBlocks() {
                     this.isContinue = true;
                     this.isAction = true;
                     const self = this;
-                    const callBack = function() {
+                    const callBack = function () {
                         self.isAction = false;
                     };
 
@@ -4415,7 +4782,7 @@ function getBlocks() {
                     this.isContinue = true;
                     this.isAction = true;
                     const self = this;
-                    const callBack = function() {
+                    const callBack = function () {
                         self.isAction = false;
                     };
                     // turn direction
@@ -4446,7 +4813,7 @@ function getBlocks() {
                 if (this.isDead) {
                     return Entry.STATIC.BREAK;
                 } else if (this.executor.register.isTurned) {
-                    Ntry.dispatchEvent('startEnemyWalk', false, function() {});
+                    Ntry.dispatchEvent('startEnemyWalk', false, () => {});
                     this.isDead = true;
                     return Entry.STATIC.BREAK;
                 } else {
@@ -4471,7 +4838,7 @@ function getBlocks() {
                 if (this.isDead) {
                     return Entry.STATIC.BREAK;
                 } else if (this.executor.register.isTurned) {
-                    Ntry.dispatchEvent('startEnemyWalk', false, function() {});
+                    Ntry.dispatchEvent('startEnemyWalk', false, () => {});
                     this.isDead = true;
                     return Entry.STATIC.BREAK;
                 } else {
@@ -4520,9 +4887,7 @@ function getBlocks() {
                         x: grid.x,
                         y: grid.y,
                     })
-                    .filter(function(e) {
-                        return e.components[Ntry.STATIC.ENEMY];
-                    });
+                    .filter((e) => e.components[Ntry.STATIC.ENEMY]);
                 this.isContinue = true;
                 if (fitEntities.length === 0) {
                     return script.getStatement('STACK_ELSE', script);
@@ -4571,9 +4936,7 @@ function getBlocks() {
                         x: grid.x,
                         y: grid.y,
                     })
-                    .filter(function(e) {
-                        return e.components[Ntry.STATIC.ENEMY];
-                    });
+                    .filter((e) => e.components[Ntry.STATIC.ENEMY]);
                 this.isContinue = true;
                 if (fitEntities.length === 0) {
                     return script.getStatement('STACK_ELSE', script);
@@ -4670,7 +5033,7 @@ function getBlocks() {
                     script.isAction = true;
                     const entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
                     let unitId;
-                    $.each(entities, function(id, entity) {
+                    $.each(entities, (id, entity) => {
                         unitId = id;
                     });
                     const unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
@@ -4679,7 +5042,7 @@ function getBlocks() {
                         Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID)
                     );
                     script.direction = unitComp.direction;
-                    const callBack = function() {
+                    const callBack = function () {
                         unitComp.direction = script.direction;
                         script.isAction = false;
                     };
@@ -4735,7 +5098,7 @@ function getBlocks() {
                 if (!script.isContinue) {
                     const entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
                     let unitId;
-                    $.each(entities, function(id, entity) {
+                    $.each(entities, (id, entity) => {
                         unitId = id;
                     });
                     const unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
@@ -4764,13 +5127,9 @@ function getBlocks() {
                         }
                     }
                     if (isFoundMushroom) {
-                        Ntry.dispatchEvent(
-                            'unitAction',
-                            Ntry.STATIC.WRONG_ATTACK_OBSTACLE,
-                            function() {
-                                script.isAction = false;
-                            }
-                        );
+                        Ntry.dispatchEvent('unitAction', Ntry.STATIC.WRONG_ATTACK_OBSTACLE, () => {
+                            script.isAction = false;
+                        });
                         return Entry.STATIC.BREAK;
                     }
                     const unitGrid = $.extend(
@@ -4787,15 +5146,15 @@ function getBlocks() {
                         Ntry.dispatchEvent(
                             'unitAction',
                             Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT,
-                            function() {
+                            () => {
                                 script.isAction = false;
                             }
                         );
                         return Entry.STATIC.BREAK;
                     }
-                    const callBack = function() {
+                    const callBack = function () {
                         Ntry.dispatchEvent('playSound', 'dieLupin');
-                        Ntry.dispatchEvent('destroyObstacle', 2, function(state) {
+                        Ntry.dispatchEvent('destroyObstacle', 2, (state) => {
                             script.isAction = false;
                         });
                     };
@@ -4838,22 +5197,22 @@ function getBlocks() {
                     );
                     Ntry.addVectorByDirection(grid, Ntry.unitComp.direction, 1);
                     Ntry.addVectorByDirection(backGrid, Ntry.unitComp.direction, -1);
-                    const frontExist = !!Ntry.entityManager.find(grid).filter(function(e) {
-                        return e.components[Ntry.STATIC.ENEMY];
-                    }).length;
-                    const backExist = !!Ntry.entityManager.find(backGrid).filter(function(e) {
-                        return e.components[Ntry.STATIC.ENEMY];
-                    }).length;
+                    const frontExist = !!Ntry.entityManager
+                        .find(grid)
+                        .filter((e) => e.components[Ntry.STATIC.ENEMY]).length;
+                    const backExist = !!Ntry.entityManager
+                        .find(backGrid)
+                        .filter((e) => e.components[Ntry.STATIC.ENEMY]).length;
                     if (!frontExist || !backExist) {
-                        Ntry.dispatchEvent('unitAction', Ntry.STATIC.BOTH_SIDE_FAIL, function() {
+                        Ntry.dispatchEvent('unitAction', Ntry.STATIC.BOTH_SIDE_FAIL, () => {
                             script.isAction = false;
                         });
                         return Entry.STATIC.BREAK;
                     }
-                    Ntry.dispatchEvent('destroyObstacle', 1, function(state) {});
-                    Ntry.dispatchEvent('destroyObstacle', -1, function(state) {});
-                    const callBack = function() {
-                        Ntry.dispatchEvent('startEnemyWalk', true, function() {
+                    Ntry.dispatchEvent('destroyObstacle', 1, (state) => {});
+                    Ntry.dispatchEvent('destroyObstacle', -1, (state) => {});
+                    const callBack = function () {
+                        Ntry.dispatchEvent('startEnemyWalk', true, () => {
                             script.isAction = false;
                         });
                     };
@@ -4904,42 +5263,42 @@ function getBlocks() {
                         tileType: Ntry.STATIC.OBSTACLE_PEPE,
                     });
                     Ntry.addVectorByDirection(backGrid, Ntry.unitComp.direction, -1);
-                    const findBackTile = Ntry.entityManager.find(backGrid).filter(function(e) {
-                        return e.components[Ntry.STATIC.ENEMY];
-                    });
-                    const frontEnemyExist = !!Ntry.entityManager.find(grid).filter(function(e) {
-                        return e.components[Ntry.STATIC.ENEMY];
-                    }).length;
+                    const findBackTile = Ntry.entityManager
+                        .find(backGrid)
+                        .filter((e) => e.components[Ntry.STATIC.ENEMY]);
+                    const frontEnemyExist = !!Ntry.entityManager
+                        .find(grid)
+                        .filter((e) => e.components[Ntry.STATIC.ENEMY]).length;
                     const frontEnemyValid = !!findTile.length;
                     const backEnemyExist = !!findBackTile.length;
                     if (frontEnemyValid && !backEnemyExist) {
                         // success
-                        var callBack = function() {
-                            Ntry.dispatchEvent('destroyObstacle', 1, function(state) {});
-                            Ntry.dispatchEvent('startEnemyWalk', true, function() {
+                        var callBack = function () {
+                            Ntry.dispatchEvent('destroyObstacle', 1, (state) => {});
+                            Ntry.dispatchEvent('startEnemyWalk', true, () => {
                                 script.isAction = false;
                             });
                         };
                         Ntry.dispatchEvent('unitAction', Ntry.STATIC.PEPE, callBack);
                     } else if (frontEnemyValid && backEnemyExist) {
                         // attack and dead
-                        var callBack = function() {
-                            Ntry.dispatchEvent('destroyObstacle', 1, function(state) {});
-                            Ntry.dispatchEvent('startEnemyWalk', false, function() {});
+                        var callBack = function () {
+                            Ntry.dispatchEvent('destroyObstacle', 1, (state) => {});
+                            Ntry.dispatchEvent('startEnemyWalk', false, () => {});
                         };
                         Ntry.dispatchEvent('unitAction', Ntry.STATIC.PEPE, callBack);
                     } else if (backEnemyExist) {
                         // dead
                         if (frontEnemyExist) {
-                            Ntry.dispatchEvent('unitAction', Ntry.STATIC.PEPE_FAIL, function() {
+                            Ntry.dispatchEvent('unitAction', Ntry.STATIC.PEPE_FAIL, () => {
                                 script.isAction = false;
                             });
                         } else {
-                            Ntry.dispatchEvent('startEnemyWalk', false, function() {});
+                            Ntry.dispatchEvent('startEnemyWalk', false, () => {});
                         }
                     } else {
                         // music time
-                        Ntry.dispatchEvent('unitAction', Ntry.STATIC.PEPE_FAIL, function() {
+                        Ntry.dispatchEvent('unitAction', Ntry.STATIC.PEPE_FAIL, () => {
                             script.isAction = false;
                         });
                     }
@@ -4989,42 +5348,42 @@ function getBlocks() {
                         tileType: Ntry.STATIC.OBSTACLE_YETI,
                     });
                     Ntry.addVectorByDirection(backGrid, Ntry.unitComp.direction, -1);
-                    const findBackTile = Ntry.entityManager.find(backGrid).filter(function(e) {
-                        return e.components[Ntry.STATIC.ENEMY];
-                    });
-                    const frontEnemyExist = !!Ntry.entityManager.find(grid).filter(function(e) {
-                        return e.components[Ntry.STATIC.ENEMY];
-                    }).length;
+                    const findBackTile = Ntry.entityManager
+                        .find(backGrid)
+                        .filter((e) => e.components[Ntry.STATIC.ENEMY]);
+                    const frontEnemyExist = !!Ntry.entityManager
+                        .find(grid)
+                        .filter((e) => e.components[Ntry.STATIC.ENEMY]).length;
                     const frontEnemyValid = !!findTile.length;
                     const backEnemyExist = !!findBackTile.length;
                     if (frontEnemyValid && !backEnemyExist) {
                         // success
-                        var callBack = function() {
-                            Ntry.dispatchEvent('destroyObstacle', 1, function(state) {});
-                            Ntry.dispatchEvent('startEnemyWalk', true, function() {
+                        var callBack = function () {
+                            Ntry.dispatchEvent('destroyObstacle', 1, (state) => {});
+                            Ntry.dispatchEvent('startEnemyWalk', true, () => {
                                 script.isAction = false;
                             });
                         };
                         Ntry.dispatchEvent('unitAction', Ntry.STATIC.PEPE, callBack);
                     } else if (frontEnemyValid && backEnemyExist) {
                         // attack and dead
-                        var callBack = function() {
-                            Ntry.dispatchEvent('destroyObstacle', 1, function(state) {});
-                            Ntry.dispatchEvent('startEnemyWalk', false, function() {});
+                        var callBack = function () {
+                            Ntry.dispatchEvent('destroyObstacle', 1, (state) => {});
+                            Ntry.dispatchEvent('startEnemyWalk', false, () => {});
                         };
                         Ntry.dispatchEvent('unitAction', Ntry.STATIC.PEPE, callBack);
                     } else if (backEnemyExist) {
                         // dead
                         if (frontEnemyExist) {
-                            Ntry.dispatchEvent('unitAction', Ntry.STATIC.YETI_FAIL, function() {
+                            Ntry.dispatchEvent('unitAction', Ntry.STATIC.YETI_FAIL, () => {
                                 script.isAction = false;
                             });
                         } else {
-                            Ntry.dispatchEvent('startEnemyWalk', false, function() {});
+                            Ntry.dispatchEvent('startEnemyWalk', false, () => {});
                         }
                     } else {
                         // music time
-                        Ntry.dispatchEvent('unitAction', Ntry.STATIC.YETI_FAIL, function() {
+                        Ntry.dispatchEvent('unitAction', Ntry.STATIC.YETI_FAIL, () => {
                             script.isAction = false;
                         });
                     }
@@ -5059,7 +5418,7 @@ function getBlocks() {
                 if (!script.isContinue) {
                     const entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
                     let unitId;
-                    $.each(entities, function(id, entity) {
+                    $.each(entities, (id, entity) => {
                         unitId = id;
                     });
                     const unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
@@ -5079,14 +5438,14 @@ function getBlocks() {
                         Ntry.dispatchEvent(
                             'unitAction',
                             Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT,
-                            function() {
+                            () => {
                                 script.isAction = false;
                             }
                         );
                         return Entry.STATIC.BREAK;
                     }
-                    const callBack = function() {
-                        Ntry.dispatchEvent('destroyObstacle', 1, function(state) {
+                    const callBack = function () {
+                        Ntry.dispatchEvent('destroyObstacle', 1, (state) => {
                             script.isAction = false;
                         });
                     };
@@ -5138,42 +5497,42 @@ function getBlocks() {
                         tileType: Ntry.STATIC.OBSTACLE_PETI,
                     });
                     Ntry.addVectorByDirection(backGrid, Ntry.unitComp.direction, -1);
-                    const findBackTile = Ntry.entityManager.find(backGrid).filter(function(e) {
-                        return e.components[Ntry.STATIC.ENEMY];
-                    });
-                    const frontEnemyExist = !!Ntry.entityManager.find(grid).filter(function(e) {
-                        return e.components[Ntry.STATIC.ENEMY];
-                    }).length;
+                    const findBackTile = Ntry.entityManager
+                        .find(backGrid)
+                        .filter((e) => e.components[Ntry.STATIC.ENEMY]);
+                    const frontEnemyExist = !!Ntry.entityManager
+                        .find(grid)
+                        .filter((e) => e.components[Ntry.STATIC.ENEMY]).length;
                     const frontEnemyValid = !!findTile.length;
                     const backEnemyExist = !!findBackTile.length;
                     if (frontEnemyValid && !backEnemyExist) {
                         // success
-                        Ntry.dispatchEvent('destroyObstacle', 1, function(state) {});
-                        var callBack = function() {
-                            Ntry.dispatchEvent('startEnemyWalk', true, function() {
+                        Ntry.dispatchEvent('destroyObstacle', 1, (state) => {});
+                        var callBack = function () {
+                            Ntry.dispatchEvent('startEnemyWalk', true, () => {
                                 script.isAction = false;
                             });
                         };
                         Ntry.dispatchEvent('unitAction', Ntry.STATIC.PETI, callBack);
                     } else if (frontEnemyValid && backEnemyExist) {
                         // attack and dead
-                        Ntry.dispatchEvent('destroyObstacle', 1, function(state) {});
-                        var callBack = function() {
-                            Ntry.dispatchEvent('startEnemyWalk', false, function() {});
+                        Ntry.dispatchEvent('destroyObstacle', 1, (state) => {});
+                        var callBack = function () {
+                            Ntry.dispatchEvent('startEnemyWalk', false, () => {});
                         };
                         Ntry.dispatchEvent('unitAction', Ntry.STATIC.PETI, callBack);
                     } else if (backEnemyExist) {
                         // dead
                         if (frontEnemyExist) {
-                            Ntry.dispatchEvent('unitAction', Ntry.STATIC.PETI_FAIL, function() {
+                            Ntry.dispatchEvent('unitAction', Ntry.STATIC.PETI_FAIL, () => {
                                 script.isAction = false;
                             });
                         } else {
-                            Ntry.dispatchEvent('startEnemyWalk', false, function() {});
+                            Ntry.dispatchEvent('startEnemyWalk', false, () => {});
                         }
                     } else {
                         // music time
-                        Ntry.dispatchEvent('unitAction', Ntry.STATIC.PETI_FAIL, function() {
+                        Ntry.dispatchEvent('unitAction', Ntry.STATIC.PETI_FAIL, () => {
                             script.isAction = false;
                         });
                     }
@@ -5205,10 +5564,10 @@ function getBlocks() {
                     script.isAction = true;
                     const entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
                     let unitId;
-                    $.each(entities, function(id, entity) {
+                    $.each(entities, (id, entity) => {
                         unitId = id;
                     });
-                    const callBack = function() {
+                    const callBack = function () {
                         script.isAction = false;
                     };
                     const unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
@@ -5249,7 +5608,7 @@ function getBlocks() {
                     this.isContinue = true;
                     this.isAction = true;
                     const self = this;
-                    const callBack = function() {
+                    const callBack = function () {
                         self.isAction = false;
                     };
 
@@ -5282,7 +5641,7 @@ function getBlocks() {
                     this.isContinue = true;
                     this.isAction = true;
                     const self = this;
-                    const callBack = function() {
+                    const callBack = function () {
                         self.isAction = false;
                     };
 
@@ -5314,7 +5673,7 @@ function getBlocks() {
                 if (!this.isContinue) {
                     const entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
                     let unitId;
-                    $.each(entities, function(id, entity) {
+                    $.each(entities, (id, entity) => {
                         unitId = id;
                     });
                     const unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
@@ -5337,8 +5696,8 @@ function getBlocks() {
                     this.isContinue = true;
                     this.isAction = true;
                     const self = this;
-                    const callback = function() {
-                        Ntry.dispatchEvent('destroyObstacle', 1, function(state) {
+                    const callback = function () {
+                        Ntry.dispatchEvent('destroyObstacle', 1, (state) => {
                             switch (state) {
                                 case Ntry.STATIC.OBSTACLE_DESTROY_SUCCESS:
                                     self.isAction = false;
@@ -5378,8 +5737,9 @@ function getBlocks() {
                     this.isAction = true;
 
                     const entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
-                    let unitId, components;
-                    $.each(entities, function(id, entity) {
+                    let unitId;
+                    let components;
+                    $.each(entities, (id, entity) => {
                         unitId = id;
                         components = entity.components;
                     });
@@ -5405,8 +5765,8 @@ function getBlocks() {
                     }
 
                     const particle = Ntry.entityManager.addEntity();
-                    Ntry.dispatchEvent('unitAction', Ntry.STATIC.ATTACK, function() {
-                        $.each(components, function(type, component) {
+                    Ntry.dispatchEvent('unitAction', Ntry.STATIC.ATTACK, () => {
+                        $.each(components, (type, component) => {
                             if (+type === Ntry.STATIC.SPRITE) {
                                 const cloneComponent = $.extend({}, component);
                                 cloneComponent.zIndex = particleZIndex;
@@ -5457,8 +5817,9 @@ function getBlocks() {
                 if (!this.isContinue) {
                     const entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
 
-                    let unitId, components;
-                    $.each(entities, function(id, entity) {
+                    let unitId;
+                    let components;
+                    $.each(entities, (id, entity) => {
                         unitId = id;
                         components = entity.components;
                     });
@@ -5489,8 +5850,8 @@ function getBlocks() {
 
                     const particle = Ntry.entityManager.addEntity();
 
-                    Ntry.dispatchEvent('unitAction', Ntry.STATIC.ATTACK, function() {
-                        $.each(components, function(type, component) {
+                    Ntry.dispatchEvent('unitAction', Ntry.STATIC.ATTACK, () => {
+                        $.each(components, (type, component) => {
                             if (+type === Ntry.STATIC.SPRITE) {
                                 const cloneComponent = $.extend({}, component);
                                 cloneComponent.zIndex = particleZIndex;
@@ -5545,8 +5906,9 @@ function getBlocks() {
                 if (!this.isContinue) {
                     const entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
 
-                    let unitId, components;
-                    $.each(entities, function(id, entity) {
+                    let unitId;
+                    let components;
+                    $.each(entities, (id, entity) => {
                         unitId = id;
                         components = entity.components;
                     });
@@ -5581,8 +5943,8 @@ function getBlocks() {
 
                     const particle = Ntry.entityManager.addEntity();
 
-                    Ntry.dispatchEvent('unitAction', Ntry.STATIC.ATTACK, function() {
-                        $.each(components, function(type, component) {
+                    Ntry.dispatchEvent('unitAction', Ntry.STATIC.ATTACK, () => {
+                        $.each(components, (type, component) => {
                             if (+type === Ntry.STATIC.SPRITE) {
                                 const cloneComponent = $.extend({}, component);
                                 cloneComponent.zIndex = particleZIndex;
@@ -5639,9 +6001,9 @@ function getBlocks() {
                 if (!this.isContinue) {
                     const entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
 
-                    let unitId
+                    let unitId;
                     let components;
-                    $.each(entities, function(id, entity) {
+                    $.each(entities, (id, entity) => {
                         unitId = id;
                         components = entity.components;
                     });
@@ -5672,8 +6034,8 @@ function getBlocks() {
 
                     const particle = Ntry.entityManager.addEntity();
 
-                    Ntry.dispatchEvent('unitAction', Ntry.STATIC.ATTACK, function() {
-                        $.each(components, function(type, component) {
+                    Ntry.dispatchEvent('unitAction', Ntry.STATIC.ATTACK, () => {
+                        $.each(components, (type, component) => {
                             if (+type === Ntry.STATIC.SPRITE) {
                                 const cloneComponent = $.extend({}, component);
                                 cloneComponent.zIndex = particleZIndex;
@@ -5732,7 +6094,9 @@ function getBlocks() {
                     const self = this;
                     const gridSize = Ntry.configManager.getConfig('gridSize');
                     const tileSize = Ntry.configManager.getConfig('tileSize').width;
-                    const entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.OBSTACLE);
+                    const entities = Ntry.entityManager.getEntitiesByComponent(
+                        Ntry.STATIC.OBSTACLE
+                    );
 
                     for (const id in entities) {
                         const obstacleComp = Ntry.entityManager.getComponent(
@@ -5778,7 +6142,7 @@ function getBlocks() {
                                 targetPos.minY = obstacleGrid.y * tileSize + tileSize / 2;
                             }
 
-                            (function(_id, _deltaPos, _deltaPos2, _targetPos, obstacleGrid) {
+                            (function (_id, _deltaPos, _deltaPos2, _targetPos, obstacleGrid) {
                                 const comp = Ntry.entityManager.getComponent(
                                     _id,
                                     Ntry.STATIC.ANIMATE
@@ -5875,7 +6239,7 @@ function getBlocks() {
                     const self = this;
                     const entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
                     let unitId;
-                    $.each(entities, function(id) {
+                    $.each(entities, (id) => {
                         unitId = id;
                     });
                     const unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
@@ -5898,8 +6262,8 @@ function getBlocks() {
                     this.isContinue = true;
                     this.isAction = true;
 
-                    const callback = function() {
-                        Ntry.dispatchEvent('destroyObstacle', 1, function(state) {
+                    const callback = function () {
+                        Ntry.dispatchEvent('destroyObstacle', 1, (state) => {
                             switch (state) {
                                 case Ntry.STATIC.OBSTACLE_DESTROY_SUCCESS:
                                     self.isAction = false;
@@ -6189,7 +6553,10 @@ function getBlocks() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [[Lang.Menus.maze_distance1, '1'], [Lang.Menus.maze_distance2, '2']],
+                    options: [
+                        [Lang.Menus.maze_distance1, '1'],
+                        [Lang.Menus.maze_distance2, '2'],
+                    ],
                     value: '1',
                     fontSize: 11,
                 },
@@ -6855,12 +7222,12 @@ function getBlocks() {
         },
         basic_button: {
             skeleton: 'basic_button',
-            color: '#eee',
+            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
             params: [
                 {
                     type: 'Text',
                     text: 'basic button',
-                    color: '#4f80ff',
+                    color: EntryStatic.colorSet.common.BUTTON,
                     align: 'center',
                 },
             ],
@@ -6909,7 +7276,7 @@ function getBlocks() {
                 if (!script.isStart) {
                     script.isStart = true;
                     script.isAction = true;
-                    Ntry.dispatchEvent('gridChange', function() {
+                    Ntry.dispatchEvent('gridChange', () => {
                         script.isAction = false;
                     });
                     const spaceShipComp = Ntry.entityManager.getComponent(
@@ -6949,7 +7316,7 @@ function getBlocks() {
                 if (!script.isStart) {
                     script.isStart = true;
                     script.isAction = true;
-                    Ntry.dispatchEvent('gridChange', function() {
+                    Ntry.dispatchEvent('gridChange', () => {
                         script.isAction = false;
                     });
                     const spaceShipComp = Ntry.entityManager.getComponent(
@@ -6991,7 +7358,7 @@ function getBlocks() {
                 if (!script.isStart) {
                     script.isStart = true;
                     script.isAction = true;
-                    Ntry.dispatchEvent('gridChange', function() {
+                    Ntry.dispatchEvent('gridChange', () => {
                         script.isAction = false;
                     });
                     const spaceShipComp = Ntry.entityManager.getComponent(
@@ -7272,7 +7639,7 @@ function getBlocks() {
                     Ntry.dispatchEvent('triggerWeapon');
                     script.isStart = true;
                     script.isAction = true;
-                    Ntry.dispatchEvent('gridChange', function() {
+                    Ntry.dispatchEvent('gridChange', () => {
                         script.isAction = false;
                     });
                     const spaceShipComp = Ntry.entityManager.getComponent(
@@ -7389,7 +7756,8 @@ function getBlocks() {
         //endregion basic 기본
         //region basic 기본
         hidden: {
-            color: '#7C7C7C',
+            color: EntryStatic.colorSet.block.default.HIDDEN,
+            outerLine: EntryStatic.colorSet.block.darken.HIDDEN,
             skeleton: 'basic',
             template: '         %1       %2',
             statements: [],
@@ -7399,6 +7767,7 @@ function getBlocks() {
                     value: '?',
                     clearBG: true,
                     color: 'white',
+                    fontSize: 12,
                 },
                 {
                     type: 'Indicator',
@@ -7419,7 +7788,8 @@ function getBlocks() {
             func() {},
         },
         hidden_event: {
-            color: '#7C7C7C',
+            color: EntryStatic.colorSet.block.default.HIDDEN,
+            outerLine: EntryStatic.colorSet.block.darken.HIDDEN,
             skeleton: 'basic_event',
             template: '         %1       ',
             statements: [],
@@ -7429,6 +7799,7 @@ function getBlocks() {
                     value: '?',
                     clearBG: true,
                     color: 'white',
+                    fontSize: 12,
                 },
                 {
                     type: 'Indicator',
@@ -7449,7 +7820,8 @@ function getBlocks() {
             func() {},
         },
         hidden_loop: {
-            color: '#7C7C7C',
+            color: EntryStatic.colorSet.block.default.HIDDEN,
+            outerLine: EntryStatic.colorSet.block.darken.HIDDEN,
             skeleton: 'basic_loop',
             statements: [
                 {
@@ -7481,7 +7853,8 @@ function getBlocks() {
             func() {},
         },
         hidden_loop2: {
-            color: '#7C7C7C',
+            color: EntryStatic.colorSet.block.default.HIDDEN,
+            outerLine: EntryStatic.colorSet.block.darken.HIDDEN,
             skeleton: 'basic_loop',
             template: '         %1       ',
             statements: [
@@ -7495,6 +7868,7 @@ function getBlocks() {
                     value: '?',
                     clearBG: true,
                     color: 'white',
+                    fontSize: 12,
                 },
                 {
                     type: 'Indicator',
@@ -7515,7 +7889,8 @@ function getBlocks() {
             func() {},
         },
         hidden_if_else: {
-            color: '#7C7C7C',
+            color: EntryStatic.colorSet.block.default.HIDDEN,
+            outerLine: EntryStatic.colorSet.block.darken.HIDDEN,
             skeleton: 'basic_double_loop',
             template: '         %1       %2%3',
             statements: [
@@ -7532,6 +7907,7 @@ function getBlocks() {
                     value: '?',
                     clearBG: true,
                     color: 'white',
+                    fontSize: 12,
                 },
                 {
                     type: 'Indicator',
@@ -7552,7 +7928,8 @@ function getBlocks() {
             func() {},
         },
         hidden_if_else2: {
-            color: '#7C7C7C',
+            color: EntryStatic.colorSet.block.default.HIDDEN,
+            outerLine: EntryStatic.colorSet.block.darken.HIDDEN,
             skeleton: 'basic_double_loop',
             template: '         %1       %2%3      %4       ',
             statements: [
@@ -7569,6 +7946,7 @@ function getBlocks() {
                     value: '?',
                     clearBG: true,
                     color: 'white',
+                    fontSize: 12,
                 },
                 {
                     type: 'Indicator',
@@ -7583,6 +7961,7 @@ function getBlocks() {
                     value: '?',
                     clearBG: true,
                     color: 'white',
+                    fontSize: 12,
                 },
             ],
             events: {},
@@ -7595,7 +7974,8 @@ function getBlocks() {
             func() {},
         },
         hidden_string: {
-            color: '#7C7C7C',
+            color: EntryStatic.colorSet.block.default.HIDDEN,
+            outerLine: EntryStatic.colorSet.block.darken.HIDDEN,
             skeleton: 'basic_string_field',
             template: '    %1    ',
             fontColor: EntryStatic.colorSet.common.WHITE,
@@ -7606,6 +7986,7 @@ function getBlocks() {
                     value: '?',
                     clearBG: true,
                     color: 'white',
+                    fontSize: 12,
                 },
             ],
             events: {},
@@ -7621,7 +8002,8 @@ function getBlocks() {
             func() {},
         },
         hidden_boolean: {
-            color: '#7C7C7C',
+            color: EntryStatic.colorSet.block.default.HIDDEN,
+            outerLine: EntryStatic.colorSet.block.darken.HIDDEN,
             skeleton: 'basic_boolean_field',
             template: '    %1    ',
             fontColor: EntryStatic.colorSet.common.WHITE,
@@ -7632,6 +8014,7 @@ function getBlocks() {
                     value: '?',
                     clearBG: true,
                     color: 'white',
+                    fontSize: 12,
                 },
             ],
             events: {},
@@ -7664,17 +8047,14 @@ function getBlocks() {
     };
 }
 
-setHardwareLanguage();
-assignBlocks();
-
-(function() {
+function inheritBlockSchema() {
     for (const type in Entry.block) {
         const block = Entry.block[type];
         if (!block.isNotFor) {
             block.isNotFor = [];
         }
         if (block.parent) {
-            const F = function() {};
+            const F = function () {};
             F.prototype = Entry.block[block.parent];
             const schema = new F();
             schema.syntax = undefined;
@@ -7684,29 +8064,49 @@ assignBlocks();
             Entry.block[type] = schema;
         }
     }
-})();
-
-function assignBlocks() {
-    Object.assign(Entry.block, getBlocks(), blocks.getBlocks());
 }
 
-function setHardwareLanguage() {
-    for (const id in Entry.HARDWARE_LIST) {
-        const hw = Entry.HARDWARE_LIST[id];
-        if (!hw) {
-            continue;
+function assignBlocks() {
+    Entry.block.converters = getConverters();
+    Entry.block.changeBlockText = function (key, text) {
+        const block = this[key];
+        if (block) {
+            block.params[0].text = text;
         }
-        if ('setLanguage' in hw) {
-            const hwLang = hw.setLanguage();
-            const data = hwLang[global.Lang.type];
-            for (const key in data) {
-                Object.assign(Lang[key], data[key]);
-            }
+    };
+    Entry.block.changeBlockEvent = function (key, event, callback) {
+        const block = this[key];
+        if (block) {
+            block.events[event] = [callback];
+        }
+    };
+    Entry.block = Object.assign(Entry.block, getBlocks(), blocks.getBlocks());
+}
+
+function applySetLanguage(hasSetLanguageObj) {
+    if ('setLanguage' in hasSetLanguageObj) {
+        const hwLang = hasSetLanguageObj.setLanguage();
+        const data = hwLang[Lang.type] || hwLang[Lang.fallbackType];
+        for (const key in data) {
+            Object.assign(Lang[key], data[key]);
         }
     }
 }
 
-Entry.reloadBlock = assignBlocks;
+Entry.reloadBlock = function () {
+    Object.values(Entry.HARDWARE_LIST).forEach(applySetLanguage);
+    Object.values(Entry.HARDWARE_LITE_LIST).forEach(applySetLanguage);
+    assignBlocks();
+    inheritBlockSchema();
+};
+
+Entry.reloadBlock();
+
+Entry.destroyBlock = function () {
+    blocks.destroyBlockList.forEach((fn) => {
+        fn();
+    });
+};
 
 if (typeof exports === 'object') {
     exports.block = Entry.block;

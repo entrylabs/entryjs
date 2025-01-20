@@ -1,4 +1,4 @@
-'use strict';
+// 'use strict';
 
 /*
  * Entry Model object generator.
@@ -120,13 +120,11 @@ Entry.Model = function(obj, isSeal) {
             }
 
             observeData.object[observeData.funcName](
-                attrs.forEach((key) => {
-                    return {
-                        name: key,
-                        object: that,
-                        oldValue: oldValue[key],
-                    };
-                })
+                attrs.forEach((key) => ({
+                    name: key,
+                    object: that,
+                    oldValue: oldValue[key],
+                }))
             );
         });
     };

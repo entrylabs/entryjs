@@ -78,7 +78,6 @@
     display: inline-block;
     width: 65px;
     height: 15px;
-    font-family: notoSansMedium;
     font-size: 14px;
     font-weight: bold;
     font-style: normal;
@@ -120,17 +119,17 @@
 
 .entryPlaygroundDefaultWorkspace {
     height: 100%;
-    background-color: #363c46;
+    background-color: white;
     color: white;
 }
 
-@introHeight: 52px;
+@introHeight: 66px;
 .entryPlaygroundIntro.active {
     position: relative;
     overflow: hidden;
     height: @introHeight;
-    top: 54px;
-    z-index:1;
+    top: 50px;
+    z-index: 1;
 }
 
 .entryPlaygroundWorkspace {
@@ -153,16 +152,43 @@
 .entryPlaygroundResizeWorkspace {
     position: absolute;
     top: 50%;
-    height: 40px;
-    width: 16px;
-    left: 254px;
+    height: 62px;
+    width: 36px;
+    left: 311px;
     margin-top: -20px;
-    cursor: ew-resize;
+    cursor: pointer;
     border-left: none;
-    z-index: 250;
-    .backgroundImage('entry_scroll_02.png');
-    background-size: 16px auto;
+    z-index: 1;
+    .backgroundImage('entry_scroll_02.svg');
+    background-size: 36px auto;
+    &.highIndex {
+        z-index: 300;
+    }
+    &.folding {
+        z-index: 253;
+        .animation-duration(0.7s);
+        .animation-name(foldBlockly);
+        .animation-fill-mode(forwards);
+        .backgroundImage('entry_scroll_03.svg');
+    }
+    &.unfolding {
+        .animation-duration(0.7s);
+        .animation-name(unfoldBlockly);
+        .animation-fill-mode(forwards);
+        .backgroundImage('entry_scroll_02.svg');
+    }
 }
+
+@keyframes unfoldBlockly {
+    from {left: 58px;}
+    to {left: 311px;}
+}
+
+@keyframes foldBlockly {
+    from {}
+    to {left: 58px;}
+}
+
 
 .entryPlaygroundTabWorkspace {
     position: absolute;
@@ -182,6 +208,52 @@
     background-color: #f1f1f1;
 }
 
+.entryPlaygroundBackPackView {
+    height: calc(100% - 47px);
+    display: block;
+    right: 0;
+    top: 38px;
+    z-index: 299;
+    position: absolute;
+
+    .widget {
+        height: 100%;
+    }
+
+    .blockBackPackDrop,
+    .objectBackPackDrop {
+        position: fixed;
+        display: none;
+        top: 0;
+        left: 0;
+        z-index: 400;
+        background-color: rgba(248, 241, 204, 0.9);
+        border: 2px dashed #ffc800;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+
+        .blockBackPackIcon {
+            pointer-events: none;
+            width: 32px;
+            height: 32px;
+            margin-bottom: 11px;
+            .backgroundImage('img_backpack_plus.svg');
+        }
+        .objectBackPackDesc,
+        .blockBackPackDesc {
+            pointer-events: none;
+            font-family: EntryFont, NanumGothic, 'Nanum Gothic';
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: -0.1px;
+            white-space: pre;
+            text-align: center;
+            color: #2c313d;
+        }
+    }
+}
+
 .entryPlaygroundButtonTabWorkspace {
     position: absolute;
     right: 0;
@@ -190,22 +262,57 @@
     background-color: #fff;
 
     .entryPlaygroundCommentButtonWorkspace {
-        .backgroundImage('btn-toggle-comment-off.png');
+        float: left;
         background-repeat: no-repeat;
         background-size: 32px auto;
         background-position: 50% 50%;
         cursor: pointer;
         width: 32px;
         height: 32px;
-        margin: 0 8px;
-        &.showComment {
-            .backgroundImage('btn-toggle-comment-select.png');
+
+        &.enabled {
             background-size: 32px auto;
             width: 32px;
             height: 32px;
             border: 0;
             background-color: inherit;
         }
+
+        &.showComment {
+            margin-right: 4px;
+            .backgroundImage('btn-toggle-comment-off.svg');
+            &.enabled {
+                .backgroundImage('btn-toggle-comment-select.svg');
+            }
+        }
+
+        &.addComment {
+            margin-right: 8px;
+            .backgroundImage('btn-add-comment-off.svg');
+            &.enabled {
+                .backgroundImage('btn-add-comment-select.svg');
+            }
+        }
+    }
+
+    .entryPlaygroundBackPackButtonWorkspace {
+        &::before {
+            content: '';
+            display: inline-block;
+            width: 1px;
+            height: 16px;
+            background: #bfd8e6;
+            margin: 8px 0 0 -9px;
+        }
+        float: left;
+        .backgroundImage('back_pack_button.svg');
+        background-repeat: no-repeat;
+        background-size: 32px auto;
+        background-position: 50% 50%;
+        cursor: pointer;
+        width: 32px;
+        height: 32px;
+        margin: 0 9px;
     }
 
     &.entryRemove.entryCode {
@@ -223,30 +330,27 @@
 .entryTabListItemWorkspace {
     float: left;
     min-width: 58px;
-    margin: 4px 0 0 2px;
-    padding: 7px 0;
+    margin-left: 2px;
+    padding: 0;
     cursor: pointer;
-    background-color: #d6e9f4;
+    background-color: #d7e8f4;
     border-top-right-radius: 6px;
     border-top-left-radius: 6px;
     font-size: 12px;
     font-weight: 600;
-    color: #8aa3b2;
+    color: #8ba4b3;
     text-align: center;
-    line-height: 14px;
-    vertical-align: bottom;
+    letter-spacing: -0.4px;
+    line-height: 32px;
 }
 .entryTabListItemWorkspace:first-child {
     margin-left: 0;
 }
 
 .entryTabSelected {
-    margin-top: 0;
-    padding: 9px 0 8px;
     color: #fff;
-    background-color: #8274ff;
+    background-color: @baseblue;
     font-size: 14px;
-    line-height: 15px;
 }
 
 .entryTabListItemWorkspace:hover {
@@ -281,33 +385,6 @@
     }
 }
 
-@-o-keyframes hideTab {
-    from {
-    }
-    to {
-        margin-top: 44px;
-        opacity: 0;
-    }
-}
-
-@-ms-keyframes hideTab {
-    from {
-    }
-    to {
-        margin-top: 44px;
-        opacity: 0;
-    }
-}
-
-@-moz-keyframes hideTab {
-    from {
-    }
-    to {
-        margin-top: 44px;
-        opacity: 0;
-    }
-}
-
 @-webkit-keyframes hideTab {
     from {
     }
@@ -325,36 +402,6 @@
 }
 
 @keyframes showTab {
-    from {
-        margin-top: 44px;
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-@-o-keyframes showTab {
-    from {
-        margin-top: 44px;
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-@-ms-keyframes showTab {
-    from {
-        margin-top: 44px;
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-@-moz-keyframes showTab {
     from {
         margin-top: 44px;
         opacity: 0;
@@ -386,8 +433,9 @@
     right: 0;
     bottom: 8px;
     opacity: 0.5;
-    z-index: 255;
+    z-index: 500;
     cursor: pointer;
+    white-space: pre-line;
 }
 
 .entryPlaygroundCurtainPhone {
@@ -404,8 +452,61 @@
     cursor: pointer;
 }
 
+.entryPlaygroundPictureCurtainWorkspace {
+    position: absolute;
+    background-color: black;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.6;
+    z-index: 255;
+    border-radius: 0 0 0 6px;
+}
+
+.entryPlaygroundPictureCurtainWorkspace .entryPlaygroundPictureCurtainWorkspaceText {
+    text-align: center;
+    height: 100%;
+    color: white;
+    font-family: NanumGothic, 'Nanum Gothic';
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 1.33;
+    letter-spacing: -0.6px;
+    display: flex;
+    justify-content: center; /* align horizontal */
+    align-items: center; /* align vertical */
+    white-space: pre-line;
+}
+
+.entryPlaygroundTableCurtainWorkspace {
+    position: absolute;
+    background-color: black;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.6;
+    z-index: 255;
+    border-radius: 0 0 0 6px;
+}
+
+.entryPlaygroundTableCurtainWorkspace .entryPlaygroundTableCurtainWorkspaceText {
+    text-align: center;
+    height: 100%;
+    color: white;
+    font-family: NanumGothic, 'Nanum Gothic';
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 1.33;
+    letter-spacing: -0.6px;
+    display: flex;
+    justify-content: center; /* align horizontal */
+    align-items: center; /* align vertical */
+}
+
 .entryPlaygroundCodeWorkspace {
-    overflow: hidden;
+    overflow: unset;
     position: absolute;
     left: 0;
     right: 0;
@@ -465,16 +566,32 @@
 }
 
 .entryPlaygroundAddPictureInner {
-    display: block;
-    width: 146px;
+    display: inline-block;
+    width: 116px;
     height: 40px;
-    margin: 0 auto;
+    margin-left: 7px;
     background-color: #fff;
     border: 1px solid #4f80ff;
     border-radius: 4px;
     color: #4f80ff;
     text-align: center;
-    font-size: 14px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 38px;
+    cursor: pointer;
+}
+
+.entryPlaygroundNewPictureInner {
+    display: inline-block;
+    width: 116px;
+    height: 40px;
+    margin-left: 6px;
+    background-color: #fff;
+    border: 1px solid #e2e2e2;
+    border-radius: 4px;
+    color: #555;
+    text-align: center;
+    font-size: 12px;
     font-weight: 600;
     line-height: 38px;
     cursor: pointer;
@@ -531,6 +648,11 @@
     cursor: pointer;
 }
 
+.entryPlaygroundPictureElement::-moz-selection {
+    cursor: move;
+    background-color: #fff;
+}
+
 .entryPlaygroundPictureElement::selection {
     cursor: move;
     background-color: #fff;
@@ -566,9 +688,11 @@
     border: 1px solid #e2e2e2;
     background-color: #fff;
     border-radius: 4px;
-    background-size: auto 90%;
+    background-size: contain;
     background-repeat: no-repeat;
     background-position: 50% 50%;
+    user-select: none;
+    -webkit-touch-callout: none;
 }
 
 .entryPlaygroundPictureName {
@@ -712,8 +836,8 @@
 .entryPlaygroundTextWorkspace .write_box .write_set .font_style_box .style_link {
     display: inline-block;
     overflow: hidden;
-    width: 38px;
-    height: 38px;
+    width: 40px;
+    height: 40px;
     margin-left: 10px;
     border: 1px solid #e2e2e2;
     background-color: #fff;
@@ -859,17 +983,67 @@
     }
 }
 .imbtn_pop_font_color {
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    width: 66px;
+    height: 40px;
+    margin-left: 10px;
     .backgroundImage('btn_pop_font_color.png');
-    background-size: 38px auto;
+    background-size: 66px auto;
+    cursor: pointer;
+    em {
+        position: absolute;
+        left: 5px;
+        right: 5px;
+        top: 5px;
+        bottom: 5px;
+        background-color: #f9f9f9;
+        z-index: -1;
+    }
     &.on {
         .backgroundImage('btn_pop_font_color_on.png');
     }
 }
+.imbtn_pop_font_paint,
 .imbtn_pop_font_backgroundcolor {
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    width: 66px;
+    height: 40px;
+    margin-left: 10px;
     .backgroundImage('btn_pop_font_paint.png');
-    background-size: 38px auto;
+    background-size: 66px auto;
+    cursor: pointer;
+    em {
+        position: absolute;
+        left: 5px;
+        right: 5px;
+        top: 5px;
+        bottom: 5px;
+        z-index: -1;
+    }
     &.on {
         .backgroundImage('btn_pop_font_paint_on.png');
+        &.clear {
+            .backgroundImage('btn_pop_font_paint_clear_on.png');
+            em {
+                display: none;
+            }
+        }
+    }
+    &.clear {
+        .backgroundImage('btn_pop_font_paint_clear.png');
+        em {
+            display: none;
+        }
+    }
+    &.clear_on {
+        .backgroundImage('btn_pop_font_paint_clear_on.png');
+        em {
+            display: none;
+        }
     }
 }
 
@@ -944,9 +1118,6 @@
     overflow: hidden;
     border-left: 1px solid #e2e2e2;
     background-color: #f2f2f2;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 
     .entryPlaygroundSoundEditWrapper {
         text-align: center;
@@ -956,6 +1127,7 @@
         .backgroundImage('sound_edit.gif');
         width: 160px;
         height: 160px;
+        -o-object-fit: contain;
         object-fit: contain;
         margin: 0 auto 24px;
         background-size: 160px auto;
@@ -971,7 +1143,11 @@
         letter-spacing: -0.3px;
         text-align: center;
         color: #555555;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
         user-select: none;
+        white-space: pre-line;
     }
 }
 
@@ -991,14 +1167,16 @@
 
 .entryPlaygroundAddSoundInner {
     display: block;
-    width: 146px;
+    overflow: hidden;
+    width: calc(100% - 24px);
     height: 40px;
     margin: 0 auto;
     background-color: #fff;
     border: 1px solid #4f80ff;
     border-radius: 4px;
     color: #4f80ff;
-    text-align: center;
+    text-align: center;  
+    letter-spacing: -0.32px;
     font-size: 14px;
     font-weight: 600;
     line-height: 38px;
@@ -1073,13 +1251,15 @@
     background-size: 28px auto;
     background-repeat: no-repeat;
     background-position: 50% 50%;
+    user-select: none;
+    -webkit-touch-callout: none;
 
     &.entryPlaygroundSoundPlay {
-        .backgroundImage('workspace_sound_play.png');
+        .backgroundImage('workspace_sound_play.svg');
     }
 
     &.entryPlaygroundSoundStop {
-        .backgroundImage('workspace_sound_stop.png');
+        .backgroundImage('workspace_sound_stop.svg');
     }
 }
 
@@ -1176,6 +1356,7 @@
 .entryPlaygroundFontSizeKnob {
     width: 19px;
     height: 30px;
+    -o-object-fit: contain;
     object-fit: contain;
     position: relative;
     margin-top: -19px;
@@ -1249,9 +1430,9 @@
 
 .tablet {
     .entryPlaygroundResizeWorkspace {
-        .backgroundImage('entry_scroll_02_big_2.png');
-        width: 15px;
-        height: 42px;
+        .backgroundImage('entry_scroll_02.svg');
+        width: 36px;
+        height: 62px;
         border-top: none;
     }
 }
@@ -1270,7 +1451,7 @@
     }
 }
 
-.sortableWidget {
+.sortable {
     height: 100%;
 
     .rcs-custom-scrollbar {
@@ -1283,5 +1464,211 @@
         background-color: #aac5d5 !important;
         border-radius: 2.5px !important;
         opacity: 0.8;
+    }
+}
+
+.entryPlaygroundTableWorkspace {
+    overflow: hidden;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 8px;
+    background-color: #f9f9f9;
+    border-radius: 0 0 0 6px;
+    top: 80px;
+    margin-left: 0;
+}
+
+.entryPlaygroundTableEdit {
+    position: absolute;
+    left: 253px;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    overflow: hidden;
+    border-left: 1px solid #e2e2e2;
+    background-color: #f2f2f2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .entryPlaygroundTableEditWrapper {
+        text-align: center;
+    }
+
+    .entryPlaygroundTableEditImage {
+        .backgroundImage('sound_edit.gif');
+        width: 160px;
+        height: 160px;
+        -o-object-fit: contain;
+        object-fit: contain;
+        margin: 0 auto 24px;
+        background-size: 160px auto;
+    }
+
+    .entryPlaygroundTableEditText {
+        margin: 0 auto;
+        font-size: 14px;
+        font-weight: bold;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        letter-spacing: -0.3px;
+        text-align: center;
+        color: #555555;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+}
+
+.entryPlaygroundAddTable {
+    width: 254px;
+    padding: 8px 0;
+    background-color: #ecf8ff;
+    border: 1px solid #d6e9f4;
+}
+
+.entryPlaygroundAddTablePhone {
+    position: relative;
+    height: 50px;
+    cursor: pointer;
+    border-bottom: 1pt solid #ebeff1;
+}
+
+.entryPlaygroundAddTableInner {
+    display: block;
+    width: 146px;
+    height: 40px;
+    margin: 0 auto;
+    background-color: #fff;
+    border: 1px solid #4f80ff;
+    border-radius: 4px;
+    color: #4f80ff;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 38px;
+    cursor: pointer;
+}
+
+.entryPlaygroundAddTableInnerPhone {
+    display: block;
+    height: 40px;
+    background-color: #cdcfc9;
+    color: #656565;
+    text-align: center;
+    font-size: 10.5pt;
+    line-height: 36px;
+    margin: 10px;
+    border: 2px dashed #737373;
+    width: 220px;
+}
+
+.entryPlaygroundTableList {
+    position: absolute;
+    padding: 0;
+    margin: 0;
+    width: 254px;
+    top: 57px;
+    bottom: 0;
+    overflow-y: hidden;
+    list-style: none;
+    background-color: #ecf8ff;
+    border: 1px solid #d6e9f4;
+}
+
+.entryPlaygroundTableListPhone {
+    position: absolute;
+    padding: 0px;
+    margin: 0px;
+    width: 254px;
+    top: 57px;
+    bottom: 0px;
+    overflow: hidden;
+    overflow-y: auto;
+    list-style: none;
+    background-color: #ecf8ff;
+    border: 1px solid #d6e9f4;
+    border-radius: 0 0 0 6px;
+}
+
+.entryPlaygroundTableList {
+    position: absolute;
+    padding: 0px;
+    margin: 0px;
+    width: 254px;
+    top: 56px;
+    bottom: 0px;
+    overflow-y: hidden;
+    list-style: none;
+    background-color: #ecf8ff;
+    border: 1px solid #d6e9f4;
+    border-radius: 0 0 0 6px;
+}
+
+.entryPlaygroundTableElement {
+    display: block;
+    position: relative;
+    background-color: #ecf8ff;
+    border-bottom: 1px solid #d6e9f4;
+    padding: 0 56px 0 36px;
+    height: 48px;
+    color: #2c313d;
+    cursor: pointer;
+
+    &.entryTableSelected {
+        background-color: #fff;
+    }
+
+    .entryPlaygroundTableThumbnail {
+        position: absolute;
+        height: 22px;
+        width: 22px;
+        top: 13px;
+        left: 8px;
+        .backgroundImage('workspace_table_icon.svg');
+        background-repeat: no-repeat;
+        background-position: 50% 50%;
+    }
+
+    .entryPlaygroundTableName {
+        width: 100%;
+        height: 24px;
+        box-sizing: border-box;
+        margin-top: 12px;
+        padding: 0 4px;
+        background-color: #fff;
+        outline: 0;
+        font-size: 12px;
+        text-overflow: ellipsis;
+        color: #2c313d;
+        font-weight: 600;
+        cursor: text;
+        border: 1px solid #e2e2e2;
+        border-radius: 4px;
+    }
+    .entryPlaygroundTableName:focus,
+    .entryPlaygroundTableName:active {
+        border-color: #4f80ff;
+    }
+
+    .entryPlaygroundTableRemove {
+        position: absolute;
+        right: 26px;
+        top: 12px;
+        width: 24px;
+        height: 24px;
+        border: 1px solid #e2e2e2;
+        border-radius: 4px;
+        background-color: #fff;
+        background-size: 10px;
+        font-size: 0;
+        cursor: pointer;
+        background-size: 10px auto;
+        background-position: 50% 50%;
+        background-repeat: no-repeat;
+        .backgroundImage('layers_icon_close_nor_new.png');
     }
 }

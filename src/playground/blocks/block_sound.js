@@ -1,3 +1,7 @@
+import _clamp from 'lodash/clamp';
+
+Entry.playbackRateValue = 1;
+
 module.exports = {
     getBlocks() {
         return {
@@ -47,7 +51,8 @@ module.exports = {
                     const sound = sprite.parent.getSound(soundId);
 
                     if (sound) {
-                        Entry.Utils.addSoundInstances(createjs.Sound.play(sound.id));
+                        const instance = Entry.Utils.playSound(sound.id);
+                        Entry.Utils.addSoundInstances(instance, sprite);
                     }
 
                     return script.callReturn();
@@ -125,12 +130,11 @@ module.exports = {
 
                     const sound = sprite.parent.getSound(soundId);
                     if (sound) {
-                        Entry.Utils.addSoundInstances(
-                            createjs.Sound.play(sound.id, {
-                                startTime: 0,
-                                duration: timeValue * 1000,
-                            })
-                        );
+                        const instance = Entry.Utils.playSound(sound.id, {
+                            startTime: 0,
+                            duration: timeValue * 1000,
+                        });
+                        Entry.Utils.addSoundInstances(instance, sprite);
                     }
                     return script.callReturn();
                 },
@@ -221,11 +225,11 @@ module.exports = {
                         let [start, end] = script.getValues(['START', 'END'], script);
                         start = Number(start) * 1000;
                         end = Number(end) * 1000;
-
-                        createjs.Sound.play(sound.id, {
+                        const instance = Entry.Utils.playSound(sound.id, {
                             startTime: Math.min(start, end),
                             duration: Math.max(start, end) - Math.min(start, end),
                         });
+                        Entry.Utils.addSoundInstances(instance, sprite);
                     }
                     return script.callReturn();
                 },
@@ -287,11 +291,14 @@ module.exports = {
                         const sound = sprite.parent.getSound(soundId);
                         if (sound) {
                             script.playState = 1;
-                            const instance = createjs.Sound.play(sound.id);
-                            Entry.Utils.addSoundInstances(instance);
-                            setTimeout(function() {
+                            const instance = Entry.Utils.playSound(sound.id);
+                            Entry.Utils.addSoundInstances(instance, sprite);
+                            const duration = Math.floor(
+                                (sound.duration * 1000) / Entry.playbackRateValue
+                            );
+                            setTimeout(() => {
                                 script.playState = 0;
-                            }, sound.duration * 1000);
+                            }, duration);
                         }
                         return script;
                     } else if (script.playState == 1) {
@@ -374,13 +381,14 @@ module.exports = {
                         const sound = sprite.parent.getSound(soundId);
                         if (sound) {
                             script.playState = 1;
-                            const instance = createjs.Sound.play(sound.id);
+                            const instance = Entry.Utils.playSound(sound.id);
+                            Entry.Utils.addSoundInstances(instance, sprite);
                             const timeValue = script.getNumberValue('SECOND', script);
-                            setTimeout(function() {
+                            setTimeout(() => {
                                 instance.stop();
                                 script.playState = 0;
                             }, timeValue * 1000);
-                            instance.addEventListener('complete', function(e) {});
+                            instance.addEventListener('complete', (e) => {});
                         }
                         return script;
                     } else if (script.playState == 1) {
@@ -484,13 +492,13 @@ module.exports = {
                             const startValue = Math.min(start, end);
                             const endValue = Math.max(start, end);
                             const duration = endValue - startValue;
-
-                            createjs.Sound.play(sound.id, {
+                            const instance = Entry.Utils.playSound(sound.id, {
                                 startTime: startValue,
                                 duration,
                             });
+                            Entry.Utils.addSoundInstances(instance, sprite);
 
-                            setTimeout(function() {
+                            setTimeout(() => {
                                 script.playState = 0;
                             }, duration);
                         }
@@ -553,14 +561,14 @@ module.exports = {
                 isNotFor: [],
                 func(sprite, script) {
                     let value = script.getNumberValue('VALUE', script) / 100;
-                    value = value + createjs.Sound.getVolume();
+                    value = value + Entry.Utils.getVolume();
                     if (value > 1) {
                         value = 1;
                     }
                     if (value < 0) {
                         value = 0;
                     }
-                    createjs.Sound.setVolume(value);
+                    Entry.Utils.setVolume(value);
                     return script.callReturn();
                 },
                 syntax: { js: [], py: ['Entry.add_sound_volume(%1)'] },
@@ -616,12 +624,237 @@ module.exports = {
                     if (value < 0) {
                         value = 0;
                     }
-                    createjs.Sound.setVolume(value);
+                    Entry.Utils.setVolume(value);
                     return script.callReturn();
                 },
                 syntax: { js: [], py: ['Entry.set_sound_volume(%1)'] },
             },
+            get_sound_speed: {
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
+                skeleton: 'basic_string_field',
+                statements: [],
+                params: [],
+                events: {},
+                def: {
+                    params: [null],
+                    type: 'get_sound_speed',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                class: 'sound_speed',
+                isNotFor: [],
+                func() {
+                    return Entry.playbackRateValue;
+                },
+                syntax: { js: [], py: ['Entry.stop_sound()'] },
+            },
+            sound_speed_change: {
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/sound_icon.svg',
+                        size: 11,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [
+                        {
+                            type: 'number',
+                            params: ['0.1'],
+                        },
+                        null,
+                    ],
+                    type: 'sound_speed_change',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                class: 'sound_speed',
+                isNotFor: [],
+                func(sprite, script) {
+                    const value = script.getNumberValue('VALUE');
+                    if (!Entry.Utils.isNumber(value)) {
+                        return;
+                    }
+                    Entry.playbackRateValue = _clamp(value + Entry.playbackRateValue, 0.5, 2);
+                    const instances = Entry.soundInstances.getAllValues();
+                    instances.forEach((instance) => {
+                        if (instance.sourceNode?.playbackRate) {
+                            instance.sourceNode.playbackRate.value = Entry.playbackRateValue;
+                        }
+                    });
+
+                    return script.callReturn();
+                },
+                syntax: { js: [], py: ['Entry.stop_sound()'] },
+            },
+            sound_speed_set: {
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/sound_icon.svg',
+                        size: 11,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [
+                        {
+                            type: 'number',
+                            params: ['1'],
+                        },
+                        null,
+                    ],
+                    type: 'sound_speed_set',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                class: 'sound_speed',
+                isNotFor: [],
+                func(sprite, script) {
+                    let value = _clamp(script.getNumberValue('VALUE'), 0.5, 2);
+                    if (!Entry.Utils.isNumber(value)) {
+                        value = 1;
+                    }
+                    Entry.playbackRateValue = value;
+                    const instances = Entry.soundInstances.getAllValues();
+                    instances.forEach((instance) => {
+                        if (instance.sourceNode?.playbackRate) {
+                            instance.sourceNode.playbackRate.value = Entry.playbackRateValue;
+                        }
+                    });
+
+                    return script.callReturn();
+                },
+                syntax: { js: [], py: ['Entry.stop_sound()'] },
+            },
             sound_silent_all: {
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.FLOW_stop_object_all, 'all'],
+                            [Lang.Blocks.FLOW_stop_object_this_object, 'thisOnly'],
+                            [Lang.Blocks.FLOW_stop_object_other_objects, 'other_objects'],
+                        ],
+                        value: 'all',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.SOUND,
+                        arrowColor: EntryStatic.colorSet.common.WHITE,
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/sound_icon.svg',
+                        size: 11,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null],
+                    type: 'sound_silent_all',
+                },
+                paramsKeyMap: {
+                    TARGET: 0,
+                },
+                class: 'sound_stop',
+                isNotFor: [],
+                func(sprite, script) {
+                    switch (script.getField('TARGET', script)) {
+                        case 'all':
+                            Entry.Utils.forceStopSounds();
+                            return script.callReturn();
+                        case 'thisOnly': {
+                            const instances = [...Entry.soundInstances.getAll(sprite)];
+                            instances.forEach((instance) => {
+                                instance?.dispatchEvent?.('complete');
+                                instance.stop();
+                            });
+                            return script.callReturn();
+                        }
+                        case 'other_objects': {
+                            const instances = [...Entry.soundInstances.getAllExcept(sprite)];
+                            instances.forEach((instance) => {
+                                instance?.dispatchEvent?.('complete');
+                                instance.stop();
+                            });
+                            return script.callReturn();
+                        }
+                    }
+                    return script.callReturn();
+                },
+                syntax: { js: [], py: ['Entry.stop_sound()'] },
+            },
+            play_bgm: {
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/sound_icon.svg',
+                        size: 11,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [
+                        {
+                            type: 'get_sounds',
+                        },
+                        null,
+                    ],
+                    type: 'play_bgm',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                class: 'bgm',
+                isNotFor: [],
+                func(sprite, script) {
+                    const soundId = script.getStringValue('VALUE', script);
+                    const sound = sprite.parent.getSound(soundId);
+
+                    if (sound) {
+                        Entry.Utils.forceStopBGM();
+                        const instance = Entry.Utils.playBGM(sound.id);
+                        Entry.Utils.addBGMInstances(instance);
+                    }
+                    return script.callReturn();
+                },
+                syntax: { js: [], py: ['Entry.stop_sound()'] },
+            },
+            stop_bgm: {
                 color: EntryStatic.colorSet.block.default.SOUND,
                 outerLine: EntryStatic.colorSet.block.darken.SOUND,
                 skeleton: 'basic',
@@ -636,15 +869,120 @@ module.exports = {
                 events: {},
                 def: {
                     params: [null],
-                    type: 'sound_silent_all',
+                    type: 'stop_bgm',
                 },
-                class: 'sound_stop',
+                paramsKeyMap: {
+                    TARGET: 0,
+                },
+                class: 'bgm',
                 isNotFor: [],
                 func(sprite, script) {
-                    createjs.Sound.stop();
+                    Entry.Utils.forceStopBGM();
                     return script.callReturn();
                 },
                 syntax: { js: [], py: ['Entry.stop_sound()'] },
+            },
+            get_sound_volume: {
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
+                skeleton: 'basic_string_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'Text',
+                        text: Lang.Blocks.CALC_get_sound_volume,
+                        color: '#FFF',
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null],
+                    type: 'get_sound_volume',
+                },
+                class: 'sound_volume',
+                isNotFor: [],
+                func() {
+                    return Entry.Utils.getVolume() * 100;
+                },
+                syntax: {
+                    js: [],
+                    py: [
+                        {
+                            syntax: 'Entry.value_of_sound_volume()',
+                            blockType: 'param',
+                        },
+                    ],
+                },
+            },
+            get_sound_duration: {
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
+                skeleton: 'basic_string_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'Text',
+                        text: Lang.Blocks.CALC_get_sound_duration_1,
+                        color: '#FFF',
+                    },
+                    {
+                        type: 'DropdownDynamic',
+                        value: null,
+                        menuName: 'sounds',
+                        fontSize: 10,
+                        bgColor: EntryStatic.colorSet.block.darken.SOUND,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                    },
+                    {
+                        type: 'Text',
+                        text: Lang.Blocks.CALC_get_sound_duration_2,
+                        color: '#FFF',
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null, null, null],
+                    type: 'get_sound_duration',
+                },
+                pyHelpDef: {
+                    params: [null, 'A&value', null],
+                    type: 'get_sound_duration',
+                },
+                paramsKeyMap: {
+                    VALUE: 1,
+                },
+                class: 'sound_duration',
+                isNotFor: [],
+                func(sprite, script) {
+                    const soundId = script.getField('VALUE', script);
+                    const soundsArr = sprite.parent.sounds;
+
+                    for (let i = 0; i < soundsArr.length; i++) {
+                        if (soundsArr[i].id === soundId) {
+                            return soundsArr[i].duration;
+                        }
+                    }
+                },
+                syntax: {
+                    js: [],
+                    py: [
+                        {
+                            syntax: 'Entry.value_of_sound_length_of(%2)',
+                            blockType: 'param',
+                            textParams: [
+                                undefined,
+                                {
+                                    type: 'DropdownDynamic',
+                                    value: null,
+                                    menuName: 'sounds',
+                                    fontSize: 11,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.SOUND,
+                                    converter: Entry.block.converters.returnStringKey,
+                                },
+                            ],
+                        },
+                    ],
+                },
             },
         };
     },

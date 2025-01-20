@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "sourceMap": true,
+        "noImplicitAny": true,
+        "module": "esnext",
+        "target": "es5",
+        "downlevelIteration": true,
+        "moduleResolution": "node",
+        "lib": ["es6", "dom", "webworker"],
+        "allowJs": true,
+        "baseUrl": "./",
+        "typeRoots": ["./types", "./node_modules/@types"],
+        "allowSyntheticDefaultImports": true
+    },
+    "include": [
+        "src/**/*.ts",
+        "./types/**/*"
+    ]
+}

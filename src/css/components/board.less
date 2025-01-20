@@ -5,7 +5,7 @@
 }
 
 .entryOverlayBoard {
-    background: rgba(255, 255, 255, 0.7);
+    background: rgba(138, 163, 178, 0.7);
 }
 
 .boardScrollbar {
@@ -68,7 +68,7 @@
 
 .entryWorkspaceBoard {
     position: absolute;
-    left: 254px;
+    left: 313px;
     top: 0;
     bottom: 0;
     right: 0px;
@@ -76,10 +76,14 @@
     border-width: 1px 0;
     overflow: hidden;
     .backgroundImage('entry_bg.svg');
+
+    &.wideView {
+        left: 254px;
+    }
 }
 
 .entryWorkspaceBoard.folding {
-    z-index: 252;
+    z-index: 251;
     // border-left: solid 1px #c4c4b9;
     .animation-duration(0.7s);
     .animation-name(foldBoard);
@@ -90,7 +94,7 @@
     from {
     }
     to {
-        left: 61px;
+        left: 59px;
     }
 }
 

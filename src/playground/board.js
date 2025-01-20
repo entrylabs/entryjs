@@ -1,9 +1,6 @@
-'use strict';
+import debounce from 'lodash/debounce';
+import _get from 'lodash/get';
 
-/*
- *
- * @param {object} dom which to inject playground
- */
 Entry.Board = class Board {
     constructor(option) {
         Entry.Model(this, false);
@@ -28,6 +25,15 @@ Entry.Board = class Board {
         this._bindEvent();
         this.observe(this, 'handleVisibleComment', ['isVisibleComment'], false);
         Entry.addEventListener('fontLoaded', this.reDraw.bind(this));
+        if (!Entry.codeChangedEvent) {
+            Entry.codeChangedEvent = new Entry.Event(window);
+        }
+
+        const updateObjectBlockCount = () => {
+            this.updateObjectBlockCount(Entry.container.selectedObject);
+        };
+        Entry.codeChangedEvent.attach(this, updateObjectBlockCount);
+        Entry.addEventListener('loadComplete', updateObjectBlockCount);
 
         Entry.Utils.setSVGDom(this.svgDom);
     }
@@ -103,6 +109,18 @@ Entry.Board = class Board {
 
         this.svgGroup = this.svg.elem('g');
         this.svgGroup.attr('transform', `scale(${this.scale})`);
+        this.svgObjectTitle = this.svgGroup.elem('g');
+        this.svgObjectTitle.board = this;
+        this.svgObjectTitle.attr({
+            class: 'svgObjectTitle',
+        });
+
+        this.svgObjectBlockCount = this.svgGroup.elem('g');
+        this.svgObjectBlockCount.board = this;
+        this.svgObjectBlockCount.attr({
+            class: 'svgObjectBlockCount',
+        });
+
         this.svgThreadGroup = this.svgGroup.elem('g');
         this.svgThreadGroup.board = this;
 
@@ -133,7 +151,7 @@ Entry.Board = class Board {
 
         const that = this;
         if (code && !shouldNotCreateView) {
-            this.codeListener = this.code.changeEvent.attach(this, function() {
+            this.codeListener = this.code.changeEvent.attach(this, () => {
                 that.changeEvent.notify();
             });
             this.svgCommentGroup.remove();
@@ -184,22 +202,22 @@ Entry.Board = class Board {
     _addControl() {
         const dom = this.svgDom;
         const that = this;
-        dom.mousedown(function() {
+        dom.mousedown(function () {
             that.onMouseDown(...arguments);
         });
-        dom.bind('touchstart', function() {
+        dom.bind('touchstart', function () {
             that.onMouseDown(...arguments);
         });
-        dom.on('wheel', function() {
+        dom.on('wheel', function () {
             that.mouseWheel(...arguments);
         });
 
         const scroller = that.scroller;
         if (scroller) {
-            dom.mouseenter(function() {
+            dom.mouseenter(() => {
                 scroller.setOpacity(0.8);
             });
-            dom.mouseleave(function() {
+            dom.mouseleave(() => {
                 scroller.setOpacity(0);
             });
         }
@@ -221,6 +239,10 @@ Entry.Board = class Board {
         }
         if (e.preventDefault) {
             e.preventDefault();
+        }
+        if (e.which == 2) {
+            console.log('mouse wheel click disabled');
+            return;
         }
 
         if (this.workingEvent) {
@@ -260,7 +282,7 @@ Entry.Board = class Board {
                 offsetY: mouseEvent.pageY,
             });
 
-            if (eventType === 'touchstart') {
+            if (eventType === 'touchstart' || Entry.isMobile()) {
                 longPressTimer = setTimeout(() => {
                     if (longPressTimer) {
                         longPressTimer = null;
@@ -421,6 +443,8 @@ Entry.Board = class Board {
         this.svgCommentGroup.remove();
         this.svgBlockGroup.remove();
         this.svgThreadGroup.remove();
+        this.clearObjectTitle();
+        this.clearObjectBlockCount();
     }
 
     updateOffset() {
@@ -503,11 +527,13 @@ Entry.Board = class Board {
     }
 
     cancelEdit() {
-        Entry.do('funcEditCancel');
+        Entry.disposeEvent.notify();
+        Entry.do('funcEditEnd', 'cancel');
     }
 
     save() {
-        Entry.do('funcCreate');
+        Entry.disposeEvent.notify();
+        Entry.do('funcEditEnd', 'save');
     }
 
     generateCodeMagnetMap() {
@@ -529,9 +555,9 @@ Entry.Board = class Board {
                 continue;
             }
 
-            const metaData = this._getCodeBlocks(code, targetType).sort((a, b) => {
-                return a.point - b.point;
-            });
+            const metaData = this._getCodeBlocks(code, targetType).sort(
+                (a, b) => a.point - b.point
+            );
 
             metaData.unshift({ point: -Number.MAX_VALUE, blocks: [] });
 
@@ -580,9 +606,13 @@ Entry.Board = class Board {
                 return [];
         }
 
-        return code.getThreads().reduce((blocks, thread) => {
-            return blocks.concat(func.call(this, thread, thread.view.zIndex, null, targetType));
-        }, []);
+        return code
+            .getThreads()
+            .reduce(
+                (blocks, thread) =>
+                    blocks.concat(func.call(this, thread, thread.view.zIndex, null, targetType)),
+                []
+            );
     }
 
     _getNextMagnets(thread, zIndex, offset, targetType) {
@@ -703,6 +733,9 @@ Entry.Board = class Board {
             if (block instanceof Entry.Comment) {
                 break;
             }
+            if (!block.assemble) {
+                break;
+            }
             const blockView = block.view;
             if (blockView.dragInstance) {
                 break;
@@ -752,12 +785,24 @@ Entry.Board = class Board {
             if (contentBlock.view.dragInstance) {
                 continue;
             }
-            if (content.acceptType !== targetType && content.acceptType !== 'boolean') {
-                continue;
-            }
             const startX = cursorX + content.box.x * this.scale;
             const startY = cursorY + content.box.y + (blockView.contentHeight % 1000) * -0.5;
             const endY = cursorY + content.box.y + content.box.height;
+            if (content.acceptType !== targetType && content.acceptType !== 'boolean') {
+                if (targetType === 'boolean') {
+                    const contentBlockView = contentBlock.view;
+                    metaData = metaData.concat(
+                        this._getFieldBlockMetaData(
+                            contentBlockView,
+                            startX + contentBlockView.contentPos.x * this.scale,
+                            startY + contentBlockView.contentPos.y,
+                            zIndex,
+                            targetType
+                        )
+                    );
+                }
+                continue;
+            }
             if (content.acceptType === targetType) {
                 metaData.push({
                     point: startY,
@@ -1126,9 +1171,7 @@ Entry.Board = class Board {
             return;
         }
 
-        threads = threads.sort((a, b) => {
-            return a.getFirstBlock().view.x - b.getFirstBlock().view.x;
-        });
+        threads = threads.sort((a, b) => a.getFirstBlock().view.x - b.getFirstBlock().view.x);
 
         let block = threads[0].getFirstBlock();
         if (block) {
@@ -1140,6 +1183,7 @@ Entry.Board = class Board {
 
     _initContextOptions() {
         const that = this;
+        const { options = {} } = Entry;
         this._contextOptions = [
             {
                 activated: true,
@@ -1179,36 +1223,32 @@ Entry.Board = class Board {
             },
             {
                 activated:
-                    Entry.type === 'workspace' && Entry.Utils.isChrome() && !Entry.isMobile(),
+                    Entry.blockSaveImageEnable &&
+                    Entry.type === 'workspace' &&
+                    Entry.Utils.isChrome() &&
+                    !Entry.isMobile(),
                 option: {
                     text: Lang.Menus.save_as_image_all,
                     enable: !this.readOnly,
-                    callback() {
+                    async callback() {
                         const threads = that.code.getThreads();
-                        const images = [];
-                        threads.forEach((t, i) => {
-                            const topBlock = t.getFirstBlock();
+                        const promises = threads.map((thread) => {
+                            const topBlock = thread.getFirstBlock();
                             if (!topBlock) {
                                 return;
                             }
-                            if (threads.length > 1 && Entry.isOffline) {
-                                topBlock.view.getDataUrl().then((data) => {
-                                    images.push(data);
-                                    if (images.length == threads.length) {
-                                        Entry.dispatchEvent('saveBlockImages', {
-                                            images,
-                                        });
-                                    }
-                                });
-                            } else {
-                                topBlock.view.downloadAsImage(++i);
-                            }
+                            return topBlock.view.getDataUrl();
+                        });
+
+                        const images = await Promise.all(promises);
+                        Entry.dispatchEvent('saveBlockImages', {
+                            images,
                         });
                     },
                 },
             },
             {
-                activated: true,
+                activated: !options.commentDisable,
                 option: {
                     text: Lang.Blocks.add_comment,
                     enable: !this.readOnly,
@@ -1227,7 +1267,7 @@ Entry.Board = class Board {
                 },
             },
             {
-                activated: true,
+                activated: !options.commentDisable,
                 option: {
                     text: Lang.Blocks.hide_all_comment,
                     enable: !this.readOnly,
@@ -1258,7 +1298,7 @@ Entry.Board = class Board {
 
         evt = Entry.windowResized;
         if (evt) {
-            evt.attach(this, Entry.Utils.debounce(this.updateOffset, 200));
+            evt.attach(this, debounce(this.updateOffset, 200));
         }
     }
 
@@ -1315,7 +1355,7 @@ Entry.Board = class Board {
             return this.workspace.trashcan.svgGroup;
         } else if (key === 'coord') {
             return {
-                getBoundingClientRect: function() {
+                getBoundingClientRect: function () {
                     const halfWidth = 20;
                     const boardOffset = this.relativeOffset;
                     return {
@@ -1396,5 +1436,139 @@ Entry.Board = class Board {
         this.scale = scale;
         this.svgGroup.attr('transform', `scale(${scale})`);
         this.adjustThreadsPosition();
+    }
+
+    updateObjectTitle(object) {
+        if (!object) {
+            this.clearObjectTitle();
+            return;
+        }
+
+        if (!this.svgObjectTitle.thumbnail) {
+            const thumbnail = this.svgObjectTitle.elem('g');
+            const rect = thumbnail.elem('rect');
+            rect.attr({
+                x: 14,
+                y: 12,
+                rx: 2,
+                ry: 2,
+                width: 24,
+                height: 24,
+                fill: 'none',
+                stroke: '#e2e2e2',
+                strokeWidth: '1',
+            });
+            const image = thumbnail.elem('image');
+            image.addClass('entryBoardObjectThumbnail');
+            image.attr({
+                x: 17,
+                y: 15,
+                width: 18,
+                height: 18,
+                href: object.thumbUrl,
+            });
+            this.svgObjectTitle.frame = rect;
+            this.svgObjectTitle.thumbnail = image;
+        }
+
+        if (!this.svgObjectTitle.name) {
+            const name = this.svgObjectTitle.elem('g');
+            const nameText = name.elem('text');
+            nameText.addClass('entryBoardObjectName');
+            nameText.attr({ x: 44, y: 26, fill: '#6b6b6b' });
+            nameText.style.font = "12px NanumGothicBold, 'Nanum Gothic'";
+            nameText.textContent = object.name;
+            this.svgObjectTitle.name = nameText;
+        }
+
+        this.svgObjectTitle.thumbnail.attr({ href: object.thumbUrl });
+        this.svgObjectTitle.name.textContent = object.name;
+        this.updateObjectBlockCount(object);
+    }
+
+    async updateObjectBlockCount(object) {
+        if (this.suffix !== 'board' || !object) {
+            this.clearObjectBlockCount();
+            return;
+        }
+
+        if (!this.svgObjectBlockCount.rect) {
+            const rect = this.svgObjectBlockCount.elem('rect');
+            rect.attr({
+                rx: 10,
+                ry: 10,
+                height: 20,
+                fill: '#ffffff',
+                stroke: '#d6e9f4',
+                strokeWidth: '1',
+            });
+            this.svgObjectBlockCount.rect = rect;
+        }
+
+        if (!this.svgObjectBlockCount.countText) {
+            const countText = this.svgObjectBlockCount.elem('text');
+            countText.style.font = "12px NanumGothic, 'Nanum Gothic'";
+            countText.attr({
+                fill: '#6b6b6b',
+            });
+            this.svgObjectBlockCount.countText = countText;
+        }
+
+        const nameWidth =
+            Math.round(this.svgObjectTitle?.name?.getBoundingClientRect().width || 0) / this.scale;
+        const x = nameWidth + 8;
+        this.svgObjectBlockCount.countText.attr({
+            x: 44 + x + 8,
+            y: 26,
+        });
+        requestAnimationFrame(() => {
+            if (!this.svgObjectBlockCount.countText) {
+                return;
+            }
+            const rectWidth =
+                this.svgObjectBlockCount.countText.getBoundingClientRect().width / this.scale;
+            this.svgObjectBlockCount.rect.attr({
+                width: rectWidth + 16,
+                x: 44 + x,
+                y: 12,
+            });
+        });
+        const blocks = await Entry.Utils.getObjectsBlocksForEventThread(object);
+        const count = _get(blocks, 'length', 0);
+
+        let langText = Lang.Workspace.use_blocks_project;
+        if (count === 1) {
+            langText = Lang.Workspace.use_block_project;
+        }
+        if (this.svgObjectBlockCount.countText) {
+            this.svgObjectBlockCount.countText.textContent = Entry.Utils.stringFormat(
+                langText,
+                Entry.Utils.shortenNumber(count)
+            );
+        }
+    }
+
+    clearObjectTitle() {
+        if (!this.svgObjectTitle) {
+            return;
+        }
+
+        this.svgObjectTitle.frame?.remove();
+        this.svgObjectTitle.thumbnail?.remove();
+        this.svgObjectTitle.name?.remove();
+        delete this.svgObjectTitle.frame;
+        delete this.svgObjectTitle.thumbnail;
+        delete this.svgObjectTitle.name;
+    }
+
+    clearObjectBlockCount() {
+        if (!this.svgObjectBlockCount) {
+            return;
+        }
+
+        this.svgObjectBlockCount.rect?.remove();
+        this.svgObjectBlockCount.countText?.remove();
+        delete this.svgObjectBlockCount.rect;
+        delete this.svgObjectBlockCount.countText;
     }
 };
