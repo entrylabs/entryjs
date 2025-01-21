@@ -224,7 +224,7 @@ class Executor {
         return Entry.STATIC.PASS;
     }
 
-    continueLoop() {
+    async continueLoop() {
         if (this._callStack.length) {
             this.scope = this._callStack.pop();
         }
