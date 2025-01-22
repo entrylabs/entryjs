@@ -932,8 +932,12 @@ Entry.EntryObject = class {
         this.updateCoordinateView(true);
         this.updateRotationView(true);
 
-        Entry.addEventListener('run', this.setDisabled);
-        Entry.addEventListener('dispatchEventDidToggleStop', this.setEnabled);
+        if (!Entry.objectEditable) {
+            this.setDisabled();
+        } else {
+            Entry.addEventListener('run', this.setDisabled);
+            Entry.addEventListener('dispatchEventDidToggleStop', this.setEnabled);
+        }
 
         return this.view_;
     }
@@ -953,33 +957,40 @@ Entry.EntryObject = class {
         this.rotateModeAView_ = rotateModeAView;
         rotationMethodWrapper.appendChild(rotateModeAView);
         rotationMethodWrapper.appendChild(rotateModeAView);
-        rotateModeAView.bindOnClick(
-            this._whenRotateEditable(() => {
-                Entry.do('objectUpdateRotateMethod', this.id, 'free');
-            }, this)
-        );
+
+        if (Entry.objectEditable) {
+            rotateModeAView.bindOnClick(
+                this._whenRotateEditable(() => {
+                    Entry.do('objectUpdateRotateMethod', this.id, 'free');
+                }, this)
+            );
+        }
 
         const rotateModeBView = Entry.createElement('span').addClass(
             'entryObjectRotateModeWorkspace entryObjectRotateModeBWorkspace'
         );
         this.rotateModeBView_ = rotateModeBView;
         rotationMethodWrapper.appendChild(rotateModeBView);
-        rotateModeBView.bindOnClick(
-            this._whenRotateEditable(() => {
-                Entry.do('objectUpdateRotateMethod', this.id, 'vertical');
-            }, this)
-        );
+        if (Entry.objectEditable) {
+            rotateModeBView.bindOnClick(
+                this._whenRotateEditable(() => {
+                    Entry.do('objectUpdateRotateMethod', this.id, 'vertical');
+                }, this)
+            );
+        }
 
         const rotateModeCView = Entry.createElement('span').addClass(
             'entryObjectRotateModeWorkspace entryObjectRotateModeCWorkspace'
         );
         this.rotateModeCView_ = rotateModeCView;
         rotationMethodWrapper.appendChild(rotateModeCView);
-        rotateModeCView.bindOnClick(
-            this._whenRotateEditable(() => {
-                Entry.do('objectUpdateRotateMethod', this.id, 'none');
-            }, this)
-        );
+        if (Entry.objectEditable) {
+            rotateModeCView.bindOnClick(
+                this._whenRotateEditable(() => {
+                    Entry.do('objectUpdateRotateMethod', this.id, 'none');
+                }, this)
+            );
+        }
 
         return rotationMethodWrapper;
     }
@@ -1395,7 +1406,6 @@ Entry.EntryObject = class {
         );
 
         $(objectView).on('dragstart', (e) => {
-            // e.originalEvent.dataTransfer.setDragImage(canvas, 25, 25);
             e.originalEvent.dataTransfer.setData('text', objectId);
         });
         const fragment = document.createDocumentFragment();
