@@ -396,7 +396,7 @@ Entry.Stage = class Stage {
             } else {
                 this.handle.toggleResize(true);
             }
-            this.handle.setVisible(true);
+            this.handle.setVisible(Entry.objectEditable);
             const entity = object.entity;
             this.handle.setWidth(entity.getScaleX() * entity.getWidth());
             this.handle.setHeight(entity.getScaleY() * entity.getHeight());
@@ -439,7 +439,7 @@ Entry.Stage = class Stage {
             this.handle.setDirection(entity.getDirection());
             this.objectUpdated = true;
 
-            this.handle.setVisible(object.entity.getVisible());
+            this.handle.setVisible(Entry.objectEditable && object.entity.getVisible());
             if (object.entity.getVisible()) {
                 this.handle.render();
             }
