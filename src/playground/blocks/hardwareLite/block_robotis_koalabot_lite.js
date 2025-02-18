@@ -275,7 +275,7 @@ let camera_id_for_use = 0;
             this.timeouts = [];
             this.__removeAllTimeouts();
             this.robotisBuffer = [];
-            this.robotisBuffer.push([INST_WRITE, 2100, 1, 1]);
+            this.robotisBuffer.push([INST_WRITE, 2100, 1, 2]); // 값 2는 코알라 얼굴이 뜨도록(펌웨어는 v1.15.4부터)
             camera_id_for_use = 0;
             if (Entry.hwLite && Entry.hwLite.serial) {
                 Entry.hwLite.serial.update();
@@ -6168,8 +6168,8 @@ let camera_id_for_use = 0;
         }
 
         requestLocalData() {
-            let packet = null;
-            if (this.robotisBuffer.length > 0) {
+            let packets = [];
+            while (this.robotisBuffer.length > 0) {
                 const data = this.robotisBuffer.shift();
                 const instruction = data[0];
                 const address = data[1];
@@ -6177,6 +6177,7 @@ let camera_id_for_use = 0;
                 const value = data[3];
                 const dataBuffer = data[4];
                 let id = 0;
+                let packet = null;
 
                 switch (instruction) {
                     case INST_WRITE:
@@ -6188,8 +6189,12 @@ let camera_id_for_use = 0;
                         packet = this.writePacket(id, address, length, dataBuffer);
                         break;
                 }
+
+                if (packet !== null && Array.isArray(packet)) {
+                    packets.push(...packet);
             }
-            return packet;
+            }
+            return packets;
         }
 
         handleLocalData(data) {
@@ -6379,6 +6384,7 @@ let camera_id_for_use = 0;
 
         requestInitialData() {
             this.robotisBuffer = [];
+            this.robotisBuffer.push([INST_WRITE, 1010, 2, 0xABC2]); // 아래 20번 모드 진입후 코알라 얼굴로 변경준비
             this.robotisBuffer.push([INST_WRITE, 21, 2, 20]);
             this.robotisBuffer.push([INST_WRITE, 19, 1, 1]); // bypass 모드 켜기
             this.robotisBuffer.push([INST_WRITE, 20, 1, 0]); // bypass port를 BLE로 설정
