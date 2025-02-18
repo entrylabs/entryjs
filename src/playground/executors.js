@@ -224,7 +224,7 @@ class Executor {
         return Entry.STATIC.PASS;
     }
 
-    async continueLoop() {
+    continueLoop() {
         if (this._callStack.length) {
             this.scope = this._callStack.pop();
         }
@@ -232,7 +232,7 @@ class Executor {
         if (schema.class === 'condition') {
             this.scope = this._callStack.pop();
         }
-        return Entry.STATIC.CONTINUE;
+        return Entry.STATIC.BREAK;
     }
 
     end() {
