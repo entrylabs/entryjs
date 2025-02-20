@@ -3,7 +3,7 @@
 
 import _range from 'lodash/range';
 
-(function() {
+(function () {
     Entry.cocodroncontrollerLite = new (class cocodroncontrollerLite {
         constructor() {
             this.id = '680101';
@@ -81,7 +81,7 @@ import _range from 'lodash/range';
                 } else {
                     console.log('Unexpected response from drone:', chunk);
                 }
-        
+
                 if (chunk >> 7) {
                     if ((chunk >> 6) & 1) {
                         const nextChunk = data[i + 1];
@@ -156,9 +156,9 @@ import _range from 'lodash/range';
         setLanguage() {
             return {
                 ko: {
-                    Blocks:{
-                        Cocodron_Dron_Controller_mode_drone:'드론  ',
-                        Cocodron_Dron_Controller_mode_rccar:'RC카  ',
+                    Blocks: {
+                        Cocodron_Dron_Controller_mode_drone: '드론  ',
+                        Cocodron_Dron_Controller_mode_rccar: 'RC카  ',
                         // Cocodron_Dron_Controller_altitude_up: '위쪽  ',
                         // Cocodron_Dron_Controller_altitude_down: '아래쪽  ',
                         // Cocodron_Dron_Controller_rotation_cw: '우회전  ',
@@ -199,11 +199,13 @@ import _range from 'lodash/range';
                         Cocodron_Dron_Controller_move_drone_forward: '앞으로 %1 만큼 %2 ms 유지  ',
                         Cocodron_Dron_Controller_move_drone_back: '뒤로 %1 만큼 %2 ms 유지  ',
                         Cocodron_Dron_Controller_move_drone_left: '왼쪽으로 %1 만큼 %2 ms 유지  ',
-                        Cocodron_Dron_Controller_move_drone_right: '오른쪽으로 %1 만큼 %2 ms 유지  ',
+                        Cocodron_Dron_Controller_move_drone_right:
+                            '오른쪽으로 %1 만큼 %2 ms 유지  ',
                         Cocodron_Dron_Controller_funled: '4색 LED 색 변경  ',
                         Cocodron_Dron_Controller_flip: '%1 플립  ',
                         Cocodron_Dron_Controller_speed: '속도조정 %1',
-                        Cocodron_Dron_Controller_simultaneousOperations: '%1 방향으로 %2 %3 만큼 %4 방향으로 %5 %6 이동  ',
+                        Cocodron_Dron_Controller_simultaneousOperations:
+                            '%1 방향으로 %2 %3 만큼 %4 방향으로 %5 %6 이동  ',
                     },
                     Device: {
                         cocodron_dron_controller: '코코드론드론조종기',
@@ -223,14 +225,22 @@ import _range from 'lodash/range';
                         Cocodron_Dron_Controller_emergency: '비상정지  ',
                         Cocodron_Dron_Controller_headless: '헤드리스 모드  ',
                         //Cocodron_Dron_Controller_move_drone: '%1 조이스틱을 %2 방향으로 %3 만큼 %4 ms 유지  ',
-                        Cocodron_Dron_Controller_up: '상승 조종기레버를 %1만큼 이동시켜 %2ms동안 유지하여 드론이 이동  ',
-                        Cocodron_Dron_Controller_down: '하강 조종기레버를 %1만큼 이동시켜 %2ms동안 유지하여 드론이 이동  ',
-                        Cocodron_Dron_Controller_cw: '우회전 조종기레버를 %1만큼 이동시켜 %2ms동안 유지하여 드론이 이동  ',
-                        Cocodron_Dron_Controller_ccw: '좌회전 조종기레버를 %1만큼 이동시켜 %2ms동안 유지하여 드론이 이동  ',
-                        Cocodron_Dron_Controller_move_drone_forward: '앞으로 조종기레버를 %1만큼 이동시켜 %2ms동안 유지하여 드론이 이동  ',
-                        Cocodron_Dron_Controller_move_drone_back: '뒤로 조종기레버를 %1만큼 이동시켜 %2ms동안 유지하여 드론이 이동  ',
-                        Cocodron_Dron_Controller_move_drone_left: '왼쪽으로 조종기레버를 %1만큼 이동시켜 %2ms동안 유지하여 드론이 이동  ',
-                        Cocodron_Dron_Controller_move_drone_right: '오른쪽으로 조종기레버를 %1만큼 이동시켜 %2ms동안 유지하여 드론이 이동  ',
+                        Cocodron_Dron_Controller_up:
+                            '상승 조종기레버를 %1만큼 이동시켜 %2ms동안 유지하여 드론이 이동  ',
+                        Cocodron_Dron_Controller_down:
+                            '하강 조종기레버를 %1만큼 이동시켜 %2ms동안 유지하여 드론이 이동  ',
+                        Cocodron_Dron_Controller_cw:
+                            '우회전 조종기레버를 %1만큼 이동시켜 %2ms동안 유지하여 드론이 이동  ',
+                        Cocodron_Dron_Controller_ccw:
+                            '좌회전 조종기레버를 %1만큼 이동시켜 %2ms동안 유지하여 드론이 이동  ',
+                        Cocodron_Dron_Controller_move_drone_forward:
+                            '앞으로 조종기레버를 %1만큼 이동시켜 %2ms동안 유지하여 드론이 이동  ',
+                        Cocodron_Dron_Controller_move_drone_back:
+                            '뒤로 조종기레버를 %1만큼 이동시켜 %2ms동안 유지하여 드론이 이동  ',
+                        Cocodron_Dron_Controller_move_drone_left:
+                            '왼쪽으로 조종기레버를 %1만큼 이동시켜 %2ms동안 유지하여 드론이 이동  ',
+                        Cocodron_Dron_Controller_move_drone_right:
+                            '오른쪽으로 조종기레버를 %1만큼 이동시켜 %2ms동안 유지하여 드론이 이동  ',
                         Cocodron_Dron_Controller_funled: '4색 변경  ',
                         Cocodron_Dron_Controller_flip: '플립  ',
                         Cocodron_Dron_Controller_speed: '속도조정 ',
@@ -261,36 +271,39 @@ import _range from 'lodash/range';
                         Cocodron_Dron_Controller_funled: 'Change 4-Color LED',
                         Cocodron_Dron_Controller_flip: '%1 Flip',
                         Cocodron_Dron_Controller_speed: 'Adjust Speed %1',
-                        Cocodron_Dron_Controller_simultaneousOperations: 'Move %1 in %2 %3 while moving %4 in %5 %6'
+                        Cocodron_Dron_Controller_simultaneousOperations:
+                            'Move %1 in %2 %3 while moving %4 in %5 %6',
                     },
                     Device: {
                         cocodron_dron_controller: 'cocodrondroncontroller',
                     },
                     Menus: {
                         cocodron_dron_controller: 'CocodronDronController',
-                        
                     },
                 },
             };
         }
 
         initializeBlocks() {
-            Entry.hwLite.connect().then(() => {
-                if (!Entry.hwLite.serial) {
-                    console.error('Serial object is not defined. Please check the connection.');
-                    return;
-                }
-        
-                Entry.getMainGenerator().getBlocks = this.getBlocks.bind(this);
-                
-                Entry.addEventListener('blockCompleted', () => {
-                    Entry.getMainGenerator().nextBlock();
+            Entry.hwLite
+                .connect()
+                .then(() => {
+                    if (!Entry.hwLite.serial) {
+                        console.error('Serial object is not defined. Please check the connection.');
+                        return;
+                    }
+
+                    Entry.getMainGenerator().getBlocks = this.getBlocks.bind(this);
+
+                    Entry.addEventListener('blockCompleted', () => {
+                        Entry.getMainGenerator().nextBlock();
+                    });
+                })
+                .catch((error) => {
+                    console.error('Failed to connect to hardware:', error);
                 });
-            }).catch((error) => {
-                console.error('Failed to connect to hardware:', error);
-            });
         }
-        
+
         getBlocks() {
             return {
                 Cocodron_Dron_Controller_connect: {
@@ -303,7 +316,10 @@ import _range from 'lodash/range';
                     isNotFor: ['cocodroncontrollerLite'],
                     func(sprite, script) {
                         const command = 'mapping_start';
-                        const commandBuffer = Buffer.from(encodeURIComponent(command)+"\r", 'utf8');
+                        const commandBuffer = Buffer.from(
+                            encodeURIComponent(command) + '\r',
+                            'utf8'
+                        );
                         if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
                             Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
                             console.log('Command sent using sendAsyncWithThrottle:', command);
@@ -323,12 +339,10 @@ import _range from 'lodash/range';
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
                     fontColor: '#fff',
-                    params: [
-                        { type: 'Block', accept: 'string' },
-                    ],
-                    def: { 
-                        params: [null,], 
-                        type: 'Cocodron_Dron_Controller_hovering' 
+                    params: [{ type: 'Block', accept: 'string' }],
+                    def: {
+                        params: [null],
+                        type: 'Cocodron_Dron_Controller_hovering',
                     },
                     paramsKeyMap: {
                         TIME: 0,
@@ -336,8 +350,8 @@ import _range from 'lodash/range';
                     class: 'cocodron',
                     isNotFor: ['cocodroncontrollerLite'],
                     func(sprite, script) {
-                        const time = script.getField('TIME')*1000;
-                
+                        const time = script.getField('TIME') * 1000;
+
                         return new Promise((resolve) => {
                             setTimeout(() => {
                                 resolve(script.callReturn());
@@ -376,17 +390,17 @@ import _range from 'lodash/range';
                         const direction = script.getField('DIRECTION');
                         const command = `${direction}\r`;
                         const commandBuffer = Buffer.from(command, 'utf8');
-                
+
                         if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
                             Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
                             console.log('Command sent using sendAsyncWithThrottle:', command);
-                                return new Promise((resolve) => {
-                                    setTimeout(() => {
-                                        resolve(script.callReturn());
-                                    }, 1100);
-                                });
+                            return new Promise((resolve) => {
+                                setTimeout(() => {
+                                    resolve(script.callReturn());
+                                }, 1100);
+                            });
                         } else {
-                                console.log('Serial writer not found.');
+                            console.log('Serial writer not found.');
                         }
                         return script.callReturn();
                     },
@@ -401,7 +415,10 @@ import _range from 'lodash/range';
                     isNotFor: ['cocodroncontrollerLite'],
                     func(sprite, script) {
                         const command = 'opt';
-                        const commandBuffer = Buffer.from(encodeURIComponent(command)+"\r", 'utf8');
+                        const commandBuffer = Buffer.from(
+                            encodeURIComponent(command) + '\r',
+                            'utf8'
+                        );
                         if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
                             Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
                             console.log('Command sent using sendAsyncWithThrottle:', command);
@@ -426,7 +443,10 @@ import _range from 'lodash/range';
                     isNotFor: ['cocodroncontrollerLite'],
                     func(sprite, script) {
                         const command = 'gyroreset';
-                        const commandBuffer = Buffer.from(encodeURIComponent(command)+"\r", 'utf8');
+                        const commandBuffer = Buffer.from(
+                            encodeURIComponent(command) + '\r',
+                            'utf8'
+                        );
                         if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
                             Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
                             console.log('Command sent using sendAsyncWithThrottle:', command);
@@ -451,7 +471,10 @@ import _range from 'lodash/range';
                     isNotFor: ['cocodroncontrollerLite'],
                     func(sprite, script) {
                         const command = 'takeoff';
-                        const commandBuffer = Buffer.from(encodeURIComponent(command)+"\r", 'utf8');
+                        const commandBuffer = Buffer.from(
+                            encodeURIComponent(command) + '\r',
+                            'utf8'
+                        );
                         console.log(`Sending command: ${command}`);
 
                         if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
@@ -460,7 +483,7 @@ import _range from 'lodash/range';
 
                             return new Promise((resolve) => {
                                 setTimeout(() => {
-                                resolve(script.callReturn());
+                                    resolve(script.callReturn());
                                 }, 4000);
                             });
                         } else {
@@ -479,9 +502,9 @@ import _range from 'lodash/range';
                         { type: 'Block', accept: 'string' },
                         { type: 'Block', accept: 'string' },
                     ],
-                    def: { 
-                        params: [null,null], 
-                        type: 'Cocodron_Dron_Controller_takeoffV2' 
+                    def: {
+                        params: [null, null],
+                        type: 'Cocodron_Dron_Controller_takeoffV2',
                     },
                     paramsKeyMap: {
                         STICK: 0,
@@ -495,26 +518,29 @@ import _range from 'lodash/range';
                         let time = script.getNumberValue('TIME', script);
                         if (stick > 500) {
                             stick = 500;
-                        }
-                        else if(stick < 20){
-                            stick =20;
-                        }
-                        else if (stick < 0) {
+                        } else if (stick < 20) {
+                            stick = 20;
+                        } else if (stick < 0) {
                             stick = 0;
                         }
-                        
 
                         if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
                             const firstCommand = `takeoff\r`;
                             const secondCommand = `up ${stick} ${time}\r`;
 
                             return new Promise((resolve) => {
-                                Entry.hwLite.serial.sendAsyncWithThrottle(Buffer.from(firstCommand, 'utf8'),false);
+                                Entry.hwLite.serial.sendAsyncWithThrottle(
+                                    Buffer.from(firstCommand, 'utf8'),
+                                    false
+                                );
                                 console.log('firstCommand:', firstCommand);
                                 setTimeout(() => {
-                                    Entry.hwLite.serial.sendAsyncWithThrottle(Buffer.from(secondCommand,'utf8'), false);
+                                    Entry.hwLite.serial.sendAsyncWithThrottle(
+                                        Buffer.from(secondCommand, 'utf8'),
+                                        false
+                                    );
                                     console.log('secondCommand:', secondCommand);
-                                resolve(script.callReturn());
+                                    resolve(script.callReturn());
                                 }, 4000);
                             });
                         } else {
@@ -534,7 +560,10 @@ import _range from 'lodash/range';
                     isNotFor: ['cocodroncontrollerLite'],
                     func(sprite, script) {
                         const command = 'land';
-                        const commandBuffer = Buffer.from(encodeURIComponent(command)+"\r", 'utf8');
+                        const commandBuffer = Buffer.from(
+                            encodeURIComponent(command) + '\r',
+                            'utf8'
+                        );
                         console.log(`Sending command: ${command}`);
 
                         if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
@@ -562,7 +591,10 @@ import _range from 'lodash/range';
                     isNotFor: ['cocodroncontrollerLite'],
                     func(sprite, script) {
                         const command = 'emergency';
-                        const commandBuffer = Buffer.from(encodeURIComponent(command)+'\r', 'utf8');
+                        const commandBuffer = Buffer.from(
+                            encodeURIComponent(command) + '\r',
+                            'utf8'
+                        );
                         if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
                             Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
                             console.log('Command sent using sendAsyncWithThrottle:', command);
@@ -588,7 +620,10 @@ import _range from 'lodash/range';
                     isNotFor: ['cocodroncontrollerLite'],
                     func(sprite, script) {
                         const command = 'headless';
-                        const commandBuffer = Buffer.from(encodeURIComponent(command)+'\r', 'utf8');
+                        const commandBuffer = Buffer.from(
+                            encodeURIComponent(command) + '\r',
+                            'utf8'
+                        );
                         if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
                             Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
                             console.log('Command sent using sendAsyncWithThrottle:', command);
@@ -624,13 +659,12 @@ import _range from 'lodash/range';
                     class: 'cocodron',
                     isNotFor: ['cocodroncontrollerLite'],
                     func(sprite, script) {
-                        let stick = script.getNumberValue('STICK', script)*10;
+                        let stick = script.getNumberValue('STICK', script) * 10;
                         let time = script.getNumberValue('TIME', script);
 
                         if (stick > 500) {
                             stick = 500;
-                        }
-                        else if (stick < 0) {
+                        } else if (stick < 0) {
                             stick = 0;
                         }
 
@@ -638,22 +672,22 @@ import _range from 'lodash/range';
                         console.log('Constructed command:', command);
 
                         const commandBuffer = Buffer.from(command, 'utf8');
-                
+
                         if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
                             Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
                             console.log('Command sent using sendAsyncWithThrottle:', command);
-                                return new Promise((resolve) => {
-                                    setTimeout(() => {
-                                        resolve(script.callReturn());
-                                    }, time + 1100);
-                                });
+                            return new Promise((resolve) => {
+                                setTimeout(() => {
+                                    resolve(script.callReturn());
+                                }, time + 1100);
+                            });
                         } else {
-                                console.log('Serial writer not found.');
+                            console.log('Serial writer not found.');
                         }
                         return script.callReturn();
                     },
                 },
-                
+
                 Cocodron_Dron_Controller_down: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -675,13 +709,12 @@ import _range from 'lodash/range';
                     class: 'cocodron',
                     isNotFor: ['cocodroncontrollerLite'],
                     func(sprite, script) {
-                        let stick = script.getNumberValue('STICK', script)*10;
+                        let stick = script.getNumberValue('STICK', script) * 10;
                         let time = script.getNumberValue('TIME', script);
 
                         if (stick > 500) {
                             stick = 500;
-                        }
-                        else if (stick < 0) {
+                        } else if (stick < 0) {
                             stick = 0;
                         }
 
@@ -689,17 +722,17 @@ import _range from 'lodash/range';
                         console.log('Constructed command:', command);
 
                         const commandBuffer = Buffer.from(command, 'utf8');
-                
+
                         if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
                             Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
                             console.log('Command sent using sendAsyncWithThrottle:', command);
-                                return new Promise((resolve) => {
-                                    setTimeout(() => {
-                                        resolve(script.callReturn());
-                                    }, time + 1100);
-                                });
+                            return new Promise((resolve) => {
+                                setTimeout(() => {
+                                    resolve(script.callReturn());
+                                }, time + 1100);
+                            });
                         } else {
-                                console.log('Serial writer not found.');
+                            console.log('Serial writer not found.');
                         }
                         return script.callReturn();
                     },
@@ -727,29 +760,28 @@ import _range from 'lodash/range';
                     class: 'cocodron',
                     isNotFor: ['cocodroncontrollerLite'],
                     func(sprite, script) {
-                        let stick = script.getNumberValue('STICK', script)*10;
+                        let stick = script.getNumberValue('STICK', script) * 10;
                         let time = script.getNumberValue('TIME', script);
 
                         if (stick > 500) {
                             stick = 500;
-                        }
-                        else if (stick < 0) {
+                        } else if (stick < 0) {
                             stick = 0;
                         }
 
                         const command = `cw ${stick} ${time}\r`;
                         const commandBuffer = Buffer.from(command, 'utf8');
-                
+
                         if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
                             Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
                             console.log('Command sent using sendAsyncWithThrottle:', command);
-                                return new Promise((resolve) => {
-                                    setTimeout(() => {
-                                        resolve(script.callReturn());
-                                    }, time + 1100);
-                                });
+                            return new Promise((resolve) => {
+                                setTimeout(() => {
+                                    resolve(script.callReturn());
+                                }, time + 1100);
+                            });
                         } else {
-                                console.log('Serial writer not found.');
+                            console.log('Serial writer not found.');
                         }
                         return script.callReturn();
                     },
@@ -776,34 +808,33 @@ import _range from 'lodash/range';
                     class: 'cocodron',
                     isNotFor: ['cocodroncontrollerLite'],
                     func(sprite, script) {
-                        let stick = script.getNumberValue('STICK', script)*10;
+                        let stick = script.getNumberValue('STICK', script) * 10;
                         let time = script.getNumberValue('TIME', script);
 
                         if (stick > 500) {
                             stick = 500;
-                        }
-                        else if (stick < 0) {
+                        } else if (stick < 0) {
                             stick = 0;
                         }
 
                         const command = `ccw ${stick} ${time}\r`;
                         const commandBuffer = Buffer.from(command, 'utf8');
-                
+
                         if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
                             Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
                             console.log('Command sent using sendAsyncWithThrottle:', command);
-                                return new Promise((resolve) => {
-                                    setTimeout(() => {
-                                        resolve(script.callReturn());
-                                    }, time + 1100);
-                                });
+                            return new Promise((resolve) => {
+                                setTimeout(() => {
+                                    resolve(script.callReturn());
+                                }, time + 1100);
+                            });
                         } else {
-                                console.log('Serial writer not found.');
+                            console.log('Serial writer not found.');
                         }
                         return script.callReturn();
                     },
                 },
-        
+
                 Cocodron_Dron_Controller_move_drone_forward: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -825,30 +856,29 @@ import _range from 'lodash/range';
                     class: 'cocodron',
                     isNotFor: ['cocodroncontrollerLite'],
                     func(sprite, script) {
-                        let stick = script.getNumberValue('STICK', script)*10;
+                        let stick = script.getNumberValue('STICK', script) * 10;
                         let time = script.getNumberValue('TIME', script);
 
                         if (stick > 500) {
                             stick = 500;
-                        }
-                        else if (stick < 0) {
+                        } else if (stick < 0) {
                             stick = 0;
                         }
                         const command = `forward ${stick} ${time}\r`;
                         console.log('Constructed command:', command);
-                
+
                         const commandBuffer = Buffer.from(command, 'utf8');
-                
+
                         if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
                             Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
                             console.log('Command sent using sendAsyncWithThrottle:', command);
-                                return new Promise((resolve) => {
-                                    setTimeout(() => {
-                                        resolve(script.callReturn());
-                                    }, time + 1100);
-                                });
+                            return new Promise((resolve) => {
+                                setTimeout(() => {
+                                    resolve(script.callReturn());
+                                }, time + 1100);
+                            });
                         } else {
-                                console.log('Serial writer not found.');
+                            console.log('Serial writer not found.');
                         }
                         return script.callReturn();
                     },
@@ -875,30 +905,29 @@ import _range from 'lodash/range';
                     class: 'cocodron',
                     isNotFor: ['cocodroncontrollerLite'],
                     func(sprite, script) {
-                        let stick = script.getNumberValue('STICK', script)*10;
+                        let stick = script.getNumberValue('STICK', script) * 10;
                         let time = script.getNumberValue('TIME', script);
 
                         if (stick > 500) {
                             stick = 500;
-                        }
-                        else if (stick < 0) {
+                        } else if (stick < 0) {
                             stick = 0;
                         }
                         const command = `back ${stick} ${time}\r`;
                         console.log('Constructed command:', command);
-                
+
                         const commandBuffer = Buffer.from(command, 'utf8');
-                
+
                         if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
                             Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
                             console.log('Command sent using sendAsyncWithThrottle:', command);
-                                return new Promise((resolve) => {
-                                    setTimeout(() => {
-                                        resolve(script.callReturn());
-                                    }, time + 1100);
-                                });
+                            return new Promise((resolve) => {
+                                setTimeout(() => {
+                                    resolve(script.callReturn());
+                                }, time + 1100);
+                            });
                         } else {
-                                console.log('Serial writer not found.');
+                            console.log('Serial writer not found.');
                         }
                         return script.callReturn();
                     },
@@ -925,31 +954,30 @@ import _range from 'lodash/range';
                     class: 'cocodron',
                     isNotFor: ['cocodroncontrollerLite'],
                     func(sprite, script) {
-                        let stick = script.getNumberValue('STICK', script)*10;
+                        let stick = script.getNumberValue('STICK', script) * 10;
                         let time = script.getNumberValue('TIME', script);
 
                         if (stick > 500) {
                             stick = 500;
-                        }
-                        else if (stick < 0) {
+                        } else if (stick < 0) {
                             stick = 0;
                         }
-                
+
                         const command = `left ${stick} ${time}\r`;
                         console.log('Constructed command:', command);
-                
+
                         const commandBuffer = Buffer.from(command, 'utf8');
-                
+
                         if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
                             Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
                             console.log('Command sent using sendAsyncWithThrottle:', command);
-                                return new Promise((resolve) => {
-                                    setTimeout(() => {
-                                        resolve(script.callReturn());
-                                    }, time + 1100);
-                                });
+                            return new Promise((resolve) => {
+                                setTimeout(() => {
+                                    resolve(script.callReturn());
+                                }, time + 1100);
+                            });
                         } else {
-                                console.log('Serial writer not found.');
+                            console.log('Serial writer not found.');
                         }
                         return script.callReturn();
                     },
@@ -975,37 +1003,35 @@ import _range from 'lodash/range';
                     class: 'cocodron',
                     isNotFor: ['cocodroncontrollerLite'],
                     func(sprite, script) {
-                        let stick = script.getNumberValue('STICK', script)*10;
+                        let stick = script.getNumberValue('STICK', script) * 10;
                         let time = script.getNumberValue('TIME', script);
 
                         if (stick > 500) {
                             stick = 500;
-                        }
-                        else if (stick < 0) {
+                        } else if (stick < 0) {
                             stick = 0;
                         }
-                
+
                         const command = `right ${stick} ${time}\r`;
                         console.log('Constructed command:', command);
-                
+
                         const commandBuffer = Buffer.from(command, 'utf8');
-                
+
                         if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
                             Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
                             console.log('Command sent using sendAsyncWithThrottle:', command);
-                                return new Promise((resolve) => {
-                                    setTimeout(() => {
-                                        resolve(script.callReturn());
-                                    }, time + 1100);
-                                });
+                            return new Promise((resolve) => {
+                                setTimeout(() => {
+                                    resolve(script.callReturn());
+                                }, time + 1100);
+                            });
                         } else {
-                                console.log('Serial writer not found.');
+                            console.log('Serial writer not found.');
                         }
                         return script.callReturn();
                     },
                 },
-                
-                
+
                 Cocodron_Dron_Controller_funled: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1017,23 +1043,25 @@ import _range from 'lodash/range';
                     isNotFor: ['cocodroncontrollerLite'],
                     func(sprite, script) {
                         const command = 'funled';
-                        const commandBuffer = Buffer.from(encodeURIComponent(command)+'\r', 'utf8');
+                        const commandBuffer = Buffer.from(
+                            encodeURIComponent(command) + '\r',
+                            'utf8'
+                        );
                         if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
                             Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
                             console.log('Command sent using sendAsyncWithThrottle:', command);
-                                return new Promise((resolve) => {
-                                    setTimeout(() => {
-                                        resolve(script.callReturn());
-                                    }, 1100);
-                                });
+                            return new Promise((resolve) => {
+                                setTimeout(() => {
+                                    resolve(script.callReturn());
+                                }, 1100);
+                            });
                         } else {
-                                console.log('Serial writer not found.');
+                            console.log('Serial writer not found.');
                         }
                         return script.callReturn();
                     },
                 },
-        
-        
+
                 Cocodron_Dron_Controller_flip: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1067,17 +1095,17 @@ import _range from 'lodash/range';
                         const direction = script.getField('DIRECTION');
                         const command = `flip ${direction}\r`;
                         const commandBuffer = Buffer.from(command, 'utf8');
-                
+
                         if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
                             Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
                             console.log('Command sent using sendAsyncWithThrottle:', command);
-                                return new Promise((resolve) => {
-                                    setTimeout(() => {
-                                        resolve(script.callReturn());
-                                    }, 1100);
-                                });
+                            return new Promise((resolve) => {
+                                setTimeout(() => {
+                                    resolve(script.callReturn());
+                                }, 1100);
+                            });
                         } else {
-                                console.log('Serial writer not found.');
+                            console.log('Serial writer not found.');
                         }
                         return script.callReturn();
                     },
@@ -1115,22 +1143,22 @@ import _range from 'lodash/range';
                         const direction = script.getField('DIRECTION');
                         const command = `speed ${direction}\r`;
                         const commandBuffer = Buffer.from(command, 'utf8');
-                
+
                         if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
                             Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
                             console.log('Command sent using sendAsyncWithThrottle:', command);
-                                return new Promise((resolve) => {
-                                    setTimeout(() => {
-                                        resolve(script.callReturn());
-                                    }, 1100);
-                                });
+                            return new Promise((resolve) => {
+                                setTimeout(() => {
+                                    resolve(script.callReturn());
+                                }, 1100);
+                            });
                         } else {
-                                console.log('Serial writer not found.');
+                            console.log('Serial writer not found.');
                         }
                         return script.callReturn();
                     },
                 },
-        
+
                 //드론 원주비행(동시동작) 블록 코드, 코드개발 필요, 좌우레버 동시명령어 실행으로 원주비행_동시명령어 실행간격0.5초대기 필요
                 Cocodron_Dron_Controller_simultaneousOperations: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -1142,10 +1170,23 @@ import _range from 'lodash/range';
                         {
                             type: 'Dropdown',
                             options: [
-                                [Lang.Blocks.Cocodron_Dron_Controller_simultaneousOperations_cw, 'cw'],
-                                [Lang.Blocks.Cocodron_Dron_Controller_simultaneousOperations_ccw, 'ccw'],
-                                [Lang.Blocks.Cocodron_Dron_Controller_simultaneousOperations_up, 'up'],
-                                [Lang.Blocks.Cocodron_Dron_Controller_simultaneousOperations_down, 'down'],
+                                [
+                                    Lang.Blocks.Cocodron_Dron_Controller_simultaneousOperations_cw,
+                                    'cw',
+                                ],
+                                [
+                                    Lang.Blocks.Cocodron_Dron_Controller_simultaneousOperations_ccw,
+                                    'ccw',
+                                ],
+                                [
+                                    Lang.Blocks.Cocodron_Dron_Controller_simultaneousOperations_up,
+                                    'up',
+                                ],
+                                [
+                                    Lang.Blocks
+                                        .Cocodron_Dron_Controller_simultaneousOperations_down,
+                                    'down',
+                                ],
                             ],
                             value: 'cw',
                             fontSize: 11,
@@ -1157,10 +1198,26 @@ import _range from 'lodash/range';
                         {
                             type: 'Dropdown',
                             options: [
-                                [Lang.Blocks.Cocodron_Dron_Controller_simultaneousOperations_forward, 'forward'],
-                                [Lang.Blocks.Cocodron_Dron_Controller_simultaneousOperations_back, 'back'],
-                                [Lang.Blocks.Cocodron_Dron_Controller_simultaneousOperations_left, 'left'],
-                                [Lang.Blocks.Cocodron_Dron_Controller_simultaneousOperations_right, 'right'],
+                                [
+                                    Lang.Blocks
+                                        .Cocodron_Dron_Controller_simultaneousOperations_forward,
+                                    'forward',
+                                ],
+                                [
+                                    Lang.Blocks
+                                        .Cocodron_Dron_Controller_simultaneousOperations_back,
+                                    'back',
+                                ],
+                                [
+                                    Lang.Blocks
+                                        .Cocodron_Dron_Controller_simultaneousOperations_left,
+                                    'left',
+                                ],
+                                [
+                                    Lang.Blocks
+                                        .Cocodron_Dron_Controller_simultaneousOperations_right,
+                                    'right',
+                                ],
                             ],
                             value: 'forward',
                             fontSize: 11,
@@ -1172,8 +1229,8 @@ import _range from 'lodash/range';
                     ],
                     def: {
                         params: [
-                            [null,null,null],
-                            [null,null,null]
+                            [null, null, null],
+                            [null, null, null],
                         ],
                         type: 'Cocodron_Dron_Controller_simultaneousOperations',
                     },
@@ -1194,21 +1251,27 @@ import _range from 'lodash/range';
                         const turnDirection = script.getField('TURN_DIRECTION');
                         const turnValue = parseInt(script.getNumberValue('TURN_VALUE', script));
                         const turnTime = parseInt(script.getNumberValue('TURN_TIME', script)); // ms
-                
+
                         if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
                             const firstCommand = `${direction} ${value} ${time}\r`;
                             const secondCommand = `${turnDirection} ${turnValue} ${turnTime}\r`;
-                
+
                             return new Promise((resolve) => {
                                 // 첫 번째 명령 전송
-                                Entry.hwLite.serial.sendAsyncWithThrottle(Buffer.from(firstCommand, 'utf8'), false);
+                                Entry.hwLite.serial.sendAsyncWithThrottle(
+                                    Buffer.from(firstCommand, 'utf8'),
+                                    false
+                                );
                                 console.log('First command sent:', firstCommand);
-                
+
                                 // 지정된 time 만큼 기다린 뒤 + 0.5초 후 두 번째 명령 전송
                                 setTimeout(() => {
-                                    Entry.hwLite.serial.sendAsyncWithThrottle(Buffer.from(secondCommand, 'utf8'), false);
+                                    Entry.hwLite.serial.sendAsyncWithThrottle(
+                                        Buffer.from(secondCommand, 'utf8'),
+                                        false
+                                    );
                                     console.log('Second command sent:', secondCommand);
-                
+
                                     // 두 번째 명령 실행도 끝난 뒤 스크립트 종료
                                     setTimeout(() => {
                                         resolve(script.callReturn());
@@ -1221,7 +1284,7 @@ import _range from 'lodash/range';
                         return script.callReturn();
                     },
                 },
-            }
+            };
         }
     })();
 })();
