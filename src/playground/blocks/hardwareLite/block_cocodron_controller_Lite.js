@@ -63,7 +63,6 @@ import _range from 'lodash/range';
             if (Entry.hwLite && Entry.hwLite.serial) {
                 Entry.hwLite.serial.update();
             }
-            console.log('Entry.hwLite:', Entry.hwLite);
         }
 
         handleLocalData(data) {
