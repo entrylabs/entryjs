@@ -235,7 +235,7 @@ class Executor {
             }
             this.scope = this._callStack.pop();
         }
-        return Entry.STATIC.CONTINUE;
+        return Entry.STATIC.BREAK;
     }
 
     end() {
