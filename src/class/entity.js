@@ -91,12 +91,14 @@ Entry.EntityObject = class EntityObject {
             Entry.stage.isObjectClick = true;
 
             if (Entry.type !== 'minimize' && Entry.stage.isEntitySelectable()) {
-                this.offset = {
-                    x: -this.parent.x + this.entity.getX() - (stageX * 0.75 - 240),
-                    y: -this.parent.y - this.entity.getY() - (stageY * 0.75 - 135),
-                };
-                this.cursor = 'move';
-                this.entity.initCommand();
+                if (Entry.objectEditable) {
+                    this.offset = {
+                        x: -this.parent.x + this.entity.getX() - (stageX * 0.75 - 240),
+                        y: -this.parent.y - this.entity.getY() - (stageY * 0.75 - 135),
+                    };
+                    this.cursor = 'move';
+                    this.entity.initCommand();
+                }
                 Entry.container.selectObject(id);
             }
         });
@@ -107,7 +109,7 @@ Entry.EntityObject = class EntityObject {
             this.entity.checkCommand();
         });
 
-        if (Entry.type !== 'minimize') {
+        if (Entry.type !== 'minimize' && Entry.objectEditable) {
             this.object.on(GEDragHelper.types.MOVE, function ({ stageX, stageY }) {
                 if (Entry.stage.isEntitySelectable()) {
                     const entity = this.entity;

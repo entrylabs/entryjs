@@ -227,15 +227,17 @@ class Executor {
     continueLoop() {
         if (this._callStack.length) {
             this.scope = this._callStack.pop();
+        } else {
+            return Entry.STATIC.PASS;
         }
         while (this._callStack.length) {
             const schema = Entry.block[this.scope.block.type];
             if (schema.class === 'repeat') {
-                continue;
+                break;
             }
             this.scope = this._callStack.pop();
         }
-        return Entry.STATIC.CONTINUE;
+        return Entry.STATIC.BREAK;
     }
 
     end() {
