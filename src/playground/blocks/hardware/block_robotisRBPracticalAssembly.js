@@ -4848,7 +4848,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.RB_rsp_screen(%1,%2,%3,%4)'],
+                py: ['Robotis.icon_screen_vehicle_and_number(%1,%2,%3,%4)'],
             },
         },
         robotis_Practice_icon_screen_game_character: {
