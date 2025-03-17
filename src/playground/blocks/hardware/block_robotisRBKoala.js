@@ -26,15 +26,7 @@ Entry.Robotis_rb_koala = {
         Entry.hw.sendQueue['setZero'] = null;
         Entry.Robotis_carCont.update();
         Entry.Robotis_carCont.setRobotisData([
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 21, 2, 20],
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 40, 2, 0],
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 66, 2, 0],
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 5200, 1, 0],
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 710, 2, 0],
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 19, 1, 1], // bypass 모드 켜기
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 4250, 1, 1], // huskylens 텍스트 지우기
-            [Entry.Robotis_rb.INSTRUCTION.BYPASS_WRITE, 64, 1, 0xFE, 0], // torque off
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 23, 1, 1], // auto report 모드 켜기
+            [Entry.Robotis_rb.INSTRUCTION.WRITE, 2100, 1, 2], // 값 2는 코알라 얼굴이 뜨도록(펌웨어는 v1.15.4부터)
         ]);
         Entry.Robotis_carCont.update();
     },
