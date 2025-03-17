@@ -139,22 +139,22 @@ Entry.Robotis_rb_P_Assembly.blockMenuBlocks = [
     'robotis_Practice_dxl_set_multiturn_round',
 
     // 인공지능 카메라 값 블록
-    'robotis_Practice_huskylens_connection_status',
-    'robotis_Practice_huskylens_if_detected',
+    'robotis_Practice_ai_camera_connection_status',
+    'robotis_Practice_ai_camera_if_detected',
 
-    'robotis_Practice_huskylens_block_value_closest_to_center',
-    'robotis_Practice_huskylens_arrow_value_closest_to_center',
-    'robotis_Practice_huskylens_number_of_learned_id',
-    'robotis_Practice_huskylens_block_value_of_id',
-    'robotis_Practice_huskylens_arrow_value_of_id',
+    'robotis_Practice_ai_camera_block_value_closest_to_center',
+    'robotis_Practice_ai_camera_arrow_value_closest_to_center',
+    'robotis_Practice_ai_camera_number_of_learned_id',
+    'robotis_Practice_ai_camera_block_value_of_id',
+    'robotis_Practice_ai_camera_arrow_value_of_id',
 
-    'robotis_Practice_huskylens_if_learned_id',
-    'robotis_Practice_huskylens_if_detected_id_type',
+    'robotis_Practice_ai_camera_if_learned_id',
+    'robotis_Practice_ai_camera_if_detected_id_type',
 
     // AI Camera 제어
-    'robotis_Practice_huskylens_set_mode',
-    'robotis_Practice_huskylens_print_custom_text',
-    'robotis_Practice_huskylens_clear_custom_text',
+    'robotis_Practice_ai_camera_set_mode',
+    'robotis_Practice_ai_camera_print_custom_text',
+    'robotis_Practice_ai_camera_clear_custom_text',
 ];
 
 function sleepBlocking(milliseconds) {
@@ -256,23 +256,23 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
 
                 
                 // 인공지능 카메라 값 블록
-                robotis_Practice_huskylens_connection_status: "인공지능 카메라가 %1이면",
-                robotis_Practice_huskylens_if_detected: "인공지능 카메라에 %1 이/가 표시되면",
+                robotis_Practice_ai_camera_connection_status: "인공지능 카메라가 %1이면",
+                robotis_Practice_ai_camera_if_detected: "인공지능 카메라에 %1 이/가 표시되면",
 
-                robotis_Practice_huskylens_block_value_closest_to_center: "인공지능 카메라가 인식한 %1의 %2",
-                robotis_Practice_huskylens_arrow_value_closest_to_center: "인공지능 카메라가 인식한 화살표의 %1",
-                robotis_Practice_huskylens_number_of_learned_id: "인공지능 카메라가 학습한 클래스의 갯수",
-                robotis_Practice_huskylens_block_value_of_id: "인공지능 카메라가 감지한 클래스가 %1인 %2의 %3",
-                robotis_Practice_huskylens_arrow_value_of_id: "인공지능 카메라가 감지한 클래스가 %1인 화살표의 %2",
+                robotis_Practice_ai_camera_block_value_closest_to_center: "인공지능 카메라가 인식한 %1의 %2",
+                robotis_Practice_ai_camera_arrow_value_closest_to_center: "인공지능 카메라가 인식한 화살표의 %1",
+                robotis_Practice_ai_camera_number_of_learned_id: "인공지능 카메라가 학습한 클래스의 갯수",
+                robotis_Practice_ai_camera_block_value_of_id: "인공지능 카메라가 감지한 클래스가 %1인 %2의 %3",
+                robotis_Practice_ai_camera_arrow_value_of_id: "인공지능 카메라가 감지한 클래스가 %1인 화살표의 %2",
 
-                robotis_Practice_huskylens_if_learned_id: "인공지능 카메라가 클래스가 %1인 데이터를 학습하였으면",
-                robotis_Practice_huskylens_if_detected_id_type: "인공지능 카메라가 클래스가 %1인 %2데이터를 인식하였으면",
+                robotis_Practice_ai_camera_if_learned_id: "인공지능 카메라가 클래스가 %1인 데이터를 학습하였으면",
+                robotis_Practice_ai_camera_if_detected_id_type: "인공지능 카메라가 클래스가 %1인 %2데이터를 인식하였으면",
                 
 
                 // 인공지능 카메라 제어
-                robotis_Practice_huskylens_set_mode: "인공지능 카메라의 작동방식을 %1(으)로 설정 %2",
-                robotis_Practice_huskylens_print_custom_text: "인공지능 카메라의 화면 위치 (%1,%2)에 %3를 보여주기%4",
-                robotis_Practice_huskylens_clear_custom_text: "인공지능 카메라의 화면의 글 지우기 %1",
+                robotis_Practice_ai_camera_set_mode: "인공지능 카메라의 작동방식을 %1(으)로 설정 %2",
+                robotis_Practice_ai_camera_print_custom_text: "인공지능 카메라의 화면 위치 (%1,%2)에 %3를 보여주기%4",
+                robotis_Practice_ai_camera_clear_custom_text: "인공지능 카메라의 화면의 글 지우기 %1",
             },
             Helper: {
                 // 주행 제어
@@ -362,22 +362,22 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_Practice_dxl_set_multiturn_round: "지정한 ID의 모터가 지정한 속도와 방향으로 지정한 바퀴만큼 회전",
                 
                 // AI Camera 값 블록
-                robotis_Practice_huskylens_connection_status: "인공지능 카메라가 연결된 상태이면 '참', 아니면 '거짓'으로 판단합니다.",
-                robotis_Practice_huskylens_if_detected: "인공지능 카메라의 LCD화면에 선택한 기호(사각형/화살표)가 표시되면 '참', 아니면 '거짓'으로 판단합니다.",
+                robotis_Practice_ai_camera_connection_status: "인공지능 카메라가 연결된 상태이면 '참', 아니면 '거짓'으로 판단합니다.",
+                robotis_Practice_ai_camera_if_detected: "인공지능 카메라의 LCD화면에 선택한 기호(사각형/화살표)가 표시되면 '참', 아니면 '거짓'으로 판단합니다.",
 
-                robotis_Practice_huskylens_block_value_closest_to_center: "인공지능 카메라 화면 중앙과 가장 가까운 사각형의 X좌표/Y좌표/너비/높이/클래스",
-                robotis_Practice_huskylens_arrow_value_closest_to_center: "인공지능 카메라 화면 중앙과 가장 가까운 화살표의 시작점X좌표/시작점Y좌표/끝점X좌표/끝점Y좌표/클래스",
-                robotis_Practice_huskylens_number_of_learned_id: "인공지능 카메라가 학습한 번호의 갯수",
-                robotis_Practice_huskylens_block_value_of_id: "인공지능 카메라가 감지한 사각형중 지정한 번호의 사각형의 X좌표/Y좌표/너비/높이",
-                robotis_Practice_huskylens_arrow_value_of_id: "인공지능 카메라가 감지한 화살표중 지정한 번호의 화살표의 시작점X좌표/시작점Y좌표/끝점X좌표/끝점Y좌표",
+                robotis_Practice_ai_camera_block_value_closest_to_center: "인공지능 카메라 화면 중앙과 가장 가까운 사각형의 X좌표/Y좌표/너비/높이/클래스",
+                robotis_Practice_ai_camera_arrow_value_closest_to_center: "인공지능 카메라 화면 중앙과 가장 가까운 화살표의 시작점X좌표/시작점Y좌표/끝점X좌표/끝점Y좌표/클래스",
+                robotis_Practice_ai_camera_number_of_learned_id: "인공지능 카메라가 학습한 번호의 갯수",
+                robotis_Practice_ai_camera_block_value_of_id: "인공지능 카메라가 감지한 사각형중 지정한 번호의 사각형의 X좌표/Y좌표/너비/높이",
+                robotis_Practice_ai_camera_arrow_value_of_id: "인공지능 카메라가 감지한 화살표중 지정한 번호의 화살표의 시작점X좌표/시작점Y좌표/끝점X좌표/끝점Y좌표",
 
-                robotis_Practice_huskylens_if_learned_id: "인공지능 카메라가 지정한 번호인 데이터를 학습하였으면 '참', 아니면 '거짓'으로 판단합니다.",
-                robotis_Practice_huskylens_if_detected_id_type: "인공지능 카메라가 지정한 번호인 지정한 데이터(사각형/화살표)를 학습하였으면 '참', 아니면 '거짓'으로 판단합니다.",
+                robotis_Practice_ai_camera_if_learned_id: "인공지능 카메라가 지정한 번호인 데이터를 학습하였으면 '참', 아니면 '거짓'으로 판단합니다.",
+                robotis_Practice_ai_camera_if_detected_id_type: "인공지능 카메라가 지정한 번호인 지정한 데이터(사각형/화살표)를 학습하였으면 '참', 아니면 '거짓'으로 판단합니다.",
 
                 // 인공지능 카메라 제어
-                robotis_Practice_huskylens_set_mode: "인공지능 카메라의 모드를 설정",
-                robotis_Practice_huskylens_print_custom_text: "인공지능 카메라 화면의 지정한 위치에 지정한 문구 출력\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120",
-                robotis_Practice_huskylens_clear_custom_text: "인공지능 카메라 화면에 표시한 모든 문구 지우기",
+                robotis_Practice_ai_camera_set_mode: "인공지능 카메라의 모드를 설정",
+                robotis_Practice_ai_camera_print_custom_text: "인공지능 카메라 화면의 지정한 위치에 지정한 문구 출력\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120",
+                robotis_Practice_ai_camera_clear_custom_text: "인공지능 카메라 화면에 표시한 모든 문구 지우기",
             },
             Blocks: {
                 robotis_red: "빨강",
@@ -668,7 +668,7 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_icon_vehicle_number_11: "로켓",
                 robotis_icon_vehicle_number_12: "어선",
                 robotis_icon_vehicle_number_13: "여객선",
-                robotis_icon_vehicle_number_14: "잠수항(왼쪽)",
+                robotis_icon_vehicle_number_14: "잠수함(왼쪽)",
                 robotis_icon_vehicle_number_15: "잠수함(오른쪽)",
                 robotis_icon_vehicle_number_16: "비행기(왼쪽)",
                 robotis_icon_vehicle_number_17: "비행기(오른쪽)",
@@ -753,29 +753,29 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
 
                 robotis_connected: "연결",
                 robotis_disconnected: "없음",
-                robotis_huskylens_mode_face_recognition: "얼굴 인식",
-                robotis_huskylens_mode_line_tracking: "라인 인식",
-                robotis_huskylens_mode_color_recognition: "색상 인식",
-                robotis_huskylens_mode_tag_recognition: "태그 인식",
-                robotis_huskylens_mode_object_classification: "사물 분류",
-                robotis_huskylens_mode_expression_recognition: '표정 인식',
-                robotis_huskylens_target_face: "얼굴",
-                robotis_huskylens_target_expression: "표정",
-                robotis_huskylens_target_object: "사물",
-                robotis_huskylens_target_color: "색상",
-                robotis_huskylens_target_tag: "태그",
-                robotis_huskylens_target_qr: "QR코드",
-                robotis_huskylens_target_block: "사각형",
-                robotis_huskylens_target_arrow: "화살표",
-                robotis_huskylens_center_block_center_x: "중심 X좌표",
-                robotis_huskylens_center_block_center_y: "중심 Y좌표",
-                robotis_huskylens_center_block_width: "너비",
-                robotis_huskylens_center_block_height: "높이",
-                robotis_huskylens_center_leared_id: "클래스",
-                robotis_huskylens_center_arrow_origin_x: "시작점 X좌표",
-                robotis_huskylens_center_arrow_origin_y: "시작점 Y좌표",
-                robotis_huskylens_center_arrow_target_x: "끝점 X좌표",
-                robotis_huskylens_center_arrow_target_y: "끝점 Y좌표",
+                robotis_ai_camera_mode_face_recognition: "얼굴 인식",
+                robotis_ai_camera_mode_line_tracking: "라인 인식",
+                robotis_ai_camera_mode_color_recognition: "색상 인식",
+                robotis_ai_camera_mode_tag_recognition: "태그 인식",
+                robotis_ai_camera_mode_object_classification: "사물 분류",
+                robotis_ai_camera_mode_expression_recognition: '표정 인식',
+                robotis_ai_camera_target_face: "얼굴",
+                robotis_ai_camera_target_expression: "표정",
+                robotis_ai_camera_target_object: "사물",
+                robotis_ai_camera_target_color: "색상",
+                robotis_ai_camera_target_tag: "태그",
+                robotis_ai_camera_target_qr: "QR코드",
+                robotis_ai_camera_target_block: "사각형",
+                robotis_ai_camera_target_arrow: "화살표",
+                robotis_ai_camera_center_block_center_x: "중심 X좌표",
+                robotis_ai_camera_center_block_center_y: "중심 Y좌표",
+                robotis_ai_camera_center_block_width: "너비",
+                robotis_ai_camera_center_block_height: "높이",
+                robotis_ai_camera_center_leared_id: "클래스",
+                robotis_ai_camera_center_arrow_origin_x: "시작점 X좌표",
+                robotis_ai_camera_center_arrow_origin_y: "시작점 Y좌표",
+                robotis_ai_camera_center_arrow_target_x: "끝점 X좌표",
+                robotis_ai_camera_center_arrow_target_y: "끝점 Y좌표",
 
                 robotis_plant_ripe: "빨간색으로 잘 익은",
                 robotis_plant_unripe: "초록색으로 덜 익은",
@@ -866,22 +866,22 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
 
                 
                 // AI Camera 값 블록
-                robotis_Practice_huskylens_connection_status: "AI Camera: If %1",
-                robotis_Practice_huskylens_if_detected: "AI Camera: If %1 is displayed",
+                robotis_Practice_ai_camera_connection_status: "AI Camera: If %1",
+                robotis_Practice_ai_camera_if_detected: "AI Camera: If %1 is displayed",
         
-                robotis_Practice_huskylens_block_value_closest_to_center: "AI Camera: %2 of the %1 closest to the center of the screen",
-                robotis_Practice_huskylens_arrow_value_closest_to_center: "AI Camera: %1 of the arrow closest to the center of the screen",
-                robotis_Practice_huskylens_number_of_learned_id: "AI Camera: the number of learned ID",
-                robotis_Practice_huskylens_block_value_of_id: "AI Camera: %3 of %2 with detected ID %1",
-                robotis_Practice_huskylens_arrow_value_of_id: "AI Camera: %2 of arrow with detected ID %1",
+                robotis_Practice_ai_camera_block_value_closest_to_center: "AI Camera: %2 of the %1 closest to the center of the screen",
+                robotis_Practice_ai_camera_arrow_value_closest_to_center: "AI Camera: %1 of the arrow closest to the center of the screen",
+                robotis_Practice_ai_camera_number_of_learned_id: "AI Camera: the number of learned ID",
+                robotis_Practice_ai_camera_block_value_of_id: "AI Camera: %3 of %2 with detected ID %1",
+                robotis_Practice_ai_camera_arrow_value_of_id: "AI Camera: %2 of arrow with detected ID %1",
         
-                robotis_Practice_huskylens_if_learned_id: "AI Camera: If learned data with ID %1",
-                robotis_Practice_huskylens_if_detected_id_type: "AI Camera: If learned %2 data with ID %1",
+                robotis_Practice_ai_camera_if_learned_id: "AI Camera: If learned data with ID %1",
+                robotis_Practice_ai_camera_if_detected_id_type: "AI Camera: If learned %2 data with ID %1",
         
                 // 인공지능 카메라 제어
-                robotis_Practice_huskylens_set_mode: "AI Camera: Set mode to %1 %2",
-                robotis_Practice_huskylens_print_custom_text: "AI Camera: Display %3 at screen position (%1, %2) %4",
-                robotis_Practice_huskylens_clear_custom_text: "AI Camera: Clear screen text %1",
+                robotis_Practice_ai_camera_set_mode: "AI Camera: Set mode to %1 %2",
+                robotis_Practice_ai_camera_print_custom_text: "AI Camera: Display %3 at screen position (%1, %2) %4",
+                robotis_Practice_ai_camera_clear_custom_text: "AI Camera: Clear screen text %1",
             },            
             Helper: {
                 // 주행 제어
@@ -950,22 +950,22 @@ Entry.Robotis_rb_P_Assembly.setLanguage = function () {
                 robotis_Practice_dxl_set_multiturn_round: "Set the motor with the specified ID to rotate the specified number of turns at the specified speed and direction",
 
                 // AI Camera 값 블록
-                robotis_Practice_huskylens_connection_status: "If the AI camera is connected, it is determined as 'true'; otherwise, 'false'.", 
-                robotis_Practice_huskylens_if_detected: "If the selected symbol (rectangle/arrow) is displayed on the LCD screen of the AI camera, it is determined as 'true'; otherwise, 'false'.", 
+                robotis_Practice_ai_camera_connection_status: "If the AI camera is connected, it is determined as 'true'; otherwise, 'false'.", 
+                robotis_Practice_ai_camera_if_detected: "If the selected symbol (rectangle/arrow) is displayed on the LCD screen of the AI camera, it is determined as 'true'; otherwise, 'false'.", 
 
-                robotis_Practice_huskylens_block_value_closest_to_center: "X coordinate/Y coordinate/width/height/learning ID of the rectangle closest to the center of the AI camera screen", 
-                robotis_Practice_huskylens_arrow_value_closest_to_center: "Starting point X coordinate/starting point Y coordinate/end point X coordinate/end point Y coordinate/learning ID of the arrow closest to the center of the AI camera screen", 
-                robotis_Practice_huskylens_number_of_learned_id: "Number of IDs learned by the AI camera", 
-                robotis_Practice_huskylens_block_value_of_id: "X coordinate/Y coordinate/width/height of the rectangle with the specified ID detected by the AI camera", 
-                robotis_Practice_huskylens_arrow_value_of_id: "Starting point X coordinate/starting point Y coordinate/end point X coordinate/end point Y coordinate of the arrow with the specified ID detected by the AI camera", 
+                robotis_Practice_ai_camera_block_value_closest_to_center: "X coordinate/Y coordinate/width/height/learning ID of the rectangle closest to the center of the AI camera screen", 
+                robotis_Practice_ai_camera_arrow_value_closest_to_center: "Starting point X coordinate/starting point Y coordinate/end point X coordinate/end point Y coordinate/learning ID of the arrow closest to the center of the AI camera screen", 
+                robotis_Practice_ai_camera_number_of_learned_id: "Number of IDs learned by the AI camera", 
+                robotis_Practice_ai_camera_block_value_of_id: "X coordinate/Y coordinate/width/height of the rectangle with the specified ID detected by the AI camera", 
+                robotis_Practice_ai_camera_arrow_value_of_id: "Starting point X coordinate/starting point Y coordinate/end point X coordinate/end point Y coordinate of the arrow with the specified ID detected by the AI camera", 
 
-                robotis_Practice_huskylens_if_learned_id: "If the AI camera has learned the data of the specified ID, it is determined as 'true'; otherwise, 'false'.", 
-                robotis_Practice_huskylens_if_detected_id_type: "If the AI camera has learned the specified data (rectangle/arrow) of the specified ID, it is determined as 'true'; otherwise, 'false'.", 
+                robotis_Practice_ai_camera_if_learned_id: "If the AI camera has learned the data of the specified ID, it is determined as 'true'; otherwise, 'false'.", 
+                robotis_Practice_ai_camera_if_detected_id_type: "If the AI camera has learned the specified data (rectangle/arrow) of the specified ID, it is determined as 'true'; otherwise, 'false'.", 
 
                 // 인공지능 카메라 제어
-                robotis_Practice_huskylens_set_mode: "Set the mode of the AI camera", 
-                robotis_Practice_huskylens_print_custom_text: "Print the specified text at the specified position on the AI camera screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120", 
-                robotis_Practice_huskylens_clear_custom_text: "Clear all the text displayed on the AI camera screen", 
+                robotis_Practice_ai_camera_set_mode: "Set the mode of the AI camera", 
+                robotis_Practice_ai_camera_print_custom_text: "Print the specified text at the specified position on the AI camera screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120", 
+                robotis_Practice_ai_camera_clear_custom_text: "Clear all the text displayed on the AI camera screen", 
             },
 
             Blocks: {
@@ -4111,7 +4111,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.RB_rsp_screen(%1,%2,%3,%4)'],
+                py: ['Robotis.icon_screen_food_and_plant(%1,%2,%3,%4)'],
             },
         },
         robotis_Practice_icon_screen_animal_human: {
@@ -4258,7 +4258,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.RB_rsp_screen(%1,%2,%3,%4)'],
+                py: ['Robotis.icon_screen_animal_and_human(%1,%2,%3,%4)'],
             },
         },
         robotis_Practice_icon_screen_object_tool: {
@@ -4407,7 +4407,7 @@ Entry.Robotis_rb_P_Assembly.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.RB_rsp_screen(%1,%2,%3,%4)'],
+                py: ['Robotis.icon_screen_object_and_tool(%1,%2,%3,%4)'],
             },
         },
         robotis_Practice_icon_screen_vehicle_number: {
