@@ -32,6 +32,8 @@ Entry.EntityObject = class EntityObject {
         this.paintShapes = [];
         this._rndPosX = 0;
         this._rndPosY = 0;
+        this.scaleOriginX = 0;
+        this.scaleOriginY = 0;
         this.voice = { speed: 0, pitch: 0, speaker: 'kyuri', volume: 1 };
         this.defaultLog = {
             textEffect: {},
@@ -83,30 +85,32 @@ Entry.EntityObject = class EntityObject {
         this.object.mouseEnabled = true;
         GEDragHelper.handleDrag(this.object);
 
-        this.object.on(GEDragHelper.types.DOWN, function({ stageX, stageY }) {
+        this.object.on(GEDragHelper.types.DOWN, function ({ stageX, stageY }) {
             const id = this.entity.parent.id;
             Entry.dispatchEvent('entityClick', this.entity);
             Entry.stage.isObjectClick = true;
 
             if (Entry.type !== 'minimize' && Entry.stage.isEntitySelectable()) {
-                this.offset = {
-                    x: -this.parent.x + this.entity.getX() - (stageX * 0.75 - 240),
-                    y: -this.parent.y - this.entity.getY() - (stageY * 0.75 - 135),
-                };
-                this.cursor = 'move';
-                this.entity.initCommand();
+                if (Entry.objectEditable) {
+                    this.offset = {
+                        x: -this.parent.x + this.entity.getX() - (stageX * 0.75 - 240),
+                        y: -this.parent.y - this.entity.getY() - (stageY * 0.75 - 135),
+                    };
+                    this.cursor = 'move';
+                    this.entity.initCommand();
+                }
                 Entry.container.selectObject(id);
             }
         });
 
-        this.object.on(GEDragHelper.types.UP, function() {
+        this.object.on(GEDragHelper.types.UP, function () {
             Entry.dispatchEvent('entityClickCanceled', this.entity);
             this.cursor = 'pointer';
             this.entity.checkCommand();
         });
 
-        if (Entry.type !== 'minimize') {
-            this.object.on(GEDragHelper.types.MOVE, function({ stageX, stageY }) {
+        if (Entry.type !== 'minimize' && Entry.objectEditable) {
+            this.object.on(GEDragHelper.types.MOVE, function ({ stageX, stageY }) {
                 if (Entry.stage.isEntitySelectable()) {
                     const entity = this.entity;
                     if (entity.parent.getLock()) {
@@ -178,6 +182,8 @@ Entry.EntityObject = class EntityObject {
         this.setRegY(regY);
         this.setScaleX(scaleX);
         this.setScaleY(scaleY);
+        this.scaleOriginX = scaleX;
+        this.scaleOriginY = scaleY;
         this.setRotation(rotation);
         this.setDirection(direction, true);
         this.setLineBreak(lineBreak);
@@ -409,6 +415,9 @@ Entry.EntityObject = class EntityObject {
     setScaleX(scaleX) {
         /** @type {number} */
         this.scaleX = scaleX;
+        if (Entry.engine.isState('stop')) {
+            this.scaleOriginX = scaleX;
+        }
         if (GEHelper.isWebGL) {
             this._scaleAdaptor.scale.setX(scaleX);
             if (this.textObject) {
@@ -437,6 +446,9 @@ Entry.EntityObject = class EntityObject {
     setScaleY(scaleY) {
         /** @type {number} */
         this.scaleY = scaleY;
+        if (Entry.engine.isState('stop')) {
+            this.scaleOriginY = scaleY;
+        }
         if (GEHelper.isWebGL) {
             this._scaleAdaptor.scale.setY(scaleY);
             if (this.textObject) {
@@ -465,6 +477,27 @@ Entry.EntityObject = class EntityObject {
     setSize(size) {
         const scale = Math.max(1, size) / this.getSize();
         this.setScaleX(this.getScaleX() * scale);
+        this.setScaleY(this.getScaleY() * scale);
+        !this.isClone && this.parent.updateCoordinateView();
+        Entry.requestUpdate = true;
+    }
+
+    resetSize() {
+        this.setScaleX(this.scaleOriginX);
+        this.setScaleY(this.scaleOriginY);
+        !this.isClone && this.parent.updateCoordinateView();
+        Entry.requestUpdate = true;
+    }
+
+    setXSize(size) {
+        const scale = Math.max(1, size) / this.getSize();
+        this.setScaleX(this.getScaleX() * scale);
+        !this.isClone && this.parent.updateCoordinateView();
+        Entry.requestUpdate = true;
+    }
+
+    setYSize(size) {
+        const scale = Math.max(1, size) / this.getSize();
         this.setScaleY(this.getScaleY() * scale);
         !this.isClone && this.parent.updateCoordinateView();
         Entry.requestUpdate = true;
@@ -1036,6 +1069,9 @@ Entry.EntityObject = class EntityObject {
      * @param {?picture model} pictureModel
      */
     setImage(pictureModel) {
+        if (!pictureModel) {
+            return;
+        }
         const that = this;
         delete pictureModel._id;
 
@@ -1112,7 +1148,7 @@ Entry.EntityObject = class EntityObject {
             diffEffects = diffEffects.concat(forceEffects);
         }
 
-        (function(e, obj) {
+        (function (e, obj) {
             const f = [];
             const adjust = Entry.adjustValueWithMaxMin;
 
@@ -1128,31 +1164,7 @@ Entry.EntityObject = class EntityObject {
             if (~diffEffects.indexOf('hsv')) {
                 /* eslint-disable */
                 let matrixValue = [
-                    1,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    1,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    1,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    1,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    1,
+                    1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1,
                 ];
                 /* eslint-enable */
 
@@ -1475,10 +1487,7 @@ Entry.EntityObject = class EntityObject {
                 // 기존 스펙으로 롤백(#11434)
                 const stroke = brush._stroke.style;
                 const thickness = brush._strokeStyle.width;
-                brush
-                    .clear()
-                    .setStrokeStyle(thickness)
-                    .beginStroke(stroke);
+                brush.clear().setStrokeStyle(thickness).beginStroke(stroke);
             }
         }
         Entry.requestUpdate = true;

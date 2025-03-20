@@ -18,15 +18,14 @@ const DropDownDynamicGenerator = {
             return [[Lang.Blocks.no_target, 'null']];
         }
     },
-    tablePredictDataDistinct: () => {
-        if (Entry.aiLearning.labels) {
-            return Entry.aiLearning.labels.map((item) => [item, item]);
-        } else {
-            return [[Lang.Blocks.no_target, 'null']];
-        }
-    },
     valueMap: () => {
-        const valueMap = Object.values(Entry.aiLearning.getTrainResult()?.valueMap || []);
+        const valueMap =
+            Object.values(
+                Entry.aiLearning.getTrainResult()?.valueMap ||
+                    Entry.aiLearning?.result?.valueMap ||
+                    {}
+            ) || [];
+
         if (valueMap?.length) {
             return valueMap.map((name) => [name, name]);
         } else {
@@ -147,6 +146,7 @@ module.exports = {
                 class: 'ai_learning',
                 isNotFor: ['ai_learning_image'],
                 events: {},
+                wikiClass: 'ai_image',
             },
             learning_title_speech: {
                 skeleton: 'basic_text',
@@ -165,6 +165,7 @@ module.exports = {
                 class: 'ai_learning',
                 isNotFor: ['ai_learning_speech'],
                 events: {},
+                wikiClass: 'ai_speech',
             },
             learning_title_text: {
                 skeleton: 'basic_text',
@@ -183,6 +184,7 @@ module.exports = {
                 class: 'ai_learning',
                 isNotFor: ['ai_learning_text'],
                 events: {},
+                wikiClass: 'ai_text',
             },
             insert_data_for_test: {
                 color: EntryStatic.colorSet.block.default.AI_LEARNING,
@@ -275,6 +277,7 @@ module.exports = {
                     js: [],
                     py: [],
                 },
+                wikiClass: 'ai_image',
             },
             insert_text_block_for_test: {
                 color: EntryStatic.colorSet.block.default.AI_LEARNING,
@@ -321,6 +324,7 @@ module.exports = {
                     js: [],
                     py: [],
                 },
+                wikiClass: 'ai_text',
             },
             test_result: {
                 color: EntryStatic.colorSet.block.default.AI_LEARNING,

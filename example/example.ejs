@@ -16,7 +16,7 @@
     </head>
 
     <body>
-        <section>
+        <section style="height: 42px;">
             <input type="file" id="litemodule" />
             <input type="text" id="litemodulename" />
             <button style="border: 1px solid black" onclick="handleUpdate()">
@@ -136,6 +136,11 @@
             type="text/javascript"
             src="https://entry-cdn.pstatic.net/external/sound/sound-editor.js?v=240130-174210"
         ></script>
+        <script 
+            type="text/javascript" 
+            src="https://entry-cdn.pstatic.net/module/legacy-video/index.js?v=241031-202112"
+        ></script>
+
 
         <% for (var chunk in htmlWebpackPlugin.files.js) { %>
         <script src="<%= htmlWebpackPlugin.files.js[chunk] %>"></script>
@@ -174,6 +179,8 @@
             window.PUBLIC_PATH_FOR_ENTRYJS = 'lib/entry-js/dist/';
             $(document).ready(function() {
                 var initOption = {
+                    libDir: '',
+                    entryDir: '',
                     type: 'workspace',
                     textCodingEnable: true,
                 };

@@ -407,8 +407,8 @@ class dmetList {
             if (data.array && Array.isArray(array)) {
                 this.#array = array;
                 this.#array.map((value) => {
-                    const { key } = value;
-                    this.#object[key] = value;
+                    const { key, _key } = value;
+                    this.#object[key || _key] = value;
                 });
             } else if (Array.isArray(list) && isPlainObject(value)) {
                 this.#array = list.map((key) => {
@@ -434,8 +434,8 @@ class dmetList {
             this.#id = id;
             this.#info = info;
             this.#array.map((value) => {
-                const { key } = value;
-                this.#object[key] = value;
+                const { key, _key } = value;
+                this.#object[key || _key] = value;
             });
         } else {
             throw 'data is wrong.';

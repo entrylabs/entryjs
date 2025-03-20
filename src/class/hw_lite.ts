@@ -64,7 +64,7 @@ export default class HardwareLite {
     setExternalModule(moduleObject: EntryHWLiteBaseModule) {
         this.hwModule = moduleObject;
         this.banClassAllHardwareLite();
-        Entry.block.changeBlockText('arduino_lite_device_name', this.hwModule.title.ko);
+        Entry.block.changeBlockText('hardware_device_name_content', this.hwModule.title.ko);
         Entry.dispatchEvent('hwLiteChanged');
         this.setWebConnector();
         this.setFlasher();
@@ -265,7 +265,7 @@ export default class HardwareLite {
     }
 
     setFlasher() {
-        if (this.hwModule.firmwareFlash) {
+        if (this.hwModule.supportFirmwareFlash) {
             this.flasher = new WebUsbFlasher();
         }
     }
