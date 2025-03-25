@@ -531,7 +531,7 @@ class TextCodingUtil {
             return EntryStatic.pythonDisabled;
         }
         EntryStatic.pythonDisabled = Object.keys(Entry.block).filter(
-            (key) => Entry.block[key]?.isNotFor.indexOf('python_disable') >= 0
+            (key) => Entry.block[key]?.isNotFor?.indexOf('python_disable') >= 0
         );
         return EntryStatic.pythonDisabled;
     }
