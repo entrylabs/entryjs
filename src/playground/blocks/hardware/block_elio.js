@@ -92,7 +92,7 @@ Entry.elio.setLanguage = function() {
 				
 				'elio_temperature_value'		: '온도',
 				'elio_humidity_value'			: '습도',
-				'elio_water_value'			: '수분'
+				'elio_water_value'				: '수분'
 
 				
 				
@@ -122,7 +122,7 @@ Entry.elio.setLanguage = function() {
 				
 				'elio_temperature_value'		: '온도',
 				'elio_humidity_value'			: '습도',
-				'elio_water_value'			: '수분'
+				'elio_water_value'				: '수분'
 
             },
         },
