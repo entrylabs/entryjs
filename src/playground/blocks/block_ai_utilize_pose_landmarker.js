@@ -182,7 +182,6 @@ Entry.AI_UTILIZE_BLOCK.poseLandmarker.getBlocks = function() {
             func(sprite, script) {
                 return script.callReturn();
             },
-            wikiClass: 'ai_utilize_pose',
         },
         pose_landmarker: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
@@ -211,7 +210,6 @@ Entry.AI_UTILIZE_BLOCK.poseLandmarker.getBlocks = function() {
                 }
                 return script.callReturn();
             },
-            wikiClass: 'ai_utilize_pose',
         },
         draw_detected_pose: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
@@ -240,7 +238,6 @@ Entry.AI_UTILIZE_BLOCK.poseLandmarker.getBlocks = function() {
                 }
                 return script.callReturn();
             },
-            wikiClass: 'ai_utilize_pose',
         },
         check_detected_pose: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
@@ -260,7 +257,6 @@ Entry.AI_UTILIZE_BLOCK.poseLandmarker.getBlocks = function() {
             func(sprite, script) {
                 return mediaPipeUtils.isPrevPoseLandmarker;
             },
-            wikiClass: 'ai_utilize_pose',
         },
         count_detected_pose: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
@@ -280,7 +276,6 @@ Entry.AI_UTILIZE_BLOCK.poseLandmarker.getBlocks = function() {
             func(sprite, script) {
                 return mediaPipeUtils.countDetectedPose || 0;
             },
-            wikiClass: 'ai_utilize_pose',
         },
         locate_to_pose: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
@@ -311,7 +306,6 @@ Entry.AI_UTILIZE_BLOCK.poseLandmarker.getBlocks = function() {
                 }
                 return script.callReturn();
             },
-            wikiClass: 'ai_utilize_pose',
         },
         locate_time_to_pose: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
@@ -388,7 +382,6 @@ Entry.AI_UTILIZE_BLOCK.poseLandmarker.getBlocks = function() {
                     return script.callReturn();
                 }
             },
-            wikiClass: 'ai_utilize_pose',
         },
         axis_detected_pose: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
@@ -422,7 +415,6 @@ Entry.AI_UTILIZE_BLOCK.poseLandmarker.getBlocks = function() {
                 }
                 return 0;
             },
-            wikiClass: 'ai_utilize_pose',
         },
     };
 };
