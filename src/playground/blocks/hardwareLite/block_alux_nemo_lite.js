@@ -15,7 +15,7 @@ const _throttle = require('lodash/throttle');
             this.id = '630101';
             this.name = 'ProboNemoLite';
             this.url = 'https://imssam.me';
-            this.imageName = 'alux_nemolite_lite.png';
+            this.imageName = 'alux_nemo_lite.png';
             this.title = {
                 ko: '네모',
                 en: 'Nemo',
