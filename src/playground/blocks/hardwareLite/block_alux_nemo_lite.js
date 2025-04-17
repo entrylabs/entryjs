@@ -2,7 +2,7 @@
 
 const _throttle = require('lodash/throttle');
 
-(function() {
+(function () {
     const NEMOLITE_INDEX = 0x42; //66
     const RELEASE_VERSION = 1;
     const SERIAL_INTERVAL = 32;
@@ -11,7 +11,7 @@ const _throttle = require('lodash/throttle');
     const RECEIVED_PACKET_LENGTH = 24;
     Entry.ProboNemoLite = new (class ProboNemoLite {
         //region constructor
-        constructor()  {
+        constructor() {
             this.id = '630101';
             this.name = 'ProboNemoLite';
             this.url = 'https://imssam.me';
@@ -33,8 +33,8 @@ const _throttle = require('lodash/throttle');
 
             const eventSetting = {
                 leading: true,
-                trailing: false
-            }
+                trailing: false,
+            };
             this.buttonEvent = _throttle(
                 () => {
                     Entry.engine.fireEvent('nemolite_event_button');
@@ -45,8 +45,7 @@ const _throttle = require('lodash/throttle');
             this.motionEvent = _throttle(
                 () => {
                     Entry.engine.fireEvent('nemolite_event_motion');
-                }
-                ,
+                },
                 EVENT_INTERVAL,
                 eventSetting
             );
@@ -56,7 +55,7 @@ const _throttle = require('lodash/throttle');
             this.qSize = 128;
             this.qBuffer = new Uint8Array(this.qSize + 2).fill(-1);
             this.receivedPacket = new Uint8Array(RECEIVED_PACKET_LENGTH).fill(-1);
-            this.sendPacket = new Uint8Array(SEND_PACKET_LENGTH).fill(0);            
+            this.sendPacket = new Uint8Array(SEND_PACKET_LENGTH).fill(0);
             this.textPacket = new Uint8Array(0).fill(0);
             this.pLength = 0; // packet length
             this.process = false; // packet process
@@ -64,7 +63,9 @@ const _throttle = require('lodash/throttle');
             this.version = 0;
             this.sendFlag = true;
 
-            this.soundKeyArray = [30578, 28861, 27241, 25713, 24270, 22908, 21622, 20408, 19263, 18182, 17161, 16198];
+            this.soundKeyArray = [
+                30578, 28861, 27241, 25713, 24270, 22908, 21622, 20408, 19263, 18182, 17161, 16198,
+            ];
             this.sendIndex = {
                 cmd0: 0,
                 cmd1: 1,
@@ -92,12 +93,12 @@ const _throttle = require('lodash/throttle');
                 buzzer0: 23,
                 buzzer1: 24,
                 ledRead: 25,
-                textSize: 26  // 텍스트 크기는 따로 계산하여 입력한다.
+                textSize: 26, // 텍스트 크기는 따로 계산하여 입력한다.
             };
             this.receivedIndex = {
                 cmd0: 0,
                 cmd1: 1,
-                size: 2, 
+                size: 2,
                 accelAx0: 3,
                 accelAx1: 4,
                 accelAy0: 5,
@@ -105,7 +106,7 @@ const _throttle = require('lodash/throttle');
                 accelAz0: 7,
                 accelAz1: 8,
                 accelALi: 9, // Linear
-                accelD: 10,  // Motion
+                accelD: 10, // Motion
                 illuminance: 11,
                 extensionAnalog: 12,
                 extensionDigital: 13,
@@ -118,7 +119,7 @@ const _throttle = require('lodash/throttle');
                 ledRead: 20,
                 compass: 21,
                 timeCheck: 22,
-                checksum: 23
+                checksum: 23,
             };
 
             this.blockMenuBlocks = [
@@ -137,7 +138,7 @@ const _throttle = require('lodash/throttle');
                 'nemolite_dropdown_index_0_5',
                 'nemolite_dropdown_index_1_5',
                 'nemolite_dropdown_led_columm',
-                
+
                 'nemolite_title_namo_input',
                 'nemolite_when_button_state',
                 'nemolite_when_motion_sensing',
@@ -148,7 +149,7 @@ const _throttle = require('lodash/throttle');
                 'nemolite_get_acceleration_value',
                 'nemolite_get_illuminance_value',
                 'nemolite_get_convert_value',
-            
+
                 'nemolite_title_namo_output',
                 'nemolite_set_display_led_icon',
                 'nemolite_set_display_led_custom_columm',
@@ -160,7 +161,7 @@ const _throttle = require('lodash/throttle');
                 'nemolite_set_play_note',
                 'nemolite_set_play_note_for_seconds',
                 'nemolite_set_stop_all_sound',
-            
+
                 'nemolite_title_namo_extension',
                 'nemolite_ext_set_extension',
                 'nemolite_ext_set_extension_value',
@@ -323,7 +324,8 @@ const _throttle = require('lodash/throttle');
                         nemolite_get_convert_value: '%1 의 값 %2 ~ %3 을 %4 ~ %5 으(로) 변환',
 
                         nemolite_set_display_led_icon: 'LED 아이콘 %1 을 %2 속도로 출력 %3',
-                        nemolite_set_display_led_custom_columm: 'LED %1 열의 %2%3%4%5%6%7%8 을 %9 속도로 출력 %10',
+                        nemolite_set_display_led_custom_columm:
+                            'LED %1 열의 %2%3%4%5%6%7%8 을 %9 속도로 출력 %10',
                         nemolite_set_display_led_text: 'LED %1 문자열을 %2 속도로 출력 %3',
                         nemolite_set_delete_all_led: 'LED 출력 지우기 %1',
                         nemolite_set_toggle_led_pixel: 'LED X: %1 Y: %2 %3 %4',
@@ -492,10 +494,12 @@ const _throttle = require('lodash/throttle');
                         nemolite_get_button_analog_value: 'Analog value of %1 button',
                         nemolite_get_acceleration_value: 'Acceleration sensor %1 value',
                         nemolite_get_illuminance_value: 'Value of illuminance sensor',
-                        nemolite_get_convert_value: 'change the value of %1 from %2 ~ %3 to %4 ~ %5',
+                        nemolite_get_convert_value:
+                            'change the value of %1 from %2 ~ %3 to %4 ~ %5',
 
                         nemolite_set_display_led_icon: 'LED icon %1 output %2 speed %3',
-                        nemolite_set_display_led_custom_columm: 'LED %1 columm %2%3%4%5%6%7%8 at %9 speed %10',
+                        nemolite_set_display_led_custom_columm:
+                            'LED %1 columm %2%3%4%5%6%7%8 at %9 speed %10',
                         nemolite_set_display_led_text: 'LED %1 string output %2 speed %3',
                         nemolite_set_delete_all_led: 'Clear LED output %1',
                         nemolite_set_toggle_led_pixel: 'LED X: %1 Y: %2 %3 %4',
@@ -535,7 +539,7 @@ const _throttle = require('lodash/throttle');
                     x: 0,
                     y: 0,
                     z: 0,
-                    linear: 0
+                    linear: 0,
                 },
                 motion: {
                     front: 0,
@@ -552,8 +556,8 @@ const _throttle = require('lodash/throttle');
                     analog: 0,
                     digital: 0, // logic
                     fall: 0, // falling edge
-                    rise: 0,  // rising edge
-                    both: 0 // change edge
+                    rise: 0, // rising edge
+                    both: 0, // change edge
                 },
                 switch: {
                     s1: {
@@ -583,7 +587,7 @@ const _throttle = require('lodash/throttle');
                         fall: 0,
                         rise: 0,
                         both: 0,
-                    }
+                    },
                 },
                 ledRead: {
                     state: 0,
@@ -594,7 +598,7 @@ const _throttle = require('lodash/throttle');
                     led: 0,
                     sound: 0,
                     extCount: 0,
-                }
+                },
             };
 
             this.setData = {
@@ -618,15 +622,15 @@ const _throttle = require('lodash/throttle');
                 extension: 0,
                 melody: {
                     play: 0,
-                    title: 0
+                    title: 0,
                 },
                 note: {
                     play: 0,
-                    pitch: 0
+                    pitch: 0,
                 },
                 ledRead: 0,
             };
-            
+
             this.lastData = {
                 ledColumm: {
                     pixel: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -667,7 +671,7 @@ const _throttle = require('lodash/throttle');
                 absolutAngle: 0,
                 turnCount: 0,
             };
-            
+
             this.compass = {
                 lastAnalog: 0,
                 bias: 0,
@@ -683,7 +687,7 @@ const _throttle = require('lodash/throttle');
 
             if (Entry.hwLite && Entry.hwLite.serial) {
                 Entry.hwLite.serial.update();
-            };
+            }
         }
         //endregion
 
@@ -694,16 +698,14 @@ const _throttle = require('lodash/throttle');
             modePacket[0] = 0x63;
             modePacket[1] = 0x36;
 
-            while(true) {
+            while (true) {
                 const response = await Entry.hwLite.serial.sendAsyncWithThrottle(modePacket);
 
                 if (response[0] !== NEMOLITE_INDEX) {
                     modePacket[0] = 0x24;
                     modePacket[1] = 0x42;
                 } else {
-                    this.version = (response.length === 1)
-                        ? 0
-                        : response[1];
+                    this.version = response.length === 1 ? 0 : response[1];
                     break;
                 }
                 await Entry.Utils.sleep(100);
@@ -734,14 +736,14 @@ const _throttle = require('lodash/throttle');
         // 디바이스에서 값을 읽어온다.
         //region handleLocalData
         handleLocalData(buffer) {
-            buffer.forEach(b => this.qEnqueue(b));
-            
-            while(this.qCount() >= this.receivedPacket.length) {
+            buffer.forEach((b) => this.qEnqueue(b));
+
+            while (this.qCount() >= this.receivedPacket.length) {
                 if (!this.process) {
-                    while(this.qCount() > 0) {
-                        if (this.receivedPacket[0] !== 0xCD) {
+                    while (this.qCount() > 0) {
+                        if (this.receivedPacket[0] !== 0xcd) {
                             this.receivedPacket[0] = this.qDequeue();
-                        } else if (this.receivedPacket[1] !== 0xDA) {
+                        } else if (this.receivedPacket[1] !== 0xda) {
                             this.receivedPacket[1] = this.qDequeue();
                         } else {
                             this.receivedPacket[2] = this.qDequeue();
@@ -751,13 +753,15 @@ const _throttle = require('lodash/throttle');
                         }
                     }
                 }
-    
-                if (this.process && (this.qCount() >= this.pLength)) {
+
+                if (this.process && this.qCount() >= this.pLength) {
                     for (let i = 3; i < this.pLength; i++) {
                         this.receivedPacket[i] = this.qDequeue();
                     }
 
-                    if (this.receivedPacket[this.pLength - 1] === this.checksum(this.receivedPacket)) {   
+                    if (
+                        this.receivedPacket[this.pLength - 1] === this.checksum(this.receivedPacket)
+                    ) {
                         // 상태 확인 코드이므로 가장 먼저 해석
                         this.parsingTimeCheck(this.receivedPacket);
 
@@ -775,7 +779,7 @@ const _throttle = require('lodash/throttle');
                     this.receivedPacket = new Uint8Array(RECEIVED_PACKET_LENGTH).fill(-1);
                     this.process = false;
                     this.sendFlag = true;
-                    this.pLength = 0;                    
+                    this.pLength = 0;
 
                     if (this.setZeroFlag) {
                         this.setZeroFlag = false;
@@ -784,17 +788,14 @@ const _throttle = require('lodash/throttle');
             }
 
             if (this.sendFlag) {
-                setTimeout(
-                    () => {                    
-                        if (Entry.hwLite && Entry.hwLite.serial) {
-                            Entry.hwLite.serial.update();
-                            this.sendFlag = false;
-                        }
-                    },
-                    SERIAL_INTERVAL
-                );
-            };
-        }//endregion 
+                setTimeout(() => {
+                    if (Entry.hwLite && Entry.hwLite.serial) {
+                        Entry.hwLite.serial.update();
+                        this.sendFlag = false;
+                    }
+                }, SERIAL_INTERVAL);
+            }
+        } //endregion
 
         //디바이스에 값을 쓴다.
         //region requestLocalData
@@ -830,11 +831,11 @@ const _throttle = require('lodash/throttle');
 
                 return packet;
             }
-        }//endregion
+        } //endregion
 
         qEnqueue(data) {
             this.qBuffer[this.qRear] = data;
-            this.qRear = (this.qRear + 1) % this.qSize
+            this.qRear = (this.qRear + 1) % this.qSize;
         }
 
         qDequeue() {
@@ -845,9 +846,9 @@ const _throttle = require('lodash/throttle');
         }
 
         qCount() {
-            return (this.qFront <= this.qRear)
-                ? (this.qRear - this.qFront)
-                : (this.qSize - this.qFront + this.qRear);
+            return this.qFront <= this.qRear
+                ? this.qRear - this.qFront
+                : this.qSize - this.qFront + this.qRear;
         }
 
         handleButtonEventInterval() {
@@ -857,23 +858,23 @@ const _throttle = require('lodash/throttle');
         handleMotionlEventInterval() {
             this.motionEventIntervalId = setInterval(this.motionEvent.bind(this), EVENT_INTERVAL);
         }
-        
+
         checksum(packet) {
             let checker = 0;
             const length = packet[2] + 2;
-            for(let i = 3; i < length; i++) {
+            for (let i = 3; i < length; i++) {
                 checker += packet[i];
             }
-            return (checker & 0xFF);
+            return checker & 0xff;
         }
-        
+
         getMonitorPort() {
             const monitor = {
                 AA1: this.device.switch.s1.analog,
                 AA2: this.device.switch.s2.analog,
                 AA3: this.device.switch.s3.analog,
                 AA4: this.device.switch.s4.analog,
-            }
+            };
 
             return { ...monitor };
         }
@@ -882,16 +883,17 @@ const _throttle = require('lodash/throttle');
             for (let i = 0; i < 3; i++) {
                 const lowData = buffer[i * 2 + 3];
                 const highData = buffer[i * 2 + 4];
-                const temp = (lowData & 0x80) === 0x80
-                    ? (0x10000 - ((lowData << 8) | highData)) * -1
-                    : (lowData << 8) | highData;
+                const temp =
+                    (lowData & 0x80) === 0x80
+                        ? (0x10000 - ((lowData << 8) | highData)) * -1
+                        : (lowData << 8) | highData;
                 const key = this.getAccelNameKey(i);
                 this.getData.accel[key] = temp / 10.0;
             }
-            this.getData.accel.linear = buffer[this.receivedIndex.accelALi]
-        };
-        
-        pasingAccelD(buffer) {    
+            this.getData.accel.linear = buffer[this.receivedIndex.accelALi];
+        }
+
+        pasingAccelD(buffer) {
             const data = buffer[this.receivedIndex.accelD];
             for (let i = 0; i < 8; i++) {
                 const key = this.getMotionNameKey(i);
@@ -908,7 +910,7 @@ const _throttle = require('lodash/throttle');
 
             this.getData.extension.analog = analog;
 
-            this.extension.value = analog + (this.state.extCount * 255) + this.extension.bias;
+            this.extension.value = analog + this.state.extCount * 255 + this.extension.bias;
             this.extension.angle = this.getConvertMap(this.extension.value % 255, 0, 255, 0, 360);
             this.extension.absolutAngle = this.getConvertMap(analog, 0, 255, 0, 360);
             this.extension.turnCount = Math.round(this.extension.value / 255);
@@ -917,13 +919,14 @@ const _throttle = require('lodash/throttle');
         parsingExtensionDigital(buffer) {
             for (let i = 0; i < 4; i++) {
                 const key = this.getButtonStateKey(i);
-                this.getData.extension[key] = (buffer[this.receivedIndex.extensionDigital] >> (7 - i)) & 0x01;
+                this.getData.extension[key] =
+                    (buffer[this.receivedIndex.extensionDigital] >> (7 - i)) & 0x01;
             }
         }
 
         pasingSwitchAnalog(buffer) {
             for (let i = 0; i < 4; i++) {
-                const nameKey = this.getButtonNameKey(i);                
+                const nameKey = this.getButtonNameKey(i);
                 this.getData.switch[nameKey].analog = buffer[this.receivedIndex.switchAnalog1 + i];
             }
         }
@@ -935,18 +938,18 @@ const _throttle = require('lodash/throttle');
                     (buffer[this.receivedIndex.switchDigitalAB] >> (i + 4)) & 0x01,
                     (buffer[this.receivedIndex.switchDigitalAB] >> i) & 0x01,
                     (buffer[this.receivedIndex.switchDigitalCD] >> (i + 4)) & 0x01,
-                    (buffer[this.receivedIndex.switchDigitalCD] >> i) & 0x01
-                ];                               
+                    (buffer[this.receivedIndex.switchDigitalCD] >> i) & 0x01,
+                ];
                 for (let j = 0; j < 4; j++) {
                     const stateKey = this.getButtonStateKey(j);
                     this.getData.switch[nameKey][stateKey] = value[j];
                 }
             }
-        };
+        }
 
         parsingLedRead(buffer) {
             const state = (buffer[this.receivedIndex.ledRead] >> 7) & 0x01;
-            const counter = buffer[this.receivedIndex.ledRead] & 0x7F;
+            const counter = buffer[this.receivedIndex.ledRead] & 0x7f;
 
             if (this.lastData.ledRead.count != counter) {
                 this.getData.ledRead.state = state;
@@ -955,8 +958,7 @@ const _throttle = require('lodash/throttle');
                 this.lastData.ledRead.state = state;
                 this.lastData.ledRead.count = counter;
             }
-
-        };
+        }
 
         parsingCompass(buffer) {
             const analog = buffer[this.receivedIndex.compass];
@@ -967,7 +969,7 @@ const _throttle = require('lodash/throttle');
             } else if (analog > this.compass.lastAnalog + 150) {
                 this.compass.absolutTurnCount--;
             }
-            this.compass.value = analog + (this.compass.absolutTurnCount * 255) + this.compass.bias;
+            this.compass.value = analog + this.compass.absolutTurnCount * 255 + this.compass.bias;
             this.compass.angle = this.getConvertMap(this.compass.value % 255, 0, 255, 0, 360);
             this.compass.absolutAngle = this.getConvertMap(analog, 0, 255, 0, 360);
             this.compass.turnCount = Math.round(this.compass.value / 255);
@@ -977,18 +979,20 @@ const _throttle = require('lodash/throttle');
                 this.compass.direction = 2; // 남
             } else if (163 <= analog && analog < 227) {
                 this.compass.direction = 1; // 서
-            } else { // 227-34
+            } else {
+                // 227-34
                 this.compass.direction = 3; // 북
             }
 
             this.compass.lastAnalog = analog;
-        };
+        }
 
         parsingTimeCheck(buffer) {
             const key = ['led', 'sound', 'extCount'];
 
             for (let i = 0; i < 3; i++) {
-                this.getData.timeCheck[key[i]] = (buffer[this.receivedIndex.timeCheck] >> (6 - (i * 2)) & 0x03);
+                this.getData.timeCheck[key[i]] =
+                    (buffer[this.receivedIndex.timeCheck] >> (6 - i * 2)) & 0x03;
 
                 if (this.setZeroFlag) {
                     this.lastData.timeCheck[key[i]] = this.getData.timeCheck[key[i]];
@@ -1000,7 +1004,8 @@ const _throttle = require('lodash/throttle');
                         if (i === 2) {
                             //+방향 일 때: 0->1->2->3->0->...
                             //-방향 일 때: 0->3->2->1->0->...
-                            const diff = this.getData.timeCheck[key[i]] - this.lastData.timeCheck[key[i]];
+                            const diff =
+                                this.getData.timeCheck[key[i]] - this.lastData.timeCheck[key[i]];
                             if (diff === 1 || diff === -3) {
                                 this.state[key[i]]++;
                             } else if (diff === -1 || diff === 3) {
@@ -1013,15 +1018,15 @@ const _throttle = require('lodash/throttle');
                     }
                 }
             }
-        };
+        }
 
         PreparePacket() {
             const sendSize = this.sendPacket.length;
             const textSize = this.textPacket.length;
             const packetSize = sendSize + textSize + 1;
-            
-            this.sendPacket[0] = 0xAD;
-            this.sendPacket[1] = 0xDA;
+
+            this.sendPacket[0] = 0xad;
+            this.sendPacket[1] = 0xda;
             this.sendPacket[2] = packetSize - 3;
 
             return new Uint8Array(packetSize).fill(0);
@@ -1032,15 +1037,15 @@ const _throttle = require('lodash/throttle');
                 let nextPage = false;
                 this.state.led = 2;
 
-                for(let i = 0; i < 14; i++) {
+                for (let i = 0; i < 14; i++) {
                     const index = this.sendIndex.led7x1 + i;
                     this.sendPacket[index] = this.setData.ledColumm.pixel[i];
-                    if ((index > 6) && (this.sendPacket[index] > 0)) {
+                    if (index > 6 && this.sendPacket[index] > 0) {
                         nextPage = true;
                     }
                 }
-                this.sendPacket[this.sendIndex.ledMs0] = (this.setData.ledColumm.speed >> 8) & 0x7F;
-                this.sendPacket[this.sendIndex.ledMs1] = this.setData.ledColumm.speed & 0xFF;
+                this.sendPacket[this.sendIndex.ledMs0] = (this.setData.ledColumm.speed >> 8) & 0x7f;
+                this.sendPacket[this.sendIndex.ledMs1] = this.setData.ledColumm.speed & 0xff;
 
                 this.sendPacket[this.sendIndex.led7x1] |= 0x80;
                 if (nextPage) {
@@ -1050,8 +1055,8 @@ const _throttle = require('lodash/throttle');
                 this.lastData.ledColumm.pixel = this.setData.ledColumm.pixel;
                 this.lastData.ledColumm.speed = this.setData.ledColumm.speed;
             }
-        };
-        
+        }
+
         addLedClear() {
             if (this.setData.ledClear === 1) {
                 this.setData.ledClear = 0;
@@ -1061,92 +1066,94 @@ const _throttle = require('lodash/throttle');
                 return false;
             }
         }
-        
+
         addLedPixel() {
             const state = this.setData.ledPixel.state;
             if (state) {
                 const index = this.setData.ledPixel.index;
-                this.sendPacket[this.sendIndex.ledPixel] = ((state & 0x03) << 6) | (index & 0x3F);
+                this.sendPacket[this.sendIndex.ledPixel] = ((state & 0x03) << 6) | (index & 0x3f);
                 this.setData.ledPixel.index = 0;
                 this.setData.ledPixel.state = 0;
             }
-        };
-        
+        }
+
         addLedSet() {
             if (this.state.led === 'i'.charCodeAt()) {
                 this.state.led = 2;
-                this.sendPacket[this.sendIndex.ledMs0] = (this.setData.ledIcon.speed >> 8) & 0xFF;
-                this.sendPacket[this.sendIndex.ledMs1] = this.setData.ledIcon.speed & 0xFF;
+                this.sendPacket[this.sendIndex.ledMs0] = (this.setData.ledIcon.speed >> 8) & 0xff;
+                this.sendPacket[this.sendIndex.ledMs1] = this.setData.ledIcon.speed & 0xff;
                 this.sendPacket[this.sendIndex.ledSet] = this.setData.ledIcon.index;
                 this.lastData.ledIcon.index = this.setData.ledIcon.index;
                 this.lastData.ledIcon.speed = this.setData.ledIcon.speed;
             }
-        };
-                
+        }
+
         addSetExtension() {
             this.sendPacket[this.sendIndex.portSet] = this.setData.extension;
-        };
-        
+        }
+
         addMelody() {
             if (this.state.sound === 'm'.charCodeAt()) {
                 this.state.sound = 2;
-                this.sendPacket[this.sendIndex.melody] = (this.setData.melody.play << 7) | (this.setData.melody.title & 0x7F);
+                this.sendPacket[this.sendIndex.melody] =
+                    (this.setData.melody.play << 7) | (this.setData.melody.title & 0x7f);
             }
-        };
-       
+        }
+
         addBuzzer() {
             if (this.state.note === 1) {
                 this.state.note = 2;
                 const pitch = this.setData.note.pitch;
                 if (0 <= pitch && pitch <= 47) {
-                    const n = (pitch / 12) & 0xFF;
+                    const n = (pitch / 12) & 0xff;
                     const v = pitch % 12;
                     let r = 2;
                     for (let i = 0; i < n; i++) {
                         r *= 2;
                     }
                     const hertz = this.soundKeyArray[v] / r;
-                    this.sendPacket[this.sendIndex.buzzer0] = (this.setData.note.play << 7) | ((hertz >> 8) & 0x7F);
-                    this.sendPacket[this.sendIndex.buzzer1] = hertz & 0xFF;
+                    this.sendPacket[this.sendIndex.buzzer0] =
+                        (this.setData.note.play << 7) | ((hertz >> 8) & 0x7f);
+                    this.sendPacket[this.sendIndex.buzzer1] = hertz & 0xff;
                 }
             }
-        };
-        
+        }
+
         addLedRead() {
             this.sendPacket[this.sendIndex.ledRead] = this.setData.ledRead;
             this.setData.ledRead = 0;
-        };
-        
+        }
+
         addText() {
             if (this.state.led === 't'.charCodeAt()) {
                 this.state.led = 2;
                 const size = this.setData.ledText.text.length;
-                const text = this.setData.ledText.text; 
-                
+                const text = this.setData.ledText.text;
+
                 this.textPacket = new Uint8Array(size);
 
                 for (let i = 0; i < size; i++) {
                     this.textPacket[i] = text[i].charCodeAt();
                 }
                 this.sendPacket[this.sendIndex.textSize] = size;
-                this.sendPacket[this.sendIndex.ledMs0] = (this.setData.ledText.speed >> 8) & 0x7F;
-                this.sendPacket[this.sendIndex.ledMs1] = this.setData.ledText.speed & 0xFF;
+                this.sendPacket[this.sendIndex.ledMs0] = (this.setData.ledText.speed >> 8) & 0x7f;
+                this.sendPacket[this.sendIndex.ledMs1] = this.setData.ledText.speed & 0xff;
 
                 this.lastData.ledText.text = text;
                 this.lastData.ledText.speed = this.setData.ledText.speed;
                 this.setData.ledText.text = '';
             }
-        };
-        
+        }
+
         getButtonNameKey(data) {
-            const key = ['s1', 's2', 's3','s4'];
+            const key = ['s1', 's2', 's3', 's4'];
             const num = Number(data);
             if (0 <= num && num <= 3) {
                 return key[num];
-            } else {                
+            } else {
                 switch (data) {
                     case Lang.template.nemolite_item_s1:
-                        return key[0]; 
+                        return key[0];
                     case Lang.template.nemolite_item_s2:
                         return key[1];
                     case Lang.template.nemolite_item_s3:
@@ -1198,7 +1205,7 @@ const _throttle = require('lodash/throttle');
                     case Lang.template.nemolite_item_motion_3:
                         return key[2];
                     case Lang.template.nemolite_item_motion_4:
-                        return key[3];                        
+                        return key[3];
                     case Lang.template.nemolite_item_motion_5:
                         return key[4];
                     case Lang.template.nemolite_item_motion_6:
@@ -1213,7 +1220,7 @@ const _throttle = require('lodash/throttle');
             }
         }
 
-        getAccelNameKey(data) {            
+        getAccelNameKey(data) {
             const key = ['x', 'y', 'z', 'linear'];
             const num = Number(data);
             if (0 <= num && num <= 3) {
@@ -1236,7 +1243,7 @@ const _throttle = require('lodash/throttle');
 
         getLedSpeedValue(data) {
             const num = Number(data);
-            switch(num) {
+            switch (num) {
                 case 0:
                     return 0;
                 case 1:
@@ -1248,20 +1255,20 @@ const _throttle = require('lodash/throttle');
                 case 4:
                     return 50;
                 case 5:
-                    return 20
+                    return 20;
                 default:
-                    return (num < 0) ? 0 : 500;
+                    return num < 0 ? 0 : 500;
             }
         }
 
         getLedIconIndexValue(data) {
             const num = Number(data);
             if (0 <= num && num <= 32) {
-                return (num + 1);
-            } else {                
+                return num + 1;
+            } else {
                 switch (data) {
                     case Lang.template.nemolite_item_smile:
-                        return 1; 
+                        return 1;
                     case Lang.template.nemolite_item_not_much:
                         return 2;
                     case Lang.template.nemolite_item_good:
@@ -1269,7 +1276,7 @@ const _throttle = require('lodash/throttle');
                     case Lang.template.nemolite_item_bad:
                         return 4;
                     case Lang.template.nemolite_item_wink:
-                        return 5; 
+                        return 5;
                     case Lang.template.nemolite_item_cry:
                         return 6;
                     case Lang.template.nemolite_item_absurd:
@@ -1277,7 +1284,7 @@ const _throttle = require('lodash/throttle');
                     case Lang.template.nemolite_item_peck:
                         return 8;
                     case Lang.template.nemolite_item_arrow_1:
-                        return 9; 
+                        return 9;
                     case Lang.template.nemolite_item_arrow_2:
                         return 10;
                     case Lang.template.nemolite_item_arrow_3:
@@ -1285,7 +1292,7 @@ const _throttle = require('lodash/throttle');
                     case Lang.template.nemolite_item_arrow_4:
                         return 12;
                     case Lang.template.nemolite_item_arrow_5:
-                        return 13; 
+                        return 13;
                     case Lang.template.nemolite_item_arrow_6:
                         return 14;
                     case Lang.template.nemolite_item_arrow_7:
@@ -1293,7 +1300,7 @@ const _throttle = require('lodash/throttle');
                     case Lang.template.nemolite_item_arrow_8:
                         return 16;
                     case Lang.template.nemolite_item_spade:
-                        return 17; 
+                        return 17;
                     case Lang.template.nemolite_item_club:
                         return 18;
                     case Lang.template.nemolite_item_diamond:
@@ -1305,7 +1312,7 @@ const _throttle = require('lodash/throttle');
                     case Lang.template.nemolite_item_x:
                         return 22;
                     case Lang.template.nemolite_item_triangle:
-                        return 23; 
+                        return 23;
                     case Lang.template.nemolite_item_square:
                         return 24;
                     case Lang.template.nemolite_item_note_1:
@@ -1313,7 +1320,7 @@ const _throttle = require('lodash/throttle');
                     case Lang.template.nemolite_item_note_2:
                         return 26;
                     case Lang.template.nemolite_item_note_3:
-                        return 27; 
+                        return 27;
                     case Lang.template.nemolite_item_dice_1:
                         return 28;
                     case Lang.template.nemolite_item_dice_2:
@@ -1321,7 +1328,7 @@ const _throttle = require('lodash/throttle');
                     case Lang.template.nemolite_item_dice_3:
                         return 30;
                     case Lang.template.nemolite_item_dice_4:
-                        return 31; 
+                        return 31;
                     case Lang.template.nemolite_item_dice_5:
                         return 32;
                     case Lang.template.nemolite_item_dice_6:
@@ -1332,14 +1339,14 @@ const _throttle = require('lodash/throttle');
             }
         }
 
-        getLedColummKey(data) {            
+        getLedColummKey(data) {
             const num = Number(data);
             if (0 <= num && num <= 13) {
                 return num;
             } else {
-                switch (data) {                    
+                switch (data) {
                     case Lang.template.nemolite_item_first:
-                        return 0; 
+                        return 0;
                     case Lang.template.nemolite_item_second:
                         return 1;
                     case Lang.template.nemolite_item_third:
@@ -1347,7 +1354,7 @@ const _throttle = require('lodash/throttle');
                     case Lang.template.nemolite_item_fourth:
                         return 3;
                     case Lang.template.nemolite_item_fifth:
-                        return 4; 
+                        return 4;
                     case Lang.template.nemolite_item_sixth:
                         return 5;
                     case Lang.template.nemolite_item_seventh:
@@ -1355,7 +1362,7 @@ const _throttle = require('lodash/throttle');
                     case Lang.template.nemolite_item_eighth:
                         return 7;
                     case Lang.template.nemolite_item_ninth:
-                        return 8; 
+                        return 8;
                     case Lang.template.nemolite_item_tenth:
                         return 9;
                     case Lang.template.nemolite_itme_eleventh:
@@ -1363,7 +1370,7 @@ const _throttle = require('lodash/throttle');
                     case Lang.template.nemolite_item_twelfth:
                         return 11;
                     case Lang.template.nemolite_item_thirteenth:
-                        return 12; 
+                        return 12;
                     case Lang.template.nemolite_itme_fourteenth:
                         return 13;
                     default:
@@ -1375,11 +1382,11 @@ const _throttle = require('lodash/throttle');
         getPitchKey(data) {
             const num = Number(data);
             if (0 <= num && num <= 32) {
-                return (num + 1);
-            } else {                
+                return num + 1;
+            } else {
                 switch (data) {
                     case Lang.template.nemolite_item_lc:
-                        return 0; 
+                        return 0;
                     case Lang.template.nemolite_item_lcs:
                         return 1;
                     case Lang.template.nemolite_item_ld:
@@ -1387,7 +1394,7 @@ const _throttle = require('lodash/throttle');
                     case Lang.template.nemolite_item_lds:
                         return 3;
                     case Lang.template.nemolite_item_le:
-                        return 4; 
+                        return 4;
                     case Lang.template.nemolite_item_lf:
                         return 5;
                     case Lang.template.nemolite_item_lfs:
@@ -1395,7 +1402,7 @@ const _throttle = require('lodash/throttle');
                     case Lang.template.nemolite_item_lg:
                         return 7;
                     case Lang.template.nemolite_item_lgs:
-                        return 8; 
+                        return 8;
                     case Lang.template.nemolite_item_la:
                         return 9;
                     case Lang.template.nemolite_item_las:
@@ -1403,7 +1410,7 @@ const _throttle = require('lodash/throttle');
                     case Lang.template.nemolite_item_lb:
                         return 11;
                     case Lang.template.nemolite_item_mc:
-                        return 12; 
+                        return 12;
                     case Lang.template.nemolite_item_mcs:
                         return 13;
                     case Lang.template.nemolite_item_md:
@@ -1411,7 +1418,7 @@ const _throttle = require('lodash/throttle');
                     case Lang.template.nemolite_item_mds:
                         return 15;
                     case Lang.template.nemolite_item_me:
-                        return 16; 
+                        return 16;
                     case Lang.template.nemolite_item_mf:
                         return 17;
                     case Lang.template.nemolite_item_mfs:
@@ -1423,7 +1430,7 @@ const _throttle = require('lodash/throttle');
                     case Lang.template.nemolite_item_ma:
                         return 21;
                     case Lang.template.nemolite_item_mas:
-                        return 22; 
+                        return 22;
                     case Lang.template.nemolite_item_mb:
                         return 23;
                     case Lang.template.nemolite_item_hc:
@@ -1437,7 +1444,7 @@ const _throttle = require('lodash/throttle');
         getSwitchValue(data) {
             const num = Number(data);
             if (0 <= num && num <= 2) {
-                return (num + 1);
+                return num + 1;
             } else {
                 switch (data) {
                     case Lang.template.nemolite_item_off_text:
@@ -1457,7 +1464,7 @@ const _throttle = require('lodash/throttle');
         getMelodyKey(data) {
             const num = Number(data);
             if (0 <= num && num <= 6) {
-                return (num + 1);
+                return num + 1;
             } else {
                 switch (data) {
                     case Lang.template.nemolite_item_do_re_mi_song:
@@ -1480,7 +1487,7 @@ const _throttle = require('lodash/throttle');
             }
         }
 
-        getExtensionKey(data) {     
+        getExtensionKey(data) {
             switch (data) {
                 case '0': // 스위치
                 case '1': // 적외선
@@ -1583,7 +1590,7 @@ const _throttle = require('lodash/throttle');
             }
         }
 
-        delayCallReturnUsingFlag(script, startCode, callReturnFlag) {            
+        delayCallReturnUsingFlag(script, startCode, callReturnFlag) {
             if (!script.isStart) {
                 script.isStart = true;
                 script.timeFlag = 1;
@@ -1635,7 +1642,7 @@ const _throttle = require('lodash/throttle');
                         INDEX: 0,
                     },
                     events: {},
-                    func: function(sprite, script) {
+                    func: function (sprite, script) {
                         return script.getField('INDEX');
                     },
                     syntax: {
@@ -1683,7 +1690,7 @@ const _throttle = require('lodash/throttle');
                             fontSize: 11,
                             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                        }
+                        },
                     ],
                     def: {
                         params: [],
@@ -1692,7 +1699,7 @@ const _throttle = require('lodash/throttle');
                         INDEX: 0,
                     },
                     events: {},
-                    func: function(sprite, script) {
+                    func: function (sprite, script) {
                         return script.getField('INDEX');
                     },
                     syntax: {
@@ -1740,7 +1747,7 @@ const _throttle = require('lodash/throttle');
                             fontSize: 11,
                             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                        }
+                        },
                     ],
                     def: {
                         params: [],
@@ -1749,9 +1756,9 @@ const _throttle = require('lodash/throttle');
                         INDEX: 0,
                     },
                     events: {},
-                    func: function(sprite, script) {
+                    func: function (sprite, script) {
                         return script.getField('INDEX');
-                    },                    
+                    },
                     syntax: {
                         js: [],
                         py: [
@@ -1801,7 +1808,7 @@ const _throttle = require('lodash/throttle');
                             fontSize: 11,
                             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                        }
+                        },
                     ],
                     def: {
                         params: [],
@@ -1810,7 +1817,7 @@ const _throttle = require('lodash/throttle');
                         INDEX: 0,
                     },
                     events: {},
-                    func: function(sprite, script) {
+                    func: function (sprite, script) {
                         return script.getField('INDEX');
                     },
                     syntax: {
@@ -1842,7 +1849,7 @@ const _throttle = require('lodash/throttle');
                             },
                         ],
                     },
-                },                
+                },
                 nemolite_dropdown_coordinate_acceleration: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1862,7 +1869,7 @@ const _throttle = require('lodash/throttle');
                             fontSize: 11,
                             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                        }
+                        },
                     ],
                     def: {
                         params: [],
@@ -1871,7 +1878,7 @@ const _throttle = require('lodash/throttle');
                         INDEX: 0,
                     },
                     events: {},
-                    func: function(sprite, script) {
+                    func: function (sprite, script) {
                         return script.getField('INDEX');
                     },
                     syntax: {
@@ -1947,7 +1954,7 @@ const _throttle = require('lodash/throttle');
                             value: 0,
                             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                        }
+                        },
                     ],
                     def: {
                         params: [],
@@ -1956,9 +1963,9 @@ const _throttle = require('lodash/throttle');
                         INDEX: 0,
                     },
                     events: {},
-                    func: function(sprite, script) {
+                    func: function (sprite, script) {
                         return script.getField('INDEX');
-                    },                    
+                    },
                     syntax: {
                         js: [],
                         py: [
@@ -2032,7 +2039,7 @@ const _throttle = require('lodash/throttle');
                             fontSize: 11,
                             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                        }
+                        },
                     ],
                     def: {
                         params: [],
@@ -2041,7 +2048,7 @@ const _throttle = require('lodash/throttle');
                         INDEX: 0,
                     },
                     events: {},
-                    func: function(sprite, script) {
+                    func: function (sprite, script) {
                         return script.getField('INDEX');
                     },
                     syntax: {
@@ -2091,7 +2098,7 @@ const _throttle = require('lodash/throttle');
                             fontSize: 11,
                             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                        }
+                        },
                     ],
                     def: {
                         params: [],
@@ -2100,7 +2107,7 @@ const _throttle = require('lodash/throttle');
                         INDEX: 0,
                     },
                     events: {},
-                    func: function(sprite, script) {
+                    func: function (sprite, script) {
                         return script.getField('INDEX');
                     },
                     syntax: {
@@ -2114,7 +2121,11 @@ const _throttle = require('lodash/throttle');
                                         options: [
                                             [Lang.template.nemolite_item_do_re_mi_song, 0],
                                             [Lang.template.nemolite_item_an_island_baby, 1],
-                                            [Lang.template.nemolite_item_twinkle_twinkle_little_star, 2],
+                                            [
+                                                Lang.template
+                                                    .nemolite_item_twinkle_twinkle_little_star,
+                                                2,
+                                            ],
                                             [Lang.template.nemolite_item_spring_in_my_hometown, 3],
                                             [Lang.template.nemolite_item_for_elise, 4],
                                             [Lang.template.nemolite_item_celebrated_chop_waltz, 5],
@@ -2166,13 +2177,13 @@ const _throttle = require('lodash/throttle');
                                 [Lang.template.nemolite_item_ma, 21],
                                 [Lang.template.nemolite_item_mas, 22],
                                 [Lang.template.nemolite_item_mb, 23],
-                                [Lang.template.nemolite_item_hc, 24]
+                                [Lang.template.nemolite_item_hc, 24],
                             ],
                             value: 0,
                             fontSize: 11,
                             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                        }
+                        },
                     ],
                     def: {
                         params: [],
@@ -2181,7 +2192,7 @@ const _throttle = require('lodash/throttle');
                         INDEX: 0,
                     },
                     events: {},
-                    func: function(sprite, script) {
+                    func: function (sprite, script) {
                         return script.getField('INDEX');
                     },
                     syntax: {
@@ -2217,7 +2228,7 @@ const _throttle = require('lodash/throttle');
                                             [Lang.template.nemolite_item_ma, 21],
                                             [Lang.template.nemolite_item_mas, 22],
                                             [Lang.template.nemolite_item_mb, 23],
-                                            [Lang.template.nemolite_item_hc, 24]
+                                            [Lang.template.nemolite_item_hc, 24],
                                         ],
                                         value: 0,
                                         fontSize: 11,
@@ -2230,7 +2241,7 @@ const _throttle = require('lodash/throttle');
                             },
                         ],
                     },
-                },                
+                },
                 nemolite_dropdown_extension_sensor: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2256,7 +2267,7 @@ const _throttle = require('lodash/throttle');
                             fontSize: 11,
                             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                        }
+                        },
                     ],
                     def: {
                         params: [null],
@@ -2265,7 +2276,7 @@ const _throttle = require('lodash/throttle');
                         INDEX: 0,
                     },
                     events: {},
-                    func: function(sprite, script) {
+                    func: function (sprite, script) {
                         return script.getField('INDEX');
                     },
                     syntax: {
@@ -2300,7 +2311,7 @@ const _throttle = require('lodash/throttle');
                         ],
                     },
                 },
-                
+
                 nemolite_dropdown_sensor_mode: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2320,7 +2331,7 @@ const _throttle = require('lodash/throttle');
                             fontSize: 11,
                             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                        }
+                        },
                     ],
                     def: {
                         params: [null],
@@ -2329,7 +2340,7 @@ const _throttle = require('lodash/throttle');
                         INDEX: 0,
                     },
                     events: {},
-                    func: function(sprite, script) {
+                    func: function (sprite, script) {
                         return script.getField('INDEX');
                     },
                     syntax: {
@@ -2377,7 +2388,7 @@ const _throttle = require('lodash/throttle');
                             fontSize: 11,
                             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                        }
+                        },
                     ],
                     def: {
                         params: [null],
@@ -2386,7 +2397,7 @@ const _throttle = require('lodash/throttle');
                         INDEX: 0,
                     },
                     events: {},
-                    func: function(sprite, script) {
+                    func: function (sprite, script) {
                         return script.getField('INDEX');
                     },
                     syntax: {
@@ -2436,7 +2447,7 @@ const _throttle = require('lodash/throttle');
                             fontSize: 11,
                             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                        }
+                        },
                     ],
                     def: {
                         params: [],
@@ -2445,7 +2456,7 @@ const _throttle = require('lodash/throttle');
                         INDEX: 0,
                     },
                     events: {},
-                    func: function(sprite, script) {
+                    func: function (sprite, script) {
                         return script.getField('INDEX');
                     },
                     syntax: {
@@ -2475,7 +2486,7 @@ const _throttle = require('lodash/throttle');
                             },
                         ],
                     },
-                },                
+                },
                 nemolite_dropdown_index_1_5: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2496,7 +2507,7 @@ const _throttle = require('lodash/throttle');
                             fontSize: 11,
                             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                        }
+                        },
                     ],
                     def: {
                         params: [],
@@ -2505,7 +2516,7 @@ const _throttle = require('lodash/throttle');
                         INDEX: 0,
                     },
                     events: {},
-                    func: function(sprite, script) {
+                    func: function (sprite, script) {
                         return script.getField('INDEX');
                     },
                     syntax: {
@@ -2564,7 +2575,7 @@ const _throttle = require('lodash/throttle');
                             fontSize: 11,
                             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                        }
+                        },
                     ],
                     def: {
                         params: [],
@@ -2573,7 +2584,7 @@ const _throttle = require('lodash/throttle');
                         INDEX: 0,
                     },
                     events: {},
-                    func: function(sprite, script) {
+                    func: function (sprite, script) {
                         return script.getField('INDEX');
                     },
                     syntax: {
@@ -2611,7 +2622,7 @@ const _throttle = require('lodash/throttle');
                             },
                         ],
                     },
-                },// endregion
+                }, // endregion
                 //========================================================================================
                 //region Input block
                 //========================================================================================
@@ -2628,7 +2639,7 @@ const _throttle = require('lodash/throttle');
                     def: {
                         type: 'nemolite_title_namo_input',
                     },
-                    class : 'nemolite_input',
+                    class: 'nemolite_input',
                     isNotFor: ['ProboNemoLite'],
                 },
                 // %1 %2 버튼 %3
@@ -2681,14 +2692,16 @@ const _throttle = require('lodash/throttle');
                     event: 'nemolite_event_button',
                     class: 'nemolite_input',
                     isNotFor: ['ProboNemoLite'],
-                    func: function(sprite, script) {
-                        const nameKey = Entry.ProboNemoLite.getButtonNameKey(script.getStringValue('INDEX'));
-                        const stateKey = Entry.ProboNemoLite.getButtonStateKey(script.getStringValue('STATE'));
+                    func: function (sprite, script) {
+                        const nameKey = Entry.ProboNemoLite.getButtonNameKey(
+                            script.getStringValue('INDEX')
+                        );
+                        const stateKey = Entry.ProboNemoLite.getButtonStateKey(
+                            script.getStringValue('STATE')
+                        );
                         const value = Entry.ProboNemoLite.getData.switch[nameKey][stateKey];
-                                        
-                        return (value === 1)
-                            ? script.callReturn()
-                            : this.die();
+
+                        return value === 1 ? script.callReturn() : this.die();
                     },
                     syntax: {
                         js: [],
@@ -2734,7 +2747,7 @@ const _throttle = require('lodash/throttle');
                             type: 'Block',
                             accept: 'string',
                             defaultType: 'number',
-                        }
+                        },
                     ],
                     events: {},
                     def: {
@@ -2753,13 +2766,13 @@ const _throttle = require('lodash/throttle');
                     event: 'nemolite_event_motion',
                     class: 'nemolite_input',
                     isNotFor: ['ProboNemoLite'],
-                    func: function(sprite, script) {
-                        const nameKey = Entry.ProboNemoLite.getMotionNameKey(script.getStringValue('INDEX'));
+                    func: function (sprite, script) {
+                        const nameKey = Entry.ProboNemoLite.getMotionNameKey(
+                            script.getStringValue('INDEX')
+                        );
                         const value = Entry.ProboNemoLite.getData.motion[nameKey];
 
-                        return (value === 1)
-                          ? script.callReturn()
-                          : this.die();
+                        return value === 1 ? script.callReturn() : this.die();
                     },
                     syntax: {
                         js: [],
@@ -2817,9 +2830,13 @@ const _throttle = require('lodash/throttle');
                     },
                     class: 'nemolite_input',
                     isNotFor: ['ProboNemoLite'],
-                    func: function(sprite, script) {
-                        const nameKey = Entry.ProboNemoLite.getButtonNameKey(script.getStringValue('INDEX'));
-                        const stateKey = Entry.ProboNemoLite.getButtonStateKey(script.getStringValue('STATE'));
+                    func: function (sprite, script) {
+                        const nameKey = Entry.ProboNemoLite.getButtonNameKey(
+                            script.getStringValue('INDEX')
+                        );
+                        const stateKey = Entry.ProboNemoLite.getButtonStateKey(
+                            script.getStringValue('STATE')
+                        );
                         const value = Entry.ProboNemoLite.getData.switch[nameKey][stateKey];
 
                         return value;
@@ -2873,8 +2890,10 @@ const _throttle = require('lodash/throttle');
                     },
                     class: 'nemolite_input',
                     isNotFor: ['ProboNemoLite'],
-                    func: function(sprite, script) {
-                        const nameKey = Entry.ProboNemoLite.getMotionNameKey(script.getStringValue('INDEX'));
+                    func: function (sprite, script) {
+                        const nameKey = Entry.ProboNemoLite.getMotionNameKey(
+                            script.getStringValue('INDEX')
+                        );
                         const value = Entry.ProboNemoLite.getData.motion[nameKey];
 
                         return value;
@@ -2920,11 +2939,11 @@ const _throttle = require('lodash/throttle');
                         params: [
                             {
                                 type: 'number',
-                                params: [ 0 ],
+                                params: [0],
                             },
                             {
                                 type: 'number',
-                                params: [ 0 ],
+                                params: [0],
                             },
                         ],
                         type: 'nemolite_is_led_state_value',
@@ -2935,12 +2954,12 @@ const _throttle = require('lodash/throttle');
                     },
                     class: 'nemolite_input',
                     isNotFor: ['ProboNemoLite'],
-                    func: function(sprite, script) {
+                    func: function (sprite, script) {
                         const x = script.getNumberValue('X');
                         const y = script.getNumberValue('Y');
                         const index = x * 7 + y + 1; // 1 ~ 49
                         let value = false;
-                        Entry.ProboNemoLite.setData.ledRead = index;                      
+                        Entry.ProboNemoLite.setData.ledRead = index;
 
                         return Entry.ProboNemoLite.getData.ledRead.state;
                     },
@@ -2993,8 +3012,10 @@ const _throttle = require('lodash/throttle');
                     },
                     class: 'nemolite_input',
                     isNotFor: ['ProboNemoLite'],
-                    func: function(sprite, script) {
-                        const nameKey = Entry.ProboNemoLite.getButtonNameKey(script.getStringValue('INDEX'));
+                    func: function (sprite, script) {
+                        const nameKey = Entry.ProboNemoLite.getButtonNameKey(
+                            script.getStringValue('INDEX')
+                        );
                         const value = Entry.ProboNemoLite.getData.switch[nameKey]['analog'];
                         return value;
                     },
@@ -3043,9 +3064,11 @@ const _throttle = require('lodash/throttle');
                     },
                     class: 'nemolite_input',
                     isNotFor: ['ProboNemoLite'],
-                    func: function(sprite, script) {
-                        const nameKey = Entry.ProboNemoLite.getAccelNameKey(script.getStringValue('INDEX'));
-                        const value = Entry.ProboNemoLite.getData.accel[nameKey];                        
+                    func: function (sprite, script) {
+                        const nameKey = Entry.ProboNemoLite.getAccelNameKey(
+                            script.getStringValue('INDEX')
+                        );
+                        const value = Entry.ProboNemoLite.getData.accel[nameKey];
                         return value;
                     },
                     syntax: {
@@ -3072,8 +3095,7 @@ const _throttle = require('lodash/throttle');
                     skeleton: 'basic_string_field',
                     statements: [],
                     template: Lang.template.nemolite_get_illuminance_value,
-                    params: [
-                    ],
+                    params: [],
                     events: {},
                     def: {
                         params: [],
@@ -3082,7 +3104,7 @@ const _throttle = require('lodash/throttle');
                     paramsKeyMap: {},
                     class: 'nemolite_input',
                     isNotFor: ['ProboNemoLite'],
-                    func: function(sprite, script) {
+                    func: function (sprite, script) {
                         const illuminance = Entry.ProboNemoLite.getData.illuminance;
                         return illuminance;
                     },
@@ -3137,23 +3159,23 @@ const _throttle = require('lodash/throttle');
                         params: [
                             {
                                 type: 'number',
-                                params: [ 0 ],
+                                params: [0],
                             },
                             {
                                 type: 'number',
-                                params: [ 0 ],
+                                params: [0],
                             },
                             {
                                 type: 'number',
-                                params: [ 0 ],
+                                params: [0],
                             },
                             {
                                 type: 'number',
-                                params: [ 0 ],
+                                params: [0],
                             },
                             {
                                 type: 'number',
-                                params: [ 0 ],
+                                params: [0],
                             },
                         ],
                         type: 'nemolite_get_convert_value',
@@ -3167,13 +3189,19 @@ const _throttle = require('lodash/throttle');
                     },
                     class: 'nemolite_input',
                     isNotFor: ['ProboNemoLite'],
-                    func: function(sprite, script) {
+                    func: function (sprite, script) {
                         const value = script.getNumberValue('VALUE');
                         const inMin = script.getNumberValue('IN_MIN');
                         const inMax = script.getNumberValue('IN_MAX');
                         const outMin = script.getNumberValue('OUT_MIN');
                         const outMax = script.getNumberValue('OUT_MAX');
-                        return Entry.ProboNemoLite.getConvertMap(value, inMin, inMax, outMin, outMax);
+                        return Entry.ProboNemoLite.getConvertMap(
+                            value,
+                            inMin,
+                            inMax,
+                            outMin,
+                            outMax
+                        );
                     },
                     syntax: {
                         js: [],
@@ -3206,7 +3234,7 @@ const _throttle = require('lodash/throttle');
                             },
                         ],
                     },
-                },//endregion
+                }, //endregion
                 //========================================================================================
                 //region Output block
                 //========================================================================================
@@ -3223,7 +3251,7 @@ const _throttle = require('lodash/throttle');
                     def: {
                         type: 'nemolite_title_namo_output',
                     },
-                    class : 'nemolite_output',
+                    class: 'nemolite_output',
                     isNotFor: ['ProboNemoLite'],
                 },
                 // LED 아이콘 %1 을 %2 속도로 출력 %3
@@ -3270,20 +3298,25 @@ const _throttle = require('lodash/throttle');
                     },
                     class: 'nemolite_output',
                     isNotFor: ['ProboNemoLite'],
-                    func: function(sprite, script) {
-                        const index = Entry.ProboNemoLite.getLedIconIndexValue(script.getStringValue('INDEX'));
-                        const speed = Entry.ProboNemoLite.getLedSpeedValue(script.getStringValue('SPEED'));
+                    func: function (sprite, script) {
+                        const index = Entry.ProboNemoLite.getLedIconIndexValue(
+                            script.getStringValue('INDEX')
+                        );
+                        const speed = Entry.ProboNemoLite.getLedSpeedValue(
+                            script.getStringValue('SPEED')
+                        );
 
-                        if ((Entry.ProboNemoLite.state.led === 0)
-                            || (Entry.ProboNemoLite.lastData.ledIcon.index !== index)
-                            || (Entry.ProboNemoLite.lastData.ledIcon.speed !== speed)
+                        if (
+                            Entry.ProboNemoLite.state.led === 0 ||
+                            Entry.ProboNemoLite.lastData.ledIcon.index !== index ||
+                            Entry.ProboNemoLite.lastData.ledIcon.speed !== speed
                         ) {
                             Entry.ProboNemoLite.setData.ledIcon.index = index;
                             Entry.ProboNemoLite.setData.ledIcon.speed = speed;
-                            
+
                             Entry.ProboNemoLite.state.led = 'i'.charCodeAt();
                         }
-                        
+
                         return script.callReturn();
                     },
                     syntax: {
@@ -3373,31 +3406,31 @@ const _throttle = require('lodash/throttle');
                             },
                             {
                                 type: 'number',
-                                params: [ 0 ],
+                                params: [0],
                             },
                             {
                                 type: 'number',
-                                params: [ 0 ],
+                                params: [0],
                             },
                             {
                                 type: 'number',
-                                params: [ 0 ],
+                                params: [0],
                             },
                             {
                                 type: 'number',
-                                params: [ 0 ],
+                                params: [0],
                             },
                             {
                                 type: 'number',
-                                params: [ 0 ],
+                                params: [0],
                             },
                             {
                                 type: 'number',
-                                params: [ 0 ],
+                                params: [0],
                             },
                             {
                                 type: 'number',
-                                params: [ 0 ],
+                                params: [0],
                             },
                             {
                                 type: 'nemolite_dropdown_index_0_5',
@@ -3419,8 +3452,10 @@ const _throttle = require('lodash/throttle');
                     },
                     class: 'nemolite_output',
                     isNotFor: ['ProboNemoLite'],
-                    func: function(sprite, script) {
-                        const index = Entry.ProboNemoLite.getLedColummKey(script.getStringValue('INDEX'));
+                    func: function (sprite, script) {
+                        const index = Entry.ProboNemoLite.getLedColummKey(
+                            script.getStringValue('INDEX')
+                        );
                         const value = [
                             script.getNumberValue('VALUE1'),
                             script.getNumberValue('VALUE2'),
@@ -3430,7 +3465,9 @@ const _throttle = require('lodash/throttle');
                             script.getNumberValue('VALUE6'),
                             script.getNumberValue('VALUE7'),
                         ];
-                        const speed = Entry.ProboNemoLite.getLedSpeedValue(script.getStringValue('SPEED'));
+                        const speed = Entry.ProboNemoLite.getLedSpeedValue(
+                            script.getStringValue('SPEED')
+                        );
                         let pixel = 0;
                         for (let i = 0; i < 7; i++) {
                             if (value[i] > 0) {
@@ -3440,15 +3477,16 @@ const _throttle = require('lodash/throttle');
                             }
                         }
 
-                        if (Entry.ProboNemoLite.state.led === 0
-                            || Entry.ProboNemoLite.lastData.ledColumm.pixel[index] !== pixel
-                            || Entry.ProboNemoLite.lastData.ledColumm.speed !== speed
+                        if (
+                            Entry.ProboNemoLite.state.led === 0 ||
+                            Entry.ProboNemoLite.lastData.ledColumm.pixel[index] !== pixel ||
+                            Entry.ProboNemoLite.lastData.ledColumm.speed !== speed
                         ) {
                             Entry.ProboNemoLite.state.led = 'c'.charCodeAt();
                             Entry.ProboNemoLite.setData.ledColumm.pixel[index] = pixel;
                             Entry.ProboNemoLite.setData.ledColumm.speed = speed;
                         }
-                        
+
                         return script.callReturn();
                     },
                     syntax: {
@@ -3528,7 +3566,7 @@ const _throttle = require('lodash/throttle');
                         params: [
                             {
                                 type: 'text',
-                                params: [ 'Hello' ],
+                                params: ['Hello'],
                             },
                             {
                                 type: 'nemolite_dropdown_index_1_5',
@@ -3543,14 +3581,17 @@ const _throttle = require('lodash/throttle');
                     },
                     class: 'nemolite_output',
                     isNotFor: ['ProboNemoLite'],
-                    func: function(sprite, script) {
+                    func: function (sprite, script) {
                         const text = script.getStringValue('TEXT');
-                        const speed = Entry.ProboNemoLite.getLedSpeedValue(script.getStringValue('SPEED'));
+                        const speed = Entry.ProboNemoLite.getLedSpeedValue(
+                            script.getStringValue('SPEED')
+                        );
 
-                        if (Entry.ProboNemoLite.state.led === 0
-                            || Entry.ProboNemoLite.lastData.ledText.text !== text
-                            || Entry.ProboNemoLite.lastData.ledText.speed !== speed
-                        ) {                      
+                        if (
+                            Entry.ProboNemoLite.state.led === 0 ||
+                            Entry.ProboNemoLite.lastData.ledText.text !== text ||
+                            Entry.ProboNemoLite.lastData.ledText.speed !== speed
+                        ) {
                             Entry.ProboNemoLite.state.led = 't'.charCodeAt();
                             Entry.ProboNemoLite.setData.ledText.text = text;
                             Entry.ProboNemoLite.setData.ledText.speed = speed;
@@ -3577,7 +3618,7 @@ const _throttle = require('lodash/throttle');
                         ],
                     },
                 },
-                
+
                 nemolite_set_delete_all_led: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -3600,9 +3641,9 @@ const _throttle = require('lodash/throttle');
                     paramsKeyMap: {},
                     class: 'nemolite_output',
                     isNotFor: ['ProboNemoLite'],
-                    func: function(sprite, script) {
+                    func: function (sprite, script) {
                         Entry.ProboNemoLite.setData.ledClear = 1;
-                        
+
                         return script.callReturn();
                     },
                     syntax: {
@@ -3650,11 +3691,11 @@ const _throttle = require('lodash/throttle');
                         params: [
                             {
                                 type: 'number',
-                                params: [ 0 ],
+                                params: [0],
                             },
                             {
                                 type: 'number',
-                                params: [ 0 ],
+                                params: [0],
                             },
                             {
                                 type: 'nemolite_dropdown_switch',
@@ -3670,13 +3711,15 @@ const _throttle = require('lodash/throttle');
                     },
                     class: 'nemolite_output',
                     isNotFor: ['ProboNemoLite'],
-                    func: function(sprite, script) {                        
+                    func: function (sprite, script) {
                         const x = script.getNumberValue('X');
                         const y = script.getNumberValue('Y');
 
-                        if ((0 <= x && x <= 6) && (0 <= y && y <= 6)) {
-                            const index = x * 7 + y + 1;  // 1 ~ 49
-                            const state = Entry.ProboNemoLite.getSwitchValue(script.getNumberValue('STATE'));
+                        if (0 <= x && x <= 6 && 0 <= y && y <= 6) {
+                            const index = x * 7 + y + 1; // 1 ~ 49
+                            const state = Entry.ProboNemoLite.getSwitchValue(
+                                script.getNumberValue('STATE')
+                            );
 
                             Entry.ProboNemoLite.setData.ledPixel.state = state;
                             Entry.ProboNemoLite.setData.ledPixel.index = index;
@@ -3741,15 +3784,17 @@ const _throttle = require('lodash/throttle');
                     },
                     class: 'nemolite_output',
                     isNotFor: ['ProboNemoLite'],
-                    func: function(sprite, script) {
-                        const title = Entry.ProboNemoLite.getMelodyKey(script.getNumberValue('TITLE'));
-                        
+                    func: function (sprite, script) {
+                        const title = Entry.ProboNemoLite.getMelodyKey(
+                            script.getNumberValue('TITLE')
+                        );
+
                         if (Entry.ProboNemoLite.state.sound === 0) {
                             Entry.ProboNemoLite.state.sound = 'm'.charCodeAt();
                             Entry.ProboNemoLite.setData.melody.play = 1;
                             Entry.ProboNemoLite.setData.melody.title = title;
                         }
-                        
+
                         return script.callReturn();
                     },
                     syntax: {
@@ -3802,23 +3847,32 @@ const _throttle = require('lodash/throttle');
                     },
                     class: 'nemolite_output',
                     isNotFor: ['ProboNemoLite'],
-                    func: function(sprite, script) {
-                        const title = Entry.ProboNemoLite.getMelodyKey(script.getNumberValue('TITLE'));
+                    func: function (sprite, script) {
+                        const title = Entry.ProboNemoLite.getMelodyKey(
+                            script.getNumberValue('TITLE')
+                        );
                         let flag = false;
-                        const startCode = function() {                            
+                        const startCode = function () {
                             if (Entry.ProboNemoLite.state.sound === 0) {
                                 Entry.ProboNemoLite.state.soundBlockId = script.executor.id;
                                 Entry.ProboNemoLite.state.sound = 'm'.charCodeAt();
                                 Entry.ProboNemoLite.setData.melody.play = 1;
                                 Entry.ProboNemoLite.setData.melody.title = title;
                             }
-                        }                        
-                        
-                        if ((Entry.ProboNemoLite.state.soundBlockId === script.executor.id) && (Entry.ProboNemoLite.state.sound === 0)) {
+                        };
+
+                        if (
+                            Entry.ProboNemoLite.state.soundBlockId === script.executor.id &&
+                            Entry.ProboNemoLite.state.sound === 0
+                        ) {
                             flag = true;
                         }
 
-                        return Entry.ProboNemoLite.delayCallReturnUsingFlag(script, startCode, flag);
+                        return Entry.ProboNemoLite.delayCallReturnUsingFlag(
+                            script,
+                            startCode,
+                            flag
+                        );
                     },
                     syntax: {
                         js: [],
@@ -3834,7 +3888,7 @@ const _throttle = require('lodash/throttle');
                             },
                         ],
                     },
-                },                
+                },
                 // %1 음을 %2 재생하기 %3
                 nemolite_set_play_note: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -3870,9 +3924,11 @@ const _throttle = require('lodash/throttle');
                     },
                     class: 'nemolite_output',
                     isNotFor: ['ProboNemoLite'],
-                    func: function(sprite, script) {
-                        const pitch = Entry.ProboNemoLite.getPitchKey(script.getNumberValue('PITCH'));
-                        
+                    func: function (sprite, script) {
+                        const pitch = Entry.ProboNemoLite.getPitchKey(
+                            script.getNumberValue('PITCH')
+                        );
+
                         Entry.ProboNemoLite.state.note = 1;
                         Entry.ProboNemoLite.setData.note.play = 1;
                         Entry.ProboNemoLite.setData.note.pitch = pitch;
@@ -3939,24 +3995,31 @@ const _throttle = require('lodash/throttle');
                     },
                     class: 'nemolite_output',
                     isNotFor: ['ProboNemoLite'],
-                    func: function(sprite, script) {
-                        const pitch = Entry.ProboNemoLite.getPitchKey(script.getNumberValue('PITCH'));
+                    func: function (sprite, script) {
+                        const pitch = Entry.ProboNemoLite.getPitchKey(
+                            script.getNumberValue('PITCH')
+                        );
                         const time = script.getNumberValue('TIME') * 1000;
-                        const startCode = function() {
+                        const startCode = function () {
                             if (Entry.ProboNemoLite.state.note === 0) {
                                 Entry.ProboNemoLite.state.noteBlockId = script.executor.id;
                                 Entry.ProboNemoLite.state.note = 1;
                                 Entry.ProboNemoLite.setData.note.play = 1;
                                 Entry.ProboNemoLite.setData.note.pitch = pitch;
                             }
-                        }
-                        const stopCode = function() {
+                        };
+                        const stopCode = function () {
                             if (Entry.ProboNemoLite.state.noteBlockId === script.executor.id) {
                                 Entry.ProboNemoLite.state.note = 0;
                             }
-                        }
+                        };
 
-                        return Entry.ProboNemoLite.delayCallReturnUsingTime(script, time, startCode, stopCode);
+                        return Entry.ProboNemoLite.delayCallReturnUsingTime(
+                            script,
+                            time,
+                            startCode,
+                            stopCode
+                        );
                     },
                     syntax: {
                         js: [],
@@ -4000,7 +4063,7 @@ const _throttle = require('lodash/throttle');
                     paramsKeyMap: {},
                     class: 'nemolite_output',
                     isNotFor: ['ProboNemoLite'],
-                    func: function(sprite, script) {
+                    func: function (sprite, script) {
                         Entry.ProboNemoLite.state.sound = 'm'.charCodeAt();
                         Entry.ProboNemoLite.setData.melody.play = 1;
                         Entry.ProboNemoLite.setData.melody.title = 0;
@@ -4037,7 +4100,7 @@ const _throttle = require('lodash/throttle');
                     def: {
                         type: 'nemolite_title_namo_extension',
                     },
-                    class : 'nemolite_extension',
+                    class: 'nemolite_extension',
                     isNotFor: ['ProboNemoLite'],
                 },
                 nemolite_ext_set_extension: {
@@ -4074,8 +4137,10 @@ const _throttle = require('lodash/throttle');
                     },
                     class: 'nemolite_extension',
                     isNotFor: ['ProboNemoLite'],
-                    func: function(sprite, script) {
-                        const type = Entry.ProboNemoLite.getExtensionKey(script.getStringValue('TYPE'));   
+                    func: function (sprite, script) {
+                        const type = Entry.ProboNemoLite.getExtensionKey(
+                            script.getStringValue('TYPE')
+                        );
                         Entry.ProboNemoLite.setData.extension = type;
                         return script.callReturn();
                     },
@@ -4110,7 +4175,7 @@ const _throttle = require('lodash/throttle');
                     paramsKeyMap: {},
                     class: 'nemolite_extension',
                     isNotFor: ['ProboNemoLite'],
-                    func: function(sprite, script) {
+                    func: function (sprite, script) {
                         const value = Entry.ProboNemoLite.getData.extension.analog;
                         return value;
                     },
@@ -4159,7 +4224,7 @@ const _throttle = require('lodash/throttle');
                     },
                     class: 'nemolite_extension',
                     isNotFor: ['ProboNemoLite'],
-                    func: function(sprite, script) {
+                    func: function (sprite, script) {
                         const value = script.getNumberValue('VALUE');
                         const analog = Entry.ProboNemoLite.getData.extension.analog;
                         const count = Entry.ProboNemoLite.state.extCount;
@@ -4201,7 +4266,7 @@ const _throttle = require('lodash/throttle');
                             {
                                 type: 'nemolite_dropdown_button_state_question',
                             },
-                            null
+                            null,
                         ],
                         type: 'nemolite_ext_is_extension_state',
                     },
@@ -4210,8 +4275,10 @@ const _throttle = require('lodash/throttle');
                     },
                     class: 'nemolite_extension',
                     isNotFor: ['ProboNemoLite'],
-                    func: function(sprite, script) {
-                        const stateKey = Entry.ProboNemoLite.getButtonStateKey(script.getStringValue('STATE'));
+                    func: function (sprite, script) {
+                        const stateKey = Entry.ProboNemoLite.getButtonStateKey(
+                            script.getStringValue('STATE')
+                        );
                         const value = Entry.ProboNemoLite.getData.extension[stateKey];
                         return value;
                     },
@@ -4258,11 +4325,13 @@ const _throttle = require('lodash/throttle');
                     },
                     class: 'nemolite_extension',
                     isNotFor: ['ProboNemoLite'],
-                    func: function(sprite, script) {
-                        const modeKey = Entry.ProboNemoLite.getSensorModeKey(script.getStringValue('TYPE'));
+                    func: function (sprite, script) {
+                        const modeKey = Entry.ProboNemoLite.getSensorModeKey(
+                            script.getStringValue('TYPE')
+                        );
                         const value = Entry.ProboNemoLite.extension[modeKey];
                         return value;
-                    },                  
+                    },
                     syntax: {
                         js: [],
                         py: [
@@ -4307,14 +4376,13 @@ const _throttle = require('lodash/throttle');
                     },
                     class: 'nemolite_extension',
                     isNotFor: ['ProboNemoLite'],
-                    func: function(sprite, script) {                        
+                    func: function (sprite, script) {
                         const value = script.getNumberValue('VALUE');
                         const analog = Entry.ProboNemoLite.getData.compass;
                         const count = Entry.ProboNemoLite.compass.absolutTurnCount;
                         Entry.ProboNemoLite.compass.bias = value - (analog + count * 255);
                         return script.callReturn();
-
-                    },                
+                    },
                     syntax: {
                         js: [],
                         py: [
@@ -4329,7 +4397,7 @@ const _throttle = require('lodash/throttle');
                             },
                         ],
                     },
-                },                
+                },
                 nemolite_ext_get_compass_analog_value: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -4346,7 +4414,7 @@ const _throttle = require('lodash/throttle');
                     paramsKeyMap: {},
                     class: 'nemolite_extension',
                     isNotFor: ['ProboNemoLite'],
-                    func: function(sprite, script) {                        
+                    func: function (sprite, script) {
                         const value = Entry.ProboNemoLite.getData.compass;
                         return value;
                     },
@@ -4388,8 +4456,10 @@ const _throttle = require('lodash/throttle');
                     },
                     class: 'nemolite_extension',
                     isNotFor: ['ProboNemoLite'],
-                    func: function(sprite, script) {                        
-                        const modeKey = Entry.ProboNemoLite.getSensorModeKey(script.getStringValue('TYPE'));
+                    func: function (sprite, script) {
+                        const modeKey = Entry.ProboNemoLite.getSensorModeKey(
+                            script.getStringValue('TYPE')
+                        );
                         const value = Entry.ProboNemoLite.compass[modeKey];
                         return value;
                     },
@@ -4407,7 +4477,7 @@ const _throttle = require('lodash/throttle');
                             },
                         ],
                     },
-                },        
+                },
                 memolite_ext_is_compass_direction: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -4420,7 +4490,8 @@ const _throttle = require('lodash/throttle');
                             type: 'Block',
                             accept: 'string',
                             defaultType: 'number',
-                        },],
+                        },
+                    ],
                     events: {},
                     def: {
                         params: [
@@ -4435,10 +4506,12 @@ const _throttle = require('lodash/throttle');
                     },
                     class: 'nemolite_extension',
                     isNotFor: ['ProboNemoLite'],
-                    func: function(sprite, script) {
-                        const key = Entry.ProboNemoLite.getDirectionKey(script.getStringValue('DIRECTION'));
+                    func: function (sprite, script) {
+                        const key = Entry.ProboNemoLite.getDirectionKey(
+                            script.getStringValue('DIRECTION')
+                        );
                         const value = Entry.ProboNemoLite.compass.direction;
-                        return (value === key);
+                        return value === key;
                     },
                     syntax: {
                         js: [],
@@ -4454,7 +4527,7 @@ const _throttle = require('lodash/throttle');
                             },
                         ],
                     },
-                },                
+                },
                 //endregion
             }; // getBlock() return;
         }
