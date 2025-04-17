@@ -89,6 +89,13 @@ Entry.elio.setLanguage = function() {
                 'elio_distance_value': '거리',
                 'elio_line1_value': '라인1',
                 'elio_line2_value': '라인2',
+				
+				'elio_temperature_value'		: '온도',
+				'elio_humidity_value'			: '습도',
+				'elio_water_value'			: '수분'
+
+				
+				
             },
         },
         en: {
@@ -112,6 +119,11 @@ Entry.elio.setLanguage = function() {
                 'elio_distance_value': '거리',
                 'elio_line1_value': '라인1',
                 'elio_line2_value': '라인2',
+				
+				'elio_temperature_value'		: '온도',
+				'elio_humidity_value'			: '습도',
+				'elio_water_value'			: '수분'
+
             },
         },
     };
@@ -137,6 +149,10 @@ Entry.elio.blockMenuBlocks = [
     'elio_distance_value',
     'elio_line1_value',
     'elio_line2_value',
+			
+	'elio_temperature_value',
+	'elio_humidity_value',
+	'elio_water_value'
 
 
 ];
@@ -1257,6 +1273,84 @@ Entry.elio.getBlocks = function() {
                 return pd['LINE2'];
             },
         },
+		
+		elio_temperature_value: {
+			color: '#00CFCA',
+			outerLine: '#04B5B0',
+			skeleton: 'basic_string_field',
+			fontColor: '#fff',
+			params: [
+				{
+					type: 'TextInput',
+					value: 0
+				}
+			],
+			def: {
+				type: 'elio_temperature_value'
+			},
+			paramsKeyMap: {
+				VALUE: 0
+			},
+			class: 'elio',
+			isNotFor: ['elio'],
+			func: function (sprite, script) {
+					//var port = Entry.elio.getDC(script.getStringField('VALUE', script));
+					var pd = Entry.hw.portData;
+					return pd["TEMPERATURE"];
+			}
+		},
+		
+		elio_humidity_value: {
+			color: '#00CFCA',
+			outerLine: '#04B5B0',
+			skeleton: 'basic_string_field',
+			fontColor: '#fff',
+			params: [
+				{
+					type: 'TextInput',
+					value: 0
+				}
+			],
+			def: {
+				type: 'elio_humidity_value'
+			},
+			paramsKeyMap: {
+				VALUE: 0
+			},
+			class: 'elio',
+			isNotFor: ['elio'],
+			func: function (sprite, script) {
+					//var port = Entry.elio.getDC(script.getStringField('VALUE', script));
+					var pd = Entry.hw.portData;
+					return pd["HUMIDITY"];
+			}
+		},
+		
+		elio_water_value: {
+			color: '#00CFCA',
+			outerLine: '#04B5B0',
+			skeleton: 'basic_string_field',
+			fontColor: '#fff',
+			params: [
+				{
+					type: 'TextInput',
+					value: 0
+				}
+			],
+			def: {
+				type: 'elio_water_value'
+			},
+			paramsKeyMap: {
+				VALUE: 0
+			},
+			class: 'elio',
+			isNotFor: ['elio'],
+			func: function (sprite, script) {
+					//var port = Entry.elio.getDC(script.getStringField('VALUE', script));
+					var pd = Entry.hw.portData;
+					return pd["WATER"];
+			}
+		},		
     };
 };
 
