@@ -1,0 +1,9 @@
+{
+    "name": "wizwingcontrollerlite",
+    "version": "1.0.0",
+    "type": "hardware",
+    "title": "위즈윙 코딩드론 R4 조종기",
+    "description": "wizwing",
+    "imageName": "wizwingcontrollerlite",
+    "moduleId": "69.1"
+}
