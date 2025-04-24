@@ -805,8 +805,8 @@ module.exports = {
                     js: [],
                     py: [],
                 },
+                wikiClass: 'ai_cluster',
             },
-            wikiClass: 'ai_cluster',
         };
     },
 };
