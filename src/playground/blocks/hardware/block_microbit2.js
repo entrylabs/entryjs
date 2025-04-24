@@ -375,7 +375,7 @@ Entry.Microbit2 = new (class Microbit2 {
                     microbit2_get_led: 'LED의 X: %1 Y: %2 밝기 값',
                     microbit2_show_preset_image: 'LED에 %1 모양 나타내기 %2',
                     microbit2_show_custom_image: 'LED %1 밝히기 %2',
-                    microbit2_show_string: 'LED에 %1 을(를) 나타내기 %2',
+                    microbit2_show_string: 'LED에 %1 을(를) 밝히기 %2',
                     microbit2_reset_screen: 'LED 모두 %1 %2',
                     microbit2_radio_toggle: '라디오 기능 %1 %2',
                     microbit2_radio_setting: '라디오 채널을 %1 (으)로 바꾸기 %2',
