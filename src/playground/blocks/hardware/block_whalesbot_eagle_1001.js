@@ -58,11 +58,12 @@ Entry.WhalesbotEagle1001.setLanguage = function () {
                 whalesbot_eagle_1001_openning_3d_simulator: '3D 시뮬레이터를 엽니 다',
                 whalesbot_eagle_1001_clean: '삭제',
                 whalesbot_eagle_1001_restart: '재시작',
+                whalesbot_eagle_1001_get_status: '상태 가져오기',
                 whalesbot_eagle_1001_entering_pitch_mode: '준비모드 시작하기',
                 whalesbot_eagle_1001_exit_pitch_mode: '준비모드 끝내기',
                 whalesbot_eagle_1001_automatic_take_off_height: '자동 이륙 높이 %1 cm',
                 whalesbot_eagle_1001_automatic_take_off_altitude_speed_offset: '자동 이륙 고도 %1 cm 속도 %2 X 오프셋 %3 도 Y 오프셋 %4 도 으로 이동하기',
-                whalesbot_eagle_1001_automatic_landing: '드로착륙',
+                whalesbot_eagle_1001_automatic_landing: '드론착륙',
                 whalesbot_eagle_1001_automatic_descent_speed_offset: '자동 낙하 속도 %1 X 오프셋 %2 도 Y 오프셋 %3 도',
                 whalesbot_eagle_1001_set_the_flight_speed: '설정된 비행 속도는 %1 cm/s',
                 whalesbot_eagle_1001_get_setting_speed: '설정 속도 가져오기',
@@ -76,7 +77,7 @@ Entry.WhalesbotEagle1001.setLanguage = function () {
                 whalesbot_eagle_1001_turn_right: '오른쪽으로 회전 %1 °',
                 whalesbot_eagle_1001_fly_in_the_specified_direction: '속도 %1 , 방향 %2 으로이동하기',
                 whalesbot_eagle_1001_flight_designated: '지정된 거리를 비행합니다 x %1 cm y %2 cm z%3 cm 속도 %4 cm/s',
-                whalesbot_eagle_1001_set_the_four_channel_lever_quantity_of_remote_control: '리모컨 4개 채널 로드 설정 Pitch %1 Roll %2 액셀러레이터 %3 Yaw %4',
+                whalesbot_eagle_1001_set_the_four_channel_lever_quantity_of_remote_control: '리모컨 4개 채널 설정 Pitch %1 Roll %2 Throttle %3 Yaw %4',
                 whalesbot_eagle_1001_stop_moving_and_hover: '호버링기능',
                 whalesbot_eagle_1001_hover_at_specified_altitude: '지정된 높이에 서스펜션 %1 cm',
                 whalesbot_eagle_1001_emergency_stop: '긴급정지',
@@ -151,6 +152,7 @@ Entry.WhalesbotEagle1001.setLanguage = function () {
                 whalesbot_eagle_1001_openning_3d_simulator: 'Open 3D Simulator',
                 whalesbot_eagle_1001_clean: 'Clean',
                 whalesbot_eagle_1001_restart: 'Restart',
+                whalesbot_eagle_1001_get_status: 'Get Status',
                 whalesbot_eagle_1001_entering_pitch_mode: 'Entering Pitch Mode',
                 whalesbot_eagle_1001_exit_pitch_mode: 'Exit Pitch Mode',
                 whalesbot_eagle_1001_automatic_take_off_height: 'Automatic Take Off Height %1 cm',
@@ -270,6 +272,7 @@ Entry.WhalesbotEagle1001.blockMenuBlocks = [
     'whalesbot_eagle_1001_execute_script',
     'whalesbot_eagle_1001_clean',
     'whalesbot_eagle_1001_restart',
+    'whalesbot_eagle_1001_get_status',
     // light & speaker blocks
     'whalesbot_eagle_1001_ls_debug_value',
     'whalesbot_eagle_1001_ls_display_symbol',
@@ -812,6 +815,38 @@ Entry.WhalesbotEagle1001.getBlocks = function () {
                 );
             },
             syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_clean()'] },
+        },
+        whalesbot_eagle_1001_get_status: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/moving_icon.svg',
+                    size: 11,
+                },
+            ],
+            events: {},
+            def: {
+                type: 'whalesbot_eagle_1001_get_status',
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            class: 'whalesbot_eagle_1001',
+            isNotFor: ['whalesbot_eagle_1001'],
+            func(sprite, script) {
+                _this.sendCmd('get_status');
+            },
+            syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_get_status()'] },
         },
         whalesbot_eagle_1001_entering_pitch_mode: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -2308,6 +2343,8 @@ Entry.WhalesbotEagle1001.getBlocks = function () {
             class: 'whalesbot_eagle_1001_ss',
             isNotFor: ['whalesbot_eagle_1001'],
             func(sprite, script) {
+                var posZ = Entry.hw.portData.state_position_z || '0';
+                return posZ;
             },
             syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ss_fly_state_POS_Z()'] },
         },
@@ -2327,6 +2364,8 @@ Entry.WhalesbotEagle1001.getBlocks = function () {
             class: 'whalesbot_eagle_1001_ss',
             isNotFor: ['whalesbot_eagle_1001'],
             func(sprite, script) {
+                var Laser = Entry.hw.portData.LaserTof || '0';
+                return Laser;
             },
             syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ss_fly_state_LASER()'] },
         },
@@ -2346,6 +2385,8 @@ Entry.WhalesbotEagle1001.getBlocks = function () {
             class: 'whalesbot_eagle_1001_ss',
             isNotFor: ['whalesbot_eagle_1001'],
             func(sprite, script) {
+                var Battery = Entry.hw.portData.Battery || '0';
+                return Battery;
             },
             syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ss_battery_voltage()'] },
         },
@@ -2365,6 +2406,8 @@ Entry.WhalesbotEagle1001.getBlocks = function () {
             class: 'whalesbot_eagle_1001_ss',
             isNotFor: ['whalesbot_eagle_1001'],
             func(sprite, script) {
+                var state = Entry.hw.portData.SPL06_temp || '0';
+                return state;
             },
             syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ss_fly_state_STATE_TEMP()'] },
         },
@@ -2400,6 +2443,14 @@ Entry.WhalesbotEagle1001.getBlocks = function () {
             class: 'whalesbot_eagle_1001_ss',
             isNotFor: ['whalesbot_eagle_1001'],
             func(sprite, script) {
+                var state = script.values[0];
+                if (state === 'STATE_PITCH') {
+                    return Entry.hw.portData.Pitch || '0';
+                } else if (state === 'STATE_ROLL') {
+                    return Entry.hw.portData.Roll || '0';
+                } else if (state === 'STATE_YAW') {
+                    return Entry.hw.portData.Yaw || '0';
+                }
             },
             syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ss_attitude_angle()'] },
         },
@@ -2433,6 +2484,14 @@ Entry.WhalesbotEagle1001.getBlocks = function () {
             class: 'whalesbot_eagle_1001_ss',
             isNotFor: ['whalesbot_eagle_1001'],
             func(sprite, script) {
+                var state = script.values[0];
+                if (state === 'GYPO_X') {
+                    return Entry.hw.portData.Gypo_x || '0';
+                } else if (state === 'GYPO_Y') {
+                    return Entry.hw.portData.Gypo_y || '0';
+                } else if (state === 'GYPO_Z') {
+                    return Entry.hw.portData.Gypo_z || '0';
+                }
             },
             syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ss_flight_angular_velocity()'] },
         },
@@ -2466,6 +2525,14 @@ Entry.WhalesbotEagle1001.getBlocks = function () {
             class: 'whalesbot_eagle_1001_ss',
             isNotFor: ['whalesbot_eagle_1001'],
             func(sprite, script) {
+                var state = script.values[0];
+                if (state === 'ACC_X') {
+                    return Entry.hw.portData.ACC_x || '0';
+                } else if (state === 'ACC_Y') {
+                    return Entry.hw.portData.ACC_y || '0';
+                } else if (state === 'ACC_Z') {
+                    return Entry.hw.portData.ACC_z || '0';
+                }
             },
             syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ss_flight_acceleration()'] },
         },
