@@ -249,13 +249,7 @@ module.exports = {
                             'PI',
                         ],
                         type: 'calc_const',
-                    },
-                    {
-                        params: [
-                            'E',
-                        ],
-                        type: 'calc_const',
-                    },
+                    }
                 ],
                 paramsKeyMap: {
                     CONSTNAME: 0
