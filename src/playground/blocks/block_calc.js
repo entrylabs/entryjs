@@ -212,6 +212,98 @@ module.exports = {
                     ],
                 },
             },
+            calc_const: {
+                color: EntryStatic.colorSet.block.default.CALC,
+                outerLine: EntryStatic.colorSet.block.darken.CALC,
+                skeleton: 'basic_string_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            ['π', 'PI'],
+                            ['e', 'E']
+                        ],
+                        value: 'PI',
+                        fontSize: 10,
+                        bgColor: EntryStatic.colorSet.block.darken.CALC,
+                    },
+                ],
+                template: '%1',
+                events: {},
+                def: {
+                    params: [
+                        'PI',
+                    ],
+                    type: 'calc_const',
+                },
+                pyHelpDef: {
+                    params: [
+                        'PI',
+                    ],
+                    type: 'calc_const',
+                },
+                defs: [
+                    {
+                        params: [
+                            'PI',
+                        ],
+                        type: 'calc_const',
+                    },
+                    {
+                        params: [
+                            'E',
+                        ],
+                        type: 'calc_const',
+                    },
+                ],
+                paramsKeyMap: {
+                    CONSTNAME: 0
+                },
+                class: 'calc',
+                isNotFor: [],
+                func(sprite, script) {
+                    const constname = script.getField('CONSTNAME', script);
+                    if (constname == 'PI') {
+                        return Math.PI;
+                    } else if (constname == 'E') {
+                        return Math.E;
+                    }
+                },
+                syntax: {
+                    js: [],
+                    py: [
+                        {
+                            syntax: 'math.%1',
+                            template: '%1',
+                            keyOption: 'calc_const',
+                            blockType: 'param',
+                            textParams: [
+                                {
+                                    type: 'Block',
+                                    accept: 'string',
+                                },
+                                {
+                                    type: 'Dropdown',
+                                    options: [
+                                        ['π', 'PI'],
+                                        ['e', 'E']
+                                    ],
+                                    value: 'PLUS',
+                                    fontSize: 11,
+                                    noArrow: false,
+                                    converter: Entry.block.converters.returnOperator,
+                                    paramType: 'operator',
+                                },
+                                {
+                                    type: 'Block',
+                                    accept: 'string',
+                                },
+                            ],
+                        },
+                    ],
+                },
+            },
             calc_rand: {
                 color: EntryStatic.colorSet.block.default.CALC,
                 outerLine: EntryStatic.colorSet.block.darken.CALC,
@@ -708,6 +800,7 @@ module.exports = {
                     {
                         type: 'Dropdown',
                         options: [
+                            ['(-)', 'neg'],
                             [Lang.Blocks.CALC_calc_operation_square, 'square'],
                             [Lang.Blocks.CALC_calc_operation_root, 'root'],
                             [Lang.Blocks.CALC_calc_operation_sin, 'sin'],
@@ -781,6 +874,9 @@ module.exports = {
 
                     let returnVal = 0;
                     switch (operator) {
+                        case 'neg':
+                            returnVal = -value;
+                            break;
                         case 'square':
                             returnVal = value * value;
                             break;
@@ -818,6 +914,21 @@ module.exports = {
                 syntax: {
                     js: [],
                     py: [
+                        {
+                            syntax: '(-%2)',
+                            template: '-%2',
+                            params: [null, null, null, 'neg'],
+                            blockType: 'param',
+                            textParams: [
+                                undefined,
+                                {
+                                    type: 'Block',
+                                    accept: 'string',
+                                },
+                                undefined,
+                                null,
+                            ],
+                        },
                         {
                             syntax: '(%2 ** 2)',
                             template: '%2 ** 2',
