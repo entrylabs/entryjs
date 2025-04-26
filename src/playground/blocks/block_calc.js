@@ -21,6 +21,7 @@ module.exports = {
                             ['-', 'MINUS'],
                             ['x', 'MULTI'],
                             ['/', 'DIVIDE'],
+                            ['^', 'POWER']
                         ],
                         value: 'PLUS',
                         fontSize: 10,
@@ -119,6 +120,20 @@ module.exports = {
                         ],
                         type: 'calc_basic',
                     },
+                    {
+                        params: [
+                            {
+                                type: 'number',
+                                params: ['10'],
+                            },
+                            'POWER',
+                            {
+                                type: 'number',
+                                params: ['10'],
+                            },
+                        ],
+                        type: 'calc_basic',
+                    },
                 ],
                 paramsKeyMap: {
                     LEFTHAND: 0,
@@ -154,8 +169,10 @@ module.exports = {
                         return leftValue.minus(rightValue).toNumber();
                     } else if (operator === 'MULTI') {
                         return leftValue.times(rightValue).toNumber();
-                    } else {
+                    } else if (operator === 'DIVIDE') {
                         return leftValue.dividedBy(rightValue).toNumber();
+                    } else {
+                        return Math.pow(leftValue * 1, rightValue * 1) + ""
                     }
                 },
                 syntax: {
@@ -178,6 +195,7 @@ module.exports = {
                                         ['-', 'MINUS'],
                                         ['x', 'MULTI'],
                                         ['/', 'DIVIDE'],
+                                        ['^', 'POWER'],
                                     ],
                                     value: 'PLUS',
                                     fontSize: 11,
