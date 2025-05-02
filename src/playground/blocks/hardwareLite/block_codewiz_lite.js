@@ -1,6 +1,6 @@
 'use strict';
 
-(function() {
+(function () {
     Entry.CodeWizLite = new (class CodeWizLite {
         constructor() {
             this.id = '011201';
@@ -245,7 +245,7 @@
             this.HUSKY = {
                 CENT_X: 160,
                 CENT_Y: 120,
-                getDist: function(x, y) {
+                getDist: function (x, y) {
                     return Math.sqrt(Math.pow(this.CENT_X - x, 2) + Math.pow(this.CENT_Y - y, 2));
                 },
             };
@@ -385,11 +385,7 @@
             // }
             // return Entry.generateHash(6) + opcode;
             // Symbol을 쓰면 hw로 넘길수있나 -> 있으면 지금과 비교해서 속도는?
-            return (
-                Date.now()
-                    .toString()
-                    .substring(6) + opcode
-            );
+            return Date.now().toString().substring(6) + opcode;
         }
 
         // 코드위즈에 보낼 데이터를 만드는 함수입니다.
@@ -788,8 +784,10 @@
                         4.이미지 인식
                         5.사물 인식
                         6.사물 추적
-                        7.선 + 태그`,
-                        CodeWizLite_OzEye_readOzEye: `오즈아이가 인식한 결과를 주기적으로 보내줍니다.`,
+                        7.선 + 태그
+                        8.얼굴 인식
+                        9.숫자 인식`,
+                        Eye_readOzEye: `오즈아이가 인식한 결과를 주기적으로 보내줍니다.`,
                         CodeWizLite_OzEye_isLearnedOzEye: `입력한 ID 번호 데이터를 학습했다면 ‘참’으로 판단하여 알려줍니다.`,
                         CodeWizLite_OzEye_isContainOzEye: `입력한 ID 번호의 사각형 데이터가 인식된다면 ‘참’으로 판단하여 알려줍니다.
                             ▼을 눌러 화살표를 선택하면 화살표 데이터가 인식될 때 ‘참’으로 판단하여 알려줍니다.`,
@@ -954,7 +952,7 @@
                     },
                     isNotFor: ['CodeWizLite'],
                     class: 'CodeWizLite_default_sensor',
-                    func: function(sprite, script) {
+                    func: function (sprite, script) {
                         var sensor = script.getField('SENSOR', script);
                         var hw_sensorData = Entry.CodeWizLite.sensorData;
                         return hw_sensorData[sensor] ?? 0;
@@ -989,7 +987,7 @@
                     },
                     isNotFor: ['CodeWizLite'],
                     class: 'CodeWizLite_default_sensor',
-                    func: function(sprite, script) {
+                    func: function (sprite, script) {
                         var sensor = script.getField('GYRO_TYPE', script);
                         var hw_sensorData = Entry.CodeWizLite.sensorData;
                         return hw_sensorData[sensor] ?? 0;
@@ -1025,7 +1023,7 @@
                     },
                     isNotFor: ['CodeWizLite'],
                     class: 'CodeWizLite_default_sensor',
-                    func: function(sprite, script) {
+                    func: function (sprite, script) {
                         var sensor = script.getField('SWITCH', script);
                         var hw_sensorData = Entry.CodeWizLite.sensorData;
                         return hw_sensorData[sensor] ?? false;
@@ -1065,7 +1063,7 @@
                     },
                     isNotFor: ['CodeWizLite'],
                     class: 'CodeWizLite_default_sensor',
-                    func: function(sprite, script) {
+                    func: function (sprite, script) {
                         var sensor = script.getField('SWITCH', script);
                         var hw_sensorData = Entry.CodeWizLite.sensorData;
                         return hw_sensorData[sensor] ?? 0;
@@ -3606,6 +3604,8 @@
                                 ['5.사물 인식', '2'],
                                 ['6.사물 추적', '1'],
                                 ['7.선 + 태그', '7'],
+                                ['8.얼굴 인식', '0'],
+                                ['9.숫자 인식', '8'],
                             ],
                             value: '2',
                             fontSize: 11,

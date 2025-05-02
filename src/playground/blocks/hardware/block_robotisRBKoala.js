@@ -26,15 +26,7 @@ Entry.Robotis_rb_koala = {
         Entry.hw.sendQueue['setZero'] = null;
         Entry.Robotis_carCont.update();
         Entry.Robotis_carCont.setRobotisData([
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 21, 2, 20],
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 40, 2, 0],
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 66, 2, 0],
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 5200, 1, 0],
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 710, 2, 0],
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 19, 1, 1], // bypass 모드 켜기
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 4250, 1, 1], // huskylens 텍스트 지우기
-            [Entry.Robotis_rb.INSTRUCTION.BYPASS_WRITE, 64, 1, 0xFE, 0], // torque off
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 23, 1, 1], // auto report 모드 켜기
+            [Entry.Robotis_rb.INSTRUCTION.WRITE, 2100, 1, 2], // 값 2는 코알라 얼굴이 뜨도록(펌웨어는 v1.15.4부터)
         ]);
         Entry.Robotis_carCont.update();
     },
@@ -107,6 +99,7 @@ Entry.Robotis_rb_koala.blockMenuBlocks = [
     'robotis_RCar_icon_screen_animal_human',
     'robotis_RCar_icon_screen_object_tool',
     'robotis_RCar_icon_screen_vehicle_number',
+    'robotis_RCar_icon_screen_game_character',
     'robotis_RCar_text_screen',
     'robotis_RCar_text_screen_redraw',
     'robotis_RCar_pixel',
@@ -118,22 +111,22 @@ Entry.Robotis_rb_koala.blockMenuBlocks = [
     'robotis_RCar_cm_led_pattern',
 
     // AI 카메라 값 블록
-    'robotis_RCar_huskylens_connection_status',
-    'robotis_RCar_huskylens_if_detected',
+    'robotis_RCar_ai_camera_connection_status',
+    'robotis_RCar_ai_camera_if_detected',
 
-    'robotis_RCar_huskylens_block_value_closest_to_center',
-    'robotis_RCar_huskylens_arrow_value_closest_to_center',
-    'robotis_RCar_huskylens_number_of_learned_id',
-    'robotis_RCar_huskylens_block_value_of_id',
-    'robotis_RCar_huskylens_arrow_value_of_id',
+    'robotis_RCar_ai_camera_block_value_closest_to_center',
+    'robotis_RCar_ai_camera_arrow_value_closest_to_center',
+    'robotis_RCar_ai_camera_number_of_learned_id',
+    'robotis_RCar_ai_camera_block_value_of_id',
+    'robotis_RCar_ai_camera_arrow_value_of_id',
 
-    'robotis_RCar_huskylens_if_learned_id',
-    'robotis_RCar_huskylens_if_detected_id_type',
+    'robotis_RCar_ai_camera_if_learned_id',
+    'robotis_RCar_ai_camera_if_detected_id_type',
 
     // AI 카메라 제어
-    'robotis_RCar_huskylens_set_mode',
-    'robotis_RCar_huskylens_print_custom_text',
-    'robotis_RCar_huskylens_clear_custom_text',
+    'robotis_RCar_ai_camera_set_mode',
+    'robotis_RCar_ai_camera_print_custom_text',
+    'robotis_RCar_ai_camera_clear_custom_text',
 ];
 
 Entry.Robotis_rb_koala.setLanguage = function() {
@@ -188,6 +181,7 @@ Entry.Robotis_rb_koala.setLanguage = function() {
                 robotis_RCar_icon_screen_animal_human: "화면에 [동물/사람]중 %1 (%2, %3)위치에 %4 크기로 표시 %5",
                 robotis_RCar_icon_screen_object_tool: "화면에 [물건/도구]중 %1 (%2, %3)위치에 %4 크기로 표시 %5",
                 robotis_RCar_icon_screen_vehicle_number: "화면에 [탈것/숫자]중 %1 (%2, %3)위치에 %4 크기로 표시 %5",
+                robotis_RCar_icon_screen_game_character: "화면에 [게임/캐릭터]중 %1를 (%2, %3)위치에 %4 크기로 표시 %5",
                 robotis_RCar_text_screen: "화면에 %1 (%2, %3)위치에 %4 로 %5으로 표시 %6",
                 robotis_RCar_text_screen_redraw: "화면에 %1 (%2, %3)위치에 %4으로 새로 표시 %5",
                 robotis_RCar_pixel: "화면 (%1, %2)위치에 %3 색 점 표시 %4",
@@ -200,22 +194,22 @@ Entry.Robotis_rb_koala.setLanguage = function() {
                 robotis_RCar_cm_led_pattern: "LED %1 %2로 깜박이기 %3",
                 
                 // AI Camera 값 블록
-                robotis_RCar_huskylens_connection_status: "AI 카메라 %1이면",
-                robotis_RCar_huskylens_if_detected: "AI 카메라 %1 이/가 표시되면",
+                robotis_RCar_ai_camera_connection_status: "AI 카메라 %1이면",
+                robotis_RCar_ai_camera_if_detected: "AI 카메라 %1 이/가 표시되면",
 
-                robotis_RCar_huskylens_block_value_closest_to_center: "AI 카메라 화면 중앙과 가장 가까운 사각형의 %1",
-                robotis_RCar_huskylens_arrow_value_closest_to_center: "AI 카메라 화면 중앙과 가장 가까운 화살표의 %1",
-                robotis_RCar_huskylens_number_of_learned_id: "AI 카메라 학습한 ID의 갯수",
-                robotis_RCar_huskylens_block_value_of_id: "AI 카메라 감지된 ID가 %1인 사각형의 %2",
-                robotis_RCar_huskylens_arrow_value_of_id: "AI 카메라 감지된 ID가 %1인 화살표의 %2",
+                robotis_RCar_ai_camera_block_value_closest_to_center: "AI 카메라 화면 중앙과 가장 가까운 사각형의 %1",
+                robotis_RCar_ai_camera_arrow_value_closest_to_center: "AI 카메라 화면 중앙과 가장 가까운 화살표의 %1",
+                robotis_RCar_ai_camera_number_of_learned_id: "AI 카메라 학습한 ID의 갯수",
+                robotis_RCar_ai_camera_block_value_of_id: "AI 카메라 감지된 ID가 %1인 사각형의 %2",
+                robotis_RCar_ai_camera_arrow_value_of_id: "AI 카메라 감지된 ID가 %1인 화살표의 %2",
 
-                robotis_RCar_huskylens_if_learned_id: "AI 카메라 ID가 %1인 데이터를 학습하였으면",
-                robotis_RCar_huskylens_if_detected_id_type: "AI 카메라 ID가 %1인 %2데이터를 인식하였으면",
+                robotis_RCar_ai_camera_if_learned_id: "AI 카메라 ID가 %1인 데이터를 학습하였으면",
+                robotis_RCar_ai_camera_if_detected_id_type: "AI 카메라 ID가 %1인 %2데이터를 인식하였으면",
 
                 // AI 카메라 제어
-                robotis_RCar_huskylens_set_mode: "AI 카메라 모드를 %1(으)로 설정 %2",
-                robotis_RCar_huskylens_print_custom_text: "AI 카메라 화면 위치 (%1,%2)에 %3를 보여주기%4",
-                robotis_RCar_huskylens_clear_custom_text: "AI 카메라 화면의 글 지우기 %1",
+                robotis_RCar_ai_camera_set_mode: "AI 카메라 모드를 %1(으)로 설정 %2",
+                robotis_RCar_ai_camera_print_custom_text: "AI 카메라 화면 위치 (%1,%2)에 %3를 보여주기%4",
+                robotis_RCar_ai_camera_clear_custom_text: "AI 카메라 화면의 글 지우기 %1",
 
             },
             Helper: {
@@ -266,6 +260,7 @@ Entry.Robotis_rb_koala.setLanguage = function() {
                 robotis_RCar_icon_screen_animal_human: "화면에 [동물/사람]중 특정 아이콘을 표시할 위치와 크기를 설정\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120\n크기: 0 ~ 200",
                 robotis_RCar_icon_screen_object_tool: "화면에 [물건/도구]중 특정 아이콘을 표시할 위치와 크기를 설정\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120\n크기: 0 ~ 200",
                 robotis_RCar_icon_screen_vehicle_number: "화면에 [탈것/숫자]중 특정 아이콘을 표시할 위치와 크기를 설정\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120\n크기: 0 ~ 200",
+                robotis_RCar_icon_screen_game_character: "화면에 [게임/캐릭터]중 특정 아이콘을 표시할 위치와 크기를 설정\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120\n크기: 0 ~ 200",
                 robotis_RCar_text_screen: "화면에 지정한 문구를 표시할 위치와 폰트크기, 색상을 설정\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120",
                 robotis_RCar_text_screen_redraw: "화면에 지정한 문구를 새롭게(문구의 배경 지움) 표시할 위치와 색상을 설정\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120\n크기: 0 ~ 200",
                 robotis_RCar_pixel: "화면에 표시할 점의 위치와 색상을 설정\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120",
@@ -277,22 +272,22 @@ Entry.Robotis_rb_koala.setLanguage = function() {
                 robotis_RCar_cm_led_pattern: "제어기의 LED의 깜박임 패턴 설정",
                 
                 // AI Camera 값 블록
-                robotis_RCar_huskylens_connection_status: "AI 카메라가 연결된 상태이면 '참', 아니면 '거짓'으로 판단합니다.",
-                robotis_RCar_huskylens_if_detected: "AI 카메라의 LCD화면에 선택한 기호(사각형/화살표)가 표시되면 '참', 아니면 '거짓'으로 판단합니다.",
+                robotis_RCar_ai_camera_connection_status: "AI 카메라가 연결된 상태이면 '참', 아니면 '거짓'으로 판단합니다.",
+                robotis_RCar_ai_camera_if_detected: "AI 카메라의 LCD화면에 선택한 기호(사각형/화살표)가 표시되면 '참', 아니면 '거짓'으로 판단합니다.",
 
-                robotis_RCar_huskylens_block_value_closest_to_center: "AI 카메라 화면 중앙과 가장 가까운 사각형의 X좌표/Y좌표/너비/높이/학습ID",
-                robotis_RCar_huskylens_arrow_value_closest_to_center: "AI 카메라 화면 중앙과 가장 가까운 화살표의 시작점X좌표/시작점Y좌표/끝점X좌표/끝점Y좌표/학습ID",
-                robotis_RCar_huskylens_number_of_learned_id: "AI 카메라가 학습한 ID의 갯수",
-                robotis_RCar_huskylens_block_value_of_id: "AI 카메라가 감지한 사각형중 지정한 ID의 사각형의 X좌표/Y좌표/너비/높이",
-                robotis_RCar_huskylens_arrow_value_of_id: "AI 카메라가 감지한 화살표중 지정한 ID의 화살표의 시작점X좌표/시작점Y좌표/끝점X좌표/끝점Y좌표",
+                robotis_RCar_ai_camera_block_value_closest_to_center: "AI 카메라 화면 중앙과 가장 가까운 사각형의 X좌표/Y좌표/너비/높이/학습ID",
+                robotis_RCar_ai_camera_arrow_value_closest_to_center: "AI 카메라 화면 중앙과 가장 가까운 화살표의 시작점X좌표/시작점Y좌표/끝점X좌표/끝점Y좌표/학습ID",
+                robotis_RCar_ai_camera_number_of_learned_id: "AI 카메라가 학습한 ID의 갯수",
+                robotis_RCar_ai_camera_block_value_of_id: "AI 카메라가 감지한 사각형중 지정한 ID의 사각형의 X좌표/Y좌표/너비/높이",
+                robotis_RCar_ai_camera_arrow_value_of_id: "AI 카메라가 감지한 화살표중 지정한 ID의 화살표의 시작점X좌표/시작점Y좌표/끝점X좌표/끝점Y좌표",
 
-                robotis_RCar_huskylens_if_learned_id: "AI 카메라가 지정한 ID인 데이터를 학습하였으면 '참', 아니면 '거짓'으로 판단합니다.",
-                robotis_RCar_huskylens_if_detected_id_type: "AI 카메라가 지정한 ID인 지정한 데이터(사각형/화살표)를 학습하였으면 '참', 아니면 '거짓'으로 판단합니다.",
+                robotis_RCar_ai_camera_if_learned_id: "AI 카메라가 지정한 ID인 데이터를 학습하였으면 '참', 아니면 '거짓'으로 판단합니다.",
+                robotis_RCar_ai_camera_if_detected_id_type: "AI 카메라가 지정한 ID인 지정한 데이터(사각형/화살표)를 학습하였으면 '참', 아니면 '거짓'으로 판단합니다.",
 
                 // AI 카메라 제어
-                robotis_RCar_huskylens_set_mode: "AI 카메라의 모드를 설정",
-                robotis_RCar_huskylens_print_custom_text: "AI 카메라 화면의 지정한 위치에 지정한 문구 출력\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120",
-                robotis_RCar_huskylens_clear_custom_text: "AI 카메라 화면에 표시한 모든 문구 지우기",
+                robotis_RCar_ai_camera_set_mode: "AI 카메라의 모드를 설정",
+                robotis_RCar_ai_camera_print_custom_text: "AI 카메라 화면의 지정한 위치에 지정한 문구 출력\nX좌표: -160 ~ 160\nY좌표: -120 ~ 120",
+                robotis_RCar_ai_camera_clear_custom_text: "AI 카메라 화면에 표시한 모든 문구 지우기",
             },
             Blocks: {
                 robotis_red: "빨강",
@@ -436,6 +431,9 @@ Entry.Robotis_rb_koala.setLanguage = function() {
                 robotis_moveRG2: "앉기",
                 robotis_moveRG3: "발버둥",
                 robotis_moveRG4: "발들기",
+                robotis_fast: '빠른',
+                robotis_normal: '보통',
+                robotis_slow: '느린',
                 robotis_stop: "정지",
                 robotis_roll: "좌우 회전각 (roll)",
                 robotis_pitch: "앞뒤 회전각 (pitch)",
@@ -575,7 +573,7 @@ Entry.Robotis_rb_koala.setLanguage = function() {
                 robotis_icon_vehicle_number_11: "로켓",
                 robotis_icon_vehicle_number_12: "어선",
                 robotis_icon_vehicle_number_13: "여객선",
-                robotis_icon_vehicle_number_14: "잠수항(왼쪽)",
+                robotis_icon_vehicle_number_14: "잠수함(왼쪽)",
                 robotis_icon_vehicle_number_15: "잠수함(오른쪽)",
                 robotis_icon_vehicle_number_16: "비행기(왼쪽)",
                 robotis_icon_vehicle_number_17: "비행기(오른쪽)",
@@ -600,6 +598,50 @@ Entry.Robotis_rb_koala.setLanguage = function() {
                 robotis_icon_vehicle_number_36: "8",
                 robotis_icon_vehicle_number_37: "9",
                 robotis_icon_vehicle_number_38: "10",
+                robotis_icon_game_character_1: '알쥐(정면)',
+                robotis_icon_game_character_2: '알쥐(왼쪽)',
+                robotis_icon_game_character_3: '알쥐(오른쪽)',
+                robotis_icon_game_character_4: '알라(정면)',
+                robotis_icon_game_character_5: '알라(왼쪽))',
+                robotis_icon_game_character_6: '알라(오른쪽)',
+                robotis_icon_game_character_7: '유령',
+                robotis_icon_game_character_8: '괴물',
+                robotis_icon_game_character_9: '바이러스',
+                robotis_icon_game_character_10: '세균',
+                robotis_icon_game_character_11: '나는 알쥐(왼쪽)',
+                robotis_icon_game_character_12: '나는 알쥐(오른쪽)',
+                robotis_icon_game_character_13: '나는 알쥐(정면)',
+                robotis_icon_game_character_14: '메달',
+                robotis_icon_game_character_15: '돈(G)',
+                robotis_icon_game_character_16: '돈($)',
+                robotis_icon_game_character_17: '하트',
+                robotis_icon_game_character_18: '폭탄',
+                robotis_icon_game_character_19: '불',
+                robotis_icon_game_character_20: '구름1',
+                robotis_icon_game_character_21: '구름2',
+                robotis_icon_game_character_22: '포탄1',
+                robotis_icon_game_character_23: '포탄2',
+                robotis_icon_game_character_24: '대포(수평)',
+                robotis_icon_game_character_25: '대포(수직)',
+                robotis_icon_game_character_26: '레이저(수직)',
+                robotis_icon_game_character_27: '게이저(수평)',
+                robotis_icon_game_character_28: '화살(수평)',
+                robotis_icon_game_character_29: '화살(수직)',
+                robotis_icon_game_character_30: '미사일(U)',
+                robotis_icon_game_character_31: '미사일(D)',
+                robotis_icon_game_character_32: '미사일(L)',
+                robotis_icon_game_character_33: '미사일(R)',
+                robotis_icon_game_character_34: '낙하산',
+                robotis_icon_game_character_35: '폭발1',
+                robotis_icon_game_character_36: '폭발2',
+                robotis_icon_game_character_37: '조준경',
+                robotis_icon_game_character_38: '가위',
+                robotis_icon_game_character_39: '바위',
+                robotis_icon_game_character_40: '보',
+                robotis_icon_game_character_41: '걷는 사람1',
+                robotis_icon_game_character_42: '걷는 사람2',
+                robotis_icon_game_character_43: '뛰는 사람1',
+                robotis_icon_game_character_44: '뛰는 사람2',
                 robotis_speed_fast: "빠른 속도",
                 robotis_speed_midium: "중간 속도",
                 robotis_speed_slow: "느린 속도",
@@ -652,24 +694,24 @@ Entry.Robotis_rb_koala.setLanguage = function() {
 
                 robotis_connected: "연결",
                 robotis_disconnected: "없음",
-                robotis_huskylens_mode_face_recognition: "얼굴인식",
-                robotis_huskylens_mode_object_tracking: "물체추적",
-                robotis_huskylens_mode_object_recognition: "물체인식",
-                robotis_huskylens_mode_line_tracking: "라인인식",
-                robotis_huskylens_mode_color_recognition: "색상인식",
-                robotis_huskylens_mode_tag_recognition: "태그인식",
-                robotis_huskylens_mode_object_classification: "물체분류",
-                robotis_huskylens_block: "사각형",
-                robotis_huskylens_arrow: "화살표",
-                robotis_huskylens_center_block_center_x: "중심 X좌표",
-                robotis_huskylens_center_block_center_y: "중심 Y좌표",
-                robotis_huskylens_center_block_width: "너비",
-                robotis_huskylens_center_block_height: "높이",
-                robotis_huskylens_center_leared_id: "학습ID",
-                robotis_huskylens_center_arrow_origin_x: "시작점 X좌표",
-                robotis_huskylens_center_arrow_origin_y: "시작점 Y좌표",
-                robotis_huskylens_center_arrow_target_x: "끝점 X좌표",
-                robotis_huskylens_center_arrow_target_y: "끝점 Y좌표",
+                robotis_ai_camera_mode_face_recognition: "얼굴인식",
+                robotis_ai_camera_mode_object_tracking: "물체추적",
+                robotis_ai_camera_mode_object_recognition: "물체인식",
+                robotis_ai_camera_mode_line_tracking: "라인인식",
+                robotis_ai_camera_mode_color_recognition: "색상인식",
+                robotis_ai_camera_mode_tag_recognition: "태그인식",
+                robotis_ai_camera_mode_object_classification: "물체분류",
+                robotis_ai_camera_block: "사각형",
+                robotis_ai_camera_arrow: "화살표",
+                robotis_ai_camera_center_block_center_x: "중심 X좌표",
+                robotis_ai_camera_center_block_center_y: "중심 Y좌표",
+                robotis_ai_camera_center_block_width: "너비",
+                robotis_ai_camera_center_block_height: "높이",
+                robotis_ai_camera_center_leared_id: "학습ID",
+                robotis_ai_camera_center_arrow_origin_x: "시작점 X좌표",
+                robotis_ai_camera_center_arrow_origin_y: "시작점 Y좌표",
+                robotis_ai_camera_center_arrow_target_x: "끝점 X좌표",
+                robotis_ai_camera_center_arrow_target_y: "끝점 Y좌표",
             },
         },
         en: {
@@ -722,6 +764,7 @@ Entry.Robotis_rb_koala.setLanguage = function() {
                 robotis_RCar_icon_screen_animal_human: "Display %1 from [Animal/Human] at position (%2, %3) in size %4 %5",
                 robotis_RCar_icon_screen_object_tool: "Display %1 from [Object/Tool] at position (%2, %3) in size %4 %5",
                 robotis_RCar_icon_screen_vehicle_number: "Display %1 from [Vehicle/Number] at position (%2, %3) in size %4 %5",
+                robotis_RCar_icon_screen_game_character: "Display %1 from [Game/Character] at position (%2, %3) in size %4 %5",
                 robotis_RCar_text_screen: "Display %1 in %5 in %4 at (%2, %3) on the screen %6",
                 robotis_RCar_text_screen_redraw: "Newly display %1 in %4 at (%2, %3) %5",
                 robotis_RCar_pixel: "Display %3 colored dot at (%1, %2) %4",
@@ -734,22 +777,22 @@ Entry.Robotis_rb_koala.setLanguage = function() {
                 robotis_RCar_cm_led_pattern: "LED %1 blinks at a %2 speed %3",
                 
                 // AI Camera 값 블록
-                robotis_RCar_huskylens_connection_status: "AI Camera: If %1",
-                robotis_RCar_huskylens_if_detected: "AI Camera: If %1 is displayed",
+                robotis_RCar_ai_camera_connection_status: "AI Camera: If %1",
+                robotis_RCar_ai_camera_if_detected: "AI Camera: If %1 is displayed",
         
-                robotis_RCar_huskylens_block_value_closest_to_center: "AI Camera: %1 of the rectangle closest to the center of the screen",
-                robotis_RCar_huskylens_arrow_value_closest_to_center: "AI Camera: %1 of the arrow closest to the center of the screen",
-                robotis_RCar_huskylens_number_of_learned_id: "AI Camera: the number of learned ID",
-                robotis_RCar_huskylens_block_value_of_id: "AI Camera: %2 of rectangle with detected ID %1",
-                robotis_RCar_huskylens_arrow_value_of_id: "AI Camera: %2 of arrow with detected ID %1",
+                robotis_RCar_ai_camera_block_value_closest_to_center: "AI Camera: %1 of the rectangle closest to the center of the screen",
+                robotis_RCar_ai_camera_arrow_value_closest_to_center: "AI Camera: %1 of the arrow closest to the center of the screen",
+                robotis_RCar_ai_camera_number_of_learned_id: "AI Camera: the number of learned ID",
+                robotis_RCar_ai_camera_block_value_of_id: "AI Camera: %2 of rectangle with detected ID %1",
+                robotis_RCar_ai_camera_arrow_value_of_id: "AI Camera: %2 of arrow with detected ID %1",
         
-                robotis_RCar_huskylens_if_learned_id: "AI Camera: If learned data with ID %1",
-                robotis_RCar_huskylens_if_detected_id_type: "AI Camera: If learned %2 data with ID %1",
+                robotis_RCar_ai_camera_if_learned_id: "AI Camera: If learned data with ID %1",
+                robotis_RCar_ai_camera_if_detected_id_type: "AI Camera: If learned %2 data with ID %1",
         
                 // AI 카메라 제어
-                robotis_RCar_huskylens_set_mode: "AI Camera: Set mode to %1 %2",
-                robotis_RCar_huskylens_print_custom_text: "AI Camera: Display %3 at screen position (%1, %2) %4",
-                robotis_RCar_huskylens_clear_custom_text: "AI Camera: Clear screen text %1",
+                robotis_RCar_ai_camera_set_mode: "AI Camera: Set mode to %1 %2",
+                robotis_RCar_ai_camera_print_custom_text: "AI Camera: Display %3 at screen position (%1, %2) %4",
+                robotis_RCar_ai_camera_clear_custom_text: "AI Camera: Clear screen text %1",
             },            
             Helper: {
                 // Driving Control
@@ -797,6 +840,7 @@ Entry.Robotis_rb_koala.setLanguage = function() {
                 robotis_RCar_icon_screen_animal_human: "Set the position and size of a specific icon in [animal/human] on the screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120\nSize: 0 ~ 200",
                 robotis_RCar_icon_screen_object_tool: "Set the position and size of a specific icon in [object/tool] on the screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120\nSize: 0 ~ 200",
                 robotis_RCar_icon_screen_vehicle_number: "Set the position and size of a specific icon in [vehicle/number] on the screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120\nSize: 0 ~ 200",
+                robotis_RCar_icon_screen_game_character: "Set the position and size of a specific icon in [game/character] on the screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120\nSize: 0 ~ 200",
                 robotis_RCar_text_screen: "Set the position, font size, and color of the specified text on the screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120",
                 robotis_RCar_text_screen_redraw: "Set the position and color of the specified text to be newly displayed (clearing the background of the text) on the screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120\nSize: 0 ~ 200",
                 robotis_RCar_pixel: "Set the position and color of the dot to be displayed on the screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120",
@@ -808,22 +852,22 @@ Entry.Robotis_rb_koala.setLanguage = function() {
                 robotis_RCar_cm_led_pattern: "Set the blinking pattern of LEDs of the controller",
                 
                 // AI Camera Value Blocks
-                robotis_RCar_huskylens_connection_status: "If the AI camera is connected, it is determined as 'true'; otherwise, 'false'.",
-                robotis_RCar_huskylens_if_detected: "If the selected symbol (rectangle/arrow) is displayed on the LCD screen of the AI camera, it is determined as 'true'; otherwise, 'false'.",
+                robotis_RCar_ai_camera_connection_status: "If the AI camera is connected, it is determined as 'true'; otherwise, 'false'.",
+                robotis_RCar_ai_camera_if_detected: "If the selected symbol (rectangle/arrow) is displayed on the LCD screen of the AI camera, it is determined as 'true'; otherwise, 'false'.",
 
-                robotis_RCar_huskylens_block_value_closest_to_center: "X coordinate/Y coordinate/width/height/learning ID of the rectangle closest to the center of the AI camera screen",
-                robotis_RCar_huskylens_arrow_value_closest_to_center: "Starting point X coordinate/starting point Y coordinate/end point X coordinate/end point Y coordinate/learning ID of the arrow closest to the center of the AI camera screen",
-                robotis_RCar_huskylens_number_of_learned_id: "Number of IDs learned by the AI camera",
-                robotis_RCar_huskylens_block_value_of_id: "X coordinate/Y coordinate/width/height of the rectangle with the specified ID detected by the AI camera",
-                robotis_RCar_huskylens_arrow_value_of_id: "Starting point X coordinate/starting point Y coordinate/end point X coordinate/end point Y coordinate of the arrow with the specified ID detected by the AI camera",
+                robotis_RCar_ai_camera_block_value_closest_to_center: "X coordinate/Y coordinate/width/height/learning ID of the rectangle closest to the center of the AI camera screen",
+                robotis_RCar_ai_camera_arrow_value_closest_to_center: "Starting point X coordinate/starting point Y coordinate/end point X coordinate/end point Y coordinate/learning ID of the arrow closest to the center of the AI camera screen",
+                robotis_RCar_ai_camera_number_of_learned_id: "Number of IDs learned by the AI camera",
+                robotis_RCar_ai_camera_block_value_of_id: "X coordinate/Y coordinate/width/height of the rectangle with the specified ID detected by the AI camera",
+                robotis_RCar_ai_camera_arrow_value_of_id: "Starting point X coordinate/starting point Y coordinate/end point X coordinate/end point Y coordinate of the arrow with the specified ID detected by the AI camera",
 
-                robotis_RCar_huskylens_if_learned_id: "If the AI camera has learned data with the specified ID, it is determined as 'true'; otherwise, 'false'.",
-                robotis_RCar_huskylens_if_detected_id_type: "If the AI camera has learned the specified data (rectangle/arrow) with the specified ID, it is determined as 'true'; otherwise, 'false'.",
+                robotis_RCar_ai_camera_if_learned_id: "If the AI camera has learned data with the specified ID, it is determined as 'true'; otherwise, 'false'.",
+                robotis_RCar_ai_camera_if_detected_id_type: "If the AI camera has learned the specified data (rectangle/arrow) with the specified ID, it is determined as 'true'; otherwise, 'false'.",
 
                 // AI Camera Control
-                robotis_RCar_huskylens_set_mode: "Set the mode of the AI camera",
-                robotis_RCar_huskylens_print_custom_text: "Print the specified text at the specified position on the AI camera screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120",
-                robotis_RCar_huskylens_clear_custom_text: "Clear all texts displayed on the AI camera screen",
+                robotis_RCar_ai_camera_set_mode: "Set the mode of the AI camera",
+                robotis_RCar_ai_camera_print_custom_text: "Print the specified text at the specified position on the AI camera screen\nX coordinate: -160 ~ 160\nY coordinate: -120 ~ 120",
+                robotis_RCar_ai_camera_clear_custom_text: "Clear all texts displayed on the AI camera screen",
             },
             Blocks: {
                 robotis_red: "Red",
@@ -966,6 +1010,9 @@ Entry.Robotis_rb_koala.setLanguage = function() {
                 robotis_moveRG2: "Sit",
                 robotis_moveRG3: "Struggle",
                 robotis_moveRG4: "RaiseFeet",
+                robotis_fast: 'Fast',
+                robotis_normal: 'Normal',
+                robotis_slow: 'Slow',
                 robotis_stop: "Stop",
                 robotis_roll: "Left-right rotate angle (roll)",
                 robotis_pitch: "Forward-backward rotate angle (pitch)",
@@ -1130,6 +1177,50 @@ Entry.Robotis_rb_koala.setLanguage = function() {
                 robotis_icon_vehicle_number_36: "8",
                 robotis_icon_vehicle_number_37: "9",
                 robotis_icon_vehicle_number_38: "10",
+                robotis_icon_game_character_1: 'R-GEE(F)',
+                robotis_icon_game_character_2: 'R-GEE(L)',
+                robotis_icon_game_character_3: 'R-GEE(R)',
+                robotis_icon_game_character_4: 'KODALA(F)',
+                robotis_icon_game_character_5: 'KODALA(L))',
+                robotis_icon_game_character_6: 'KODALA(R)',
+                robotis_icon_game_character_7: 'Ghost',
+                robotis_icon_game_character_8: 'Monster',
+                robotis_icon_game_character_9: 'Virus',
+                robotis_icon_game_character_10: 'Bacteria',
+                robotis_icon_game_character_11: 'Flying R-GEE (L)',
+                robotis_icon_game_character_12: 'Flying R-GEE (R)',
+                robotis_icon_game_character_13: 'Flying R-GEE (F)',
+                robotis_icon_game_character_14: 'Medal',
+                robotis_icon_game_character_15: 'Money (G)',
+                robotis_icon_game_character_16: 'Money ($)',
+                robotis_icon_game_character_17: 'Heart',
+                robotis_icon_game_character_18: 'Bomb',
+                robotis_icon_game_character_19: 'Fire',
+                robotis_icon_game_character_20: 'Cloud 1',
+                robotis_icon_game_character_21: 'Cloud 2',
+                robotis_icon_game_character_22: 'Shell 1',
+                robotis_icon_game_character_23: 'Shell 2',
+                robotis_icon_game_character_24: 'Cannon (Horizontal)',
+                robotis_icon_game_character_25: 'Cannon (Vertical)',
+                robotis_icon_game_character_26: 'Laser (Vertical)',
+                robotis_icon_game_character_27: 'Laser (Horizontal)',
+                robotis_icon_game_character_28: 'Arrow (Horizontal)',
+                robotis_icon_game_character_29: 'Arrow (Vertical)',
+                robotis_icon_game_character_30: 'Missile (Up)',
+                robotis_icon_game_character_31: 'Missile (Down)',
+                robotis_icon_game_character_32: 'Missile (Left)',
+                robotis_icon_game_character_33: 'Missile (Right)',
+                robotis_icon_game_character_34: 'Parachute',
+                robotis_icon_game_character_35: 'Explosion 1',
+                robotis_icon_game_character_36: 'Explosion 2',
+                robotis_icon_game_character_37: 'Scope',
+                robotis_icon_game_character_38: 'Scissors',
+                robotis_icon_game_character_39: 'Rock',
+                robotis_icon_game_character_40: 'Paper',
+                robotis_icon_game_character_41: 'Walking Person 1',
+                robotis_icon_game_character_42: 'Walking Person 2',
+                robotis_icon_game_character_43: 'Running Person 1',
+                robotis_icon_game_character_44: 'Running Person 2',  
                 robotis_speed_fast: "Fast Speed",
                 robotis_speed_midium: "Medium Speed",
                 robotis_speed_slow: "Slow Speed",
@@ -1180,24 +1271,24 @@ Entry.Robotis_rb_koala.setLanguage = function() {
                 robotis_line_cross_type_12: "︙",
                 robotis_connected: "Connected",
                 robotis_disconnected: "Not connected",
-                robotis_huskylens_mode_face_recognition: "Face Recognition",
-                robotis_huskylens_mode_object_tracking: "Object Tracking",
-                robotis_huskylens_mode_object_recognition: "Object Recognition",
-                robotis_huskylens_mode_line_tracking: "Line Tracking",
-                robotis_huskylens_mode_color_recognition: "Color Recognition",
-                robotis_huskylens_mode_tag_recognition: "Tag Recognition",
-                robotis_huskylens_mode_object_classification: "Object Classification",
-                robotis_huskylens_block: "Block",
-                robotis_huskylens_arrow: "Arrow",
-                robotis_huskylens_center_block_center_x: "Center X Coordinate",
-                robotis_huskylens_center_block_center_y: "Center Y Coordinate",
-                robotis_huskylens_center_block_width: "Width",
-                robotis_huskylens_center_block_height: "Height",
-                robotis_huskylens_center_leared_id: "Learned ID",
-                robotis_huskylens_center_arrow_origin_x: "Start X Coordinate",
-                robotis_huskylens_center_arrow_origin_y: "Start Y Coordinate",
-                robotis_huskylens_center_arrow_target_x: "End X Coordinate",
-                robotis_huskylens_center_arrow_target_y: "End Y Coordinate",
+                robotis_ai_camera_mode_face_recognition: "Face Recognition",
+                robotis_ai_camera_mode_object_tracking: "Object Tracking",
+                robotis_ai_camera_mode_object_recognition: "Object Recognition",
+                robotis_ai_camera_mode_line_tracking: "Line Tracking",
+                robotis_ai_camera_mode_color_recognition: "Color Recognition",
+                robotis_ai_camera_mode_tag_recognition: "Tag Recognition",
+                robotis_ai_camera_mode_object_classification: "Object Classification",
+                robotis_ai_camera_block: "Block",
+                robotis_ai_camera_arrow: "Arrow",
+                robotis_ai_camera_center_block_center_x: "Center X Coordinate",
+                robotis_ai_camera_center_block_center_y: "Center Y Coordinate",
+                robotis_ai_camera_center_block_width: "Width",
+                robotis_ai_camera_center_block_height: "Height",
+                robotis_ai_camera_center_leared_id: "Learned ID",
+                robotis_ai_camera_center_arrow_origin_x: "Start X Coordinate",
+                robotis_ai_camera_center_arrow_origin_y: "Start Y Coordinate",
+                robotis_ai_camera_center_arrow_target_x: "End X Coordinate",
+                robotis_ai_camera_center_arrow_target_y: "End Y Coordinate",
             },
         }
     }
@@ -1560,7 +1651,7 @@ Entry.Robotis_rb_koala.getBlocks = function() {
                     leftSpeed = 127; // 속도제어 안함
                     rightSpeed = wheelSpeed;
                 } else {
-                    leftSpeed = wheelSpeed; // 속도제어 안함
+                    leftSpeed = wheelSpeed;
                     rightSpeed = wheelSpeed;
                 }
 
@@ -1721,7 +1812,7 @@ Entry.Robotis_rb_koala.getBlocks = function() {
                     type: 'Dropdown',
                     options: [
                         [Lang.Blocks.robotis_moveF, '1'],
-                        [Lang.Blocks.robotis_moveB, '-1'], //Lang.Blocks.robotis_common_green_color
+                        [Lang.Blocks.robotis_moveB, '-1'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -1881,10 +1972,9 @@ Entry.Robotis_rb_koala.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['느린', '1'],
-                        ['보통', '2'],
-                        ['빠른', '3'],
-
+                        [Lang.Blocks.robotis_slow, '1'],
+                        [Lang.Blocks.robotis_normal, '2'],
+                        [Lang.Blocks.robotis_fast, '3'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -3118,7 +3208,7 @@ Entry.Robotis_rb_koala.getBlocks = function() {
 
                 var data_sendqueue = [
                     [data_instruction, data_address, data_length, data_value],
-                    [3, 162, 1, 1]
+                    [Entry.Robotis_rb.INSTRUCTION.WRITE, 162, 1, 1]
                 ];
               
 
@@ -3296,7 +3386,7 @@ Entry.Robotis_rb_koala.getBlocks = function() {
 
                 var data_sendqueue = [
                     [data_instruction, data_address, data_length, data_value],
-                    [3, 162, 1, 1]
+                    [Entry.Robotis_rb.INSTRUCTION.WRITE, 162, 1, 1]
                 ];
               
 
@@ -3893,6 +3983,159 @@ Entry.Robotis_rb_koala.getBlocks = function() {
                 py: ['Robotis.RB100_icon_screen_vehicle_number(%1,%2,%3,%4)'],
             },
         },
+        robotis_RCar_icon_screen_game_character: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.robotis_icon_game_character_1, '11520'], // 알쥐(정면)
+                        [Lang.Blocks.robotis_icon_game_character_2, '11521'], // 알쥐(왼쪽)
+                        [Lang.Blocks.robotis_icon_game_character_3, '11522'], // 알쥐(오른쪽)
+                        [Lang.Blocks.robotis_icon_game_character_4, '11523'], // 알라(정면)
+                        [Lang.Blocks.robotis_icon_game_character_5, '11524'], // 알라(왼쪽)
+                        [Lang.Blocks.robotis_icon_game_character_6, '11525'], // 알라(오른쪽)
+                        [Lang.Blocks.robotis_icon_game_character_7, '11526'], // 유령
+                        [Lang.Blocks.robotis_icon_game_character_8, '11527'], // 괴물
+                        [Lang.Blocks.robotis_icon_game_character_9, '11528'], // 바이러스
+                        [Lang.Blocks.robotis_icon_game_character_10, '11529'], // 세균
+                        [Lang.Blocks.robotis_icon_game_character_11, '11784'], // 나는 알쥐(L)
+                        [Lang.Blocks.robotis_icon_game_character_12, '11785'], // 나는 알쥐(R)
+                        [Lang.Blocks.robotis_icon_game_character_13, '11786'], // 나는 알쥐(U)
+                        [Lang.Blocks.robotis_icon_game_character_14, '11530'], // 메달
+                        [Lang.Blocks.robotis_icon_game_character_15, '11531'], // 돈(G)
+                        [Lang.Blocks.robotis_icon_game_character_16, '11532'], // 돈($)
+                        [Lang.Blocks.robotis_icon_game_character_17, '11533'], // 하트
+                        [Lang.Blocks.robotis_icon_game_character_18, '11534'], // 포탄
+                        [Lang.Blocks.robotis_icon_game_character_19, '11535'], // 불
+                        [Lang.Blocks.robotis_icon_game_character_20, '11803'], // 구름1
+                        [Lang.Blocks.robotis_icon_game_character_21, '11804'], // 구름2
+                        [Lang.Blocks.robotis_icon_game_character_22, '11536'], // 포탄1
+                        [Lang.Blocks.robotis_icon_game_character_23, '11791'], // 포탄2
+                        [Lang.Blocks.robotis_icon_game_character_24, '11537'], // 대포(수평)
+                        [Lang.Blocks.robotis_icon_game_character_25, '11538'], // 대포(수직)
+                        [Lang.Blocks.robotis_icon_game_character_27, '11540'], // 레이저(수평)
+                        [Lang.Blocks.robotis_icon_game_character_26, '11539'], // 레이저(수직)
+                        [Lang.Blocks.robotis_icon_game_character_28, '11541'], // 화살(수평)
+                        [Lang.Blocks.robotis_icon_game_character_29, '11542'], // 화살(수직)
+                        [Lang.Blocks.robotis_icon_game_character_30, '11792'], // 미사일(U)
+                        [Lang.Blocks.robotis_icon_game_character_31, '11793'], // 미사일(D)
+                        [Lang.Blocks.robotis_icon_game_character_32, '11794'], // 미사일(L)
+                        [Lang.Blocks.robotis_icon_game_character_33, '11795'], // 미사일(R)
+                        [Lang.Blocks.robotis_icon_game_character_34, '11796'], // 낙하산
+                        [Lang.Blocks.robotis_icon_game_character_35, '11543'], // 폭발1
+                        [Lang.Blocks.robotis_icon_game_character_36, '11544'], // 폭발2
+                        [Lang.Blocks.robotis_icon_game_character_37, '11810'], // 조준경
+                        [Lang.Blocks.robotis_icon_game_character_38, '11545'], // 가위
+                        [Lang.Blocks.robotis_icon_game_character_39, '11546'], // 바위
+                        [Lang.Blocks.robotis_icon_game_character_40, '11547'], // 보
+                        [Lang.Blocks.robotis_icon_game_character_41, '11797'], // 걷는 사람1
+                        [Lang.Blocks.robotis_icon_game_character_42, '11798'], // 걷는 사람2
+                        [Lang.Blocks.robotis_icon_game_character_43, '11799'], // 뛰는 사람1
+                        [Lang.Blocks.robotis_icon_game_character_44, '11800'], // 뛰는 사람2
+                    ],
+                    value: '11520',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                    50,
+                    null,
+                ],
+                type: 'robotis_RCar_icon_screen_game_character',
+            },
+            paramsKeyMap: {
+                ICON: 0,
+                X: 1,
+                Y: 2,
+                SIZE: 3,
+            },
+            class: 'robotis_rb100_lcd',
+            isNotFor: ['Robotis_rb_koala'],
+            func(sprite, script) {
+                // instruction / address / length / value / default length
+                let iconNum = script.getField('ICON', script);
+                let x = script.getNumberValue('X', script);
+                let y = script.getNumberValue('Y', script);
+                let size = script.getNumberValue('SIZE', script) * 2;
+
+                let data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                let data_address = 166;
+                let data_length = 2;
+                let data_value = 10496;
+
+                if (x < -160) {
+                    x = -160;
+                } else if (x > 160) {
+                    x = 160;
+                }
+
+                if (y < -120) {
+                    y = -120;
+                } else if (y > 120) {
+                    y = 120;
+                }
+
+                if (size < 0) {
+                    size = 0;
+                } else if (size > 400) {
+                    size = 400;
+                }
+
+                data_value = iconNum;
+
+                let data_sendqueue = [
+                    [Entry.Robotis_rb.INSTRUCTION.WRITE, 130, 2, x],
+                    [Entry.Robotis_rb.INSTRUCTION.WRITE, 132, 2, y],
+                    [Entry.Robotis_rb.INSTRUCTION.WRITE, 149, 2, size],
+                    [data_instruction, data_address, data_length, data_value],
+                    [Entry.Robotis_rb.INSTRUCTION.WRITE, 162, 1, 1],
+                ];
+
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    Entry.Robotis_openCM70.delay + 200
+                );
+            },
+            syntax: {
+                js: [],
+                py: ['Robotis.RB100_icon_screen_game_and_character(%1,%2,%3,%4)'],
+            },
+        },
         robotis_RCar_text_screen: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -4395,7 +4638,7 @@ Entry.Robotis_rb_koala.getBlocks = function() {
                         data_length,
                         data_value,
                     ],
-                    [3, 162, 1, 1]
+                    [Entry.Robotis_rb.INSTRUCTION.WRITE, 162, 1, 1]
                 ];
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
@@ -5439,7 +5682,7 @@ Entry.Robotis_rb_koala.getBlocks = function() {
 
 
         
-        robotis_RCar_huskylens_block_value_closest_to_center: {
+        robotis_RCar_ai_camera_block_value_closest_to_center: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -5449,11 +5692,11 @@ Entry.Robotis_rb_koala.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.robotis_huskylens_center_block_center_x, '0'],
-                        [Lang.Blocks.robotis_huskylens_center_block_center_y, '1'],
-                        [Lang.Blocks.robotis_huskylens_center_block_width, '2'],
-                        [Lang.Blocks.robotis_huskylens_center_block_height, '3'],
-                        [Lang.Blocks.robotis_huskylens_center_leared_id, '4'],
+                        [Lang.Blocks.robotis_ai_camera_center_block_center_x, '0'],
+                        [Lang.Blocks.robotis_ai_camera_center_block_center_y, '1'],
+                        [Lang.Blocks.robotis_ai_camera_center_block_width, '2'],
+                        [Lang.Blocks.robotis_ai_camera_center_block_height, '3'],
+                        [Lang.Blocks.robotis_ai_camera_center_leared_id, '4'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -5466,12 +5709,12 @@ Entry.Robotis_rb_koala.getBlocks = function() {
                 params: [
                     null,
                 ],
-                type: 'robotis_RCar_huskylens_block_value_closest_to_center',
+                type: 'robotis_RCar_ai_camera_block_value_closest_to_center',
             },
             paramsKeyMap: {
                 DATA_TYPE: 0,
             },
-            class: 'robotis_rb100_custom_huskylens',
+            class: 'robotis_rb100_custom_ai_camera',
             isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
@@ -5487,10 +5730,10 @@ Entry.Robotis_rb_koala.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.robotis_huskylens_block_value_closest_to_center(%1)'],
+                py: ['Robotis.robotis_ai_camera_block_value_closest_to_center(%1)'],
             },
         },
-        robotis_RCar_huskylens_arrow_value_closest_to_center: {
+        robotis_RCar_ai_camera_arrow_value_closest_to_center: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -5500,11 +5743,11 @@ Entry.Robotis_rb_koala.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.robotis_huskylens_center_arrow_origin_x, '0'],
-                        [Lang.Blocks.robotis_huskylens_center_arrow_origin_y, '1'],
-                        [Lang.Blocks.robotis_huskylens_center_arrow_target_x, '2'],
-                        [Lang.Blocks.robotis_huskylens_center_arrow_target_y, '3'],
-                        [Lang.Blocks.robotis_huskylens_center_leared_id, '4'],
+                        [Lang.Blocks.robotis_ai_camera_center_arrow_origin_x, '0'],
+                        [Lang.Blocks.robotis_ai_camera_center_arrow_origin_y, '1'],
+                        [Lang.Blocks.robotis_ai_camera_center_arrow_target_x, '2'],
+                        [Lang.Blocks.robotis_ai_camera_center_arrow_target_y, '3'],
+                        [Lang.Blocks.robotis_ai_camera_center_leared_id, '4'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -5517,12 +5760,12 @@ Entry.Robotis_rb_koala.getBlocks = function() {
                 params: [
                     null,
                 ],
-                type: 'robotis_RCar_huskylens_arrow_value_closest_to_center',
+                type: 'robotis_RCar_ai_camera_arrow_value_closest_to_center',
             },
             paramsKeyMap: {
                 DATA_TYPE: 0,
             },
-            class: 'robotis_rb100_custom_huskylens',
+            class: 'robotis_rb100_custom_ai_camera',
             isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
@@ -5539,10 +5782,10 @@ Entry.Robotis_rb_koala.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.robotis_huskylens_arrow_value_closest_to_center(%1)'],
+                py: ['Robotis.robotis_ai_camera_arrow_value_closest_to_center(%1)'],
             },
         },
-        robotis_RCar_huskylens_number_of_learned_id: {
+        robotis_RCar_ai_camera_number_of_learned_id: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -5554,11 +5797,11 @@ Entry.Robotis_rb_koala.getBlocks = function() {
             def: {
                 params: [
                 ],
-                type: 'robotis_RCar_huskylens_number_of_learned_id',
+                type: 'robotis_RCar_ai_camera_number_of_learned_id',
             },
             paramsKeyMap: {
             },
-            class: 'robotis_rb100_custom_huskylens',
+            class: 'robotis_rb100_custom_ai_camera',
             isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
@@ -5572,10 +5815,10 @@ Entry.Robotis_rb_koala.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.robotis_huskylens_number_of_learned_id()'],
+                py: ['Robotis.robotis_ai_camera_number_of_learned_id()'],
             },
         },
-        robotis_RCar_huskylens_block_value_of_id: {
+        robotis_RCar_ai_camera_block_value_of_id: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -5602,10 +5845,10 @@ Entry.Robotis_rb_koala.getBlocks = function() {
                     {
                         type: 'Dropdown',
                         options: [
-                            [Lang.Blocks.robotis_huskylens_center_block_center_x, '0'],
-                            [Lang.Blocks.robotis_huskylens_center_block_center_y, '1'],
-                            [Lang.Blocks.robotis_huskylens_center_block_width, '2'],
-                            [Lang.Blocks.robotis_huskylens_center_block_height, '3'],
+                            [Lang.Blocks.robotis_ai_camera_center_block_center_x, '0'],
+                            [Lang.Blocks.robotis_ai_camera_center_block_center_y, '1'],
+                            [Lang.Blocks.robotis_ai_camera_center_block_width, '2'],
+                            [Lang.Blocks.robotis_ai_camera_center_block_height, '3'],
                         ],
                         value: '0',
                         fontSize: 11,
@@ -5619,13 +5862,13 @@ Entry.Robotis_rb_koala.getBlocks = function() {
                     null,
                     null,
                 ],
-                type: 'robotis_RCar_huskylens_block_value_of_id',
+                type: 'robotis_RCar_ai_camera_block_value_of_id',
             },
             paramsKeyMap: {
                 ID: 0,
                 TYPE: 1,
             },
-            class: 'robotis_rb100_custom_huskylens',
+            class: 'robotis_rb100_custom_ai_camera',
             isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
@@ -5665,10 +5908,10 @@ Entry.Robotis_rb_koala.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.robotis_huskylens_block_value_of_id(%1, %2)'],
+                py: ['Robotis.robotis_ai_camera_block_value_of_id(%1, %2)'],
             },
         },
-        robotis_RCar_huskylens_arrow_value_of_id: {
+        robotis_RCar_ai_camera_arrow_value_of_id: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -5695,10 +5938,10 @@ Entry.Robotis_rb_koala.getBlocks = function() {
                     {
                         type: 'Dropdown',
                         options: [
-                            [Lang.Blocks.robotis_huskylens_center_arrow_origin_x, '0'],
-                            [Lang.Blocks.robotis_huskylens_center_arrow_origin_y, '1'],
-                            [Lang.Blocks.robotis_huskylens_center_arrow_target_x, '2'],
-                            [Lang.Blocks.robotis_huskylens_center_arrow_target_y, '3'],
+                            [Lang.Blocks.robotis_ai_camera_center_arrow_origin_x, '0'],
+                            [Lang.Blocks.robotis_ai_camera_center_arrow_origin_y, '1'],
+                            [Lang.Blocks.robotis_ai_camera_center_arrow_target_x, '2'],
+                            [Lang.Blocks.robotis_ai_camera_center_arrow_target_y, '3'],
                         ],
                         value: '0',
                         fontSize: 11,
@@ -5712,13 +5955,13 @@ Entry.Robotis_rb_koala.getBlocks = function() {
                     null,
                     null,
                 ],
-                type: 'robotis_RCar_huskylens_arrow_value_of_id',
+                type: 'robotis_RCar_ai_camera_arrow_value_of_id',
             },
             paramsKeyMap: {
                 ID: 0,
                 TYPE: 1,
             },
-            class: 'robotis_rb100_custom_huskylens',
+            class: 'robotis_rb100_custom_ai_camera',
             isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
@@ -5757,10 +6000,10 @@ Entry.Robotis_rb_koala.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.robotis_huskylens_arrow_value_of_id(%1, %2)'],
+                py: ['Robotis.robotis_ai_camera_arrow_value_of_id(%1, %2)'],
             },
         },
-        robotis_RCar_huskylens_connection_status: {
+        robotis_RCar_ai_camera_connection_status: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -5784,12 +6027,12 @@ Entry.Robotis_rb_koala.getBlocks = function() {
                 params: [
                     null,
                 ],
-                type: 'robotis_RCar_huskylens_connection_status',
+                type: 'robotis_RCar_ai_camera_connection_status',
             },
             paramsKeyMap: {
                 STATUS: 0,
             },
-            class: 'robotis_rb100_custom_huskylens',
+            class: 'robotis_rb100_custom_ai_camera',
             isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
@@ -5806,10 +6049,10 @@ Entry.Robotis_rb_koala.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.robotis_huskylens_connection_status(%1)'],
+                py: ['Robotis.robotis_ai_camera_connection_status(%1)'],
             },
         },
-        robotis_RCar_huskylens_if_detected: {
+        robotis_RCar_ai_camera_if_detected: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -5819,8 +6062,8 @@ Entry.Robotis_rb_koala.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.robotis_huskylens_block, '0'],
-                        [Lang.Blocks.robotis_huskylens_arrow, '1'],
+                        [Lang.Blocks.robotis_ai_camera_block, '0'],
+                        [Lang.Blocks.robotis_ai_camera_arrow, '1'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -5833,12 +6076,12 @@ Entry.Robotis_rb_koala.getBlocks = function() {
                 params: [
                     null,
                 ],
-                type: 'robotis_RCar_huskylens_if_detected',
+                type: 'robotis_RCar_ai_camera_if_detected',
             },
             paramsKeyMap: {
                 DETECT_TYPE: 0,
             },
-            class: 'robotis_rb100_custom_huskylens',
+            class: 'robotis_rb100_custom_ai_camera',
             isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 var scope = script.executor.scope;
@@ -5858,10 +6101,10 @@ Entry.Robotis_rb_koala.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.robotis_huskylens_if_detected(%1)'],
+                py: ['Robotis.robotis_ai_camera_if_detected(%1)'],
             },
         },
-        robotis_RCar_huskylens_set_mode: {
+        robotis_RCar_ai_camera_set_mode: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -5870,13 +6113,13 @@ Entry.Robotis_rb_koala.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.robotis_huskylens_mode_face_recognition, '0'],
-                        [Lang.Blocks.robotis_huskylens_mode_object_tracking, '1'],
-                        [Lang.Blocks.robotis_huskylens_mode_object_recognition, '2'],
-                        [Lang.Blocks.robotis_huskylens_mode_line_tracking, '3'],
-                        [Lang.Blocks.robotis_huskylens_mode_color_recognition, '4'],
-                        [Lang.Blocks.robotis_huskylens_mode_tag_recognition, '5'],
-                        [Lang.Blocks.robotis_huskylens_mode_object_classification, '6'],
+                        [Lang.Blocks.robotis_ai_camera_mode_face_recognition, '0'],
+                        [Lang.Blocks.robotis_ai_camera_mode_object_tracking, '1'],
+                        [Lang.Blocks.robotis_ai_camera_mode_object_recognition, '2'],
+                        [Lang.Blocks.robotis_ai_camera_mode_line_tracking, '3'],
+                        [Lang.Blocks.robotis_ai_camera_mode_color_recognition, '4'],
+                        [Lang.Blocks.robotis_ai_camera_mode_tag_recognition, '5'],
+                        [Lang.Blocks.robotis_ai_camera_mode_object_classification, '6'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -5894,16 +6137,16 @@ Entry.Robotis_rb_koala.getBlocks = function() {
                 params: [
                     null,
                 ],
-                type: 'robotis_RCar_huskylens_set_mode',
+                type: 'robotis_RCar_ai_camera_set_mode',
             },
             paramsKeyMap: {
-                HUSKYLENS_MODE: 0,
+                AI_CAMERA_MODE: 0,
             },
             class: 'robotis_openCM70_cm',
             isNotFor: ['Robotis_rb_koala'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
-                var huskylens_mode = script.getField('HUSKYLENS_MODE', script);
+                var ai_camera_mode = script.getField('AI_CAMERA_MODE', script);
 
                 var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
                 var data_address = 4001;
@@ -5914,7 +6157,7 @@ Entry.Robotis_rb_koala.getBlocks = function() {
                         data_instruction,
                         data_address,
                         data_length,
-                        huskylens_mode,
+                        ai_camera_mode,
                     ],
                 ];
 
@@ -5926,10 +6169,10 @@ Entry.Robotis_rb_koala.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.set_huskylens_mode(%1)'],
+                py: ['Robotis.set_ai_camera_mode(%1)'],
             },
         },
-        robotis_RCar_huskylens_print_custom_text: {
+        robotis_RCar_ai_camera_print_custom_text: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -5966,7 +6209,7 @@ Entry.Robotis_rb_koala.getBlocks = function() {
                     },
                     "Hello!"
                 ],
-                type: 'robotis_RCar_huskylens_print_custom_text',
+                type: 'robotis_RCar_ai_camera_print_custom_text',
             },
             paramsKeyMap: {
                 X: 0,
@@ -5980,10 +6223,17 @@ Entry.Robotis_rb_koala.getBlocks = function() {
                 var x = script.getNumberValue('X', script);
                 var y = script.getNumberValue('Y', script);
                 var text = script.getStringValue('TEXT', script);
-                var text_len = text.length;
                 var data_buf = [];
                 var i = 0;
 
+                // Encode the text as UTF-8
+                let encoder = new TextEncoder();
+                let utf8Array = encoder.encode(text);
+
+                // utf8Array is now a Uint8Array containing the UTF-8 bytes of the text
+                let text_len = utf8Array.length;
+
+                if (text_len > 45) text_len = 45;
                 
                 if (x < -160) x = 160;
                 else if (x > 160) x = 160;
@@ -6001,7 +6251,7 @@ Entry.Robotis_rb_koala.getBlocks = function() {
                 data_buf.push(0);
                 data_buf.push(0);
                 for (i = 0; i < text_len; i++) {
-                    data_buf.push(text[i]);
+                    data_buf.push(utf8Array[i]);
                 }
 
                 var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
@@ -6025,10 +6275,10 @@ Entry.Robotis_rb_koala.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.robotis_huskylens_print_custom_text(%1,%2,%3)'],
+                py: ['Robotis.robotis_ai_camera_print_custom_text(%1,%2,%3)'],
             },
         },
-        robotis_RCar_huskylens_clear_custom_text: {
+        robotis_RCar_ai_camera_clear_custom_text: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -6044,7 +6294,7 @@ Entry.Robotis_rb_koala.getBlocks = function() {
             def: {
                 params: [
                 ],
-                type: 'robotis_RCar_huskylens_clear_custom_text',
+                type: 'robotis_RCar_ai_camera_clear_custom_text',
             },
             paramsKeyMap: {
             },
@@ -6074,7 +6324,7 @@ Entry.Robotis_rb_koala.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.robotis_huskylens_clear_custom_text()'],
+                py: ['Robotis.robotis_ai_camera_clear_custom_text()'],
             },
         },
     };

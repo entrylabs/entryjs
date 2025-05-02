@@ -427,7 +427,7 @@ function getBlocks() {
             },
         },
         hardware_device_name_title: {
-            skeleton: 'basic_text',
+            skeleton: 'basic_text_light',
             color: EntryStatic.colorSet.common.TRANSPARENT,
             template: '%1',
             params: [
@@ -447,6 +447,36 @@ function getBlocks() {
                 'arduinoLiteConnected',
             ],
             events: {},
+        },
+        hardware_device_name_title_robot: {
+            parent: 'hardware_device_name_title',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.hardware_device_name_title_robot,
+                    color: EntryStatic.colorSet.common.TEXT,
+                    align: 'center',
+                    fontWeight: '100',
+                },
+            ],
+            isNotFor: [
+                'arduinoConnect',
+                'arduinoConnected',
+                'arduinoLiteConnectFailed',
+                'arduinoLiteConnected',
+            ],
+        },
+        hardware_device_name_title_sensor: {
+            parent: 'hardware_device_name_title_robot',
+        },
+        hardware_device_name_title_motor: {
+            parent: 'hardware_device_name_title_robot',
+        },
+        hardware_device_name_title_led: {
+            parent: 'hardware_device_name_title_robot',
+        },
+        hardware_device_name_title_melody: {
+            parent: 'hardware_device_name_title_robot',
         },
         hardware_device_name_content: {
             skeleton: 'basic_text',
@@ -473,6 +503,18 @@ function getBlocks() {
                 'arduinoLiteConnected',
             ],
             events: {},
+        },
+        hardware_device_name_content_sensor: {
+            parent: 'hardware_device_name_content',
+        },
+        hardware_device_name_content_motor: {
+            parent: 'hardware_device_name_content',
+        },
+        hardware_device_name_content_led: {
+            parent: 'hardware_device_name_content',
+        },
+        hardware_device_name_content_melody: {
+            parent: 'hardware_device_name_content',
         },
         hardware_connected_noti: {
             skeleton: 'basic_text',
@@ -552,84 +594,6 @@ function getBlocks() {
             isNotFor: ['arduinoDisconnected'],
             events: {},
         },
-        // arduino_download_connector: {
-        //     skeleton: 'clickable_text',
-        //     skeletonOptions: {
-        //         box: {
-        //             offsetX: 3,
-        //         },
-        //     },
-        //     isNotFor: ['arduinoDisconnected'],
-        //     color: EntryStatic.colorSet.common.TRANSPARENT,
-        //     class: 'arduino_default',
-        //     params: [
-        //         {
-        //             type: 'Text',
-        //             text: Lang.Blocks.ARDUINO_download_connector,
-        //             color: EntryStatic.colorSet.common.TEXT,
-        //             align: 'center',
-        //         },
-        //     ],
-        //     events: {
-        //         mousedown: [
-        //             function () {
-        //                 Entry.hw.downloadConnector();
-        //             },
-        //         ],
-        //     },
-        // },
-        // download_guide: {
-        //     skeleton: 'clickable_text',
-        //     skeletonOptions: {
-        //         box: {
-        //             offsetX: 3,
-        //         },
-        //     },
-        //     isNotFor: ['arduinoDisconnected'],
-        //     color: EntryStatic.colorSet.common.TRANSPARENT,
-        //     class: 'arduino_default',
-        //     params: [
-        //         {
-        //             type: 'Text',
-        //             text: Lang.Blocks.download_guide,
-        //             color: EntryStatic.colorSet.common.TEXT,
-        //             align: 'center',
-        //         },
-        //     ],
-        //     events: {
-        //         mousedown: [
-        //             function() {
-        //                 Entry.hw.downloadGuide();
-        //             },
-        //         ],
-        //     },
-        // },
-        // arduino_download_source: {
-        //     skeleton: 'clickable_text',
-        //     skeletonOptions: {
-        //         box: {
-        //             offsetX: 3,
-        //         },
-        //     },
-        //     isNotFor: ['arduinoDisconnected'],
-        //     color: EntryStatic.colorSet.common.TRANSPARENT,
-        //     params: [
-        //         {
-        //             type: 'Text',
-        //             text: Lang.Blocks.ARDUINO_download_source,
-        //             color: EntryStatic.colorSet.common.TEXT,
-        //             align: 'center',
-        //         },
-        //     ],
-        //     class: 'arduino_default',
-        //     events: {
-        //         mousedown: [
-        //             function () {
-        //                 Entry.hw.downloadSource();
-        //             },
-        //         ],
-        //     },
-        // },
         arduino_connected: {
             skeleton: 'basic_button',
             color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
@@ -645,22 +609,6 @@ function getBlocks() {
             events: {},
         },
 
-        // arduino_connect: {
-        //     skeleton: 'basic_text',
-        //     color: EntryStatic.colorSet.common.TRANSPARENT,
-        //     template: '%1',
-        //     isNotFor: ['arduinoConnect'],
-        //     class: 'arduino_default',
-        //     params: [
-        //         {
-        //             type: 'Text',
-        //             text: Lang.Blocks.ARDUINO_connect,
-        //             color: EntryStatic.colorSet.common.TEXT,
-        //             align: 'center',
-        //         },
-        //     ],
-        //     events: {},
-        // },
         arduino_reconnect: {
             skeleton: 'basic_button',
             color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
@@ -686,7 +634,6 @@ function getBlocks() {
             skeleton: 'clickable_text',
             skeletonOptions: {
                 box: {
-                    offsetX: 60,
                     offsetY: -10,
                 },
             },
@@ -699,13 +646,16 @@ function getBlocks() {
                     type: 'Indicator',
                     img: 'question_in_round.svg',
                     size: 9,
-                    align: 'left',
+                    position: {
+                        x: -45,
+                        y: 0,
+                    },
                 },
                 {
                     type: 'Text',
                     text: Lang.Blocks.ROBOT_connect_helper,
                     color: EntryStatic.colorSet.common.BUTTON,
-                    align: 'left',
+                    align: 'center',
                     fontSize: 13,
                 },
             ],
@@ -761,7 +711,6 @@ function getBlocks() {
             skeleton: 'clickable_text',
             skeletonOptions: {
                 box: {
-                    offsetX: 70,
                     offsetY: -10,
                 },
             },
@@ -774,13 +723,16 @@ function getBlocks() {
                     type: 'Indicator',
                     img: 'question_in_round.svg',
                     size: 9,
-                    align: 'left',
+                    position: {
+                        x: -55,
+                        y: 0,
+                    },
                 },
                 {
                     type: 'Text',
                     text: Lang.Blocks.hardware_connect_helper,
                     color: EntryStatic.colorSet.common.BUTTON,
-                    align: 'left',
+                    align: 'center',
                     fontSize: 13,
                 },
             ],
@@ -2757,11 +2709,14 @@ function getBlocks() {
                     const sounds = sprite.parent.sounds;
                     const isExist = Entry.isExist(soundId, 'id', sounds);
                     if (isExist) {
+                        const duration = Math.floor(
+                            (sound.duration * 1000) / Entry.playbackRateValue
+                        );
                         const instance = Entry.Utils.playSound(soundId);
                         Entry.Utils.addSoundInstances(instance);
                         setTimeout(() => {
                             script.playState = 0;
-                        }, sound.duration * 1000);
+                        }, duration);
                     }
                     return script;
                 } else if (script.playState === 1) {

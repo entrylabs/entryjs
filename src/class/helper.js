@@ -72,6 +72,18 @@ class EntryBlockHelper {
         this._elementsContainer.addClass('entryBlockHelperContent textModeElem selectAble');
         blockHelperContent.appendChild(this._elementsContainer);
 
+        const blockHelperLink = Entry.createElement(
+            'div',
+            'entryBlockHelperLinkWorkspace'
+        );
+        blockHelperLink.addClass('blockHelperLink');
+        const helperLink = Entry.createElement('a', 'entryBlockHelperLink');
+        helperLink.addClass('linkTextElem');
+        helperLink.setAttribute('target' ,'_blank');
+        blockHelperLink.appendChild(helperLink);
+        blockHelperContent.appendChild(blockHelperLink);
+        this.blockHelperLink_ = helperLink;
+
         if (typeof CodeMirror !== 'undefined') {
             const codeMirrorTitle = Entry.createElement('div');
             codeMirrorTitle.addClass('entryBlockHelperTitle textModeElem');
@@ -189,6 +201,14 @@ class EntryBlockHelper {
         } else {
             this._contentView.removeClass('textMode');
             this.blockHelperDescription_.textContent = description;
+            const category = Entry.block[type].wikiClass || Entry.Utils.getBlockCategory(type);
+            if (category) {
+                this.blockHelperLink_.textContent = Lang.Helper.link_to_entry_wiki;
+                this.blockHelperLink_.href = Lang.Helper[`wiki_link_${category}`];
+            } else {
+                this.blockHelperLink_.textContent = '';
+                this.blockHelperLink_.href = '';
+            }
         }
 
         code.createThread([def]);

@@ -1421,7 +1421,7 @@ Entry.BlockView = class BlockView {
             const { block, isInBlockMenu, copyable } = blockView;
             const { options: EntryOptions = {} } = Entry;
             const {
-                Blocks: { Duplication_option, CONTEXT_COPY_option, Delete_Blocks },
+                Blocks: { Duplication_option, CONTEXT_COPY_option, cut_blocks, Delete_Blocks },
                 Menus: { save_as_image },
             } = Lang;
 
@@ -1438,6 +1438,16 @@ Entry.BlockView = class BlockView {
                 enable: copyable && !isBoardReadOnly,
                 callback() {
                     block.copyToClipboard();
+                },
+            };
+
+            const cut = {
+                text: cut_blocks,
+                enable: copyable && block.isDeletable() && !isBoardReadOnly,
+                callback() {
+                    block.copyToClipboard();
+                    Entry.do('destroyBlockBelow', block);
+                    blockView.getBoard().setSelectedBlock(null);
                 },
             };
 
@@ -1484,7 +1494,7 @@ Entry.BlockView = class BlockView {
             }
 
             if (!isInBlockMenu) {
-                options = [copyAndPaste, copy, remove, addStorage, ...options, comment].filter(
+                options = [copyAndPaste, copy, cut, remove, addStorage, ...options, comment].filter(
                     (x) => x
                 );
             }

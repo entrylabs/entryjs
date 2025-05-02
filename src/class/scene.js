@@ -261,6 +261,9 @@ Entry.Scene = class {
     createSceneDivider() {
         const divide = Entry.createElement('span');
         divide.addClass('entrySceneInputCover');
+        if (!Entry.sceneEditable) {
+            divide.addClass('entryDisabledScene');
+        }
         return divide;
     }
 

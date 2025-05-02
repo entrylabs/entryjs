@@ -385,26 +385,44 @@ Entry.EXPANSION_BLOCK.weather = {
                 taean: '4482500000',
             },
         },
-
         'Jeollabuk-do': {
-            code: '5200000000',
+            code: '4500000000',
             sub: {
-                jeonju: '5211000000',
-                gunsan_si: '5213000000',
-                iksan: '5214000000',
-                jeongeup: '5218000000',
-                namwon: '5219000000',
-                gimje_si: '5221000000',
-                wanju: '5271000000',
-                jinan: '5272000000',
-                muju: '5273000000',
-                jangsu: '5274000000',
-                imsil: '5275000000',
-                sunchang: '5277000000',
-                gochang: '5279000000',
-                buan: '5280000000',
+                jeonju: '4511000000',
+                gunsan_si: '4513000000',
+                iksan: '4514000000',
+                jeongeup: '4518000000',
+                namwon: '4519000000',
+                gimje_si: '4521000000',
+                wanju: '4571000000',
+                jinan: '4572000000',
+                muju: '4573000000',
+                jangsu: '4574000000',
+                imsil: '4575000000',
+                sunchang: '4577000000',
+                gochang: '4579000000',
+                buan: '4580000000',
             },
         },
+        // 'Jeollabuk-do': {
+        //     code: '5200000000',
+        //     sub: {
+        //         jeonju: '5211000000',
+        //         gunsan_si: '5213000000',
+        //         iksan: '5214000000',
+        //         jeongeup: '5218000000',
+        //         namwon: '5219000000',
+        //         gimje_si: '5221000000',
+        //         wanju: '5271000000',
+        //         jinan: '5272000000',
+        //         muju: '5273000000',
+        //         jangsu: '5274000000',
+        //         imsil: '5275000000',
+        //         sunchang: '5277000000',
+        //         gochang: '5279000000',
+        //         buan: '5280000000',
+        //     },
+        // },
         'Jeollanam-do': {
             code: '4600000000',
             sub: {
@@ -890,6 +908,7 @@ Entry.EXPANSION_BLOCK.weather.getBlocks = function() {
                     },
                 ],
             },
+            wikiClass: 'weather',
         },
         check_city_finedust: {
             color: EntryStatic.colorSet.block.default.EXPANSION,
@@ -973,6 +992,7 @@ Entry.EXPANSION_BLOCK.weather.getBlocks = function() {
                     },
                 ],
             },
+            wikiClass: 'weather',
         },
         get_city_weather_data: {
             color: EntryStatic.colorSet.block.default.EXPANSION,
@@ -1093,6 +1113,7 @@ Entry.EXPANSION_BLOCK.weather.getBlocks = function() {
                     },
                 ],
             },
+            wikiClass: 'weather',
         },
         get_current_city_weather_data: {
             color: EntryStatic.colorSet.block.default.EXPANSION,
@@ -1155,6 +1176,7 @@ Entry.EXPANSION_BLOCK.weather.getBlocks = function() {
                     },
                 ],
             },
+            wikiClass: 'weather',
         },
         get_today_city_temperature: {
             color: EntryStatic.colorSet.block.default.EXPANSION,
@@ -1214,6 +1236,7 @@ Entry.EXPANSION_BLOCK.weather.getBlocks = function() {
                     },
                 ],
             },
+            wikiClass: 'weather',
         },
 
         //시군구 추가로 인한 legacy code 기존 블럭유지를 위해 필요.
@@ -1325,6 +1348,7 @@ Entry.EXPANSION_BLOCK.weather.getBlocks = function() {
                     },
                 ],
             },
+            wikiClass: 'weather',
         },
         check_finedust: {
             color: EntryStatic.colorSet.block.default.EXPANSION,
@@ -1387,6 +1411,7 @@ Entry.EXPANSION_BLOCK.weather.getBlocks = function() {
                     },
                 ],
             },
+            wikiClass: 'weather',
         },
         get_weather_data: {
             color: EntryStatic.colorSet.block.default.EXPANSION,
@@ -1489,6 +1514,7 @@ Entry.EXPANSION_BLOCK.weather.getBlocks = function() {
                     },
                 ],
             },
+            wikiClass: 'weather',
         },
         get_current_weather_data: {
             color: EntryStatic.colorSet.block.default.EXPANSION,
@@ -1539,6 +1565,7 @@ Entry.EXPANSION_BLOCK.weather.getBlocks = function() {
                     },
                 ],
             },
+            wikiClass: 'weather',
         },
         get_today_temperature: {
             color: EntryStatic.colorSet.block.default.EXPANSION,
@@ -1589,6 +1616,7 @@ Entry.EXPANSION_BLOCK.weather.getBlocks = function() {
                     },
                 ],
             },
+            wikiClass: 'weather',
         },
         get_cur_weather: {
             color: EntryStatic.colorSet.block.default.EXPANSION,
@@ -1633,6 +1661,7 @@ Entry.EXPANSION_BLOCK.weather.getBlocks = function() {
                 js: [],
                 py: [],
             },
+            wikiClass: 'weather',
         },
         get_cur_wind: {
             color: EntryStatic.colorSet.block.default.EXPANSION,
@@ -1677,6 +1706,7 @@ Entry.EXPANSION_BLOCK.weather.getBlocks = function() {
                 js: [],
                 py: [],
             },
+            wikiClass: 'weather',
         },
         get_cur_weather_data: {
             color: EntryStatic.colorSet.block.default.EXPANSION,
@@ -1726,6 +1756,7 @@ Entry.EXPANSION_BLOCK.weather.getBlocks = function() {
                 js: [],
                 py: [],
             },
+            wikiClass: 'weather',
         },
         check_cur_weather: {
             color: EntryStatic.colorSet.block.default.EXPANSION,
@@ -1776,6 +1807,7 @@ Entry.EXPANSION_BLOCK.weather.getBlocks = function() {
                 js: [],
                 py: [],
             },
+            wikiClass: 'weather',
         },
         check_cur_finddust: {
             color: EntryStatic.colorSet.block.default.EXPANSION,
@@ -1826,6 +1858,7 @@ Entry.EXPANSION_BLOCK.weather.getBlocks = function() {
                 js: [],
                 py: [],
             },
+            wikiClass: 'weather',
         },
         get_day_weather: {
             color: EntryStatic.colorSet.block.default.EXPANSION,
@@ -1873,6 +1906,7 @@ Entry.EXPANSION_BLOCK.weather.getBlocks = function() {
                 js: [],
                 py: [],
             },
+            wikiClass: 'weather',
         },
         get_day_weather_data: {
             color: EntryStatic.colorSet.block.default.EXPANSION,
@@ -1925,6 +1959,7 @@ Entry.EXPANSION_BLOCK.weather.getBlocks = function() {
                 js: [],
                 py: [],
             },
+            wikiClass: 'weather',
         },
         check_day_weather: {
             color: EntryStatic.colorSet.block.default.EXPANSION,
@@ -1978,6 +2013,7 @@ Entry.EXPANSION_BLOCK.weather.getBlocks = function() {
                 js: [],
                 py: [],
             },
+            wikiClass: 'weather',
         },
         get_time_weather: {
             color: EntryStatic.colorSet.block.default.EXPANSION,
@@ -2034,6 +2070,7 @@ Entry.EXPANSION_BLOCK.weather.getBlocks = function() {
                 js: [],
                 py: [],
             },
+            wikiClass: 'weather',
         },
         get_time_weather_data: {
             color: EntryStatic.colorSet.block.default.EXPANSION,
@@ -2095,6 +2132,7 @@ Entry.EXPANSION_BLOCK.weather.getBlocks = function() {
                 js: [],
                 py: [],
             },
+            wikiClass: 'weather',
         },
         check_time_weather: {
             color: EntryStatic.colorSet.block.default.EXPANSION,
@@ -2157,6 +2195,7 @@ Entry.EXPANSION_BLOCK.weather.getBlocks = function() {
                 js: [],
                 py: [],
             },
+            wikiClass: 'weather',
         },
     };
 };

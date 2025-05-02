@@ -318,7 +318,7 @@ Entry.Robotis_rb.setLanguage = function() {
                 robotis_face22: "목욕",
                 robotis_face23: "햐트뿅뿅",
 
-                robotis_car_anim01: "기본표정",
+                robotis_car_anim01: "기본 표정",
                 robotis_car_anim02: "감동",
                 robotis_car_anim03: "미소",
                 robotis_car_anim04: "웃음",

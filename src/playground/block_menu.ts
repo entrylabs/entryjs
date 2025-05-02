@@ -980,32 +980,40 @@ class BlockMenu extends ModelClass<Schema> {
     }
 
     _generateHwCode(shouldHide?: boolean) {
-        const threads = this.code.getThreadsByCategory(HW);
+        const targetHwCategory = [HW];
+        const targetPracticalCategories = practicalCourseCategoryList.filter(
+            (category) => category != 'hw_robot'
+        );
+        EntryStatic.isPracticalCourse && targetHwCategory.push(...targetPracticalCategories);
 
-        if (!(this._categoryData && this.shouldGenerateHwCode(threads))) {
-            return;
-        }
+        targetHwCategory.map((hwCategory) => {
+            const threads = this.code.getThreadsByCategory(hwCategory);
 
-        threads.forEach((t: any) => {
-            this._deleteThreadsMap(t);
-            t.destroy();
-        });
-
-        const blocks = this._getCategoryBlocks(HW);
-
-        if (isEmpty(blocks)) {
-            return;
-        }
-
-        this._buildCategoryCodes(
-            blocks.filter((b) => !this.checkBanClass(Entry.block[b])),
-            HW
-        ).forEach((t: any) => {
-            if (shouldHide) {
-                t[0].x = -99999;
+            if (!(this._categoryData && this.shouldGenerateHwCode(threads))) {
+                return;
             }
-            this._createThread(t);
-            delete t[0].x;
+
+            threads.forEach((t: any) => {
+                this._deleteThreadsMap(t);
+                t.destroy();
+            });
+
+            const blocks = this._getCategoryBlocks(hwCategory);
+
+            if (isEmpty(blocks)) {
+                return;
+            }
+
+            this._buildCategoryCodes(
+                blocks.filter((b) => !this.checkBanClass(Entry.block[b])),
+                hwCategory
+            ).forEach((t: any) => {
+                if (shouldHide) {
+                    t[0].x = -99999;
+                }
+                this._createThread(t);
+                delete t[0].x;
+            });
         });
 
         this.hwCodeOutdated = false;
