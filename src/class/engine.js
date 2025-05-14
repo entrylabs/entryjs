@@ -274,6 +274,9 @@ Entry.Engine = class Engine {
                         parent: this.runButtonCurtain,
                     });
                     this.runButton.bindOnClick(() => Entry.engine.toggleRun());
+                    if (Entry.options.isStartOnLoaded && Entry.engine.state === 'stop') {
+                        Entry.engine.toggleRun();
+                    }
                 }
             };
 

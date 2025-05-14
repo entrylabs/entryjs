@@ -604,7 +604,9 @@ Entry.parseOptions = function (options) {
     if (options.textCodingEnable) {
         this.textCodingEnable = options.textCodingEnable;
     }
-
+    if (options.isStartOnLoaded) {
+        this.isStartOnLoaded = options.isStartOnLoaded;
+    }
     this.fullScreenEnable = options.fullScreenEnable;
     if (this.fullScreenEnable === undefined) {
         this.fullScreenEnable = true;
