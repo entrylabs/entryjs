@@ -31,16 +31,16 @@ Entry.smartCodingHouse = {
 
     // 핀 매핑 (참고용)
     analogPin: {
-        ULTRASONIC_TRIG: 0,
-        ULTRASONIC_ECHO: 1,
-        TEMP_HUM: 2,
-        IR_SENSOR: 3,
-        LIGHT_SENSOR: 4,
-        RAIN_SENSOR: 5,
+        ULTRASONIC_TRIG: 0, // 초음파센서 trig
+        ULTRASONIC_ECHO: 1, // 초음파센서 echo
+        TEMP_HUM: 2, // 온습도센서
+        IR_SENSOR: 3, // 적외선센서
+        LIGHT_SENSOR: 4, // 조도센서
+        RAIN_SENSOR: 5, // 레인센서서
     },
     digitalPin: {
-        SERVO_MOTOR: 2, // 서보모터 제어 (D2)
-        DC_MOTOR: 3, // DC모터 (D3) – 방향과 속도를 하나의 값으로 결합
+        SERVO_MOTOR: 2, // 서보모터
+        DC_MOTOR: 3, // DC모터 – 방향과 속도를 하나의 값으로 결합
         OUTDOOR1_LED_RED: 5, // 1층 실외 빨강 LED
         OUTDOOR1_LED_GREEN: 6, // 1층 실외 초록 LED
         OUTDOOR1_LED_BLUE: 7, // 1층 실외 파란 LED
@@ -122,45 +122,46 @@ function hexToRgb(hex) {
     let num = parseInt(hex, 16);
     return { r: (num >> 16) & 255, g: (num >> 8) & 255, b: num & 255 };
 }
+
 // RGB를 HSV로 변환하는 함수
 function rgbToHsv(r, g, b) {
     // 0~255 범위의 값을 0~1 범위로 정규화
     r /= 255;
     g /= 255;
     b /= 255;
-
+  
     // 최대값과 최소값 찾기
     let max = Math.max(r, g, b);
     let min = Math.min(r, g, b);
     let h,
-        s,
-        v = max;
+      s,
+      v = max;
     let d = max - min;
-
+  
     // 채도(saturation) 계산: 최대값이 0이면 0, 아니면 (최대-최소)/최대
     s = max === 0 ? 0 : d / max;
-
+  
     // 색조(hue) 계산
     if (max === min) {
-        // 무채색인 경우(hue는 정의할 수 없음; 0으로 지정)
-        h = 0;
+      // 무채색인 경우(hue는 정의할 수 없음; 0으로 지정)
+      h = 0;
     } else {
-        if (max === r) {
-            h = (g - b) / d + (g < b ? 6 : 0);
-        } else if (max === g) {
-            h = (b - r) / d + 2;
-        } else {
-            h = (r - g) / d + 4;
-        }
-        h /= 6; // 0~1 사이의 값으로 정규화
+      if (max === r) {
+        h = (g - b) / d + (g < b ? 6 : 0);
+      } else if (max === g) {
+        h = (b - r) / d + 2;
+      } else {
+        h = (r - g) / d + 4;
+      }
+      h /= 6; // 0~1 사이의 값으로 정규화
     }
-
+  
     // 결과 객체 반환: h는 0~1, s는 0~1, v는 0~1
     return { h: h, s: s, v: v };
-}
-
-// HSV 값을 RGB로 변환하는 함수
-function hsvToRgb(h, s, v) {
+  }
+  
+  // HSV 값을 RGB로 변환하는 함수
+  function hsvToRgb(h, s, v) {
     let r, g, b;
     const i = Math.floor(h * 6);
     const f = h * 6 - i;
@@ -168,44 +169,45 @@ function hsvToRgb(h, s, v) {
     const q = v * (1 - f * s);
     const t = v * (1 - (1 - f) * s);
     switch (i % 6) {
-        case 0:
-            (r = v), (g = t), (b = p);
-            break;
-        case 1:
-            (r = q), (g = v), (b = p);
-            break;
-        case 2:
-            (r = p), (g = v), (b = t);
-            break;
-        case 3:
-            (r = p), (g = q), (b = v);
-            break;
-        case 4:
-            (r = t), (g = p), (b = v);
-            break;
-        case 5:
-            (r = v), (g = p), (b = q);
-            break;
+      case 0:
+        (r = v), (g = t), (b = p);
+        break;
+      case 1:
+        (r = q), (g = v), (b = p);
+        break;
+      case 2:
+        (r = p), (g = v), (b = t);
+        break;
+      case 3:
+        (r = p), (g = q), (b = v);
+        break;
+      case 4:
+        (r = t), (g = p), (b = v);
+        break;
+      case 5:
+        (r = v), (g = p), (b = q);
+        break;
     }
     return {
-        r: Math.round(r * 255),
-        g: Math.round(g * 255),
-        b: Math.round(b * 255),
+      r: Math.round(r * 255),
+      g: Math.round(g * 255),
+      b: Math.round(b * 255),
     };
-}
+  }
 
 // 블록이 아니라, 일반 함수로 선언
-Entry.smartCodingHouse.modeDoor = function () {
+Entry.smartCodingHouse.modeDoor = function() {
     let port = Entry.smartCodingHouse.digitalPin.SERVO_MOTOR;
     // 서보모터를 90도로 설정
     Entry.hw.sendQueue[port] = 4;
     Entry.hw.update && Entry.hw.update();
-
+    
     setTimeout(() => {
         Entry.hw.sendQueue[port] = 0;
         Entry.hw.update && Entry.hw.update();
     }, 26);
 };
+
 
 Entry.smartCodingHouse.getBlocks = function () {
     return {
@@ -234,22 +236,27 @@ Entry.smartCodingHouse.getBlocks = function () {
             paramsKeyMap: { EXPECTED: 0, THRESHOLD: 1 },
             def: {
                 type: 'set_ultrasonic_input',
-                params: [null, { type: 'number', params: ['3'] }],
+                params: [null, { type: 'number', params: ['20'] }],
             },
             class: 'SmartCodingHouseSensor',
             isNotFor: ['smartCodingHouse'],
             func: function (sprite, script) {
                 var expected = script.getField('EXPECTED', script); // "near" 또는 "far"
-                var threshold = script.getNumberValue('THRESHOLD', script); // 임계값 (기본 3)
+                var threshold = script.getNumberValue('THRESHOLD', script); // 임계값 (기본 20cm)
                 var distance = Number(Entry.hw.portData.ultrasonic);
-                if (isNaN(distance)) return false;
+                
+                if (isNaN(distance)) {
+                    // 만약 ultrasonic이 NaN이면, a1 값을 대신 사용
+                    distance = Number(Entry.hw.portData.a1);
+                }
+                // console.log('[DEBUG] Ultrasonic sensor reading: ' + distance + ' cm');
+
                 // 센서 값이 임계값보다 작으면 "near", 이상이면 "far"
                 var actual = distance < threshold ? 'near' : 'far';
                 return actual === expected;
             },
         },
 
-        // ── 온습도 센서 블록 ─────────────────────────────
         set_temp_hum_input: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.default.HARDWARE,
@@ -286,24 +293,36 @@ Entry.smartCodingHouse.getBlocks = function () {
             func: function (sprite, script) {
                 var sensorType = script.getField('TYPE', script); // "temperature" 또는 "humidity"
                 var expected = script.getField('EXPECTED', script);
+                // a2 채널에서 수신한 결합된 값을 가져옴
+                var combined = Number(Entry.hw.portData.a2);
+                // Arduino에서 보낸 값은 (온도×100 + 습도)를 5로 나눈 값이므로,
+                // 원래 값을 복원하려면 5를 곱해줌
+                var value = combined * 5;
+                // 온도는 몫, 습도는 나머지로 분리 (예: 25°C, 50% → 25×100+50 = 2550)
+                var temp = Math.floor(value / 100);
+                var humi = value % 100;
+
+                console.log('[DEBUG] combined: ' + combined);
+                console.log('[DEBUG] temp: ' + temp);
+                console.log('[DEBUG] humi: ' + humi);
+
+                if (isNaN(combined)) {
+                    combined = Number(Entry.hw.portData.a2);
+                }
+                
                 if (sensorType === 'temperature') {
-                    var temp = Number(Entry.hw.portData.temperature);
-                    if (isNaN(temp)) return false;
-                    // 25℃를 기준으로 온도가 높으면 "hot", 낮으면 "cold"
                     var actual = temp > 25 ? 'hot' : 'cold';
-                    // 예상 결과가 온도 관련 옵션이 아니면 false 반환
                     if (expected !== 'hot' && expected !== 'cold') return false;
                     return actual === expected;
                 } else {
-                    var humi = Number(Entry.hw.portData.humidity);
-                    if (isNaN(humi)) return false;
-                    // 50%를 기준으로 습도가 높으면 "wet", 낮으면 "dry"
                     var actual = humi > 50 ? 'wet' : 'dry';
                     if (expected !== 'wet' && expected !== 'dry') return false;
                     return actual === expected;
                 }
+                
             },
         },
+        
 
         set_light_input: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -543,6 +562,7 @@ Entry.smartCodingHouse.getBlocks = function () {
                         Entry.smartCodingHouse.modeDoor();
                         break;
                     default:
+                        console.log('Unknown mode: ' + mode);
                 }
                 return script.callReturn();
             },
@@ -692,14 +712,10 @@ Entry.smartCodingHouse.getBlocks = function () {
                 let location = script.getField('LOCATION', script);
                 let color = script.getStringField('COLOR', script);
                 if (!location) {
+                    console.error('Error: LOCATION 값이 undefined!');
                     return script.callReturn();
                 }
                 let rgb = hexToRgb(color);
-                let hsv = rgbToHsv(rgb.r, rgb.g, rgb.b); // RGB → HSV
-                hsv.s = 1.0; // 채도 100%
-                hsv.v = 1.0; // 밝기 100%
-                rgb = hsvToRgb(hsv.h, hsv.s, hsv.v); // HSV → RGB
-
                 let pinR, pinG, pinB;
                 if (location === 'OUTDOOR1') {
                     pinR = Entry.smartCodingHouse.digitalPin.OUTDOOR1_LED_RED;
@@ -714,6 +730,10 @@ Entry.smartCodingHouse.getBlocks = function () {
                     pinG = Entry.smartCodingHouse.digitalPin.TERRACE2_LED_GREEN;
                     pinB = Entry.smartCodingHouse.digitalPin.TERRACE2_LED_BLUE;
                 }
+                // 콘솔 로그로 선택된 포트 번호 확인
+                // console.log('LED OFF - Location:', location);
+                // console.log('Port Red:', pinR, 'Port Green:', pinG, 'Port Blue:', pinB);
+
                 // LED 출력: 하드웨어 업데이트 전에 값 할당
                 Entry.hw.sendQueue[pinR] = rgb.r;
                 Entry.hw.sendQueue[pinG] = rgb.g;
@@ -734,7 +754,7 @@ Entry.smartCodingHouse.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['1층 실내', 'INDOOR'],
+                        ['실내', 'INDOOR'],
                         ['1층 실외', 'OUTDOOR1'],
                         ['2층 테라스', 'TERRACE2'],
                     ],
