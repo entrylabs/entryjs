@@ -1040,7 +1040,7 @@ const _throttle = require('lodash/throttle');
                 for (let i = 0; i < 14; i++) {
                     const index = this.sendIndex.led7x1 + i;
                     this.sendPacket[index] = this.setData.ledColumm.pixel[i];
-                    if (index > 6 && this.sendPacket[index] > 0) {
+                    if (i >= 7 && this.sendPacket[index] > 0) {
                         nextPage = true;
                     }
                 }
