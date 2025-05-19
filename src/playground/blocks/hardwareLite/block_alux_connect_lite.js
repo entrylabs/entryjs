@@ -83,7 +83,17 @@ const _throttle = require('lodash/throttle');
             }
             this.remoteEvent = _throttle(
                 () => {
-                    Entry.engine.fireEvent('connectlite_event_remote_input');
+                    // 통신 상태를 저장하고 이벤트 후에 복원
+                    const prevFlag = this.sendFlag;
+                    try {
+                        console.log('리모컨 이벤트 발생', new Date().toISOString());
+                        Entry.engine.fireEvent('connectlite_event_remote_input');
+                    } catch (e) {
+                        console.error('리모컨 이벤트 에러:', e);
+                    } finally {
+                        // 이벤트 처리 후 원래 통신 상태 복원
+                        this.sendFlag = prevFlag;
+                    }
                 },
                 EVENT_INTERVAL,
                 eventSetting
@@ -593,8 +603,17 @@ const _throttle = require('lodash/throttle');
 
             Entry.addEventListener('run', this.handleRemoteEventInterval.bind(this));
             Entry.addEventListener('run', this.handleDigitalEventInterval.bind(this));
-            Entry.addEventListener('beforeStop', clearInterval(this.remoteEventIntervalId));
-            Entry.addEventListener('beforeStop', clearInterval(this.digitalEventIntervalId));
+            Entry.addEventListener('beforeStop', () => {
+                console.log('이벤트 인터벌 정리');
+                if (this.remoteEventIntervalId) {
+                    clearInterval(this.remoteEventIntervalId);
+                    this.remoteEventIntervalId = null;
+                }
+                if (this.digitalEventIntervalId) {
+                    clearInterval(this.digitalEventIntervalId);
+                    this.digitalEventIntervalId = null;
+                }
+            });
 
             this.setZero();
             
@@ -613,7 +632,16 @@ const _throttle = require('lodash/throttle');
         }
 
         handleRemoteEventInterval() {
-            this.remoteEventIntervalId = setInterval(this.remoteEvent.bind(this), EVENT_INTERVAL);
+            // 기존 인터벌이 있으면 제거
+            if (this.remoteEventIntervalId) {
+                clearInterval(this.remoteEventIntervalId);
+            }
+            console.log('리모컨 이벤트 인터벌 등록');
+            this.remoteEventIntervalId = setInterval(() => {
+                // sendFlag 확인 후 이벤트 발생
+                const currentState = this.remoteEvent.bind(this);
+                currentState();
+            }, EVENT_INTERVAL);
         }
 
         handleDigitalEventInterval() {
@@ -621,7 +649,15 @@ const _throttle = require('lodash/throttle');
         }
 
         // 디바이스에서 값을 읽어온다.
+        // 디바이스에서 값을 읽어온다.
         handleLocalData(buffer) {
+            console.log('handleLocalData 호출', this.sendFlag);
+            
+            // 데이터가 들어왔으므로 통신 타임아웃 초기화
+            if (this._recoverTimeoutId) {
+                clearTimeout(this._recoverTimeoutId);
+            }
+            
             buffer.forEach(b => this.qEnqueue(b));
             
             while(this.qCount() >= this.inputPacket.length) {
@@ -656,24 +692,37 @@ const _throttle = require('lodash/throttle');
             }
 
             if (this.sendFlag) {
-                setTimeout(
+                // 기존 대기중인 타임아웃 취소
+                if (this._requestTimeoutId) {
+                    clearTimeout(this._requestTimeoutId);
+                }
+                
+                this._requestTimeoutId = setTimeout(
                     () => {                    
                         if (Entry.hwLite && Entry.hwLite.serial) {
                             Entry.hwLite.serial.update();
                             this.sendFlag = false;
+                            
+                            // 응답 타임아웃 처리: 일정 시간 후에도 응답이 없으면 복구
+                            this._recoverTimeoutId = setTimeout(() => {
+                                console.log('통신 복구 메커니즘 작동');
+                                this.sendFlag = true;
+                            }, SERIAL_INTERVAL * 3);
                         }
                     },
                     SERIAL_INTERVAL
                 );
-            };
+            }
         }
 
         //디바이스에 값을 쓴다.
         requestLocalData() {
+            console.log('requestLocalData 호출',this.sendFlag);
             if (this.sendFlag) {
                 return this.generateOutputPacket(this.RemoteData);
             }
         }
+
 
         qEnqueue(data) {
             this.qBuffer[this.qRear] = data;
