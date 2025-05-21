@@ -1170,8 +1170,8 @@ let camera_id_for_use = 0;
                         robotis_ai_camera_center_arrow_target_x: '끝점 X좌표',
                         robotis_ai_camera_center_arrow_target_y: '끝점 Y좌표',
 
-                        robotis_plant_ripe: '빨간색으로 잘 익은',
-                        robotis_plant_unripe: '초록색으로 덜 익은',
+                        robotis_plant_ripe: '빨간색',
+                        robotis_plant_unripe: '초록색',
                         robotis_harvest: '수확하고',
                         robotis_not_harvest: '수확하지 않고',
                     },
