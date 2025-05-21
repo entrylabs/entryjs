@@ -24,71 +24,71 @@ import metadata from './metadata_whalesbot_drone_lite.json';
             // duration도 미확인
             this.duration = 32;
             this.blockMenuBlocks = [
-                // 'whalesbot_eagle_1001_openning_3d_simulator',
-                'whalesbot_eagle_1001_entering_pitch_mode',
-                'whalesbot_eagle_1001_exit_pitch_mode',
-                'whalesbot_eagle_1001_automatic_take_off_height',
-                'whalesbot_eagle_1001_automatic_take_off_altitude_speed_offset',
-                'whalesbot_eagle_1001_automatic_landing',
-                'whalesbot_eagle_1001_automatic_descent_speed_offset',
-                'whalesbot_eagle_1001_set_the_flight_speed',
-                'whalesbot_eagle_1001_get_setting_speed',
-                'whalesbot_eagle_1001_rise',
-                'whalesbot_eagle_1001_down',
-                'whalesbot_eagle_1001_fly_forward',
-                'whalesbot_eagle_1001_fly_backward',
-                'whalesbot_eagle_1001_fly_left',
-                'whalesbot_eagle_1001_fly_right',
-                'whalesbot_eagle_1001_turn_left',
-                'whalesbot_eagle_1001_turn_right',
-                'whalesbot_eagle_1001_fly_in_the_specified_direction',
-                'whalesbot_eagle_1001_flight_designated',
-                'whalesbot_eagle_1001_set_the_four_channel_lever_quantity_of_remote_control',
-                'whalesbot_eagle_1001_stop_moving_and_hover',
-                'whalesbot_eagle_1001_hover_at_specified_altitude',
-                'whalesbot_eagle_1001_emergency_stop',
-                'whalesbot_eagle_1001_set_the_steering_gear',
-                // 'whalesbot_eagle_1001_execute_script',
-                'whalesbot_eagle_1001_clean',
-                'whalesbot_eagle_1001_restart',
-                'whalesbot_eagle_1001_get_status',
+                // 'whalesbot_eagle_1001_lite_openning_3d_simulator',
+                'whalesbot_eagle_1001_lite_entering_pitch_mode',
+                'whalesbot_eagle_1001_lite_exit_pitch_mode',
+                'whalesbot_eagle_1001_lite_automatic_take_off_height',
+                'whalesbot_eagle_1001_lite_automatic_take_off_altitude_speed_offset',
+                'whalesbot_eagle_1001_lite_automatic_landing',
+                'whalesbot_eagle_1001_lite_automatic_descent_speed_offset',
+                'whalesbot_eagle_1001_lite_set_the_flight_speed',
+                'whalesbot_eagle_1001_lite_get_setting_speed',
+                'whalesbot_eagle_1001_lite_rise',
+                'whalesbot_eagle_1001_lite_down',
+                'whalesbot_eagle_1001_lite_fly_forward',
+                'whalesbot_eagle_1001_lite_fly_backward',
+                'whalesbot_eagle_1001_lite_fly_left',
+                'whalesbot_eagle_1001_lite_fly_right',
+                'whalesbot_eagle_1001_lite_turn_left',
+                'whalesbot_eagle_1001_lite_turn_right',
+                'whalesbot_eagle_1001_lite_fly_in_the_specified_direction',
+                'whalesbot_eagle_1001_lite_flight_designated',
+                'whalesbot_eagle_1001_lite_set_the_four_channel_lever_quantity_of_remote_control',
+                'whalesbot_eagle_1001_lite_stop_moving_and_hover',
+                'whalesbot_eagle_1001_lite_hover_at_specified_altitude',
+                'whalesbot_eagle_1001_lite_emergency_stop',
+                'whalesbot_eagle_1001_lite_set_the_steering_gear',
+                // 'whalesbot_eagle_1001_lite_execute_script',
+                'whalesbot_eagle_1001_lite_clean',
+                'whalesbot_eagle_1001_lite_restart',
+                'whalesbot_eagle_1001_lite_get_status',
                 // light & speaker blocks
-                'whalesbot_eagle_1001_ls_debug_value',
-                'whalesbot_eagle_1001_ls_display_symbol',
-                'whalesbot_eagle_1001_ls_off_LED',
-                'whalesbot_eagle_1001_ls_display_digital_tube',
-                'whalesbot_eagle_1001_ls_display_digital_tube_score',
-                'whalesbot_eagle_1001_ls_off_digital_tube',
-                'whalesbot_eagle_1001_ls_set_RGB',
-                'whalesbot_eagle_1001_ls_fly_RGB',
-                // 'whalesbot_eagle_1001_ls_set_DO',
-                // 'whalesbot_eagle_1001_ls_execute_script',
+                'whalesbot_eagle_1001_lite_ls_debug_value',
+                'whalesbot_eagle_1001_lite_ls_display_symbol',
+                'whalesbot_eagle_1001_lite_ls_off_LED',
+                'whalesbot_eagle_1001_lite_ls_display_digital_tube',
+                'whalesbot_eagle_1001_lite_ls_display_digital_tube_score',
+                'whalesbot_eagle_1001_lite_ls_off_digital_tube',
+                'whalesbot_eagle_1001_lite_ls_set_RGB',
+                'whalesbot_eagle_1001_lite_ls_fly_RGB',
+                // 'whalesbot_eagle_1001_lite_ls_set_DO',
+                // 'whalesbot_eagle_1001_lite_ls_execute_script',
                 // sensors
-                'whalesbot_eagle_1001_ss_fly_state_POS_Z',
-                'whalesbot_eagle_1001_ss_fly_state_LASER',
-                'whalesbot_eagle_1001_ss_battery_voltage',
-                'whalesbot_eagle_1001_ss_fly_state_STATE_TEMP',
-                'whalesbot_eagle_1001_ss_attitude_angle',
-                'whalesbot_eagle_1001_ss_flight_angular_velocity',
-                'whalesbot_eagle_1001_ss_flight_acceleration',
-                'whalesbot_eagle_1001_ss_optical_flow',
-                'whalesbot_eagle_1001_ss_get_infrared_distance',
-                'whalesbot_eagle_1001_ss_obstacle_infrared_detected_bool',
-                // 'whalesbot_eagle_1001_ss_obstacle_infrared_detected_string',
-                // 'whalesbot_eagle_1001_ss_human_infrared_value_bool',
-                // 'whalesbot_eagle_1001_ss_human_infrared_value_string',
-                'whalesbot_eagle_1001_ss_AI',
-                // 'whalesbot_eagle_1001_ss_get_ultrasonic_distance',
-                'whalesbot_eagle_1001_ss_get_ambient_light',
-                // 'whalesbot_eagle_1001_ss_get_temperature',
-                // 'whalesbot_eagle_1001_ss_get_humidity',
-                // 'whalesbot_eagle_1001_ss_get_flame',
-                // 'whalesbot_eagle_1001_ss_get_gesture',
-                // 'whalesbot_eagle_1001_ss_get_tof',
-                // 'whalesbot_eagle_1001_ss_fly_setpoint_LASER_ENABLE',
-                // 'whalesbot_eagle_1001_ss_get_bt_remote_control',
-                // 'whalesbot_eagle_1001_ss_seconds',
-                // 'whalesbot_eagle_1001_ss_resettime',
+                'whalesbot_eagle_1001_lite_ss_fly_state_POS_Z',
+                'whalesbot_eagle_1001_lite_ss_fly_state_LASER',
+                'whalesbot_eagle_1001_lite_ss_battery_voltage',
+                'whalesbot_eagle_1001_lite_ss_fly_state_STATE_TEMP',
+                'whalesbot_eagle_1001_lite_ss_attitude_angle',
+                'whalesbot_eagle_1001_lite_ss_flight_angular_velocity',
+                'whalesbot_eagle_1001_lite_ss_flight_acceleration',
+                'whalesbot_eagle_1001_lite_ss_optical_flow',
+                'whalesbot_eagle_1001_lite_ss_get_infrared_distance',
+                'whalesbot_eagle_1001_lite_ss_obstacle_infrared_detected_bool',
+                // 'whalesbot_eagle_1001_lite_ss_obstacle_infrared_detected_string',
+                // 'whalesbot_eagle_1001_lite_ss_human_infrared_value_bool',
+                // 'whalesbot_eagle_1001_lite_ss_human_infrared_value_string',
+                'whalesbot_eagle_1001_lite_ss_AI',
+                // 'whalesbot_eagle_1001_lite_ss_get_ultrasonic_distance',
+                'whalesbot_eagle_1001_lite_ss_get_ambient_light',
+                // 'whalesbot_eagle_1001_lite_ss_get_temperature',
+                // 'whalesbot_eagle_1001_lite_ss_get_humidity',
+                // 'whalesbot_eagle_1001_lite_ss_get_flame',
+                // 'whalesbot_eagle_1001_lite_ss_get_gesture',
+                // 'whalesbot_eagle_1001_lite_ss_get_tof',
+                // 'whalesbot_eagle_1001_lite_ss_fly_setpoint_LASER_ENABLE',
+                // 'whalesbot_eagle_1001_lite_ss_get_bt_remote_control',
+                // 'whalesbot_eagle_1001_lite_ss_seconds',
+                // 'whalesbot_eagle_1001_lite_ss_resettime',
             ];
             this.portData = {
                 baudRate: 115200,
@@ -1157,77 +1157,77 @@ import metadata from './metadata_whalesbot_drone_lite.json';
             return {
                 ko: {
                     template: {
-                        whalesbot_eagle_1001_openning_3d_simulator: '3D 시뮬레이터를 엽니 다',
-                        whalesbot_eagle_1001_clean: '삭제',
-                        whalesbot_eagle_1001_restart: '재시작',
-                        whalesbot_eagle_1001_get_status: '상태 가져오기',
-                        whalesbot_eagle_1001_entering_pitch_mode: '준비모드 시작하기',
-                        whalesbot_eagle_1001_exit_pitch_mode: '준비모드 끝내기',
-                        whalesbot_eagle_1001_automatic_take_off_height: '자동 이륙 높이 %1 cm',
-                        whalesbot_eagle_1001_automatic_take_off_altitude_speed_offset: '자동 이륙 고도 %1 cm 속도 %2 X 오프셋 %3 도 Y 오프셋 %4 도 으로 이동하기',
-                        whalesbot_eagle_1001_automatic_landing: '드론착륙',
-                        whalesbot_eagle_1001_automatic_descent_speed_offset: '자동 낙하 속도 %1 X 오프셋 %2 도 Y 오프셋 %3 도',
-                        whalesbot_eagle_1001_set_the_flight_speed: '설정된 비행 속도는 %1 cm/s',
-                        whalesbot_eagle_1001_get_setting_speed: '설정 속도 가져오기',
-                        whalesbot_eagle_1001_rise: '위로 %1 cm',
-                        whalesbot_eagle_1001_down: '아래로 %1 cm',
-                        whalesbot_eagle_1001_fly_forward: '앞으로 %1 cm',
-                        whalesbot_eagle_1001_fly_backward: '뒤로 %1 cm',
-                        whalesbot_eagle_1001_fly_left: '왼쪽으로 %1 cm',
-                        whalesbot_eagle_1001_fly_right: '오른쪽으로 %1 cm',
-                        whalesbot_eagle_1001_turn_left: '왼쪽으로 회전 %1 °',
-                        whalesbot_eagle_1001_turn_right: '오른쪽으로 회전 %1 °',
-                        whalesbot_eagle_1001_fly_in_the_specified_direction: '속도 %1 , 방향 %2 으로이동하기',
-                        whalesbot_eagle_1001_flight_designated: '지정된 거리를 비행합니다 x %1 cm y %2 cm z%3 cm 속도 %4 cm/s',
-                        whalesbot_eagle_1001_set_the_four_channel_lever_quantity_of_remote_control: '리모컨 4개 채널 설정 Pitch %1 Roll %2 Throttle %3 Yaw %4',
-                        whalesbot_eagle_1001_stop_moving_and_hover: '호버링기능',
-                        whalesbot_eagle_1001_hover_at_specified_altitude: '지정된 높이에 서스펜션 %1 cm',
-                        whalesbot_eagle_1001_emergency_stop: '긴급정지',
-                        whalesbot_eagle_1001_set_the_steering_gear: '스티어링기어 ID 설정 포트 %1 속도 %2 각도 %3',
-                        whalesbot_eagle_1001_execute_script: '스크립트 실행',
+                        whalesbot_eagle_1001_lite_openning_3d_simulator: '3D 시뮬레이터를 엽니 다',
+                        whalesbot_eagle_1001_lite_clean: '삭제',
+                        whalesbot_eagle_1001_lite_restart: '재시작',
+                        whalesbot_eagle_1001_lite_get_status: '상태 가져오기',
+                        whalesbot_eagle_1001_lite_entering_pitch_mode: '준비모드 시작하기',
+                        whalesbot_eagle_1001_lite_exit_pitch_mode: '준비모드 끝내기',
+                        whalesbot_eagle_1001_lite_automatic_take_off_height: '자동 이륙 높이 %1 cm',
+                        whalesbot_eagle_1001_lite_automatic_take_off_altitude_speed_offset: '자동 이륙 고도 %1 cm 속도 %2 X 오프셋 %3 도 Y 오프셋 %4 도 으로 이동하기',
+                        whalesbot_eagle_1001_lite_automatic_landing: '드론착륙',
+                        whalesbot_eagle_1001_lite_automatic_descent_speed_offset: '자동 낙하 속도 %1 X 오프셋 %2 도 Y 오프셋 %3 도',
+                        whalesbot_eagle_1001_lite_set_the_flight_speed: '설정된 비행 속도는 %1 cm/s',
+                        whalesbot_eagle_1001_lite_get_setting_speed: '설정 속도 가져오기',
+                        whalesbot_eagle_1001_lite_rise: '위로 %1 cm',
+                        whalesbot_eagle_1001_lite_down: '아래로 %1 cm',
+                        whalesbot_eagle_1001_lite_fly_forward: '앞으로 %1 cm',
+                        whalesbot_eagle_1001_lite_fly_backward: '뒤로 %1 cm',
+                        whalesbot_eagle_1001_lite_fly_left: '왼쪽으로 %1 cm',
+                        whalesbot_eagle_1001_lite_fly_right: '오른쪽으로 %1 cm',
+                        whalesbot_eagle_1001_lite_turn_left: '왼쪽으로 회전 %1 °',
+                        whalesbot_eagle_1001_lite_turn_right: '오른쪽으로 회전 %1 °',
+                        whalesbot_eagle_1001_lite_fly_in_the_specified_direction: '속도 %1 , 방향 %2 으로이동하기',
+                        whalesbot_eagle_1001_lite_flight_designated: '지정된 거리를 비행합니다 x %1 cm y %2 cm z%3 cm 속도 %4 cm/s',
+                        whalesbot_eagle_1001_lite_set_the_four_channel_lever_quantity_of_remote_control: '리모컨 4개 채널 설정 Pitch %1 Roll %2 Throttle %3 Yaw %4',
+                        whalesbot_eagle_1001_lite_stop_moving_and_hover: '호버링기능',
+                        whalesbot_eagle_1001_lite_hover_at_specified_altitude: '지정된 높이에 서스펜션 %1 cm',
+                        whalesbot_eagle_1001_lite_emergency_stop: '긴급정지',
+                        whalesbot_eagle_1001_lite_set_the_steering_gear: '스티어링기어 ID 설정 포트 %1 속도 %2 각도 %3',
+                        whalesbot_eagle_1001_lite_execute_script: '스크립트 실행',
                         // light & speaker blocks
-                        whalesbot_eagle_1001_ls_debug_value: '센서 값 확인 %1 %2',
-                        whalesbot_eagle_1001_ls_display_symbol: '도트매트릭스 %1 포트 %2',
-                        whalesbot_eagle_1001_ls_off_LED: '표현스크린 닫기 포트 %1',
-                        whalesbot_eagle_1001_ls_display_digital_tube: '디지털튜브 포트 %1 %2',
-                        whalesbot_eagle_1001_ls_display_digital_tube_score: '디지털튜브에 점수 표시 포트 %1 %2 : %3',
-                        whalesbot_eagle_1001_ls_off_digital_tube: '디지털튜브 닫기 포트 %1',
-                        whalesbot_eagle_1001_ls_set_RGB: 'LED색상설정 포트 %1 색상 R %2 G %3 B %4',
-                        whalesbot_eagle_1001_ls_fly_RGB: 'Led 조명인가요? %1',
-                        whalesbot_eagle_1001_ls_set_DO: '전자석 포트 %1 %2',
-                        whalesbot_eagle_1001_ls_execute_script: '동작 없이 스크립트 실행',
+                        whalesbot_eagle_1001_lite_ls_debug_value: '센서 값 확인 %1 %2',
+                        whalesbot_eagle_1001_lite_ls_display_symbol: '도트매트릭스 %1 포트 %2',
+                        whalesbot_eagle_1001_lite_ls_off_LED: '표현스크린 닫기 포트 %1',
+                        whalesbot_eagle_1001_lite_ls_display_digital_tube: '디지털튜브 포트 %1 %2',
+                        whalesbot_eagle_1001_lite_ls_display_digital_tube_score: '디지털튜브에 점수 표시 포트 %1 %2 : %3',
+                        whalesbot_eagle_1001_lite_ls_off_digital_tube: '디지털튜브 닫기 포트 %1',
+                        whalesbot_eagle_1001_lite_ls_set_RGB: 'LED색상설정 포트 %1 색상 R %2 G %3 B %4',
+                        whalesbot_eagle_1001_lite_ls_fly_RGB: 'Led 조명인가요? %1',
+                        whalesbot_eagle_1001_lite_ls_set_DO: '전자석 포트 %1 %2',
+                        whalesbot_eagle_1001_lite_ls_execute_script: '동작 없이 스크립트 실행',
                         // sensors
-                        whalesbot_eagle_1001_ss_fly_state_POS_Z: '비행 고도 cm',
-                        whalesbot_eagle_1001_ss_fly_state_LASER: '동체 내부 레이저 거리 측정 cm',
-                        whalesbot_eagle_1001_ss_battery_voltage: '배터리 전압 (V)',
-                        whalesbot_eagle_1001_ss_fly_state_STATE_TEMP: '메인보드 온도 (°)',
-                        whalesbot_eagle_1001_ss_attitude_angle: '자세각 %1 (°)',
-                        whalesbot_eagle_1001_ss_flight_angular_velocity: '비행각속도 %1 cm/s',
-                        whalesbot_eagle_1001_ss_flight_acceleration: '비행 가속도 %1 (1g)',
-                        whalesbot_eagle_1001_ss_optical_flow: '광류 %1 (cm)',
-                        whalesbot_eagle_1001_ss_get_infrared_distance: '적외선센 포트 %1 값',
-                        whalesbot_eagle_1001_ss_obstacle_infrared_detected_bool: '적외선센서 포트 %1 장애물 감지',
-                        whalesbot_eagle_1001_ss_obstacle_infrared_detected_string: '적외선센서 포트 %1 장애물 감지',
-                        whalesbot_eagle_1001_ss_human_infrared_value_bool: '인체 감지 센서 포트 %1 사람을 감지하다',
-                        whalesbot_eagle_1001_ss_human_infrared_value_string: '인체 감지 센서 포트 %1 사람을 감지하다',
-                        whalesbot_eagle_1001_ss_AI: '아날로그 입력 포트 %1 값',
-                        whalesbot_eagle_1001_ss_get_ultrasonic_distance: '초음파센서 포트 %1 거리 강지 cm',
-                        whalesbot_eagle_1001_ss_get_ambient_light: '조도센서 입력 포트 %1 값',
-                        whalesbot_eagle_1001_ss_get_temperature: '온도 센서 포트 %1 °C',
-                        whalesbot_eagle_1001_ss_get_humidity: '습도 센서 포트 %1 값 %',
-                        whalesbot_eagle_1001_ss_get_flame: '불꽃센서 포트 %1 값',
-                        whalesbot_eagle_1001_ss_get_gesture: '동작인식 포트 %1',
-                        whalesbot_eagle_1001_ss_get_tof: '레이저 거리 측정 포트 %1',
-                        whalesbot_eagle_1001_ss_fly_setpoint_LASER_ENABLE: '레이저 높이 %1',
-                        whalesbot_eagle_1001_ss_get_bt_remote_control: '리모콘 버튼 %1 값',
-                        whalesbot_eagle_1001_ss_seconds: '현재 타이머 값',
-                        whalesbot_eagle_1001_ss_resettime: '타이머 재설정',
+                        whalesbot_eagle_1001_lite_ss_fly_state_POS_Z: '비행 고도 cm',
+                        whalesbot_eagle_1001_lite_ss_fly_state_LASER: '동체 내부 레이저 거리 측정 cm',
+                        whalesbot_eagle_1001_lite_ss_battery_voltage: '배터리 전압 (V)',
+                        whalesbot_eagle_1001_lite_ss_fly_state_STATE_TEMP: '메인보드 온도 (°)',
+                        whalesbot_eagle_1001_lite_ss_attitude_angle: '자세각 %1 (°)',
+                        whalesbot_eagle_1001_lite_ss_flight_angular_velocity: '비행각속도 %1 cm/s',
+                        whalesbot_eagle_1001_lite_ss_flight_acceleration: '비행 가속도 %1 (1g)',
+                        whalesbot_eagle_1001_lite_ss_optical_flow: '광류 %1 (cm)',
+                        whalesbot_eagle_1001_lite_ss_get_infrared_distance: '적외선센 포트 %1 값',
+                        whalesbot_eagle_1001_lite_ss_obstacle_infrared_detected_bool: '적외선센서 포트 %1 장애물 감지',
+                        whalesbot_eagle_1001_lite_ss_obstacle_infrared_detected_string: '적외선센서 포트 %1 장애물 감지',
+                        whalesbot_eagle_1001_lite_ss_human_infrared_value_bool: '인체 감지 센서 포트 %1 사람을 감지하다',
+                        whalesbot_eagle_1001_lite_ss_human_infrared_value_string: '인체 감지 센서 포트 %1 사람을 감지하다',
+                        whalesbot_eagle_1001_lite_ss_AI: '아날로그 입력 포트 %1 값',
+                        whalesbot_eagle_1001_lite_ss_get_ultrasonic_distance: '초음파센서 포트 %1 거리 강지 cm',
+                        whalesbot_eagle_1001_lite_ss_get_ambient_light: '조도센서 입력 포트 %1 값',
+                        whalesbot_eagle_1001_lite_ss_get_temperature: '온도 센서 포트 %1 °C',
+                        whalesbot_eagle_1001_lite_ss_get_humidity: '습도 센서 포트 %1 값 %',
+                        whalesbot_eagle_1001_lite_ss_get_flame: '불꽃센서 포트 %1 값',
+                        whalesbot_eagle_1001_lite_ss_get_gesture: '동작인식 포트 %1',
+                        whalesbot_eagle_1001_lite_ss_get_tof: '레이저 거리 측정 포트 %1',
+                        whalesbot_eagle_1001_lite_ss_fly_setpoint_LASER_ENABLE: '레이저 높이 %1',
+                        whalesbot_eagle_1001_lite_ss_get_bt_remote_control: '리모콘 버튼 %1 값',
+                        whalesbot_eagle_1001_lite_ss_seconds: '현재 타이머 값',
+                        whalesbot_eagle_1001_lite_ss_resettime: '타이머 재설정',
                     },
                     Device: {
-                        whalesbot_eagle_1001_lite: 'whalesbot_eagle_1001_lite',
+                        whalesbot_eagle_1001_lite_lite: 'whalesbot_eagle_1001_lite_lite',
                     },
                     Menus: {
-                        whalesbot_eagle_1001_lite: 'WhalesbotEagle1001Lite',
+                        whalesbot_eagle_1001_lite_lite: 'WhalesbotEagle1001Lite',
                     },
                     Blocks: {
                         light_speaker: {
@@ -1238,90 +1238,90 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                             laser_height_determination: { on: 'On', off: 'Off' },
                             remote_control_button: { key: 'Key', left_rocker_x: 'Left rocker X', left_rocker_y: 'Left rocker Y', right_rocker_x: 'Right rocker X', right_rocker_y: 'Right rocker Y' },
                         },
-                        whalesbot_eagle_1001_toast_status_title: "드론 상태",
-                        whalesbot_eagle_1001_toast_prepare_download: "다운로드 준비...",
-                        whalesbot_eagle_1001_toast_downloading_code: "코드 다운로드...",
-                        whalesbot_eagle_1001_toast_download_success: "다운로드 코드가 성공했습니다",
-                        whalesbot_eagle_1001_toast_download_failed: "다운로드 코드가 실패했습니다",
-                        whalesbot_eagle_1001_toast_clean_failed: "깨끗한 코드가 실패했습니다",
-                        whalesbot_eagle_1001_toast_clean_success: "깨끗한 코드 성공",
-                        whalesbot_eagle_1001_toast_unsupport_block_title: "지원되지 않는 블록",
-                        whalesbot_eagle_1001_toast_unsupport_block_msg: "하드웨어에서는 일부 블록이 지원되지 않습니다"
+                        whalesbot_eagle_1001_lite_toast_status_title: "드론 상태",
+                        whalesbot_eagle_1001_lite_toast_prepare_download: "다운로드 준비...",
+                        whalesbot_eagle_1001_lite_toast_downloading_code: "코드 다운로드...",
+                        whalesbot_eagle_1001_lite_toast_download_success: "다운로드 코드가 성공했습니다",
+                        whalesbot_eagle_1001_lite_toast_download_failed: "다운로드 코드가 실패했습니다",
+                        whalesbot_eagle_1001_lite_toast_clean_failed: "깨끗한 코드가 실패했습니다",
+                        whalesbot_eagle_1001_lite_toast_clean_success: "깨끗한 코드 성공",
+                        whalesbot_eagle_1001_lite_toast_unsupport_block_title: "지원되지 않는 블록",
+                        whalesbot_eagle_1001_lite_toast_unsupport_block_msg: "하드웨어에서는 일부 블록이 지원되지 않습니다"
                     }
                 },
                 en: {
                     template: {
-                        whalesbot_eagle_1001_openning_3d_simulator: 'Open 3D Simulator',
-                        whalesbot_eagle_1001_clean: 'Clean',
-                        whalesbot_eagle_1001_restart: 'Restart',
-                        whalesbot_eagle_1001_get_status: 'Get Status',
-                        whalesbot_eagle_1001_entering_pitch_mode: 'Entering Pitch Mode',
-                        whalesbot_eagle_1001_exit_pitch_mode: 'Exit Pitch Mode',
-                        whalesbot_eagle_1001_automatic_take_off_height: 'Automatic Take Off Height %1 cm',
-                        whalesbot_eagle_1001_automatic_take_off_altitude_speed_offset: 'Automatic Take Off Altitude %1 cm, Speed %2, X offset %3 degree, Y offset %4 degree',
-                        whalesbot_eagle_1001_automatic_landing: 'Automatic Landing',
-                        whalesbot_eagle_1001_automatic_descent_speed_offset: 'Automatic Descent Speed %1, X offset %2 degree, Y offset %3 degree',
-                        whalesbot_eagle_1001_set_the_flight_speed: 'Set The Flight Speed To %1 cm/s',
-                        whalesbot_eagle_1001_get_setting_speed: 'Get Setting Speed',
-                        whalesbot_eagle_1001_rise: 'Rise %1 cm',
-                        whalesbot_eagle_1001_down: 'Down %1 cm',
-                        whalesbot_eagle_1001_fly_forward: 'Fly Forward %1 cm',
-                        whalesbot_eagle_1001_fly_backward: 'Fly Backward %1 cm',
-                        whalesbot_eagle_1001_fly_left: 'Fly Left %1 cm',
-                        whalesbot_eagle_1001_fly_right: 'Fly Right %1 cm',
-                        whalesbot_eagle_1001_turn_left: 'Turn Left %1 °',
-                        whalesbot_eagle_1001_turn_right: 'Turn Right %1 °',
-                        whalesbot_eagle_1001_fly_in_the_specified_direction: 'Fly In The Specified Direction Speed %1 cm/s Direction %2 °',
-                        whalesbot_eagle_1001_flight_designated: 'Flight Designated Distance X %1 cm Y %2 cm Z %3 cm Speed %4 cm/s',
-                        whalesbot_eagle_1001_set_the_four_channel_lever_quantity_of_remote_control: 'Set The Four Channel Lever Quantity Of Remote Control Pitch %1° Roll %2° Throttle %3° Roll %4°',
-                        whalesbot_eagle_1001_stop_moving_and_hover: 'Stop Moving And Hover',
-                        whalesbot_eagle_1001_hover_at_specified_altitude: 'Hover At a Specified Altitude %1 cm',
-                        whalesbot_eagle_1001_emergency_stop: 'Emergency Stop',
-                        whalesbot_eagle_1001_set_the_steering_gear: 'Set The Steering Gear Port %1 Speed %2 cm/s Angle %3 °',
-                        whalesbot_eagle_1001_execute_script: 'Execute Script',
+                        whalesbot_eagle_1001_lite_openning_3d_simulator: 'Open 3D Simulator',
+                        whalesbot_eagle_1001_lite_clean: 'Clean',
+                        whalesbot_eagle_1001_lite_restart: 'Restart',
+                        whalesbot_eagle_1001_lite_get_status: 'Get Status',
+                        whalesbot_eagle_1001_lite_entering_pitch_mode: 'Entering Pitch Mode',
+                        whalesbot_eagle_1001_lite_exit_pitch_mode: 'Exit Pitch Mode',
+                        whalesbot_eagle_1001_lite_automatic_take_off_height: 'Automatic Take Off Height %1 cm',
+                        whalesbot_eagle_1001_lite_automatic_take_off_altitude_speed_offset: 'Automatic Take Off Altitude %1 cm, Speed %2, X offset %3 degree, Y offset %4 degree',
+                        whalesbot_eagle_1001_lite_automatic_landing: 'Automatic Landing',
+                        whalesbot_eagle_1001_lite_automatic_descent_speed_offset: 'Automatic Descent Speed %1, X offset %2 degree, Y offset %3 degree',
+                        whalesbot_eagle_1001_lite_set_the_flight_speed: 'Set The Flight Speed To %1 cm/s',
+                        whalesbot_eagle_1001_lite_get_setting_speed: 'Get Setting Speed',
+                        whalesbot_eagle_1001_lite_rise: 'Rise %1 cm',
+                        whalesbot_eagle_1001_lite_down: 'Down %1 cm',
+                        whalesbot_eagle_1001_lite_fly_forward: 'Fly Forward %1 cm',
+                        whalesbot_eagle_1001_lite_fly_backward: 'Fly Backward %1 cm',
+                        whalesbot_eagle_1001_lite_fly_left: 'Fly Left %1 cm',
+                        whalesbot_eagle_1001_lite_fly_right: 'Fly Right %1 cm',
+                        whalesbot_eagle_1001_lite_turn_left: 'Turn Left %1 °',
+                        whalesbot_eagle_1001_lite_turn_right: 'Turn Right %1 °',
+                        whalesbot_eagle_1001_lite_fly_in_the_specified_direction: 'Fly In The Specified Direction Speed %1 cm/s Direction %2 °',
+                        whalesbot_eagle_1001_lite_flight_designated: 'Flight Designated Distance X %1 cm Y %2 cm Z %3 cm Speed %4 cm/s',
+                        whalesbot_eagle_1001_lite_set_the_four_channel_lever_quantity_of_remote_control: 'Set The Four Channel Lever Quantity Of Remote Control Pitch %1° Roll %2° Throttle %3° Roll %4°',
+                        whalesbot_eagle_1001_lite_stop_moving_and_hover: 'Stop Moving And Hover',
+                        whalesbot_eagle_1001_lite_hover_at_specified_altitude: 'Hover At a Specified Altitude %1 cm',
+                        whalesbot_eagle_1001_lite_emergency_stop: 'Emergency Stop',
+                        whalesbot_eagle_1001_lite_set_the_steering_gear: 'Set The Steering Gear Port %1 Speed %2 cm/s Angle %3 °',
+                        whalesbot_eagle_1001_lite_execute_script: 'Execute Script',
                         // light & speaker blocks
-                        whalesbot_eagle_1001_ls_debug_value: 'Debugging: Data %1 %2',
-                        whalesbot_eagle_1001_ls_display_symbol: 'Emotion screen symbols %1 port %2',
-                        whalesbot_eagle_1001_ls_off_LED: 'Clear emotion screen port %1',
-                        whalesbot_eagle_1001_ls_display_digital_tube: 'Digital tube port %1 %2',
-                        whalesbot_eagle_1001_ls_display_digital_tube_score: 'Digital tube score display port %1 %2 : %3',
-                        whalesbot_eagle_1001_ls_off_digital_tube: 'Clear digital tube port %1',
-                        whalesbot_eagle_1001_ls_set_RGB: 'Set LED lights port %1 color R %2 G %3 B %4',
-                        whalesbot_eagle_1001_ls_fly_RGB: 'Airborne lighting %1',
-                        whalesbot_eagle_1001_ls_set_DO: 'Electromagnet port %1 %2',
-                        whalesbot_eagle_1001_ls_execute_script: 'Execute Script Without Motion',
+                        whalesbot_eagle_1001_lite_ls_debug_value: 'Debugging: Data %1 %2',
+                        whalesbot_eagle_1001_lite_ls_display_symbol: 'Emotion screen symbols %1 port %2',
+                        whalesbot_eagle_1001_lite_ls_off_LED: 'Clear emotion screen port %1',
+                        whalesbot_eagle_1001_lite_ls_display_digital_tube: 'Digital tube port %1 %2',
+                        whalesbot_eagle_1001_lite_ls_display_digital_tube_score: 'Digital tube score display port %1 %2 : %3',
+                        whalesbot_eagle_1001_lite_ls_off_digital_tube: 'Clear digital tube port %1',
+                        whalesbot_eagle_1001_lite_ls_set_RGB: 'Set LED lights port %1 color R %2 G %3 B %4',
+                        whalesbot_eagle_1001_lite_ls_fly_RGB: 'Airborne lighting %1',
+                        whalesbot_eagle_1001_lite_ls_set_DO: 'Electromagnet port %1 %2',
+                        whalesbot_eagle_1001_lite_ls_execute_script: 'Execute Script Without Motion',
                         // sensors
-                        whalesbot_eagle_1001_ss_fly_state_POS_Z: 'Flight attitude cm',
-                        whalesbot_eagle_1001_ss_fly_state_LASER: 'Laser ranging inside the fuselage cm',
-                        whalesbot_eagle_1001_ss_battery_voltage: 'Battery voltage (V)',
-                        whalesbot_eagle_1001_ss_fly_state_STATE_TEMP: 'Main board temperature (°C)',
-                        whalesbot_eagle_1001_ss_attitude_angle: 'Attitude angle %1 (°)',
-                        whalesbot_eagle_1001_ss_flight_angular_velocity: 'Flight angular velocity %1 cm/s',
-                        whalesbot_eagle_1001_ss_flight_acceleration: 'Flight acceleration %1 (1g)',
-                        whalesbot_eagle_1001_ss_optical_flow: 'Optical flow %1 (cm)',
-                        whalesbot_eagle_1001_ss_get_infrared_distance: 'Infrared ranging sensor port %1 value',
-                        whalesbot_eagle_1001_ss_obstacle_infrared_detected_bool: 'Infrared port %1 obstacle detected',
-                        whalesbot_eagle_1001_ss_obstacle_infrared_detected_string: 'Infrared port %1 obstacle detected',
-                        whalesbot_eagle_1001_ss_human_infrared_value_bool: 'Human infrared sensor port %1 detects a person',
-                        whalesbot_eagle_1001_ss_human_infrared_value_string: 'Human infrared sensor port %1 detects a person',
-                        whalesbot_eagle_1001_ss_AI: 'Analog input port %1 value',
-                        whalesbot_eagle_1001_ss_get_ultrasonic_distance: 'Ultrasonic sensor port %1 detect distance cm',
-                        whalesbot_eagle_1001_ss_get_ambient_light: 'Ambient light port %1 value',
-                        whalesbot_eagle_1001_ss_get_temperature: 'Temperature sensor port %1 °C',
-                        whalesbot_eagle_1001_ss_get_humidity: 'Humidity sensor port %1 value %',
-                        whalesbot_eagle_1001_ss_get_flame: 'Flame sensor port %1 value',
-                        whalesbot_eagle_1001_ss_get_gesture: 'Gesture recognition port %1',
-                        whalesbot_eagle_1001_ss_get_tof: 'Laser ranging port %1',
-                        whalesbot_eagle_1001_ss_fly_setpoint_LASER_ENABLE: 'Laser height determination %1',
-                        whalesbot_eagle_1001_ss_get_bt_remote_control: 'Remote control button %1 value',
-                        whalesbot_eagle_1001_ss_seconds: 'current timer value',
-                        whalesbot_eagle_1001_ss_resettime: 'Reset timer',
+                        whalesbot_eagle_1001_lite_ss_fly_state_POS_Z: 'Flight attitude cm',
+                        whalesbot_eagle_1001_lite_ss_fly_state_LASER: 'Laser ranging inside the fuselage cm',
+                        whalesbot_eagle_1001_lite_ss_battery_voltage: 'Battery voltage (V)',
+                        whalesbot_eagle_1001_lite_ss_fly_state_STATE_TEMP: 'Main board temperature (°C)',
+                        whalesbot_eagle_1001_lite_ss_attitude_angle: 'Attitude angle %1 (°)',
+                        whalesbot_eagle_1001_lite_ss_flight_angular_velocity: 'Flight angular velocity %1 cm/s',
+                        whalesbot_eagle_1001_lite_ss_flight_acceleration: 'Flight acceleration %1 (1g)',
+                        whalesbot_eagle_1001_lite_ss_optical_flow: 'Optical flow %1 (cm)',
+                        whalesbot_eagle_1001_lite_ss_get_infrared_distance: 'Infrared ranging sensor port %1 value',
+                        whalesbot_eagle_1001_lite_ss_obstacle_infrared_detected_bool: 'Infrared port %1 obstacle detected',
+                        whalesbot_eagle_1001_lite_ss_obstacle_infrared_detected_string: 'Infrared port %1 obstacle detected',
+                        whalesbot_eagle_1001_lite_ss_human_infrared_value_bool: 'Human infrared sensor port %1 detects a person',
+                        whalesbot_eagle_1001_lite_ss_human_infrared_value_string: 'Human infrared sensor port %1 detects a person',
+                        whalesbot_eagle_1001_lite_ss_AI: 'Analog input port %1 value',
+                        whalesbot_eagle_1001_lite_ss_get_ultrasonic_distance: 'Ultrasonic sensor port %1 detect distance cm',
+                        whalesbot_eagle_1001_lite_ss_get_ambient_light: 'Ambient light port %1 value',
+                        whalesbot_eagle_1001_lite_ss_get_temperature: 'Temperature sensor port %1 °C',
+                        whalesbot_eagle_1001_lite_ss_get_humidity: 'Humidity sensor port %1 value %',
+                        whalesbot_eagle_1001_lite_ss_get_flame: 'Flame sensor port %1 value',
+                        whalesbot_eagle_1001_lite_ss_get_gesture: 'Gesture recognition port %1',
+                        whalesbot_eagle_1001_lite_ss_get_tof: 'Laser ranging port %1',
+                        whalesbot_eagle_1001_lite_ss_fly_setpoint_LASER_ENABLE: 'Laser height determination %1',
+                        whalesbot_eagle_1001_lite_ss_get_bt_remote_control: 'Remote control button %1 value',
+                        whalesbot_eagle_1001_lite_ss_seconds: 'current timer value',
+                        whalesbot_eagle_1001_lite_ss_resettime: 'Reset timer',
                     },
                     Device: {
-                        whalesbot_eagle_1001_lite: 'whalesbot_eagle_1001_lite',
+                        whalesbot_eagle_1001_lite_lite: 'whalesbot_eagle_1001_lite_lite',
                     },
                     Menus: {
-                        whalesbot_eagle_1001_lite: 'WhalesbotEagle1001Lite',
+                        whalesbot_eagle_1001_lite_lite: 'WhalesbotEagle1001Lite',
                     },
                     Blocks: {
                         light_speaker: {
@@ -1332,15 +1332,15 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                             laser_height_determination: { on: 'On', off: 'Off' },
                             remote_control_button: { key: 'Key', left_rocker_x: 'Left rocker X', left_rocker_y: 'Left rocker Y', right_rocker_x: 'Right rocker X', right_rocker_y: 'Right rocker Y' },
                         },
-                        whalesbot_eagle_1001_toast_status_title: "Drone Status",
-                        whalesbot_eagle_1001_toast_prepare_download: "Prepare Downloading...",
-                        whalesbot_eagle_1001_toast_downloading_code: "Downloading Code...",
-                        whalesbot_eagle_1001_toast_download_success: "Download Code Successed",
-                        whalesbot_eagle_1001_toast_download_failed: "Download code failed",
-                        whalesbot_eagle_1001_toast_clean_failed: "Clean code failed",
-                        whalesbot_eagle_1001_toast_clean_success: "Clean code success",
-                        whalesbot_eagle_1001_toast_unsupport_block_title: "Unsupport Block",
-                        whalesbot_eagle_1001_toast_unsupport_block_msg: "There is some blocks is not supported by hardware"
+                        whalesbot_eagle_1001_lite_toast_status_title: "Drone Status",
+                        whalesbot_eagle_1001_lite_toast_prepare_download: "Prepare Downloading...",
+                        whalesbot_eagle_1001_lite_toast_downloading_code: "Downloading Code...",
+                        whalesbot_eagle_1001_lite_toast_download_success: "Download Code Successed",
+                        whalesbot_eagle_1001_lite_toast_download_failed: "Download code failed",
+                        whalesbot_eagle_1001_lite_toast_clean_failed: "Clean code failed",
+                        whalesbot_eagle_1001_lite_toast_clean_success: "Clean code success",
+                        whalesbot_eagle_1001_lite_toast_unsupport_block_title: "Unsupport Block",
+                        whalesbot_eagle_1001_lite_toast_unsupport_block_msg: "There is some blocks is not supported by hardware"
                     }
                 },
             };
@@ -1384,30 +1384,30 @@ import metadata from './metadata_whalesbot_drone_lite.json';
             };
 
             const wbVariables = {
-                'whalesbot_eagle_1001_get_setting_speed': 'fly_state(SETSPEED)',
-                'whalesbot_eagle_1001_ss_fly_state_POS_Z': 'fly_state(POS_Z)',
-                'whalesbot_eagle_1001_ss_fly_state_LASER': 'fly_state(LASER)',
-                'whalesbot_eagle_1001_ss_battery_voltage': 'battery()',
-                'whalesbot_eagle_1001_ss_fly_state_STATE_TEMP': 'fly_state(STATE_TEMP)',
-                'whalesbot_eagle_1001_ss_attitude_angle': 'fly_state($VALUE)',
-                'whalesbot_eagle_1001_ss_flight_angular_velocity': 'fly_state($VALUE)',
-                'whalesbot_eagle_1001_ss_flight_acceleration': 'fly_state($VALUE)',
-                'whalesbot_eagle_1001_ss_optical_flow': 'fly_state($VALUE)',
-                'whalesbot_eagle_1001_ss_get_infrared_distance': 'get_infrared_distance($VALUE)',
-                'whalesbot_eagle_1001_ss_obstacle_infrared_detected_string': 'obstacle_infrared_detected($VALUE)',
-                'whalesbot_eagle_1001_ss_obstacle_infrared_detected_bool': 'obstacle_infrared_detected($VALUE)',
-                'whalesbot_eagle_1001_ss_human_infrared_value_string': 'human_infrared_value($VALUE)',
-                'whalesbot_eagle_1001_ss_human_infrared_value_bool': 'human_infrared_value($VALUE)',
-                'whalesbot_eagle_1001_ss_AI': 'AI($VALUE)',
-                'whalesbot_eagle_1001_ss_get_ultrasonic_distance': 'get_ultrasonic_distance($VALUE)',
-                'whalesbot_eagle_1001_ss_get_ambient_light': 'get_ambient_light($VALUE)',
-                'whalesbot_eagle_1001_ss_get_temperature': 'get_temperature($VALUE)',
-                'whalesbot_eagle_1001_ss_get_humidity': 'get_humidity($VALUE)',
-                'whalesbot_eagle_1001_ss_get_flame': 'get_flame($VALUE)',
-                'whalesbot_eagle_1001_ss_get_gesture': 'get_gesture($VALUE)',
-                'whalesbot_eagle_1001_ss_get_tof': 'get_tof($VALUE)',
-                'whalesbot_eagle_1001_ss_get_bt_remote_control': 'get_bt_remote_control($VALUE)',
-                'whalesbot_eagle_1001_ss_seconds': 'seconds()',
+                'whalesbot_eagle_1001_lite_get_setting_speed': 'fly_state(SETSPEED)',
+                'whalesbot_eagle_1001_lite_ss_fly_state_POS_Z': 'fly_state(POS_Z)',
+                'whalesbot_eagle_1001_lite_ss_fly_state_LASER': 'fly_state(LASER)',
+                'whalesbot_eagle_1001_lite_ss_battery_voltage': 'battery()',
+                'whalesbot_eagle_1001_lite_ss_fly_state_STATE_TEMP': 'fly_state(STATE_TEMP)',
+                'whalesbot_eagle_1001_lite_ss_attitude_angle': 'fly_state($VALUE)',
+                'whalesbot_eagle_1001_lite_ss_flight_angular_velocity': 'fly_state($VALUE)',
+                'whalesbot_eagle_1001_lite_ss_flight_acceleration': 'fly_state($VALUE)',
+                'whalesbot_eagle_1001_lite_ss_optical_flow': 'fly_state($VALUE)',
+                'whalesbot_eagle_1001_lite_ss_get_infrared_distance': 'get_infrared_distance($VALUE)',
+                'whalesbot_eagle_1001_lite_ss_obstacle_infrared_detected_string': 'obstacle_infrared_detected($VALUE)',
+                'whalesbot_eagle_1001_lite_ss_obstacle_infrared_detected_bool': 'obstacle_infrared_detected($VALUE)',
+                'whalesbot_eagle_1001_lite_ss_human_infrared_value_string': 'human_infrared_value($VALUE)',
+                'whalesbot_eagle_1001_lite_ss_human_infrared_value_bool': 'human_infrared_value($VALUE)',
+                'whalesbot_eagle_1001_lite_ss_AI': 'AI($VALUE)',
+                'whalesbot_eagle_1001_lite_ss_get_ultrasonic_distance': 'get_ultrasonic_distance($VALUE)',
+                'whalesbot_eagle_1001_lite_ss_get_ambient_light': 'get_ambient_light($VALUE)',
+                'whalesbot_eagle_1001_lite_ss_get_temperature': 'get_temperature($VALUE)',
+                'whalesbot_eagle_1001_lite_ss_get_humidity': 'get_humidity($VALUE)',
+                'whalesbot_eagle_1001_lite_ss_get_flame': 'get_flame($VALUE)',
+                'whalesbot_eagle_1001_lite_ss_get_gesture': 'get_gesture($VALUE)',
+                'whalesbot_eagle_1001_lite_ss_get_tof': 'get_tof($VALUE)',
+                'whalesbot_eagle_1001_lite_ss_get_bt_remote_control': 'get_bt_remote_control($VALUE)',
+                'whalesbot_eagle_1001_lite_ss_seconds': 'seconds()',
             }
 
             const startBlocks = [
@@ -1417,17 +1417,17 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                 "mouse_click_cancled",
                 "when_object_click",
                 "when_object_click_canceled",
-                'whalesbot_eagle_1001_execute_script',
-                'whalesbot_eagle_1001_ls_debug_value',
-                'whalesbot_eagle_1001_ls_display_symbol',
-                'whalesbot_eagle_1001_ls_off_LED',
-                'whalesbot_eagle_1001_ls_display_digital_tube',
-                'whalesbot_eagle_1001_ls_display_digital_tube_score',
-                'whalesbot_eagle_1001_ls_off_digital_tube',
-                'whalesbot_eagle_1001_ls_set_RGB',
-                'whalesbot_eagle_1001_ls_fly_RGB',
-                'whalesbot_eagle_1001_ls_set_DO',
-                // 'whalesbot_eagle_1001_ls_execute_script',
+                'whalesbot_eagle_1001_lite_execute_script',
+                'whalesbot_eagle_1001_lite_ls_debug_value',
+                'whalesbot_eagle_1001_lite_ls_display_symbol',
+                'whalesbot_eagle_1001_lite_ls_off_LED',
+                'whalesbot_eagle_1001_lite_ls_display_digital_tube',
+                'whalesbot_eagle_1001_lite_ls_display_digital_tube_score',
+                'whalesbot_eagle_1001_lite_ls_off_digital_tube',
+                'whalesbot_eagle_1001_lite_ls_set_RGB',
+                'whalesbot_eagle_1001_lite_ls_fly_RGB',
+                'whalesbot_eagle_1001_lite_ls_set_DO',
+                // 'whalesbot_eagle_1001_lite_ls_execute_script',
             ]
 
             let globlalCVariables = {}
@@ -1536,75 +1536,75 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                         return `\t${changedVariableName} += ${changedVariableValue};\n`;
 
                     // HARDWARE
-                    case 'whalesbot_eagle_1001_entering_pitch_mode':
+                    case 'whalesbot_eagle_1001_lite_entering_pitch_mode':
                         return '\tfly_unlock();\n';
 
-                    case 'whalesbot_eagle_1001_exit_pitch_mode':
+                    case 'whalesbot_eagle_1001_lite_exit_pitch_mode':
                         return '\tfly_lock();\n';
 
-                    case 'whalesbot_eagle_1001_automatic_take_off_height':
+                    case 'whalesbot_eagle_1001_lite_automatic_take_off_height':
                         let takeOffHeight = _getParameter(block.params[0]);
                         return `\tfly_start(${takeOffHeight});\n`;
 
-                    case 'whalesbot_eagle_1001_automatic_take_off_altitude_speed_offset':
+                    case 'whalesbot_eagle_1001_lite_automatic_take_off_altitude_speed_offset':
                         let takeOffAltitude = _getParameter(block.params[0]) != "" ? _getParameter(block.params[0]) : defaultAltitude;
                         let takeOffSpeed = _getParameter(block.params[1]) != "" ? _getParameter(block.params[1]) : defaultSpeed;
                         let takeOffXoffset = (-10.00 <= _getParameter(block.params[2]) || _getParameter(block.params[2]) <= 10.00) ? _getParameter(block.params[2]) : defaultOffset;
                         let takeOffYoffset = (-10.00 <= _getParameter(block.params[3]) || _getParameter(block.params[3]) <= 10.00) ? _getParameter(block.params[3]) : defaultOffset;
                         return `\tfly_start_2(${takeOffAltitude},${takeOffSpeed},${takeOffXoffset},${takeOffYoffset});\n`
 
-                    case 'whalesbot_eagle_1001_automatic_landing':
+                    case 'whalesbot_eagle_1001_lite_automatic_landing':
                         return `\tfly_land();\n`;
 
-                    case 'whalesbot_eagle_1001_automatic_descent_speed_offset':
+                    case 'whalesbot_eagle_1001_lite_automatic_descent_speed_offset':
                         let automaticSpeed = _getParameter(block.params[0]) != "" ? _getParameter(block.params[0]) : defaultSpeed;
                         let automaticXoffset = (-10.00 <= _getParameter(block.params[1]) || _getParameter(block.params[1]) <= 10.00) ? _getParameter(block.params[1]) : defaultOffset;
                         let automaticYoffset = (-10.00 <= _getParameter(block.params[2]) || _getParameter(block.params[2]) <= 10.00) ? _getParameter(block.params[2]) : defaultOffset;
                         return `\tfly_land_2(${automaticSpeed},${automaticXoffset},${automaticYoffset});\n`
 
-                    case 'whalesbot_eagle_1001_set_the_flight_speed':
+                    case 'whalesbot_eagle_1001_lite_set_the_flight_speed':
                         let speed = _getParameter(block.params[0]);
                         return `\tfly_setspeed(${speed});\n`;
 
-                    case 'whalesbot_eagle_1001_rise':
+                    case 'whalesbot_eagle_1001_lite_rise':
                         let up = _getParameter(block.params[0]);
                         return `\tfly_moveto(UP,${up});\n`;
 
-                    case 'whalesbot_eagle_1001_down':
+                    case 'whalesbot_eagle_1001_lite_down':
                         let down = _getParameter(block.params[0]);
                         return `\tfly_moveto(DOWN,${down});\n`;
 
-                    case 'whalesbot_eagle_1001_fly_forward':
+                    case 'whalesbot_eagle_1001_lite_fly_forward':
                         let front = _getParameter(block.params[0]);
                         return `\tfly_moveto(FRONT,${front});\n`;
 
-                    case 'whalesbot_eagle_1001_fly_backward':
+                    case 'whalesbot_eagle_1001_lite_fly_backward':
                         let back = _getParameter(block.params[0]);
                         return `\tfly_moveto(BACK,${back});\n`;
 
-                    case 'whalesbot_eagle_1001_fly_left':
+                    case 'whalesbot_eagle_1001_lite_fly_left':
                         let left = _getParameter(block.params[0]);
                         return `\tfly_moveto(LEFT,${left});\n`;
 
-                    case 'whalesbot_eagle_1001_fly_right':
+                    case 'whalesbot_eagle_1001_lite_fly_right':
                         let right = _getParameter(block.params[0]);
                         return `\tfly_moveto(RIGHT,${right});\n`;
 
-                    case 'whalesbot_eagle_1001_turn_left':
+                    case 'whalesbot_eagle_1001_lite_turn_left':
                         let turnLeft = _getParameter(block.params[0]);
                         if (0 > turnLeft || turnLeft > 360) {
                             turnLeft = 360
                         }
                         return `\tfly_turn(CCW,${turnLeft});\n`;
 
-                    case 'whalesbot_eagle_1001_turn_right':
+                    case 'whalesbot_eagle_1001_lite_turn_right':
                         let turnRight = _getParameter(block.params[0]);
                         if (0 > turnRight || turnRight > 360) {
                             turnRight = 360
                         }
                         return `\tfly_turn(CW,${turnRight});\n`;
 
-                    case 'whalesbot_eagle_1001_fly_in_the_specified_direction':
+                    case 'whalesbot_eagle_1001_lite_fly_in_the_specified_direction':
                         let dirSpeed = _getParameter(block.params[0]);
                         let dirDirection = _getParameter(block.params[1]);
                         if (0 > dirDirection || dirDirection > 360) {
@@ -1612,32 +1612,32 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                         }
                         return `\tfly_dir(${dirSpeed},${dirDirection});\n`;
 
-                    case 'whalesbot_eagle_1001_flight_designated':
+                    case 'whalesbot_eagle_1001_lite_flight_designated':
                         let disX = _getParameter(block.params[0]);
                         let disY = _getParameter(block.params[1]);
                         let disZ = _getParameter(block.params[2]);
                         let disSpeed = _getParameter(block.params[3]);
                         return `\tfly_move_dis(${disX},${disY},${disZ},${disSpeed});\n`;
 
-                    case 'whalesbot_eagle_1001_set_the_four_channel_lever_quantity_of_remote_control':
+                    case 'whalesbot_eagle_1001_lite_set_the_four_channel_lever_quantity_of_remote_control':
                         let pitch = _getParameter(block.params[0]);
                         let roll = _getParameter(block.params[1]);
                         let throttle = _getParameter(block.params[2]);
                         let yaw = _getParameter(block.params[3]);
                         return `\tfly_move(${pitch},${roll},${throttle},${yaw});\n`;
 
-                    case 'whalesbot_eagle_1001_stop_moving_and_hover':
+                    case 'whalesbot_eagle_1001_lite_stop_moving_and_hover':
                         return `\tfly_hover();\n`;
 
-                    case 'whalesbot_eagle_1001_hover_at_specified_altitude':
+                    case 'whalesbot_eagle_1001_lite_hover_at_specified_altitude':
                         let hoverSpecifiedAltitude = (_getParameter(block.params[0]) == "" || _getParameter(block.params[0]) < 20) ? "20" : _getParameter(block.params[0]);
                         hoverSpecifiedAltitude = (_getParameter(block.params[0]) > 200) ? "200" : _getParameter(block.params[0]);
                         return `\tfly_hover_laser(${hoverSpecifiedAltitude});\n`;
 
-                    case 'whalesbot_eagle_1001_emergency_stop':
+                    case 'whalesbot_eagle_1001_lite_emergency_stop':
                         return `\tfly_lock();\n`;
 
-                    case 'whalesbot_eagle_1001_set_the_steering_gear':
+                    case 'whalesbot_eagle_1001_lite_set_the_steering_gear':
                         let servoSpeed = _getParameter(block.params[1]);
                         let servoAngle = _getParameter(block.params[2]);
                         if (0 > servoAngle || servoAngle > 360) {
@@ -1646,63 +1646,63 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                         return `\tSetServo(P2,${servoSpeed},${servoAngle});\n`;
 
                     // light & speaker blocks
-                    case 'whalesbot_eagle_1001_ls_debug_value':
+                    case 'whalesbot_eagle_1001_lite_ls_debug_value':
                         let lsDebugValue1 = _getParameter(block.params[0]);
                         let lsDebugValue2 = _getParameter(block.params[1]);
                         return `\tDebugValue(${lsDebugValue1}, ${lsDebugValue2});\n`;
 
-                    case 'whalesbot_eagle_1001_ls_display_symbol':
+                    case 'whalesbot_eagle_1001_lite_ls_display_symbol':
                         let lsDisplaySymbol = block.params[0];
                         let lsDisplaySymbolPort = block.params[1];
                         return `\tdisplay_symbol(${lsDisplaySymbolPort}, ${lsDisplaySymbol});\n`;
 
-                    case 'whalesbot_eagle_1001_ls_off_LED':
+                    case 'whalesbot_eagle_1001_lite_ls_off_LED':
                         let lsOffLedPort = block.params[0];
                         return `\toff_LED(${lsOffLedPort});\n`;
 
-                    case 'whalesbot_eagle_1001_ls_display_digital_tube':
+                    case 'whalesbot_eagle_1001_lite_ls_display_digital_tube':
                         let lsDisplayDigitalTubePort = block.params[0];
                         let lsDisplayDigitalTubeValue = _getParameter(block.params[1]);
                         return `\tdisplay_digital_tube(${lsDisplayDigitalTubePort}, ${lsDisplayDigitalTubeValue});\n`;
 
-                    case 'whalesbot_eagle_1001_ls_display_digital_tube_score':
+                    case 'whalesbot_eagle_1001_lite_ls_display_digital_tube_score':
                         let lsDisplayDigitalTubeScorePort = block.params[0];
                         let lsDisplayDigitalTubeScoreValue1 = _getParameter(block.params[1]);
                         let lsDisplayDigitalTubeScoreValue2 = _getParameter(block.params[2]);
                         return `\tdisplay_digital_tube_score(${lsDisplayDigitalTubeScorePort}, ${lsDisplayDigitalTubeScoreValue1}, ${lsDisplayDigitalTubeScoreValue2});\n`;
 
-                    case 'whalesbot_eagle_1001_ls_off_digital_tube':
+                    case 'whalesbot_eagle_1001_lite_ls_off_digital_tube':
                         let lsOffDigitalTubePort = block.params[0];
                         return `\toff_digital_tube(${lsOffDigitalTubePort});\n`;
 
-                    case 'whalesbot_eagle_1001_ls_set_RGB':
+                    case 'whalesbot_eagle_1001_lite_ls_set_RGB':
                         let lsSetRGBPort = block.params[0];
                         let lsSetRGBR = _getParameter(block.params[1]);
                         let lsSetRGBG = _getParameter(block.params[2]);
                         let lsSetRGBB = _getParameter(block.params[3]);
                         return `\tset_RGB(${lsSetRGBPort}, ${lsSetRGBR}, ${lsSetRGBG}, ${lsSetRGBB});\n`;
 
-                    case 'whalesbot_eagle_1001_ls_fly_RGB':
+                    case 'whalesbot_eagle_1001_lite_ls_fly_RGB':
                         let lsFlyRGB = block.params[0];
                         // let lsFlyRGBR = _getParameter(block.params[1]);
                         // let lsFlyRGBG = _getParameter(block.params[2]);
                         // let lsFlyRGBB = _getParameter(block.params[3]);
                         return `\tfly_RGB(${lsFlyRGB});\n`;
 
-                    case 'whalesbot_eagle_1001_ls_set_DO':
+                    case 'whalesbot_eagle_1001_lite_ls_set_DO':
                         let lsSetDOPort = block.params[0];
                         let lsSetDOValue = block.params[1];
                         return `\tSetDO(${lsSetDOPort}, ${lsSetDOValue});\n`;
 
                     // sensors
-                    case 'whalesbot_eagle_1001_ss_fly_setpoint_LASER_ENABLE':
+                    case 'whalesbot_eagle_1001_lite_ss_fly_setpoint_LASER_ENABLE':
                         let ssFlySetpointToggle = block.params[0];
                         return `\tfly_setpoint(LASER_ENABLE, ${ssFlySetpointToggle});\n`;
 
-                    case 'whalesbot_eagle_1001_ss_resettime':
+                    case 'whalesbot_eagle_1001_lite_ss_resettime':
                         return `\tresettime();\n`;
 
-                    case 'whalesbot_eagle_1001_ss_obstacle_infrared_detected_bool':
+                    case 'whalesbot_eagle_1001_lite_ss_obstacle_infrared_detected_bool':
                         let ssBbstacleInfraredDetectedBool = block.params[0];
                         return `obstacle_infrared_detected(${ssBbstacleInfraredDetectedBool})`;
 
@@ -1748,7 +1748,7 @@ import metadata from './metadata_whalesbot_drone_lite.json';
             }
 
             return {
-                whalesbot_eagle_1001_openning_3d_simulator: {
+                whalesbot_eagle_1001_lite_openning_3d_simulator: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -1763,12 +1763,12 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                     ],
                     events: {},
                     def: {
-                        type: 'whalesbot_eagle_1001_openning_3d_simulator',
+                        type: 'whalesbot_eagle_1001_lite_openning_3d_simulator',
                     },
                     paramsKeyMap: {
                         VALUE: 0,
                     },
-                    class: 'whalesbot_eagle_1001_lite',
+                    class: 'whalesbot_eagle_1001_lite_lite',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                         const width = window.innerWidth * 0.8;
@@ -1779,9 +1779,9 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                             `width=${width},height=${height}`
                         );
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_openning_3d_simulator()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_openning_3d_simulator()'] },
                 },
-                whalesbot_eagle_1001_restart: {
+                whalesbot_eagle_1001_lite_restart: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -1801,19 +1801,19 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                     ],
                     events: {},
                     def: {
-                        type: 'whalesbot_eagle_1001_restart',
+                        type: 'whalesbot_eagle_1001_lite_restart',
                     },
                     paramsKeyMap: {
                         VALUE: 0,
                     },
-                    class: 'whalesbot_eagle_1001_lite',
+                    class: 'whalesbot_eagle_1001_lite_lite',
                     isNotFor: ['WhalesbotDroneLite'],
                     async func(sprite, script) {
                         await _this.sendPacket(_this.getStateCode);
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_restart()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_restart()'] },
                 },
-                whalesbot_eagle_1001_clean: {
+                whalesbot_eagle_1001_lite_clean: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -1833,22 +1833,22 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                     ],
                     events: {},
                     def: {
-                        type: 'whalesbot_eagle_1001_clean',
+                        type: 'whalesbot_eagle_1001_lite_clean',
                     },
                     paramsKeyMap: {
                         VALUE: 0,
                     },
-                    class: 'whalesbot_eagle_1001_lite',
+                    class: 'whalesbot_eagle_1001_lite_lite',
                     isNotFor: ['WhalesbotDroneLite'],
                     async func(sprite, script) {
                         await _this.sendPacket(_this.stopCode);
                         await _this.sendPacket(_this.stopCode);
-                        Entry.toast.success(Lang.Blocks.whalesbot_eagle_1001_toast_status_title,
-                            Lang.Blocks.whalesbot_eagle_1001_toast_clean_success);
+                        Entry.toast.success(Lang.Blocks.whalesbot_eagle_1001_lite_toast_status_title,
+                            Lang.Blocks.whalesbot_eagle_1001_lite_toast_clean_success);
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_clean()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_clean()'] },
                 },
-                whalesbot_eagle_1001_get_status: {
+                whalesbot_eagle_1001_lite_get_status: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -1868,19 +1868,19 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                     ],
                     events: {},
                     def: {
-                        type: 'whalesbot_eagle_1001_get_status',
+                        type: 'whalesbot_eagle_1001_lite_get_status',
                     },
                     paramsKeyMap: {
                         VALUE: 0,
                     },
-                    class: 'whalesbot_eagle_1001_lite',
+                    class: 'whalesbot_eagle_1001_lite_lite',
                     isNotFor: ['WhalesbotDroneLite'],
                     async func(sprite, script) {
                         await _this.handleGetStatus();
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_get_status()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_get_status()'] },
                 },
-                whalesbot_eagle_1001_entering_pitch_mode: {
+                whalesbot_eagle_1001_lite_entering_pitch_mode: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -1895,19 +1895,19 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                     ],
                     events: {},
                     def: {
-                        type: 'whalesbot_eagle_1001_entering_pitch_mode',
+                        type: 'whalesbot_eagle_1001_lite_entering_pitch_mode',
                     },
                     paramsKeyMap: {},
-                    class: 'whalesbot_eagle_1001_lite',
+                    class: 'whalesbot_eagle_1001_lite_lite',
                     isNotFor: ['WhalesbotDroneLite'],
                     async func(sprite, script) {
                         await _this.sendPacket(_this.getStateCode);
                         await _this.sendPacket(_this.getStateCode);
                         cFunctions.push(`fly_unlock();`);
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_entering_pitch_mode()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_entering_pitch_mode()'] },
                 },
-                whalesbot_eagle_1001_exit_pitch_mode: {
+                whalesbot_eagle_1001_lite_exit_pitch_mode: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -1922,12 +1922,12 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                     ],
                     events: {},
                     def: {
-                        type: 'whalesbot_eagle_1001_exit_pitch_mode',
+                        type: 'whalesbot_eagle_1001_lite_exit_pitch_mode',
                     },
                     paramsKeyMap: {
                         VALUE: 0,
                     },
-                    class: 'whalesbot_eagle_1001_lite',
+                    class: 'whalesbot_eagle_1001_lite_lite',
                     isNotFor: ['WhalesbotDroneLite'],
                     async func(sprite, script) {
                         const project = _this.exportProject();
@@ -1941,8 +1941,8 @@ import metadata from './metadata_whalesbot_drone_lite.json';
 
                         if (_this.unsupportBlockExist) {
                             Entry.toast.alert(
-                                Lang.Blocks.whalesbot_eagle_1001_toast_unsupport_block_title,
-                                Lang.Blocks.whalesbot_eagle_1001_toast_unsupport_block_msg
+                                Lang.Blocks.whalesbot_eagle_1001_lite_toast_unsupport_block_title,
+                                Lang.Blocks.whalesbot_eagle_1001_lite_toast_unsupport_block_msg
                             )
                             _this.unsupportBlockExist = false;
                             Entry.engine.toggleStop();
@@ -1951,26 +1951,26 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                         console.log(sourceCode)
 
                         Entry.toast.success(
-                            Lang.Blocks.whalesbot_eagle_1001_toast_status_title,
-                            Lang.Blocks.whalesbot_eagle_1001_toast_prepare_download
+                            Lang.Blocks.whalesbot_eagle_1001_lite_toast_status_title,
+                            Lang.Blocks.whalesbot_eagle_1001_lite_toast_prepare_download
                         );
                         await _this.handleClean();
                         await _this.sleep(3000);
                         Entry.toast.success(
-                            Lang.Blocks.whalesbot_eagle_1001_toast_status_title,
-                            Lang.Blocks.whalesbot_eagle_1001_toast_downloading_code
+                            Lang.Blocks.whalesbot_eagle_1001_lite_toast_status_title,
+                            Lang.Blocks.whalesbot_eagle_1001_lite_toast_downloading_code
                         );
                         await _this.downloadCode(sourceCode);
                         await _this.sleep(4000);
                         Entry.toast.success(
-                            Lang.Blocks.whalesbot_eagle_1001_toast_status_title,
-                            Lang.Blocks.whalesbot_eagle_1001_toast_download_success
+                            Lang.Blocks.whalesbot_eagle_1001_lite_toast_status_title,
+                            Lang.Blocks.whalesbot_eagle_1001_lite_toast_download_success
                         );
                         await _this.handleRun();
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_exit_pitch_mode()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_exit_pitch_mode()'] },
                 },
-                whalesbot_eagle_1001_automatic_take_off_height: {
+                whalesbot_eagle_1001_lite_automatic_take_off_height: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -1992,19 +1992,19 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                             },
                             null,
                         ],
-                        type: 'whalesbot_eagle_1001_automatic_take_off_height',
+                        type: 'whalesbot_eagle_1001_lite_automatic_take_off_height',
                     },
                     paramsKeyMap: {
                         VALUE: 0,
                     },
-                    class: 'whalesbot_eagle_1001_lite',
+                    class: 'whalesbot_eagle_1001_lite_lite',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                         cFunctions.push(`fly_start(${script.getValue('VALUE')})`);
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_automatic_take_off_height();'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_automatic_take_off_height();'] },
                 },
-                whalesbot_eagle_1001_automatic_take_off_altitude_speed_offset: {
+                whalesbot_eagle_1001_lite_automatic_take_off_altitude_speed_offset: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -2052,7 +2052,7 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                                 params: ['0'],
                             },
                         ],
-                        type: 'whalesbot_eagle_1001_automatic_take_off_altitude_speed_offset',
+                        type: 'whalesbot_eagle_1001_lite_automatic_take_off_altitude_speed_offset',
                     },
                     paramsKeyMap: {
                         altitude: 0,
@@ -2060,14 +2060,14 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                         x: 2,
                         y: 3,
                     },
-                    class: 'whalesbot_eagle_1001_lite',
+                    class: 'whalesbot_eagle_1001_lite_lite',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                         cFunctions.push(`fly_start(${script.getValue('VALUE')})`);
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_automatic_take_off_altitude_speed_offset();'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_automatic_take_off_altitude_speed_offset();'] },
                 },
-                whalesbot_eagle_1001_automatic_landing: {
+                whalesbot_eagle_1001_lite_automatic_landing: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -2082,19 +2082,19 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                     ],
                     events: {},
                     def: {
-                        type: 'whalesbot_eagle_1001_automatic_landing',
+                        type: 'whalesbot_eagle_1001_lite_automatic_landing',
                     },
                     paramsKeyMap: {
                         VALUE: 0,
                     },
-                    class: 'whalesbot_eagle_1001_lite',
+                    class: 'whalesbot_eagle_1001_lite_lite',
                     isNotFor: ['WhalesbotDroneLite'],
                     async func(sprite, script) {
                         cFunctions.push(`fly_land();`);
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_automatic_landing()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_automatic_landing()'] },
                 },
-                whalesbot_eagle_1001_automatic_descent_speed_offset: {
+                whalesbot_eagle_1001_lite_automatic_descent_speed_offset: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -2133,21 +2133,21 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                                 params: ['0'],
                             },
                         ],
-                        type: 'whalesbot_eagle_1001_automatic_descent_speed_offset',
+                        type: 'whalesbot_eagle_1001_lite_automatic_descent_speed_offset',
                     },
                     paramsKeyMap: {
                         speed: 0,
                         x: 1,
                         y: 2,
                     },
-                    class: 'whalesbot_eagle_1001_lite',
+                    class: 'whalesbot_eagle_1001_lite_lite',
                     isNotFor: ['WhalesbotDroneLite'],
                     async func(sprite, script) {
                         cFunctions.push(`fly_land_2();`);
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_automatic_descent_speed_offset()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_automatic_descent_speed_offset()'] },
                 },
-                whalesbot_eagle_1001_set_the_flight_speed: {
+                whalesbot_eagle_1001_lite_set_the_flight_speed: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -2168,20 +2168,20 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                                 params: ['50'],
                             },
                         ],
-                        type: 'whalesbot_eagle_1001_set_the_flight_speed',
+                        type: 'whalesbot_eagle_1001_lite_set_the_flight_speed',
                     },
                     paramsKeyMap: {
                         SPEED: 0,
                     },
-                    class: 'whalesbot_eagle_1001_lite',
+                    class: 'whalesbot_eagle_1001_lite_lite',
                     isNotFor: ['WhalesbotDroneLite'],
                     async func(sprite, script) {
                         const speed = script.getValue('SPEED');
                         cFunctions.push(`fly_setspeed(${speed});`);
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_set_the_flight_speed()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_set_the_flight_speed()'] },
                 },
-                whalesbot_eagle_1001_get_setting_speed: {
+                whalesbot_eagle_1001_lite_get_setting_speed: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -2190,17 +2190,17 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                     params: [],
                     events: {},
                     def: {
-                        type: 'whalesbot_eagle_1001_get_setting_speed',
+                        type: 'whalesbot_eagle_1001_lite_get_setting_speed',
                     },
                     paramsKeyMap: {},
-                    class: 'whalesbot_eagle_1001_lite',
+                    class: 'whalesbot_eagle_1001_lite_lite',
                     isNotFor: ['WhalesbotDroneLite'],
                     async func(sprite, script) {
                         cFunctions.push(`fly_state(SETSPEED);`);
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_get_setting_speed()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_get_setting_speed()'] },
                 },
-                whalesbot_eagle_1001_rise: {
+                whalesbot_eagle_1001_lite_rise: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -2222,20 +2222,20 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                             },
                             null,
                         ],
-                        type: 'whalesbot_eagle_1001_rise',
+                        type: 'whalesbot_eagle_1001_lite_rise',
                     },
                     paramsKeyMap: {
                         value: 0,
                     },
-                    class: 'whalesbot_eagle_1001_lite',
+                    class: 'whalesbot_eagle_1001_lite_lite',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                         const value = script.getValue('value');
                         cFunctions.push(`fly_moveto(UP,${value})`);
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_rise();'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_rise();'] },
                 },
-                whalesbot_eagle_1001_down: {
+                whalesbot_eagle_1001_lite_down: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -2257,20 +2257,20 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                             },
                             null,
                         ],
-                        type: 'whalesbot_eagle_1001_down',
+                        type: 'whalesbot_eagle_1001_lite_down',
                     },
                     paramsKeyMap: {
                         value: 0,
                     },
-                    class: 'whalesbot_eagle_1001_lite',
+                    class: 'whalesbot_eagle_1001_lite_lite',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                         const value = script.getValue('value');
                         cFunctions.push(`fly_moveto(DOWN,${value})`);
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_down();'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_down();'] },
                 },
-                whalesbot_eagle_1001_fly_forward: {
+                whalesbot_eagle_1001_lite_fly_forward: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -2292,20 +2292,20 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                             },
                             null,
                         ],
-                        type: 'whalesbot_eagle_1001_fly_forward',
+                        type: 'whalesbot_eagle_1001_lite_fly_forward',
                     },
                     paramsKeyMap: {
                         value: 0,
                     },
-                    class: 'whalesbot_eagle_1001_lite',
+                    class: 'whalesbot_eagle_1001_lite_lite',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                         const value = script.getValue('value');
                         cFunctions.push(`fly_moveto(FRONT,${value})`);
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_fly_forward();'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_fly_forward();'] },
                 },
-                whalesbot_eagle_1001_fly_backward: {
+                whalesbot_eagle_1001_lite_fly_backward: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -2327,20 +2327,20 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                             },
                             null,
                         ],
-                        type: 'whalesbot_eagle_1001_fly_backward',
+                        type: 'whalesbot_eagle_1001_lite_fly_backward',
                     },
                     paramsKeyMap: {
                         value: 0,
                     },
-                    class: 'whalesbot_eagle_1001_lite',
+                    class: 'whalesbot_eagle_1001_lite_lite',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                         const value = script.getValue('value');
                         cFunctions.push(`fly_moveto(BACK,${value})`);
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_fly_backward();'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_fly_backward();'] },
                 },
-                whalesbot_eagle_1001_fly_left: {
+                whalesbot_eagle_1001_lite_fly_left: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -2362,20 +2362,20 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                             },
                             null,
                         ],
-                        type: 'whalesbot_eagle_1001_fly_left',
+                        type: 'whalesbot_eagle_1001_lite_fly_left',
                     },
                     paramsKeyMap: {
                         value: 0,
                     },
-                    class: 'whalesbot_eagle_1001_lite',
+                    class: 'whalesbot_eagle_1001_lite_lite',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                         const value = script.getValue('value');
                         cFunctions.push(`fly_moveto(LEFT,${value});`);
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_fly_left();'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_fly_left();'] },
                 },
-                whalesbot_eagle_1001_fly_right: {
+                whalesbot_eagle_1001_lite_fly_right: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -2397,20 +2397,20 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                             },
                             null,
                         ],
-                        type: 'whalesbot_eagle_1001_fly_right',
+                        type: 'whalesbot_eagle_1001_lite_fly_right',
                     },
                     paramsKeyMap: {
                         value: 0,
                     },
-                    class: 'whalesbot_eagle_1001_lite',
+                    class: 'whalesbot_eagle_1001_lite_lite',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                         const value = script.getValue('value');
                         cFunctions.push(`fly_moveto(RIGHT,${value});`);
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_fly_right();'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_fly_right();'] },
                 },
-                whalesbot_eagle_1001_turn_left: {
+                whalesbot_eagle_1001_lite_turn_left: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -2431,12 +2431,12 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                                 params: ['90'],
                             },
                         ],
-                        type: 'whalesbot_eagle_1001_turn_left',
+                        type: 'whalesbot_eagle_1001_lite_turn_left',
                     },
                     paramsKeyMap: {
                         value: 0,
                     },
-                    class: 'whalesbot_eagle_1001_lite',
+                    class: 'whalesbot_eagle_1001_lite_lite',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                         const value = script.getValue('value');
@@ -2445,9 +2445,9 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                         }
                         cFunctions.push(`fly_turn(CCW,${value});`);
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_turn_left();'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_turn_left();'] },
                 },
-                whalesbot_eagle_1001_turn_right: {
+                whalesbot_eagle_1001_lite_turn_right: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -2468,12 +2468,12 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                                 params: ['90'],
                             },
                         ],
-                        type: 'whalesbot_eagle_1001_turn_right',
+                        type: 'whalesbot_eagle_1001_lite_turn_right',
                     },
                     paramsKeyMap: {
                         value: 0,
                     },
-                    class: 'whalesbot_eagle_1001_lite',
+                    class: 'whalesbot_eagle_1001_lite_lite',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                         const value = script.getValue('value');
@@ -2482,9 +2482,9 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                         }
                         cFunctions.push(`fly_turn(CW,${value});`);
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_turn_right();'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_turn_right();'] },
                 },
-                whalesbot_eagle_1001_fly_in_the_specified_direction: {
+                whalesbot_eagle_1001_lite_fly_in_the_specified_direction: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -2514,13 +2514,13 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                                 params: ['0'],
                             },
                         ],
-                        type: 'whalesbot_eagle_1001_fly_in_the_specified_direction',
+                        type: 'whalesbot_eagle_1001_lite_fly_in_the_specified_direction',
                     },
                     paramsKeyMap: {
                         speed: 0,
                         direction: 1,
                     },
-                    class: 'whalesbot_eagle_1001_lite',
+                    class: 'whalesbot_eagle_1001_lite_lite',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                         const speed = script.getValue('speed');
@@ -2530,9 +2530,9 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                         }
                         cFunctions.push(`fly_dir(${speed},${direction});`);
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_fly_in_the_specified_direction();'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_fly_in_the_specified_direction();'] },
                 },
-                whalesbot_eagle_1001_flight_designated: {
+                whalesbot_eagle_1001_lite_flight_designated: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -2580,7 +2580,7 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                                 params: ['30'],
                             },
                         ],
-                        type: 'whalesbot_eagle_1001_flight_designated',
+                        type: 'whalesbot_eagle_1001_lite_flight_designated',
                     },
                     paramsKeyMap: {
                         x: 0,
@@ -2588,7 +2588,7 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                         z: 2,
                         speed: 3,
                     },
-                    class: 'whalesbot_eagle_1001_lite',
+                    class: 'whalesbot_eagle_1001_lite_lite',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                         const x = script.getValue('x');
@@ -2597,9 +2597,9 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                         const speed = script.getValue('speed');
                         cFunctions.push(`fly_move_dis(${x},${y},${z},${speed})`);
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_flight_designated();'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_flight_designated();'] },
                 },
-                whalesbot_eagle_1001_set_the_four_channel_lever_quantity_of_remote_control: {
+                whalesbot_eagle_1001_lite_set_the_four_channel_lever_quantity_of_remote_control: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -2647,7 +2647,7 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                                 params: ['50'],
                             },
                         ],
-                        type: 'whalesbot_eagle_1001_set_the_four_channel_lever_quantity_of_remote_control',
+                        type: 'whalesbot_eagle_1001_lite_set_the_four_channel_lever_quantity_of_remote_control',
                     },
                     paramsKeyMap: {
                         pitch: 0,
@@ -2655,7 +2655,7 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                         throttle: 2,
                         yaw: 3,
                     },
-                    class: 'whalesbot_eagle_1001_lite',
+                    class: 'whalesbot_eagle_1001_lite_lite',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                         const pitch = script.getValue('pitch');
@@ -2664,9 +2664,9 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                         const yaw = script.getValue('yaw');
                         cFunctions.push(`fly_move(${pitch},${roll},${throttle},${yaw});`);
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_set_the_four_channel_lever_quantity_of_remote_control();'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_set_the_four_channel_lever_quantity_of_remote_control();'] },
                 },
-                whalesbot_eagle_1001_stop_moving_and_hover: {
+                whalesbot_eagle_1001_lite_stop_moving_and_hover: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -2676,17 +2676,17 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                     events: {},
                     def: {
                         params: [],
-                        type: 'whalesbot_eagle_1001_stop_moving_and_hover',
+                        type: 'whalesbot_eagle_1001_lite_stop_moving_and_hover',
                     },
                     paramsKeyMap: {},
-                    class: 'whalesbot_eagle_1001_lite',
+                    class: 'whalesbot_eagle_1001_lite_lite',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                         cFunctions.push(`fly_hover();`);
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_stop_moving_and_hover();'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_stop_moving_and_hover();'] },
                 },
-                whalesbot_eagle_1001_hover_at_specified_altitude: {
+                whalesbot_eagle_1001_lite_hover_at_specified_altitude: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -2707,19 +2707,19 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                                 params: ['20'],
                             },
                         ],
-                        type: 'whalesbot_eagle_1001_hover_at_specified_altitude',
+                        type: 'whalesbot_eagle_1001_lite_hover_at_specified_altitude',
                     },
                     paramsKeyMap: {
                         altitude: 0,
                     },
-                    class: 'whalesbot_eagle_1001_lite',
+                    class: 'whalesbot_eagle_1001_lite_lite',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                         cFunctions.push(`fly_hover_laser();`);
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_hover_at_specified_altitude();'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_hover_at_specified_altitude();'] },
                 },
-                whalesbot_eagle_1001_emergency_stop: {
+                whalesbot_eagle_1001_lite_emergency_stop: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -2728,17 +2728,17 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                     params: [],
                     events: {},
                     def: {
-                        type: 'whalesbot_eagle_1001_emergency_stop',
+                        type: 'whalesbot_eagle_1001_lite_emergency_stop',
                     },
                     paramsKeyMap: {},
-                    class: 'whalesbot_eagle_1001_lite',
+                    class: 'whalesbot_eagle_1001_lite_lite',
                     isNotFor: ['WhalesbotDroneLite'],
                     async func(sprite, script) {
                         cFunctions.push(`fly_lock();`);
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_emergency_stop()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_emergency_stop()'] },
                 },
-                whalesbot_eagle_1001_set_the_steering_gear: {
+                whalesbot_eagle_1001_lite_set_the_steering_gear: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -2779,23 +2779,23 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                                 params: ['90'],
                             },
                         ],
-                        type: 'whalesbot_eagle_1001_set_the_steering_gear',
+                        type: 'whalesbot_eagle_1001_lite_set_the_steering_gear',
                     },
                     paramsKeyMap: {
                         port: 0,
                         speed: 1,
                         angle: 2,
                     },
-                    class: 'whalesbot_eagle_1001_lite',
+                    class: 'whalesbot_eagle_1001_lite_lite',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                         const speed = script.getValue('speed');
                         const angle = script.getValue('angle');
                         cFunctions.push(`SetServo(P2,${speed},${angle});`);
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_set_the_steering_gear();'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_set_the_steering_gear();'] },
                 },
-                // whalesbot_eagle_1001_execute_script: {
+                // whalesbot_eagle_1001_lite_execute_script: {
                 //     color: EntryStatic.colorSet.block.default.HARDWARE,
                 //     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 //     fontColor: '#fff',
@@ -2815,12 +2815,12 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                 //     ],
                 //     events: {},
                 //     def: {
-                //         type: 'whalesbot_eagle_1001_execute_script',
+                //         type: 'whalesbot_eagle_1001_lite_execute_script',
                 //     },
                 //     paramsKeyMap: {
                 //         VALUE: 0,
                 //     },
-                //     class: 'whalesbot_eagle_1001_lite',
+                //     class: 'whalesbot_eagle_1001_lite_lite',
                 //     isNotFor: ['WhalesbotDroneLite'],
                 //     async func(sprite, script) {
                 //         if (openedSimulatorPopup()) {
@@ -2833,11 +2833,11 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                 //         }
                 //         await _this.sendPacket(_this.runCode);
                 //     },
-                //     syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_execute_script()'] },
+                //     syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_execute_script()'] },
                 // },
 
                 // light & speaker blocks
-                whalesbot_eagle_1001_ls_debug_value: {
+                whalesbot_eagle_1001_lite_ls_debug_value: {
                     color: blockColors.color.light_speaker,
                     outerLine: blockColors.outerLine.light_speaker,
                     fontColor: '#fff',
@@ -2867,13 +2867,13 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                                 params: [''],
                             },
                         ],
-                        type: 'whalesbot_eagle_1001_ls_debug_value',
+                        type: 'whalesbot_eagle_1001_lite_ls_debug_value',
                     },
                     paramsKeyMap: {
                         VALUE1: 0,
                         VALUE2: 1,
                     },
-                    class: 'whalesbot_eagle_1001_ls',
+                    class: 'whalesbot_eagle_1001_lite_ls',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                         var value1 = Number(script.values[0]);
@@ -2889,10 +2889,10 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                             throw new Error();
                         }
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ls_debug_value()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_ls_debug_value()'] },
                 },
 
-                whalesbot_eagle_1001_ls_display_symbol: {
+                whalesbot_eagle_1001_lite_ls_display_symbol: {
                     color: blockColors.color.light_speaker,
                     outerLine: blockColors.outerLine.light_speaker,
                     fontColor: '#fff',
@@ -2939,20 +2939,20 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                             null,
                             null,
                         ],
-                        type: 'whalesbot_eagle_1001_ls_display_symbol',
+                        type: 'whalesbot_eagle_1001_lite_ls_display_symbol',
                     },
                     paramsKeyMap: {
                         SYMBOLS: 0,
                         PORT: 1,
                     },
-                    class: 'whalesbot_eagle_1001_ls',
+                    class: 'whalesbot_eagle_1001_lite_ls',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ls_display_symbol()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_ls_display_symbol()'] },
                 },
 
-                whalesbot_eagle_1001_ls_off_LED: {
+                whalesbot_eagle_1001_lite_ls_off_LED: {
                     color: blockColors.color.light_speaker,
                     outerLine: blockColors.outerLine.light_speaker,
                     fontColor: '#fff',
@@ -2975,19 +2975,19 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                         params: [
                             null,
                         ],
-                        type: 'whalesbot_eagle_1001_ls_off_LED',
+                        type: 'whalesbot_eagle_1001_lite_ls_off_LED',
                     },
                     paramsKeyMap: {
                         PORT: 0,
                     },
-                    class: 'whalesbot_eagle_1001_ls',
+                    class: 'whalesbot_eagle_1001_lite_ls',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ls_off_LED()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_ls_off_LED()'] },
                 },
 
-                whalesbot_eagle_1001_ls_display_digital_tube: {
+                whalesbot_eagle_1001_lite_ls_display_digital_tube: {
                     color: blockColors.color.light_speaker,
                     outerLine: blockColors.outerLine.light_speaker,
                     fontColor: '#fff',
@@ -3019,13 +3019,13 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                                 params: [''],
                             },
                         ],
-                        type: 'whalesbot_eagle_1001_ls_display_digital_tube',
+                        type: 'whalesbot_eagle_1001_lite_ls_display_digital_tube',
                     },
                     paramsKeyMap: {
                         PORT: 0,
                         NUMBER: 1,
                     },
-                    class: 'whalesbot_eagle_1001_ls',
+                    class: 'whalesbot_eagle_1001_lite_ls',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                         var number = Number(script.values[1]);
@@ -3035,10 +3035,10 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                             throw new Error();
                         }
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ls_display_digital_tube()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_ls_display_digital_tube()'] },
                 },
 
-                whalesbot_eagle_1001_ls_display_digital_tube_score: {
+                whalesbot_eagle_1001_lite_ls_display_digital_tube_score: {
                     color: blockColors.color.light_speaker,
                     outerLine: blockColors.outerLine.light_speaker,
                     fontColor: '#fff',
@@ -3079,14 +3079,14 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                                 params: [''],
                             },
                         ],
-                        type: 'whalesbot_eagle_1001_ls_display_digital_tube_score',
+                        type: 'whalesbot_eagle_1001_lite_ls_display_digital_tube_score',
                     },
                     paramsKeyMap: {
                         PORT: 0,
                         NUMBER1: 1,
                         NUMBER2: 2,
                     },
-                    class: 'whalesbot_eagle_1001_ls',
+                    class: 'whalesbot_eagle_1001_lite_ls',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                         var number1 = Number(script.values[1]);
@@ -3097,10 +3097,10 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                             throw new Error();
                         }
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ls_display_digital_tube_score()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_ls_display_digital_tube_score()'] },
                 },
 
-                whalesbot_eagle_1001_ls_off_digital_tube: {
+                whalesbot_eagle_1001_lite_ls_off_digital_tube: {
                     color: blockColors.color.light_speaker,
                     outerLine: blockColors.outerLine.light_speaker,
                     fontColor: '#fff',
@@ -3123,19 +3123,19 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                         params: [
                             null,
                         ],
-                        type: 'whalesbot_eagle_1001_ls_off_digital_tube',
+                        type: 'whalesbot_eagle_1001_lite_ls_off_digital_tube',
                     },
                     paramsKeyMap: {
                         PORT: 0,
                     },
-                    class: 'whalesbot_eagle_1001_ls',
+                    class: 'whalesbot_eagle_1001_lite_ls',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ls_off_digital_tube()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_ls_off_digital_tube()'] },
                 },
 
-                whalesbot_eagle_1001_ls_set_RGB: {
+                whalesbot_eagle_1001_lite_ls_set_RGB: {
                     color: blockColors.color.light_speaker,
                     outerLine: blockColors.outerLine.light_speaker,
                     fontColor: '#fff',
@@ -3185,7 +3185,7 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                                 params: ['255'],
                             },
                         ],
-                        type: 'whalesbot_eagle_1001_ls_set_RGB',
+                        type: 'whalesbot_eagle_1001_lite_ls_set_RGB',
                     },
                     paramsKeyMap: {
                         PORT: 0,
@@ -3193,7 +3193,7 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                         GREEN: 2,
                         BLUE: 3,
                     },
-                    class: 'whalesbot_eagle_1001_ls',
+                    class: 'whalesbot_eagle_1001_lite_ls',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                         var red = Number(script.values[1]);
@@ -3205,10 +3205,10 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                             throw new Error();
                         }
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ls_set_RGB()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_ls_set_RGB()'] },
                 },
 
-                whalesbot_eagle_1001_ls_fly_RGB: {
+                whalesbot_eagle_1001_lite_ls_fly_RGB: {
                     color: blockColors.color.light_speaker,
                     outerLine: blockColors.outerLine.light_speaker,
                     fontColor: '#fff',
@@ -3234,19 +3234,19 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                         params: [
                             null,
                         ],
-                        type: 'whalesbot_eagle_1001_ls_fly_RGB',
+                        type: 'whalesbot_eagle_1001_lite_ls_fly_RGB',
                     },
                     paramsKeyMap: {
                         COLOR: 0,
                     },
-                    class: 'whalesbot_eagle_1001_ls',
+                    class: 'whalesbot_eagle_1001_lite_ls',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ls_fly_RGB()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_ls_fly_RGB()'] },
                 },
 
-                whalesbot_eagle_1001_ls_set_DO: {
+                whalesbot_eagle_1001_lite_ls_set_DO: {
                     color: blockColors.color.light_speaker,
                     outerLine: blockColors.outerLine.light_speaker,
                     fontColor: '#fff',
@@ -3281,20 +3281,20 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                             null,
                             null,
                         ],
-                        type: 'whalesbot_eagle_1001_ls_set_DO',
+                        type: 'whalesbot_eagle_1001_lite_ls_set_DO',
                     },
                     paramsKeyMap: {
                         PORT: 0,
                         ELECTROMAGNET: 1,
                     },
-                    class: 'whalesbot_eagle_1001_ls',
+                    class: 'whalesbot_eagle_1001_lite_ls',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ls_set_DO()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_ls_set_DO()'] },
                 },
 
-                whalesbot_eagle_1001_ls_execute_script: {
+                whalesbot_eagle_1001_lite_ls_execute_script: {
                     color: blockColors.color.light_speaker,
                     outerLine: blockColors.outerLine.light_speaker,
                     fontColor: '#fff',
@@ -3314,12 +3314,12 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                     ],
                     events: {},
                     def: {
-                        type: 'whalesbot_eagle_1001_ls_execute_script',
+                        type: 'whalesbot_eagle_1001_lite_ls_execute_script',
                     },
                     paramsKeyMap: {
                         VALUE: 0,
                     },
-                    class: 'whalesbot_eagle_1001_ls',
+                    class: 'whalesbot_eagle_1001_lite_ls',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                         const project = _this.exportProject();
@@ -3333,8 +3333,8 @@ import metadata from './metadata_whalesbot_drone_lite.json';
 
                         if (_this.unsupportBlockExist) {
                             Entry.toast.alert(
-                                Lang.Blocks.whalesbot_eagle_1001_toast_unsupport_block_title,
-                                Lang.Blocks.whalesbot_eagle_1001_toast_unsupport_block_msg
+                                Lang.Blocks.whalesbot_eagle_1001_lite_toast_unsupport_block_title,
+                                Lang.Blocks.whalesbot_eagle_1001_lite_toast_unsupport_block_msg
                             )
                             _this.unsupportBlockExist = false;
                             Entry.engine.toggleStop();
@@ -3348,8 +3348,8 @@ import metadata from './metadata_whalesbot_drone_lite.json';
 
                         if (openedSimulatorPopup()) {
                             Entry.toast.success(
-                                Lang.Blocks.whalesbot_eagle_1001_toast_status_title,
-                                Lang.Blocks.whalesbot_eagle_1001_toast_download_success
+                                Lang.Blocks.whalesbot_eagle_1001_lite_toast_status_title,
+                                Lang.Blocks.whalesbot_eagle_1001_lite_toast_download_success
                             );
                             return;
                         }
@@ -3359,27 +3359,27 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                         _this.sendCmd(sourceCode);
 
                         Entry.toast.success(
-                            Lang.Blocks.whalesbot_eagle_1001_toast_status_title,
-                            Lang.Blocks.whalesbot_eagle_1001_toast_prepare_download
+                            Lang.Blocks.whalesbot_eagle_1001_lite_toast_status_title,
+                            Lang.Blocks.whalesbot_eagle_1001_lite_toast_prepare_download
                         );
                         setTimeout(() => {
                             Entry.toast.success(
-                                Lang.Blocks.whalesbot_eagle_1001_toast_status_title,
-                                Lang.Blocks.whalesbot_eagle_1001_toast_downloading_code
+                                Lang.Blocks.whalesbot_eagle_1001_lite_toast_status_title,
+                                Lang.Blocks.whalesbot_eagle_1001_lite_toast_downloading_code
                             );
                             setTimeout(() => {
                                 Entry.toast.success(
-                                    Lang.Blocks.whalesbot_eagle_1001_toast_status_title,
-                                    Lang.Blocks.whalesbot_eagle_1001_toast_download_success
+                                    Lang.Blocks.whalesbot_eagle_1001_lite_toast_status_title,
+                                    Lang.Blocks.whalesbot_eagle_1001_lite_toast_download_success
                                 );
                             }, 3000);
                         }, 4000);
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ls_execute_script()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_ls_execute_script()'] },
                 },
 
                 // sensors
-                whalesbot_eagle_1001_ss_fly_state_POS_Z: {
+                whalesbot_eagle_1001_lite_ss_fly_state_POS_Z: {
                     color: blockColors.color.sensor,
                     outerLine: blockColors.outerLine.sensor,
                     fontColor: '#fff',
@@ -3388,19 +3388,19 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                     params: [],
                     events: {},
                     def: {
-                        type: 'whalesbot_eagle_1001_ss_fly_state_POS_Z',
+                        type: 'whalesbot_eagle_1001_lite_ss_fly_state_POS_Z',
                     },
                     paramsKeyMap: {},
-                    class: 'whalesbot_eagle_1001_ss',
+                    class: 'whalesbot_eagle_1001_lite_ss',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                         _this.sleep();
                         return _this.sensor.state_position_z || '0';
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ss_fly_state_POS_Z()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_ss_fly_state_POS_Z()'] },
                 },
 
-                whalesbot_eagle_1001_ss_fly_state_LASER: {
+                whalesbot_eagle_1001_lite_ss_fly_state_LASER: {
                     color: blockColors.color.sensor,
                     outerLine: blockColors.outerLine.sensor,
                     fontColor: '#fff',
@@ -3409,19 +3409,19 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                     params: [],
                     events: {},
                     def: {
-                        type: 'whalesbot_eagle_1001_ss_fly_state_LASER',
+                        type: 'whalesbot_eagle_1001_lite_ss_fly_state_LASER',
                     },
                     paramsKeyMap: {},
-                    class: 'whalesbot_eagle_1001_ss',
+                    class: 'whalesbot_eagle_1001_lite_ss',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                         _this.sleep();
                         return _this.sensor.LaserTof || '0';
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ss_fly_state_LASER()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_ss_fly_state_LASER()'] },
                 },
 
-                whalesbot_eagle_1001_ss_battery_voltage: {
+                whalesbot_eagle_1001_lite_ss_battery_voltage: {
                     color: blockColors.color.sensor,
                     outerLine: blockColors.outerLine.sensor,
                     fontColor: '#fff',
@@ -3430,19 +3430,19 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                     params: [],
                     events: {},
                     def: {
-                        type: 'whalesbot_eagle_1001_ss_battery_voltage',
+                        type: 'whalesbot_eagle_1001_lite_ss_battery_voltage',
                     },
                     paramsKeyMap: {},
-                    class: 'whalesbot_eagle_1001_ss',
+                    class: 'whalesbot_eagle_1001_lite_ss',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                         _this.sleep();
                         return _this.sensor.Battery || '0';
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ss_battery_voltage()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_ss_battery_voltage()'] },
                 },
 
-                whalesbot_eagle_1001_ss_fly_state_STATE_TEMP: {
+                whalesbot_eagle_1001_lite_ss_fly_state_STATE_TEMP: {
                     color: blockColors.color.sensor,
                     outerLine: blockColors.outerLine.sensor,
                     fontColor: '#fff',
@@ -3451,19 +3451,19 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                     params: [],
                     events: {},
                     def: {
-                        type: 'whalesbot_eagle_1001_ss_fly_state_STATE_TEMP',
+                        type: 'whalesbot_eagle_1001_lite_ss_fly_state_STATE_TEMP',
                     },
                     paramsKeyMap: {},
-                    class: 'whalesbot_eagle_1001_ss',
+                    class: 'whalesbot_eagle_1001_lite_ss',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                         _this.sleep();
                         return _this.sensor.SPL06_temp || '0';
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ss_fly_state_STATE_TEMP()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_ss_fly_state_STATE_TEMP()'] },
                 },
 
-                whalesbot_eagle_1001_ss_attitude_angle: {
+                whalesbot_eagle_1001_lite_ss_attitude_angle: {
                     color: blockColors.color.sensor,
                     outerLine: blockColors.outerLine.sensor,
                     fontColor: '#fff',
@@ -3488,10 +3488,10 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                         params: [
                             null,
                         ],
-                        type: 'whalesbot_eagle_1001_ss_attitude_angle',
+                        type: 'whalesbot_eagle_1001_lite_ss_attitude_angle',
                     },
                     paramsKeyMap: {},
-                    class: 'whalesbot_eagle_1001_ss',
+                    class: 'whalesbot_eagle_1001_lite_ss',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                         var state = script.values[0];
@@ -3506,10 +3506,10 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                             return _this.sensor.Yaw || '0';
                         }
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ss_attitude_angle()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_ss_attitude_angle()'] },
                 },
 
-                whalesbot_eagle_1001_ss_flight_angular_velocity: {
+                whalesbot_eagle_1001_lite_ss_flight_angular_velocity: {
                     color: blockColors.color.sensor,
                     outerLine: blockColors.outerLine.sensor,
                     fontColor: '#fff',
@@ -3532,10 +3532,10 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                         params: [
                             null,
                         ],
-                        type: 'whalesbot_eagle_1001_ss_flight_angular_velocity',
+                        type: 'whalesbot_eagle_1001_lite_ss_flight_angular_velocity',
                     },
                     paramsKeyMap: {},
-                    class: 'whalesbot_eagle_1001_ss',
+                    class: 'whalesbot_eagle_1001_lite_ss',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                         var state = script.values[0];
@@ -3550,10 +3550,10 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                             return _this.sensor.Gypo_z || '0';
                         }
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ss_flight_angular_velocity()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_ss_flight_angular_velocity()'] },
                 },
 
-                whalesbot_eagle_1001_ss_flight_acceleration: {
+                whalesbot_eagle_1001_lite_ss_flight_acceleration: {
                     color: blockColors.color.sensor,
                     outerLine: blockColors.outerLine.sensor,
                     fontColor: '#fff',
@@ -3576,10 +3576,10 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                         params: [
                             null,
                         ],
-                        type: 'whalesbot_eagle_1001_ss_flight_acceleration',
+                        type: 'whalesbot_eagle_1001_lite_ss_flight_acceleration',
                     },
                     paramsKeyMap: {},
-                    class: 'whalesbot_eagle_1001_ss',
+                    class: 'whalesbot_eagle_1001_lite_ss',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                         var state = script.values[0];
@@ -3594,10 +3594,10 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                             return _this.sensor.ACC_z || '0';
                         }
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ss_flight_acceleration()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_ss_flight_acceleration()'] },
                 },
 
-                whalesbot_eagle_1001_ss_optical_flow: {
+                whalesbot_eagle_1001_lite_ss_optical_flow: {
                     color: blockColors.color.sensor,
                     outerLine: blockColors.outerLine.sensor,
                     fontColor: '#fff',
@@ -3620,17 +3620,17 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                         params: [
                             null,
                         ],
-                        type: 'whalesbot_eagle_1001_ss_optical_flow',
+                        type: 'whalesbot_eagle_1001_lite_ss_optical_flow',
                     },
                     paramsKeyMap: {},
-                    class: 'whalesbot_eagle_1001_ss',
+                    class: 'whalesbot_eagle_1001_lite_ss',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ss_optical_flow()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_ss_optical_flow()'] },
                 },
 
-                whalesbot_eagle_1001_ss_get_infrared_distance: {
+                whalesbot_eagle_1001_lite_ss_get_infrared_distance: {
                     color: blockColors.color.sensor,
                     outerLine: blockColors.outerLine.sensor,
                     fontColor: '#fff',
@@ -3653,17 +3653,17 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                         params: [
                             null,
                         ],
-                        type: 'whalesbot_eagle_1001_ss_get_infrared_distance',
+                        type: 'whalesbot_eagle_1001_lite_ss_get_infrared_distance',
                     },
                     paramsKeyMap: {},
-                    class: 'whalesbot_eagle_1001_ss',
+                    class: 'whalesbot_eagle_1001_lite_ss',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ss_get_infrared_distance()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_ss_get_infrared_distance()'] },
                 },
 
-                whalesbot_eagle_1001_ss_obstacle_infrared_detected_string: {
+                whalesbot_eagle_1001_lite_ss_obstacle_infrared_detected_string: {
                     color: blockColors.color.sensor,
                     outerLine: blockColors.outerLine.sensor,
                     fontColor: '#fff',
@@ -3686,17 +3686,17 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                         params: [
                             null,
                         ],
-                        type: 'whalesbot_eagle_1001_ss_obstacle_infrared_detected_string',
+                        type: 'whalesbot_eagle_1001_lite_ss_obstacle_infrared_detected_string',
                     },
                     paramsKeyMap: {},
-                    class: 'whalesbot_eagle_1001_ss',
+                    class: 'whalesbot_eagle_1001_lite_ss',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ss_obstacle_infrared_detected_string()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_ss_obstacle_infrared_detected_string()'] },
                 },
 
-                whalesbot_eagle_1001_ss_obstacle_infrared_detected_bool: {
+                whalesbot_eagle_1001_lite_ss_obstacle_infrared_detected_bool: {
                     color: blockColors.color.sensor,
                     outerLine: blockColors.outerLine.sensor,
                     fontColor: '#fff',
@@ -3719,17 +3719,17 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                         params: [
                             null,
                         ],
-                        type: 'whalesbot_eagle_1001_ss_obstacle_infrared_detected_bool',
+                        type: 'whalesbot_eagle_1001_lite_ss_obstacle_infrared_detected_bool',
                     },
                     paramsKeyMap: {},
-                    class: 'whalesbot_eagle_1001_ss',
+                    class: 'whalesbot_eagle_1001_lite_ss',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ss_obstacle_infrared_detected_bool()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_ss_obstacle_infrared_detected_bool()'] },
                 },
 
-                whalesbot_eagle_1001_ss_human_infrared_value_string: {
+                whalesbot_eagle_1001_lite_ss_human_infrared_value_string: {
                     color: blockColors.color.sensor,
                     outerLine: blockColors.outerLine.sensor,
                     fontColor: '#fff',
@@ -3752,17 +3752,17 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                         params: [
                             null,
                         ],
-                        type: 'whalesbot_eagle_1001_ss_human_infrared_value_string',
+                        type: 'whalesbot_eagle_1001_lite_ss_human_infrared_value_string',
                     },
                     paramsKeyMap: {},
-                    class: 'whalesbot_eagle_1001_ss',
+                    class: 'whalesbot_eagle_1001_lite_ss',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ss_human_infrared_value_string()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_ss_human_infrared_value_string()'] },
                 },
 
-                whalesbot_eagle_1001_ss_human_infrared_value_bool: {
+                whalesbot_eagle_1001_lite_ss_human_infrared_value_bool: {
                     color: blockColors.color.sensor,
                     outerLine: blockColors.outerLine.sensor,
                     fontColor: '#fff',
@@ -3785,17 +3785,17 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                         params: [
                             null,
                         ],
-                        type: 'whalesbot_eagle_1001_ss_human_infrared_value_bool',
+                        type: 'whalesbot_eagle_1001_lite_ss_human_infrared_value_bool',
                     },
                     paramsKeyMap: {},
-                    class: 'whalesbot_eagle_1001_ss',
+                    class: 'whalesbot_eagle_1001_lite_ss',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ss_human_infrared_value_bool()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_ss_human_infrared_value_bool()'] },
                 },
 
-                whalesbot_eagle_1001_ss_AI: {
+                whalesbot_eagle_1001_lite_ss_AI: {
                     color: blockColors.color.sensor,
                     outerLine: blockColors.outerLine.sensor,
                     fontColor: '#fff',
@@ -3818,17 +3818,17 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                         params: [
                             null,
                         ],
-                        type: 'whalesbot_eagle_1001_ss_AI',
+                        type: 'whalesbot_eagle_1001_lite_ss_AI',
                     },
                     paramsKeyMap: {},
-                    class: 'whalesbot_eagle_1001_ss',
+                    class: 'whalesbot_eagle_1001_lite_ss',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ss_AI()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_ss_AI()'] },
                 },
 
-                whalesbot_eagle_1001_ss_get_ultrasonic_distance: {
+                whalesbot_eagle_1001_lite_ss_get_ultrasonic_distance: {
                     color: blockColors.color.sensor,
                     outerLine: blockColors.outerLine.sensor,
                     fontColor: '#fff',
@@ -3851,17 +3851,17 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                         params: [
                             null,
                         ],
-                        type: 'whalesbot_eagle_1001_ss_get_ultrasonic_distance',
+                        type: 'whalesbot_eagle_1001_lite_ss_get_ultrasonic_distance',
                     },
                     paramsKeyMap: {},
-                    class: 'whalesbot_eagle_1001_ss',
+                    class: 'whalesbot_eagle_1001_lite_ss',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ss_get_ultrasonic_distance()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_ss_get_ultrasonic_distance()'] },
                 },
 
-                whalesbot_eagle_1001_ss_get_ambient_light: {
+                whalesbot_eagle_1001_lite_ss_get_ambient_light: {
                     color: blockColors.color.sensor,
                     outerLine: blockColors.outerLine.sensor,
                     fontColor: '#fff',
@@ -3884,17 +3884,17 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                         params: [
                             null,
                         ],
-                        type: 'whalesbot_eagle_1001_ss_get_ambient_light',
+                        type: 'whalesbot_eagle_1001_lite_ss_get_ambient_light',
                     },
                     paramsKeyMap: {},
-                    class: 'whalesbot_eagle_1001_ss',
+                    class: 'whalesbot_eagle_1001_lite_ss',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ss_get_ambient_light()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_ss_get_ambient_light()'] },
                 },
 
-                whalesbot_eagle_1001_ss_get_temperature: {
+                whalesbot_eagle_1001_lite_ss_get_temperature: {
                     color: blockColors.color.sensor,
                     outerLine: blockColors.outerLine.sensor,
                     fontColor: '#fff',
@@ -3917,17 +3917,17 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                         params: [
                             null,
                         ],
-                        type: 'whalesbot_eagle_1001_ss_get_temperature',
+                        type: 'whalesbot_eagle_1001_lite_ss_get_temperature',
                     },
                     paramsKeyMap: {},
-                    class: 'whalesbot_eagle_1001_ss',
+                    class: 'whalesbot_eagle_1001_lite_ss',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ss_get_temperature()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_ss_get_temperature()'] },
                 },
 
-                whalesbot_eagle_1001_ss_get_humidity: {
+                whalesbot_eagle_1001_lite_ss_get_humidity: {
                     color: blockColors.color.sensor,
                     outerLine: blockColors.outerLine.sensor,
                     fontColor: '#fff',
@@ -3950,17 +3950,17 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                         params: [
                             null,
                         ],
-                        type: 'whalesbot_eagle_1001_ss_get_humidity',
+                        type: 'whalesbot_eagle_1001_lite_ss_get_humidity',
                     },
                     paramsKeyMap: {},
-                    class: 'whalesbot_eagle_1001_ss',
+                    class: 'whalesbot_eagle_1001_lite_ss',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ss_get_humidity()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_ss_get_humidity()'] },
                 },
 
-                whalesbot_eagle_1001_ss_get_flame: {
+                whalesbot_eagle_1001_lite_ss_get_flame: {
                     color: blockColors.color.sensor,
                     outerLine: blockColors.outerLine.sensor,
                     fontColor: '#fff',
@@ -3983,17 +3983,17 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                         params: [
                             null,
                         ],
-                        type: 'whalesbot_eagle_1001_ss_get_flame',
+                        type: 'whalesbot_eagle_1001_lite_ss_get_flame',
                     },
                     paramsKeyMap: {},
-                    class: 'whalesbot_eagle_1001_ss',
+                    class: 'whalesbot_eagle_1001_lite_ss',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ss_get_flame()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_ss_get_flame()'] },
                 },
 
-                whalesbot_eagle_1001_ss_get_gesture: {
+                whalesbot_eagle_1001_lite_ss_get_gesture: {
                     color: blockColors.color.sensor,
                     outerLine: blockColors.outerLine.sensor,
                     fontColor: '#fff',
@@ -4016,17 +4016,17 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                         params: [
                             null,
                         ],
-                        type: 'whalesbot_eagle_1001_ss_get_gesture',
+                        type: 'whalesbot_eagle_1001_lite_ss_get_gesture',
                     },
                     paramsKeyMap: {},
-                    class: 'whalesbot_eagle_1001_ss',
+                    class: 'whalesbot_eagle_1001_lite_ss',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ss_get_gesture()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_ss_get_gesture()'] },
                 },
 
-                whalesbot_eagle_1001_ss_get_tof: {
+                whalesbot_eagle_1001_lite_ss_get_tof: {
                     color: blockColors.color.sensor,
                     outerLine: blockColors.outerLine.sensor,
                     fontColor: '#fff',
@@ -4049,17 +4049,17 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                         params: [
                             null,
                         ],
-                        type: 'whalesbot_eagle_1001_ss_get_tof',
+                        type: 'whalesbot_eagle_1001_lite_ss_get_tof',
                     },
                     paramsKeyMap: {},
-                    class: 'whalesbot_eagle_1001_ss',
+                    class: 'whalesbot_eagle_1001_lite_ss',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ss_get_tof()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_ss_get_tof()'] },
                 },
 
-                whalesbot_eagle_1001_ss_fly_setpoint_LASER_ENABLE: {
+                whalesbot_eagle_1001_lite_ss_fly_setpoint_LASER_ENABLE: {
                     color: blockColors.color.sensor,
                     outerLine: blockColors.outerLine.sensor,
                     fontColor: '#fff',
@@ -4083,17 +4083,17 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                         params: [
                             null,
                         ],
-                        type: 'whalesbot_eagle_1001_ss_fly_setpoint_LASER_ENABLE',
+                        type: 'whalesbot_eagle_1001_lite_ss_fly_setpoint_LASER_ENABLE',
                     },
                     paramsKeyMap: {},
-                    class: 'whalesbot_eagle_1001_ss',
+                    class: 'whalesbot_eagle_1001_lite_ss',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ss_fly_setpoint_LASER_ENABLE()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_ss_fly_setpoint_LASER_ENABLE()'] },
                 },
 
-                whalesbot_eagle_1001_ss_get_bt_remote_control: {
+                whalesbot_eagle_1001_lite_ss_get_bt_remote_control: {
                     color: blockColors.color.sensor,
                     outerLine: blockColors.outerLine.sensor,
                     fontColor: '#fff',
@@ -4120,17 +4120,17 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                         params: [
                             null,
                         ],
-                        type: 'whalesbot_eagle_1001_ss_get_bt_remote_control',
+                        type: 'whalesbot_eagle_1001_lite_ss_get_bt_remote_control',
                     },
                     paramsKeyMap: {},
-                    class: 'whalesbot_eagle_1001_ss',
+                    class: 'whalesbot_eagle_1001_lite_ss',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ss_get_bt_remote_control()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_ss_get_bt_remote_control()'] },
                 },
 
-                whalesbot_eagle_1001_ss_seconds: {
+                whalesbot_eagle_1001_lite_ss_seconds: {
                     color: blockColors.color.sensor,
                     outerLine: blockColors.outerLine.sensor,
                     fontColor: '#fff',
@@ -4139,17 +4139,17 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                     params: [],
                     events: {},
                     def: {
-                        type: 'whalesbot_eagle_1001_ss_seconds',
+                        type: 'whalesbot_eagle_1001_lite_ss_seconds',
                     },
                     paramsKeyMap: {},
-                    class: 'whalesbot_eagle_1001_ss',
+                    class: 'whalesbot_eagle_1001_lite_ss',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ss_seconds()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_ss_seconds()'] },
                 },
 
-                whalesbot_eagle_1001_ss_resettime: {
+                whalesbot_eagle_1001_lite_ss_resettime: {
                     color: blockColors.color.sensor,
                     outerLine: blockColors.outerLine.sensor,
                     fontColor: '#fff',
@@ -4158,14 +4158,14 @@ import metadata from './metadata_whalesbot_drone_lite.json';
                     params: [],
                     events: {},
                     def: {
-                        type: 'whalesbot_eagle_1001_ss_resettime',
+                        type: 'whalesbot_eagle_1001_lite_ss_resettime',
                     },
                     paramsKeyMap: {},
-                    class: 'whalesbot_eagle_1001_ss',
+                    class: 'whalesbot_eagle_1001_lite_ss',
                     isNotFor: ['WhalesbotDroneLite'],
                     func(sprite, script) {
                     },
-                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_ss_resettime()'] },
+                    syntax: { js: [], py: ['Entry.whalesbot_eagle_1001_lite_ss_resettime()'] },
                 },
             };
         }
