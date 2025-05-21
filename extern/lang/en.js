@@ -5920,6 +5920,7 @@ Lang.Helper = {
     repeat_while_true: 'Repeats the blocks inside until/while the condition is True/False. ',
     stop_repeat:
         "Stops the closest block that encloses this block.\n It works with various C-shaped blocks like 'repeat' block.",
+    continue_repeat: 'Skip this repeat and run it from the beginning of the next repeat.',
     _if: 'If the condition is True/False, run the blocks inside.',
     if_else:
         "If the condition is True/False, run the blocks inside the 'if' section.\nIf not, run the blocks inside the 'else' section.",
@@ -7121,6 +7122,7 @@ Lang.template = {
     hidden_loop: 'Repeat   %1 times %2',
     repeat_inf: 'Repeat infinitely %1',
     stop_repeat: 'Stop repeat %1',
+    continue_repeat: 'Skip this repeat %1',
     wait_until_true: 'Wait until %1 %2',
     _if: 'If %1 then %2',
     if_else: 'If %1 then %2 %3 else',
