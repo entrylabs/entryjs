@@ -83,15 +83,11 @@ const _throttle = require('lodash/throttle');
             }
             this.remoteEvent = _throttle(
                 () => {
-                    // 통신 상태를 저장하고 이벤트 후에 복원
                     const prevFlag = this.sendFlag;
                     try {
-
                         Entry.engine.fireEvent('connectlite_event_remote_input');
                     } catch (e) {
-
                     } finally {
-                        // 이벤트 처리 후 원래 통신 상태 복원
                         this.sendFlag = prevFlag;
                     }
                 },
@@ -100,9 +96,14 @@ const _throttle = require('lodash/throttle');
             );
             this.digitalEvent = _throttle(
                 () => {
-                    Entry.engine.fireEvent('connectlite_event_digital_input');
-                }
-                ,
+                    const prevFlag = this.sendFlag;
+                    try {
+                        Entry.engine.fireEvent('connectlite_event_digital_input');
+                    } catch (e) {
+                    } finally {
+                        this.sendFlag = prevFlag;
+                    }
+                },
                 EVENT_INTERVAL,
                 eventSetting
             );
@@ -631,31 +632,31 @@ const _throttle = require('lodash/throttle');
         }
 
         handleRemoteEventInterval() {
-            // 기존 인터벌이 있으면 제거
             if (this.remoteEventIntervalId) {
                 clearInterval(this.remoteEventIntervalId);
             }
             this.remoteEventIntervalId = setInterval(() => {
-                // sendFlag 확인 후 이벤트 발생
                 const currentState = this.remoteEvent.bind(this);
                 currentState();
             }, EVENT_INTERVAL);
         }
 
         handleDigitalEventInterval() {
-            this.digitalEventIntervalId = setInterval(this.digitalEvent.bind(this), EVENT_INTERVAL);
+            if (this.digitalEventIntervalId) {
+                clearInterval(this.digitalEventIntervalId);
+            }
+            this.digitalEventIntervalId = setInterval(() => {
+                const currentState = this.digitalEvent.bind(this);
+                currentState();
+            }, EVENT_INTERVAL);
         }
 
-        // 디바이스에서 값을 읽어온다.
-        // 디바이스에서 값을 읽어온다.
         handleLocalData(buffer) {
+            buffer.forEach(b => this.qEnqueue(b));
 
-            // 데이터가 들어왔으므로 통신 타임아웃 초기화
             if (this._recoverTimeoutId) {
                 clearTimeout(this._recoverTimeoutId);
             }
-
-            buffer.forEach(b => this.qEnqueue(b));
 
             while(this.qCount() >= this.inputPacket.length) {
                 if (!this.process) {
@@ -689,18 +690,14 @@ const _throttle = require('lodash/throttle');
             }
 
             if (this.sendFlag) {
-                // 기존 대기중인 타임아웃 취소
                 if (this._requestTimeoutId) {
                     clearTimeout(this._requestTimeoutId);
                 }
-
                 this._requestTimeoutId = setTimeout(
                     () => {
                         if (Entry.hwLite && Entry.hwLite.serial) {
                             Entry.hwLite.serial.update();
                             this.sendFlag = false;
-
-                            // 응답 타임아웃 처리: 일정 시간 후에도 응답이 없으면 복구
                             this._recoverTimeoutId = setTimeout(() => {
                                 this.sendFlag = true;
                             }, SERIAL_INTERVAL * 3);
@@ -717,7 +714,6 @@ const _throttle = require('lodash/throttle');
                 return this.generateOutputPacket(this.RemoteData);
             }
         }
-
 
         qEnqueue(data) {
             this.qBuffer[this.qRear] = data;
@@ -744,7 +740,6 @@ const _throttle = require('lodash/throttle');
                 checker += packet[i];
             }
             return (checker & 0xFF);
-
         }
 
         checksumHandle(packet) {
