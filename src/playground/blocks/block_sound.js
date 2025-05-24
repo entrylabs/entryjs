@@ -293,12 +293,10 @@ module.exports = {
                             script.playState = 1;
                             const instance = Entry.Utils.playSound(sound.id);
                             Entry.Utils.addSoundInstances(instance, sprite);
-                            const duration = Math.floor(
-                                (sound.duration * 1000) / Entry.playbackRateValue
-                            );
-                            setTimeout(() => {
+
+                            instance.on('complete', () => {
                                 script.playState = 0;
-                            }, duration);
+                            });
                         }
                         return script;
                     } else if (script.playState == 1) {
@@ -381,14 +379,13 @@ module.exports = {
                         const sound = sprite.parent.getSound(soundId);
                         if (sound) {
                             script.playState = 1;
-                            const instance = Entry.Utils.playSound(sound.id);
+                            const duration = script.getNumberValue('SECOND', script) * 1000;
+                            const instance = Entry.Utils.playSound(sound.id, { duration });
                             Entry.Utils.addSoundInstances(instance, sprite);
-                            const timeValue = script.getNumberValue('SECOND', script);
-                            setTimeout(() => {
-                                instance.stop();
+
+                            instance.on('complete', () => {
                                 script.playState = 0;
-                            }, timeValue * 1000);
-                            instance.addEventListener('complete', (e) => {});
+                            });
                         }
                         return script;
                     } else if (script.playState == 1) {
@@ -498,9 +495,9 @@ module.exports = {
                             });
                             Entry.Utils.addSoundInstances(instance, sprite);
 
-                            setTimeout(() => {
+                            instance.on('complete', () => {
                                 script.playState = 0;
-                            }, duration);
+                            });
                         }
                         return script;
                     } else if (script.playState == 1) {
