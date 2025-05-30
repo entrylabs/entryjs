@@ -147,8 +147,8 @@ Entry.clearProject = function () {
         Entry.variableContainer.clear();
         Entry.container.clear();
         Entry.scene.clear();
-        Entry.stateManager.clear();
-        DataTable.clear();
+        Entry.stateManager?.clear();
+        DataTable?.clear();
         GEHelper.resManager.clearProject();
         Entry.Loader && (Entry.Loader.loaded = false);
 
