@@ -265,15 +265,19 @@ Entry.Engine = class Engine {
                 this.isLoaded = true;
                 const isSoundEmpty = Entry.soundQueue.urls.size < 1;
                 if (isSoundEmpty || Entry.soundQueue.loadComplete) {
-                    this.runButtonCurtain = Entry.Dom('div', {
-                        class: 'entryRunButtonBigMinimizeCurtain',
-                        parent: $('#entryCanvasWrapper'),
-                    });
-                    this.runButton = Entry.Dom('div', {
-                        class: 'entryRunButtonBigMinimize',
-                        parent: this.runButtonCurtain,
-                    });
-                    this.runButton.bindOnClick(() => Entry.engine.toggleRun());
+                    if (!this.runButtonCurtain) {
+                        this.runButtonCurtain = Entry.Dom('div', {
+                            class: 'entryRunButtonBigMinimizeCurtain',
+                            parent: $('#entryCanvasWrapper'),
+                        });
+                    }
+                    if (!this.runButton) {
+                        this.runButton = Entry.Dom('div', {
+                            class: 'entryRunButtonBigMinimize',
+                            parent: this.runButtonCurtain,
+                        });
+                        this.runButton.bindOnClick(() => Entry.engine.toggleRun());
+                    }
                     if (Entry.options.isStartOnLoaded && Entry.engine.state === 'stop') {
                         Entry.engine.toggleRun();
                     }
