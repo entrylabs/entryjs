@@ -1,5 +1,31 @@
 import _get from 'lodash/get';
 
+const calcOperationOptions = EntryStatic.isPracticalCourse
+    ? [
+          [Lang.Blocks.CALC_calc_operation_unnatural, 'unnatural'],
+          [Lang.Blocks.CALC_calc_operation_floor, 'floor'],
+          [Lang.Blocks.CALC_calc_operation_ceil, 'ceil'],
+          [Lang.Blocks.CALC_calc_operation_round, 'round'],
+      ]
+    : [
+          [Lang.Blocks.CALC_calc_operation_square, 'square'],
+          [Lang.Blocks.CALC_calc_operation_root, 'root'],
+          [Lang.Blocks.CALC_calc_operation_sin, 'sin'],
+          [Lang.Blocks.CALC_calc_operation_cos, 'cos'],
+          [Lang.Blocks.CALC_calc_operation_tan, 'tan'],
+          [Lang.Blocks.CALC_calc_operation_asin, 'asin_radian'],
+          [Lang.Blocks.CALC_calc_operation_acos, 'acos_radian'],
+          [Lang.Blocks.CALC_calc_operation_atan, 'atan_radian'],
+          [Lang.Blocks.CALC_calc_operation_log, 'log'],
+          [Lang.Blocks.CALC_calc_operation_ln, 'ln'],
+          [Lang.Blocks.CALC_calc_operation_unnatural, 'unnatural'],
+          [Lang.Blocks.CALC_calc_operation_floor, 'floor'],
+          [Lang.Blocks.CALC_calc_operation_ceil, 'ceil'],
+          [Lang.Blocks.CALC_calc_operation_round, 'round'],
+          [Lang.Blocks.CALC_calc_operation_factorial, 'factorial'],
+          [Lang.Blocks.CALC_calc_operation_abs, 'abs'],
+      ];
+
 module.exports = {
     getBlocks() {
         return {
@@ -689,25 +715,8 @@ module.exports = {
                     },
                     {
                         type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.CALC_calc_operation_square, 'square'],
-                            [Lang.Blocks.CALC_calc_operation_root, 'root'],
-                            [Lang.Blocks.CALC_calc_operation_sin, 'sin'],
-                            [Lang.Blocks.CALC_calc_operation_cos, 'cos'],
-                            [Lang.Blocks.CALC_calc_operation_tan, 'tan'],
-                            [Lang.Blocks.CALC_calc_operation_asin, 'asin_radian'],
-                            [Lang.Blocks.CALC_calc_operation_acos, 'acos_radian'],
-                            [Lang.Blocks.CALC_calc_operation_atan, 'atan_radian'],
-                            [Lang.Blocks.CALC_calc_operation_log, 'log'],
-                            [Lang.Blocks.CALC_calc_operation_ln, 'ln'],
-                            [Lang.Blocks.CALC_calc_operation_unnatural, 'unnatural'],
-                            [Lang.Blocks.CALC_calc_operation_floor, 'floor'],
-                            [Lang.Blocks.CALC_calc_operation_ceil, 'ceil'],
-                            [Lang.Blocks.CALC_calc_operation_round, 'round'],
-                            [Lang.Blocks.CALC_calc_operation_factorial, 'factorial'],
-                            [Lang.Blocks.CALC_calc_operation_abs, 'abs'],
-                        ],
-                        value: 'square',
+                        options: calcOperationOptions,
+                        value: EntryStatic.isPracticalCourse ? 'unnatural' : 'square',
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.CALC,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
