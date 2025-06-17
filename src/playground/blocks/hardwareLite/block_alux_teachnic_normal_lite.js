@@ -141,14 +141,26 @@ const _throttle = require('lodash/throttle');
             }
             this.remoteEvent = _throttle(
                 () => {
-                    Entry.engine.fireEvent('technicnormallite_event_remote_input');
+                    const prevFlag = this.sendFlag;
+                    try {
+                        Entry.engine.fireEvent('technicnormallite_event_remote_input');
+                    } catch (e) {
+                    } finally {
+                        this.sendFlag = prevFlag;
+                    }
                 },
                 EVENT_INTERVAL,
                 eventSetting
             );
             this.digitalEvent = _throttle(
-                () => {
-                    Entry.engine.fireEvent('technicnormallite_event_digital_input');
+                () => {                    
+                    const prevFlag = this.sendFlag;
+                    try {
+                        Entry.engine.fireEvent('technicnormallite_event_digital_input');
+                    } catch (e) {
+                    } finally {
+                        this.sendFlag = prevFlag;
+                    }
                 }
                 ,
                 EVENT_INTERVAL,
@@ -656,8 +668,16 @@ const _throttle = require('lodash/throttle');
 
             Entry.addEventListener('run', this.handleRemoteEventInterval.bind(this));
             Entry.addEventListener('run', this.handleDigitalEventInterval.bind(this));
-            Entry.addEventListener('beforeStop', clearInterval(this.remoteEventIntervalId));
-            Entry.addEventListener('beforeStop', clearInterval(this.digitalEventIntervalId));
+            Entry.addEventListener('beforeStop', () => {
+                if (this.remoteEventIntervalId) {
+                    clearInterval(this.remoteEventIntervalId);
+                    this.remoteEventIntervalId = null;
+                }
+                if (this.digitalEventIntervalId) {
+                    clearInterval(this.digitalEventIntervalId);
+                    this.digitalEventIntervalId = null;
+                }
+            });
             this.setZero();
 
             if (this.version === 0) {
@@ -674,16 +694,32 @@ const _throttle = require('lodash/throttle');
         }
 
         handleRemoteEventInterval() {
-            this.remoteEventIntervalId = setInterval(this.remoteEvent.bind(this), EVENT_INTERVAL);
+            if (this.remoteEventIntervalId) {
+                clearInterval(this.remoteEventIntervalId);
+            }
+            this.remoteEventIntervalId = setInterval(() => {
+                const currentState = this.remoteEvent.bind(this);
+                currentState();
+            }, EVENT_INTERVAL);
         }
 
-        handleDigitalEventInterval() {
-            this.digitalEventIntervalId = setInterval(this.digitalEvent.bind(this), EVENT_INTERVAL);
+        handleDigitalEventInterval() {            
+            if (this.digitalEventIntervalId) {
+                clearInterval(this.digitalEventIntervalId);
+            }
+            this.digitalEventIntervalId = setInterval(() => {
+                const currentState = this.digitalEvent.bind(this);
+                currentState();
+            }, EVENT_INTERVAL);
         }
 
         // 디바이스에서 값을 읽어온다.
         handleLocalData(buffer) {
             buffer.forEach(b => this.qEnqueue(b));
+
+            if (this._recoverTimeoutId) {
+                clearTimeout(this._recoverTimeoutId);
+            }
             
             while(this.qCount() >= this.inputPacket.length) {
                 if (!this.process) {
@@ -717,11 +753,17 @@ const _throttle = require('lodash/throttle');
             }
 
             if (this.sendFlag) {
-                setTimeout(
-                    () => {                    
+                if (this._requestTimeoutId) {
+                    clearTimeout(this._requestTimeoutId);
+                }
+                this._requestTimeoutId = setTimeout(
+                    () => {
                         if (Entry.hwLite && Entry.hwLite.serial) {
                             Entry.hwLite.serial.update();
                             this.sendFlag = false;
+                            this._recoverTimeoutId = setTimeout(() => {
+                                this.sendFlag = true;
+                            }, SERIAL_INTERVAL * 3);
                         }
                     },
                     SERIAL_INTERVAL
@@ -3632,7 +3674,7 @@ const _throttle = require('lodash/throttle');
                         let value = script.getNumberValue('PARAM2');
                         
                         if (value != 0) {
-                            count = Number(value / 255).toFixed(0);
+                            count = Math.floor(value / 255);
                             value = value % 255;
                         } else {
                             count = 0;

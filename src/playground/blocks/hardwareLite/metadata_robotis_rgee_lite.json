@@ -1,0 +1,9 @@
+{
+    "name": "RobotisRgeeLite",
+    "version": "1.0.0",
+    "type": "hardware",
+    "title": "로보티즈 알쥐",
+    "description": "로보티즈",
+    "imageName": "robotis_rgee_lite",
+    "moduleId": "070501"
+}
