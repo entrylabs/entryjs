@@ -199,11 +199,11 @@ Entry.Workspace = class Workspace {
                         Entry.modal.confirm(alertMessage.message).then((result) => {
                             if (result) {
                                 Entry.variableContainer.removeNotPythonSupportedFunction();
-                                Entry.expansion.banExpansionBlocks(Entry.expansionBlocks);
-                                Entry.aiUtilize.banAIUtilizeBlocks(Entry.aiUtilizeBlocks);
-                                Entry.hwLite.banClassAllHardwareLite();
-                                Entry.playground.dataTable.removeAllBlocks();
-                                Entry.aiLearning.removeAllBlocks();
+                                Entry.expansion?.banExpansionBlocks(Entry.expansionBlocks);
+                                Entry.aiUtilize?.banAIUtilizeBlocks(Entry.aiUtilizeBlocks);
+                                Entry.hwLite?.banClassAllHardwareLite();
+                                Entry.playground?.dataTable?.removeAllBlocks();
+                                Entry.aiLearning?.removeAllBlocks();
                                 Util.removeNotSupportedBlock();
                                 Entry.playground.blockMenu.banClass('python_disable');
                                 // 블럭 삭제되고 처리
@@ -514,7 +514,7 @@ Entry.Workspace = class Workspace {
                         !blockView.isInBlockMenu &&
                         blockView.block.isDeletable()
                     ) {
-                        (function(block) {
+                        (function (block) {
                             block.copyToClipboard();
                             Entry.do('destroyBlockBelow', block);
                             blockView.getBoard().setSelectedBlock(null);

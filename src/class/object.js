@@ -226,8 +226,8 @@ Entry.EntryObject = class {
         const objectType = this.objectType;
         this.thumbUrl = '';
         if (objectType === 'sprite') {
-            if (picture.fileurl) {
-                this.thumbUrl = picture.fileurl;
+            if (picture.thumbUrl || picture.fileurl) {
+                this.thumbUrl = picture.thumbUrl || picture.fileurl;
             } else {
                 const fileName = picture.filename;
                 this.thumbUrl = `${Entry.defaultPath}/uploads/${fileName.substring(
@@ -747,8 +747,6 @@ Entry.EntryObject = class {
         }
         e.stopPropagation();
 
-        const { options = {} } = Entry;
-        const { backpackDisable } = options;
         const object = this;
         const container = Entry.container;
         const objects = container._getSortableObjectList();
@@ -810,7 +808,7 @@ Entry.EntryObject = class {
             },
         ];
 
-        if (!backpackDisable) {
+        if (!Entry.backpackDisable) {
             contextMenus.push({
                 text: Lang.Blocks.add_my_storage,
                 enable: !Entry.engine.isState('run') && !!window.user,
@@ -820,12 +818,14 @@ Entry.EntryObject = class {
             });
         }
 
-        contextMenus.push({
-            text: Lang.Blocks.export_object,
-            callback() {
-                Entry.dispatchEvent('exportObject', object);
-            },
-        });
+        if (Entry.exportObjectEnable) {
+            contextMenus.push({
+                text: Lang.Blocks.export_object,
+                callback() {
+                    Entry.dispatchEvent('exportObject', object);
+                },
+            });
+        }
 
         const { clientX: x, clientY: y } = Entry.Utils.convertMouseEvent(e);
         Entry.ContextMenu.show(contextMenus, 'workspace-contextmenu', { x, y });
@@ -932,8 +932,12 @@ Entry.EntryObject = class {
         this.updateCoordinateView(true);
         this.updateRotationView(true);
 
-        Entry.addEventListener('run', this.setDisabled);
-        Entry.addEventListener('dispatchEventDidToggleStop', this.setEnabled);
+        if (!Entry.objectEditable) {
+            this.setDisabled();
+        } else {
+            Entry.addEventListener('run', this.setDisabled);
+            Entry.addEventListener('dispatchEventDidToggleStop', this.setEnabled);
+        }
 
         return this.view_;
     }
@@ -953,33 +957,40 @@ Entry.EntryObject = class {
         this.rotateModeAView_ = rotateModeAView;
         rotationMethodWrapper.appendChild(rotateModeAView);
         rotationMethodWrapper.appendChild(rotateModeAView);
-        rotateModeAView.bindOnClick(
-            this._whenRotateEditable(() => {
-                Entry.do('objectUpdateRotateMethod', this.id, 'free');
-            }, this)
-        );
+
+        if (Entry.objectEditable) {
+            rotateModeAView.bindOnClick(
+                this._whenRotateEditable(() => {
+                    Entry.do('objectUpdateRotateMethod', this.id, 'free');
+                }, this)
+            );
+        }
 
         const rotateModeBView = Entry.createElement('span').addClass(
             'entryObjectRotateModeWorkspace entryObjectRotateModeBWorkspace'
         );
         this.rotateModeBView_ = rotateModeBView;
         rotationMethodWrapper.appendChild(rotateModeBView);
-        rotateModeBView.bindOnClick(
-            this._whenRotateEditable(() => {
-                Entry.do('objectUpdateRotateMethod', this.id, 'vertical');
-            }, this)
-        );
+        if (Entry.objectEditable) {
+            rotateModeBView.bindOnClick(
+                this._whenRotateEditable(() => {
+                    Entry.do('objectUpdateRotateMethod', this.id, 'vertical');
+                }, this)
+            );
+        }
 
         const rotateModeCView = Entry.createElement('span').addClass(
             'entryObjectRotateModeWorkspace entryObjectRotateModeCWorkspace'
         );
         this.rotateModeCView_ = rotateModeCView;
         rotationMethodWrapper.appendChild(rotateModeCView);
-        rotateModeCView.bindOnClick(
-            this._whenRotateEditable(() => {
-                Entry.do('objectUpdateRotateMethod', this.id, 'none');
-            }, this)
-        );
+        if (Entry.objectEditable) {
+            rotateModeCView.bindOnClick(
+                this._whenRotateEditable(() => {
+                    Entry.do('objectUpdateRotateMethod', this.id, 'none');
+                }, this)
+            );
+        }
 
         return rotationMethodWrapper;
     }
@@ -1395,7 +1406,6 @@ Entry.EntryObject = class {
         );
 
         $(objectView).on('dragstart', (e) => {
-            // e.originalEvent.dataTransfer.setDragImage(canvas, 25, 25);
             e.originalEvent.dataTransfer.setData('text', objectId);
         });
         const fragment = document.createDocumentFragment();

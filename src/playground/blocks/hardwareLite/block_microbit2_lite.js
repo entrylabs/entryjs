@@ -191,9 +191,10 @@ const EVENT_INTERVAL = 150;
             this.id = '220301';
             this.url = 'http://microbit.org/ko/';
             this.imageName = 'microbit2lite.png';
+            this.supportFirmwareFlash = true;
             this.title = {
-                en: 'Microbit',
-                ko: '마이크로비트',
+                en: 'Microbit V2',
+                ko: '마이크로비트 V2',
             };
             this.name = 'Microbit2lite';
             this.digitalPins = [
@@ -241,9 +242,9 @@ const EVENT_INTERVAL = 150;
                 'microbit2lite_screen_toggle',
                 'microbit2lite_set_led',
                 'microbit2lite_get_led',
-                'microbit2lite_show_preset_image',
                 'microbit2lite_show_custom_image',
                 'microbit2lite_show_string',
+                'microbit2lite_show_preset_image',
                 'microbit2lite_reset_screen',
                 'microbit2lite_radio_toggle',
                 'microbit2lite_radio_setting',
@@ -413,9 +414,9 @@ const EVENT_INTERVAL = 150;
                         microbit2lite_screen_toggle: 'LED 기능 %1 %2',
                         microbit2lite_set_led: 'LED의 X: %1 Y: %2 를 밝기 %3 (으)로 밝히기 %4',
                         microbit2lite_get_led: 'LED의 X: %1 Y: %2 밝기 값',
-                        microbit2lite_show_preset_image: 'LED를 %1 모양으로 밝히기 %2',
+                        microbit2lite_show_preset_image: 'LED에 %1 모양 나타내기 %2',
                         microbit2lite_show_custom_image: 'LED %1 밝히기 %2',
-                        microbit2lite_show_string: 'LED에 %1 을(를) 밝히기 %2',
+                        microbit2lite_show_string: 'LED에 %1 을(를) 나타내기 %2',
                         microbit2lite_reset_screen: 'LED 모두 %1 %2',
                         microbit2lite_radio_toggle: '라디오 기능 %1 %2',
                         microbit2lite_radio_setting: '라디오 채널을 %1 (으)로 바꾸기 %2',
@@ -435,7 +436,7 @@ const EVENT_INTERVAL = 150;
                         microbit2lite_get_field_strength_axis: '%1 의 자기장 세기 값',
                         microbit2lite_get_light_level: '빛 센서 값',
                         microbit2lite_get_temperature: '온도',
-                        microbit2lite_get_sound_level: '마이크 소리 크기 값',
+                        microbit2lite_get_sound_level: '마이크 소리 크기',
                         microbit2lite_set_servo: '핀 %1 에 서보 모터 각도를 %2 로 정하기 %3',
                         microbit2lite_set_pwm: '핀 %1 에 서보 펄스 폭을 %2 %3초로 정하기 %4',
                         microbit2lite_common_title: '마이크로비트 공통',
@@ -637,9 +638,9 @@ const EVENT_INTERVAL = 150;
                         microbit2lite_get_direction: 'compass direction',
                         microbit2lite_get_field_strength_axis:
                             'magnetic field strength value of %1 ',
-                        microbit2lite_get_light_level: 'Light sensor value',
-                        microbit2lite_get_temperature: 'temperature value',
-                        microbit2lite_get_sound_level: 'microphone volume value',
+                        microbit2lite_get_light_level: 'light sensor value',
+                        microbit2lite_get_temperature: 'temperature',
+                        microbit2lite_get_sound_level: 'microphone volume',
                         microbit2lite_set_servo: 'Set servo pin %1 angle to %2 %3',
                         microbit2lite_set_pwm: 'set servo pin %1 pulse to %2 %3 %4',
                         microbit2lite_common_title: 'Common Blocks',
@@ -697,6 +698,8 @@ const EVENT_INTERVAL = 150;
                         unplot: 'unplot',
                         on: 'Turn on',
                         off: 'Turn off',
+                        remove: 'Clear',
+                        light: 'Light',
                         microbit_2_HEART: 'heart',
                         microbit_2_HEART_SMALL: 'small heart',
                         microbit_2_HAPPY: 'happy',
@@ -1026,6 +1029,7 @@ const EVENT_INTERVAL = 150;
                     skeleton: 'basic_text',
                     color: EntryStatic.colorSet.common.TRANSPARENT,
                     fontColor: '#333333',
+                    template: '%1',
                     params: [
                         {
                             type: 'Text',
@@ -1037,7 +1041,7 @@ const EVENT_INTERVAL = 150;
                     def: {
                         type: 'microbit2lite_common_title',
                     },
-                    class: 'microbit2lite_title',
+                    class: 'microbit2litePin',
                     isNotFor: ['Microbit2lite'],
                     events: {},
                 },
@@ -2310,6 +2314,7 @@ const EVENT_INTERVAL = 150;
                     skeleton: 'basic_text',
                     color: EntryStatic.colorSet.common.TRANSPARENT,
                     fontColor: '#333333',
+                    template: '%1',
                     params: [
                         {
                             type: 'Text',
@@ -2321,7 +2326,7 @@ const EVENT_INTERVAL = 150;
                     def: {
                         type: 'microbit2lite_v2_title',
                     },
-                    class: 'microbit2lite_title',
+                    class: 'microbit2litev2',
                     isNotFor: ['Microbit2lite'],
                     events: {},
                 },

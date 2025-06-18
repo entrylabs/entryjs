@@ -55,8 +55,7 @@ class Executor {
                 } else if (e.name === 'OfflineError') {
                     Entry.Utils.stopProjectWithToast(this.scope, 'OfflineError', e);
                 } else if (this.isFuncExecutor) {
-                    //function executor
-                    throw e;
+                    Entry.Utils.stopProjectWithToast(this.parentScope, undefined, e);
                 } else if (e.name === 'RangeError') {
                     Entry.toast.alert(
                         Lang.Workspace.RecursiveCallWarningTitle,
@@ -103,7 +102,7 @@ class Executor {
                             Entry.Utils.stopProjectWithToast(this.scope, 'IncompatibleError', e);
                         } else if (this.isFuncExecutor) {
                             //function executor
-                            throw e;
+                            Entry.Utils.stopProjectWithToast(this.parentScope, undefined, e);
                         } else if (e.name === 'RangeError') {
                             Entry.toast.alert(
                                 Lang.Workspace.RecursiveCallWarningTitle,
@@ -223,6 +222,22 @@ class Executor {
             this.scope = this._callStack.pop();
         }
         return Entry.STATIC.PASS;
+    }
+
+    continueLoop() {
+        if (this._callStack.length) {
+            this.scope = this._callStack.pop();
+        } else {
+            return Entry.STATIC.PASS;
+        }
+        while (this._callStack.length) {
+            const schema = Entry.block[this.scope.block.type];
+            if (schema.class === 'repeat') {
+                break;
+            }
+            this.scope = this._callStack.pop();
+        }
+        return Entry.STATIC.BREAK;
     }
 
     end() {

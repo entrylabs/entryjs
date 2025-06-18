@@ -20,7 +20,7 @@ module.exports = {
                 },
                 events: {
                     mousedown: [
-                        function() {
+                        function () {
                             Entry.do('funcEditStart', Entry.generateHash());
                         },
                     ],
@@ -67,7 +67,7 @@ module.exports = {
                 },
                 events: {
                     mousedown: [
-                        function() {
+                        function () {
                             Entry.do(
                                 'playgroundChangeViewMode',
                                 'variable',
@@ -78,6 +78,7 @@ module.exports = {
                         },
                     ],
                 },
+                wikiClass: 'function',
             },
             set_func_variable: {
                 template: Lang.template.set_variable,
@@ -129,7 +130,7 @@ module.exports = {
                 ],
                 events: {
                     updateFuncVariableList: [
-                        function() {
+                        function () {
                             const func = Entry.Func.targetFunc || {};
                             func?.content
                                 ?.getBlockList(false, 'set_func_variable')
@@ -190,6 +191,7 @@ module.exports = {
                         },
                     ],
                 },
+                wikiClass: 'function',
             },
             get_func_variable: {
                 template: '%1 %2',
@@ -237,7 +239,7 @@ module.exports = {
                 ],
                 events: {
                     updateFuncVariableList: [
-                        function() {
+                        function () {
                             const func = Entry.Func.targetFunc || {};
                             func?.content
                                 ?.getBlockList(false, 'get_func_variable')
@@ -266,6 +268,7 @@ module.exports = {
                     js: [],
                     py: [],
                 },
+                wikiClass: 'function',
             },
             function_create_value: {
                 skeleton: 'basic_create_value',
@@ -326,6 +329,7 @@ module.exports = {
                         },
                     ],
                 },
+                wikiClass: 'function',
             },
             function_general: {
                 skeleton: 'basic',
@@ -341,7 +345,7 @@ module.exports = {
                 ],
                 events: {
                     dataAdd: [
-                        function(block) {
+                        function (block) {
                             const vc = Entry.variableContainer;
                             if (vc) {
                                 vc.addRef('_functionRefs', block);
@@ -349,7 +353,7 @@ module.exports = {
                         },
                     ],
                     dataDestroy: [
-                        function(block) {
+                        function (block) {
                             const vc = Entry.variableContainer;
                             if (vc) {
                                 vc.removeRef('_functionRefs', block);
@@ -357,7 +361,7 @@ module.exports = {
                         },
                     ],
                     dblclick: [
-                        function(blockView) {
+                        function (blockView) {
                             const mode = blockView.getBoard().workspace.getMode();
                             if (mode !== Entry.Workspace.MODE_BOARD) {
                                 return;
@@ -371,7 +375,7 @@ module.exports = {
                         },
                     ],
                 },
-                func(entity) {
+                func(entity, script) {
                     if (!this.initiated) {
                         this.initiated = true;
                         Entry.callStackLength++;
@@ -381,6 +385,7 @@ module.exports = {
                         this.funcExecutor.register.params = this.values;
                         this.funcExecutor.register.paramMap = func.paramMap;
                         this.funcExecutor.parentExecutor = this.executor;
+                        this.funcExecutor.parentScope = script;
                         this.funcExecutor.isFuncExecutor = true;
                         this.funcExecutor.localVariables = _cloneDeep(func.localVariables);
                     }
@@ -405,6 +410,7 @@ module.exports = {
                     Entry.callStackLength--;
                 },
                 syntax: { js: [], py: [''] },
+                wikiClass: 'function',
             },
             function_value: {
                 skeleton: 'basic_string_field',
@@ -414,7 +420,7 @@ module.exports = {
                 params: [],
                 events: {
                     dataAdd: [
-                        function(block) {
+                        function (block) {
                             const vc = Entry.variableContainer;
                             if (vc) {
                                 vc.addRef('_functionRefs', block);
@@ -422,7 +428,7 @@ module.exports = {
                         },
                     ],
                     dataDestroy: [
-                        function(block) {
+                        function (block) {
                             const vc = Entry.variableContainer;
                             if (vc) {
                                 vc.removeRef('_functionRefs', block);
@@ -430,7 +436,7 @@ module.exports = {
                         },
                     ],
                     dblclick: [
-                        function(blockView) {
+                        function (blockView) {
                             const mode = blockView.getBoard().workspace.getMode();
                             if (mode !== Entry.Workspace.MODE_BOARD) {
                                 return;
@@ -444,7 +450,7 @@ module.exports = {
                         },
                     ],
                 },
-                func(entity) {
+                func(entity, script) {
                     if (!this.initiated) {
                         this.initiated = true;
                         Entry.callStackLength++;
@@ -454,6 +460,7 @@ module.exports = {
                         this.funcExecutor.register.params = this.values;
                         this.funcExecutor.register.paramMap = func.paramMap;
                         this.funcExecutor.parentExecutor = this.executor;
+                        this.funcExecutor.parentScope = script;
                         this.funcExecutor.isFuncExecutor = true;
                         this.funcExecutor.localVariables = _cloneDeep(func.localVariables);
                     }
@@ -480,6 +487,7 @@ module.exports = {
                     return scope.getValue('VALUE', scope);
                 },
                 syntax: { js: [], py: [''] },
+                wikiClass: 'function',
             },
             function_field_label: {
                 skeleton: 'basic_param',
@@ -505,6 +513,7 @@ module.exports = {
                 },
                 //"syntax": {"js": [], "py": ["%1function_field_label#"]}
                 syntax: { js: [], py: ['name'] },
+                wikiClass: 'function',
             },
             function_field_string: {
                 skeleton: 'basic_param',
@@ -535,6 +544,7 @@ module.exports = {
                     type: 'function_field_string',
                 },
                 syntax: { js: [], py: ['value'] },
+                wikiClass: 'function',
             },
             function_field_boolean: {
                 skeleton: 'basic_param',
@@ -565,6 +575,7 @@ module.exports = {
                     type: 'function_field_boolean',
                 },
                 syntax: { js: [], py: ['boolean'] },
+                wikiClass: 'function',
             },
             function_param_string: {
                 skeleton: 'basic_string_field',
@@ -573,7 +584,7 @@ module.exports = {
                 template: '%1 %2',
                 events: {
                     viewAdd: [
-                        function() {
+                        function () {
                             if (Entry.Func.isEdit) {
                                 Entry.Func.refreshMenuCode();
                             }
@@ -586,6 +597,7 @@ module.exports = {
                     ];
                 },
                 syntax: { js: [], py: [''] },
+                wikiClass: 'function',
             },
             function_param_boolean: {
                 skeleton: 'basic_boolean_field',
@@ -593,7 +605,7 @@ module.exports = {
                 template: '%1 %2',
                 events: {
                     viewAdd: [
-                        function() {
+                        function () {
                             if (Entry.Func.isEdit) {
                                 Entry.Func.refreshMenuCode();
                             }
@@ -606,6 +618,7 @@ module.exports = {
                     ];
                 },
                 syntax: { js: [], py: [''] },
+                wikiClass: 'function',
             },
             function_create: {
                 skeleton: 'basic_create',
@@ -658,6 +671,7 @@ module.exports = {
                         },
                     ],
                 },
+                wikiClass: 'function',
             },
         };
     },
