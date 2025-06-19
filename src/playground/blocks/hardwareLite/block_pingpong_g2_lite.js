@@ -23,6 +23,15 @@ const Buffer = require('buffer').Buffer;
                 connectionType: 'bytestream', // or ascii
             };
             this.imageName = 'pingpong_g2_lite.png';
+            // INFO: 하드웨어 연결 전, 사용자에게 값을 받아올 커스텀 프롬프트 설정
+            this.customPrompt = {
+                title: '그룹 번호 입력',
+                description:
+                    '연결할 기기의 그룹 번호를 입력해 주세요.\n 별도로 지정하지 않았다면 00을 입력합니다.',
+                defaultValue: '00',
+                negativeButtonText: '도움말 보기',
+                positiveButtonText: '설정',
+            };
 
             this.setZero();
         }
