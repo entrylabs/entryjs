@@ -37,14 +37,26 @@ const _throttle = require('lodash/throttle');
             };
             this.buttonEvent = _throttle(
                 () => {
-                    Entry.engine.fireEvent('nemolite_event_button');
+                    const prevFlag = this.sendFlag;
+                    try {
+                        Entry.engine.fireEvent('nemolite_event_button');
+                    } catch (e) {
+                    } finally {
+                        this.sendFlag = prevFlag;
+                    }
                 },
                 EVENT_INTERVAL,
                 eventSetting
             );
             this.motionEvent = _throttle(
                 () => {
-                    Entry.engine.fireEvent('nemolite_event_motion');
+                    const prevFlag = this.sendFlag;
+                    try {
+                        Entry.engine.fireEvent('nemolite_event_motion');
+                    } catch (e) {
+                    } finally {
+                        this.sendFlag = prevFlag;
+                    }
                 },
                 EVENT_INTERVAL,
                 eventSetting
@@ -621,11 +633,11 @@ const _throttle = require('lodash/throttle');
                 ledClear: 1,
                 extension: 0,
                 melody: {
-                    play: 0,
+                    play: 1,
                     title: 0,
                 },
                 note: {
-                    play: 0,
+                    play: 1,
                     pitch: 0,
                 },
                 ledRead: 0,
@@ -657,7 +669,7 @@ const _throttle = require('lodash/throttle');
 
             this.state = {
                 led: 0,
-                sound: 0,
+                sound: 'm'.charCodeAt(),
                 note: 0,
                 soundBlockId: 0,
                 noteBlockId: 0,
@@ -687,6 +699,7 @@ const _throttle = require('lodash/throttle');
 
             if (Entry.hwLite && Entry.hwLite.serial) {
                 Entry.hwLite.serial.update();
+                this.state.sound = 0;
             }
         }
         //endregion
@@ -713,8 +726,16 @@ const _throttle = require('lodash/throttle');
 
             Entry.addEventListener('run', this.handleButtonEventInterval.bind(this));
             Entry.addEventListener('run', this.handleMotionlEventInterval.bind(this));
-            Entry.addEventListener('beforeStop', clearInterval(this.buttonEventIntervalId));
-            Entry.addEventListener('beforeStop', clearInterval(this.motionEventIntervalId));
+            Entry.addEventListener('beforeStop', () => {
+                if (this.buttonEventIntervalId) {
+                    clearInterval(this.buttonEventIntervalId);
+                    this.buttonEventIntervalId = null;
+                }
+                if (this.motionEventIntervalId) {
+                    clearInterval(this.motionEventIntervalId);
+                    this.motionEventIntervalId = null;
+                }
+            });
 
             this.setZero();
 
@@ -733,10 +754,34 @@ const _throttle = require('lodash/throttle');
         }
         //endregion
 
+        handleButtonEventInterval() {
+            if (this.buttonEventIntervalId) {
+                clearInterval(this.buttonEventIntervalId);
+            }
+            this.buttonEventIntervalId = setInterval(() => {
+                const currentState = this.buttonEvent.bind(this);
+                currentState();
+            }, EVENT_INTERVAL);
+        }
+
+        handleMotionlEventInterval() {
+            if (this.motionEventIntervalId) {
+                clearInterval(this.motionEventIntervalId);
+            }
+            this.motionEventIntervalId = setInterval(() => {
+                const currentState = this.motionEvent.bind(this);
+                currentState();
+            }, EVENT_INTERVAL);
+        }
+
         // 디바이스에서 값을 읽어온다.
         //region handleLocalData
         handleLocalData(buffer) {
             buffer.forEach((b) => this.qEnqueue(b));
+
+            if (this._recoverTimeoutId) {
+                clearTimeout(this._recoverTimeoutId);
+            }
 
             while (this.qCount() >= this.receivedPacket.length) {
                 if (!this.process) {
@@ -788,12 +833,21 @@ const _throttle = require('lodash/throttle');
             }
 
             if (this.sendFlag) {
-                setTimeout(() => {
-                    if (Entry.hwLite && Entry.hwLite.serial) {
-                        Entry.hwLite.serial.update();
-                        this.sendFlag = false;
-                    }
-                }, SERIAL_INTERVAL);
+                if (this._requestTimeoutId) {
+                    clearTimeout(this._requestTimeoutId);
+                }
+                this._requestTimeoutId = setTimeout(
+                    () => {
+                        if (Entry.hwLite && Entry.hwLite.serial) {
+                            Entry.hwLite.serial.update();
+                            this.sendFlag = false;
+                            this._recoverTimeoutId = setTimeout(() => {
+                                this.sendFlag = true;
+                            }, SERIAL_INTERVAL * 3);
+                        }
+                    },
+                    SERIAL_INTERVAL
+                );
             }
         } //endregion
 
@@ -849,14 +903,6 @@ const _throttle = require('lodash/throttle');
             return this.qFront <= this.qRear
                 ? this.qRear - this.qFront
                 : this.qSize - this.qFront + this.qRear;
-        }
-
-        handleButtonEventInterval() {
-            this.buttonEventIntervalId = setInterval(this.buttonEvent.bind(this), EVENT_INTERVAL);
-        }
-
-        handleMotionlEventInterval() {
-            this.motionEventIntervalId = setInterval(this.motionEvent.bind(this), EVENT_INTERVAL);
         }
 
         checksum(packet) {
@@ -1040,7 +1086,7 @@ const _throttle = require('lodash/throttle');
                 for (let i = 0; i < 14; i++) {
                     const index = this.sendIndex.led7x1 + i;
                     this.sendPacket[index] = this.setData.ledColumm.pixel[i];
-                    if (index > 6 && this.sendPacket[index] > 0) {
+                    if (index > 7 && this.sendPacket[index] > 0) {
                         nextPage = true;
                     }
                 }
