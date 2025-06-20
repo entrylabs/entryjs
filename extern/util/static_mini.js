@@ -253,6 +253,7 @@ EntryStatic.getAllBlocks = function () {
                 'calc_rand',
                 'coordinate_object',
                 'quotient_and_mod',
+                'calc_operation',
                 'get_project_timer_value',
                 'choose_project_timer_action',
                 'set_visible_project_timer',
