@@ -1,0 +1,9 @@
+{
+    "name": "RobotisKkokduLite",
+    "version": "1.0.0",
+    "type": "hardware",
+    "title": "로보티즈 꼭두",
+    "description": "로보티즈",
+    "imageName": "robotis_kkokdu_lite",
+    "moduleId": "070701"
+}

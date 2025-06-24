@@ -2230,7 +2230,7 @@ let camera_id_for_use = 0;
                             //DEFAULT_DELAY
                         );
                     },
-                    syntax: { js: [], py: ['Koalabot.dxl_each_control(%1)'] },
+                    syntax: { js: [], py: ['Koalabot.go_distance(%1)'] },
                 },
 
                 robotis_koalabot_lite_turn_angle: {
@@ -2308,7 +2308,7 @@ let camera_id_for_use = 0;
                             //DEFAULT_DELAY
                         );
                     },
-                    syntax: { js: [], py: ['Koalabot.dxl_each_control(%1)'] },
+                    syntax: { js: [], py: ['Koalabot.turn_angle(%1)'] },
                 },
                 robotis_koalabot_lite_follow_line: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
