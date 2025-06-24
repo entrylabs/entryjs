@@ -2,7 +2,7 @@
     "name": "@entrylabs/entry",
     "title": "EntryJS",
     "description": "JavaScript library for visual programming",
-    "version": "4.0.20",
+    "version": "4.0.21",
     "main": "dist/entry.min.js",
     "homepage": "https://playentry.org",
     "author": {
@@ -60,7 +60,7 @@
         "ml-cart": "^2.1.1",
         "pixi.js": "5.3.12",
         "postcss-flexbugs-fixes": "^4.1.0",
-        "simplebar": "^3.1.1",
+        "simplebar": "^5.3.0",
         "skmeans": "^0.11.3",
         "socket.io-client": "^2.3.0",
         "ua-parser-js": "^1.0.38",

@@ -83,16 +83,27 @@ const _throttle = require('lodash/throttle');
             }
             this.remoteEvent = _throttle(
                 () => {
-                    Entry.engine.fireEvent('connectlite_event_remote_input');
+                    const prevFlag = this.sendFlag;
+                    try {
+                        Entry.engine.fireEvent('connectlite_event_remote_input');
+                    } catch (e) {
+                    } finally {
+                        this.sendFlag = prevFlag;
+                    }
                 },
                 EVENT_INTERVAL,
                 eventSetting
             );
             this.digitalEvent = _throttle(
                 () => {
-                    Entry.engine.fireEvent('connectlite_event_digital_input');
-                }
-                ,
+                    const prevFlag = this.sendFlag;
+                    try {
+                        Entry.engine.fireEvent('connectlite_event_digital_input');
+                    } catch (e) {
+                    } finally {
+                        this.sendFlag = prevFlag;
+                    }
+                },
                 EVENT_INTERVAL,
                 eventSetting
             );
@@ -100,13 +111,13 @@ const _throttle = require('lodash/throttle');
             this.qRear = 0;
             this.qFront = 0;
             this.qSize = 128;
-            this.qBuffer = new Uint8Array(this.qSize + 2).fill(-1);            
+            this.qBuffer = new Uint8Array(this.qSize + 2).fill(-1);
             this.inputPacket = new Uint8Array(RECEIVED_PACKET_LENGTH).fill(-1);
             this.pLength = 0; // packet length
             this.process = false; // packet process
 
             this.version = 0;
-            this.sendFlag = true;            
+            this.sendFlag = true;
 
             this.blockMenuBlocks = [
                 //dropdown
@@ -169,7 +180,7 @@ const _throttle = require('lodash/throttle');
                 'connectlite_play_melody_sec_output',
                 'connectlite_play_melody_output',
                 'connectlite_play_value_sec_output',
-                'connectlite_play_value_output',    
+                'connectlite_play_value_output',
                 'connectlite_play_melody_track_output',
                 'connectlite_play_melody_off',
                 'connectlite_set_rgbled_on_output',
@@ -182,7 +193,7 @@ const _throttle = require('lodash/throttle');
                 //EEPROM
                 'connectlite_set_eeprom_write',
             ];
-        }        
+        }
 
         setLanguage() {
             return {
@@ -255,12 +266,12 @@ const _throttle = require('lodash/throttle');
 
                         connectlite_item_error: '오류',
                         connectlite_item_nothing: '없음',
-        
+
                         connectlite_when_press_remote_key: '%1 리모컨 %2 키를 눌렀을 때',
                         connectlite_when_input_digital_value: '%1 디지털 입력 %2 이(가) 들어왔을 때',
-        
+
                         connectlite_set_sensor_setting: '입력포트 %1 을(를) %2 센서로 설정 %3',
-        
+
                         connectlite_is_remote_key: '리모컨 입력 %1',
                         connectlite_is_digital_value: '디지털 입력 %1',
                         connectlite_is_extension_digital_input: '확장 디지털 입력 %1 의 %2',
@@ -278,8 +289,8 @@ const _throttle = require('lodash/throttle');
                         connectlite_is_multi_sensor: '멀티키 센서 %1의 %2',
                         connectlite_is_multi_switch: '분배 스위치 %1의 %2',
                         connectlite_set_eeprom_call: 'EEPROM %1 주소의 값 호출하기 %2',
-                        connectlite_get_eeprom_address_value: 'EEPROM 주소의 값',      
-        
+                        connectlite_get_eeprom_address_value: 'EEPROM 주소의 값',
+
                         connectlite_set_port_output: '출력핀 %1 을(를) %2 %3',
                         connectlite_set_servo_output: '서보 모터 %1 의 위치를 %2 로 이동 %3',
                         connectlite_set_s_dc_output: 'S 모터 %1 을(를) %2 속도로 회전 %3',
@@ -373,7 +384,7 @@ const _throttle = require('lodash/throttle');
                         connectlite_item_melody_end: 'End',
                         connectlite_item_melody_level_up: 'Level up',
                         connectlite_item_melody_level_down: 'Level down',
-                        
+
                         connectlite_item_error: 'error',
                         connectlite_item_nothing: 'nothing',
 
@@ -445,7 +456,7 @@ const _throttle = require('lodash/throttle');
                     AA3: 0,
                     AA4: 0
                 },
-                Start: {                    
+                Start: {
                     AA1: 0,
                     AA2: 0,
                     AA3: 0,
@@ -564,7 +575,7 @@ const _throttle = require('lodash/throttle');
                 Buff: 0,
                 Count: 0
             };
-            
+
             if (Entry.hwLite && Entry.hwLite.serial) {
                 Entry.hwLite.serial.update();
             };
@@ -593,11 +604,19 @@ const _throttle = require('lodash/throttle');
 
             Entry.addEventListener('run', this.handleRemoteEventInterval.bind(this));
             Entry.addEventListener('run', this.handleDigitalEventInterval.bind(this));
-            Entry.addEventListener('beforeStop', clearInterval(this.remoteEventIntervalId));
-            Entry.addEventListener('beforeStop', clearInterval(this.digitalEventIntervalId));
+            Entry.addEventListener('beforeStop', () => {
+                if (this.remoteEventIntervalId) {
+                    clearInterval(this.remoteEventIntervalId);
+                    this.remoteEventIntervalId = null;
+                }
+                if (this.digitalEventIntervalId) {
+                    clearInterval(this.digitalEventIntervalId);
+                    this.digitalEventIntervalId = null;
+                }
+            });
 
             this.setZero();
-            
+
             if (this.version === 0) {
                 const packet = await Entry.hwLite.serial.reader.read();
                 this.version = packet.value[0];
@@ -613,17 +632,32 @@ const _throttle = require('lodash/throttle');
         }
 
         handleRemoteEventInterval() {
-            this.remoteEventIntervalId = setInterval(this.remoteEvent.bind(this), EVENT_INTERVAL);
+            if (this.remoteEventIntervalId) {
+                clearInterval(this.remoteEventIntervalId);
+            }
+            this.remoteEventIntervalId = setInterval(() => {
+                const currentState = this.remoteEvent.bind(this);
+                currentState();
+            }, EVENT_INTERVAL);
         }
 
         handleDigitalEventInterval() {
-            this.digitalEventIntervalId = setInterval(this.digitalEvent.bind(this), EVENT_INTERVAL);
+            if (this.digitalEventIntervalId) {
+                clearInterval(this.digitalEventIntervalId);
+            }
+            this.digitalEventIntervalId = setInterval(() => {
+                const currentState = this.digitalEvent.bind(this);
+                currentState();
+            }, EVENT_INTERVAL);
         }
 
-        // 디바이스에서 값을 읽어온다.
         handleLocalData(buffer) {
             buffer.forEach(b => this.qEnqueue(b));
-            
+
+            if (this._recoverTimeoutId) {
+                clearTimeout(this._recoverTimeoutId);
+            }
+
             while(this.qCount() >= this.inputPacket.length) {
                 if (!this.process) {
                     while(this.qCount() > 0) {
@@ -639,7 +673,7 @@ const _throttle = require('lodash/throttle');
                         }
                     }
                 }
-    
+
                 if (this.process && (this.qCount() >= this.pLength)) {
                     for (let i = 3; i < this.pLength; i++) {
                         this.inputPacket[i] = this.qDequeue();
@@ -656,16 +690,22 @@ const _throttle = require('lodash/throttle');
             }
 
             if (this.sendFlag) {
-                setTimeout(
-                    () => {                    
+                if (this._requestTimeoutId) {
+                    clearTimeout(this._requestTimeoutId);
+                }
+                this._requestTimeoutId = setTimeout(
+                    () => {
                         if (Entry.hwLite && Entry.hwLite.serial) {
                             Entry.hwLite.serial.update();
                             this.sendFlag = false;
+                            this._recoverTimeoutId = setTimeout(() => {
+                                this.sendFlag = true;
+                            }, SERIAL_INTERVAL * 3);
                         }
                     },
                     SERIAL_INTERVAL
                 );
-            };
+            }
         }
 
         //디바이스에 값을 쓴다.
@@ -700,9 +740,8 @@ const _throttle = require('lodash/throttle');
                 checker += packet[i];
             }
             return (checker & 0xFF);
-
         }
-        
+
         checksumHandle(packet) {
             let checker = 0;
             const length = packet[2] + 2;
@@ -744,7 +783,7 @@ const _throttle = require('lodash/throttle');
             this.InputData.Remote.R_3 = (remoteByte1 >> 7) & 0x01;
             this.InputData.Remote.R_2 = (remoteByte1 >> 6) & 0x01;
             this.InputData.Remote.R_4 = (remoteByte1 >> 5) & 0x01;
-            this.InputData.Remote.R_1 = (remoteByte1 >> 4) & 0x01;                    
+            this.InputData.Remote.R_1 = (remoteByte1 >> 4) & 0x01;
             this.InputData.Remote.R_7 = (remoteByte2 >> 7) & 0x01;
             this.InputData.Remote.R_6 = (remoteByte2 >> 6) & 0x01;
             this.InputData.Remote.R_8 = (remoteByte2 >> 5) & 0x01;
@@ -779,7 +818,7 @@ const _throttle = require('lodash/throttle');
             this.InputData.Acceler.AXIS_Z4 = packet[24];
         }
 
-        generateOutputPacket(remoteData) {           
+        generateOutputPacket(remoteData) {
 
             const outputPacket = new Uint8Array(SEND_PACKET_LENGTH).fill(-1);
 
@@ -802,7 +841,7 @@ const _throttle = require('lodash/throttle');
             outputPacket[12] = remoteData.MEL2;
             outputPacket[13] = remoteData.MEL1;
 
-            outputPacket[14] = remoteData.FND; 
+            outputPacket[14] = remoteData.FND;
 
             outputPacket[15] = remoteData.EEPR4;
             outputPacket[16] = remoteData.EEPR3;
@@ -816,14 +855,14 @@ const _throttle = require('lodash/throttle');
 
             return outputPacket;
         }
-        
+
         getMonitorPort() {
             return { ...this.InputData.Analog };
         }
 
         getRemoteKey(data) {
-            const num = Number(data);            
-            
+            const num = Number(data);
+
             if (1 <= num && num <= 8) {
                 return `R_${num}`;
             } else if (9 <= num && num <= 10) {
@@ -900,7 +939,7 @@ const _throttle = require('lodash/throttle');
                 case '7': // 조도
                 case '9': // 초음파
                 case Lang.template.connectlite_item_rotation:    // 회전
-                case Lang.template.connectlite_item_illuminance: // 조도            
+                case Lang.template.connectlite_item_illuminance: // 조도
                 case Lang.template.connectlite_item_ultrasonic:  // 초음파
                     return 2;
                 case '10': // 소리
@@ -923,7 +962,7 @@ const _throttle = require('lodash/throttle');
                     return 8;
                 case '14': // 나침반
                 case '15': // 3축 가속도
-                case '17': // 확장 입력  
+                case '17': // 확장 입력
                 case Lang.template.connectlite_item_compass:
                 case Lang.template.connectlite_item_tri_acceleration:
                 case Lang.template.connectlite_item_extension_input:
@@ -982,7 +1021,7 @@ const _throttle = require('lodash/throttle');
             const num = Number(key);
             if (1 <= num && num <= 8) {
                 return (num - 1);
-            } else if (9 <= num && num <= 16) {                
+            } else if (9 <= num && num <= 16) {
                 return (num - 9);
             } else {
                 switch (key) {
@@ -1243,7 +1282,7 @@ const _throttle = require('lodash/throttle');
                     return this.Rgb.Dimming.Blue;
                 case '4':
                 case Lang.template.technicpowerlite_item_color_cyan:
-                    return this.Rgb.Dimming.Cyan;        
+                    return this.Rgb.Dimming.Cyan;
                 case '5':
                 case Lang.template.technicpowerlite_item_color_magenta:
                     return this.Rgb.Dimming.Magenta;
@@ -1938,7 +1977,7 @@ const _throttle = require('lodash/throttle');
                             },
                         ],
                     },
-                },                
+                },
                 connectlite_dropdown_extension_analog_key: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2163,7 +2202,7 @@ const _throttle = require('lodash/throttle');
                     },
                     func: function(sprite, script) {
                         return script.getStringField('PARAM0');
-                    },                    
+                    },
                     syntax: {
                         js: [],
                         py: [
@@ -2250,7 +2289,7 @@ const _throttle = require('lodash/throttle');
                             },
                         ],
                     },
-                },           
+                },
                 connectlite_dropdown_on_off_key: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2580,7 +2619,7 @@ const _throttle = require('lodash/throttle');
                                 [Lang.template.connectlite_item_pitch_ra + ' (45)', '45'],
                                 [Lang.template.connectlite_item_pitch_ra_sharp + ' (46)', '46'],
                                 [Lang.template.connectlite_item_pitch_si + ' (47)', '47'],
-        
+
                                 [Lang.template.connectlite_item_pitch_do + ' (48)', '48'],
                                 [Lang.template.connectlite_item_pitch_do_sharp + ' (49)', '49'],
                                 [Lang.template.connectlite_item_pitch_re + ' (50)', '50'],
@@ -2593,7 +2632,7 @@ const _throttle = require('lodash/throttle');
                                 [Lang.template.connectlite_item_pitch_ra + ' (57)', '57'],
                                 [Lang.template.connectlite_item_pitch_ra_sharp + ' (58)', '58'],
                                 [Lang.template.connectlite_item_pitch_si + ' (59)', '59'],
-        
+
                                 [Lang.template.connectlite_item_pitch_do + ' (60)', '60'],
                                 [Lang.template.connectlite_item_pitch_do_sharp + ' (61)', '61'],
                                 [Lang.template.connectlite_item_pitch_re + ' (62)', '62'],
@@ -2606,7 +2645,7 @@ const _throttle = require('lodash/throttle');
                                 [Lang.template.connectlite_item_pitch_ra + ' (69)', '69'],
                                 [Lang.template.connectlite_item_pitch_ra_sharp + ' (70)', '70'],
                                 [Lang.template.connectlite_item_pitch_si + ' (71)', '71'],
-        
+
                                 [Lang.template.connectlite_item_pitch_do + ' (72)', '72'],
                                 [Lang.template.connectlite_item_pitch_do_sharp + ' (73)', '73'],
                                 [Lang.template.connectlite_item_pitch_re + ' (74)', '74'],
@@ -2661,7 +2700,7 @@ const _throttle = require('lodash/throttle');
                                             [Lang.template.connectlite_item_pitch_ra + ' (45)', '45'],
                                             [Lang.template.connectlite_item_pitch_ra_sharp + ' (46)', '46'],
                                             [Lang.template.connectlite_item_pitch_si + ' (47)', '47'],
-                    
+
                                             [Lang.template.connectlite_item_pitch_do + ' (48)', '48'],
                                             [Lang.template.connectlite_item_pitch_do_sharp + ' (49)', '49'],
                                             [Lang.template.connectlite_item_pitch_re + ' (50)', '50'],
@@ -2674,7 +2713,7 @@ const _throttle = require('lodash/throttle');
                                             [Lang.template.connectlite_item_pitch_ra + ' (57)', '57'],
                                             [Lang.template.connectlite_item_pitch_ra_sharp + ' (58)', '58'],
                                             [Lang.template.connectlite_item_pitch_si + ' (59)', '59'],
-                    
+
                                             [Lang.template.connectlite_item_pitch_do + ' (60)', '60'],
                                             [Lang.template.connectlite_item_pitch_do_sharp + ' (61)', '61'],
                                             [Lang.template.connectlite_item_pitch_re + ' (62)', '62'],
@@ -2687,7 +2726,7 @@ const _throttle = require('lodash/throttle');
                                             [Lang.template.connectlite_item_pitch_ra + ' (69)', '69'],
                                             [Lang.template.connectlite_item_pitch_ra_sharp + ' (70)', '70'],
                                             [Lang.template.connectlite_item_pitch_si + ' (71)', '71'],
-                    
+
                                             [Lang.template.connectlite_item_pitch_do + ' (72)', '72'],
                                             [Lang.template.connectlite_item_pitch_do_sharp + ' (73)', '73'],
                                             [Lang.template.connectlite_item_pitch_re + ' (74)', '74'],
@@ -2773,7 +2812,7 @@ const _throttle = require('lodash/throttle');
                 },
                 ///========================================================================================
                 /// Event block
-                ///========================================================================================                
+                ///========================================================================================
                 // %1 리모컨 %2 키를 눌렀을 때
                 connectlite_when_press_remote_key: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -2901,7 +2940,7 @@ const _throttle = require('lodash/throttle');
                 },
                 ///========================================================================================
                 /// Setting Block
-                ///========================================================================================               
+                ///========================================================================================
                 // 입력포트 %1 을(를) %2 센서로 설정 %3
                 connectlite_set_sensor_setting: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -3165,7 +3204,7 @@ const _throttle = require('lodash/throttle');
                             },
                         ],
                     },
-                },                        
+                },
                 // 3가속도 %1의 Y축
                 connectlite_get_tri_axis_acceler_y: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -3266,7 +3305,7 @@ const _throttle = require('lodash/throttle');
                         ],
                     },
                 },
-                
+
                 // %1 의 %2 ~ %3 값을 %4 ~ %5 (으)로 변환
                 connectlite_get_value_mapping: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -3377,7 +3416,7 @@ const _throttle = require('lodash/throttle');
                             },
                         ],
                     },
-                },                
+                },
                 // 컬러 센서 %1 이(가) %2 인가?
                 connectlite_is_color_value: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -3458,7 +3497,7 @@ const _throttle = require('lodash/throttle');
                     ],
                     events: {},
                     def: {
-                        params: [                    
+                        params: [
                             {
                                 type: 'connectlite_dropdown_analog_key',
                             },
@@ -3474,7 +3513,7 @@ const _throttle = require('lodash/throttle');
                         const key0 = Entry.ProboConnectLite.getAnalogKey(script.getStringValue('PARAM0'));
                         const value = Entry.ProboConnectLite.InputData.Analog[key0];
                         const color = Entry.ProboConnectLite.Color;
-                        
+
                         for (let i = 1; i < 7; i++) {
                             const key1 =  Entry.ProboConnectLite.getColorSensorKey(i.toString());
                             if ((color[key1].Min <= value) && (value <= color[key1].Max)) {
@@ -3568,15 +3607,15 @@ const _throttle = require('lodash/throttle');
                         const key = Entry.ProboConnectLite.getAnalogKey(script.getStringValue('PARAM1'));
                         let count = 0;
                         let value = script.getNumberValue('PARAM2');
-                        
+
                         if (value != 0) {
-                            count = Number(value / 255).toFixed(0);
+                            count = Math.floor(value / 255);
                             value = value % 255;
                         } else {
-                            count = 0;
                             value = 0;
+                            count = 0;
                         }
-                        
+
                         Entry.ProboConnectLite.Infinite.Buff[key] = Entry.ProboConnectLite.InputData.Analog[key];
                         Entry.ProboConnectLite.Infinite.Start[key] = Entry.ProboConnectLite.InputData.Analog[key] - value;
                         Entry.ProboConnectLite.Infinite.Count[key] = count;
@@ -3660,7 +3699,7 @@ const _throttle = require('lodash/throttle');
                             infinite.Count[key]++;
                         } else if (value > infinite.Buff[key] + 150) {
                             infinite.Count[key]--;
-                        }                    
+                        }
                         infinite.Buff[key] = value;
                         value = (infinite.Buff[key] - infinite.Start[key]) + (infinite.Count[key] * 255);
 
@@ -3713,7 +3752,7 @@ const _throttle = require('lodash/throttle');
                     ],
                     events: {},
                     def: {
-                        params: [                    
+                        params: [
                             {
                                 type: 'connectlite_dropdown_inNcom_sensor_key',
                             },
@@ -3888,14 +3927,14 @@ const _throttle = require('lodash/throttle');
                         const value = Entry.ProboConnectLite.getMultiKeyValue(script.getStringValue('PARAM1'));
                         const analog = Entry.ProboConnectLite.InputData.Analog[key0];
                         const multySwitch = Entry.ProboConnectLite.MultiSwitch;
-                        
+
                         for (let i = 0; i < 8; i++) {
                             const key = 'Key' + (i + 1).toString();
                             if (multySwitch[key].Min <= analog && analog <= multySwitch[key].Max) {
                                 return (value === i);
                             }
                         }
-                        
+
                         return false;
                     },
                     syntax: {
@@ -3978,7 +4017,7 @@ const _throttle = require('lodash/throttle');
                             },
                         ],
                     },
-                },                
+                },
                 // 확장 아날로그 입력 %1 의 %2
                 connectlite_get_extension_analog_input: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -4014,7 +4053,7 @@ const _throttle = require('lodash/throttle');
                     },
                     class: 'connectlite_input',
                     isNotFor: ['ProboConnectLite'],
-                    func: function(sprite, script) {                        
+                    func: function(sprite, script) {
                         const key = Entry.ProboConnectLite.getAxisKey(
                             script.getStringValue('PARAM0'),
                             Entry.ProboConnectLite.getExtentionAnalogKey(script.getStringValue('PARAM1'))
@@ -4047,7 +4086,7 @@ const _throttle = require('lodash/throttle');
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
-                    skeleton: 'basic',                    
+                    skeleton: 'basic',
                     statements: [],
                     params: [
                         {
@@ -4101,7 +4140,7 @@ const _throttle = require('lodash/throttle');
                             return script;
                         } else {
                             Entry.ProboConnectLite.EEPROM.Buff =
-                                (Entry.ProboConnectLite.InputData.EEPROM.EEPR2 << 8) + 
+                                (Entry.ProboConnectLite.InputData.EEPROM.EEPR2 << 8) +
                                 Entry.ProboConnectLite.InputData.EEPROM.EEPR1;
                             Entry.ProboConnectLite.RemoteData['EEPR4'] = 0;
                             Entry.ProboConnectLite.RemoteData['EEPR3'] = 0;
@@ -4160,7 +4199,7 @@ const _throttle = require('lodash/throttle');
                         ],
                     },
                 },
-                
+
                 ///========================================================================================
                 /// output block
                 ///========================================================================================
@@ -4189,7 +4228,7 @@ const _throttle = require('lodash/throttle');
                     events: {},
                     def: {
                         params: [
-                            { 
+                            {
                                 type: 'connectlite_dropdown_dc_1_all_key',
                             },
                             {
@@ -4206,7 +4245,7 @@ const _throttle = require('lodash/throttle');
                     class: 'connectlite_output',
                     isNotFor: ['ProboConnectLite'],
                     func: function(sprite, script) {
-                        const key = Entry.ProboConnectLite.getDckey(script.getStringValue('PARAM0')); 
+                        const key = Entry.ProboConnectLite.getDckey(script.getStringValue('PARAM0'));
                         const value = script.getNumberValue('PARAM1');
 
                         switch (key) {
@@ -4275,7 +4314,7 @@ const _throttle = require('lodash/throttle');
                     events: {},
                     def: {
                         params: [
-                            { 
+                            {
                                 type: 'connectlite_dropdown_port_1_4_key',
                             },
                             {
@@ -4341,7 +4380,7 @@ const _throttle = require('lodash/throttle');
                     events: {},
                     def: {
                         params: [
-                            { 
+                            {
                                 type: 'connectlite_dropdown_port_1_4_key',
                             },
                             {
@@ -4422,7 +4461,7 @@ const _throttle = require('lodash/throttle');
                     events: {},
                     def: {
                         params: [
-                            { 
+                            {
                                 type: 'connectlite_dropdown_port_1_4_key',
                             },
                             {
@@ -4441,7 +4480,7 @@ const _throttle = require('lodash/throttle');
                     func: function(sprite, script) {
                         const key = Entry.ProboConnectLite.getPortKey(script.getStringValue('PARAM0'));
                         const value = Entry.ProboConnectLite.getPortToggleValue(script.getStringValue('PARAM1'));
-        
+
                         Entry.ProboConnectLite.RemoteData[key] = value;
 
                         return script.callReturn();
@@ -4490,7 +4529,7 @@ const _throttle = require('lodash/throttle');
                     events: {},
                     def: {
                         params: [
-                            { 
+                            {
                                 type: 'connectlite_dropdown_pitch_key',
                             },
                             {
@@ -4514,9 +4553,9 @@ const _throttle = require('lodash/throttle');
                             const note = Entry.ProboConnectLite.getNoteKey(script.getStringValue('PARAM1'));
                             const ms = Entry.ProboConnectLite.Note[note];
                             const fps = Entry.FPS || 60;
-        
+
                             Entry.ProboConnectLite.RemoteData['MEL2'] = pitch >> 8;
-                            Entry.ProboConnectLite.RemoteData['MEL1'] = pitch;        
+                            Entry.ProboConnectLite.RemoteData['MEL1'] = pitch;
                             Entry.TimeWaitManager.add(
                                 script.block.id,
                                 function() {
@@ -4530,7 +4569,7 @@ const _throttle = require('lodash/throttle');
                         } else {
                             Entry.ProboConnectLite.RemoteData['MEL2'] = 0;
                             Entry.ProboConnectLite.RemoteData['MEL1'] = 0;
-        
+
                             delete script.timeFlag;
                             delete script.isStart;
                             Entry.engine.isContinue = false;
@@ -4582,7 +4621,7 @@ const _throttle = require('lodash/throttle');
                     events: {},
                     def: {
                         params: [
-                            { 
+                            {
                                 type: 'connectlite_dropdown_pitch_key',
                             },
                             {
@@ -4603,11 +4642,11 @@ const _throttle = require('lodash/throttle');
                             script.isStart = true;
                             script.timeFlag = 1;
                             const pitch = Entry.ProboConnectLite.getPitchValue(script.getNumberValue('PARAM0'));
-                            const sec = script.getNumberValue('PARAM1');        
+                            const sec = script.getNumberValue('PARAM1');
                             const fps = Entry.FPS || 60;
-                           
+
                             Entry.ProboConnectLite.RemoteData['MEL2'] = pitch >> 8;
-                            Entry.ProboConnectLite.RemoteData['MEL1'] = pitch;        
+                            Entry.ProboConnectLite.RemoteData['MEL1'] = pitch;
                             Entry.TimeWaitManager.add(
                                 script.block.id,
                                 function() {
@@ -4622,7 +4661,7 @@ const _throttle = require('lodash/throttle');
                         } else {
                             Entry.ProboConnectLite.RemoteData['MEL2'] = 0;
                             Entry.ProboConnectLite.RemoteData['MEL1'] = 0;
-        
+
                             delete script.timeFlag;
                             delete script.isStart;
                             Entry.engine.isContinue = false;
@@ -4656,7 +4695,7 @@ const _throttle = require('lodash/throttle');
                     fontColor: '#fff',
                     skeleton: 'basic',
                     statements: [],
-                    params: [                
+                    params: [
                         {
                             type: 'Block',
                             accept: 'string',
@@ -4670,7 +4709,7 @@ const _throttle = require('lodash/throttle');
                     events: {},
                     def: {
                         params: [
-                            { 
+                            {
                                 type: 'connectlite_dropdown_pitch_key',
                             },
                             null
@@ -4683,7 +4722,7 @@ const _throttle = require('lodash/throttle');
                     class: 'connectlite_output',
                     isNotFor: ['ProboConnectLite'],
                     func: function(sprite, script) {
-                        const pitch = Entry.ProboConnectLite.getPitchValue(script.getNumberValue('PARAM0'));        
+                        const pitch = Entry.ProboConnectLite.getPitchValue(script.getNumberValue('PARAM0'));
                         Entry.ProboConnectLite.RemoteData['MEL2'] = pitch >> 8;
                         Entry.ProboConnectLite.RemoteData['MEL1'] = pitch;
                         return script.callReturn();
@@ -4749,13 +4788,13 @@ const _throttle = require('lodash/throttle');
                         if (!script.isStart) {
                             script.isStart = true;
                             script.timeFlag = 1;
-        
+
                             const melody = script.getNumberValue('PARAM0');
                             const sec = script.getNumberValue('PARAM1');
                             const fps = Entry.FPS || 60;
-        
+
                             Entry.ProboConnectLite.RemoteData['MEL2'] = (melody >> 8) & 0xff;
-                            Entry.ProboConnectLite.RemoteData['MEL1'] = melody & 0xff;        
+                            Entry.ProboConnectLite.RemoteData['MEL1'] = melody & 0xff;
                             Entry.TimeWaitManager.add(
                                 script.block.id,
                                 function() {
@@ -4769,7 +4808,7 @@ const _throttle = require('lodash/throttle');
                         } else {
                             Entry.ProboConnectLite.RemoteData['MEL2'] = 0;
                             Entry.ProboConnectLite.RemoteData['MEL1'] = 0;
-        
+
                             delete script.timeFlag;
                             delete script.isStart;
                             Entry.engine.isContinue = false;
@@ -4875,10 +4914,10 @@ const _throttle = require('lodash/throttle');
                     events: {},
                     def: {
                         params: [
-                            { 
+                            {
                                 type: 'connectlite_dropdown_melody_key',
                             },
-                            { 
+                            {
                                 type: 'connectlite_dropdown_time_2_key',
                             },
                             null
@@ -4905,8 +4944,8 @@ const _throttle = require('lodash/throttle');
                             const melody = Entry.ProboConnectLite.Track[track][script.trackStep];
 
                             Entry.ProboConnectLite.RemoteData['MEL2'] = (melody >> 8) & 0xff;
-                            Entry.ProboConnectLite.RemoteData['MEL1'] = melody & 0xff;        
-                            script.timeFlag = 1;        
+                            Entry.ProboConnectLite.RemoteData['MEL1'] = melody & 0xff;
+                            script.timeFlag = 1;
                             Entry.TimeWaitManager.add(
                                 script.block.id,
                                 function() {
@@ -4943,7 +4982,7 @@ const _throttle = require('lodash/throttle');
                         } else {
                             Entry.ProboConnectLite.RemoteData['MEL2'] = 0;
                             Entry.ProboConnectLite.RemoteData['MEL1'] = 0;
-        
+
                             delete script.trackStep;
                             delete script.maxStep;
                             delete script.timeFlag;
@@ -5032,7 +5071,7 @@ const _throttle = require('lodash/throttle');
                     events: {},
                     def: {
                         params: [
-                            { 
+                            {
                                 type: 'connectlite_dropdown_port_1_4_key',
                             },
                             {
@@ -5072,7 +5111,7 @@ const _throttle = require('lodash/throttle');
                             },
                         ],
                     },
-                },    
+                },
                 // RGB LED %1 을(를) 끄기 %2
                 connectlite_set_rgbled_off_output: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -5094,7 +5133,7 @@ const _throttle = require('lodash/throttle');
                     events: {},
                     def: {
                         params: [
-                            { 
+                            {
                                 type: 'connectlite_dropdown_port_1_4_key',
                             },
                             null
@@ -5155,13 +5194,13 @@ const _throttle = require('lodash/throttle');
                     events: {},
                     def: {
                         params: [
-                            { 
+                            {
                                 type: 'connectlite_dropdown_port_1_4_key',
                             },
-                            { 
+                            {
                                 type: 'connectlite_dropdown_rgb_color_key',
                             },
-                            { 
+                            {
                                 type: 'connectlite_dropdown_time_3',
                             },
                             null
@@ -5232,10 +5271,10 @@ const _throttle = require('lodash/throttle');
                     events: {},
                     def: {
                         params: [
-                            { 
+                            {
                                 type: 'connectlite_dropdown_port_1_4_key',
                             },
-                            { 
+                            {
                                 type: 'connectlite_dropdown_rgb_color_key',
                             },
                             null
@@ -5369,7 +5408,7 @@ const _throttle = require('lodash/throttle');
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
-                    skeleton: 'basic',                    
+                    skeleton: 'basic',
                     statements: [],
                     params: [
                         {
@@ -5389,7 +5428,7 @@ const _throttle = require('lodash/throttle');
                     events: {},
                     def: {
                         params: [
-                            { 
+                            {
                                 type: 'number',
                                 params: [ 0 ]
                             },
@@ -5411,7 +5450,7 @@ const _throttle = require('lodash/throttle');
                         const address = script.getNumberValue('PARAM0');
                         const value = script.getNumberValue('PARAM1');
 
-                        if (!script.isStart) {        
+                        if (!script.isStart) {
                             script.isStart = true;
                             script.timeFlag = 1;
 
@@ -5437,14 +5476,14 @@ const _throttle = require('lodash/throttle');
                             Entry.ProboConnectLite.RemoteData['EEPR3'] = address;
                             Entry.ProboConnectLite.RemoteData['EEPR2'] = 0;
                             Entry.ProboConnectLite.RemoteData['EEPR1'] = 0;
-        
+
                             setTimeout(function() {
                                 Entry.ProboConnectLite.RemoteData['EEPR4'] = 0;
                                 Entry.ProboConnectLite.RemoteData['EEPR3'] = 0;
                                 Entry.ProboConnectLite.RemoteData['EEPR2'] = 0;
                                 Entry.ProboConnectLite.RemoteData['EEPR1'] = 0;
                             }, 100);
-                            
+
                             delete script.timeFlag;
                             delete script.isStart;
                             Entry.engine.isContinue = false;
