@@ -88,6 +88,7 @@ Entry.ITPLE.setLanguage = function () {
             template: {
                 ITPLE_get_analog_value: '아날로그 %1 번 값',
                 ITPLE_get_digital_value: '디지털 %1 번 값',
+                ITPLE_is_key_pressed: '%1 키를 누름',
                 ITPLE_value_mapping: '%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼 값',
                 ITPLE_get_ultrasonic_value: '초음파센서 Trig %1 Echo %2 값',
                 ITPLE_toggle_led: '디지털 %1 번 핀 %2 %3',
@@ -107,6 +108,7 @@ Entry.ITPLE.setLanguage = function () {
             template: {
                 ITPLE_get_analog_value: 'Analog %1 value',
                 ITPLE_get_digital_value: 'Digital %1 value',
+                ITPLE_is_key_pressed: '%1 key pressed',
                 ITPLE_value_mapping: 'Map Value %1 %2 ~ %3 to %4 ~ %5',
                 ITPLE_get_ultrasonic_value: 'Read ultrasonic sensor trig pin %1 echo pin %2',
                 ITPLE_toggle_led: 'Digital %1 Pin %2 %3',
@@ -128,6 +130,7 @@ Entry.ITPLE.setLanguage = function () {
 Entry.ITPLE.blockMenuBlocks = [
     'ITPLE_get_analog_value',
     'ITPLE_get_digital_value',
+    'ITPLE_is_key_pressed',
     'ITPLE_value_mapping',
     'ITPLE_get_ultrasonic_value',
     'ITPLE_get_digital',
@@ -320,6 +323,77 @@ Entry.ITPLE.getBlocks = function () {
                                 accept: 'string',
                             },
                         ],
+                    },
+                ],
+            },
+        },
+        ITPLE_is_key_pressed: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+
+            skeleton: 'basic_boolean_field',
+
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['위', 'UP'],
+                        ['아래', 'DOWN'],
+                        ['오른쪽', 'RIGHT'],
+                        ['왼쪽', 'LEFT'],
+                    ],
+                    value: 'UP',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+
+            events: {},
+
+            def: {
+                params: [null],
+                type: 'ITPLE_is_key_pressed',
+            },
+
+            paramsKeyMap: {
+                KEY: 0,
+            },
+
+            func(sprite, script) {
+                const seletedKey = script.getField('KEY');
+
+                const analogPortData = Entry.hw.portData.ANALOG;
+                const digitalPortData = Entry.hw.portData.DIGITAL;
+
+                switch (seletedKey) {
+                    case 'UP':{
+                        const value = analogPortData ? analogPortData[0] : 0;
+                        return value === 0;
+                    }
+                    case 'DOWN':{
+                        const value = analogPortData ? analogPortData[1] : 0;
+                        return value === 0;
+                    }
+                    case 'RIGHT': {
+                        const value = digitalPortData ? digitalPortData[8] : 1;
+                        return value === 0;
+                    }
+                    case 'LEFT': {
+                        const value = digitalPortData ? digitalPortData[7] : 1;
+                        return value === 0;
+                    }
+                    default:
+                        return false;
+                }
+            },
+
+            syntax: {
+                js : [],
+                py : [
+                    {
+                    syntax : '위:Arduino.analogRead(0)==0, 아래:Arduino.analogRead(1)==0, 오른쪽:Arduino.digitalRead(8)==0, 왼쪽:Arduino.digitalRead(7)==0',
                     },
                 ],
             },
