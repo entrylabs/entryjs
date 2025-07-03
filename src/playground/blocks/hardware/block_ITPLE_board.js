@@ -89,11 +89,14 @@ Entry.ITPLE.setLanguage = function () {
                 ITPLE_get_analog_value: '아날로그 %1 번 값',
                 ITPLE_get_digital_value: '디지털 %1 번 값',
                 ITPLE_is_key_pressed: '%1 키를 누름',
+                ITPLE_value_lighting: '조도 센서 값이 %1 보다 큰가?',
+                ITPLE_value_sound: '소리 센서 값이 %1 보다 큰가?',
                 ITPLE_value_mapping: '%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼 값',
                 ITPLE_get_ultrasonic_value: '초음파센서 Trig %1 Echo %2 값',
                 ITPLE_toggle_led: '디지털 %1 번 핀 %2 %3',
+                ITPLE_turn_led: '%1 색 LED %2 %3',
                 ITPLE_digital_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
-                ITPLE_set_tone: '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5',
+                ITPLE_set_tone: '버저를 %2 %3 음으로 %4 초 연주하기 %5',
                 ITPLE_get_digital: '디지털 %1 번 센서값',
                 ITPLE_set_motor_direction: '%1 모터 %2 방향으로 정하기 %3',
                 ITPLE_set_motor_speed_old: '(V1)%1 모터 %2 속도로  정하기 %3',
@@ -109,11 +112,14 @@ Entry.ITPLE.setLanguage = function () {
                 ITPLE_get_analog_value: 'Analog %1 value',
                 ITPLE_get_digital_value: 'Digital %1 value',
                 ITPLE_is_key_pressed: '%1 key pressed',
+                ITPLE_value_lighting: 'Is light sensor value greater than %1 ?',
+                ITPLE_value_sound: 'Is sound sensor value greater than %1 ?',
                 ITPLE_value_mapping: 'Map Value %1 %2 ~ %3 to %4 ~ %5',
                 ITPLE_get_ultrasonic_value: 'Read ultrasonic sensor trig pin %1 echo pin %2',
                 ITPLE_toggle_led: 'Digital %1 Pin %2 %3',
+                ITPLE_turn_led: '%1 color LED %2',
                 ITPLE_digital_pwm: 'Digital %1 Pin %2 %3',
-                ITPLE_set_tone: 'Play tone pin %1 on note %2 octave %3 beat %4 %5',
+                ITPLE_set_tone: 'Play tone on note %2 octave %3 beat %4 %5',
                 ITPLE_get_digital: 'Digital %1 Sensor value',
                 ITPLE_set_motor_direction: '%1 motor %2 direction %3',
                 ITPLE_set_motor_speed_old: '(old) %1 motor %2 speed %3',
@@ -131,10 +137,13 @@ Entry.ITPLE.blockMenuBlocks = [
     'ITPLE_get_analog_value',
     'ITPLE_get_digital_value',
     'ITPLE_is_key_pressed',
+    'ITPLE_value_lighting',
+    'ITPLE_value_sound',
     'ITPLE_value_mapping',
     'ITPLE_get_ultrasonic_value',
     'ITPLE_get_digital',
     'ITPLE_toggle_led',
+    'ITPLE_turn_led',
     'ITPLE_digital_pwm',
     'ITPLE_set_tone',
     'ITPLE_set_motor_direction',
@@ -394,6 +403,105 @@ Entry.ITPLE.getBlocks = function () {
                 py : [
                     {
                     syntax : '위:Arduino.analogRead(0)==0, 아래:Arduino.analogRead(1)==0, 오른쪽:Arduino.digitalRead(8)==0, 왼쪽:Arduino.digitalRead(7)==0',
+                    },
+                ],
+            },
+        },
+        ITPLE_value_lighting: { // 저학년을 위한 조도센서 블록 생성
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+
+            skeleton: 'basic_boolean_field',
+
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'number',
+                },
+            ],
+
+            events: {},
+
+            def: {
+                params: [null],
+                type: 'ITPLE_value_lighting',
+            },
+
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+
+            func(sprite, script) {
+                const value = script.getValue('VALUE');
+
+                const analogPortData = Entry.hw.portData.ANALOG;
+
+                if (analogPortData) {
+                    return analogPortData[2] > value;
+                }
+                return false;
+            },
+
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Arduino.analogRead(2) > %1',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        ITPLE_value_sound: { // 저학년을 위한 사운드센서 블록 생성
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+
+            skeleton: 'basic_boolean_field',
+
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'number',
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'ITPLE_value_sound',
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            func(sprite, script) {
+                const value = script.getValue('VALUE');
+
+                const analogPortData = Entry.hw.portData.ANALOG;
+
+                if (analogPortData) {
+                    return analogPortData[3] > value;
+                }
+                return false;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Arduino.analogRead(3) > %1',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
                     },
                 ],
             },
@@ -816,6 +924,101 @@ Entry.ITPLE.getBlocks = function () {
                 ],
             },
         },
+        ITPLE_turn_led: { // 저학년 학생을 위한, 핀 번호 없는 LED 켜기 블록
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+
+            skeleton: 'basic',
+
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['빨간', 10],
+                        ['파란', 11],
+                    ],
+                    value: 10,
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['켜기', 'on'],
+                        ['끄기', 'off'],
+                    ],
+                    value: 'on',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+
+            events: {},
+
+            def: {
+                params: [
+                    null,
+                ],
+                type: 'ITPLE_turn_led',
+            },
+
+            paramsKeyMap: {
+                PORT: 0,
+                VALUE: 1,
+            },
+            class: 'ITPLE',
+            isNotFor: ['ITPLE'],
+            func(sprite, script) {
+                const port = script.getNumberValue('PORT');
+                let value = script.getValue('VALUE');
+
+                if (typeof value === 'string') {
+                    value = value.toLowerCase();
+                }
+                if (Entry.ITPLE.highList.indexOf(value) > -1) {
+                    value = 255;
+                } else if (Entry.ITPLE.lowList.indexOf(value) > -1) {
+                    value = 0;
+                } else {
+                    throw new Error();
+                }
+                if (!Entry.hw.sendQueue.SET) {
+                    Entry.hw.sendQueue.SET = {};
+                }
+                Entry.hw.sendQueue.SET[port] = {
+                    type: Entry.ITPLE.sensorTypes.DIGITAL,
+                    data: value,
+                    time: new Date().getTime(),
+                };
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Arduino.digitalWrite(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
         ITPLE_digital_pwm: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1048,7 +1251,7 @@ Entry.ITPLE.getBlocks = function () {
                 ],
             },
         },
-        ITPLE_set_tone: {
+        ITPLE_set_tone: { // 버저 핀번호 가림 업데이트
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1110,7 +1313,7 @@ Entry.ITPLE.getBlocks = function () {
             isNotFor: ['ITPLE'],
             func(sprite, script) {
                 const sq = Entry.hw.sendQueue;
-                const port = script.getNumberValue('PORT', script);
+                const port = 3;
 
                 if (!script.isStart) {
                     let note = script.getValue('NOTE', script);
@@ -1191,7 +1394,7 @@ Entry.ITPLE.getBlocks = function () {
                 js: [],
                 py: [
                     {
-                        syntax: 'Arduino.tone(%1, %2, %3, %4)',
+                        syntax: 'Arduino.tone(3, %2, %3, %4)',
                         textParams: [
                             {
                                 type: 'Block',
