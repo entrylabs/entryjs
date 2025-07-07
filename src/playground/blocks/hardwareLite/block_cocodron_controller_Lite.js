@@ -11,7 +11,7 @@ import _range from 'lodash/range';
             this.url = 'http://www.cocodrone.co.kr/kr/';
             this.imageName = 'cocodroncontrollerLite.png';
             this.title = {
-                ko: '코코드론조종기기',
+                ko: '코코드론조종기',
                 en: 'cocodron controller',
                 ja: 'ココドローン 操縦機'
             };
