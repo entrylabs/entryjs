@@ -518,7 +518,7 @@ import _range from 'lodash/range';
                             return new Promise((resolve) => {
                                 setTimeout(() => {
                                     resolve(script.callReturn());
-                                }, 5000);
+                                }, 4500);
                             });
                         } else {
                             console.log('Serial writer not found.');
