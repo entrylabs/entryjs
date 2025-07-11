@@ -3,8 +3,7 @@
 Entry.Timbo = {
     id: '6A.1',
     name: 'Timbo',
-    url: '',
-    imageName: '',
+
     title: {
         ko: '팀보 커뮤니케이션 블록',
         en: 'Timbo Communication Block',
@@ -16,13 +15,6 @@ Entry.Timbo = {
             Entry.hw.sendQueue.readablePorts.push(port);
         }
         Entry.hw.update();
-    },
-    monitorTemplate: {
-        imgPath: 'hw/timbo.png',
-        width: 600,
-        height: 400,
-        listPorts: {},
-        mode: 'both',
     },
 };
 
