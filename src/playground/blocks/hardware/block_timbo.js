@@ -3,6 +3,7 @@
 Entry.Timbo = {
     id: '6A.1',
     name: 'Timbo',
+
     title: {
         ko: '팀보 커뮤니케이션 블록',
         en: 'Timbo Communication Block',
@@ -21,7 +22,7 @@ Entry.Timbo.setLanguage = function () {
     return {
         ko: {
             template: {
-                timbo_queen_play: '퀸의 %1켜기',
+                timbo_queen_play: '퀸의 %1 켜기',
                 timbo_queen_stop: '퀸의 동작 끄기',
                 timbo_motion_play: '모션 %1의 %2 켜기',
                 timbo_motion_stop: '모션 %1의 동작 끄기',
@@ -35,12 +36,12 @@ Entry.Timbo.setLanguage = function () {
                 timbo: '팀보',
             },
             Helper: {
-                timbo_queen_play: '퀸의 %1켜기',
-                timbo_queen_stop: '퀸의 동작 끄기',
-                timbo_motion_play: '모션 %1의 %2 켜기',
-                timbo_motion_stop: '모션 %1의 동작 끄기',
-                timbo_check_queen: '퀸의 동작여부 체크',
-                timbo_check_motion: '모션 %1의 동작여부 체크',
+                timbo_queen_play: '퀸의 동작을 선택하여 켭니다.',
+                timbo_queen_stop: '퀸의 동작을 멈춥니다.',
+                timbo_motion_play: '지정한 모션 번호와 동작 타입으로 모션을 실행합니다.',
+                timbo_motion_stop: '지정한 모션 번호의 동작을 멈춥니다.',
+                timbo_check_queen: '퀸이 동작 중인지 확인합니다.',
+                timbo_check_motion: '지정한 모션 번호가 동작 중인지 확인합니다.',
             },
         },
         en: {
@@ -59,12 +60,12 @@ Entry.Timbo.setLanguage = function () {
                 timbo: 'Timbo',
             },
             Helper: {
-                timbo_queen_play: 'Turn on Queen %1',
-                timbo_queen_stop: 'Turn off Queen action',
-                timbo_motion_play: 'Turn on Motion %1 of %2',
-                timbo_motion_stop: 'Turn off Motion %1 action',
-                timbo_check_queen: 'Check if Queen is operating',
-                timbo_check_motion: 'Check if Motion %1 is operating',
+                timbo_queen_play: 'Turn on selected Queen action.',
+                timbo_queen_stop: 'Stop all Queen actions.',
+                timbo_motion_play: 'Execute specific Motion with given type.',
+                timbo_motion_stop: 'Stop Motion action of given ID.',
+                timbo_check_queen: 'Check if Queen is currently operating.',
+                timbo_check_motion: 'Check if selected Motion is currently operating.',
             },
         },
     };
@@ -85,7 +86,7 @@ Entry.Timbo.getBlocks = function () {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
-            statements: [],
+            template: Lang.template.timbo_queen_play,
             params: [
                 {
                     type: 'Dropdown',
@@ -101,18 +102,13 @@ Entry.Timbo.getBlocks = function () {
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
-            events: {},
-            def: {
-                params: [],
-                type: 'timbo_queen_play',
-            },
             paramsKeyMap: {
                 ACTION: 0,
             },
-            class: 'timbo_queen',
+            class: 'timbo',
             isNotFor: ['Timbo'],
             func(sprite, script) {
-                const action = script.getNumberValue('ACTION');
+                const action = Number(script.getField('ACTION'));
                 Entry.hw.setDigitalPortValue(1, action);
                 return script.callReturn();
             },
@@ -121,18 +117,12 @@ Entry.Timbo.getBlocks = function () {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
-            statements: [],
+            template: Lang.template.timbo_queen_stop,
             params: [],
-            events: {},
-            def: {
-                params: [],
-                type: 'timbo_queen_stop',
-            },
-            paramsKeyMap: {},
-            class: 'timbo_queen',
+            class: 'timbo',
             isNotFor: ['Timbo'],
             func(sprite, script) {
-                Entry.hw.setDigitalPortValue(1, 0);
+                Entry.hw.setDigitalPortValue(1, 5);
                 return script.callReturn();
             },
         },
@@ -174,7 +164,7 @@ Entry.Timbo.getBlocks = function () {
             ],
             events: {},
             def: {
-                params: [null],
+                params: [null, null],
                 type: 'timbo_motion_play',
             },
             paramsKeyMap: {
@@ -184,8 +174,8 @@ Entry.Timbo.getBlocks = function () {
             class: 'timbo_motion',
             isNotFor: ['Timbo'],
             func(sprite, script) {
-                const port = script.getNumberValue('PORT');
-                const action = script.getNumberValue('ACTION');
+                const port = Number(script.getField('PORT'));
+                const action = Number(script.getField('ACTION'));
                 Entry.hw.setDigitalPortValue(port + 1, action);
                 return script.callReturn();
             },
@@ -238,8 +228,8 @@ Entry.Timbo.getBlocks = function () {
             class: 'timbo_motion',
             isNotFor: ['Timbo'],
             func(sprite, script) {
-                const port = script.getNumberValue('PORT');
-                Entry.hw.setDigitalPortValue(port + 1, 0);
+                const port = Number(script.getField('PORT'));
+                Entry.hw.setDigitalPortValue(port + 1, 5);
                 return script.callReturn();
             },
         },
@@ -279,7 +269,7 @@ Entry.Timbo.getBlocks = function () {
             class: 'timbo_motion_value',
             isNotFor: ['Timbo'],
             func(sprite, script) {
-                const port = script.getNumberValue('PORT');
+                const port = Number(script.getField('PORT'));
                 return Entry.hw.getDigitalPortValue(port + 1);
             },
         },
