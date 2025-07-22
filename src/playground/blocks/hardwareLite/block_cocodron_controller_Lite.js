@@ -11,8 +11,9 @@ import _range from 'lodash/range';
             this.url = 'http://www.cocodrone.co.kr/kr/';
             this.imageName = 'cocodroncontrollerLite.png';
             this.title = {
-                ko: '코코드론조종기기',
+                ko: '코코드론조종기',
                 en: 'cocodron controller',
+                ja: 'ココドローン 操縦機'
             };
             this.duration = 32;
             this.blockMenuBlocks = [
@@ -168,7 +169,7 @@ import _range from 'lodash/range';
                         // Cocodron_Dron_Controller_move_drone_back:'뒤쪽  ',
                         Cocodron_Dron_Controller_flip_f: '앞으로  ',
                         Cocodron_Dron_Controller_flip_b: '뒤로  ',
-                        Cocodron_Dron_Controller_flip_l: '왼쪽으로로  ',
+                        Cocodron_Dron_Controller_flip_l: '왼쪽으로  ',
                         Cocodron_Dron_Controller_flip_r: '오른쪽으로  ',
                         Cocodron_Dron_Controller_simultaneousOperations_up: '상승  ',
                         Cocodron_Dron_Controller_simultaneousOperations_down: '하강  ',
@@ -207,10 +208,10 @@ import _range from 'lodash/range';
                             '%1 방향으로 %2 %3 만큼 %4 방향으로 %5 %6 이동  ',
                     },
                     Device: {
-                        cocodron_dron_controller: '코코드론드론조종기',
+                        cocodron_dron_controller: '코코드론조종기',
                     },
                     Menus: {
-                        cocodron_dron_controller: '코코드론드론조종기',
+                        cocodron_dron_controller: '코코드론조종기',
                     },
                     Helper: {
                         Cocodron_Dron_Controller_connect: '바인딩  ',
@@ -248,36 +249,70 @@ import _range from 'lodash/range';
                 },
                 en: {
                     template: {
-                        Cocodron_Dron_Controller_connect: 'Binding',
-                        Cocodron_Dron_Controller_hovering: 'Hovering for %1 seconds',
-                        Cocodron_Dron_Controller_mode: '%1 Mode',
-                        Cocodron_Dron_Controller_opt: 'Optical Sensor',
-                        Cocodron_Dron_Controller_gyroreset: 'Gyro Reset',
-                        Cocodron_Dron_Controller_takeoff: 'Take Off',
-                        Cocodron_Dron_Controller_takeoffV2: 'Take Off %1 %2',
-                        Cocodron_Dron_Controller_land: 'Landing',
-                        Cocodron_Dron_Controller_emergency: 'Emergency Stop',
-                        Cocodron_Dron_Controller_headless: 'Headless Mode',
+                        Cocodron_Dron_Controller_connect: 'Binding ',
+                        Cocodron_Dron_Controller_hovering: 'Hovering for %1 seconds ',
+                        Cocodron_Dron_Controller_mode: '%1 Mode ',
+                        Cocodron_Dron_Controller_opt: 'Optical Sensor ',
+                        Cocodron_Dron_Controller_gyroreset: 'Gyro Reset ',
+                        Cocodron_Dron_Controller_takeoff: 'Take Off ',
+                        Cocodron_Dron_Controller_takeoffV2: 'Take Off %1 %2 ',
+                        Cocodron_Dron_Controller_land: 'Landing ',
+                        Cocodron_Dron_Controller_emergency: 'Emergency Stop ',
+                        Cocodron_Dron_Controller_headless: 'Headless Mode ',
                         //Cocodron_Dron_Controller_move_drone: 'Move joystick %1 in %2 direction by %3 for %4 ms',
-                        Cocodron_Dron_Controller_up: 'Ascend by %1 for %2 ms',
-                        Cocodron_Dron_Controller_down: 'Descend by %1 for %2 ms',
-                        Cocodron_Dron_Controller_cw: 'Rotate Clockwise by %1 for %2 ms',
-                        Cocodron_Dron_Controller_ccw: 'Rotate Counterclockwise by %1 for %2 ms',
-                        Cocodron_Dron_Controller_move_drone_forward: 'Move Forward by %1 for %2 ms',
-                        Cocodron_Dron_Controller_move_drone_back: 'Move Backward by %1 for %2 ms',
-                        Cocodron_Dron_Controller_move_drone_left: 'Move Left by %1 for %2 ms',
-                        Cocodron_Dron_Controller_move_drone_right: 'Move Right by %1 for %2 ms',
-                        Cocodron_Dron_Controller_funled: 'Change 4-Color LED',
-                        Cocodron_Dron_Controller_flip: '%1 Flip',
-                        Cocodron_Dron_Controller_speed: 'Adjust Speed %1',
+                        Cocodron_Dron_Controller_up: 'Ascend by %1 for %2 ms ',
+                        Cocodron_Dron_Controller_down: 'Descend by %1 for %2 ms ',
+                        Cocodron_Dron_Controller_cw: 'Rotate Clockwise by %1 for %2 ms ',
+                        Cocodron_Dron_Controller_ccw: 'Rotate Counterclockwise by %1 for %2 ms ',
+                        Cocodron_Dron_Controller_move_drone_forward: 'Move Forward by %1 for %2 ms ',
+                        Cocodron_Dron_Controller_move_drone_back: 'Move Backward by %1 for %2 ms ',
+                        Cocodron_Dron_Controller_move_drone_left: 'Move Left by %1 for %2 ms ',
+                        Cocodron_Dron_Controller_move_drone_right: 'Move Right by %1 for %2 ms ',
+                        Cocodron_Dron_Controller_funled: 'Change 4-Color LED ',
+                        Cocodron_Dron_Controller_flip: '%1 Flip ',
+                        Cocodron_Dron_Controller_speed: 'Adjust Speed %1 ',
                         Cocodron_Dron_Controller_simultaneousOperations:
-                            'Move %1 in %2 %3 while moving %4 in %5 %6',
+                            'Move %1 in %2 %3 while moving %4 in %5 %6 ',
                     },
                     Device: {
-                        cocodron_dron_controller: 'cocodrondroncontroller',
+                        cocodron_dron_controller: 'cocodroncontroller',
                     },
                     Menus: {
-                        cocodron_dron_controller: 'CocodronDronController',
+                        cocodron_dron_controller: 'CocodronController',
+                    },
+                },
+                ja: {
+                    template: {
+                        Cocodron_Dron_Controller_connect: 'バインディング  ',
+                        Cocodron_Dron_Controller_hovering: 'ホバーリング  %1 秒  ',
+                        Cocodron_Dron_Controller_mode: '%1 モード  ',
+                        Cocodron_Dron_Controller_opt: '光学センサー  ',
+                        Cocodron_Dron_Controller_gyroreset: 'ジャイロ初期化  ',
+                        Cocodron_Dron_Controller_takeoff: '離陸',
+                        Cocodron_Dron_Controller_takeoffV2: '離陸 %1 %2',
+                        Cocodron_Dron_Controller_land: '着陸  ',
+                        Cocodron_Dron_Controller_emergency: '緊急停止  ',
+                        Cocodron_Dron_Controller_headless: 'ヘッドレスモード  ',
+                        //Cocodron_Dron_Controller_move_drone: '%1 조이스틱을 %2 방향으로 %3 만큼 %4 ms 유지  ',
+                        Cocodron_Dron_Controller_up: '%1 上昇 %2 ms キープ  ',
+                        Cocodron_Dron_Controller_down: '%1 上昇 %2 ms キープ  ',
+                        Cocodron_Dron_Controller_cw: '%1 右回転 %2 ms キープ  ',
+                        Cocodron_Dron_Controller_ccw: '%1 左回転 %2 ms キープ  ',
+                        Cocodron_Dron_Controller_move_drone_forward: '%1 前方移動  %2 ms キープ  ',
+                        Cocodron_Dron_Controller_move_drone_back: '%1 前方移動  %2 ms キープ  ',
+                        Cocodron_Dron_Controller_move_drone_left: '%1 左移動  %2 ms キープ  ',
+                        Cocodron_Dron_Controller_move_drone_right: '%1 右移動  %2 ms キープ  ',
+                        Cocodron_Dron_Controller_funled: '4色LED カラー変更  ',
+                        Cocodron_Dron_Controller_flip: '%1 フリップ  ',
+                        Cocodron_Dron_Controller_speed: '速度調整 %1 ',
+                        Cocodron_Dron_Controller_simultaneousOperations:
+                            '%1 方向へ %2 %3  %4 方向へ %5 %6 移動  ',
+                    },
+                    Device: {
+                        cocodron_dron_controller: 'ココドローン 操縦機',
+                    },
+                    Menus: {
+                        cocodron_dron_controller: 'ココドローン 操縦機',
                     },
                 },
             };
@@ -349,7 +384,7 @@ import _range from 'lodash/range';
                     class: 'cocodron',
                     isNotFor: ['cocodroncontrollerLite'],
                     func(sprite, script) {
-                        const time = script.getField('TIME') * 1000;
+                        const time = script.getField('TIME');
 
                         return new Promise((resolve) => {
                             setTimeout(() => {
@@ -483,7 +518,7 @@ import _range from 'lodash/range';
                             return new Promise((resolve) => {
                                 setTimeout(() => {
                                     resolve(script.callReturn());
-                                }, 4000);
+                                }, 4500);
                             });
                         } else {
                             console.log('Serial writer not found.');
@@ -658,7 +693,7 @@ import _range from 'lodash/range';
                     class: 'cocodron',
                     isNotFor: ['cocodroncontrollerLite'],
                     func(sprite, script) {
-                        let stick = script.getNumberValue('STICK', script) * 10;
+                        let stick = script.getNumberValue('STICK', script);
                         let time = script.getNumberValue('TIME', script);
 
                         if (stick > 500) {
@@ -708,7 +743,7 @@ import _range from 'lodash/range';
                     class: 'cocodron',
                     isNotFor: ['cocodroncontrollerLite'],
                     func(sprite, script) {
-                        let stick = script.getNumberValue('STICK', script) * 10;
+                        let stick = script.getNumberValue('STICK', script);
                         let time = script.getNumberValue('TIME', script);
 
                         if (stick > 500) {
@@ -759,7 +794,7 @@ import _range from 'lodash/range';
                     class: 'cocodron',
                     isNotFor: ['cocodroncontrollerLite'],
                     func(sprite, script) {
-                        let stick = script.getNumberValue('STICK', script) * 10;
+                        let stick = script.getNumberValue('STICK', script);
                         let time = script.getNumberValue('TIME', script);
 
                         if (stick > 500) {
@@ -807,7 +842,7 @@ import _range from 'lodash/range';
                     class: 'cocodron',
                     isNotFor: ['cocodroncontrollerLite'],
                     func(sprite, script) {
-                        let stick = script.getNumberValue('STICK', script) * 10;
+                        let stick = script.getNumberValue('STICK', script);
                         let time = script.getNumberValue('TIME', script);
 
                         if (stick > 500) {
@@ -855,7 +890,7 @@ import _range from 'lodash/range';
                     class: 'cocodron',
                     isNotFor: ['cocodroncontrollerLite'],
                     func(sprite, script) {
-                        let stick = script.getNumberValue('STICK', script) * 10;
+                        let stick = script.getNumberValue('STICK', script);
                         let time = script.getNumberValue('TIME', script);
 
                         if (stick > 500) {
@@ -904,7 +939,7 @@ import _range from 'lodash/range';
                     class: 'cocodron',
                     isNotFor: ['cocodroncontrollerLite'],
                     func(sprite, script) {
-                        let stick = script.getNumberValue('STICK', script) * 10;
+                        let stick = script.getNumberValue('STICK', script);
                         let time = script.getNumberValue('TIME', script);
 
                         if (stick > 500) {
@@ -953,7 +988,7 @@ import _range from 'lodash/range';
                     class: 'cocodron',
                     isNotFor: ['cocodroncontrollerLite'],
                     func(sprite, script) {
-                        let stick = script.getNumberValue('STICK', script) * 10;
+                        let stick = script.getNumberValue('STICK', script);
                         let time = script.getNumberValue('TIME', script);
 
                         if (stick > 500) {
@@ -1002,7 +1037,7 @@ import _range from 'lodash/range';
                     class: 'cocodron',
                     isNotFor: ['cocodroncontrollerLite'],
                     func(sprite, script) {
-                        let stick = script.getNumberValue('STICK', script) * 10;
+                        let stick = script.getNumberValue('STICK', script);
                         let time = script.getNumberValue('TIME', script);
 
                         if (stick > 500) {
