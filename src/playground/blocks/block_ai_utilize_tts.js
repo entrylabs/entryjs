@@ -258,7 +258,6 @@ Entry.AI_UTILIZE_BLOCK.tts.getBlocks = function() {
                     },
                 ],
             },
-            wikiClass: 'ai_utilize_tts',
         },
         read_text_wait_with_block: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
@@ -317,7 +316,6 @@ Entry.AI_UTILIZE_BLOCK.tts.getBlocks = function() {
                     },
                 ],
             },
-            wikiClass: 'ai_utilize_tts',
         },
         set_tts_property: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
@@ -377,7 +375,6 @@ Entry.AI_UTILIZE_BLOCK.tts.getBlocks = function() {
                     },
                 ],
             },
-            wikiClass: 'ai_utilize_tts',
         },
     };
 };
