@@ -377,11 +377,11 @@ Entry.ITPLE.getBlocks = function () {
                 const digitalPortData = Entry.hw.portData.DIGITAL;
 
                 switch (seletedKey) {
-                    case 'UP':{
+                    case 'UP': {
                         const value = analogPortData ? analogPortData[0] : 0;
                         return value === 0;
                     }
-                    case 'DOWN':{
+                    case 'DOWN': {
                         const value = analogPortData ? analogPortData[1] : 0;
                         return value === 0;
                     }
@@ -399,15 +399,16 @@ Entry.ITPLE.getBlocks = function () {
             },
 
             syntax: {
-                js : [],
-                py : [
+                js: [],
+                py: [
                     {
-                    syntax : '위:Arduino.analogRead(0)==0, 아래:Arduino.analogRead(1)==0, 오른쪽:Arduino.digitalRead(8)==0, 왼쪽:Arduino.digitalRead(7)==0',
+                        syntax: '위:Arduino.analogRead(0)==0, 아래:Arduino.analogRead(1)==0, 오른쪽:Arduino.digitalRead(8)==0, 왼쪽:Arduino.digitalRead(7)==0',
                     },
                 ],
             },
         },
-        ITPLE_value_lighting: { // 저학년을 위한 조도센서 블록 생성
+        ITPLE_value_lighting: {
+            // 저학년을 위한 조도센서 블록 생성
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -459,7 +460,8 @@ Entry.ITPLE.getBlocks = function () {
                 ],
             },
         },
-        ITPLE_value_sound: { // 저학년을 위한 사운드센서 블록 생성
+        ITPLE_value_sound: {
+            // 저학년을 위한 사운드센서 블록 생성
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -924,7 +926,8 @@ Entry.ITPLE.getBlocks = function () {
                 ],
             },
         },
-        ITPLE_turn_led: { // 저학년 학생을 위한, 핀 번호 없는 LED 켜기 블록
+        ITPLE_turn_led: {
+            // 저학년 학생을 위한, 핀 번호 없는 LED 켜기 블록
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -964,9 +967,7 @@ Entry.ITPLE.getBlocks = function () {
             events: {},
 
             def: {
-                params: [
-                    null,
-                ],
+                params: [null],
                 type: 'ITPLE_turn_led',
             },
 
@@ -1251,7 +1252,8 @@ Entry.ITPLE.getBlocks = function () {
                 ],
             },
         },
-        ITPLE_set_tone: { // 버저 핀번호 가림 업데이트
+        ITPLE_set_tone: {
+            // 버저 핀번호 가림 업데이트
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
