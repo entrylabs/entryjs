@@ -369,7 +369,7 @@ Entry.ITPLE.getBlocks = function () {
             paramsKeyMap: {
                 KEY: 0,
             },
-
+            isNotFor: ['ITPLE'],
             func(sprite, script) {
                 const seletedKey = script.getField('KEY');
 
@@ -432,7 +432,7 @@ Entry.ITPLE.getBlocks = function () {
             paramsKeyMap: {
                 VALUE: 0,
             },
-
+            isNotFor: ['ITPLE'],
             func(sprite, script) {
                 const value = script.getValue('VALUE');
 
@@ -482,6 +482,7 @@ Entry.ITPLE.getBlocks = function () {
             paramsKeyMap: {
                 VALUE: 0,
             },
+            isNotFor: ['ITPLE'],
             func(sprite, script) {
                 const value = script.getValue('VALUE');
 
