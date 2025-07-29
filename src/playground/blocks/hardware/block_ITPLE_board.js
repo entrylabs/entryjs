@@ -968,89 +968,7 @@ Entry.ITPLE.getBlocks = function () {
                 ],
             },
         },
-        ITPLE_set_motor_speed_old: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['왼쪽', '10'],
-                        ['오른쪽', '11'],
-                    ],
-                    value: '10',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    '10',
-                    {
-                        type: 'text',
-                        params: ['255'],
-                    },
-                    null,
-                ],
-                type: 'ITPLE_set_motor_speed_old',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-                VALUE: 1,
-            },
-            class: 'ITPLE_motor',
-            isNotFor: ['ITPLE'],
-            func(sprite, script) {
-                const port = script.getNumberValue('PORT');
-                let value = script.getNumberValue('VALUE');
-                value = Math.round(value);
-                value = Math.max(value, 0);
-                value = Math.min(value, 255);
-                if (!Entry.hw.sendQueue.SET) {
-                    Entry.hw.sendQueue.SET = {};
-                }
-                Entry.hw.sendQueue.SET[port] = {
-                    type: Entry.ITPLE.sensorTypes.PWM,
-                    data: value,
-                    time: new Date().getTime(),
-                };
-                return script.callReturn();
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.analogWrite(%1, %2)',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
-            },
-        },
-
-        ITPLE_set_motor_speed_new: {
+        ITPLE_set_motor_speed: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1088,7 +1006,7 @@ Entry.ITPLE.getBlocks = function () {
                     },
                     null,
                 ],
-                type: 'ITPLE_set_motor_speed_new',
+                type: 'ITPLE_set_motor_speed',
             },
             paramsKeyMap: {
                 PORT: 0,
