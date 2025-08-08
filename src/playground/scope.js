@@ -19,6 +19,13 @@ class Scope {
         return result;
     }
 
+    // 클래스 레벨에서 한 번만 생성
+    static _reservedKeywords = new Set(['__proto__']);
+
+    filterReservedKeywords(param) {
+        return Scope._reservedKeywords.has(param) ? '' : param;
+    }
+
     getParams() {
         const that = this;
         return this.block.params.map((param) => {
@@ -27,7 +34,7 @@ class Scope {
                 const newScope = new Entry.Scope(fieldBlock, that.executor);
                 return newScope.run(this.entity, true);
             } else {
-                return param;
+                return this.filterReservedKeywords(param);
             }
         });
     }
@@ -137,7 +144,7 @@ class Scope {
     }
 
     getField(key) {
-        return this.block.params[this._getParamIndex(key)];
+        return this.filterReservedKeywords(this.block.params[this._getParamIndex(key)]);
     }
 
     getStringField(key) {

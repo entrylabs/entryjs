@@ -765,6 +765,10 @@ module.exports = {
                         operator = operator.split('_')[0];
                     }
 
+                    if (!calcOperationOptions.some((option) => option[1] === operator)) {
+                        operator = 'round';
+                    }
+
                     let returnVal = 0;
                     switch (operator) {
                         case 'square':
