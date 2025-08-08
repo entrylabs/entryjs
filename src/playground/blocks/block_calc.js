@@ -761,12 +761,12 @@ module.exports = {
                         throw new Error('x range exceeded');
                     }
 
-                    if (operator.indexOf('_')) {
-                        operator = operator.split('_')[0];
-                    }
-
                     if (!calcOperationOptions.some((option) => option[1] === operator)) {
                         operator = 'round';
+                    }
+
+                    if (operator.indexOf('_')) {
+                        operator = operator.split('_')[0];
                     }
 
                     let returnVal = 0;
