@@ -313,8 +313,10 @@ Entry.ITPLE.getBlocks = function () {
                   type: 'Dropdown',
                   options: [
                     ['크다', '>'],
-                    ['작다', '<'],
+                    ['크거나같다', '>='],
                     ['같다', '=='],
+                    ['작거나같다', '<='],
+                    ['작다', '<'],
                   ],
                   value: '>',
                   fontSize: 11,
