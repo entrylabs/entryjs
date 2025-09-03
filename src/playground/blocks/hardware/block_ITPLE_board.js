@@ -1,6 +1,11 @@
 'use strict';
 
 Entry.ITPLE = {
+    afterReceive(pd) {
+        if(Entry.engine.isState('run')) {
+            Entry.engine.fireEvent('ITPLE_press_button');
+        }
+    },
     id: '5E.1',
     name: 'ITPLE',
     url: 'http://www.itpleinfo.com/',
@@ -80,12 +85,19 @@ Entry.ITPLE = {
     highList: ['high', '1', 'on'],
     lowList: ['low', '0', 'off'],
     BlockState: {},
+    EdgeFlag: {
+        'A0': false,
+        'A1': false,
+        '7': false,
+        '8': false,
+    },
 };
 
 Entry.ITPLE.setLanguage = function () {
     return {
         ko: {
             template: {
+                ITPLE_push_button: '%1 %2 버튼을 눌렀을 때',
                 ITPLE_get_button_value: '%1 버튼 값',
                 ITPLE_get_sensor_value: '%1 센서 값',
                 ITPLE_get_ultrasonic_value: '초음파 센서 값',
@@ -100,6 +112,7 @@ Entry.ITPLE.setLanguage = function () {
         },
         en: {
             template: {
+                ITPLE_push_button: '%1 When %2 button is pressed',
                 ITPLE_get_button_value: '%1 button value',
                 ITPLE_get_sensor_value: '%1 sensor value',
                 ITPLE_get_ultrasonic_value: 'Ultrasonic sensor value',
@@ -116,6 +129,7 @@ Entry.ITPLE.setLanguage = function () {
 };
 
 Entry.ITPLE.blockMenuBlocks = [
+    'ITPLE_push_button',
     'ITPLE_get_button_value',
     'ITPLE_get_sensor_value',
     'ITPLE_get_ultrasonic_value',
@@ -131,6 +145,89 @@ Entry.ITPLE.blockMenuBlocks = [
 //region ITPLE 보드
 Entry.ITPLE.getBlocks = function () {
     return {
+        ITPLE_push_button: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_event',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/start_icon_hardware.svg',
+                    size: 14,
+                    position: {
+                        x: 0,
+                        y: -2,
+                    },
+                },
+                {
+                    type: 'Dropdown',
+                    options: [['위쪽', 'A0'], ['아래쪽', 'A1'], ['왼쪽', '7'], ['오른쪽', '8']],
+                    value: 'A0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null, 'A0'], 
+                type: 'ITPLE_push_button'
+            },
+            paramsKeyMap: {
+                PORT: 1 
+            },
+            class: 'ITPLEStart',
+            isNotFor: ['ITPLE'], 
+            event: 'ITPLE_press_button',
+            func(sprite, script) {
+                const portConfigMap = {
+                    'A0': { type: 'ANALOG', index: 0 },
+                    'A1': { type: 'ANALOG', index: 1 },
+                    '7':  { type: 'DIGITAL', index: 7 },
+                    '8':  { type: 'DIGITAL', index: 8 },
+                };
+
+                const portKey = script.getValue('PORT', script);
+                const config = portConfigMap[portKey];
+                const value = Entry.hw.portData[config.type]?.[config.index] ?? 0;
+
+                const hasBeenPressedBefore = Entry.ITPLE.EdgeFlag[portKey];
+                
+                if (value === 0) {
+                    if (!hasBeenPressedBefore) {
+                        Entry.ITPLE.EdgeFlag[portKey] = true;
+                        return script.callReturn();
+                    }
+                } else {
+                    Entry.ITPLE.EdgeFlag[portKey] = false;
+                }
+
+                return this.die();
+            },
+            
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'def when_push_button(%2):',
+                        passTest: true,
+                        blockType: 'event',
+                        textParams: [
+                            undefined,
+                            {
+                                type: 'Dropdown',
+                                options: [['위쪽', 'A0'], ['아래쪽', 'A1'], ['왼쪽', '7'], ['오른쪽', '8']],
+                                value: 'A0',
+                                arrowColor: EntryStatic.colorSet.arrow.default.START,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+
         ITPLE_get_button_value: {
             color: EntryStatic.colorSet.block["default"].HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -247,7 +344,7 @@ Entry.ITPLE.getBlocks = function () {
               type: 'ITPLE_is_key_pressed',
           },
           paramsKeyMap: {
-              KEY: 0,
+              KEY: 1,
           },
           "class": 'ITPLEGet',
           isNotFor: ['ITPLE'],
