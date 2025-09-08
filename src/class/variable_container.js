@@ -83,7 +83,7 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('entryVariableSelectorWorkspace')
             .appendTo(this.view_);
 
-        $(selectView).on('click tab', 'td', function() {
+        $(selectView).on('click tab', 'td', function () {
             if (this.disabled) {
                 return;
             }
@@ -127,11 +127,11 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('entryVariableAdd_box')
             .appendTo(listViewContainer);
 
-        $(listView).on('mouseenter', '.entryVariableListElementWorkspace', function() {
+        $(listView).on('mouseenter', '.entryVariableListElementWorkspace', function () {
             this.addClass('active');
         });
 
-        $(listView).on('mouseleave', '.entryVariableListElementWorkspace', function() {
+        $(listView).on('mouseleave', '.entryVariableListElementWorkspace', function () {
             this.removeClass('active');
         });
 
@@ -173,9 +173,7 @@ Entry.VariableContainer = class VariableContainer {
     createSelectButton(type, isEnable = true) {
         const view = Entry.createElement('td').addClass('entryVariableSelectButtonWorkspace', type);
         const textView = Entry.createElement('div');
-        const text = Entry.createElement('span')
-            .addClass('text')
-            .appendTo(textView);
+        const text = Entry.createElement('span').addClass('text').appendTo(textView);
 
         view.setAttribute('data-type', type);
         view.appendChild(textView);
@@ -293,9 +291,7 @@ Entry.VariableContainer = class VariableContainer {
         message.usedView && $(message.usedView).remove();
         const usedWrapper = Entry.createElement('div').addClass('use_block');
 
-        const boxSubject = Entry.createElement('span')
-            .addClass('box_sjt')
-            .appendTo(usedWrapper);
+        const boxSubject = Entry.createElement('span').addClass('box_sjt').appendTo(usedWrapper);
 
         if (callers.length) {
             boxSubject.textContent = Entry.Utils.stringFormat(
@@ -303,9 +299,7 @@ Entry.VariableContainer = class VariableContainer {
                 callers.length
             );
 
-            const listView = Entry.createElement('ul')
-                .addClass('obj_list')
-                .appendTo(usedWrapper);
+            const listView = Entry.createElement('ul').addClass('obj_list').appendTo(usedWrapper);
             const fragment = document.createDocumentFragment();
             callers.forEach((caller) => {
                 const element = Entry.createElement('li');
@@ -317,11 +311,8 @@ Entry.VariableContainer = class VariableContainer {
                 const thumb = element.appendChild(caller.object.thumbnailView_.cloneNode());
                 thumb.addClass('thmb');
                 element.appendChild(thumb);
-                Entry.createElement('span')
-                    .addClass('text')
-                    .appendTo(element).textContent = `${caller.object.name} : ${
-                    Lang.Blocks[`START_${caller.block.type}`]
-                }`;
+                Entry.createElement('span').addClass('text').appendTo(element).textContent =
+                    `${caller.object.name} : ${Lang.Blocks[`START_${caller.block.type}`]}`;
                 element.bindOnClick((e) => {
                     e.stopPropagation();
                     if (Entry.playground.object !== caller.object) {
@@ -374,13 +365,9 @@ Entry.VariableContainer = class VariableContainer {
         );
 
         const usedWrapper = Entry.createElement('div').addClass('use_obj');
-        const usedSubject = Entry.createElement('span')
-            .addClass('box_sjt')
-            .appendTo(usedWrapper);
+        const usedSubject = Entry.createElement('span').addClass('box_sjt').appendTo(usedWrapper);
 
-        const listView = Entry.createElement('ul')
-            .addClass('obj_list')
-            .appendTo(usedWrapper);
+        const listView = Entry.createElement('ul').addClass('obj_list').appendTo(usedWrapper);
 
         if (callers.length) {
             usedSubject.textContent = Entry.Utils.stringFormat(
@@ -399,11 +386,8 @@ Entry.VariableContainer = class VariableContainer {
                 const thumb = caller.object.thumbnailView_.cloneNode();
                 thumb.addClass('thmb');
                 element.appendChild(thumb);
-                Entry.createElement('span')
-                    .addClass('text')
-                    .appendTo(element).textContent = `${caller.object.name} : ${
-                    Lang.Blocks[`VARIABLE_${caller.block.type}`]
-                }`;
+                Entry.createElement('span').addClass('text').appendTo(element).textContent =
+                    `${caller.object.name} : ${Lang.Blocks[`VARIABLE_${caller.block.type}`]}`;
                 element.variable = variable;
                 element.bindOnClick((e) => {
                     e.stopPropagation();
@@ -427,9 +411,8 @@ Entry.VariableContainer = class VariableContainer {
                 Lang.Workspace.use_block_objects2,
                 callers.length
             );
-            Entry.createElement('div')
-                .addClass('caution_dsc')
-                .appendTo(listView).textContent = Lang.Workspace.no_use;
+            Entry.createElement('div').addClass('caution_dsc').appendTo(listView).textContent =
+                Lang.Workspace.no_use;
         }
 
         if (hasInFunction) {
@@ -456,15 +439,11 @@ Entry.VariableContainer = class VariableContainer {
         }
         this.funcSettingView = element;
 
-        const funcAttr = createElement('div')
-            .addClass('func_attr')
-            .appendTo(element);
+        const funcAttr = createElement('div').addClass('func_attr').appendTo(element);
         if (this._isPythonMode()) {
             funcAttr.addClass('hidden');
         }
-        const boxSubject = createElement('span')
-            .addClass('box_sjt')
-            .appendTo(funcAttr);
+        const boxSubject = createElement('span').addClass('box_sjt').appendTo(funcAttr);
         boxSubject.textContent = Lang.Workspace.func_property;
 
         this.generateFuncDefaultView(funcAttr, func);
@@ -495,13 +474,9 @@ Entry.VariableContainer = class VariableContainer {
         const createElement = Entry.createElement;
 
         // 슬라이드 입력창
-        const checkInputBox = createElement('div')
-            .addClass('check_inpt')
-            .appendTo(element);
+        const checkInputBox = createElement('div').addClass('check_inpt').appendTo(element);
 
-        const resultCheckBox = createElement('div')
-            .addClass('chk_box')
-            .appendTo(checkInputBox);
+        const resultCheckBox = createElement('div').addClass('chk_box').appendTo(checkInputBox);
         element.resultCheck = createElement('span')
             .addClass('entryFuncAddResultCheckWorkspace')
             .bindOnClick(() => {
@@ -527,13 +502,9 @@ Entry.VariableContainer = class VariableContainer {
     generateFuncLocalVariableView(element, func) {
         const createElement = Entry.createElement;
 
-        const checkInputBox = createElement('div')
-            .addClass('check_inpt')
-            .appendTo(element);
+        const checkInputBox = createElement('div').addClass('check_inpt').appendTo(element);
 
-        const localVarCheckBox = createElement('div')
-            .addClass('chk_box')
-            .appendTo(checkInputBox);
+        const localVarCheckBox = createElement('div').addClass('chk_box').appendTo(checkInputBox);
 
         element.localVarCheck = createElement('span')
             .addClass('entryFuncAddLocalVarCheckWorkspace')
@@ -571,9 +542,7 @@ Entry.VariableContainer = class VariableContainer {
             .appendTo(localVarCheckBox);
         localVarCheckText.textContent = Lang.Workspace.check_local_variable;
 
-        const countInputBox = createElement('div')
-            .addClass('cnt_inpt')
-            .appendTo(checkInputBox);
+        const countInputBox = createElement('div').addClass('cnt_inpt').appendTo(checkInputBox);
 
         const buttonMinus = createElement('a')
             .addClass('btn_cnt')
@@ -640,12 +609,8 @@ Entry.VariableContainer = class VariableContainer {
 
         const createElement = Entry.createElement;
 
-        const countGroup = createElement('div')
-            .addClass('cnt_group')
-            .appendTo(element);
-        const countLabel = createElement('div')
-            .addClass('cnt_label')
-            .appendTo(countGroup);
+        const countGroup = createElement('div').addClass('cnt_group').appendTo(element);
+        const countLabel = createElement('div').addClass('cnt_label').appendTo(countGroup);
         countLabel.textContent = Lang.Workspace.local_variable;
         const scrollBox = createElement('div')
             .addClass('scroll_box simplebar-content-wrapper')
@@ -686,7 +651,7 @@ Entry.VariableContainer = class VariableContainer {
         );
         $listValues.on('focus', 'input', Entry.Utils.setFocused);
         $listValues.on('keypress', 'input', Entry.Utils.blurWhenEnter);
-        $listValues.on('click', 'a', function() {
+        $listValues.on('click', 'a', function () {
             const index = this.getAttribute('data-index');
             Entry.do('removeFuncLocalVariableByIndex', func, index);
             Entry.dispatchEvent('changeFuncVariableListSize');
@@ -777,18 +742,14 @@ Entry.VariableContainer = class VariableContainer {
         func.usedView && $(func.usedView).remove();
         const wrapper = createElement('div').addClass('use_block');
 
-        const boxSubject = createElement('span')
-            .addClass('box_sjt')
-            .appendTo(wrapper);
+        const boxSubject = createElement('span').addClass('box_sjt').appendTo(wrapper);
 
         if (callers.length) {
             boxSubject.textContent = Entry.Utils.stringFormat(
                 Lang.Workspace.use_block_objects1,
                 callers.length
             );
-            const listView = createElement('ul')
-                .addClass('obj_list')
-                .appendTo(wrapper);
+            const listView = createElement('ul').addClass('obj_list').appendTo(wrapper);
             const fragment = document.createDocumentFragment();
             callers.forEach((caller) => {
                 const element = createElement('li');
@@ -818,9 +779,7 @@ Entry.VariableContainer = class VariableContainer {
             });
             listView.appendChild(fragment);
         } else {
-            const caution = createElement('div')
-                .addClass('caution_dsc')
-                .appendTo(wrapper);
+            const caution = createElement('div').addClass('caution_dsc').appendTo(wrapper);
             caution.textContent = Lang.Workspace.no_use;
             boxSubject.textContent = Lang.Workspace.use_block_objects2;
         }
@@ -891,13 +850,13 @@ Entry.VariableContainer = class VariableContainer {
             if (this._isPythonMode()) {
                 $(data.listElement)
                     .find('input')
-                    .each(function() {
+                    .each(function () {
                         $(this).attr('disabled', 'disabled');
                     });
             } else {
                 $(data.listElement)
                     .find('input')
-                    .each(function() {
+                    .each(function () {
                         $(this).removeAttr('disabled');
                     });
             }
@@ -917,10 +876,7 @@ Entry.VariableContainer = class VariableContainer {
         arrItems.forEach((items) => {
             Object.values(items).forEach((item) => {
                 if (item.listElement) {
-                    item.listElement
-                        .removeClass('unfold')
-                        .removeClass('selected')
-                        .addClass('fold');
+                    item.listElement.removeClass('unfold').removeClass('selected').addClass('fold');
                 }
             });
         });
@@ -946,13 +902,9 @@ Entry.VariableContainer = class VariableContainer {
             'entryVariableSplitterWorkspace unfold all'
         );
 
-        const listBox = createElement('div')
-            .addClass('attr_box unfold')
-            .appendTo(listWrapper);
+        const listBox = createElement('div').addClass('attr_box unfold').appendTo(listWrapper);
 
-        const list = createElement('div')
-            .addClass('list')
-            .appendTo(listBox);
+        const list = createElement('div').addClass('list').appendTo(listBox);
 
         this.makeChildVariableViews(this.messages_, this.createMessageView.bind(this), list);
         this.makeChildVariableViews(this.variables_, this.createVariableView.bind(this), list);
@@ -980,13 +932,9 @@ Entry.VariableContainer = class VariableContainer {
             'entryVariableSplitterWorkspace message unfold'
         );
 
-        const messageListBox = createElement('div')
-            .addClass('attr_box')
-            .appendTo(messageList);
+        const messageListBox = createElement('div').addClass('attr_box').appendTo(messageList);
 
-        const list = createElement('div')
-            .addClass('list')
-            .appendTo(messageListBox);
+        const list = createElement('div').addClass('list').appendTo(messageListBox);
 
         this.makeChildVariableViews(this.messages_, this.createMessageView.bind(this), list);
         listView.appendChild(messageList);
@@ -1026,9 +974,7 @@ Entry.VariableContainer = class VariableContainer {
             })
             .appendTo(globalList);
 
-        const globalListBox = createElement('div')
-            .addClass('attr_box')
-            .appendTo(globalList);
+        const globalListBox = createElement('div').addClass('attr_box').appendTo(globalList);
 
         //local list container
         const localList = createElement('div').addClass(
@@ -1044,9 +990,7 @@ Entry.VariableContainer = class VariableContainer {
             })
             .appendTo(localList);
 
-        const localListBox = createElement('div')
-            .addClass('attr_box')
-            .appendTo(localList);
+        const localListBox = createElement('div').addClass('attr_box').appendTo(localList);
 
         const { globalV, localV } = _.groupBy(this.variables_, ({ object_ }) =>
             object_ ? 'localV' : 'globalV'
@@ -1113,9 +1057,7 @@ Entry.VariableContainer = class VariableContainer {
             })
             .appendTo(globalList);
 
-        const globalListBox = createElement('div')
-            .addClass('attr_box')
-            .appendTo(globalList);
+        const globalListBox = createElement('div').addClass('attr_box').appendTo(globalList);
 
         //local list container
         const localList = createElement('div').addClass(
@@ -1131,9 +1073,7 @@ Entry.VariableContainer = class VariableContainer {
             })
             .appendTo(localList);
 
-        const localListBox = createElement('div')
-            .addClass('attr_box')
-            .appendTo(localList);
+        const localListBox = createElement('div').addClass('attr_box').appendTo(localList);
 
         const { localV, globalV } = _.groupBy(this.lists_, ({ object_ }) =>
             object_ ? 'localV' : 'globalV'
@@ -1171,9 +1111,7 @@ Entry.VariableContainer = class VariableContainer {
             'entryVariableSplitterWorkspace func unfold'
         );
 
-        const funcListBox = createElement('div')
-            .addClass('attr_box')
-            .appendTo(funcList);
+        const funcListBox = createElement('div').addClass('attr_box').appendTo(funcList);
 
         this.makeChildVariableViews(
             this.functions_,
@@ -1648,18 +1586,12 @@ Entry.VariableContainer = class VariableContainer {
                 return this.select(func);
             })
             .appendTo(view);
-        const editBoxInputWrapper = createElement('div')
-            .addClass('inpt')
-            .appendTo(editBoxWrapper);
-        const editBoxInput = createElement('span')
-            .addClass('input')
-            .appendTo(editBoxInputWrapper);
+        const editBoxInputWrapper = createElement('div').addClass('inpt').appendTo(editBoxWrapper);
+        const editBoxInput = createElement('span').addClass('input').appendTo(editBoxInputWrapper);
         editBoxInput.textContent = func.description;
         editBoxInput.setAttribute('autocomplete', 'off');
 
-        const ArrowDownButton = createElement('div')
-            .addClass('arrowDown')
-            .appendTo(editBoxWrapper);
+        const ArrowDownButton = createElement('div').addClass('arrowDown').appendTo(editBoxWrapper);
 
         const delButton = createElement('a')
             .addClass('del')
@@ -1938,9 +1870,7 @@ Entry.VariableContainer = class VariableContainer {
             watchButton.removeClass('on');
         }
         watchButton.href = '#';
-        const editBoxInputWrapper = createElement('div')
-            .addClass('inpt')
-            .appendTo(editBoxWrapper);
+        const editBoxInputWrapper = createElement('div').addClass('inpt').appendTo(editBoxWrapper);
         const editBoxInput = createElement('input')
             .addClass('editBoxInput')
             .bindOnClick((e) => {
@@ -1951,7 +1881,7 @@ Entry.VariableContainer = class VariableContainer {
         editBoxInput.setAttribute('type', 'text');
         editBoxInput.setAttribute('name', 'inpt_name');
         editBoxInput.value = variable.name_;
-        editBoxInput.onblur = function() {
+        editBoxInput.onblur = function () {
             const value = this.value.trim();
             if (!value) {
                 Entry.toast.alert(Lang.Msgs.warn, Lang.Msgs.variable_can_not_space);
@@ -1962,9 +1892,7 @@ Entry.VariableContainer = class VariableContainer {
             targetVariable && Entry.do('variableSetName', targetVariable.getId(), value);
         };
         editBoxInput.onkeydown = Entry.Utils.blurWhenEnter;
-        const ArrowDownButton = createElement('div')
-            .addClass('arrowDown')
-            .appendTo(editBoxWrapper);
+        const ArrowDownButton = createElement('div').addClass('arrowDown').appendTo(editBoxWrapper);
         const delButton = createElement('a')
             .addClass('del')
             .bindOnClick((e) => {
@@ -2094,9 +2022,7 @@ Entry.VariableContainer = class VariableContainer {
                 return this.select(message);
             })
             .appendTo(view);
-        const editBoxInputWrapper = createElement('div')
-            .addClass('inpt')
-            .appendTo(editBoxWrapper);
+        const editBoxInputWrapper = createElement('div').addClass('inpt').appendTo(editBoxWrapper);
         const editBoxInput = createElement('input')
             .addClass('editBoxInput')
             .bindOnClick((e) => {
@@ -2107,7 +2033,7 @@ Entry.VariableContainer = class VariableContainer {
         editBoxInput.setAttribute('type', 'text');
         editBoxInput.value = message.name;
         editBoxInput.onfocus = Entry.Utils.setFocused;
-        editBoxInput.onblur = Entry.Utils.setBlurredTimer(function() {
+        editBoxInput.onblur = Entry.Utils.setBlurredTimer(function () {
             const value = this.value;
             if (!value.trim()) {
                 Entry.toast.alert(Lang.Msgs.warn, Lang.Msgs.sign_can_not_space);
@@ -2124,9 +2050,7 @@ Entry.VariableContainer = class VariableContainer {
         }, 200);
         editBoxInput.onkeydown = Entry.Utils.blurWhenEnter;
 
-        const ArrowDownButton = createElement('div')
-            .addClass('arrowDown')
-            .appendTo(editBoxWrapper);
+        const ArrowDownButton = createElement('div').addClass('arrowDown').appendTo(editBoxWrapper);
 
         const delButton = createElement('a')
             .addClass('del')
@@ -2156,9 +2080,7 @@ Entry.VariableContainer = class VariableContainer {
         const that = this;
         const createElement = Entry.createElement;
 
-        const listWrapper = createElement('div')
-            .addClass('list fold')
-            .appendTo(this.globalListBox);
+        const listWrapper = createElement('div').addClass('list fold').appendTo(this.globalListBox);
 
         if (!list.object_) {
             if (list.isCloud_) {
@@ -2209,9 +2131,7 @@ Entry.VariableContainer = class VariableContainer {
             watchButton.removeClass('on');
         }
         watchButton.href = '#';
-        const editBoxInputWrapper = createElement('div')
-            .addClass('inpt')
-            .appendTo(editBoxWrapper);
+        const editBoxInputWrapper = createElement('div').addClass('inpt').appendTo(editBoxWrapper);
         const editBoxInput = createElement('input')
             .addClass('editBoxInput')
             .bindOnClick((e) => {
@@ -2222,7 +2142,7 @@ Entry.VariableContainer = class VariableContainer {
         editBoxInput.setAttribute('type', 'text');
         editBoxInput.setAttribute('name', 'inpt_name');
         editBoxInput.value = list.name_;
-        editBoxInput.onblur = function() {
+        editBoxInput.onblur = function () {
             const value = this.value.trim();
             if (!value) {
                 Entry.toast.alert(Lang.Msgs.warn, Lang.Msgs.list_can_not_space);
@@ -2233,9 +2153,7 @@ Entry.VariableContainer = class VariableContainer {
             targetList && Entry.do('listSetName', targetList.getId(), value);
         };
         editBoxInput.onkeydown = Entry.Utils.blurWhenEnter;
-        const ArrowDownButton = createElement('div')
-            .addClass('arrowDown')
-            .appendTo(editBoxWrapper);
+        const ArrowDownButton = createElement('div').addClass('arrowDown').appendTo(editBoxWrapper);
         const delButton = createElement('a')
             .addClass('del')
             .bindOnClick((e) => {
@@ -2367,7 +2285,7 @@ Entry.VariableContainer = class VariableContainer {
         addSpaceInput.id = 'entryVariableAddSpaceInputWorkspace';
         addSpaceInput.setAttribute('placeholder', Lang.Workspace.Variable_placeholder_content);
         addSpaceInput.variableContainer = this;
-        addSpaceInput.onkeypress = _whenEnter(function() {
+        addSpaceInput.onkeypress = _whenEnter(function () {
             if (this.enterKeyDisabled) {
                 this.blur();
             } else {
@@ -2375,7 +2293,7 @@ Entry.VariableContainer = class VariableContainer {
             }
         });
         addSpaceInput.onfocus = _setFocused;
-        const doBlur = _setBlurredTimer(function() {
+        const doBlur = _setBlurredTimer(function () {
             this.isBlurred = false;
             Entry.do('variableAddSetName', this.value);
             this.blurCallback && this.blurCallback();
@@ -2546,7 +2464,7 @@ Entry.VariableContainer = class VariableContainer {
         addSpaceInput.setAttribute('type', 'text');
         addSpaceInput.id = 'entryVariableAddSpaceInputWorkspace';
         addSpaceInput.setAttribute('placeholder', Lang.Workspace.list_create_placeholder);
-        addSpaceInput.onkeypress = Entry.Utils.whenEnter(function() {
+        addSpaceInput.onkeypress = Entry.Utils.whenEnter(function () {
             if (this.enterKeyDisabled) {
                 this.blur();
             } else {
@@ -2554,7 +2472,7 @@ Entry.VariableContainer = class VariableContainer {
             }
         });
         addSpaceInput.onfocus = _setFocused;
-        const doBlur = _setBlurredTimer(function() {
+        const doBlur = _setBlurredTimer(function () {
             this.isBlurred = false;
             Entry.do('listAddSetName', this.value);
             this.blurCallback && this.blurCallback();
@@ -2671,7 +2589,7 @@ Entry.VariableContainer = class VariableContainer {
         msgNameInput.setAttribute('autocomplete', 'off');
         msgNameInput.setAttribute('type', 'text');
         msgNameInput.setAttribute('placeholder', Lang.Workspace.message_create_placeholder);
-        msgNameInput.onkeydown = Entry.Utils.whenEnter(function() {
+        msgNameInput.onkeydown = Entry.Utils.whenEnter(function () {
             if (this.enterKeyDisabled) {
                 this.blur();
             } else {
@@ -2885,17 +2803,11 @@ Entry.VariableContainer = class VariableContainer {
         }
         this.variableSettingView = element;
 
-        const varAttr = createElement('div')
-            .addClass('val_attr')
-            .appendTo(element);
-        const boxSubject = createElement('span')
-            .addClass('box_sjt')
-            .appendTo(varAttr);
+        const varAttr = createElement('div').addClass('val_attr').appendTo(element);
+        const boxSubject = createElement('span').addClass('box_sjt').appendTo(varAttr);
         boxSubject.textContent = Lang.Workspace.Variable_property;
 
-        const valTypeText = Entry.createElement('span')
-            .addClass('val_type_txt')
-            .appendTo(varAttr);
+        const valTypeText = Entry.createElement('span').addClass('val_type_txt').appendTo(varAttr);
 
         if (variable.isRealTime_) {
             valTypeText.textContent = Lang.Menus.realtime;
@@ -2904,9 +2816,7 @@ Entry.VariableContainer = class VariableContainer {
         }
 
         // 기본 값 입력 창
-        const attrInputBox = createElement('div')
-            .addClass('attr_inpt')
-            .appendTo(varAttr);
+        const attrInputBox = createElement('div').addClass('attr_inpt').appendTo(varAttr);
         if (this._isPythonMode()) {
             attrInputBox.addClass('hidden');
         }
@@ -2924,7 +2834,7 @@ Entry.VariableContainer = class VariableContainer {
         attrInput.value = 0;
         attrInput.onkeypress = Entry.Utils.blurWhenEnter;
         attrInput.onfocus = _setFocused;
-        attrInput.onblur = _setBlurredTimer(function() {
+        attrInput.onblur = _setBlurredTimer(function () {
             const v = that.selected;
             if (!v) {
                 console.error('error: not selected');
@@ -2935,13 +2845,9 @@ Entry.VariableContainer = class VariableContainer {
         element.initValueInput = attrInput;
 
         // 슬라이드 입력창
-        const slideInputBox = createElement('div')
-            .addClass('slide_inpt')
-            .appendTo(varAttr);
+        const slideInputBox = createElement('div').addClass('slide_inpt').appendTo(varAttr);
 
-        const slideCheckBox = createElement('div')
-            .addClass('chk_box')
-            .appendTo(slideInputBox);
+        const slideCheckBox = createElement('div').addClass('chk_box').appendTo(slideInputBox);
         element.slideCheck = createElement('span')
             .addClass('entryVariableAddSpaceCheckWorkspace')
             .bindOnClick(() => {
@@ -2953,15 +2859,11 @@ Entry.VariableContainer = class VariableContainer {
                 );
             })
             .appendTo(slideCheckBox);
-        const slideCheckText = createElement('span')
-            .addClass('chk_text')
-            .appendTo(slideCheckBox);
+        const slideCheckText = createElement('span').addClass('chk_text').appendTo(slideCheckBox);
         slideCheckText.textContent = Lang.Workspace.slide;
 
         // 최소 최대 영역
-        const slideCountBox = createElement('div')
-            .addClass('cnt_box')
-            .appendTo(slideInputBox);
+        const slideCountBox = createElement('div').addClass('cnt_box').appendTo(slideInputBox);
 
         const minValueInput = createElement('input').appendTo(slideCountBox);
         minValueInput.textContent = Lang.Workspace.min_value;
@@ -2978,7 +2880,7 @@ Entry.VariableContainer = class VariableContainer {
         }
         minValueInput.onkeypress = Entry.Utils.blurWhenEnter;
         minValueInput.onfocus = _setFocused;
-        minValueInput.onblur = _setBlurredTimer(function() {
+        minValueInput.onblur = _setBlurredTimer(function () {
             const v = that.selected;
             let value = this.value;
             value = Entry.Utils.isNumber(value) ? value : v.getMinValue();
@@ -2986,9 +2888,7 @@ Entry.VariableContainer = class VariableContainer {
         });
         element.minValueInput = minValueInput;
 
-        createElement('span')
-            .addClass('dash')
-            .appendTo(slideCountBox).textContent = '~';
+        createElement('span').addClass('dash').appendTo(slideCountBox).textContent = '~';
 
         const maxValueInput = createElement('input').appendTo(slideCountBox);
         maxValueInput.textContent = Lang.Workspace.max_value;
@@ -3003,7 +2903,7 @@ Entry.VariableContainer = class VariableContainer {
 
         maxValueInput.onkeypress = Entry.Utils.blurWhenEnter;
         maxValueInput.onfocus = _setFocused;
-        maxValueInput.onblur = _setBlurredTimer(function() {
+        maxValueInput.onblur = _setBlurredTimer(function () {
             const v = that.selected;
             let value = this.value;
             value = Entry.Utils.isNumber(value) ? value : v.getMaxValue();
@@ -3060,20 +2960,14 @@ Entry.VariableContainer = class VariableContainer {
         }
         this.listSettingView = element;
 
-        const listAttr = createElement('div')
-            .addClass('list_attr')
-            .appendTo(element);
+        const listAttr = createElement('div').addClass('list_attr').appendTo(element);
         if (this._isPythonMode()) {
             listAttr.addClass('hidden');
         }
-        const boxSubject = createElement('span')
-            .addClass('box_sjt')
-            .appendTo(listAttr);
+        const boxSubject = createElement('span').addClass('box_sjt').appendTo(listAttr);
         boxSubject.textContent = Lang.Workspace.list_property;
 
-        const valTypeText = Entry.createElement('span')
-            .addClass('val_type_txt')
-            .appendTo(listAttr);
+        const valTypeText = Entry.createElement('span').addClass('val_type_txt').appendTo(listAttr);
 
         if (list.isRealTime_) {
             valTypeText.textContent = Lang.Menus.realtime;
@@ -3091,9 +2985,7 @@ Entry.VariableContainer = class VariableContainer {
         const that = this;
         const createElement = Entry.createElement;
 
-        const buttonBox = createElement('div')
-            .addClass('btn_box')
-            .appendTo(element);
+        const buttonBox = createElement('div').addClass('btn_box').appendTo(element);
 
         const buttonExport = createElement('a')
             .addClass('btn_list')
@@ -3124,18 +3016,12 @@ Entry.VariableContainer = class VariableContainer {
         const that = this;
         const createElement = Entry.createElement;
 
-        const listCount = createElement('div')
-            .addClass('list_cnt')
-            .appendTo(element);
+        const listCount = createElement('div').addClass('list_cnt').appendTo(element);
 
-        const countSubject = createElement('span')
-            .addClass('cnt_sjt')
-            .appendTo(listCount);
+        const countSubject = createElement('span').addClass('cnt_sjt').appendTo(listCount);
         countSubject.textContent = Lang.Workspace.number_of_list;
 
-        const countInputBox = createElement('div')
-            .addClass('cnt_inpt')
-            .appendTo(listCount);
+        const countInputBox = createElement('div').addClass('cnt_inpt').appendTo(listCount);
 
         const buttonMinus = createElement('a')
             .addClass('btn_cnt')
@@ -3159,7 +3045,7 @@ Entry.VariableContainer = class VariableContainer {
         countInput.setAttribute('type', 'text');
         countInput.setAttribute('maxlength', maxlength);
 
-        countInput.onblur = function() {
+        countInput.onblur = function () {
             const v = that.selected;
             let value = this.value;
             const array_ = v.getArray();
@@ -3207,16 +3093,10 @@ Entry.VariableContainer = class VariableContainer {
     generateListValuesView(element) {
         const createElement = Entry.createElement;
 
-        const countGroup = createElement('div')
-            .addClass('cnt_group')
-            .appendTo(element);
-        const countLabel = createElement('div')
-            .addClass('cnt_label')
-            .appendTo(countGroup);
+        const countGroup = createElement('div').addClass('cnt_group').appendTo(element);
+        const countLabel = createElement('div').addClass('cnt_label').appendTo(countGroup);
         countLabel.textContent = Lang.Workspace.list_default_value;
-        const scrollBox = createElement('div')
-            .addClass('scroll_box')
-            .appendTo(countGroup);
+        const scrollBox = createElement('div').addClass('scroll_box').appendTo(countGroup);
         const el = new SimpleBar(scrollBox, { autoHide: false });
         const parent = /* html */ `<ol class="cnt_list">{1}</ol>`;
         this.listSettingView.countGroup = countGroup;
@@ -3294,7 +3174,7 @@ Entry.VariableContainer = class VariableContainer {
             );
             $listValues.on('focus', 'input', Entry.Utils.setFocused);
             $listValues.on('keypress', 'input', Entry.Utils.blurWhenEnter);
-            $listValues.on('click', 'a', function() {
+            $listValues.on('click', 'a', function () {
                 const index = this.getAttribute('data-index');
                 arr.splice(index, 1);
                 that.updateListSettingView();
