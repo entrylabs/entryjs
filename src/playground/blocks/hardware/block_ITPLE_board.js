@@ -1,6 +1,11 @@
 'use strict';
 
 Entry.ITPLE = {
+    afterReceive(pd) {
+        if(Entry.engine.isState('run')) {
+            Entry.engine.fireEvent('ITPLE_press_button');
+        }
+    },
     id: '5E.1',
     name: 'ITPLE',
     url: 'http://www.itpleinfo.com/',
@@ -80,103 +85,85 @@ Entry.ITPLE = {
     highList: ['high', '1', 'on'],
     lowList: ['low', '0', 'off'],
     BlockState: {},
+    EdgeFlag: {
+        'A0': false,
+        'A1': false,
+        '7': false,
+        '8': false,
+    },
 };
 
 Entry.ITPLE.setLanguage = function () {
     return {
         ko: {
             template: {
-                ITPLE_get_analog_value: '아날로그 %1 번 값',
-                ITPLE_get_digital_value: '디지털 %1 번 값',
+                ITPLE_push_button: '%1 %2 버튼을 눌렀을 때',
+                ITPLE_get_button_value: '%1 버튼 값',
+                ITPLE_get_sensor_value: '%1 센서 값',
+                ITPLE_get_ultrasonic_value: '초음파 센서 값',
                 ITPLE_is_key_pressed: '%1 키가 눌러져 있는가?',
-                ITPLE_value_lighting: '조도 센서 값이 %1 보다 큰가?',
-                ITPLE_value_sound: '소리 센서 값이 %1 보다 큰가?',
-                ITPLE_value_mapping: '%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼 값',
-                ITPLE_get_ultrasonic_value: '초음파센서 Trig %1 Echo %2 값',
-                ITPLE_toggle_led: '디지털 %1 번 핀 %2 %3',
+                ITPLE_value_sensor: '%1 센서 값이 %2보다 %3',
                 ITPLE_turn_led: '%1 LED %2 %3',
-                ITPLE_digital_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
-                ITPLE_set_tone: '버저를 %2 %3 음으로 %4 초 연주하기 %5',
-                ITPLE_get_digital: '디지털 %1 번 센서값',
+                ITPLE_set_tone: '버저를 %1 %2 음으로 %3 초 연주하기 %4',
                 ITPLE_set_motor_direction: '%1 모터 %2 방향으로 정하기 %3',
-                ITPLE_set_motor_speed_old: '(V1)%1 모터 %2 속도로  정하기 %3',
-                ITPLE_set_motor_speed_new: '(V2)%1 모터 %2 속도로  정하기 %3',
-                ITPLE_set_servo: '디지털 %1 번 핀의 서보모터를 %2 도로 정하기 %3',
-                ITPLE_set_neopixelinit: '디지털 %1 번 핀에 연결된 %2 개의 네오픽셀 LED 사용하기 %3',
-                ITPLE_set_neopixel:
-                    '디지털 %1 번 핀에 연결된 %2 번째 네오픽셀 LED를 R: %3 , G: %4 , B: %5 색으로 켜기 %6',
+                ITPLE_set_motor_speed: '%1 모터 %2 빠르기로 정하기 %3',
+                ITPLE_set_servo: '서보모터를 %2 도로 정하기 %3',
             },
         },
         en: {
             template: {
-                ITPLE_get_analog_value: 'Analog %1 value',
-                ITPLE_get_digital_value: 'Digital %1 value',
+                ITPLE_push_button: '%1 When %2 button is pressed',
+                ITPLE_get_button_value: '%1 button value',
+                ITPLE_get_sensor_value: '%1 sensor value',
+                ITPLE_get_ultrasonic_value: 'Ultrasonic sensor value',
                 ITPLE_is_key_pressed: '%1 key pressed',
-                ITPLE_value_lighting: 'Is light sensor value greater than %1',
-                ITPLE_value_sound: 'Is sound sensor value greater than %1',
-                ITPLE_value_mapping: 'Map Value %1 %2 ~ %3 to %4 ~ %5',
-                ITPLE_get_ultrasonic_value: 'Read ultrasonic sensor trig pin %1 echo pin %2',
-                ITPLE_toggle_led: 'Digital %1 Pin %2 %3',
+                ITPLE_value_sensor: 'Is %1 sensor value %3 than %2',
                 ITPLE_turn_led: '%1 LED %2 %3',
-                ITPLE_digital_pwm: 'Digital %1 Pin %2 %3',
-                ITPLE_set_tone: 'Play tone on note %2 octave %3 beat %4 %5',
-                ITPLE_get_digital: 'Digital %1 Sensor value',
+                ITPLE_set_tone: 'Play tone on note %1 octave %2 beat %3 %4',
                 ITPLE_set_motor_direction: '%1 motor %2 direction %3',
-                ITPLE_set_motor_speed_old: '(old) %1 motor %2 speed %3',
-                ITPLE_set_motor_speed_new: '(new) %1 motor %2 speed %3',
-                ITPLE_set_servo: 'Set servo motor of pin %1 to %2 degree %3',
-                ITPLE_set_neopixelinit: 'Use %2 NeoPixel LEDs connected to digital pin %1 %3',
-                ITPLE_set_neopixel:
-                    'Turn on the %2nd NeoPixel LED connected to digital pin %1 with color R: %3, G: %4, B: %5 %6',
+                ITPLE_set_motor_speed: '%1 motor %2 speed %3',
+                ITPLE_set_servo: 'Set servo motor to %2 degree %3',
             },
         },
     };
 };
 
 Entry.ITPLE.blockMenuBlocks = [
-    'ITPLE_get_analog_value',
-    'ITPLE_get_digital_value',
-    'ITPLE_is_key_pressed',
-    'ITPLE_value_lighting',
-    'ITPLE_value_sound',
-    'ITPLE_value_mapping',
+    'ITPLE_push_button',
+    'ITPLE_get_button_value',
+    'ITPLE_get_sensor_value',
     'ITPLE_get_ultrasonic_value',
-    'ITPLE_get_digital',
-    'ITPLE_toggle_led',
+    'ITPLE_is_key_pressed',
+    'ITPLE_value_sensor',
     'ITPLE_turn_led',
-    'ITPLE_digital_pwm',
     'ITPLE_set_tone',
     'ITPLE_set_motor_direction',
-    'ITPLE_set_motor_speed_old',
-    'ITPLE_set_motor_speed_new',
+    'ITPLE_set_motor_speed',
     'ITPLE_set_servo',
-    'ITPLE_set_neopixelinit',
-    'ITPLE_set_neopixel',
 ];
 
 //region ITPLE 보드
 Entry.ITPLE.getBlocks = function () {
     return {
-        ITPLE_analog_list: {
+        ITPLE_push_button: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic_string_field',
+            skeleton: 'basic_event',
             statements: [],
-            template: '%1',
             params: [
                 {
+                    type: 'Indicator',
+                    img: 'block_icon/start_icon_hardware.svg',
+                    size: 14,
+                    position: {
+                        x: 0,
+                        y: -2,
+                    },
+                },
+                {
                     type: 'Dropdown',
-                    options: [
-                        ['A0', '0'],
-                        ['A1', '1'],
-                        ['A2', '2'],
-                        ['A3', '3'],
-                        ['A4', '4'],
-                        ['A5', '5'],
-                        ['A6', '6'],
-                        ['A7', '7'],
-                    ],
-                    value: '0',
+                    options: [['위쪽', 'A0'], ['아래쪽', 'A1'], ['왼쪽', '7'], ['오른쪽', '8']],
+                    value: 'A0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -184,159 +171,217 @@ Entry.ITPLE.getBlocks = function () {
             ],
             events: {},
             def: {
-                params: [null],
+                params: [null, 'A0'], 
+                type: 'ITPLE_push_button'
             },
             paramsKeyMap: {
-                PORT: 0,
+                PORT: 1 
             },
+            class: 'ITPLEStart',
+            isNotFor: ['ITPLE'], 
+            event: 'ITPLE_press_button',
             func(sprite, script) {
-                return script.getField('PORT');
+                const portConfigMap = {
+                    'A0': { type: 'ANALOG', index: 0 },
+                    'A1': { type: 'ANALOG', index: 1 },
+                    '7':  { type: 'DIGITAL', index: 7 },
+                    '8':  { type: 'DIGITAL', index: 8 },
+                };
+
+                const portKey = script.getValue('PORT', script);
+                const config = portConfigMap[portKey];
+                const value = Entry.hw.portData[config.type]?.[config.index] ?? 0;
+
+                const hasBeenPressedBefore = Entry.ITPLE.EdgeFlag[portKey];
+                
+                if (value === 0) {
+                    if (!hasBeenPressedBefore) {
+                        Entry.ITPLE.EdgeFlag[portKey] = true;
+                        return script.callReturn();
+                    }
+                } else {
+                    Entry.ITPLE.EdgeFlag[portKey] = false;
+                }
+
+                return this.die();
             },
+            
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: '%1',
-                        blockType: 'param',
+                        syntax: 'def when_push_button(%2):',
+                        passTest: true,
+                        blockType: 'event',
                         textParams: [
+                            undefined,
                             {
                                 type: 'Dropdown',
-                                options: [
-                                    ['A0', '0'],
-                                    ['A1', '1'],
-                                    ['A2', '2'],
-                                    ['A3', '3'],
-                                    ['A4', '4'],
-                                    ['A5', '5'],
-                                    ['A6', '6'],
-                                    ['A7', '7'],
-                                ],
-                                value: '0',
-                                fontSize: 11,
-                                converter: Entry.block.converters.returnStringKey,
-                                codeMap: 'Entry.CodeMap.Arduino.ITPLE_analog_list[0]',
-                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                options: [['위쪽', 'A0'], ['아래쪽', 'A1'], ['왼쪽', '7'], ['오른쪽', '8']],
+                                value: 'A0',
+                                arrowColor: EntryStatic.colorSet.arrow.default.START,
+                                converter: Entry.block.converters.returnStringValue,
                             },
                         ],
-                        keyOption: 'ITPLE_analog_list',
                     },
                 ],
             },
         },
-        ITPLE_get_analog_value: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
+
+        ITPLE_get_button_value: {
+            color: EntryStatic.colorSet.block["default"].HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-            ],
+            params: [{
+                type: 'Dropdown',
+                options: [['위쪽', 'A0'], ['아래쪽', 'A1'], ['왼쪽', '7'], ['오른쪽', '8']],
+                value: 'A0',
+                fontSize: 11,
+                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                arrowColor: EntryStatic.colorSet.arrow["default"].HARDWARE
+            }],
             events: {},
             def: {
-                params: [
-                    {
-                        type: 'ITPLE_analog_list',
-                    },
-                ],
-                type: 'ITPLE_get_analog_value',
+                params: [null],
+                type: 'ITPLE_get_button_value'
             },
             paramsKeyMap: {
-                PORT: 0,
+                PORT: 0
             },
-            class: 'ITPLEGet',
+            "class": 'ITPLEGet',
             isNotFor: ['ITPLE'],
-            func(sprite, script) {
-                let port = script.getValue('PORT', script);
-                const ANALOG = Entry.hw.portData.ANALOG;
-                if (port[0] === 'A') {
-                    port = port.substring(1);
-                }
-                return ANALOG ? ANALOG[port] || 0 : 0;
+            func: function func(sprite, script) {
+                const portConfigMap = {
+                    'A0': { type: 'ANALOG', index: 0 },
+                    'A1': { type: 'ANALOG', index: 1 },
+                    '7':  { type: 'DIGITAL', index: 7 },
+                    '8':  { type: 'DIGITAL', index: 8 },
+                };
+                const portKey = script.getValue('PORT', script);
+                const config = portConfigMap[portKey];
+                if (!config) return 0;
+                return Entry.hw.portData[config.type]?.[config.index] ?? 0;
             },
             syntax: {
                 js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.analogRead(%1)',
-                        blockType: 'param',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
-            },
+                py: [{
+                    syntax: 'Arduino.digitalRead(%1)',
+                    blockType: 'param',
+                    textParams: [{ type: 'Block', accept: 'string' }]
+                }]
+            }
         },
-        ITPLE_get_digital_value: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#fff',
-            skeleton: 'basic_string_field',
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    {
-                        type: 'arduino_get_port_number',
-                        params: [7],
-                    },
-                ],
-                type: 'ITPLE_get_digital_value',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-            },
-            class: 'ITPLEGet',
-            isNotFor: ['ITPLE'],
-            func(sprite, script) {
-                const { hwModule = {} } = Entry.hw;
-                const { name } = hwModule;
-                if (name === 'ITPLE' || name === 'ArduinoNano') {
-                    const port = script.getNumberValue('PORT', script);
-                    const DIGITAL = Entry.hw.portData.DIGITAL;
-                    if (!Entry.hw.sendQueue.GET) {
-                        Entry.hw.sendQueue.GET = {};
-                    }
-                    Entry.hw.sendQueue.GET[Entry.ITPLE.sensorTypes.DIGITAL] = {
-                        port,
-                        time: new Date().getTime(),
-                    };
-                    return DIGITAL ? DIGITAL[port] || 0 : 0;
-                } else {
-                    return Entry.block.arduino_get_digital_value.func(sprite, script);
-                }
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.digitalRead(%1)',
-                        blockType: 'param',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
-            },
+        ITPLE_get_sensor_value: {
+          color: EntryStatic.colorSet.block["default"].HARDWARE,
+          outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+          fontColor: '#fff',
+          skeleton: 'basic_string_field',
+          statements: [],
+          params: [{
+            type: 'Dropdown',
+            options: [['조도', 'A2'], ['소리', 'A3'], ['왼쪽 라인', 'A6'], ['오른쪽 라인', 'A7']],
+            value: 'A2',
+            fontSize: 11,
+            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+            arrowColor: EntryStatic.colorSet.arrow["default"].HARDWARE
+          }],
+          events: {},
+          def: {
+            params: [null],
+            type: 'ITPLE_get_sensor_value'
+          },
+          paramsKeyMap: {
+            PORT: 0
+          },
+          "class": 'ITPLEGet',
+          isNotFor: ['ITPLE'],
+          func: function func(sprite, script) {
+            const portConfigMap = {
+              'A2': { type: 'ANALOG', index: 2 },
+              'A3': { type: 'ANALOG', index: 3 },
+              'A6': { type: 'ANALOG', index: 6 },
+              'A7': { type: 'ANALOG', index: 7 },
+            };
+            const portKey = script.getValue('PORT', script);
+            const config = portConfigMap[portKey];
+            if (!config) return 0;
+            return Entry.hw.portData[config.type]?.[config.index] ?? 0;
+          },
+          syntax: {
+            js: [],
+            py: [{
+              syntax: 'Arduino.analogRead(%1)',
+              blockType: 'param',
+              textParams: [{ type: 'Block', accept: 'string' }]
+            }]
+          }
         },
         ITPLE_is_key_pressed: {
+          color: EntryStatic.colorSet.block.default.HARDWARE,
+          outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+          fontColor: '#fff',
+          skeleton: 'basic_boolean_field',
+          params: [
+              {
+                  type: 'Dropdown',
+                  options: [
+                      ['위쪽', 'A0'],
+                      ['아래쪽', 'A1'],
+                      ['왼쪽', '7'],
+                      ['오른쪽', '8'],
+                  ],
+                  value: 'A0',
+                  fontSize: 11,
+                  bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                  arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+              },
+          ],
+          events: {},
+          def: {
+              params: [null],
+              type: 'ITPLE_is_key_pressed',
+          },
+          paramsKeyMap: {
+              KEY: 1,
+          },
+          "class": 'ITPLEGet',
+          isNotFor: ['ITPLE'],
+          func(sprite, script) {
+              // 각 키에 대한 하드웨어 포트 정보를 객체로 관리하여 확장성을 높입니다.
+              const keyToPortMap = {
+                  'A0': { type: 'ANALOG', index: 0 },
+                  'A1': { type: 'ANALOG', index: 1 },
+                  '7':  { type: 'DIGITAL', index: 7 },
+                  '8':  { type: 'DIGITAL', index: 8 },
+              };
+
+              const seletedKey = script.getField('KEY');
+              const portConfig = keyToPortMap[seletedKey];
+
+              // 유효하지 않은 키는 즉시 false를 반환합니다.
+              if (!portConfig) {
+                  return false;
+              }
+              
+              // 옵셔널 체이닝(?.)과 null 병합 연산자(??)를 사용해
+              // 하드웨어 데이터 존재 여부를 확인하고 값을 안전하게 가져옵니다.
+              const value = Entry.hw.portData[portConfig.type]?.[portConfig.index] ?? 1;
+
+              // 버튼이 눌렸을 때의 값(0)과 일치하는지 확인하여 boolean 값을 반환합니다.
+              return value === 0;
+          },
+          syntax: {
+              js: [],
+              py: [
+                  {
+                      syntax: 'Arduino.digitalRead(%1)==0',
+                  },
+              ],
+          },
+        },
+        ITPLE_value_sensor: { // 저학년을 위한 센서 블록 생성
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -347,588 +392,148 @@ Entry.ITPLE.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['위', 'UP'],
-                        ['아래', 'DOWN'],
-                        ['오른쪽', 'RIGHT'],
-                        ['왼쪽', 'LEFT'],
+                        ['조도', '2'],
+                        ['소리', '3'],
+                        ['왼쪽 라인', '6'],
+                        ['오른쪽 라인', '7'],
                     ],
-                    value: 'UP',
+                    value: '2',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-            ],
-
-            events: {},
-
-            def: {
-                params: [null],
-                type: 'ITPLE_is_key_pressed',
-            },
-
-            paramsKeyMap: {
-                KEY: 0,
-            },
-            isNotFor: ['ITPLE'],
-            func(sprite, script) {
-                const seletedKey = script.getField('KEY');
-
-                const analogPortData = Entry.hw.portData.ANALOG;
-                const digitalPortData = Entry.hw.portData.DIGITAL;
-
-                switch (seletedKey) {
-                    case 'UP': {
-                        const value = analogPortData ? analogPortData[0] : 0;
-                        return value === 0;
-                    }
-                    case 'DOWN': {
-                        const value = analogPortData ? analogPortData[1] : 0;
-                        return value === 0;
-                    }
-                    case 'RIGHT': {
-                        const value = digitalPortData ? digitalPortData[8] : 1;
-                        return value === 0;
-                    }
-                    case 'LEFT': {
-                        const value = digitalPortData ? digitalPortData[7] : 1;
-                        return value === 0;
-                    }
-                    default:
-                        return false;
-                }
-            },
-
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: '위:Arduino.analogRead(0)==0, 아래:Arduino.analogRead(1)==0, 오른쪽:Arduino.digitalRead(8)==0, 왼쪽:Arduino.digitalRead(7)==0',
-                    },
-                ],
-            },
-        },
-        ITPLE_value_lighting: {
-            // 저학년을 위한 조도센서 블록 생성
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#fff',
-
-            skeleton: 'basic_boolean_field',
-
-            params: [
                 {
                     type: 'Block',
                     accept: 'number',
                 },
-            ],
-
-            events: {},
-
-            def: {
-                params: [null],
-                type: 'ITPLE_value_lighting',
-            },
-
-            paramsKeyMap: {
-                VALUE: 0,
-            },
-            isNotFor: ['ITPLE'],
-            func(sprite, script) {
-                const value = script.getValue('VALUE');
-
-                const analogPortData = Entry.hw.portData.ANALOG;
-
-                if (analogPortData) {
-                    return analogPortData[2] > value;
+                {
+                  type: 'Dropdown',
+                  options: [
+                    ['크다', '>'],
+                    ['크거나같다', '>='],
+                    ['같다', '=='],
+                    ['작거나같다', '<='],
+                    ['작다', '<'],
+                  ],
+                  value: '>',
+                  fontSize: 11,
+                  bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                  arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 }
-                return false;
-            },
-
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.analogRead(2) > %1',
-                        blockType: 'param',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
-            },
-        },
-        ITPLE_value_sound: {
-            // 저학년을 위한 사운드센서 블록 생성
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#fff',
-
-            skeleton: 'basic_boolean_field',
-
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'number',
-                },
             ],
-            events: {},
-            def: {
-                params: [null],
-                type: 'ITPLE_value_sound',
-            },
-            paramsKeyMap: {
-                VALUE: 0,
-            },
-            isNotFor: ['ITPLE'],
-            func(sprite, script) {
-                const value = script.getValue('VALUE');
 
-                const analogPortData = Entry.hw.portData.ANALOG;
-
-                if (analogPortData) {
-                    return analogPortData[3] > value;
-                }
-                return false;
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.analogRead(3) > %1',
-                        blockType: 'param',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
-            },
-        },
-        ITPLE_value_mapping: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#fff',
-            skeleton: 'basic_string_field',
-            statements: [],
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-            ],
             events: {},
+
             def: {
-                params: [
-                    {
-                        type: 'number',
-                        params: ['0'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['0'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['1023'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['0'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['255'],
-                    },
-                ],
-                type: 'ITPLE_value_mapping',
+                params: [null, {
+                    type: 'number',
+                    params: ['500']
+                }, null],
+                type: 'ITPLE_value_sensor',
             },
+
             paramsKeyMap: {
-                PORT: 0,
-                VALUE2: 1,
-                VALUE3: 2,
-                VALUE4: 3,
-                VALUE5: 4,
+                PIN: 0,
+                VALUE: 1,
+                COMPARISON: 2,
             },
             class: 'ITPLEGet',
             isNotFor: ['ITPLE'],
+            
             func(sprite, script) {
-                let result = script.getValue('PORT', script);
-                const ANALOG = Entry.hw.portData.ANALOG;
-                let value2 = script.getNumberValue('VALUE2', script);
-                let value3 = script.getNumberValue('VALUE3', script);
-                let value4 = script.getNumberValue('VALUE4', script);
-                let value5 = script.getNumberValue('VALUE5', script);
-                const stringValue4 = script.getValue('VALUE4', script);
-                const stringValue5 = script.getValue('VALUE5', script);
-                let isFloat = false;
+                const pin = script.getValue('PIN');
+                const value = script.getValue('VALUE');
+                const comparison = script.getValue('COMPARISON');
 
-                if (
-                    (Entry.Utils.isNumber(stringValue4) && stringValue4.indexOf('.') > -1) ||
-                    (Entry.Utils.isNumber(stringValue5) && stringValue5.indexOf('.') > -1)
-                ) {
-                    isFloat = true;
-                }
+                const analogPortData = Entry.hw.portData.ANALOG;
 
-                if (value2 > value3) {
-                    var swap = value2;
-                    value2 = value3;
-                    value3 = swap;
+                if (analogPortData) {
+                    switch (comparison) {
+                        case '>':
+                            return analogPortData[pin] > value;
+                        case '<':
+                            return analogPortData[pin] < value;
+                        case '==':
+                            return analogPortData[pin] === value;
+                    }
                 }
-                if (value4 > value5) {
-                    var swap = value4;
-                    value4 = value5;
-                    value5 = swap;
-                }
-                result -= value2;
-                result = result * ((value5 - value4) / (value3 - value2));
-                result += value4;
-                result = Math.min(value5, result);
-                result = Math.max(value4, result);
-
-                if (isFloat) {
-                    result = Math.round(result * 100) / 100;
-                } else {
-                    result = Math.round(result);
-                }
-
-                return result;
+                return false;
             },
+
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'Arduino.map(%1, %2, %3, %4, %5)',
-                        blockType: 'param',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
+                        syntax: 'Arduino.analogRead(%1) %3 %2',
                     },
                 ],
             },
         },
         ITPLE_get_ultrasonic_value: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#fff',
-            skeleton: 'basic_string_field',
-            statements: [],
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    {
-                        type: 'arduino_get_port_number',
-                        params: ['13'],
-                    },
-                    {
-                        type: 'arduino_get_port_number',
-                        params: ['12'],
-                    },
-                ],
-                type: 'ITPLE_get_ultrasonic_value',
-            },
-            paramsKeyMap: {
-                PORT1: 0,
-                PORT2: 1,
-            },
-            class: 'ITPLEGet',
-            isNotFor: ['ITPLE'],
-            func(sprite, script) {
-                const port1 = script.getNumberValue('PORT1', script);
-                const port2 = script.getNumberValue('PORT2', script);
-
-                if (!Entry.hw.sendQueue.SET) {
-                    Entry.hw.sendQueue.SET = {};
-                }
-                delete Entry.hw.sendQueue.SET[port1];
-                delete Entry.hw.sendQueue.SET[port2];
-
-                if (!Entry.hw.sendQueue.GET) {
-                    Entry.hw.sendQueue.GET = {};
-                }
-                Entry.hw.sendQueue.GET[Entry.ITPLE.sensorTypes.ULTRASONIC] = {
-                    port: [port1, port2],
-                    time: new Date().getTime(),
-                };
-                return Entry.hw.portData.ULTRASONIC || 0;
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.ultrasonicRead(%1, %2)',
-                        blockType: 'param',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
-            },
+          color: EntryStatic.colorSet.block["default"].HARDWARE,
+          outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+          fontColor: '#fff',
+          skeleton: 'basic_string_field',
+          statements: [],
+          params: [{
+            type: 'Block',
+            accept: 'string',
+            defaultType: 'number'
+          }, {
+            type: 'Block',
+            accept: 'string',
+            defaultType: 'number'
+          }],
+          events: {},
+          def: {
+            params: [{
+              type: 'arduino_get_port_number',
+              params: ['13']
+            }, {
+              type: 'arduino_get_port_number',
+              params: ['12']
+            }],
+            type: 'ITPLE_get_ultrasonic_value'
+          },
+          paramsKeyMap: {
+            PORT1: 0,
+            PORT2: 1
+          },
+          "class": 'ITPLEGet',
+          isNotFor: ['ITPLE'],
+          func: function func(sprite, script) {
+            var port1 = script.getNumberValue('PORT1', script);
+            var port2 = script.getNumberValue('PORT2', script);
+            if (!Entry.hw.sendQueue.SET) {
+              Entry.hw.sendQueue.SET = {};
+            }
+            delete Entry.hw.sendQueue.SET[port1];
+            delete Entry.hw.sendQueue.SET[port2];
+            if (!Entry.hw.sendQueue.GET) {
+              Entry.hw.sendQueue.GET = {};
+            }
+            Entry.hw.sendQueue.GET[Entry.ITPLE.sensorTypes.ULTRASONIC] = {
+              port: [port1, port2],
+              time: new Date().getTime()
+            };
+            return Entry.hw.portData.ULTRASONIC || 0;
+          },
+          syntax: {
+            js: [],
+            py: [{
+              syntax: 'Arduino.ultrasonicRead(%1, %2)',
+              blockType: 'param',
+              textParams: [{
+                type: 'Block',
+                accept: 'string'
+              }, {
+                type: 'Block',
+                accept: 'string'
+              }]
+            }],
+          }
         },
-        ITPLE_get_digital: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#fff',
-            skeleton: 'basic_boolean_field',
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    {
-                        type: 'arduino_get_port_number',
-                        params: [2],
-                    },
-                ],
-                type: 'ITPLE_get_digital',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-            },
-            class: 'ITPLEGet',
-            isNotFor: ['ITPLE'],
-            func(sprite, script) {
-                const { hwModule = {} } = Entry.hw;
-                const { name } = hwModule;
-                if (name === 'ITPLE' || name === 'ArduinoNano') {
-                    const port = script.getNumberValue('PORT', script);
-                    const DIGITAL = Entry.hw.portData.DIGITAL;
-                    if (!Entry.hw.sendQueue.GET) {
-                        Entry.hw.sendQueue.GET = {};
-                    }
-                    Entry.hw.sendQueue.GET[Entry.ITPLE.sensorTypes.DIGITAL] = {
-                        port,
-                        time: new Date().getTime(),
-                    };
-                    return DIGITAL ? DIGITAL[port] || 0 : 0;
-                } else {
-                    return Entry.block.arduino_get_digital_value.func(sprite, script);
-                }
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.digitalRead(%1)',
-                        blockType: 'param',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
-            },
-        },
-        arduino_get_digital_toggle: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic_string_field',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.ARDUINO_on, 'on'],
-                        [Lang.Blocks.ARDUINO_off, 'off'],
-                    ],
-                    value: 'on',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            events: {},
-            def: {
-                params: [null],
-            },
-            paramsKeyMap: {
-                OPERATOR: 0,
-            },
-            func(sprite, script) {
-                return script.getStringField('OPERATOR');
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: '%1',
-                        textParams: [
-                            {
-                                type: 'Dropdown',
-                                options: [
-                                    [Lang.Blocks.ARDUINO_on, 'on'],
-                                    [Lang.Blocks.ARDUINO_off, 'off'],
-                                ],
-                                value: 'on',
-                                fontSize: 11,
-                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter: Entry.block.converters.returnStringValueUpperCase,
-                                codeMap: 'Entry.CodeMap.Arduino.arduino_get_digital_toggle[0]',
-                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                            },
-                        ],
-                        keyOption: 'arduino_get_digital_toggle',
-                    },
-                ],
-            },
-        },
-        ITPLE_toggle_led: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    {
-                        type: 'arduino_get_port_number',
-                        params: [10],
-                    },
-                    {
-                        type: 'arduino_get_digital_toggle',
-                        params: ['on'],
-                    },
-                    null,
-                ],
-                type: 'ITPLE_toggle_led',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-                VALUE: 1,
-            },
-            class: 'ITPLE',
-            isNotFor: ['ITPLE'],
-            func(sprite, script) {
-                const port = script.getNumberValue('PORT');
-                let value = script.getValue('VALUE');
-
-                if (typeof value === 'string') {
-                    value = value.toLowerCase();
-                }
-                if (Entry.ITPLE.highList.indexOf(value) > -1) {
-                    value = 255;
-                } else if (Entry.ITPLE.lowList.indexOf(value) > -1) {
-                    value = 0;
-                } else {
-                    throw new Error();
-                }
-                if (!Entry.hw.sendQueue.SET) {
-                    Entry.hw.sendQueue.SET = {};
-                }
-                Entry.hw.sendQueue.SET[port] = {
-                    type: Entry.ITPLE.sensorTypes.DIGITAL,
-                    data: value,
-                    time: new Date().getTime(),
-                };
-                return script.callReturn();
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.digitalWrite(%1, %2)',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
-            },
-        },
-        ITPLE_turn_led: {
-            // 저학년 학생을 위한, 핀 번호 없는 LED 켜기 블록
+        ITPLE_turn_led: { // 저학년 학생을 위한, 핀 번호 없는 LED 켜기 블록
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -968,7 +573,9 @@ Entry.ITPLE.getBlocks = function () {
             events: {},
 
             def: {
-                params: [null],
+                params: [
+                    null,
+                ],
                 type: 'ITPLE_turn_led',
             },
 
@@ -1007,83 +614,6 @@ Entry.ITPLE.getBlocks = function () {
                 py: [
                     {
                         syntax: 'Arduino.digitalWrite(%1, %2)',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
-            },
-        },
-        ITPLE_digital_pwm: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    {
-                        type: 'arduino_get_pwm_port_number',
-                    },
-                    {
-                        type: 'text',
-                        params: ['255'],
-                    },
-                    null,
-                ],
-                type: 'ITPLE_digital_pwm',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-                VALUE: 1,
-            },
-            class: 'ITPLE',
-            isNotFor: ['ITPLE'],
-            func(sprite, script) {
-                const port = script.getNumberValue('PORT');
-                let value = script.getNumberValue('VALUE');
-                value = Math.round(value);
-                value = Math.max(value, 0);
-                value = Math.min(value, 255);
-                if (!Entry.hw.sendQueue.SET) {
-                    Entry.hw.sendQueue.SET = {};
-                }
-                Entry.hw.sendQueue.SET[port] = {
-                    type: Entry.ITPLE.sensorTypes.PWM,
-                    data: value,
-                    time: new Date().getTime(),
-                };
-                return script.callReturn();
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.analogWrite(%1, %2)',
                         textParams: [
                             {
                                 type: 'Block',
@@ -1263,11 +793,6 @@ Entry.ITPLE.getBlocks = function () {
                 {
                     type: 'Block',
                     accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
                 },
                 {
                     type: 'Block',
@@ -1289,10 +814,6 @@ Entry.ITPLE.getBlocks = function () {
             def: {
                 params: [
                     {
-                        type: 'arduino_get_port_number',
-                        params: [3],
-                    },
-                    {
                         type: 'ITPLE_tone_list',
                     },
                     {
@@ -1307,10 +828,9 @@ Entry.ITPLE.getBlocks = function () {
                 type: 'ITPLE_set_tone',
             },
             paramsKeyMap: {
-                PORT: 0,
-                NOTE: 1,
-                OCTAVE: 2,
-                DURATION: 3,
+                NOTE: 0,
+                OCTAVE: 1,
+                DURATION: 2,
             },
             class: 'ITPLE',
             isNotFor: ['ITPLE'],
@@ -1397,12 +917,8 @@ Entry.ITPLE.getBlocks = function () {
                 js: [],
                 py: [
                     {
-                        syntax: 'Arduino.tone(3, %2, %3, %4)',
+                        syntax: 'Arduino.tone(3, %1, %2, %3)',
                         textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
                             {
                                 type: 'Block',
                                 accept: 'string',
@@ -1551,89 +1067,7 @@ Entry.ITPLE.getBlocks = function () {
                 ],
             },
         },
-        ITPLE_set_motor_speed_old: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['왼쪽', '10'],
-                        ['오른쪽', '11'],
-                    ],
-                    value: '10',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    '10',
-                    {
-                        type: 'text',
-                        params: ['255'],
-                    },
-                    null,
-                ],
-                type: 'ITPLE_set_motor_speed_old',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-                VALUE: 1,
-            },
-            class: 'ITPLE_motor',
-            isNotFor: ['ITPLE'],
-            func(sprite, script) {
-                const port = script.getNumberValue('PORT');
-                let value = script.getNumberValue('VALUE');
-                value = Math.round(value);
-                value = Math.max(value, 0);
-                value = Math.min(value, 255);
-                if (!Entry.hw.sendQueue.SET) {
-                    Entry.hw.sendQueue.SET = {};
-                }
-                Entry.hw.sendQueue.SET[port] = {
-                    type: Entry.ITPLE.sensorTypes.PWM,
-                    data: value,
-                    time: new Date().getTime(),
-                };
-                return script.callReturn();
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.analogWrite(%1, %2)',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
-            },
-        },
-
-        ITPLE_set_motor_speed_new: {
+        ITPLE_set_motor_speed: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1671,7 +1105,7 @@ Entry.ITPLE.getBlocks = function () {
                     },
                     null,
                 ],
-                type: 'ITPLE_set_motor_speed_new',
+                type: 'ITPLE_set_motor_speed',
             },
             paramsKeyMap: {
                 PORT: 0,
