@@ -2341,9 +2341,14 @@ module.exports = {
                 class: 'calc_string',
                 isNotFor: [],
                 func(sprite, script) {
-                    return script
-                        .getStringValue('STRING', script)
-                        [script.getField('CASE', script)]();
+                    const str = script.getStringValue('STRING', script);
+                    const caseType = script.getField('CASE', script);
+                    if (caseType === 'toUpperCase') {
+                        return str.toUpperCase();
+                    } else if (caseType === 'toLowerCase') {
+                        return str.toLowerCase();
+                    }
+                    return str;
                 },
                 syntax: {
                     js: [],
