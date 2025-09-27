@@ -30,13 +30,22 @@ const Common = {
             options.body = JSON.stringify(options.data);
         }
         const queryString = options.params ? `?${Common.toQueryString(options.params)}` : '';
-        const response = await fetch(`${Entry.baseUrl || ''}${options.url}${queryString}`, options);
-        if (response.status >= 400) {
+        const fetchPromise = fetch(`${Entry.baseUrl || ''}${options.url}${queryString}`, options);
+        const timeoutPromise = new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Request timeout')), timeout)
+        );
+        try {
+            const response = await Promise.race([fetchPromise, timeoutPromise]);
+            if (response.status >= 400) {
+                Common.callApi.cache = new _memoize.Cache();
+                throw new Error(response);
+            }
+            const data = await response.json();
+            return { data };
+        } catch (error) {
             Common.callApi.cache = new _memoize.Cache();
-            throw new Error(response);
+            throw error;
         }
-        const data = await response.json();
-        return { data };
     }),
     toNumber: (str) => {
         if (typeof str === 'number') {
