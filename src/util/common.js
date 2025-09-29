@@ -31,8 +31,8 @@ const Common = {
         }
         const queryString = options.params ? `?${Common.toQueryString(options.params)}` : '';
         const fetchPromise = fetch(`${Entry.baseUrl || ''}${options.url}${queryString}`, options);
-        const timeoutPromise = new Promise((_, reject) => 
-            setTimeout(() => reject(new Error('Request timeout')), timeout)
+        const timeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('Request timeout')), 3000)
         );
         try {
             const response = await Promise.race([fetchPromise, timeoutPromise]);
