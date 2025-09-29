@@ -344,9 +344,9 @@ Entry.ITPLE.getBlocks = function () {
               type: 'ITPLE_is_key_pressed',
           },
           paramsKeyMap: {
-              KEY: 1,
+              KEY: 0,
           },
-          "class": 'ITPLEGet',
+          "class": 'ITPLE',
           isNotFor: ['ITPLE'],
           func(sprite, script) {
               // 각 키에 대한 하드웨어 포트 정보를 객체로 관리하여 확장성을 높입니다.
@@ -357,8 +357,8 @@ Entry.ITPLE.getBlocks = function () {
                   '8':  { type: 'DIGITAL', index: 8 },
               };
 
-              const seletedKey = script.getField('KEY');
-              const portConfig = keyToPortMap[seletedKey];
+              const selectedKey = script.getField('KEY');
+              const portConfig = keyToPortMap[selectedKey];
 
               // 유효하지 않은 키는 즉시 false를 반환합니다.
               if (!portConfig) {
@@ -376,7 +376,7 @@ Entry.ITPLE.getBlocks = function () {
               js: [],
               py: [
                   {
-                      syntax: 'Arduino.digitalRead(%1)==0',
+                      syntax: 'Arduino.digitalRead("%1")==0',
                   },
               ],
           },
