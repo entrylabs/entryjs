@@ -18,8 +18,11 @@ Entry.etboard = {
         } else {
             const keySet = Object.keys(Entry.hw.sendQueue.SET);
             keySet.forEach((key) => {
-                Entry.hw.sendQueue.SET[key].data = 0;
-                Entry.hw.sendQueue.SET[key].time = new Date().getTime();
+                // 서보모터(SERVO_PIN, type: 4)인 경우 제외하고 나머지만 0으로 설정
+                if (Entry.hw.sendQueue.SET[key].type !== 4) {
+                    Entry.hw.sendQueue.SET[key].data = 0;
+                    Entry.hw.sendQueue.SET[key].time = new Date().getTime();
+                }
             });
         }
         Entry.hw.update();
