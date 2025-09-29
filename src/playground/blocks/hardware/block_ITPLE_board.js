@@ -346,7 +346,7 @@ Entry.ITPLE.getBlocks = function () {
           paramsKeyMap: {
               KEY: 0,
           },
-          "class": 'ITPLE',
+          "class": 'ITPLEGet',
           isNotFor: ['ITPLE'],
           func(sprite, script) {
               // 각 키에 대한 하드웨어 포트 정보를 객체로 관리하여 확장성을 높입니다.
