@@ -23,6 +23,7 @@ import blockAiLearningDecisiontree from '../playground/blocks/block_ai_learning_
 import blockAiLearningSvm from '../playground/blocks/block_ai_learning_svm';
 import blockAiUtilizeMediaPipe from '../playground/blocks/block_ai_utilize_media_pipe';
 import InputPopup from './learning/InputPopup';
+import _isEmpty from 'lodash/isEmpty';
 
 Entry.MlPopup = InputPopup;
 const basicBlockList = [
@@ -242,6 +243,9 @@ export default class AILearning {
         } = modelInfo || {};
         if (!this.#dataApi) {
             console.log('there is no dataApi');
+            return;
+        } else if (_isEmpty(modelInfo)) {
+            console.log('empty modelInfo');
             return;
         }
         this.destroy();
