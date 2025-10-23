@@ -1514,7 +1514,7 @@ Entry.BlockView = class BlockView {
 
             if (!isInBlockMenu) {
                 options = [
-                    aiAnalyze,
+                    Entry.aiAssistantEnable && aiAnalyze,
                     copyAndPaste,
                     copy,
                     cut,
