@@ -1421,9 +1421,28 @@ Entry.BlockView = class BlockView {
             const { block, isInBlockMenu, copyable } = blockView;
             const { options: EntryOptions = {} } = Entry;
             const {
-                Blocks: { Duplication_option, CONTEXT_COPY_option, cut_blocks, Delete_Blocks },
+                Blocks: {
+                    AI_analyze_option,
+                    Duplication_option,
+                    CONTEXT_COPY_option,
+                    cut_blocks,
+                    Delete_Blocks,
+                },
                 Menus: { save_as_image },
             } = Lang;
+
+            const aiAnalyze = {
+                text: AI_analyze_option,
+                enable: copyable && !isBoardReadOnly,
+                callback() {
+                    // NOTICE : Entry.do는 필요할지 고려 > 뒤로가기 적용이 필요한지
+                    const blocksData = { ...block.copy() };
+
+                    Entry.dispatchEvent('analyzeBlock', {
+                        data: JSON.stringify(blocksData),
+                    });
+                },
+            };
 
             const copyAndPaste = {
                 text: Duplication_option,
@@ -1494,9 +1513,16 @@ Entry.BlockView = class BlockView {
             }
 
             if (!isInBlockMenu) {
-                options = [copyAndPaste, copy, cut, remove, addStorage, ...options, comment].filter(
-                    (x) => x
-                );
+                options = [
+                    Entry.aiAssistantEnable && aiAnalyze,
+                    copyAndPaste,
+                    copy,
+                    cut,
+                    remove,
+                    addStorage,
+                    ...options,
+                    comment,
+                ].filter((x) => x);
             }
 
             return options;

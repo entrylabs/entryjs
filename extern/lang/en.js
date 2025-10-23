@@ -1707,6 +1707,7 @@ Lang.Blocks = {
     START_message_send_wait_2: ' message and wait',
     Duplication_option: 'Duplicate',
     cut_blocks: 'Cut',
+    AI_analyze_option: 'Galaxy AI Analyze',
     CONTEXT_COPY_option: 'Copy',
     Delete_Blocks: 'Remove',
     add_my_storage: 'add to my storage',

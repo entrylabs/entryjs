@@ -611,6 +611,9 @@ Entry.parseOptions = function (options) {
     if (this.fullScreenEnable === undefined) {
         this.fullScreenEnable = true;
     }
+    if (options.aiAssistantEnable) {
+        this.aiAssistantEnable = options.aiAssistantEnable;
+    }
     this.modalContainer = options.modalContainer || $('body')[0];
 };
 
