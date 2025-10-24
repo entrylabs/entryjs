@@ -365,11 +365,13 @@ Entry.createDom = function (container, type) {
             this.sceneView = sceneView;
             this.scene.generateView(this.sceneView, type);
 
-            const blockCountViewerView = Entry.createElement('div');
-            blockCountViewerView.addClass('entryBlockCountView');
-            topFloatingView.appendChild(blockCountViewerView);
-            this.blockCountViewerView = blockCountViewerView;
-            this.blockCountViewer.generateView(this.blockCountViewerView, type);
+            if (!Entry.aiAssistantEnable) {
+                const blockCountViewerView = Entry.createElement('div');
+                blockCountViewerView.addClass('entryBlockCountView');
+                topFloatingView.appendChild(blockCountViewerView);
+                this.blockCountViewerView = blockCountViewerView;
+                this.blockCountViewer.generateView(this.blockCountViewerView, type);
+            }
 
             const stateManagerView = Entry.createElement('div');
             this.sceneView.appendChild(stateManagerView);
