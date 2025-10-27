@@ -135,6 +135,9 @@ Entry.Playground = class Playground {
                 })
                 .appendTo(codeView);
             this.resizeHandle_ = resizeHandle;
+            if (Entry.aiAssistantEnable) {
+                this.blockMenu.toggleBlockMenu();
+            }
 
             /** @type {!Element} */
             this.codeView_ = codeView;

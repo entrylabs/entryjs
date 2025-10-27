@@ -368,6 +368,11 @@ Entry.resizeElement = function (interfaceModel) {
             Entry.engine.toggleSpeedPanel();
         }
 
+        if (Entry.aiAssistantEnable) {
+            Entry.CANVAS_DEFAULT_WIDTH = 250;
+            Entry.CANVAS_MAX_WIDTH = 350;
+        }
+
         let isEngineContainerVisible = true;
         let canvasSize = interfaceModel.canvasWidth;
         if (!canvasSize) {
