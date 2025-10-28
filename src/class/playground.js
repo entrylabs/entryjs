@@ -64,13 +64,11 @@ Entry.Playground = class Playground {
             this.generateTabView(tabView);
             this.tabView_ = tabView;
 
-            if (!Entry.aiAssistantEnable) {
-                const tabButtonView = Entry.createElement('div', 'entryButtonTab')
-                    .addClass('entryPlaygroundButtonTabWorkspace')
-                    .appendTo(this.view_);
-                this.tabButtonView_ = tabButtonView;
-                this.createButtonTabView(tabButtonView);
-            }
+            const tabButtonView = Entry.createElement('div', 'entryButtonTab')
+                .addClass('entryPlaygroundButtonTabWorkspace')
+                .appendTo(this.view_);
+            this.tabButtonView_ = tabButtonView;
+            this.createButtonTabView(tabButtonView);
 
             const curtainView = Entry.createElement('div', 'entryCurtain')
                 .addClass('entryPlaygroundCurtainWorkspace entryRemove')
