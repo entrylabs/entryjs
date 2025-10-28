@@ -1553,6 +1553,7 @@ Lang.Blocks = {
     TUT_repeat_until_gold: '부품에 도달할 때 까지 반복',
     TUT_declare_function: '함수 선언',
     TUT_call_function: '함수 호출',
+    AI_analyze_option: 'AI로  코드 분석하기',
     CONTEXT_COPY_option: '코드 복사하기',
     Delete_Blocks: '코드 삭제하기',
     Duplication_option: '코드 복제하기',
