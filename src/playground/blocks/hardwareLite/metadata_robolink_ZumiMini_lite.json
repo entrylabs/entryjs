@@ -1,0 +1,9 @@
+{
+    "name": "ZumiMiniLite",
+    "version": "1.0.0",
+    "type": "hardware",
+    "title": "주미 미니",
+    "description": "로보링크",
+    "imageName": "robolink_ZumiMini_lite.png",
+    "moduleId": "4A0501"
+}
