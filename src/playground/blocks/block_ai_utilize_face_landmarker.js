@@ -218,7 +218,6 @@ Entry.AI_UTILIZE_BLOCK.faceLandmarker.getBlocks = function() {
             func(sprite, script) {
                 return script.callReturn();
             },
-            wikiClass: 'ai_utilize_face',
         },
         face_landmarker: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
@@ -247,7 +246,6 @@ Entry.AI_UTILIZE_BLOCK.faceLandmarker.getBlocks = function() {
                 }
                 return script.callReturn();
             },
-            wikiClass: 'ai_utilize_face',
         },
         draw_detected_face: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
@@ -276,7 +274,6 @@ Entry.AI_UTILIZE_BLOCK.faceLandmarker.getBlocks = function() {
                 }
                 return script.callReturn();
             },
-            wikiClass: 'ai_utilize_face',
         },
         check_detected_face: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
@@ -296,7 +293,6 @@ Entry.AI_UTILIZE_BLOCK.faceLandmarker.getBlocks = function() {
             func(sprite, script) {
                 return mediaPipeUtils.isPrevFaceLandmarker;
             },
-            wikiClass: 'ai_utilize_face',
         },
         count_detected_face: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
@@ -316,7 +312,6 @@ Entry.AI_UTILIZE_BLOCK.faceLandmarker.getBlocks = function() {
             func(sprite, script) {
                 return mediaPipeUtils.countDetectedFace || 0;
             },
-            wikiClass: 'ai_utilize_face',
         },
         locate_to_face: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
@@ -347,7 +342,6 @@ Entry.AI_UTILIZE_BLOCK.faceLandmarker.getBlocks = function() {
                 }
                 return script.callReturn();
             },
-            wikiClass: 'ai_utilize_face',
         },
         locate_time_to_face: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
@@ -424,7 +418,6 @@ Entry.AI_UTILIZE_BLOCK.faceLandmarker.getBlocks = function() {
                     return script.callReturn();
                 }
             },
-            wikiClass: 'ai_utilize_face',
         },
         check_detected_gender: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
@@ -452,7 +445,6 @@ Entry.AI_UTILIZE_BLOCK.faceLandmarker.getBlocks = function() {
                 const result = mediaPipeUtils.getFaceGender(face);
                 return result === gender;
             },
-            wikiClass: 'ai_utilize_face',
         },
         check_compare_age: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
@@ -508,7 +500,6 @@ Entry.AI_UTILIZE_BLOCK.faceLandmarker.getBlocks = function() {
                         return result <= age;
                 }
             },
-            wikiClass: 'ai_utilize_face',
         },
         check_detected_emotion: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
@@ -536,7 +527,6 @@ Entry.AI_UTILIZE_BLOCK.faceLandmarker.getBlocks = function() {
                 const result = mediaPipeUtils.getFaceEmotion(face);
                 return result === emotion;
             },
-            wikiClass: 'ai_utilize_face',
         },
         axis_detected_face: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
@@ -570,7 +560,6 @@ Entry.AI_UTILIZE_BLOCK.faceLandmarker.getBlocks = function() {
                 }
                 return 0;
             },
-            wikiClass: 'ai_utilize_face',
         },
         get_detected_face_value: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
@@ -619,7 +608,6 @@ Entry.AI_UTILIZE_BLOCK.faceLandmarker.getBlocks = function() {
                         );
                 }
             },
-            wikiClass: 'ai_utilize_face',
         },
     };
 };

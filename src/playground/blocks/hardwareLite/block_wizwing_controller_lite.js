@@ -2,7 +2,7 @@
 
 import _range from 'lodash/range';
 
-(function () {
+(function() {
     Entry.wizwingcontrollerlite = new (class wizwingcontrollerlite {
         constructor() {
             this.id = '69.1';
@@ -32,6 +32,7 @@ import _range from 'lodash/range';
                 'Wizwing_Drone_Controller_diagonal',
                 'Wizwing_Drone_Controller_circularflight',
                 'Wizwing_Drone_Controller_photoflight',
+
             ];
             this.portData = {
                 baudRate: 9600,
@@ -57,6 +58,7 @@ import _range from 'lodash/range';
             if (Entry.hwLite && Entry.hwLite.serial) {
                 Entry.hwLite.serial.update();
             }
+            console.log('Entry.hwLite:', Entry.hwLite);
         }
 
         handleLocalData(data) {
@@ -74,7 +76,7 @@ import _range from 'lodash/range';
                 } else {
                     console.log('Unexpected response from drone:', chunk);
                 }
-
+        
                 if (chunk >> 7) {
                     if ((chunk >> 6) & 1) {
                         const nextChunk = data[i + 1];
@@ -149,7 +151,7 @@ import _range from 'lodash/range';
         setLanguage() {
             return {
                 ko: {
-                    Blocks: {
+                    Blocks:{
                         Wizwing_Drone_Controller_flip_f: '앞으로  ',
                         Wizwing_Drone_Controller_flip_b: '뒤로  ',
                         Wizwing_Drone_Controller_flip_l: '왼쪽으로  ',
@@ -225,31 +227,29 @@ import _range from 'lodash/range';
                     },
                     Menus: {
                         Wizwing_Drone_Controller: 'WizwingDronController',
+                        
                     },
                 },
             };
         }
 
         initializeBlocks() {
-            Entry.hwLite
-                .connect()
-                .then(() => {
-                    if (!Entry.hwLite.serial) {
-                        console.error('Serial object is not defined. Please check the connection.');
-                        return;
-                    }
-
-                    Entry.getMainGenerator().getBlocks = this.getBlocks.bind(this);
-
-                    Entry.addEventListener('blockCompleted', () => {
-                        Entry.getMainGenerator().nextBlock();
-                    });
-                })
-                .catch((error) => {
-                    console.error('Failed to connect to hardware:', error);
+            Entry.hwLite.connect().then(() => {
+                if (!Entry.hwLite.serial) {
+                    console.error('Serial object is not defined. Please check the connection.');
+                    return;
+                }
+        
+                Entry.getMainGenerator().getBlocks = this.getBlocks.bind(this);
+                
+                Entry.addEventListener('blockCompleted', () => {
+                    Entry.getMainGenerator().nextBlock();
                 });
+            }).catch((error) => {
+                console.error('Failed to connect to hardware:', error);
+            });
         }
-
+        
         getBlocks() {
             return {
                 Wizwing_Drone_Controller_connect: {
@@ -259,13 +259,10 @@ import _range from 'lodash/range';
                     params: [],
                     def: { params: [], type: 'Wizwing_Drone_Controller_connect' },
                     class: 'wizwing',
-                    isNotFor: ['wizwingcontrollerlite'],
+                    isNotFor: ['wizwingcontrollerlite'], 
                     func(sprite, script) {
                         const command = 'mapping_start';
-                        const commandBuffer = Buffer.from(
-                            encodeURIComponent(command) + '\r',
-                            'utf8'
-                        );
+                        const commandBuffer = Buffer.from(encodeURIComponent(command)+"\r", 'utf8');
                         if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
                             Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
                             console.log('Command sent using sendAsyncWithThrottle:', command);
@@ -291,10 +288,7 @@ import _range from 'lodash/range';
                     isNotFor: ['wizwingcontrollerlite'],
                     func(sprite, script) {
                         const command = 'takeoff';
-                        const commandBuffer = Buffer.from(
-                            encodeURIComponent(command) + '\r',
-                            'utf8'
-                        );
+                        const commandBuffer = Buffer.from(encodeURIComponent(command)+"\r", 'utf8');
                         console.log(`Sending command: ${command}`);
 
                         if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
@@ -303,7 +297,7 @@ import _range from 'lodash/range';
 
                             return new Promise((resolve) => {
                                 setTimeout(() => {
-                                    resolve(script.callReturn());
+                                resolve(script.callReturn());
                                 }, 4000);
                             });
                         } else {
@@ -323,10 +317,7 @@ import _range from 'lodash/range';
                     isNotFor: ['wizwingcontrollerlite'],
                     func(sprite, script) {
                         const command = 'land';
-                        const commandBuffer = Buffer.from(
-                            encodeURIComponent(command) + '\r',
-                            'utf8'
-                        );
+                        const commandBuffer = Buffer.from(encodeURIComponent(command)+"\r", 'utf8');
                         console.log(`Sending command: ${command}`);
 
                         if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
@@ -364,52 +355,54 @@ import _range from 'lodash/range';
                     class: 'wizwing',
                     isNotFor: ['wizwingcontrollerlite'],
                     func(sprite, script) {
-                        let stick = script.getNumberValue('STICK', script) * 5;
+                        let stick = script.getNumberValue('STICK', script)*5;
                         let time = script.getNumberValue('TIME', script);
 
                         if (stick > 500) {
                             stick = 500;
-                        } else if (stick < -500) {
+                        }
+                        else if (stick < -500) {
                             stick = -500;
                         }
 
-                        if (stick >= 0) {
-                            const command1 = `up ${stick} ${time}\r`;
-                            console.log('Constructed command:', command1);
-                            const commandBuffer = Buffer.from(command1, 'utf8');
-                            if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
-                                Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
-                                console.log('Command sent using sendAsyncWithThrottle:', command1);
-                                return new Promise((resolve) => {
-                                    setTimeout(() => {
-                                        resolve(script.callReturn());
-                                    }, time + 1100);
-                                });
-                            } else {
-                                console.log('Serial writer not found.');
-                            }
-                        } else {
-                            stick = stick * -1;
-                            const command2 = `down ${stick} ${time}\r`;
-                            console.log('Constructed command:', command2);
-                            const commandBuffer = Buffer.from(command2, 'utf8');
-                            if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
-                                Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
-                                console.log('Command sent using sendAsyncWithThrottle:', command2);
-                                return new Promise((resolve) => {
-                                    setTimeout(() => {
-                                        resolve(script.callReturn());
-                                    }, time + 1100);
-                                });
-                            } else {
-                                console.log('Serial writer not found.');
-                            }
+                        if (stick >= 0) { 
+	                        const command1 = `up ${stick} ${time}\r`;
+	                        console.log('Constructed command:', command1);
+	                        const commandBuffer = Buffer.from(command1, 'utf8');
+	                        if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
+        	                    	Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
+                            		console.log('Command sent using sendAsyncWithThrottle:', command1);
+                                	return new Promise((resolve) => {
+                                    		setTimeout(() => {
+                                        	resolve(script.callReturn());
+                                    		}, time + 1100);
+                                	});
+                        	} else {
+                                	console.log('Serial writer not found.');
+                        	}
                         }
+                        else {
+				stick = stick * -1; 
+	                        const command2 = `down ${stick} ${time}\r`;
+	                        console.log('Constructed command:', command2);
+	                        const commandBuffer = Buffer.from(command2, 'utf8');
+                        	if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
+                            		Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
+                            		console.log('Command sent using sendAsyncWithThrottle:', command2);
+                                	return new Promise((resolve) => {
+                                    		setTimeout(() => {
+                                        	resolve(script.callReturn());
+                                    		}, time + 1100);
+                                	});
+                        	} else {
+                                	console.log('Serial writer not found.');
+                        	}
+			}             
 
                         return script.callReturn();
                     },
                 },
-
+                
                 Wizwing_Drone_Controller_elevator: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -431,48 +424,50 @@ import _range from 'lodash/range';
                     class: 'wizwing',
                     isNotFor: ['wizwingcontrollerlite'],
                     func(sprite, script) {
-                        let stick = script.getNumberValue('STICK', script) * 5;
+                        let stick = script.getNumberValue('STICK', script)*5;
                         let time = script.getNumberValue('TIME', script);
 
                         if (stick > 500) {
                             stick = 500;
-                        } else if (stick < -500) {
+                        }
+                        else if (stick < -500) {
                             stick = -500;
                         }
 
-                        if (stick >= 0) {
-                            const command1 = `forward ${stick} ${time}\r`;
-                            console.log('Constructed command:', command1);
-                            const commandBuffer = Buffer.from(command1, 'utf8');
-                            if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
-                                Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
-                                console.log('Command sent using sendAsyncWithThrottle:', command1);
-                                return new Promise((resolve) => {
-                                    setTimeout(() => {
-                                        resolve(script.callReturn());
-                                    }, time + 1100);
-                                });
-                            } else {
-                                console.log('Serial writer not found.');
-                            }
-                        } else {
-                            stick = stick * -1;
-                            const command2 = `back ${stick} ${time}\r`;
-                            console.log('Constructed command:', command2);
-                            const commandBuffer = Buffer.from(command2, 'utf8');
-                            if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
-                                Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
-                                console.log('Command sent using sendAsyncWithThrottle:', command2);
-                                return new Promise((resolve) => {
-                                    setTimeout(() => {
-                                        resolve(script.callReturn());
-                                    }, time + 1100);
-                                });
-                            } else {
-                                console.log('Serial writer not found.');
-                            }
+                        if (stick >= 0) { 
+	                        const command1 = `forward ${stick} ${time}\r`;
+	                        console.log('Constructed command:', command1);
+	                        const commandBuffer = Buffer.from(command1, 'utf8');
+	                        if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
+        	                    	Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
+                            		console.log('Command sent using sendAsyncWithThrottle:', command1);
+                                	return new Promise((resolve) => {
+                                    		setTimeout(() => {
+                                        	resolve(script.callReturn());
+                                    		}, time + 1100);
+                                	});
+                        	} else {
+                                	console.log('Serial writer not found.');
+                        	}
                         }
-
+                        else {
+				stick = stick * -1; 
+	                        const command2 = `back ${stick} ${time}\r`;
+	                        console.log('Constructed command:', command2);
+	                        const commandBuffer = Buffer.from(command2, 'utf8');
+                        	if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
+                            		Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
+                            		console.log('Command sent using sendAsyncWithThrottle:', command2);
+                                	return new Promise((resolve) => {
+                                    		setTimeout(() => {
+                                        	resolve(script.callReturn());
+                                    		}, time + 1100);
+                                	});
+                        	} else {
+                                	console.log('Serial writer not found.');
+                        	}
+			}             
+   
                         return script.callReturn();
                     },
                 },
@@ -498,47 +493,49 @@ import _range from 'lodash/range';
                     class: 'wizwing',
                     isNotFor: ['wizwingcontrollerlite'],
                     func(sprite, script) {
-                        let stick = script.getNumberValue('STICK', script) * 5;
+                        let stick = script.getNumberValue('STICK', script)*5;
                         let time = script.getNumberValue('TIME', script);
 
                         if (stick > 500) {
                             stick = 500;
-                        } else if (stick < -500) {
+                        }
+                        else if (stick < -500) {
                             stick = -500;
                         }
-
-                        if (stick >= 0) {
-                            const command1 = `right ${stick} ${time}\r`;
-                            console.log('Constructed command:', command1);
-                            const commandBuffer = Buffer.from(command1, 'utf8');
-                            if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
-                                Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
-                                console.log('Command sent using sendAsyncWithThrottle:', command1);
-                                return new Promise((resolve) => {
-                                    setTimeout(() => {
-                                        resolve(script.callReturn());
-                                    }, time + 1100);
-                                });
-                            } else {
-                                console.log('Serial writer not found.');
-                            }
-                        } else {
-                            stick = stick * -1;
-                            const command2 = `left ${stick} ${time}\r`;
-                            console.log('Constructed command:', command2);
-                            const commandBuffer = Buffer.from(command2, 'utf8');
-                            if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
-                                Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
-                                console.log('Command sent using sendAsyncWithThrottle:', command2);
-                                return new Promise((resolve) => {
-                                    setTimeout(() => {
-                                        resolve(script.callReturn());
-                                    }, time + 1100);
-                                });
-                            } else {
-                                console.log('Serial writer not found.');
-                            }
+                
+                        if (stick >= 0) { 
+	                        const command1 = `right ${stick} ${time}\r`;
+	                        console.log('Constructed command:', command1);
+	                        const commandBuffer = Buffer.from(command1, 'utf8');
+	                        if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
+        	                    	Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
+                            		console.log('Command sent using sendAsyncWithThrottle:', command1);
+                                	return new Promise((resolve) => {
+                                    		setTimeout(() => {
+                                        	resolve(script.callReturn());
+                                    		}, time + 1100);
+                                	});
+                        	} else {
+                                	console.log('Serial writer not found.');
+                        	}
                         }
+                        else {
+				stick = stick * -1; 
+	                        const command2 = `left ${stick} ${time}\r`;
+	                        console.log('Constructed command:', command2);
+	                        const commandBuffer = Buffer.from(command2, 'utf8');
+                        	if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
+                            		Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
+                            		console.log('Command sent using sendAsyncWithThrottle:', command2);
+                                	return new Promise((resolve) => {
+                                    		setTimeout(() => {
+                                        	resolve(script.callReturn());
+                                    		}, time + 1100);
+                                	});
+                        	} else {
+                                	console.log('Serial writer not found.');
+                        	}
+			}             
 
                         return script.callReturn();
                     },
@@ -564,47 +561,49 @@ import _range from 'lodash/range';
                     class: 'wizwing',
                     isNotFor: ['wizwingcontrollerlite'],
                     func(sprite, script) {
-                        let stick = script.getNumberValue('STICK', script) * 5;
+                        let stick = script.getNumberValue('STICK', script)*5;
                         let time = script.getNumberValue('TIME', script);
 
                         if (stick > 500) {
                             stick = 500;
-                        } else if (stick < -500) {
+                        }
+                        else if (stick < -500) {
                             stick = -500;
                         }
 
-                        if (stick >= 0) {
-                            const command1 = `cw ${stick} ${time}\r`;
-                            console.log('Constructed command:', command1);
-                            const commandBuffer = Buffer.from(command1, 'utf8');
-                            if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
-                                Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
-                                console.log('Command sent using sendAsyncWithThrottle:', command1);
-                                return new Promise((resolve) => {
-                                    setTimeout(() => {
-                                        resolve(script.callReturn());
-                                    }, time + 1100);
-                                });
-                            } else {
-                                console.log('Serial writer not found.');
-                            }
-                        } else {
-                            stick = stick * -1;
-                            const command2 = `ccw ${stick} ${time}\r`;
-                            console.log('Constructed command:', command2);
-                            const commandBuffer = Buffer.from(command2, 'utf8');
-                            if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
-                                Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
-                                console.log('Command sent using sendAsyncWithThrottle:', command2);
-                                return new Promise((resolve) => {
-                                    setTimeout(() => {
-                                        resolve(script.callReturn());
-                                    }, time + 1100);
-                                });
-                            } else {
-                                console.log('Serial writer not found.');
-                            }
+                        if (stick >= 0) { 
+	                        const command1 = `cw ${stick} ${time}\r`;
+	                        console.log('Constructed command:', command1);
+	                        const commandBuffer = Buffer.from(command1, 'utf8');
+	                        if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
+        	                    	Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
+                            		console.log('Command sent using sendAsyncWithThrottle:', command1);
+                                	return new Promise((resolve) => {
+                                    		setTimeout(() => {
+                                        	resolve(script.callReturn());
+                                    		}, time + 1100);
+                                	});
+                        	} else {
+                                	console.log('Serial writer not found.');
+                        	}
                         }
+                        else {
+				stick = stick * -1; 
+	                        const command2 = `ccw ${stick} ${time}\r`;
+	                        console.log('Constructed command:', command2);
+	                        const commandBuffer = Buffer.from(command2, 'utf8');
+                        	if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
+                            		Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
+                            		console.log('Command sent using sendAsyncWithThrottle:', command2);
+                                	return new Promise((resolve) => {
+                                    		setTimeout(() => {
+                                        	resolve(script.callReturn());
+                                    		}, time + 1100);
+                                	});
+                        	} else {
+                                	console.log('Serial writer not found.');
+                        	}
+			}             
 
                         return script.callReturn();
                     },
@@ -620,20 +619,17 @@ import _range from 'lodash/range';
                     isNotFor: ['wizwingcontrollerlite'],
                     func(sprite, script) {
                         const command = 'funled';
-                        const commandBuffer = Buffer.from(
-                            encodeURIComponent(command) + '\r',
-                            'utf8'
-                        );
+                        const commandBuffer = Buffer.from(encodeURIComponent(command)+'\r', 'utf8');
                         if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
                             Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
                             console.log('Command sent using sendAsyncWithThrottle:', command);
-                            return new Promise((resolve) => {
-                                setTimeout(() => {
-                                    resolve(script.callReturn());
-                                }, 1100);
-                            });
+                                return new Promise((resolve) => {
+                                    setTimeout(() => {
+                                        resolve(script.callReturn());
+                                    }, 1100);
+                                });
                         } else {
-                            console.log('Serial writer not found.');
+                                console.log('Serial writer not found.');
                         }
                         return script.callReturn();
                     },
@@ -672,17 +668,17 @@ import _range from 'lodash/range';
                         const direction = script.getField('DIRECTION');
                         const command = `flip ${direction}\r`;
                         const commandBuffer = Buffer.from(command, 'utf8');
-
+                
                         if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
                             Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
                             console.log('Command sent using sendAsyncWithThrottle:', command);
-                            return new Promise((resolve) => {
-                                setTimeout(() => {
-                                    resolve(script.callReturn());
-                                }, 4100);
-                            });
+                                return new Promise((resolve) => {
+                                    setTimeout(() => {
+                                        resolve(script.callReturn());
+                                    }, 4100);
+                                });
                         } else {
-                            console.log('Serial writer not found.');
+                                console.log('Serial writer not found.');
                         }
                         return script.callReturn();
                     },
@@ -720,17 +716,17 @@ import _range from 'lodash/range';
                         const direction = script.getField('DIRECTION');
                         const command = `speed ${direction}\r`;
                         const commandBuffer = Buffer.from(command, 'utf8');
-
+                
                         if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
                             Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
                             console.log('Command sent using sendAsyncWithThrottle:', command);
-                            return new Promise((resolve) => {
-                                setTimeout(() => {
-                                    resolve(script.callReturn());
-                                }, 1100);
-                            });
+                                return new Promise((resolve) => {
+                                    setTimeout(() => {
+                                        resolve(script.callReturn());
+                                    }, 1100);
+                                });
                         } else {
-                            console.log('Serial writer not found.');
+                                console.log('Serial writer not found.');
                         }
                         return script.callReturn();
                     },
@@ -746,10 +742,7 @@ import _range from 'lodash/range';
                     isNotFor: ['wizwingcontrollerlite'],
                     func(sprite, script) {
                         const command = 'emergency';
-                        const commandBuffer = Buffer.from(
-                            encodeURIComponent(command) + '\r',
-                            'utf8'
-                        );
+                        const commandBuffer = Buffer.from(encodeURIComponent(command)+'\r', 'utf8');
                         if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
                             Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
                             console.log('Command sent using sendAsyncWithThrottle:', command);
@@ -774,10 +767,7 @@ import _range from 'lodash/range';
                     isNotFor: ['wizwingcontrollerlite'],
                     func(sprite, script) {
                         const command = 'opt';
-                        const commandBuffer = Buffer.from(
-                            encodeURIComponent(command) + '\r',
-                            'utf8'
-                        );
+                        const commandBuffer = Buffer.from(encodeURIComponent(command)+"\r", 'utf8');
                         if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
                             Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
                             console.log('Command sent using sendAsyncWithThrottle:', command);
@@ -803,10 +793,7 @@ import _range from 'lodash/range';
                     isNotFor: ['wizwingcontrollerlite'],
                     func(sprite, script) {
                         const command = 'gyroreset';
-                        const commandBuffer = Buffer.from(
-                            encodeURIComponent(command) + '\r',
-                            'utf8'
-                        );
+                        const commandBuffer = Buffer.from(encodeURIComponent(command)+"\r", 'utf8');
                         if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
                             Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
                             console.log('Command sent using sendAsyncWithThrottle:', command);
@@ -822,6 +809,7 @@ import _range from 'lodash/range';
                     },
                 },
 
+
                 Wizwing_Drone_Controller_headless: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -833,10 +821,7 @@ import _range from 'lodash/range';
                     isNotFor: ['wizwingcontrollerlite'],
                     func(sprite, script) {
                         const command = 'headless';
-                        const commandBuffer = Buffer.from(
-                            encodeURIComponent(command) + '\r',
-                            'utf8'
-                        );
+                        const commandBuffer = Buffer.from(encodeURIComponent(command)+'\r', 'utf8');
                         if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
                             Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer, false);
                             console.log('Command sent using sendAsyncWithThrottle:', command);
@@ -851,6 +836,7 @@ import _range from 'lodash/range';
                         return script.callReturn();
                     },
                 },
+
 
                 Wizwing_Drone_Controller_diagonal: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -875,123 +861,135 @@ import _range from 'lodash/range';
                     class: 'wizwing',
                     isNotFor: ['wizwingcontrollerlite'],
                     func(sprite, script) {
-                        let stick1 = script.getNumberValue('STICK1', script) * 5;
-                        let stick2 = script.getNumberValue('STICK2', script) * 5;
+                        let stick1 = script.getNumberValue('STICK1', script)*5;
+                        let stick2 = script.getNumberValue('STICK2', script)*5;
                         let time = script.getNumberValue('TIME', script);
 
                         if (stick1 > 500) {
                             stick1 = 500;
-                        } else if (stick1 < -500) {
+                        }
+                        else if (stick1 < -500) {
                             stick1 = -500;
                         }
 
                         if (stick2 > 500) {
                             stick2 = 500;
-                        } else if (stick2 < -500) {
+                        }
+                        else if (stick2 < -500) {
                             stick2 = -500;
                         }
+                
+                        if (stick1 >= 0 && stick2 >= 0) { 
+	                        const command1 = `forward ${stick1} ${time}\r`;
+	                        console.log('Constructed command:', command1);
+	                        const commandBuffer1 = Buffer.from(command1, 'utf8');
 
-                        if (stick1 >= 0 && stick2 >= 0) {
-                            const command1 = `forward ${stick1} ${time}\r`;
-                            console.log('Constructed command:', command1);
-                            const commandBuffer1 = Buffer.from(command1, 'utf8');
+	                        const command11 = `right ${stick2} ${time}\r`;
+	                        console.log('Constructed command:', command11);
+	                        const commandBuffer11 = Buffer.from(command11, 'utf8');
 
-                            const command11 = `right ${stick2} ${time}\r`;
-                            console.log('Constructed command:', command11);
-                            const commandBuffer11 = Buffer.from(command11, 'utf8');
+	                        if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
+        	                    	Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer1, false);
+                            		console.log('Command sent using sendAsyncWithThrottle:', command1);
 
-                            if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
-                                Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer1, false);
-                                console.log('Command sent using sendAsyncWithThrottle:', command1);
+        	                    	Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer11, false);
+                            		console.log('Command sent using sendAsyncWithThrottle:', command11);
 
-                                Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer11, false);
-                                console.log('Command sent using sendAsyncWithThrottle:', command11);
+                                	return new Promise((resolve) => {
+                                    		setTimeout(() => {
+                                        	resolve(script.callReturn());
+                                    		}, time + 1100);
+                                	});
+                        	} else {
+                                	console.log('Serial writer not found.');
+                        	}
 
-                                return new Promise((resolve) => {
-                                    setTimeout(() => {
-                                        resolve(script.callReturn());
-                                    }, time + 1100);
-                                });
-                            } else {
-                                console.log('Serial writer not found.');
-                            }
-                        } else if (stick1 >= 0 && stick2 < 0) {
-                            stick2 = stick2 * -1;
+                        }
 
-                            const command1 = `forward ${stick1} ${time}\r`;
-                            console.log('Constructed command:', command1);
-                            const commandBuffer1 = Buffer.from(command1, 'utf8');
+                        else if (stick1 >= 0 && stick2 < 0) { 
+				stick2 = stick2 * -1; 
 
-                            const command11 = `left ${stick2} ${time}\r`;
-                            console.log('Constructed command:', command11);
-                            const commandBuffer11 = Buffer.from(command11, 'utf8');
+	                        const command1 = `forward ${stick1} ${time}\r`;
+	                        console.log('Constructed command:', command1);
+	                        const commandBuffer1 = Buffer.from(command1, 'utf8');
 
-                            if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
-                                Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer1, false);
-                                console.log('Command sent using sendAsyncWithThrottle:', command1);
+	                        const command11 = `left ${stick2} ${time}\r`;
+	                        console.log('Constructed command:', command11);
+	                        const commandBuffer11 = Buffer.from(command11, 'utf8');
 
-                                Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer11, false);
-                                console.log('Command sent using sendAsyncWithThrottle:', command11);
+	                        if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
+        	                    	Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer1, false);
+                            		console.log('Command sent using sendAsyncWithThrottle:', command1);
 
-                                return new Promise((resolve) => {
-                                    setTimeout(() => {
-                                        resolve(script.callReturn());
-                                    }, time + 1100);
-                                });
-                            } else {
-                                console.log('Serial writer not found.');
-                            }
-                        } else if (stick1 < 0 && stick2 >= 0) {
-                            stick1 = stick1 * -1;
-                            const command1 = `back ${stick1} ${time}\r`;
-                            console.log('Constructed command:', command1);
-                            const commandBuffer1 = Buffer.from(command1, 'utf8');
+        	                    	Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer11, false);
+                            		console.log('Command sent using sendAsyncWithThrottle:', command11);
 
-                            const command11 = `right ${stick2} ${time}\r`;
-                            console.log('Constructed command:', command11);
-                            const commandBuffer11 = Buffer.from(command11, 'utf8');
+                                	return new Promise((resolve) => {
+                                    		setTimeout(() => {
+                                        	resolve(script.callReturn());
+                                    		}, time + 1100);
+                                	});
+                        	} else {
+                                	console.log('Serial writer not found.');
+                        	}
 
-                            if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
-                                Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer1, false);
-                                console.log('Command sent using sendAsyncWithThrottle:', command1);
+                        }
 
-                                Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer11, false);
-                                console.log('Command sent using sendAsyncWithThrottle:', command11);
+                        else if (stick1 < 0 && stick2 >= 0) { 
+				stick1 = stick1 * -1; 
+	                        const command1 = `back ${stick1} ${time}\r`;
+	                        console.log('Constructed command:', command1);
+	                        const commandBuffer1 = Buffer.from(command1, 'utf8');
 
-                                return new Promise((resolve) => {
-                                    setTimeout(() => {
-                                        resolve(script.callReturn());
-                                    }, time + 1100);
-                                });
-                            } else {
-                                console.log('Serial writer not found.');
-                            }
-                        } else {
-                            stick1 = stick1 * -1;
-                            stick2 = stick2 * -1;
-                            const command1 = `back ${stick1} ${time}\r`;
-                            console.log('Constructed command:', command1);
-                            const commandBuffer1 = Buffer.from(command1, 'utf8');
+	                        const command11 = `right ${stick2} ${time}\r`;
+	                        console.log('Constructed command:', command11);
+	                        const commandBuffer11 = Buffer.from(command11, 'utf8');
 
-                            const command11 = `left ${stick2} ${time}\r`;
-                            console.log('Constructed command:', command11);
-                            const commandBuffer11 = Buffer.from(command11, 'utf8');
+	                        if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
+        	                    	Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer1, false);
+                            		console.log('Command sent using sendAsyncWithThrottle:', command1);
 
-                            if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
-                                Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer1, false);
-                                console.log('Command sent using sendAsyncWithThrottle:', command1);
+        	                    	Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer11, false);
+                            		console.log('Command sent using sendAsyncWithThrottle:', command11);
 
-                                Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer11, false);
-                                console.log('Command sent using sendAsyncWithThrottle:', command11);
+                                	return new Promise((resolve) => {
+                                    		setTimeout(() => {
+                                        	resolve(script.callReturn());
+                                    		}, time + 1100);
+                                	});
+                        	} else {
+                                	console.log('Serial writer not found.');
+                        	}
 
-                                return new Promise((resolve) => {
-                                    setTimeout(() => {
-                                        resolve(script.callReturn());
-                                    }, time + 1100);
-                                });
-                            } else {
-                                console.log('Serial writer not found.');
-                            }
+                        }
+
+                        else { 
+				stick1 = stick1 * -1; 
+				stick2 = stick2 * -1; 
+	                        const command1 = `back ${stick1} ${time}\r`;
+	                        console.log('Constructed command:', command1);
+	                        const commandBuffer1 = Buffer.from(command1, 'utf8');
+
+	                        const command11 = `left ${stick2} ${time}\r`;
+	                        console.log('Constructed command:', command11);
+	                        const commandBuffer11 = Buffer.from(command11, 'utf8');
+
+	                        if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
+        	                    	Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer1, false);
+                            		console.log('Command sent using sendAsyncWithThrottle:', command1);
+
+        	                    	Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer11, false);
+                            		console.log('Command sent using sendAsyncWithThrottle:', command11);
+
+                                	return new Promise((resolve) => {
+                                    		setTimeout(() => {
+                                        	resolve(script.callReturn());
+                                    		}, time + 1100);
+                                	});
+                        	} else {
+                                	console.log('Serial writer not found.');
+                        	}
+
                         }
 
                         return script.callReturn();
@@ -1021,123 +1019,139 @@ import _range from 'lodash/range';
                     class: 'wizwing',
                     isNotFor: ['wizwingcontrollerlite'],
                     func(sprite, script) {
-                        let stick1 = script.getNumberValue('STICK1', script) * 5;
-                        let stick2 = script.getNumberValue('STICK2', script) * 5;
+                        let stick1 = script.getNumberValue('STICK1', script)*5;
+                        let stick2 = script.getNumberValue('STICK2', script)*5;
                         let time = script.getNumberValue('TIME', script);
 
                         if (stick1 > 500) {
                             stick1 = 500;
-                        } else if (stick1 < -500) {
+                        }
+                        else if (stick1 < -500) {
                             stick1 = -500;
                         }
 
                         if (stick2 > 500) {
                             stick2 = 500;
-                        } else if (stick2 < -500) {
+                        }
+                        else if (stick2 < -500) {
                             stick2 = -500;
                         }
+                
+                        if (stick1 >= 0 && stick2 >= 0) { 
 
-                        if (stick1 >= 0 && stick2 >= 0) {
-                            const command1 = `forward ${stick1} ${time}\r`;
-                            console.log('Constructed command:', command1);
-                            const commandBuffer1 = Buffer.from(command1, 'utf8');
+	                        const command1 = `forward ${stick1} ${time}\r`;
+	                        console.log('Constructed command:', command1);
+	                        const commandBuffer1 = Buffer.from(command1, 'utf8');
 
-                            const command11 = `cw ${stick2} ${time}\r`;
-                            console.log('Constructed command:', command11);
-                            const commandBuffer11 = Buffer.from(command11, 'utf8');
+	                        const command11 = `cw ${stick2} ${time}\r`;
+	                        console.log('Constructed command:', command11);
+	                        const commandBuffer11 = Buffer.from(command11, 'utf8');
 
-                            if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
-                                Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer1, false);
-                                console.log('Command sent using sendAsyncWithThrottle:', command1);
+	                        if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
+        	                    	Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer1, false);
+                            		console.log('Command sent using sendAsyncWithThrottle:', command1);
 
-                                Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer11, false);
-                                console.log('Command sent using sendAsyncWithThrottle:', command11);
+        	                    	Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer11, false);
+                            		console.log('Command sent using sendAsyncWithThrottle:', command11);
 
-                                return new Promise((resolve) => {
-                                    setTimeout(() => {
-                                        resolve(script.callReturn());
-                                    }, time + 1100);
-                                });
-                            } else {
-                                console.log('Serial writer not found.');
-                            }
-                        } else if (stick1 >= 0 && stick2 < 0) {
-                            stick2 = stick2 * -1;
+                                	return new Promise((resolve) => {
+                                    		setTimeout(() => {
+                                        	resolve(script.callReturn());
+                                    		}, time + 1100);
+                                	});
+                        	} else {
+                                	console.log('Serial writer not found.');
+                        	}
 
-                            const command1 = `forward ${stick1} ${time}\r`;
-                            console.log('Constructed command:', command1);
-                            const commandBuffer1 = Buffer.from(command1, 'utf8');
+                        }
 
-                            const command11 = `ccw ${stick2} ${time}\r`;
-                            console.log('Constructed command:', command11);
-                            const commandBuffer11 = Buffer.from(command11, 'utf8');
 
-                            if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
-                                Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer1, false);
-                                console.log('Command sent using sendAsyncWithThrottle:', command1);
+                        else if (stick1 >= 0 && stick2 < 0) { 
+				stick2 = stick2 * -1; 
 
-                                Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer11, false);
-                                console.log('Command sent using sendAsyncWithThrottle:', command11);
+	                        const command1 = `forward ${stick1} ${time}\r`;
+	                        console.log('Constructed command:', command1);
+	                        const commandBuffer1 = Buffer.from(command1, 'utf8');
 
-                                return new Promise((resolve) => {
-                                    setTimeout(() => {
-                                        resolve(script.callReturn());
-                                    }, time + 1100);
-                                });
-                            } else {
-                                console.log('Serial writer not found.');
-                            }
-                        } else if (stick1 < 0 && stick2 >= 0) {
-                            stick1 = stick1 * -1;
-                            const command1 = `back ${stick1} ${time}\r`;
-                            console.log('Constructed command:', command1);
-                            const commandBuffer1 = Buffer.from(command1, 'utf8');
+	                        const command11 = `ccw ${stick2} ${time}\r`;
+	                        console.log('Constructed command:', command11);
+	                        const commandBuffer11 = Buffer.from(command11, 'utf8');
 
-                            const command11 = `cw ${stick2} ${time}\r`;
-                            console.log('Constructed command:', command11);
-                            const commandBuffer11 = Buffer.from(command11, 'utf8');
+	                        if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
+        	                    	Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer1, false);
+                            		console.log('Command sent using sendAsyncWithThrottle:', command1);
 
-                            if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
-                                Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer1, false);
-                                console.log('Command sent using sendAsyncWithThrottle:', command1);
+        	                    	Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer11, false);
+                            		console.log('Command sent using sendAsyncWithThrottle:', command11);
 
-                                Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer11, false);
-                                console.log('Command sent using sendAsyncWithThrottle:', command11);
+                                	return new Promise((resolve) => {
+                                    		setTimeout(() => {
+                                        	resolve(script.callReturn());
+                                    		}, time + 1100);
+                                	});
 
-                                return new Promise((resolve) => {
-                                    setTimeout(() => {
-                                        resolve(script.callReturn());
-                                    }, time + 1100);
-                                });
-                            } else {
-                                console.log('Serial writer not found.');
-                            }
-                        } else {
-                            stick1 = stick1 * -1;
-                            stick2 = stick2 * -1;
-                            const command1 = `back ${stick1} ${time}\r`;
-                            console.log('Constructed command:', command1);
-                            const commandBuffer1 = Buffer.from(command1, 'utf8');
+                        	} else {
+                                	console.log('Serial writer not found.');
+                        	}
 
-                            const command11 = `ccw ${stick2} ${time}\r`;
-                            console.log('Constructed command:', command11);
-                            const commandBuffer11 = Buffer.from(command11, 'utf8');
+                        }
 
-                            if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
-                                Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer1, false);
-                                console.log('Command sent using sendAsyncWithThrottle:', command1);
+                        else if (stick1 < 0 && stick2 >= 0) { 
+				stick1 = stick1 * -1; 
+	                        const command1 = `back ${stick1} ${time}\r`;
+	                        console.log('Constructed command:', command1);
+	                        const commandBuffer1 = Buffer.from(command1, 'utf8');
 
-                                Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer11, false);
-                                console.log('Command sent using sendAsyncWithThrottle:', command11);
+	                        const command11 = `cw ${stick2} ${time}\r`;
+	                        console.log('Constructed command:', command11);
+	                        const commandBuffer11 = Buffer.from(command11, 'utf8');
 
-                                return new Promise((resolve) => {
-                                    setTimeout(() => {
-                                        resolve(script.callReturn());
-                                    }, time + 1100);
-                                });
-                            } else {
-                                console.log('Serial writer not found.');
-                            }
+	                        if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
+        	                    	Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer1, false);
+                            		console.log('Command sent using sendAsyncWithThrottle:', command1);
+
+        	                    	Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer11, false);
+                            		console.log('Command sent using sendAsyncWithThrottle:', command11);
+
+                                	return new Promise((resolve) => {
+                                    		setTimeout(() => {
+                                        	resolve(script.callReturn());
+                                    		}, time + 1100);
+                                	});
+
+                        	} else {
+                                	console.log('Serial writer not found.');
+                        	}
+
+                        }
+
+                        else { 
+				stick1 = stick1 * -1; 
+				stick2 = stick2 * -1; 
+	                        const command1 = `back ${stick1} ${time}\r`;
+	                        console.log('Constructed command:', command1);
+	                        const commandBuffer1 = Buffer.from(command1, 'utf8');
+
+	                        const command11 = `ccw ${stick2} ${time}\r`;
+	                        console.log('Constructed command:', command11);
+	                        const commandBuffer11 = Buffer.from(command11, 'utf8');
+
+	                        if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
+        	                    	Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer1, false);
+                            		console.log('Command sent using sendAsyncWithThrottle:', command1);
+
+        	                    	Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer11, false);
+                            		console.log('Command sent using sendAsyncWithThrottle:', command11);
+
+                                	return new Promise((resolve) => {
+                                    		setTimeout(() => {
+                                        	resolve(script.callReturn());
+                                    		}, time + 1100);
+                                	});
+                        	} else {
+                                	console.log('Serial writer not found.');
+                        	}
+
                         }
 
                         return script.callReturn();
@@ -1167,129 +1181,142 @@ import _range from 'lodash/range';
                     class: 'wizwing',
                     isNotFor: ['wizwingcontrollerlite'],
                     func(sprite, script) {
-                        let stick1 = script.getNumberValue('STICK1', script) * 5;
-                        let stick2 = script.getNumberValue('STICK2', script) * 5;
+                        let stick1 = script.getNumberValue('STICK1', script)*5;
+                        let stick2 = script.getNumberValue('STICK2', script)*5;
                         let time = script.getNumberValue('TIME', script);
 
                         if (stick1 > 500) {
                             stick1 = 500;
-                        } else if (stick1 < -500) {
+                        }
+                        else if (stick1 < -500) {
                             stick1 = -500;
                         }
 
                         if (stick2 > 500) {
                             stick2 = 500;
-                        } else if (stick2 < -500) {
+                        }
+                        else if (stick2 < -500) {
                             stick2 = -500;
                         }
+                
+                        if (stick1 >= 0 && stick2 >= 0) { 
+	                        const command1 = `right ${stick1} ${time}\r`;
+	                        console.log('Constructed command:', command1);
+	                        const commandBuffer1 = Buffer.from(command1, 'utf8');
 
-                        if (stick1 >= 0 && stick2 >= 0) {
-                            const command1 = `right ${stick1} ${time}\r`;
-                            console.log('Constructed command:', command1);
-                            const commandBuffer1 = Buffer.from(command1, 'utf8');
+	                        const command11 = `cw ${stick2} ${time}\r`;
+	                        console.log('Constructed command:', command11);
+	                        const commandBuffer11 = Buffer.from(command11, 'utf8');
 
-                            const command11 = `cw ${stick2} ${time}\r`;
-                            console.log('Constructed command:', command11);
-                            const commandBuffer11 = Buffer.from(command11, 'utf8');
+	                        if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
+        	                    	Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer1, false);
+                            		console.log('Command sent using sendAsyncWithThrottle:', command1);
 
-                            if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
-                                Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer1, false);
-                                console.log('Command sent using sendAsyncWithThrottle:', command1);
+        	                    	Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer11, false);
+                            		console.log('Command sent using sendAsyncWithThrottle:', command11);
 
-                                Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer11, false);
-                                console.log('Command sent using sendAsyncWithThrottle:', command11);
+                                	return new Promise((resolve) => {
+                                    		setTimeout(() => {
+                                        	resolve(script.callReturn());
+                                    		}, time + 1100);
+                                	});
+                        	} else {
+                                	console.log('Serial writer not found.');
+                        	}
 
-                                return new Promise((resolve) => {
-                                    setTimeout(() => {
-                                        resolve(script.callReturn());
-                                    }, time + 1100);
-                                });
-                            } else {
-                                console.log('Serial writer not found.');
-                            }
-                        } else if (stick1 >= 0 && stick2 < 0) {
-                            stick2 = stick2 * -1;
+                        }
 
-                            const command1 = `right ${stick1} ${time}\r`;
-                            console.log('Constructed command:', command1);
-                            const commandBuffer1 = Buffer.from(command1, 'utf8');
+                        else if (stick1 >= 0 && stick2 < 0) { 
+				stick2 = stick2 * -1; 
 
-                            const command11 = `ccw ${stick2} ${time}\r`;
-                            console.log('Constructed command:', command11);
-                            const commandBuffer11 = Buffer.from(command11, 'utf8');
+	                        const command1 = `right ${stick1} ${time}\r`;
+	                        console.log('Constructed command:', command1);
+	                        const commandBuffer1 = Buffer.from(command1, 'utf8');
 
-                            if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
-                                Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer1, false);
-                                console.log('Command sent using sendAsyncWithThrottle:', command1);
+	                        const command11 = `ccw ${stick2} ${time}\r`;
+	                        console.log('Constructed command:', command11);
+	                        const commandBuffer11 = Buffer.from(command11, 'utf8');
 
-                                Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer11, false);
-                                console.log('Command sent using sendAsyncWithThrottle:', command11);
+	                        if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
+        	                    	Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer1, false);
+                            		console.log('Command sent using sendAsyncWithThrottle:', command1);
 
-                                return new Promise((resolve) => {
-                                    setTimeout(() => {
-                                        resolve(script.callReturn());
-                                    }, time + 1100);
-                                });
-                            } else {
-                                console.log('Serial writer not found.');
-                            }
-                        } else if (stick1 < 0 && stick2 >= 0) {
-                            stick1 = stick1 * -1;
-                            const command1 = `left ${stick1} ${time}\r`;
-                            console.log('Constructed command:', command1);
-                            const commandBuffer1 = Buffer.from(command1, 'utf8');
+        	                    	Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer11, false);
+                            		console.log('Command sent using sendAsyncWithThrottle:', command11);
 
-                            const command11 = `cw ${stick2} ${time}\r`;
-                            console.log('Constructed command:', command11);
-                            const commandBuffer11 = Buffer.from(command11, 'utf8');
+                                	return new Promise((resolve) => {
+                                    		setTimeout(() => {
+                                        	resolve(script.callReturn());
+                                    		}, time + 1100);
+                                	});
+                        	} else {
+                                	console.log('Serial writer not found.');
+                        	}
 
-                            if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
-                                Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer1, false);
-                                console.log('Command sent using sendAsyncWithThrottle:', command1);
+                        }
 
-                                Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer11, false);
-                                console.log('Command sent using sendAsyncWithThrottle:', command11);
+                        else if (stick1 < 0 && stick2 >= 0) { 
+				stick1 = stick1 * -1; 
+	                        const command1 = `left ${stick1} ${time}\r`;
+	                        console.log('Constructed command:', command1);
+	                        const commandBuffer1 = Buffer.from(command1, 'utf8');
 
-                                return new Promise((resolve) => {
-                                    setTimeout(() => {
-                                        resolve(script.callReturn());
-                                    }, time + 1100);
-                                });
-                            } else {
-                                console.log('Serial writer not found.');
-                            }
-                        } else {
-                            stick1 = stick1 * -1;
-                            stick2 = stick2 * -1;
-                            const command1 = `left ${stick1} ${time}\r`;
-                            console.log('Constructed command:', command1);
-                            const commandBuffer1 = Buffer.from(command1, 'utf8');
+	                        const command11 = `cw ${stick2} ${time}\r`;
+	                        console.log('Constructed command:', command11);
+	                        const commandBuffer11 = Buffer.from(command11, 'utf8');
 
-                            const command11 = `ccw ${stick2} ${time}\r`;
-                            console.log('Constructed command:', command11);
-                            const commandBuffer11 = Buffer.from(command11, 'utf8');
+	                        if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
+        	                    	Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer1, false);
+                            		console.log('Command sent using sendAsyncWithThrottle:', command1);
 
-                            if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
-                                Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer1, false);
-                                console.log('Command sent using sendAsyncWithThrottle:', command1);
+        	                    	Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer11, false);
+                            		console.log('Command sent using sendAsyncWithThrottle:', command11);
 
-                                Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer11, false);
-                                console.log('Command sent using sendAsyncWithThrottle:', command11);
+                                	return new Promise((resolve) => {
+                                    		setTimeout(() => {
+                                        	resolve(script.callReturn());
+                                    		}, time + 1100);
+                                	});
+                        	} else {
+                                	console.log('Serial writer not found.');
+                        	}
 
-                                return new Promise((resolve) => {
-                                    setTimeout(() => {
-                                        resolve(script.callReturn());
-                                    }, time + 1100);
-                                });
-                            } else {
-                                console.log('Serial writer not found.');
-                            }
+                        }
+
+                        else { 
+				stick1 = stick1 * -1; 
+				stick2 = stick2 * -1; 
+	                        const command1 = `left ${stick1} ${time}\r`;
+	                        console.log('Constructed command:', command1);
+	                        const commandBuffer1 = Buffer.from(command1, 'utf8');
+
+	                        const command11 = `ccw ${stick2} ${time}\r`;
+	                        console.log('Constructed command:', command11);
+	                        const commandBuffer11 = Buffer.from(command11, 'utf8');
+
+	                        if (Entry.hwLite && Entry.hwLite.serial && Entry.hwLite.serial.writer) {
+        	                    	Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer1, false);
+                            		console.log('Command sent using sendAsyncWithThrottle:', command1);
+
+        	                    	Entry.hwLite.serial.sendAsyncWithThrottle(commandBuffer11, false);
+                            		console.log('Command sent using sendAsyncWithThrottle:', command11);
+
+                                	return new Promise((resolve) => {
+                                    		setTimeout(() => {
+                                        	resolve(script.callReturn());
+                                    		}, time + 1100);
+                                	});
+                        	} else {
+                                	console.log('Serial writer not found.');
+                        	}
+
                         }
 
                         return script.callReturn();
                     },
                 },
-            };
+
+            }
         }
     })();
 })();

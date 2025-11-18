@@ -61,7 +61,6 @@ module.exports = {
                     js: [],
                     py: [],
                 },
-                wikiClass: 'ai_cluster',
             },
             set_cluster_option_centroids: {
                 color: EntryStatic.colorSet.block.default.AI_LEARNING,
@@ -108,7 +107,6 @@ module.exports = {
                     js: [],
                     py: [],
                 },
-                wikiClass: 'ai_cluster',
             },
             get_cluster_centriod_count: {
                 color: EntryStatic.colorSet.block.default.AI_LEARNING,
@@ -136,7 +134,6 @@ module.exports = {
                     js: [],
                     py: [],
                 },
-                wikiClass: 'ai_cluster',
             },
             get_cluster_centriod_value: {
                 color: EntryStatic.colorSet.block.default.AI_LEARNING,
@@ -190,7 +187,6 @@ module.exports = {
                     js: [],
                     py: [],
                 },
-                wikiClass: 'ai_cluster',
             },
             get_cluster_centriod_index_1: {
                 color: EntryStatic.colorSet.block.default.AI_LEARNING,
@@ -240,7 +236,6 @@ module.exports = {
                     js: [],
                     py: [],
                 },
-                wikiClass: 'ai_cluster',
             },
             get_cluster_centriod_index_2: {
                 color: EntryStatic.colorSet.block.default.AI_LEARNING,
@@ -311,7 +306,6 @@ module.exports = {
                     js: [],
                     py: [],
                 },
-                wikiClass: 'ai_cluster',
             },
             get_cluster_centriod_index_3: {
                 color: EntryStatic.colorSet.block.default.AI_LEARNING,
@@ -403,7 +397,6 @@ module.exports = {
                     js: [],
                     py: [],
                 },
-                wikiClass: 'ai_cluster',
             },
             get_cluster_centriod_index_4: {
                 color: EntryStatic.colorSet.block.default.AI_LEARNING,
@@ -516,7 +509,6 @@ module.exports = {
                     js: [],
                     py: [],
                 },
-                wikiClass: 'ai_cluster',
             },
             get_cluster_centriod_index_5: {
                 color: EntryStatic.colorSet.block.default.AI_LEARNING,
@@ -650,7 +642,6 @@ module.exports = {
                     js: [],
                     py: [],
                 },
-                wikiClass: 'ai_cluster',
             },
             get_cluster_centriod_index_6: {
                 color: EntryStatic.colorSet.block.default.AI_LEARNING,
@@ -805,7 +796,6 @@ module.exports = {
                     js: [],
                     py: [],
                 },
-                wikiClass: 'ai_cluster',
             },
         };
     },

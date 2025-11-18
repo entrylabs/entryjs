@@ -344,7 +344,7 @@ Entry.EXPANSION_BLOCK.festival = {
     },
 };
 
-Entry.EXPANSION_BLOCK.festival.getBlocks = function () {
+Entry.EXPANSION_BLOCK.festival.getBlocks = function() {
     const params = {
         getLocation(isPython) {
             const param = {
@@ -454,7 +454,7 @@ Entry.EXPANSION_BLOCK.festival.getBlocks = function () {
             callApi(key, { url: Entry.EXPANSION_BLOCK.festival.api, params })
                 .then((result) => {
                     if (result && result.hasOwnProperty('data')) {
-                        return resolve(result?.data?.response?.body?.totalCount);
+                        return resolve(result?.data?.response?.body?.items?.item?.[0]?.totalCnt);
                     }
                     resolve(defaultValue);
                 })
@@ -529,12 +529,12 @@ Entry.EXPANSION_BLOCK.festival.getBlocks = function () {
             func(sprite, script) {
                 const defaultValue = 0;
                 const params = {
-                    area: Entry.EXPANSION_BLOCK.festival.locationMap[
-                        script.getField('LOCATION', script)
-                    ].code,
-                    month: Entry.EXPANSION_BLOCK.festival.monthMap[
-                        script.getField('MONTH', script)
-                    ],
+                    area:
+                        Entry.EXPANSION_BLOCK.festival.locationMap[
+                            script.getField('LOCATION', script)
+                        ].code,
+                    month:
+                        Entry.EXPANSION_BLOCK.festival.monthMap[script.getField('MONTH', script)],
                     list: 'N',
                 };
                 return getFestivalCount(params, defaultValue);
@@ -549,7 +549,6 @@ Entry.EXPANSION_BLOCK.festival.getBlocks = function () {
                     },
                 ],
             },
-            wikiClass: 'festival',
         },
         get_festival_info: {
             color: EntryStatic.colorSet.block.default.EXPANSION,
@@ -597,9 +596,8 @@ Entry.EXPANSION_BLOCK.festival.getBlocks = function () {
                 const defaultValue = Lang.Blocks.no_data;
                 const params = {
                     area: location.code,
-                    month: Entry.EXPANSION_BLOCK.festival.monthMap[
-                        script.getField('MONTH', script)
-                    ],
+                    month:
+                        Entry.EXPANSION_BLOCK.festival.monthMap[script.getField('MONTH', script)],
                 };
 
                 return getFestivals(number, params, {}).then((festival) => {
@@ -632,7 +630,6 @@ Entry.EXPANSION_BLOCK.festival.getBlocks = function () {
                     },
                 ],
             },
-            wikiClass: 'festival',
         },
     };
 };
