@@ -12,21 +12,21 @@ Entry.ZumiMini = {
         ko: '로보링크 주미미니',
         en: 'Robolink zumi mini',
     },
-       
+
     setZero: function() {
 
-        console.log("engine set Zero..");  
+        console.log("engine set Zero..");
         Entry.hw.sendQueue['req'] = 0x00;
-        Entry.hw.sendQueue['com'] = 0x00;  
+        Entry.hw.sendQueue['com'] = 0x00;
         Entry.hw.sendQueue['speed'] = 0x00;
-        Entry.hw.sendQueue['dir'] = 0x00;     
-        Entry.hw.update(); 
+        Entry.hw.sendQueue['dir'] = 0x00;
+        Entry.hw.update();
         exCnt = tempCnt;
-        //console.log("exCnt:" + exCnt);      
+        //console.log("exCnt:" + exCnt);
     },
 
     afterReceive(pd) {
-        
+
         const Z_WAIT = 0;
         const Z_SEND_PACKET = 1;
         const Z_MOVING = 2;
@@ -41,13 +41,13 @@ Entry.ZumiMini = {
 
         //temCnt = Entry.hw.portData.inputData.euler['ROLL'];
         //console.log("exCnt: " + exCnt);
-        
-        
+
+
         if (Entry.engine.isState('run')) {
-            //console.log("engine running..");  
+            //console.log("engine running..");
             firstRun = false;
             tempCnt++;
-            //console.log("tempCnt: " + tempCnt);             
+            //console.log("tempCnt: " + tempCnt);
         }
         else if (Entry.engine.isState('stop')) {
             //Entry.hw.sendQueue['req'] = 0x00;
@@ -57,37 +57,37 @@ Entry.ZumiMini = {
             if(firstRun == false)
             {
                 var _stat = Entry.hw.portData.inputData['pStat'];
-              
+
                 if ((pStep == Z_WAIT) && (_stat == READY)) {
                     pStep = Z_SEND_PACKET;
-                    console.log("ready start");                   
+                    console.log("ready start");
                     firstRun = true;
                 }
                 else if ((pStep == Z_WAIT) && (_stat == PROCESS)) {
                     pStep = Z_WAIT;    //wait until other action ends.
                     console.log("not ready");
-                }                       
+                }
 
                 if ((pStep == Z_SEND_PACKET) && (_stat == READY)) {    //send command until hardware start to action.
 
                     if (iter < 5) {
                         Entry.hw.sendQueue['com'] = COMMAND_MOTION_STOP;
                         Entry.hw.update();
-                        console.log("send protocol");        
+                        console.log("send protocol");
                     }
                     else {
                         Entry.hw.sendQueue['com'] = 0x00;
                         Entry.hw.update();
                     }
                     pStep = Z_SEND_PACKET;
-                    //iter++;                  
-                }                    
+                    //iter++;
+                }
             }
             else {
                 Entry.hw.sendQueue['com'] = 0x00;
                 Entry.hw.update();
-            }         
-        }        
+            }
+        }
     }
 };
 
@@ -133,16 +133,16 @@ Entry.ZumiMini.setLanguage = function () {
                 ID: '번호',
                 PITCH: '피치',
                 ROLL: '롤',
-                YAW: '요우', 
+                YAW: '요우',
                 FORWARD: '전진',
                 BACKWARD: '후진',
                 RAPID: '빠르게',
                 MID: '보통',
-                SLOW: '느리게', 
+                SLOW: '느리게',
                 LEFT: '왼쪽',
-                RIGHT: '오른쪽', 
+                RIGHT: '오른쪽',
                 CAMERA: '카메라',
-                EMOTION: '표정', 
+                EMOTION: '표정',
                 EMO_CHAOS: '혼란',
                 EMO_SMILE: '미소',
                 EMO_LOVE: '사랑',
@@ -154,7 +154,7 @@ Entry.ZumiMini.setLanguage = function () {
                 EMO_CRY: '슬픔',
                 EMO_WINK: '윙크',
                 EMO_BLINK: '깜빡깜빡',
-                EMO_STOP: '무표정',
+                EMO_SLEEPING: '잠듬',
                 SND_USER: '사용자 녹음',
                 SND_CAT: '고양이',
                 SND_SHUTTER: '셔터',
@@ -168,13 +168,13 @@ Entry.ZumiMini.setLanguage = function () {
                 M2: '오른쪽 모터',
                 CW: '전진방향',
                 CCW: '후진방향',
-                STOP: '멈춤', 
+                STOP: '멈춤',
                 RED_BTN: '빨강버튼',
                 BLUE_BTN: '파랑버튼',
                 YELLOW_BTN: '노랑버튼',
                 GREEN_BTN: '녹색버튼',
                 PRESSED: '눌렀을 때',
-                RELEASED: '눌리지 않았을 때',               
+                RELEASED: '눌리지 않았을 때',
             },
             template: {
                 go_forward:'앞으로 가기(10cm) %1',
@@ -191,7 +191,7 @@ Entry.ZumiMini.setLanguage = function () {
                 cat_face_detector: 'AI 고양이 얼굴 %1 %2',
                 face_boolean_detector: '%1 이 감지 되었을 때',
                 color_detector: 'AI 컬러 감지 %1 %2',
-                color_boolean_detector:'%1 이 감지되었을 때', 
+                color_boolean_detector:'%1 이 감지되었을 때',
                 april_detector: '마커 감지 %1 %2',
                 april_boolean_detector: '마커 %1 이 감지되었을 때',
                 IMU_sensor: '자세 측정 %1 %2',
@@ -202,13 +202,13 @@ Entry.ZumiMini.setLanguage = function () {
                 following_line_infinite: '계속 선 따라가기 속도 %1 %2',
                 motion_stop: '이동 멈추기 %1',
                 screen_toggle: '화면 바꾸기 %1 %2',
-                emotion: '표정 변화 %1 %2', 
-                play_sound: '소리내기 %1 %2',  
+                emotion: '표정 변화 %1 %2',
+                play_sound: '소리내기 %1 %2',
                 LED_control: 'LED 불빛 %1 효과 %2 동작 %3 %4',
                 motor_control: '모터 %1 방향 %2 속도 %3 %4',
-                power_info: '배터리 %1',           
+                power_info: '배터리 %1',
             },
-        },       
+        },
 
         en: {
             Blocks: {
@@ -256,7 +256,7 @@ Entry.ZumiMini.setLanguage = function () {
                 MID: 'medium',
                 SLOW: 'slow',
                 LEFT: 'left',
-                RIGHT: 'right',  
+                RIGHT: 'right',
                 CAMERA: 'camera',
                 EMOTION: 'emotion',
                 EMO_CHAOS: 'chaos',
@@ -269,8 +269,8 @@ Entry.ZumiMini.setLanguage = function () {
                 EMO_SLEEP: 'sleep',
                 EMO_CRY: 'cry',
                 EMO_WINK: 'wink',
-                EMO_BLINK: 'blink', 
-                EMO_STOP: 'default',
+                EMO_BLINK: 'blink',
+                EMO_SLEEPING: 'sleeping',
                 SND_CAT: 'meow',
                 SND_SHUTTER: 'shutter',
                 SND_FAIL: 'fail',
@@ -282,14 +282,14 @@ Entry.ZumiMini.setLanguage = function () {
                 M1: 'left motor',
                 M2: 'right motor',
                 CW: 'forward',
-                CCW: 'backward', 
-                STOP: 'stop', 
+                CCW: 'backward',
+                STOP: 'stop',
                 RED_BTN: 'red button',
                 BLUE_BTN: 'blue button',
                 YELLOW_BTN: 'yellow button',
                 GREEN_BTN: 'green button',
                 PRESSED: 'pressed',
-                RELEASED: 'released',                      
+                RELEASED: 'released',
             },
             template: {
                 go_forward:'going forward(10cm) %1',
@@ -300,7 +300,7 @@ Entry.ZumiMini.setLanguage = function () {
                 following_line_until_sensing: 'following the line until meet the intersection %1',
                 front_sensor: 'front sensor %1 %2',
                 bottom_sensor: 'bottom sensor %1 %2',
-                button_inpput: 'button input %1',
+                button_input: 'button input %1',
                 button_boolean_input: 'when %1 %2',
                 face_detector: 'AI face %1 %2',
                 cat_face_detector: 'AI cat face %1 %2',
@@ -308,7 +308,7 @@ Entry.ZumiMini.setLanguage = function () {
                 color_detector: 'AI color detection %1 %2',
                 color_boolean_detector:'when %1 is detected',
                 april_detector: 'apriltag detection %1 %2',
-                april_boolean_detector: 'when apriltag %1 is detected', 
+                april_boolean_detector: 'when apriltag %1 is detected',
                 IMU_sensor: ' inertial mesurement %1 %2',
                 move_straight: 'move direction %1 speed %2 distance %3 cm %4',
                 move_turn: 'turn %1 speed %2 degree %3 %4',
@@ -318,38 +318,38 @@ Entry.ZumiMini.setLanguage = function () {
                 motion_stop: 'stop moving %1',
                 screen_toggle: 'toggle screen %1 %2',
                 emotion: 'change emotion  %1 %2',
-                play_sound: 'play sound %1 %2', 
-                LED_control: 'LED light %1 effect %2 acttion %3 %4', 
-                motor_control: 'motor %1 direction %2 speed %3 %4',  
-                power_info: 'battery %1',   
+                play_sound: 'play sound %1 %2',
+                LED_control: 'LED light %1 effect %2 acttion %3 %4',
+                motor_control: 'motor %1 direction %2 speed %3 %4',
+                power_info: 'battery %1',
             },
-        },        
+        },
     };
 };
 
 Entry.ZumiMini.blockMenuBlocks = [
-         
-    'motor_control',     
-    'move_straight',       
-    'move_straight_infinite',    
-    'move_turn', 
+
+    'motor_control',
+    'move_straight',
+    'move_straight_infinite',
+    'move_turn',
     'motion_stop',
 
     'going_forward_until_sensing',
-    'following_line_until_sensing',     
+    'following_line_until_sensing',
     'following_line_dist',
-    'following_line_infinite',            
-    
+    'following_line_infinite',
+
     'LED_control',
 
     'button_boolean_input',
 
     'screen_toggle',
-    'emotion', 
-    
+    'emotion',
+
     'face_boolean_detector',
     'color_boolean_detector',
-    'april_boolean_detector',    
+    'april_boolean_detector',
 
 
     'front_sensor',
@@ -359,12 +359,12 @@ Entry.ZumiMini.blockMenuBlocks = [
     'cat_face_detector',
     'color_detector',
     'april_detector',
-    'power_info',   
+    'power_info',
 ];
 
 
 Entry.ZumiMini.getBlocks = function() {
-    return {    
+    return {
         motion_stop: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -413,8 +413,8 @@ Entry.ZumiMini.getBlocks = function() {
                     })
                     .then(() => {
 
-                        return new Promise(resolve => { 
-                            
+                        return new Promise(resolve => {
+
                             var ttt = setInterval(() => {
 
                                 if (_exit == true) {
@@ -426,7 +426,7 @@ Entry.ZumiMini.getBlocks = function() {
                                 var _stat = Entry.hw.portData.inputData['pStat'];
 
                                 if ((pStep == Z_WAIT) && (_stat == READY)) pStep = Z_SEND_PACKET;
-                                else if ((pStep == Z_WAIT) && (_stat == PROCESS)) pStep = Z_WAIT;    //wait until other action ends.                       
+                                else if ((pStep == Z_WAIT) && (_stat == PROCESS)) pStep = Z_WAIT;    //wait until other action ends.
 
                                 if ((pStep == Z_SEND_PACKET) && (_stat == READY)) {    //send command until hardware start to action.
 
@@ -451,21 +451,21 @@ Entry.ZumiMini.getBlocks = function() {
                                     resolve();
                                     clearInterval(ttt);
                                 }
-                                else if ((pStep == Z_MOVING) && (_stat == PROCESS)) pStep = Z_MOVING;  //wait until the action ends.                     
+                                else if ((pStep == Z_MOVING) && (_stat == PROCESS)) pStep = Z_MOVING;  //wait until the action ends.
 
-                            }, 50); 
+                            }, 50);
 
                         });
-                               
+
                     })
                     .then(() => {
                         resolve();
-                    })                    
+                    })
 
                 });
             },
         },
-        
+
         move_straight: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -476,7 +476,7 @@ Entry.ZumiMini.getBlocks = function() {
                     type: 'Dropdown',
                     options: [
                         [Lang.Blocks.FORWARD, 'FORWARD'],
-                        [Lang.Blocks.BACKWARD, 'BACKWARD'],                        
+                        [Lang.Blocks.BACKWARD, 'BACKWARD'],
                     ],
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -493,10 +493,10 @@ Entry.ZumiMini.getBlocks = function() {
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                {               
+                {
                     type: 'Block',
                     accept: 'string',
-                },               
+                },
                 {
                     type: "Indicator",
                     img: 'block_icon/hardware_icon.svg',
@@ -544,7 +544,7 @@ Entry.ZumiMini.getBlocks = function() {
                 var _dist = script.getNumberValue('DIST');
 
                 return new Promise(resolve => {
-                    
+
                     new Promise(resolve => {
                         setTimeout(function () {
                             console.log("exCnt: " + exCnt + " tempCnt:" + tempCnt);
@@ -569,7 +569,7 @@ Entry.ZumiMini.getBlocks = function() {
                                 var _stat = Entry.hw.portData.inputData['pStat'];
 
                                 if ((pStep == Z_WAIT) && (_stat == READY)) pStep = Z_SEND_PACKET;
-                                else if ((pStep == Z_WAIT) && (_stat == PROCESS)) pStep = Z_WAIT;    //wait until other action ends.                       
+                                else if ((pStep == Z_WAIT) && (_stat == PROCESS)) pStep = Z_WAIT;    //wait until other action ends.
 
                                 if ((pStep == Z_SEND_PACKET) && (_stat == READY)) {    //send command until hardware start to action.
 
@@ -618,7 +618,7 @@ Entry.ZumiMini.getBlocks = function() {
                     })
                     .then(() => {
                         resolve();
-                    })       
+                    })
 
                 });
             },
@@ -629,7 +629,7 @@ Entry.ZumiMini.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#ffffff',
             skeleton: 'basic',
-            params: [               
+            params: [
                 {
                     type: 'Dropdown',
                     options: [
@@ -703,7 +703,7 @@ Entry.ZumiMini.getBlocks = function() {
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },              
+                },
                 {
                     type: "Indicator",
                     img: 'block_icon/hardware_icon.svg',
@@ -728,7 +728,7 @@ Entry.ZumiMini.getBlocks = function() {
                 const SPEED_RAPID = 3;
                 const SPEED_MID = 2;
                 const SPEED_LOW = 1;
-              
+
                 console.log("go move straight infinite block Start!");
 
                 var _dir = script.getStringField('DIR', script);
@@ -743,7 +743,7 @@ Entry.ZumiMini.getBlocks = function() {
                 else if (_spd == 'MID') Entry.hw.sendQueue['speed'] = SPEED_MID;
                 else if (_spd == 'SLOW') Entry.hw.sendQueue['speed'] = SPEED_LOW;
 
-                console.log("send protocol!");            
+                console.log("send protocol!");
             },
         },
 
@@ -752,7 +752,7 @@ Entry.ZumiMini.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#ffffff',
             skeleton: 'basic',
-            params: [               
+            params: [
                 {
                     type: 'Dropdown',
                     options: [
@@ -820,10 +820,10 @@ Entry.ZumiMini.getBlocks = function() {
                             resolve();
                         }, 200);
                     })
-                    .then(() => { 
+                    .then(() => {
 
-                        return new Promise(resolve => { 
-                            
+                        return new Promise(resolve => {
+
                             var ttt = setInterval(() => {
 
                                 if (_exit == true) {
@@ -835,7 +835,7 @@ Entry.ZumiMini.getBlocks = function() {
                                 var _stat = Entry.hw.portData.inputData['pStat'];
 
                                 if ((pStep == Z_WAIT) && (_stat == READY)) pStep = Z_SEND_PACKET;
-                                else if ((pStep == Z_WAIT) && (_stat == PROCESS)) pStep = Z_WAIT;    //wait until other action ends.                       
+                                else if ((pStep == Z_WAIT) && (_stat == PROCESS)) pStep = Z_WAIT;    //wait until other action ends.
 
                                 if ((pStep == Z_SEND_PACKET) && (_stat == READY)) {    //send command until hardware start to action.
 
@@ -885,7 +885,7 @@ Entry.ZumiMini.getBlocks = function() {
                 });
             },
         },
-        
+
         move_turn: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -974,8 +974,8 @@ Entry.ZumiMini.getBlocks = function() {
                         }, 200);
                     })
                     .then(() => {
-                        return new Promise(resolve => { 
-                            
+                        return new Promise(resolve => {
+
                             var ttt = setInterval(() => {
 
                                 if (_exit == true) {
@@ -983,11 +983,11 @@ Entry.ZumiMini.getBlocks = function() {
                                     resolve();
                                     clearInterval(ttt);
                                 }
-                                
+
                                 var _stat = Entry.hw.portData.inputData['pStat'];
 
                                 if ((pStep == Z_WAIT) && (_stat == READY)) pStep = Z_SEND_PACKET;
-                                else if ((pStep == Z_WAIT) && (_stat == PROCESS)) pStep = Z_WAIT;    //wait until other action ends.                       
+                                else if ((pStep == Z_WAIT) && (_stat == PROCESS)) pStep = Z_WAIT;    //wait until other action ends.
 
                                 if ((pStep == Z_SEND_PACKET) && (_stat == READY)) {    //send command until hardware start to action.
 
@@ -1042,8 +1042,8 @@ Entry.ZumiMini.getBlocks = function() {
                     })
                 });
             },
-        },      
-        
+        },
+
         go_forward: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1051,7 +1051,7 @@ Entry.ZumiMini.getBlocks = function() {
             skeleton: 'basic',
             params: [
                 {
-                    type: "Indicator",                
+                    type: "Indicator",
                     img: 'block_icon/hardware_icon.svg',
                     size: 14
                 }
@@ -1062,26 +1062,26 @@ Entry.ZumiMini.getBlocks = function() {
             class: "base",
             isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
-                
+
                 const Z_WAIT = 0;
                 const Z_SEND_PACKET = 1;
                 const Z_MOVING = 2;
 
                 const READY = 0;
-                const PROCESS = 1; 
-                
+                const PROCESS = 1;
+
                 const COMMAND_GOGO = 1;
-                
+
                 //var exTime = new Date();
                 //var firstCheck = true;
                 var pStep = Z_WAIT;
                 var iter = 0;
                 var _exit = false;
-               
+
                 console.log("going forward block Start!");
 
                 return new Promise(resolve => {
-                    
+
                     new Promise(resolve => {
                         setTimeout(function () {
                             console.log("exCnt: " + exCnt + " tempCnt:" + tempCnt);
@@ -1092,8 +1092,8 @@ Entry.ZumiMini.getBlocks = function() {
                         }, 200);
                     })
                     .then(() => {
-                        return new Promise(resolve => {  
-                            
+                        return new Promise(resolve => {
+
                             var ttt = setInterval(() => {
 
                                 if (_exit == true) {
@@ -1101,11 +1101,11 @@ Entry.ZumiMini.getBlocks = function() {
                                     resolve();
                                     clearInterval(ttt);
                                 }
-                                
+
                                 var _stat = Entry.hw.portData.inputData['pStat'];
 
                                 if ((pStep == Z_WAIT) && (_stat == READY)) pStep = Z_SEND_PACKET;
-                                else if ((pStep == Z_WAIT) && (_stat == PROCESS)) pStep = Z_WAIT;    //wait until other action ends.                       
+                                else if ((pStep == Z_WAIT) && (_stat == PROCESS)) pStep = Z_WAIT;    //wait until other action ends.
 
                                 if ((pStep == Z_SEND_PACKET) && (_stat == READY)) {    //send command until hardware start to action.
 
@@ -1141,7 +1141,7 @@ Entry.ZumiMini.getBlocks = function() {
                     })
                 });
             },
-        },      
+        },
 
         go_back: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -1170,7 +1170,7 @@ Entry.ZumiMini.getBlocks = function() {
                 const PROCESS = 1;
 
                 const COMMAND_BACK = 4;
-               
+
                 var pStep = Z_WAIT;
                 var iter = 0;
                 var _exit = false;
@@ -1178,7 +1178,7 @@ Entry.ZumiMini.getBlocks = function() {
                 console.log("going back block Start!");
 
                 return new Promise(resolve => {
-                    
+
                     new Promise(resolve => {
                         setTimeout(function () {
                             console.log("exCnt: " + exCnt + " tempCnt:" + tempCnt);
@@ -1189,7 +1189,7 @@ Entry.ZumiMini.getBlocks = function() {
                         }, 200);
                     })
                     .then(() => {
-                        return new Promise(resolve => {  
+                        return new Promise(resolve => {
 
                             var ttt = setInterval(() => {
 
@@ -1202,7 +1202,7 @@ Entry.ZumiMini.getBlocks = function() {
                                 var _stat = Entry.hw.portData.inputData['pStat'];
 
                                 if ((pStep == Z_WAIT) && (_stat == READY)) pStep = Z_SEND_PACKET;
-                                else if ((pStep == Z_WAIT) && (_stat == PROCESS)) pStep = Z_WAIT;    //wait until other action ends.                       
+                                else if ((pStep == Z_WAIT) && (_stat == PROCESS)) pStep = Z_WAIT;    //wait until other action ends.
 
                                 if ((pStep == Z_SEND_PACKET) && (_stat == READY)) {    //send command until hardware start to action.
 
@@ -1227,15 +1227,15 @@ Entry.ZumiMini.getBlocks = function() {
                                     resolve();
                                     clearInterval(ttt);
                                 }
-                                else if ((pStep == Z_MOVING) && (_stat == PROCESS)) pStep = Z_MOVING;  //wait until the action ends.                     
+                                else if ((pStep == Z_MOVING) && (_stat == PROCESS)) pStep = Z_MOVING;  //wait until the action ends.
 
                             }, 50);
 
-                        });                    
+                        });
                     })
                     .then(() => {
                         resolve();
-                    })                    
+                    })
                 });
             },
         },
@@ -1276,7 +1276,7 @@ Entry.ZumiMini.getBlocks = function() {
 
                 return new Promise(resolve => {
 
-                    new Promise(resolve => {                        
+                    new Promise(resolve => {
                         setTimeout(function () {
                             console.log("exCnt: " + exCnt + " tempCnt:" + tempCnt);
                             if (exCnt == tempCnt) {
@@ -1285,22 +1285,22 @@ Entry.ZumiMini.getBlocks = function() {
                             resolve();
                         }, 200);
                     })
-                    .then(() => { 
-                        
-                        return new Promise(resolve => {  
-                            
+                    .then(() => {
+
+                        return new Promise(resolve => {
+
                             var ttt = setInterval(() => {
 
                                 if (_exit == true) {
                                     console.log("skip block!");
                                     resolve();
                                     clearInterval(ttt);
-                                }                                        
+                                }
 
                                 var _stat = Entry.hw.portData.inputData['pStat'];
 
                                 if ((pStep == Z_WAIT) && (_stat == READY)) pStep = Z_SEND_PACKET;
-                                else if ((pStep == Z_WAIT) && (_stat == PROCESS)) pStep = Z_WAIT;    //wait until other action ends.                       
+                                else if ((pStep == Z_WAIT) && (_stat == PROCESS)) pStep = Z_WAIT;    //wait until other action ends.
 
                                 if ((pStep == Z_SEND_PACKET) && (_stat == READY)) {    //send command until hardware start to action.
 
@@ -1327,13 +1327,13 @@ Entry.ZumiMini.getBlocks = function() {
                                 }
                                 else if ((pStep == Z_MOVING) && (_stat == PROCESS)) pStep = Z_MOVING;  //wait until the action ends.
 
-                            }, 50);                                                
-                        
+                            }, 50);
+
                         });
                     })
                     .then(() => {
                         resolve();
-                    })                 
+                    })
 
                 });
             },
@@ -1384,22 +1384,22 @@ Entry.ZumiMini.getBlocks = function() {
                             resolve();
                         }, 200);
                     })
-                    .then(() => { 
+                    .then(() => {
 
-                        return new Promise(resolve => {                                                       
-                            
+                        return new Promise(resolve => {
+
                             var ttt = setInterval(() => {
 
                                 if (_exit == true) {
                                     console.log("skip block!");
                                     resolve();
                                     clearInterval(ttt);
-                                }                               
-                               
+                                }
+
                                 var _stat = Entry.hw.portData.inputData['pStat'];
 
                                 if ((pStep == Z_WAIT) && (_stat == READY)) pStep = Z_SEND_PACKET;
-                                else if ((pStep == Z_WAIT) && (_stat == PROCESS)) pStep = Z_WAIT;    //wait until other action ends.                       
+                                else if ((pStep == Z_WAIT) && (_stat == PROCESS)) pStep = Z_WAIT;    //wait until other action ends.
 
                                 if ((pStep == Z_SEND_PACKET) && (_stat == READY)) {    //send command until hardware start to action.
 
@@ -1433,7 +1433,7 @@ Entry.ZumiMini.getBlocks = function() {
                     })
                     .then(() => {
                         resolve();
-                    })   
+                    })
 
                 });
             },
@@ -1484,8 +1484,8 @@ Entry.ZumiMini.getBlocks = function() {
                             resolve();
                         }, 200);
                     })
-                    .then(() => { 
-                        return new Promise(resolve => { 
+                    .then(() => {
+                        return new Promise(resolve => {
 
                             var ttt = setInterval(() => {
 
@@ -1493,12 +1493,12 @@ Entry.ZumiMini.getBlocks = function() {
                                     console.log("skip block!");
                                     resolve();
                                     clearInterval(ttt);
-                                } 
+                                }
 
                                 var _stat = Entry.hw.portData.inputData['pStat'];
 
                                 if ((pStep == Z_WAIT) && (_stat == READY)) pStep = Z_SEND_PACKET;
-                                else if ((pStep == Z_WAIT) && (_stat == PROCESS)) pStep = Z_WAIT;    //wait until other action ends.                       
+                                else if ((pStep == Z_WAIT) && (_stat == PROCESS)) pStep = Z_WAIT;    //wait until other action ends.
 
                                 if ((pStep == Z_SEND_PACKET) && (_stat == READY)) {    //send command until hardware start to action.
 
@@ -1527,11 +1527,11 @@ Entry.ZumiMini.getBlocks = function() {
 
                             }, 50);
 
-                        });                    
+                        });
                     })
                     .then(() => {
                         resolve();
-                    }) 
+                    })
                 });
             },
         },
@@ -1543,7 +1543,7 @@ Entry.ZumiMini.getBlocks = function() {
             skeleton: 'basic',
             params: [
                 {
-                    type: "Indicator", 
+                    type: "Indicator",
                     img: 'block_icon/hardware_icon.svg',
                     size: 14,
                 }
@@ -1581,8 +1581,8 @@ Entry.ZumiMini.getBlocks = function() {
                             resolve();
                         }, 200);
                     })
-                    .then(() => { 
-                        return new Promise(resolve => { 
+                    .then(() => {
+                        return new Promise(resolve => {
 
                             var ttt = setInterval(() => {
 
@@ -1595,7 +1595,7 @@ Entry.ZumiMini.getBlocks = function() {
                                 var _stat = Entry.hw.portData.inputData['pStat'];
 
                                 if ((pStep == Z_WAIT) && (_stat == READY)) pStep = Z_SEND_PACKET;
-                                else if ((pStep == Z_WAIT) && (_stat == PROCESS)) pStep = Z_WAIT;    //wait until other action ends.                       
+                                else if ((pStep == Z_WAIT) && (_stat == PROCESS)) pStep = Z_WAIT;    //wait until other action ends.
 
                                 if ((pStep == Z_SEND_PACKET) && (_stat == READY)) {    //send command until hardware start to action.
 
@@ -1622,30 +1622,30 @@ Entry.ZumiMini.getBlocks = function() {
                                 }
                                 else if ((pStep == Z_MOVING) && (_stat == PROCESS)) pStep = Z_MOVING;  //wait until the action ends.
 
-                            }, 50); 
-                        });        
+                            }, 50);
+                        });
 
                     })
                     .then(() => {
                         resolve();
-                    })                
+                    })
 
                 });
             },
         },
 
-        
+
         front_sensor: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#ffffff',
             skeleton: 'basic_string_field',
-            params: [                
+            params: [
                 {
                     type: 'Dropdown',
                     options: [
                         [Lang.Blocks.FL, 'FL'],
-                        [Lang.Blocks.FR, 'FR'],                                           
+                        [Lang.Blocks.FR, 'FR'],
                     ],
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1727,7 +1727,7 @@ Entry.ZumiMini.getBlocks = function() {
             },
             class: 'info',
             isNotFor: ['zumi_mini'],
-            func: function (sprite, script) {                
+            func: function (sprite, script) {
                 var vol = Entry.hw.portData.inputData.euler['PITCH'];
                 return vol;
             },
@@ -1738,7 +1738,7 @@ Entry.ZumiMini.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#ffffff',
             skeleton: 'basic_string_field',
-            params: [               
+            params: [
                 {
                     type: 'Indicator',
                     img: 'block_icon/hardware_icon.svg',
@@ -1747,18 +1747,18 @@ Entry.ZumiMini.getBlocks = function() {
             ],
             def: {
                 type: 'button_input',
-            },           
+            },
             class: 'info',
             isNotFor: ['zumi_mini'],
-            func: function (sprite, script) {                
-                
+            func: function (sprite, script) {
+
                 var bStat =  Entry.hw.portData.inputData.euler['ROLL'];
                 if(bStat == 8) bStat = 'R';
                 else if(bStat == 4) bStat = 'B';
                 else if(bStat == 2) bStat = 'G';
                 else if(bStat == 1) bStat = 'Y';
                 else bStat = 'N';
-                
+
                 return bStat;
             },
         },
@@ -1785,12 +1785,12 @@ Entry.ZumiMini.getBlocks = function() {
                     type: 'Dropdown',
                     options: [
                         [Lang.Blocks.PRESSED, 'PRESS'],
-                        [Lang.Blocks.RELEASED, 'RELEASE'],                       
+                        [Lang.Blocks.RELEASED, 'RELEASE'],
                     ],
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },               
+                },
             ],
             def: {
                 params: ['RED_BTN','PRESS'],
@@ -1808,8 +1808,8 @@ Entry.ZumiMini.getBlocks = function() {
                 const stat = script.getStringField('STATUS', script);
                 var bStat = Entry.hw.portData.inputData.euler['ROLL'];
                 var result = false;
-                
-                if (stat == 'PRESS') 
+
+                if (stat == 'PRESS')
                 {
                     if((btn == 'RED_BTN')&&(bStat == 8)) result = true;
                     else if((btn == 'BLUE_BTN') && (bStat == 4)) result = true;
@@ -1817,15 +1817,15 @@ Entry.ZumiMini.getBlocks = function() {
                     else if((btn == 'YELLOW_BTN') && (bStat == 1)) result = true;
                     else result = false;
                 }
-                else if (stat == 'RELEASE') 
+                else if (stat == 'RELEASE')
                 {
                     if ((btn == 'RED_BTN') && (bStat == 8)) result = false;
                     else if ((btn == 'BLUE_BTN') && (bStat == 4)) result = false;
                     else if ((btn == 'GREEN_BTN') && (bStat == 2)) result = false;
                     else if ((btn == 'YELLOW_BTN') && (bStat == 1)) result = false;
                     else result = true;
-                }              
-               
+                }
+
                 return result;
             },
         },
@@ -1863,7 +1863,7 @@ Entry.ZumiMini.getBlocks = function() {
             class: 'info',
             isNotFor: ['zumi_mini'],
             func: function (sprite, script) {
-                
+
                 const REQUEST_FACE_DETECTION = 0x01;
                 Entry.hw.sendQueue['req'] |= REQUEST_FACE_DETECTION;
                 const sen = script.getStringField('PARAM', script);
@@ -1878,9 +1878,9 @@ Entry.ZumiMini.getBlocks = function() {
                 }
                 else if (sen == 'CY') {
                     if (result == 0x00) result = -999;
-                    else result = (200 / 2) - Yg;
-                }             
-               
+                    else result = ((200 / 2) - Yg) + 35;
+                }
+
                 return result;
             },
         },
@@ -1917,8 +1917,8 @@ Entry.ZumiMini.getBlocks = function() {
             },
             class: 'info',
             isNotFor: ['zumi_mini'],
-            func: function (sprite, script) {           
-                
+            func: function (sprite, script) {
+
                 const REQUEST_USER_DEFINED = 0x10;
                 Entry.hw.sendQueue['req'] |= REQUEST_USER_DEFINED;
                 const sen = script.getStringField('PARAM', script);
@@ -1933,10 +1933,10 @@ Entry.ZumiMini.getBlocks = function() {
                 }
                 else if (sen == 'CY') {
                     if (result == 0x00) result = -999;
-                    else result = ((200 / 2) - Yg) + 20;
+                    else result = ((200 / 2) - Yg) + 30;
                 }
 
-                return result;                
+                return result;
             },
         },
 
@@ -1955,7 +1955,7 @@ Entry.ZumiMini.getBlocks = function() {
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },               
+                },
             ],
             def: {
                 params: ['HUMAN'],
@@ -1971,24 +1971,24 @@ Entry.ZumiMini.getBlocks = function() {
                 var result = false;
 
                 const REQUEST_FACE_DETECTION = 0x01;   //humanface
-                const REQUEST_USER_DEFINED = 0x10;     //catface         
-                               
+                const REQUEST_USER_DEFINED = 0x10;     //catface
+
                 const sen = script.getStringField('FACE', script);
-                
+
                 if(sen == 'HUMAN')
                 {
                     Entry.hw.sendQueue['req'] |= REQUEST_FACE_DETECTION;
                     var humanResult = Entry.hw.portData.inputData.faceDetect['DETECT'];
                     if(humanResult != 0) result = true;
-                    else result = false;                   
+                    else result = false;
                 }
                 else if(sen == 'CAT')
                 {
                     Entry.hw.sendQueue['req'] |= REQUEST_USER_DEFINED;
                     var catResult = Entry.hw.portData.inputData.userDefined['DETECT'];
                     if(catResult != 0) result = true;
-                    else result = false;                   
-                }      
+                    else result = false;
+                }
 
                 return result;
             },
@@ -2027,11 +2027,11 @@ Entry.ZumiMini.getBlocks = function() {
             },
             class: 'info',
             isNotFor: ['zumi_mini'],
-            func: function (sprite, script) { 
+            func: function (sprite, script) {
 
                 const REQUEST_COLOR_DETECTION = 0x02;
                 Entry.hw.sendQueue['req'] |= REQUEST_COLOR_DETECTION;
-                
+
                 const sen = script.getStringField('PARAM', script);
                 var result = Entry.hw.portData.inputData.colorDetect[sen];
 
@@ -2042,19 +2042,19 @@ Entry.ZumiMini.getBlocks = function() {
                 else if ((result == 0x03) && (sen == 'COLOR')) result = 'GREEN';
                 else if ((result == 0x04) && (sen == 'COLOR')) result = 'CYAN';
                 else if ((result == 0x05) && (sen == 'COLOR')) result = 'BLUE';
-                else if ((result == 0x06) && (sen == 'COLOR')) result = 'PURPLE';                
+                else if ((result == 0x06) && (sen == 'COLOR')) result = 'PURPLE';
 
                 var Xg = Entry.hw.portData.inputData.colorDetect['CX'];
                 var Yg = Entry.hw.portData.inputData.colorDetect['CY'];
 
                 if (sen == 'CX') {
-                    if (result == 0x00) result = -999;
-                    else result = ((200 / 2) - Xg);
+                    if (result == 0xFE) result = -999;
+                    else result = ((200 / 2) - Xg) +20;
                 }
                 else if (sen == 'CY') {
-                    if (result == 0x00) result = -999;
-                    else result = ((200 / 2) - Yg);
-                }             
+                    if (result == 0xFE) result = -999;
+                    else result = ((200 / 2) - Yg) +35;
+                }
 
                 return result;
             },
@@ -2080,7 +2080,7 @@ Entry.ZumiMini.getBlocks = function() {
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },             
+                },
             ],
             def: {
                 params: ['RED'],
@@ -2091,13 +2091,13 @@ Entry.ZumiMini.getBlocks = function() {
             },
             class: 'boolean',
             isNotFor: ['zumi_mini'],
-            func: function (sprite, script) { 
+            func: function (sprite, script) {
 
                 var result = false;
-                
+
                 const REQUEST_COLOR_DETECTION = 0x02;
                 Entry.hw.sendQueue['req'] |= REQUEST_COLOR_DETECTION;
-                
+
                 const sen = script.getStringField('PARAM', script);
                 var result = Entry.hw.portData.inputData.colorDetect['COLOR'];
 
@@ -2110,12 +2110,12 @@ Entry.ZumiMini.getBlocks = function() {
                 else if ((result == 0x04) && (sen == 'CYAN')) result = true;
                 else if ((result == 0x05) && (sen == 'BLUE')) result = true;
                 else if ((result == 0x06) && (sen == 'PURPLE')) result = true;
-                else result = false;              
+                else result = false;
 
                 return result;
             },
         },
-        
+
 
         april_detector: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -2128,7 +2128,7 @@ Entry.ZumiMini.getBlocks = function() {
                     options: [
                         [Lang.Blocks.ID, 'ID'],
                         [Lang.Blocks.CX, 'CX'],
-                        [Lang.Blocks.CY, 'CY'],                       
+                        [Lang.Blocks.CY, 'CY'],
                     ],
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2162,22 +2162,34 @@ Entry.ZumiMini.getBlocks = function() {
                 var Xg = Entry.hw.portData.inputData.aprilDetect['CX'];
                 var Yg = Entry.hw.portData.inputData.aprilDetect['CY'];
 
-                
+
                 if(sen == 'ID')
                 {
                     if(result == 0xFE) result = -1;
-                }                
+                    else
+                    {
+                        if(result <11) result +=1;
+                        else if(result == 14) result = 12;
+                        else if(result == 15) result = 13;
+                        else if(result == 16) result = 14;
+                        else if(result == 18) result = 15;
+                        else if(result == 19) result = 16;
+                        else if(result == 20) result = 17;
+                    }
+                }
                 else if(sen == 'CX')
                 {
                     if(result == 0x00) result = -999;
                     else result = (200 / 2) - Xg;
                 }
-                else if (sen == 'CY') 
+                else if (sen == 'CY')
                 {
                     if (result == 0x00) result = -999;
                     else result = (100 / 2) - Yg;
-                }                
-              
+                    //console.log(Yg, result);
+                }
+
+
                 return result;
             },
         },
@@ -2187,14 +2199,14 @@ Entry.ZumiMini.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#ffffff',
             skeleton: 'basic_boolean_field',
-            params: [               
+            params: [
                 {
                     type: 'Block',
                     accept: 'string',
                 },
             ],
             def: {
-                params: [18],
+                params: [15],
                 type: 'april_boolean_detector',
             },
             paramsKeyMap: {
@@ -2209,11 +2221,19 @@ Entry.ZumiMini.getBlocks = function() {
                 const REQUEST_APRIL_DETECTION = 0x04;
                 Entry.hw.sendQueue['req'] |= REQUEST_APRIL_DETECTION;
 
-                var _num = script.getNumberValue('NUM');                
+                var _num = script.getNumberValue('NUM');
                 var result = Entry.hw.portData.inputData.aprilDetect['ID'];
 
+                if(result <11) result +=1;
+                else if(result == 14) result = 12;
+                else if(result == 15) result = 13;
+                else if(result == 16) result = 14;
+                else if(result == 18) result = 15;
+                else if(result == 19) result = 16;
+                else if(result == 20) result = 17;
+
                 if(_num == result) result = true;
-                else result = false;              
+                else result = false;
 
                 return result;
             },
@@ -2258,7 +2278,7 @@ Entry.ZumiMini.getBlocks = function() {
                 const sen = script.getStringField('EULER', script);
                 const angle = Entry.hw.portData.inputData.euler[sen];
                 return angle;
-                
+
             },
         },
 
@@ -2272,7 +2292,7 @@ Entry.ZumiMini.getBlocks = function() {
                     type: 'Dropdown',
                     options: [
                         [Lang.Blocks.CAMERA, 'CAMERA'],
-                        [Lang.Blocks.EMOTION, 'EMOTION'],                      
+                        [Lang.Blocks.EMOTION, 'EMOTION'],
                     ],
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2298,13 +2318,13 @@ Entry.ZumiMini.getBlocks = function() {
                 const COMMAND_SCREEN_TOGGLE = 240;
                 const SCREEN_CAMERA = 1;
                 const SCREEN_EMOTION = 2;
-                               
+
                 var _type = script.getStringField('TYPE', script);
 
                 Entry.hw.sendQueue['com'] = COMMAND_SCREEN_TOGGLE;
 
                 if (_type == 'CAMERA') Entry.hw.sendQueue['speed'] = SCREEN_CAMERA;
-                else if (_type == 'EMOTION') Entry.hw.sendQueue['speed'] = SCREEN_EMOTION;               
+                else if (_type == 'EMOTION') Entry.hw.sendQueue['speed'] = SCREEN_EMOTION;
 
                 console.log("send protocol!");
             },
@@ -2330,7 +2350,7 @@ Entry.ZumiMini.getBlocks = function() {
                         [Lang.Blocks.EMO_CRY, 'CRY'],
                         [Lang.Blocks.EMO_WINK, 'WINK'],
                         [Lang.Blocks.EMO_BLINK, 'BLINK'],
-                        [Lang.Blocks.EMO_STOP, 'STOP'],
+                        [Lang.Blocks.EMO_SLEEPING, 'SLEEPING'],
                     ],
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2354,18 +2374,22 @@ Entry.ZumiMini.getBlocks = function() {
             func: function (sprite, script) {
 
                 const COMMAND_EMOTION_CHANGE = 241;
-                const EMO_BLINK = 1;
+
+                const EMO_BLINK = 3;
                 const EMO_STOP = 2;
-                const EMO_SMILE = 3;
-                const EMO_LOVE = 4;
-                const EMO_CRASH = 5;
-                const EMO_SURPRISE = 6;
-                const EMO_NICE = 7;
-                const EMO_CANTBELIEVE = 8;
-                const EMO_SLEEP = 9;
-                const EMO_CRY = 10;
-                const EMO_CHAOS = 11;               
-                const EMO_WINK = 14;               
+
+                const EMO_SMILE = 4;
+                const EMO_LOVE = 5;
+
+                const EMO_CRASH = 6;
+                const EMO_SURPRISE = 7;
+                const EMO_NICE = 8;
+                const EMO_CANTBELIEVE = 9;
+                const EMO_SLEEP = 10;
+                const EMO_CRY = 11;
+                const EMO_CHAOS = 12;
+                const EMO_SLEEPING = 13;
+                const EMO_WINK = 14;
 
                 var _type = script.getStringField('TYPE', script);
 
@@ -2382,12 +2406,12 @@ Entry.ZumiMini.getBlocks = function() {
                 else if (_type == 'CRY') Entry.hw.sendQueue['speed'] = EMO_CRY;
                 else if (_type == 'WINK') Entry.hw.sendQueue['speed'] = EMO_WINK;
                 else if (_type == 'BLINK') Entry.hw.sendQueue['speed'] = EMO_BLINK;
-                else if (_type == 'STOP') Entry.hw.sendQueue['speed'] = EMO_STOP;
+                else if (_type == 'SLEEPING') Entry.hw.sendQueue['speed'] = EMO_SLEEPING;
 
                 console.log("send protocol!");
             },
         },
-        
+
         play_sound: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2401,11 +2425,11 @@ Entry.ZumiMini.getBlocks = function() {
                         [Lang.Blocks.SND_CAT, 'CAT'],
                         [Lang.Blocks.SND_SHUTTER, 'SHUTTER'],
                         [Lang.Blocks.SND_FAIL, 'FAIL'],
-                        [Lang.Blocks.SND_SUCCESS, 'SUCCESS'],   
+                        [Lang.Blocks.SND_SUCCESS, 'SUCCESS'],
                         [Lang.Blocks.SND_FAIL2, 'FAIL2'],
                         [Lang.Blocks.SND_HONK, 'HONK'],
-                        [Lang.Blocks.SND_HONK2, 'HONK2'],                       
-                        [Lang.Blocks.SND_SIREN, 'SIREN'],                      
+                        [Lang.Blocks.SND_HONK2, 'HONK2'],
+                        [Lang.Blocks.SND_SIREN, 'SIREN'],
                     ],
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2437,7 +2461,7 @@ Entry.ZumiMini.getBlocks = function() {
                 const SND_FAIL2 = 2;
                 const SND_HONK = 6;
                 const SND_HONK2 = 7;
-                const SND_SIREN = 8;               
+                const SND_SIREN = 8;
 
                 var _type = script.getStringField('TYPE', script);
 
@@ -2455,7 +2479,7 @@ Entry.ZumiMini.getBlocks = function() {
                 console.log("send protocol!");
             },
         },
-        
+
         LED_control: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2470,7 +2494,7 @@ Entry.ZumiMini.getBlocks = function() {
                         [Lang.Blocks.BLUE, 'BLUE'],
                         [Lang.Blocks.YELLOW, 'YELLOW'],
                         [Lang.Blocks.SKY_BLUE, 'SKY_BLUE'],
-                        [Lang.Blocks.PINK, 'PINK'], 
+                        [Lang.Blocks.PINK, 'PINK'],
                         [Lang.Blocks.WHITE, 'WHITE'],
                     ],
                     fontSize: 11,
@@ -2486,7 +2510,7 @@ Entry.ZumiMini.getBlocks = function() {
                         [Lang.Blocks.LED_SUNRISE, 'SUNRISE'],
                         [Lang.Blocks.LED_SUNSET, 'SUNSET'],
                         [Lang.Blocks.LED_FLICKER, 'FLICKER'],
-                        [Lang.Blocks.LED_RAINBOW, 'RAINBOW'],                     
+                        [Lang.Blocks.LED_RAINBOW, 'RAINBOW'],
                     ],
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2541,7 +2565,7 @@ Entry.ZumiMini.getBlocks = function() {
                 const LED_SUNRISE = 4;
                 const LED_SUNSET = 5;
                 const LED_RAINBOW = 6;
-                
+
                 const LED_OFF = 0;
                 const LED_ON = 1;
 
@@ -2583,7 +2607,7 @@ Entry.ZumiMini.getBlocks = function() {
                                 var _stat = Entry.hw.portData.inputData['pStat'];
 
                                 if ((pStep == Z_WAIT) && (_stat == READY)) pStep = Z_SEND_PACKET;
-                                else if ((pStep == Z_WAIT) && (_stat == PROCESS)) pStep = Z_WAIT;    //wait until other action ends.                       
+                                else if ((pStep == Z_WAIT) && (_stat == PROCESS)) pStep = Z_WAIT;    //wait until other action ends.
 
                                 if ((pStep == Z_SEND_PACKET) && (_stat == READY)) {    //send command until hardware start to action.
 
@@ -2598,7 +2622,7 @@ Entry.ZumiMini.getBlocks = function() {
                                         else if ((_col == 'PINK') && (_act == 'ON')) Entry.hw.sendQueue['speed'] = LED_PINK;
                                         else if ((_col == 'YELLOW') && (_act == 'ON')) Entry.hw.sendQueue['speed'] = LED_YELLOW;
                                         else if ((_col == 'WHITE') && (_act == 'ON')) Entry.hw.sendQueue['speed'] = LED_WHITE;
-                                       
+
                                         if (_eff == 'NORMAL') Entry.hw.sendQueue['dist'] = LED_NORMAL;
                                         else if (_eff == 'BLINK') Entry.hw.sendQueue['dist'] = LED_BLINK;
                                         else if (_eff == 'FLICKER') Entry.hw.sendQueue['dist'] = LED_FLICKER;
@@ -2606,7 +2630,7 @@ Entry.ZumiMini.getBlocks = function() {
                                         else if (_eff == 'SUNRISE') Entry.hw.sendQueue['dist'] = LED_SUNRISE;
                                         else if (_eff == 'SUNSET') Entry.hw.sendQueue['dist'] = LED_SUNSET;
                                         else if (_eff == 'RAINBOW') Entry.hw.sendQueue['dist'] = LED_RAINBOW;
-                                        
+
                                         if (_act == 'OFF') Entry.hw.sendQueue['dir'] = LED_OFF;
                                         else Entry.hw.sendQueue['dir'] = LED_ON;
 
@@ -2630,7 +2654,7 @@ Entry.ZumiMini.getBlocks = function() {
                                     resolve();
                                     clearInterval(ttt);
                                 }
-                                else if ((pStep == Z_MOVING) && (_stat == PROCESS)) pStep = Z_MOVING;  //wait until the action ends.                     
+                                else if ((pStep == Z_MOVING) && (_stat == PROCESS)) pStep = Z_MOVING;  //wait until the action ends.
 
                             }, 50);
 
@@ -2707,7 +2731,7 @@ Entry.ZumiMini.getBlocks = function() {
                 const DIR_LEFT = 1;
                 const DIR_RIGHT = 2;
                 const DIR_STOP = 3;
-              
+
                 var pStep = Z_WAIT;
                 var iter = 0;
                 var _exit = false;
@@ -2725,7 +2749,7 @@ Entry.ZumiMini.getBlocks = function() {
 
                 //if ((ex_com != COMMAND_MOTOR1_INFINITE)|| (ex_com != COMMAND_MOTOR2_INFINITE)) {
                     //tSpd = 0x00; tDir = 0x00;
-                //}              
+                //}
 
                 var _dirInt = 0;
 
@@ -2738,20 +2762,20 @@ Entry.ZumiMini.getBlocks = function() {
                     if (_dir == 'CW') _dirInt = DIR_LEFT;
                     else if (_dir == 'CCW') _dirInt = DIR_RIGHT;
                     else if (_dir == 'STOP') _dirInt = DIR_STOP;
-                }                
+                }
 
                 if (_spd < 0) _spd = 0; else if (_spd > 10) _spd = 10;
-                
-                if (_num == 'LEFT') { 
-                    Entry.hw.sendQueue['com'] = COMMAND_MOTOR1_INFINITE;                  
-                    
+
+                if (_num == 'LEFT') {
+                    Entry.hw.sendQueue['com'] = COMMAND_MOTOR1_INFINITE;
+
                     tSpd = tSpd & 0b11110000;
                     tSpd = tSpd | _spd;
                     Entry.hw.sendQueue['speed'] = tSpd;
 
                     tDir = tDir & 0b11110000;
                     tDir = tDir | _dirInt;
-                    Entry.hw.sendQueue['dir'] = tDir;                    
+                    Entry.hw.sendQueue['dir'] = tDir;
                 }
                 else if (_num == 'RIGHT') {
                     Entry.hw.sendQueue['com'] = COMMAND_MOTOR2_INFINITE;
@@ -2763,12 +2787,12 @@ Entry.ZumiMini.getBlocks = function() {
                     tDir = tDir & 0b00001111;
                     tDir = tDir | (_dirInt << 4);
                     Entry.hw.sendQueue['dir'] = tDir;
-                }            
+                }
 
                 console.log("send protocol!");
-                
+
             },
-        },       
+        },
 
     };
 };
