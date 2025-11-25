@@ -32,7 +32,6 @@ Entry.EXPANSION_BLOCK.weather = {
             return;
         }
         Entry.EXPANSION_BLOCK.weather.date = new Date();
-        Entry.EXPANSION_BLOCK.weather.localDate = new Date().toLocaleDateString().replaceAll('.', '').replaceAll(' ', '')
         Entry.EXPANSION_BLOCK.weather.getData('week', 'Seoul', 'today');
         Entry.EXPANSION_BLOCK.weather.getData('hour', 'Seoul', '00');
         Entry.EXPANSION_BLOCK.weather.getData('now', 'Seoul');
@@ -170,7 +169,10 @@ Entry.EXPANSION_BLOCK.weather = {
             default:
                 break;
         }
-        return date.toLocaleDateString().replaceAll('.', '').replaceAll(' ', '');
+        return date
+            .toISOString()
+            .slice(0, 10)
+            .replace(/-/g, '');
     },
     locationMap: {
         Seoul: {
@@ -1203,7 +1205,10 @@ Entry.EXPANSION_BLOCK.weather.getBlocks = function() {
                     parent: script.getField('LOCATION', script),
                     sub: script.getField('SUBLOCATION', script),
                 };
-                const date = Entry.EXPANSION_BLOCK.weather.localDate;
+                const date = Entry.EXPANSION_BLOCK.weather.date
+                    .toISOString()
+                    .slice(0, 10)
+                    .replace(/-/g, '');
                 let time = script.getField('TIME', script);
                 // db에 저장하지 않으면서 00시가 없어져서 03시부터 가능..
                 if (time == '00') {
@@ -1584,7 +1589,10 @@ Entry.EXPANSION_BLOCK.weather.getBlocks = function() {
             class: 'weather_legacy',
             isNotFor: ['weather_legacy'],
             async func(sprite, script) {
-                const date = Entry.EXPANSION_BLOCK.weather.localDate;
+                const date = Entry.EXPANSION_BLOCK.weather.date
+                    .toISOString()
+                    .slice(0, 10)
+                    .replace(/-/g, '');
                 let time = script.getField('TIME', script);
                 // db에 저장하지 않으면서 00시가 없어져서 03시부터 가능..
                 if (time == '00') {
@@ -2042,7 +2050,10 @@ Entry.EXPANSION_BLOCK.weather.getBlocks = function() {
             isNotFor: ['weather'],
             async func(sprite, script) {
                 const location = script.getValue('LOCATION', script);
-                const date = Entry.EXPANSION_BLOCK.weather.localDate;
+                const date = Entry.EXPANSION_BLOCK.weather.date
+                    .toISOString()
+                    .slice(0, 10)
+                    .replace(/-/g, '');
                 let time = script.getField('TIME', script);
                 // db에 저장하지 않으면서 00시가 없어져서 03시부터 가능..
                 if (time == '00') {
@@ -2101,7 +2112,10 @@ Entry.EXPANSION_BLOCK.weather.getBlocks = function() {
                 const location = script.getValue('LOCATION', script);
                 const type =
                     Entry.EXPANSION_BLOCK.weather.propertyHourMap[script.getField('TYPE', script)];
-                const date = Entry.EXPANSION_BLOCK.weather.localDate;
+                const date = Entry.EXPANSION_BLOCK.weather.date
+                    .toISOString()
+                    .slice(0, 10)
+                    .replace(/-/g, '');
                 let time = script.getField('TIME', script);
                 // db에 저장하지 않으면서 00시가 없어져서 03시부터 가능..
                 if (time == '00') {
@@ -2158,7 +2172,10 @@ Entry.EXPANSION_BLOCK.weather.getBlocks = function() {
             isNotFor: ['weather'],
             async func(sprite, script) {
                 const location = script.getValue('LOCATION', script);
-                const date = Entry.EXPANSION_BLOCK.weather.localDate;
+                const date = Entry.EXPANSION_BLOCK.weather.date
+                    .toISOString()
+                    .slice(0, 10)
+                    .replace(/-/g, '');
                 let time = script.getField('TIME', script);
                 // db에 저장하지 않으면서 00시가 없어져서 03시부터 가능..
                 if (time == '00') {
