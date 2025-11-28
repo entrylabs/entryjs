@@ -254,7 +254,7 @@ Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.getBlocks = function () {
             isNotFor: ['behaviorConductLifeSafety'],
             func(sprite, script) {
                 const number = script.getStringValue('NUMBER', script);
-                const defaultValue = Lang.Blocks.no_data;
+                const defaultValue = Lang.Blocks.deprecated;
                 const params = {
                     category: Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.apiType,
                     subCategory: script.getField('CATEGORY', script),
