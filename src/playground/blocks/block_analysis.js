@@ -1233,10 +1233,9 @@ module.exports = {
                     const returnCol = DataTable.getColumnIndex(script.getValue('RETURN', script));
                     const value = script.getValue('VALUE', script);
                     const table = DataTable.getSource(tableId, sprite);
-                    const { origin } = table;
 
                     let foundIndex;
-                    for (let i = 0; i < origin.length; i++) {
+                    for (let i = 0; i < table?.table?.length || 0; i++) {
                         if (table.getValue([i, col]) == value) {
                             foundIndex = i;
                             break;
