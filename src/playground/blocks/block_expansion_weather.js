@@ -32,7 +32,12 @@ Entry.EXPANSION_BLOCK.weather = {
             return;
         }
         Entry.EXPANSION_BLOCK.weather.date = new Date();
-        Entry.EXPANSION_BLOCK.weather.localDate = new Date().toLocaleDateString().replaceAll('.', '').replaceAll(' ', '')
+        const localDate = new Date();
+        const localDateYear = localDate.getFullYear();
+        const localDateMonth = String(localDate.getMonth() + 1).padStart(2, '0');
+        const localDateDay = String(localDate.getDate()).padStart(2, '0');
+        // eslint-disable-next-line max-len
+        Entry.EXPANSION_BLOCK.weather.localDate = `${localDateYear}${localDateMonth}${localDateDay}`;
         Entry.EXPANSION_BLOCK.weather.getData('week', 'Seoul', 'today');
         Entry.EXPANSION_BLOCK.weather.getData('hour', 'Seoul', '00');
         Entry.EXPANSION_BLOCK.weather.getData('now', 'Seoul');
@@ -90,29 +95,29 @@ Entry.EXPANSION_BLOCK.weather = {
         }
 
         const skyCodeMap = {
-            '1': 'sunny', //"맑음",
-            '2': 'partly_cloudy', //"구름조금",
-            '3': 'cloudy', //"흐림",
-            '4': 'rainy', //"비",
-            '5': 'snowy', //"눈",
-            '6': 'sleet', //"눈비",
+            1: 'sunny', //"맑음",
+            2: 'partly_cloudy', //"구름조금",
+            3: 'cloudy', //"흐림",
+            4: 'rainy', //"비",
+            5: 'snowy', //"눈",
+            6: 'sleet', //"눈비",
 
-            '7': 'rainy', //"소나기",
-            '8': 'snowy', //"소낙눈",
-            '9': 'cloudy', //"안개",
-            '10': 'rainy', //"뇌우",
-            '11': 'cloudy', //"차차 흐려짐",
-            '12': 'rainy', //"흐려져 뇌우",
-            '13': 'rainy', //"흐려져 비",
-            '14': 'snowy', //"흐려져 눈",
-            '15': 'sleet', //"흐려져 눈비",
-            '16': 'cloudy', //"흐린 후 갬",
-            '17': 'rainy', //"뇌우 후 갬",
-            '18': 'rainy', //"비 후 갬",
-            '19': 'snowy', //"눈 후 갬",
-            '20': 'sleet', //"눈비 후 갬",
-            '21': 'mostly_cloudy', //"구름많음",
-            '22': 'cloudy',
+            7: 'rainy', //"소나기",
+            8: 'snowy', //"소낙눈",
+            9: 'cloudy', //"안개",
+            10: 'rainy', //"뇌우",
+            11: 'cloudy', //"차차 흐려짐",
+            12: 'rainy', //"흐려져 뇌우",
+            13: 'rainy', //"흐려져 비",
+            14: 'snowy', //"흐려져 눈",
+            15: 'sleet', //"흐려져 눈비",
+            16: 'cloudy', //"흐린 후 갬",
+            17: 'rainy', //"뇌우 후 갬",
+            18: 'rainy', //"비 후 갬",
+            19: 'snowy', //"눈 후 갬",
+            20: 'sleet', //"눈비 후 갬",
+            21: 'mostly_cloudy', //"구름많음",
+            22: 'cloudy',
         };
 
         if (skyCodeMap[sky_code]) {
@@ -170,7 +175,10 @@ Entry.EXPANSION_BLOCK.weather = {
             default:
                 break;
         }
-        return date.toLocaleDateString().replaceAll('.', '').replaceAll(' ', '');
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}${month}${day}`;
     },
     locationMap: {
         Seoul: {
@@ -555,7 +563,7 @@ Entry.EXPANSION_BLOCK.weather = {
     },
 };
 
-Entry.EXPANSION_BLOCK.weather.getBlocks = function() {
+Entry.EXPANSION_BLOCK.weather.getBlocks = function () {
     const params = {
         getDate(isPython = false) {
             const param = {
@@ -1892,6 +1900,7 @@ Entry.EXPANSION_BLOCK.weather.getBlocks = function() {
                     location,
                     script.getField('DATE', script)
                 );
+
                 return apiResult.sky;
             },
             syntax: {
