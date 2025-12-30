@@ -1,8 +1,37 @@
 'use strict';
 
 Entry.ITPLE = {
+    // 이전 버튼 상태 저장
+    prevButtonState: {
+        'A0': 1, 'A1': 1, '7': 1, '8': 1,
+    },
     afterReceive(pd) {
-        if(Entry.engine.isState('run')) {
+        if (!Entry.engine.isState('run')) {
+            return;
+        }
+        
+        // 버튼 상태 확인
+        const portConfigs = [
+            { key: 'A0', type: 'ANALOG', index: 0 },
+            { key: 'A1', type: 'ANALOG', index: 1 },
+            { key: '7', type: 'DIGITAL', index: 7 },
+            { key: '8', type: 'DIGITAL', index: 8 },
+        ];
+        
+        let buttonPressed = false;
+        for (const config of portConfigs) {
+            const currentValue = Entry.hw.portData[config.type]?.[config.index] ?? 1;
+            const prevValue = Entry.ITPLE.prevButtonState[config.key];
+            
+            // 버튼이 눌린 순간 감지 (1 → 0)
+            if (prevValue !== 0 && currentValue === 0) {
+                buttonPressed = true;
+            }
+            Entry.ITPLE.prevButtonState[config.key] = currentValue;
+        }
+        
+        // 버튼이 눌린 순간에만 이벤트 발생
+        if (buttonPressed) {
             Entry.engine.fireEvent('ITPLE_press_button');
         }
     },
@@ -69,8 +98,8 @@ Entry.ITPLE = {
         PULSEIN: 6,
         ULTRASONIC: 7,
         TIMER: 8,
-        NEOPIXELINIT: 9,
-        NEOPIXELCOLOR: 10,
+        NEOPIXEL_INIT: 9,
+        NEOPIXEL_COLOR: 10,
         NEOPIXEL_BRIGHTNESS: 11,
         NEOPIXEL_SHIFT: 12,
         NEOPIXEL_ROTATE: 13,
@@ -126,6 +155,7 @@ Entry.ITPLE = {
         '7': false,
         '8': false,
     },
+    timeSeq: 0,
 };
 
 Entry.ITPLE.setLanguage = function () {
@@ -253,19 +283,18 @@ Entry.ITPLE.getBlocks = function () {
                     '8':  { type: 'DIGITAL', index: 8 },
                 };
 
-                const portKey = script.getValue('PORT', script);
+                const portKey = script.getField('PORT', script);
                 const config = portConfigMap[portKey];
-                const value = Entry.hw.portData[config.type]?.[config.index] ?? 0;
-
-                const hasBeenPressedBefore = Entry.ITPLE.EdgeFlag[portKey];
                 
+                if (!config) {
+                    return this.die();
+                }
+                
+                const value = Entry.hw.portData[config.type]?.[config.index] ?? 1;
+
+                // 버튼이 눌렸을 때 (value === 0) 실행
                 if (value === 0) {
-                    if (!hasBeenPressedBefore) {
-                        Entry.ITPLE.EdgeFlag[portKey] = true;
-                        return script.callReturn();
-                    }
-                } else {
-                    Entry.ITPLE.EdgeFlag[portKey] = false;
+                    return script.callReturn();
                 }
 
                 return this.die();
