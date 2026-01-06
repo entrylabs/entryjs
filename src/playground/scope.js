@@ -26,12 +26,30 @@ class Scope {
         return Scope._reservedKeywords.has(param) ? '' : param;
     }
 
+    /**
+     * 함수 정의 블록의 초기 실행 시, 첫 번째 파라미터(FIELD)만 평가
+     * 나머지 파라미터는 이 시점에서 평가할 필요가 없으므로 더미값(0) 반환
+     */
+    getFirstFuncParam(param, i) {
+        if (i !== 0) {
+            this.executor.isNotSetParams = false;
+            return 0; // 첫 번째 외 파라미터는 초기 실행 시 무시
+        }
+        const newScope = new Entry.Scope(param, this.executor);
+        const result = newScope.run(this.entity, true);
+        return result;
+    }
+
     getParams() {
-        const that = this;
-        return this.block.params.map((param) => {
+        const isNotSetParams =
+            this.executor.isNotSetParams && this.block.data.type === 'function_create_value';
+        return this.block.params.map((param, i) => {
             if (param instanceof Entry.Block) {
+                if (isNotSetParams) {
+                    return this.getFirstFuncParam(param, i);
+                }
                 const fieldBlock = param;
-                const newScope = new Entry.Scope(fieldBlock, that.executor);
+                const newScope = new Entry.Scope(fieldBlock, this.executor);
                 return newScope.run(this.entity, true);
             } else {
                 return this.filterReservedKeywords(param);
@@ -185,7 +203,6 @@ class Scope {
         }
         const values = this.getParams();
         const isPromise = values.some((value) => value instanceof Promise);
-        // const schema = this.block.getSchema();
         if (!schema.func) {
             return;
         }

@@ -463,6 +463,7 @@ module.exports = {
                         this.funcExecutor.parentScope = script;
                         this.funcExecutor.isFuncExecutor = true;
                         this.funcExecutor.localVariables = _cloneDeep(func.localVariables);
+                        this.funcExecutor.isNotSetParams = true;
                     }
 
                     const { promises } = this.funcExecutor.execute();
