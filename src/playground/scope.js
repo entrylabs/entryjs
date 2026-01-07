@@ -13,10 +13,14 @@ class Scope {
     }
 
     getParam(index) {
-        const fieldBlock = this.block.params[index];
-        const newScope = new Entry.Scope(fieldBlock, this.executor);
-        const result = newScope.run(this.entity, true);
-        return result;
+        const param = this.block.params[index];
+        if (param instanceof Entry.Block) {
+            const newScope = new Entry.Scope(param, this.executor);
+            const result = newScope.run(this.entity, true);
+            return result;
+        } else {
+            return this.filterReservedKeywords(param);
+        }
     }
 
     // 클래스 레벨에서 한 번만 생성
@@ -26,28 +30,9 @@ class Scope {
         return Scope._reservedKeywords.has(param) ? '' : param;
     }
 
-    /**
-     * 함수 정의 블록의 초기 실행 시, 첫 번째 파라미터(FIELD)만 평가
-     * 나머지 파라미터는 이 시점에서 평가할 필요가 없으므로 더미값(0) 반환
-     */
-    getFirstFuncParam(param, i) {
-        if (i !== 0) {
-            this.executor.isNotSetParams = false;
-            return 0; // 첫 번째 외 파라미터는 초기 실행 시 무시
-        }
-        const newScope = new Entry.Scope(param, this.executor);
-        const result = newScope.run(this.entity, true);
-        return result;
-    }
-
     getParams() {
-        const isNotSetParams =
-            this.executor.isNotSetParams && this.block.data.type === 'function_create_value';
-        return this.block.params.map((param, i) => {
+        return this.block.params.map((param) => {
             if (param instanceof Entry.Block) {
-                if (isNotSetParams) {
-                    return this.getFirstFuncParam(param, i);
-                }
                 const fieldBlock = param;
                 const newScope = new Entry.Scope(fieldBlock, this.executor);
                 return newScope.run(this.entity, true);
