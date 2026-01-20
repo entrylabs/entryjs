@@ -15,6 +15,15 @@ Entry.Engine = class Engine {
         this.popup = null;
         this.isUpdating = true;
         this.speeds = [1, 15, 30, 45, 60];
+        this.engineTimer = {
+            isInit: false,
+            isPaused: false,
+            start: 0,
+            pauseStart: 0,
+            pausedTime: 0,
+        };
+        this._engineTimeouts = [];
+        this._engineTimeoutSeq = 0;
 
         this.attachKeyboardCapture();
 
@@ -558,6 +567,8 @@ Entry.Engine = class Engine {
         audioUtils.stopRecord();
         clearInterval(this.ticker);
         this.ticker = null;
+        this._stopEngineTimer();
+        this._clearEngineTimeouts();
     }
 
     /**
@@ -570,6 +581,7 @@ Entry.Engine = class Engine {
             if (Entry.hw.communicationType !== 'manual') {
                 Entry.hw.update();
             }
+            this._processEngineTimeouts();
         }
     };
 
@@ -646,6 +658,7 @@ Entry.Engine = class Engine {
             container.takeSequenceSnapshot();
             Entry.scene.takeStartSceneSnapshot();
             this.state = EntryEngineState.run;
+            this._resetEngineTimer();
             this.fireEvent('start');
             this.achieveEnabled = !(disableAchieve === false);
         }
@@ -788,6 +801,8 @@ Entry.Engine = class Engine {
         }
 
         this.state = EntryEngineState.stop;
+        this._stopEngineTimer();
+        this._clearEngineTimeouts();
         this.setEnableInputField(false);
         Entry.dispatchEvent('stop');
         Entry.stage.hideInputField();
@@ -822,6 +837,7 @@ Entry.Engine = class Engine {
                 delete timer.pauseStart;
             }
             this.state = EntryEngineState.run;
+            this._resumeEngineTimer();
             Entry.Utils.recoverSoundInstances();
             if (visible && this.runButton) {
                 this.setPauseButton(this.option);
@@ -849,6 +865,7 @@ Entry.Engine = class Engine {
                 timer.pausedTime += new Date().getTime() - timer.pauseStart;
                 timer.pauseStart = new Date().getTime();
             }
+            this._pauseEngineTimer();
             Entry.Utils.pauseSoundInstances();
             if (visible && this.runButton) {
                 this.setPauseButton(this.option);
@@ -1296,5 +1313,99 @@ Entry.Engine = class Engine {
             })();
             this.execPromises[index + i] = execPromise;
         });
+    }
+
+    _resetEngineTimer() {
+        const timer = this.engineTimer;
+        timer.start = new Date().getTime();
+        timer.pausedTime = 0;
+        timer.pauseStart = 0;
+        timer.isPaused = false;
+        timer.isInit = true;
+    }
+
+    _pauseEngineTimer() {
+        const timer = this.engineTimer;
+        if (!timer.isInit || timer.isPaused) {
+            return;
+        }
+        timer.isPaused = true;
+        timer.pauseStart = new Date().getTime();
+    }
+
+    _resumeEngineTimer() {
+        const timer = this.engineTimer;
+        if (!timer.isInit || !timer.isPaused) {
+            return;
+        }
+        if (timer.pauseStart) {
+            timer.pausedTime += new Date().getTime() - timer.pauseStart;
+        }
+        timer.pauseStart = 0;
+        timer.isPaused = false;
+    }
+
+    _stopEngineTimer() {
+        const timer = this.engineTimer;
+        timer.isInit = false;
+        timer.isPaused = false;
+        timer.start = 0;
+        timer.pauseStart = 0;
+        timer.pausedTime = 0;
+    }
+
+    _getEngineTimeMs() {
+        const timer = this.engineTimer;
+        if (!timer.isInit) {
+            return 0;
+        }
+        const now = timer.isPaused && timer.pauseStart ? timer.pauseStart : new Date().getTime();
+        return Math.max(now - timer.start - timer.pausedTime, 0);
+    }
+
+    _processEngineTimeouts() {
+        if (!this._engineTimeouts.length) {
+            return;
+        }
+        const nowMs = this._getEngineTimeMs();
+        const timeouts = this._engineTimeouts;
+        let writeIndex = 0;
+        for (let i = 0; i < timeouts.length; i++) {
+            const item = timeouts[i];
+            if (item.targetTimeMs <= nowMs) {
+                try {
+                    item.callback();
+                } catch (e) {
+                    console.error('Engine setTimeout callback error', e);
+                }
+            } else {
+                timeouts[writeIndex++] = item;
+            }
+        }
+        if (writeIndex !== timeouts.length) {
+            timeouts.length = writeIndex;
+        }
+    }
+
+    _clearEngineTimeouts() {
+        this._engineTimeouts = [];
+    }
+
+    setTimeout(callback, delay) {
+        if (typeof callback !== 'function') {
+            return null;
+        }
+        const id = ++this._engineTimeoutSeq;
+        const targetTimeMs = this._getEngineTimeMs() + Math.max(Number(delay) || 0, 0);
+        this._engineTimeouts.push({
+            id,
+            callback,
+            targetTimeMs,
+        });
+        return id;
+    }
+
+    clearTimeout(id) {
+        this._engineTimeouts = this._engineTimeouts.filter((item) => item.id !== id);
     }
 };

@@ -152,7 +152,7 @@ module.exports = {
                             }
                         };
                         sprite.stopDialog = stopDialog;
-                        timeoutId = setTimeout(stopDialog, timeValue * 1000);
+                        timeoutId = Entry.engine.setTimeout(stopDialog, timeValue * 1000);
                     }
                     if (script.timeFlag == 0) {
                         delete script.timeFlag;

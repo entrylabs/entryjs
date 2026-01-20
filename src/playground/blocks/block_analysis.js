@@ -856,7 +856,7 @@ module.exports = {
                     const tableId = script.getField('MATRIX', script);
                     const timeValue = script.getNumberValue('SECOND', script);
                     DataTable.showTable(tableId);
-                    setTimeout(() => {
+                    Entry.engine.setTimeout(() => {
                         DataTable.closeModal();
                     }, timeValue * 1000);
                     return script.callReturn();
