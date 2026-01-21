@@ -139,7 +139,7 @@ Entry.AltinoLite.setLanguage = function() {
             },
             template: {
                 altino_lite_analogValue: '알티노 라이트 %1 센서값',
-                altino_lite_stopAll: '정지 %1°%2',
+                altino_lite_stopAll: '정지 %1 %2',
                 altino_lite_dot_display: '표시하기 %1 %2',
                 altino_lite_dot_display_line: '표시하기 %1 %2 %3 %4 %5 %6 %7 %8 %9 %10',
                 altino_lite_dot_display_hex: '표시하기 %1 %2 %3 %4 %5 %6 %7 %8 %9',

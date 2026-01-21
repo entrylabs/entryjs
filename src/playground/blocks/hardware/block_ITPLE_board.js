@@ -1,8 +1,37 @@
 'use strict';
 
 Entry.ITPLE = {
+    // 이전 버튼 상태 저장
+    prevButtonState: {
+        'A0': 1, 'A1': 1, '7': 1, '8': 1,
+    },
     afterReceive(pd) {
-        if(Entry.engine.isState('run')) {
+        if (!Entry.engine.isState('run')) {
+            return;
+        }
+        
+        // 버튼 상태 확인
+        const portConfigs = [
+            { key: 'A0', type: 'ANALOG', index: 0 },
+            { key: 'A1', type: 'ANALOG', index: 1 },
+            { key: '7', type: 'DIGITAL', index: 7 },
+            { key: '8', type: 'DIGITAL', index: 8 },
+        ];
+        
+        let buttonPressed = false;
+        for (const config of portConfigs) {
+            const currentValue = Entry.hw.portData[config.type]?.[config.index] ?? 1;
+            const prevValue = Entry.ITPLE.prevButtonState[config.key];
+            
+            // 버튼이 눌린 순간 감지 (1 → 0)
+            if (prevValue !== 0 && currentValue === 0) {
+                buttonPressed = true;
+            }
+            Entry.ITPLE.prevButtonState[config.key] = currentValue;
+        }
+        
+        // 버튼이 눌린 순간에만 이벤트 발생
+        if (buttonPressed) {
             Entry.engine.fireEvent('ITPLE_press_button');
         }
     },
@@ -20,14 +49,44 @@ Entry.ITPLE = {
                 GET: {},
                 SET: {},
             };
-        } else {
-            const keySet = Object.keys(Entry.hw.sendQueue.SET);
-            keySet.forEach((key) => {
+        }
+
+        // 기존 큐 초기화
+        const keySet = Object.keys(Entry.hw.sendQueue.SET);
+        keySet.forEach((key) => {
+            const portNum = parseInt(key);
+            // 네오픽셀 관련 포트(100-103, 200-205)와 물리 포트 9는 별도 처리
+            // 206(BLINK), 207(BLINK_STOP)은 명시적으로 삭제
+            if (portNum === 206 || portNum === 207) {
+                delete Entry.hw.sendQueue.SET[key];
+            } else if (portNum !== 9 && !(portNum >= 100 && portNum <= 103) && !(portNum >= 200 && portNum <= 205)) {
                 Entry.hw.sendQueue.SET[key].data = 0;
                 Entry.hw.sendQueue.SET[key].time = new Date().getTime();
-            });
-        }
-        Entry.hw.update();
+            }
+        });
+
+        // 깜박이기 중지 명령 전송 (전체) - INIT보다 먼저 실행
+        const stopTime = new Date().getTime();
+        Entry.hw.sendQueue.SET[206] = {
+            type: 15, // NEOPIXEL_BLINK_STOP
+            data: { side: 2 }, // 전체
+            time: stopTime,
+        };
+        console.log('[ITPLE] setZero - BLINK_STOP sent at', stopTime);
+        Entry.hw.update(); // 즉시 전송
+
+        // NEOPIXEL_INIT 명령 전송 (네오픽셀 끄기)
+        // 깜박이기 중지 후 약간의 시간차를 두고 INIT 실행
+        setTimeout(() => {
+            const initTime = new Date().getTime();
+            Entry.hw.sendQueue.SET[200] = {
+                type: 9, // NEOPIXEL_INIT
+                data: 0,
+                time: initTime,
+            };
+            console.log('[ITPLE] setZero - NEOPIXEL_INIT sent at', initTime);
+            Entry.hw.update();
+        }, 20);
     },
     sensorTypes: {
         ALIVE: 0,
@@ -39,8 +98,13 @@ Entry.ITPLE = {
         PULSEIN: 6,
         ULTRASONIC: 7,
         TIMER: 8,
-        NEOPIXELINIT: 9,
-        NEOPIXELCOLOR: 10,
+        NEOPIXEL_INIT: 9,
+        NEOPIXEL_COLOR: 10,
+        NEOPIXEL_BRIGHTNESS: 11,
+        NEOPIXEL_SHIFT: 12,
+        NEOPIXEL_ROTATE: 13,
+        NEOPIXEL_BLINK: 14,
+        NEOPIXEL_BLINK_STOP: 15,
     },
     toneTable: {
         0: 0,
@@ -91,6 +155,7 @@ Entry.ITPLE = {
         '7': false,
         '8': false,
     },
+    timeSeq: 0,
 };
 
 Entry.ITPLE.setLanguage = function () {
@@ -108,6 +173,16 @@ Entry.ITPLE.setLanguage = function () {
                 ITPLE_set_motor_direction: '%1 모터 %2 방향으로 정하기 %3',
                 ITPLE_set_motor_speed: '%1 모터 %2 빠르기로 정하기 %3',
                 ITPLE_set_servo: '서보모터를 %2 도로 정하기 %3',
+                ITPLE_set_neopixel_init: '네오픽셀 모두 끄기 %1',
+                ITPLE_set_neopixel: '%1 번째 네오픽셀 LED를 %2 색으로 켜기 %3',
+                ITPLE_set_neopixel_all: '네오픽셀 전체의 색상을 %1 (으)로 켜기 %2',
+                ITPLE_set_neopixel_range: '%1 번부터 %2 번까지 네오픽셀을 %3 색상으로 켜기 %4',
+                ITPLE_set_neopixel_rotate: '네오픽셀 %1 방향으로 %2 칸 이동 %3',
+                ITPLE_set_neopixel_brightness: '네오픽셀 최대 밝기를 %1 (으)로 정하기 %2',
+                ITPLE_set_neopixel_blink: '%1 네오픽셀 %2 색으로 깜박이기 (간격: %3초) %4',
+                ITPLE_stop_neopixel_blink: '%1 네오픽셀 깜박이기 중지 %2',
+                ITPLE_color_picker_value: '색상 선택 %1',
+                ITPLE_rgb_to_color_value: 'R: %1 G: %2 B: %3 색상값',
             },
         },
         en: {
@@ -123,6 +198,16 @@ Entry.ITPLE.setLanguage = function () {
                 ITPLE_set_motor_direction: '%1 motor %2 direction %3',
                 ITPLE_set_motor_speed: '%1 motor %2 speed %3',
                 ITPLE_set_servo: 'Set servo motor to %2 degree %3',
+                ITPLE_set_neopixel_init: 'Turn off all NeoPixels %1',
+                ITPLE_set_neopixel: 'Set NeoPixel %1 to %2 color %3',
+                ITPLE_set_neopixel_all: 'Set all NeoPixels to %1 color %2',
+                ITPLE_set_neopixel_range: 'Fill NeoPixels from %1 to %2 with %3 color %4',
+                ITPLE_set_neopixel_rotate: 'Shift NeoPixels %1 by %2 steps %3',
+                ITPLE_set_neopixel_brightness: 'Set NeoPixel max brightness to %1 %2',
+                ITPLE_set_neopixel_blink: 'Blink %1 NeoPixels %2 color (interval: %3s) %4',
+                ITPLE_stop_neopixel_blink: 'Stop %1 NeoPixel blinking %2',
+                ITPLE_color_picker_value: 'Pick color %1',
+                ITPLE_rgb_to_color_value: 'Color from R:%1 G:%2 B:%3',
             },
         },
     };
@@ -133,6 +218,8 @@ Entry.ITPLE.blockMenuBlocks = [
     'ITPLE_get_button_value',
     'ITPLE_get_sensor_value',
     'ITPLE_get_ultrasonic_value',
+    'ITPLE_color_picker_value',
+    'ITPLE_rgb_to_color_value',
     'ITPLE_is_key_pressed',
     'ITPLE_value_sensor',
     'ITPLE_turn_led',
@@ -140,6 +227,14 @@ Entry.ITPLE.blockMenuBlocks = [
     'ITPLE_set_motor_direction',
     'ITPLE_set_motor_speed',
     'ITPLE_set_servo',
+    'ITPLE_set_neopixel_init',
+    'ITPLE_set_neopixel',
+    'ITPLE_set_neopixel_all',
+    'ITPLE_set_neopixel_range',
+    'ITPLE_set_neopixel_rotate',
+    'ITPLE_set_neopixel_brightness',
+    'ITPLE_set_neopixel_blink',
+    'ITPLE_stop_neopixel_blink',
 ];
 
 //region ITPLE 보드
@@ -188,19 +283,18 @@ Entry.ITPLE.getBlocks = function () {
                     '8':  { type: 'DIGITAL', index: 8 },
                 };
 
-                const portKey = script.getValue('PORT', script);
+                const portKey = script.getField('PORT', script);
                 const config = portConfigMap[portKey];
-                const value = Entry.hw.portData[config.type]?.[config.index] ?? 0;
-
-                const hasBeenPressedBefore = Entry.ITPLE.EdgeFlag[portKey];
                 
+                if (!config) {
+                    return this.die();
+                }
+                
+                const value = Entry.hw.portData[config.type]?.[config.index] ?? 1;
+
+                // 버튼이 눌렸을 때 (value === 0) 실행
                 if (value === 0) {
-                    if (!hasBeenPressedBefore) {
-                        Entry.ITPLE.EdgeFlag[portKey] = true;
-                        return script.callReturn();
-                    }
-                } else {
-                    Entry.ITPLE.EdgeFlag[portKey] = false;
+                    return script.callReturn();
                 }
 
                 return this.die();
@@ -274,87 +368,85 @@ Entry.ITPLE.getBlocks = function () {
             }
         },
         ITPLE_get_sensor_value: {
-          color: EntryStatic.colorSet.block["default"].HARDWARE,
-          outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-          fontColor: '#fff',
-          skeleton: 'basic_string_field',
-          statements: [],
-          params: [{
-            type: 'Dropdown',
-            options: [['조도', 'A2'], ['소리', 'A3'], ['왼쪽 라인', 'A6'], ['오른쪽 라인', 'A7']],
-            value: 'A2',
-            fontSize: 11,
-            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-            arrowColor: EntryStatic.colorSet.arrow["default"].HARDWARE
-          }],
-          events: {},
-          def: {
-            params: [null],
-            type: 'ITPLE_get_sensor_value'
-          },
-          paramsKeyMap: {
-            PORT: 0
-          },
-          "class": 'ITPLEGet',
-          isNotFor: ['ITPLE'],
-          func: function func(sprite, script) {
-            const portConfigMap = {
-              'A2': { type: 'ANALOG', index: 2 },
-              'A3': { type: 'ANALOG', index: 3 },
-              'A6': { type: 'ANALOG', index: 6 },
-              'A7': { type: 'ANALOG', index: 7 },
-            };
-            const portKey = script.getValue('PORT', script);
-            const config = portConfigMap[portKey];
-            if (!config) return 0;
-            return Entry.hw.portData[config.type]?.[config.index] ?? 0;
-          },
-          syntax: {
-            js: [],
-            py: [{
-              syntax: 'Arduino.analogRead(%1)',
-              blockType: 'param',
-              textParams: [{ type: 'Block', accept: 'string' }]
-            }]
-          }
+            color: EntryStatic.colorSet.block["default"].HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [{
+                type: 'Dropdown',
+                options: [['조도', 'A2'], ['소리', 'A3'], ['왼쪽 라인', 'A6'], ['오른쪽 라인', 'A7']],
+                value: 'A2',
+                fontSize: 11,
+                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                arrowColor: EntryStatic.colorSet.arrow["default"].HARDWARE
+            }],
+            events: {},
+            def: {
+                params: [null],
+                type: 'ITPLE_get_sensor_value'
+            },
+            paramsKeyMap: {
+                PORT: 0
+            },
+            "class": 'ITPLEGet',
+            isNotFor: ['ITPLE'],
+            func: function func(sprite, script) {
+                const portConfigMap = {
+                    'A2': { type: 'ANALOG', index: 2 },
+                    'A3': { type: 'ANALOG', index: 3 },
+                    'A6': { type: 'ANALOG', index: 6 },
+                    'A7': { type: 'ANALOG', index: 7 },
+                };
+                const portKey = script.getValue('PORT', script);
+                const config = portConfigMap[portKey];
+                if (!config) return 0;
+                return Entry.hw.portData[config.type]?.[config.index] ?? 0;
+            },
+            syntax: {
+                js: [],
+                py: [{
+                    syntax: 'Arduino.analogRead(%1)',
+                    blockType: 'param',
+                    textParams: [{ type: 'Block', accept: 'string' }]
+                }]
+            }
         },
         ITPLE_is_key_pressed: {
-          color: EntryStatic.colorSet.block.default.HARDWARE,
-          outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-          fontColor: '#fff',
-          skeleton: 'basic_boolean_field',
-          params: [
-              {
-                  type: 'Dropdown',
-                  options: [
-                      ['위쪽', 'A0'],
-                      ['아래쪽', 'A1'],
-                      ['왼쪽', '7'],
-                      ['오른쪽', '8'],
-                  ],
-                  value: 'A0',
-                  fontSize: 11,
-                  bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                  arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-              },
-          ],
-          events: {},
-          def: {
-              params: [null],
-              type: 'ITPLE_is_key_pressed',
-          },
-          paramsKeyMap: {
-              KEY: 0,
-          },
-          "class": 'ITPLEGet',
-          isNotFor: ['ITPLE'],
-          func(sprite, script) {
-              // 각 키에 대한 하드웨어 포트 정보를 객체로 관리하여 확장성을 높입니다.
-              const keyToPortMap = {
-                  'A0': { type: 'ANALOG', index: 0 },
-                  'A1': { type: 'ANALOG', index: 1 },
-                  '7':  { type: 'DIGITAL', index: 7 },
-                  '8':  { type: 'DIGITAL', index: 8 },
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_boolean_field',
+            params: [{
+                type: 'Dropdown',
+                options: [
+                    ['위쪽', 'A0'],
+                    ['아래쪽', 'A1'],
+                    ['왼쪽', '7'],
+                    ['오른쪽', '8'],
+                ],
+                value: 'A0',
+                fontSize: 11,
+                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+            },],
+            events: {},
+            def: {
+                params: [null],
+                type: 'ITPLE_is_key_pressed',
+            },
+            paramsKeyMap: {
+                KEY: 0,
+            },
+            "class": 'ITPLEGet',
+            isNotFor: ['ITPLE'],
+            func(sprite, script) {
+                // 각 키에 대한 하드웨어 포트 정보를 객체로 관리하여 확장성을 높입니다.
+                const keyToPortMap = {
+                    'A0': { type: 'ANALOG', index: 0 },
+                    'A1': { type: 'ANALOG', index: 1 },
+                    '7':  { type: 'DIGITAL', index: 7 },
+                    '8':  { type: 'DIGITAL', index: 8 },
               };
 
               const selectedKey = script.getField('KEY');
@@ -470,68 +562,139 @@ Entry.ITPLE.getBlocks = function () {
             },
         },
         ITPLE_get_ultrasonic_value: {
-          color: EntryStatic.colorSet.block["default"].HARDWARE,
-          outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-          fontColor: '#fff',
-          skeleton: 'basic_string_field',
-          statements: [],
-          params: [{
-            type: 'Block',
-            accept: 'string',
-            defaultType: 'number'
-          }, {
-            type: 'Block',
-            accept: 'string',
-            defaultType: 'number'
-          }],
-          events: {},
-          def: {
+            color: EntryStatic.colorSet.block["default"].HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
             params: [{
-              type: 'arduino_get_port_number',
-              params: ['13']
+                type: 'Block',
+                accept: 'string',
+                defaultType: 'number'
             }, {
-              type: 'arduino_get_port_number',
-              params: ['12']
-            }],
-            type: 'ITPLE_get_ultrasonic_value'
-          },
-          paramsKeyMap: {
-            PORT1: 0,
-            PORT2: 1
-          },
-          "class": 'ITPLEGet',
-          isNotFor: ['ITPLE'],
-          func: function func(sprite, script) {
-            var port1 = script.getNumberValue('PORT1', script);
-            var port2 = script.getNumberValue('PORT2', script);
-            if (!Entry.hw.sendQueue.SET) {
-              Entry.hw.sendQueue.SET = {};
-            }
-            delete Entry.hw.sendQueue.SET[port1];
-            delete Entry.hw.sendQueue.SET[port2];
-            if (!Entry.hw.sendQueue.GET) {
-              Entry.hw.sendQueue.GET = {};
-            }
-            Entry.hw.sendQueue.GET[Entry.ITPLE.sensorTypes.ULTRASONIC] = {
-              port: [port1, port2],
-              time: new Date().getTime()
-            };
-            return Entry.hw.portData.ULTRASONIC || 0;
-          },
-          syntax: {
-            js: [],
-            py: [{
-              syntax: 'Arduino.ultrasonicRead(%1, %2)',
-              blockType: 'param',
-              textParams: [{
                 type: 'Block',
-                accept: 'string'
-              }, {
-                type: 'Block',
-                accept: 'string'
-              }]
+                accept: 'string',
+                defaultType: 'number'
             }],
-          }
+            events: {},
+            def: {
+                params: [{
+                    type: 'arduino_get_port_number',
+                    params: ['13']
+                }, {
+                    type: 'arduino_get_port_number',
+                    params: ['12']
+                }],
+                type: 'ITPLE_get_ultrasonic_value'
+            },
+            paramsKeyMap: {
+                PORT1: 0,
+                PORT2: 1
+            },
+            "class": 'ITPLEGet',
+            isNotFor: ['ITPLE'],
+            func: function func(sprite, script) {
+                var port1 = script.getNumberValue('PORT1', script);
+                var port2 = script.getNumberValue('PORT2', script);
+                if (!Entry.hw.sendQueue.SET) {
+                    Entry.hw.sendQueue.SET = {};
+                }
+                delete Entry.hw.sendQueue.SET[port1];
+                delete Entry.hw.sendQueue.SET[port2];
+                if (!Entry.hw.sendQueue.GET) {
+                    Entry.hw.sendQueue.GET = {};
+                }
+                Entry.hw.sendQueue.GET[Entry.ITPLE.sensorTypes.ULTRASONIC] = {
+                    port: [port1, port2],
+                    time: new Date().getTime()
+                };
+                return Entry.hw.portData.ULTRASONIC || 0;
+            },
+            syntax: {
+                js: [],
+                py: [{
+                    syntax: 'Arduino.ultrasonicRead(%1, %2)',
+                    blockType: 'param',
+                    textParams: [{
+                        type: 'Block',
+                        accept: 'string'
+                    }, {
+                        type: 'Block',
+                        accept: 'string'
+                    }]
+                }],
+            }
+        },
+        ITPLE_color_picker_value: {
+            color: EntryStatic.colorSet.block["default"].HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                { type: 'Color' },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'ITPLE_color_picker_value',
+            },
+            paramsKeyMap: {
+                COLOR: 0,
+            },
+            class: 'ITPLE_neopixel',
+            isNotFor: ['ITPLE'],
+            func(sprite, script) {
+                // Color 파라미터는 이미 hex 문자열을 반환
+                return script.getStringValue('COLOR', script);
+            },
+            syntax: {
+                js: [],
+                py: []
+            },
+        },
+        ITPLE_rgb_to_color_value: {
+            color: EntryStatic.colorSet.block["default"].HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                { type: 'Block', accept: 'string', defaultType: 'number' },
+                { type: 'Block', accept: 'string', defaultType: 'number' },
+                { type: 'Block', accept: 'string', defaultType: 'number' },
+            ],
+            events: {},
+            def: {
+                params: [
+                    { type: 'number', params: ['255'] },
+                    { type: 'number', params: ['0'] },
+                    { type: 'number', params: ['0'] },
+                ],
+                type: 'ITPLE_rgb_to_color_value',
+            },
+            paramsKeyMap: {
+                RED: 0,
+                GREEN: 1,
+                BLUE: 2,
+            },
+            class: 'ITPLE_neopixel',
+            isNotFor: ['ITPLE'],
+            func(sprite, script) {
+                let r = script.getNumberValue('RED', script);
+                let g = script.getNumberValue('GREEN', script);
+                let b = script.getNumberValue('BLUE', script);
+                // clamp
+                r = Math.min(255, Math.max(0, Math.floor(r)));
+                g = Math.min(255, Math.max(0, Math.floor(g)));
+                b = Math.min(255, Math.max(0, Math.floor(b)));
+                const toHex = (v) => v.toString(16).padStart(2, '0').toUpperCase();
+                return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+            },
+            syntax: {
+                js: [],
+                py: []
+            },
         },
         ITPLE_turn_led: { // 저학년 학생을 위한, 핀 번호 없는 LED 켜기 블록
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -1208,9 +1371,479 @@ Entry.ITPLE.getBlocks = function () {
             },
             syntax: {
                 js: [],
+                py: [{
+                    syntax: 'Arduino.servomotorWrite(%1, %2)',
+                    textParams: [{
+                        type: 'Block',
+                        accept: 'string',
+                    },{
+                        type: 'Block',
+                        accept: 'string',
+                    },],
+                },],
+            },
+        },
+        ITPLE_set_neopixel_init: {
+            color: EntryStatic.colorSet.block["default"].HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [{
+                type: 'Indicator',
+                img: 'block_icon/hardware_icon.svg',
+                size: 12
+            }],
+            events: {},
+            def: {
+                params: [null],
+                type: 'ITPLE_set_neopixel_init'
+            },
+            "class": 'ITPLE_neopixel',
+            isNotFor: ['ITPLE'],
+            func(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const port = 200;
+    
+                if (!script.isStart) {
+                    if (!sq.SET) {
+                        sq.SET = {};
+                    }
+    
+                    // 시퀀스 번호로 고유한 시간 보장
+                    Entry.ITPLE.timeSeq++;
+                    const uniqueTime = new Date().getTime() + Entry.ITPLE.timeSeq;
+    
+                    sq.SET[port] = {
+                        type: Entry.ITPLE.sensorTypes.NEOPIXEL_INIT,
+                        data: uniqueTime % 10000,
+                        time: uniqueTime,
+                    };
+    
+                    script.isStart = true;
+                    script.timeFlag = Date.now();
+                    return script;
+                }
+    
+                // 10ms 대기
+                if (Date.now() - script.timeFlag < 2) {
+                    return script;
+                }
+    
+                delete script.isStart;
+                delete script.timeFlag;
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [{
+                    syntax: 'Arduino.neopixelInit(9, 4)'
+                }]
+            }
+        },
+        ITPLE_set_neopixel: {
+            color: EntryStatic.colorSet.block["default"].HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [{
+                type: 'Dropdown',
+                options: [['1', '0'], ['2', '1'], ['3', '2'], ['4', '3']],
+                value: '0',
+                fontSize: 11,
+                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                arrowColor: EntryStatic.colorSet.arrow["default"].HARDWARE
+            }, {
+                type: 'Block',
+                accept: 'string',
+                defaultType: 'text'
+            }, {
+                type: 'Indicator',
+                img: 'block_icon/hardware_icon.svg',
+                size: 12
+            }],
+            events: {},
+            def: {
+                params: [null, {
+                    type: 'ITPLE_color_picker_value', params: ['#FF0000']
+                }, null],
+                type: 'ITPLE_set_neopixel'
+            },
+            paramsKeyMap: {
+                NUM: 0,
+                COLOR: 1,
+            },
+            "class": 'ITPLE_neopixel',
+            isNotFor: ['ITPLE'],
+            func(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const num = script.getNumberValue('NUM', script);
+                const port = 100 + num;
+                const color = script.getStringValue('COLOR', script);
+    
+                const rgb = Entry.hex2rgb(color);
+                let r = rgb.r || 0;
+                let g = rgb.g || 0;
+                let b = rgb.b || 0;
+    
+                r = Math.min(255, Math.max(0, r));
+                g = Math.min(255, Math.max(0, g));
+                b = Math.min(255, Math.max(0, b));
+    
+                if (!script.isStart) {
+                    if (!sq.SET) {
+                        sq.SET = {};
+                    }
+    
+                    // 시퀀스 번호로 고유한 시간 보장
+                    Entry.ITPLE.timeSeq++;
+                    const uniqueTime = new Date().getTime() + Entry.ITPLE.timeSeq;
+    
+                    sq.SET[port] = {
+                        type: Entry.ITPLE.sensorTypes.NEOPIXEL_COLOR,
+                        data: { num, r, g, b },
+                        time: uniqueTime,
+                    };
+    
+                    script.isStart = true;
+                    script.timeFlag = Date.now();
+                    return script;
+                }
+    
+                // 10ms 대기
+                if (Date.now() - script.timeFlag < 2) {
+                    return script;
+                }
+    
+                delete script.isStart;
+                delete script.timeFlag;
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [{
+                    syntax: 'Arduino.neopixelColor(9, %1, %2)',
+                    textParams: [
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                    ],
+                }]
+            }
+        },
+        ITPLE_set_neopixel_all: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                { type: 'Block', accept: 'string', defaultType: 'text' },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    { type: 'ITPLE_color_picker_value', params: ['#00FF00'] },
+                    null,
+                ],
+                type: 'ITPLE_set_neopixel_all',
+            },
+            paramsKeyMap: {
+                COLOR: 0,
+            },
+            class: 'ITPLE_neopixel',
+            isNotFor: ['ITPLE'],
+            func(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const port = 202; // 전체 설정용 가상 포트
+                const color = script.getStringValue('COLOR', script);
+    
+                const rgb = Entry.hex2rgb(color);
+                let r = rgb.r || 0;
+                let g = rgb.g || 0;
+                let b = rgb.b || 0;
+    
+                r = Math.min(255, Math.max(0, r));
+                g = Math.min(255, Math.max(0, g));
+                b = Math.min(255, Math.max(0, b));
+    
+                if (!script.isStart) {
+                    if (!sq.SET) {
+                        sq.SET = {};
+                    }
+    
+                    // 시퀀스 번호로 고유한 시간 보장
+                    Entry.ITPLE.timeSeq++;
+                    const uniqueTime = new Date().getTime() + Entry.ITPLE.timeSeq;
+    
+                    sq.SET[port] = {
+                        type: Entry.ITPLE.sensorTypes.NEOPIXEL_COLOR,
+                        data: { num: 255, r, g, b }, // num: 255는 전체를 의미
+                        time: uniqueTime,
+                    };
+    
+                    script.isStart = true;
+                    script.timeFlag = Date.now();
+                    return script;
+                }
+    
+                // 10ms 대기
+                if (Date.now() - script.timeFlag < 2) {
+                    return script;
+                }
+    
+                delete script.isStart;
+                delete script.timeFlag;
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
                 py: [
                     {
-                        syntax: 'Arduino.servomotorWrite(%1, %2)',
+                        syntax: 'Arduino.neopixelColorAll(9, %1)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ]
+            },
+        },
+        ITPLE_set_neopixel_range: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['1', '0'],
+                        ['2', '1'],
+                        ['3', '2'],
+                        ['4', '3'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['1', '0'],
+                        ['2', '1'],
+                        ['3', '2'],
+                        ['4', '3'],
+                    ],
+                    value: '3',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                { type: 'Block', accept: 'string', defaultType: 'text' },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                    null,
+                    { type: 'ITPLE_color_picker_value', params: ['#0000FF'] },
+                    null,
+                ],
+                type: 'ITPLE_set_neopixel_range',
+            },
+            paramsKeyMap: {
+                START: 0,
+                END: 1,
+                COLOR: 2,
+            },
+            class: 'ITPLE_neopixel',
+            isNotFor: ['ITPLE'],
+            func(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const port = 203; // 범위 설정용 가상 포트
+                let start = script.getNumberValue('START', script);
+                let end = script.getNumberValue('END', script);
+                const color = script.getStringValue('COLOR', script);
+    
+                const rgb = Entry.hex2rgb(color);
+                let r = rgb.r || 0;
+                let g = rgb.g || 0;
+                let b = rgb.b || 0;
+    
+                // 범위 자동 조절 (0~3)
+                start = Math.min(3, Math.max(0, start));
+                end = Math.min(3, Math.max(0, end));
+    
+                // start > end인 경우 swap
+                if (start > end) {
+                    const temp = start;
+                    start = end;
+                    end = temp;
+                }
+    
+                // RGB 값 조절
+                r = Math.min(255, Math.max(0, r));
+                g = Math.min(255, Math.max(0, g));
+                b = Math.min(255, Math.max(0, b));
+    
+                if (!script.isStart) {
+                    if (!sq.SET) {
+                        sq.SET = {};
+                    }
+    
+                    // 시퀀스 번호로 고유한 시간 보장
+                    Entry.ITPLE.timeSeq++;
+                    const uniqueTime = new Date().getTime() + Entry.ITPLE.timeSeq;
+    
+                    sq.SET[port] = {
+                        type: Entry.ITPLE.sensorTypes.NEOPIXEL_COLOR,
+                        data: { num: 254, start, end, r, g, b }, // num: 254는 범위를 의미
+                        time: uniqueTime,
+                    };
+    
+                    script.isStart = true;
+                    script.timeFlag = Date.now();
+                    return script;
+                }
+    
+                // 10ms 대기
+                if (Date.now() - script.timeFlag < 2) {
+                    return script;
+                }
+    
+                delete script.isStart;
+                delete script.timeFlag;
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Arduino.neopixelColorRange(9, %1, %2, %3)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ]
+            },
+        },
+        ITPLE_set_neopixel_rotate: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['왼쪽', '-1'],
+                        ['오른쪽', '1'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                    {
+                        type: 'number',
+                        params: ['1'],
+                    },
+                    null,
+                ],
+                type: 'ITPLE_set_neopixel_rotate',
+            },
+            paramsKeyMap: {
+                DIRECTION: 0,
+                STEPS: 1,
+            },
+            class: 'ITPLE_neopixel',
+            isNotFor: ['ITPLE'],
+            func(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const port = 205; // 회전용 가상 포트
+                let direction = script.getNumberValue('DIRECTION', script);
+                let steps = script.getNumberValue('STEPS', script);
+    
+                // steps 범위 조절 (0~4)
+                steps = Math.min(4, Math.max(0, Math.floor(steps)));
+    
+                if (!script.isStart) {
+                    if (!sq.SET) {
+                        sq.SET = {};
+                    }
+    
+                    // 시퀀스 번호로 고유한 시간 보장
+                    Entry.ITPLE.timeSeq++;
+                    const uniqueTime = new Date().getTime() + Entry.ITPLE.timeSeq;
+    
+                    sq.SET[port] = {
+                        type: Entry.ITPLE.sensorTypes.NEOPIXEL_ROTATE,
+                        data: { direction, steps },
+                        time: uniqueTime,
+                    };
+    
+                    script.isStart = true;
+                    script.timeFlag = Date.now();
+                    return script;
+                }
+    
+                // 10ms 대기
+                if (Date.now() - script.timeFlag < 10) {
+                    return script;
+                }
+    
+                delete script.isStart;
+                delete script.timeFlag;
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Arduino.neopixelRotate(9, %1, %2)',
                         textParams: [
                             {
                                 type: 'Block',
@@ -1222,7 +1855,262 @@ Entry.ITPLE.getBlocks = function () {
                             },
                         ],
                     },
+                ]
+            },
+        },
+        ITPLE_set_neopixel_brightness: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'number',
+                        params: ['255'],
+                    },
+                    null,
                 ],
+                type: 'ITPLE_set_neopixel_brightness',
+            },
+            paramsKeyMap: {
+                BRIGHTNESS: 0,
+            },
+            class: 'ITPLE_neopixel',
+            isNotFor: ['ITPLE'],
+            func(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const port = 201;
+                let brightness = script.getNumberValue('BRIGHTNESS', script);
+    
+                brightness = Math.min(255, Math.max(0, brightness));
+    
+                if (!script.isStart) {
+                    if (!sq.SET) {
+                        sq.SET = {};
+                    }
+    
+                    // 시퀀스 번호로 고유한 시간 보장
+                    Entry.ITPLE.timeSeq++;
+                    const uniqueTime = new Date().getTime() + Entry.ITPLE.timeSeq;
+    
+                    sq.SET[port] = {
+                        type: Entry.ITPLE.sensorTypes.NEOPIXEL_BRIGHTNESS,
+                        data: brightness,
+                        time: uniqueTime,
+                    };
+    
+                    script.isStart = true;
+                    script.timeFlag = Date.now();
+                    return script;
+                }
+    
+                // 10ms 대기
+                if (Date.now() - script.timeFlag < 2) {
+                    return script;
+                }
+    
+                delete script.isStart;
+                delete script.timeFlag;
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Arduino.neopixelBrightness(9, %1)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ]
+            },
+        },
+        ITPLE_set_neopixel_blink: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['왼쪽', '0'],
+                        ['오른쪽', '1'],
+                        ['전체', '2'],
+                    ],
+                    value: '2',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                { type: 'Block', accept: 'string', defaultType: 'text' },
+                { type: 'Block', accept: 'string', defaultType: 'number' },
+                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                    { type: 'ITPLE_color_picker_value', params: ['#FFFFFF'] },
+                    { type: 'number', params: ['0.5'] },
+                    null,
+                ],
+                type: 'ITPLE_set_neopixel_blink',
+            },
+            paramsKeyMap: {
+                SIDE: 0,
+                COLOR: 1,
+                INTERVAL: 2,
+            },
+            class: 'ITPLE_neopixel',
+            isNotFor: ['ITPLE'],
+            func(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const port = 206; // BLINK 가상 포트
+    
+                const side = script.getNumberValue('SIDE', script); // 2: 전체, 0: 왼쪽, 1: 오른쪽
+                const count = 0; // 무한 깜박임
+                const color = script.getStringValue('COLOR', script);
+                let intervalSec = script.getNumberValue('INTERVAL', script);
+    
+                const rgb = Entry.hex2rgb(color);
+                let r = rgb.r || 0;
+                let g = rgb.g || 0;
+                let b = rgb.b || 0;
+    
+                r = Math.min(255, Math.max(0, r));
+                g = Math.min(255, Math.max(0, g));
+                b = Math.min(255, Math.max(0, b));
+                const interval = Math.max(0.1, intervalSec) * 1000; // ms
+    
+                if (!script.isStart) {
+                    if (!sq.SET) {
+                        sq.SET = {};
+                    }
+    
+                    // 시퀀스 번호로 고유한 시간 보장 (다른 네오픽셀 동작과 통일)
+                    Entry.ITPLE.timeSeq++;
+                    const uniqueTime = new Date().getTime() + Entry.ITPLE.timeSeq;
+    
+                    sq.SET[port] = {
+                        type: Entry.ITPLE.sensorTypes.NEOPIXEL_BLINK,
+                        data: { side, count, r, g, b, interval },
+                        time: uniqueTime,
+                    };
+    
+                    script.isStart = true;
+                    script.timeFlag = Date.now();
+                    return script;
+                }
+    
+                if (Date.now() - script.timeFlag < 2) {
+                    return script;
+                }
+    
+                delete script.isStart;
+                delete script.timeFlag;
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Arduino.neopixelBlink(%1, %2, %3)',
+                        textParams: [
+                            { type: 'Block', accept: 'string' },
+                            { type: 'Block', accept: 'string' },
+                            { type: 'Block', accept: 'string' },
+                        ],
+                    },
+                ]
+            },
+        },
+        ITPLE_stop_neopixel_blink: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['왼쪽', '0'],
+                        ['오른쪽', '1'],
+                        ['전체', '2'],
+                    ],
+                    value: '2',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+            ],
+            events: {},
+            def: {
+                params: [null, null],
+                type: 'ITPLE_stop_neopixel_blink',
+            },
+            paramsKeyMap: {
+                SIDE: 0,
+            },
+            class: 'ITPLE_neopixel',
+            isNotFor: ['ITPLE'],
+            func(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const port = 206; // BLINK/STOP 통합 가상 포트
+    
+                if (!script.isStart) {
+                    if (!sq.SET) {
+                        sq.SET = {};
+                    }
+    
+                    const side = script.getNumberValue('SIDE', script);
+    
+                    // 시퀀스 번호로 고유한 시간 보장
+                    Entry.ITPLE.timeSeq++;
+                    const uniqueTime = new Date().getTime() + Entry.ITPLE.timeSeq;
+    
+                    sq.SET[port] = {
+                        type: Entry.ITPLE.sensorTypes.NEOPIXEL_BLINK_STOP,
+                        data: { side },
+                        time: uniqueTime,
+                    };
+    
+                    script.isStart = true;
+                    script.timeFlag = Date.now();
+                    return script;
+                }
+    
+                if (Date.now() - script.timeFlag < 2) {
+                    return script;
+                }
+    
+                delete script.isStart;
+                delete script.timeFlag;
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [
+                    { syntax: 'Arduino.neopixelBlinkStop(9, %1)' },
+                ]
             },
         },
     };
