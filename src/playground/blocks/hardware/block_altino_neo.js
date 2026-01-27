@@ -1,14 +1,14 @@
 'use strict';
 
-Entry.Altino = {
+Entry.AltinoNeo = {
     PORT_MAP: {
         rightWheel: 0,
         leftWheel: 0,
         steering: 0,
-        ascii: 0,
-        led: 0,
+        led1: 0,
         led2: 0,
         note: 0,
+        ascii: 0,
         dot1: 0,
         dot2: 0,
         dot3: 0,
@@ -17,17 +17,16 @@ Entry.Altino = {
         dot6: 0,
         dot7: 0,
         dot8: 0,
-        command: 0,
     },
     setZero: function() {
-        var portMap = Entry.Altino.PORT_MAP;
+        var portMap = Entry.AltinoNeo.PORT_MAP;
         var sq = Entry.hw.sendQueue;
         for (var port in portMap) {
             sq[port] = portMap[port];
         }
         Entry.hw.update();
-        var Altino = Entry.Altino;
-        Altino.removeAllTimeouts();
+        // var Altino = Entry.Altino;
+        // Altino.removeAllTimeouts();
     },
     timeouts: [],
     removeTimeout: function(id) {
@@ -45,237 +44,234 @@ Entry.Altino = {
         }
         this.timeouts = [];
     },
-    id: '18.1',
-    name: 'altino',
+    id: '18.4',
+    name: 'altino_neo',
     url: 'http://saeon.co.kr/',
-    imageName: 'altino.png',
+    imageName: 'altino_neo.png',
     title: {
-        en: 'altino',
-        ko: '알티노',
+        en: 'Altino Neo',
+        ko: '알티노 네오',
     },
 };
 
-Entry.Altino.blockMenuBlocks = [
-    'altino_analogValue',
-    'altino_stopAll',
-    'altino_rear_wheel',
-    'altino_steering',
-    'altino_sound',
-    'altino_light',
-    'altino_dot_display',
-    'altino_dot_display_line',
-    'altino_steering_hex',
-    'altino_light_hex',
-    'altino_sound_hex',
-    'altino_dot_display_hex',
-    'altino_dot_display_matrix_on',
-    'altino_dot_display_matrix_off',
-    'altino_ir_reset',
+Entry.AltinoNeo.blockMenuBlocks = [
+    'altino_neo_analogValue',
+    'altino_neo_stopAll',
+    'altino_neo_rear_wheel',
+    'altino_neo_steering',
+    'altino_neo_sound',
+    'altino_neo_light',
+    'altino_neo_dot_display',
+    'altino_neo_dot_display_line',
+    'altino_neo_steering_hex',
+    'altino_neo_light_hex',
+    'altino_neo_sound_hex',
+    'altino_neo_dot_display_hex',
+    'altino_neo_dot_display_matrix_on',
+    'altino_neo_dot_display_matrix_off',
 ];
 
-Entry.Altino.setLanguage = function() {
+Entry.AltinoNeo.setLanguage = function() {
     return {
         ko: {
             // ko.js에 작성하던 내용
             Blocks: {
-                ALTINO_ACCX: '가속도-X',
-                ALTINO_ACCY: '가속도-Y',
-                ALTINO_ACCZ: '가속도-Z',
-                ALTINO_BAT: '배터리 전압',
-                ALTINO_CDS: '조도',
-                ALTINO_GYROX: '자이로-X',
-                ALTINO_GYROY: '자이로-Y',
-                ALTINO_GYROZ: '자이로-Z',
-                ALTINO_IR1: '적외선-1',
-                ALTINO_IR2: '적외선-2',
-                ALTINO_IR3: '적외선-3',
-                ALTINO_IR4: '적외선-4',
-                ALTINO_IR5: '적외선-5',
-                ALTINO_IR6: '적외선-6',
-                ALTINO_Led_Brake_Light: '브레이크',
-                ALTINO_Led_Forward_Light: '전방',
-                ALTINO_Led_Reverse_Light: '후진',
-                ALTINO_Led_Turn_Left_Light: '왼쪽 방향지시',
-                ALTINO_Led_Turn_Right_Light: '오른쪽 방향지시',
-                ALTINO_Line: '번째 줄',
-                ALTINO_MAGX: '지자기-X',
-                ALTINO_MAGY: '지자기-Y',
-                ALTINO_MAGZ: '지자기-Z',
-                ALTINO_REMOTE: '리모콘 수신 값',
-                ALTINO_STTOR: '조향전류',
-                ALTINO_STVAR: '조향 가변저항',
-                ALTINO_Steering_Angle_Center: '중앙',
-                ALTINO_Steering_Angle_Left10: '왼쪽으로-10',
-                ALTINO_Steering_Angle_Left15: '왼쪽으로-15',
-                ALTINO_Steering_Angle_Left20: '왼쪽으로-20',
-                ALTINO_Steering_Angle_Left5: '왼쪽으로-5',
-                ALTINO_Steering_Angle_Right10: '오른쪽으로-10',
-                ALTINO_Steering_Angle_Right15: '오른쪽으로-15',
-                ALTINO_Steering_Angle_Right20: '오른쪽으로-20',
-                ALTINO_Steering_Angle_Right5: '오른쪽으로-5',
-                ALTINO_TEM: '온도',
-                ALTINO_TOR1: '오른쪽 뒷바퀴 전류',
-                ALTINO_TOR2: '왼쪽 뒷바퀴 전류',
-                ALTINO_Value: '출력 값',
-                ALTINO_a: 'A(라)',
-                ALTINO_a2: 'A#(라#)',
-                ALTINO_b: 'B(시)',
-                ALTINO_c: 'C(도)',
-                ALTINO_c2: 'C#(도#)',
-                ALTINO_d: 'D(레)',
-                ALTINO_d2: 'D#(레#)',
-                ALTINO_dot_display_1: '한문자',
-                ALTINO_dot_display_2: '출력하기',
-                ALTINO_e: 'E(미)',
-                ALTINO_f: 'F(파)',
-                ALTINO_f2: 'F#(파#)',
-                ALTINO_g: 'G(솔)',
-                ALTINO_g2: 'G#(솔#)',
-                ALTINO_sound_oct: '옥타브',
-                ALTINO_h: '끄기',
-                ALTINO_h2: '켜기',
-                ALTINO_leftWheel: '왼쪽',
-                ALTINO_melody_ms: '연주하기',
-                ALTINO_outputValue: '출력 값',
-                ALTINO_rightWheel: '오른쪽',
-                ALTINO_set: '로 정하기',
-                ALTINO_stopAll: '모두',
-                ALTINO_stopDrive: '주행',
-                ALTINO_stopSteering: '조향',
-                ALTINO_stopSound: '소리',
-                ALTINO_stopLight: '라이트',
-                ALTINO_stopDisplay: '표시하기',
-                ALTINO_dot_line_1: '1행',
-                ALTINO_dot_line_2: '2행',
-                ALTINO_dot_line_3: '3행',
-                ALTINO_dot_line_4: '4행',
-                ALTINO_dot_line_5: '5행',
-                ALTINO_dot_line_6: '6행',
-                ALTINO_dot_line_7: '7행',
-                ALTINO_dot_line_8: '8행',
+                altino_neo_BAT: '배터리',
+                altino_neo_CDS: '조도',
+                altino_neo_TOF1: 'TOF-1',
+                altino_neo_TOF2: 'TOF-2',
+                altino_neo_TOF3: 'TOF-3',
+                altino_neo_TOF4: 'TOF-4',
+                altino_neo_TOF5: 'TOF-5',
+                altino_neo_TOF6: 'TOF-6',
+                altino_neo_ACC_X: '가속도-X',
+                altino_neo_ACC_Y: '가속도-Y',
+                altino_neo_ACC_Z: '가속도-Z',
+                altino_neo_MAG_X: '지자기-X',
+                altino_neo_MAG_Y: '지자기-Y',
+                altino_neo_MAG_Z: '지자기-Z',
+                altino_neo_GYRO_X: '자이로-X',
+                altino_neo_GYRO_Y: '자이로-Y',
+                altino_neo_GYRO_Z: '자이로-Z',
+                altino_neo_AHRS_Roll: '횡전각',
+                altino_neo_AHRS_Pitch: '종전각',
+                altino_neo_AHRS_Yaw: '편향각',
+                altino_neo_Temp: '온도',
+                altino_neo_Left_Wheel_Torque: '왼쪽 뒷바퀴 전류',
+                altino_neo_Right_Wheel_Torque: '오른쪽 뒷바퀴 전류',
+                altino_neo_Led_Brake_Light: '브레이크',
+                altino_neo_Led_Forward_Light: '전방',
+                altino_neo_Led_Backward_Light: '후방',
+                altino_neo_Led_Turn_Left_Light: '왼쪽 방향지시',
+                altino_neo_Led_Turn_Right_Light: '오른쪽 방향지시',
+                altino_neo_Line: '번째 줄',
+                altino_neo_Steering_Angle_Center: '중앙',
+                altino_neo_Steering_Angle_Left10: '왼쪽으로-10',
+                altino_neo_Steering_Angle_Left15: '왼쪽으로-15',
+                altino_neo_Steering_Angle_Left20: '왼쪽으로-20',
+                altino_neo_Steering_Angle_Left5: '왼쪽으로-5',
+                altino_neo_Steering_Angle_Right10: '오른쪽으로-10',
+                altino_neo_Steering_Angle_Right15: '오른쪽으로-15',
+                altino_neo_Steering_Angle_Right20: '오른쪽으로-20',
+                altino_neo_Steering_Angle_Right5: '오른쪽으로-5',
+                altino_neo_Value: '출력 값',
+                altino_neo_a: 'A(라)',
+                altino_neo_a2: 'A#(라#)',
+                altino_neo_b: 'B(시)',
+                altino_neo_c: 'C(도)',
+                altino_neo_c2: 'C#(도#)',
+                altino_neo_d: 'D(레)',
+                altino_neo_d2: 'D#(레#)',
+                altino_neo_dot_display_1: '한문자',
+                altino_neo_dot_display_2: '출력하기',
+                altino_neo_e: 'E(미)',
+                altino_neo_f: 'F(파)',
+                altino_neo_f2: 'F#(파#)',
+                altino_neo_g: 'G(솔)',
+                altino_neo_g2: 'G#(솔#)',
+                altino_neo_sound_oct: '옥타브',
+                altino_neo_h: '끄기',
+                altino_neo_h2: '켜기',
+                altino_neo_leftWheel: '왼쪽',
+                altino_neo_melody_ms: '연주하기',
+                altino_neo_outputValue: '출력 값',
+                altino_neo_rightWheel: '오른쪽',
+                altino_neo_set: '로 정하기',
+                altino_neo_stopAll: '모두',
+                altino_neo_stopDrive: '주행',
+                altino_neo_stopSteering: '조향',
+                altino_neo_stopSound: '소리',
+                altino_neo_stopLight: '라이트',
+                altino_neo_stopDisplay: '표시하기',
+                altino_neo_dot_line_1: '1행',
+                altino_neo_dot_line_2: '2행',
+                altino_neo_dot_line_3: '3행',
+                altino_neo_dot_line_4: '4행',
+                altino_neo_dot_line_5: '5행',
+                altino_neo_dot_line_6: '6행',
+                altino_neo_dot_line_7: '7행',
+                altino_neo_dot_line_8: '8행',
             },
             template: {
-                altino_analogValue: '알티노 %1 센서값',
-                altino_stopAll: '정지 %1%2',
-                altino_dot_display: '표시하기 %1 %2',
-                altino_dot_display_line: '표시하기 %1 %2 %3 %4 %5 %6 %7 %8 %9 %10',
-                altino_dot_display_hex: '표시하기 %1 %2 %3 %4 %5 %6 %7 %8 %9',
-                altino_dot_display_matrix_on: '표시하기 켜기 X:%1 Y:%2 %3',
-                altino_dot_display_matrix_off: '표시하기 끄기 X:%1 Y:%2 %3',
-                altino_light: '라이트%1 %2 %3',
-                altino_light_hex: '라이트%1 %2 %3',
-                altino_sound_hex: '소리%1 %2',
-                altino_rear_wheel: '뒷바퀴 구동 좌:%1 우:%2%3',
-                altino_sound: '소리 %1 %2 %3',
-                altino_steering_hex: '조향 %1%2',
-                altino_steering: '조향 %1°%2',
-                altino_ir_reset: '알티노 IR 센서 초기화%1',
+                altino_neo_analogValue: '알티노 네오 %1 센서값',
+                altino_neo_stopAll: '정지 %1 %2',
+                altino_neo_dot_display: '표시하기 %1 %2',
+                altino_neo_dot_display_line: '표시하기 %1 %2 %3 %4 %5 %6 %7 %8 %9 %10',
+                altino_neo_dot_display_hex: '표시하기 %1 %2 %3 %4 %5 %6 %7 %8 %9',
+                altino_neo_dot_display_matrix_on: '표시하기 켜기 X:%1 Y:%2 %3',
+                altino_neo_dot_display_matrix_off: '표시하기 끄기 X:%1 Y:%2 %3',
+                altino_neo_light: '라이트%1 %2 %3',
+                altino_neo_light_hex: '라이트%1 %2 %3',
+                altino_neo_sound_hex: '소리%1 %2',
+                altino_neo_rear_wheel: '뒷바퀴 구동 좌:%1 우:%2%3',
+                altino_neo_sound: '소리 %1 %2 %3',
+                altino_neo_steering_hex: '조향 %1%2',
+                altino_neo_steering: '조향 %1°%2',
             },
         },
         en: {
             // en.js에 작성하던 내용
             Blocks: {
-                ALTINO_ACCX: 'Accel-X',
-                ALTINO_ACCY: 'Accel-Y',
-                ALTINO_ACCZ: 'Accel-Z',
-                ALTINO_BAT: 'BAT',
-                ALTINO_CDS: 'CDS',
-                ALTINO_GYROX: 'Gyro-X',
-                ALTINO_GYROY: 'Gyro-Y',
-                ALTINO_GYROZ: 'Gyro-Z',
-                ALTINO_IR1: 'IR-1',
-                ALTINO_IR2: 'IR-2',
-                ALTINO_IR3: 'IR-3',
-                ALTINO_IR4: 'IR-4',
-                ALTINO_IR5: 'IR-5',
-                ALTINO_IR6: 'IR-6',
-                ALTINO_Led_Brake_Light: 'Brake',
-                ALTINO_Led_Forward_Light: 'Forward',
-                ALTINO_Led_Reverse_Light: 'Reverse',
-                ALTINO_Led_Turn_Left_Light: 'Turn Left',
-                ALTINO_Led_Turn_Right_Light: 'Turn Right',
-                ALTINO_Line: 'line',
-                ALTINO_MAGX: 'Magnet-X',
-                ALTINO_MAGY: 'Magnet-Y',
-                ALTINO_MAGZ: 'Magnet-Z',
-                ALTINO_REMOTE: 'remote control',
-                ALTINO_STTOR: 'S-Current',
-                ALTINO_STVAR: 'steering potentiometer',
-                ALTINO_Steering_Angle_Center: 'Center-0',
-                ALTINO_Steering_Angle_Left10: 'Left-10',
-                ALTINO_Steering_Angle_Left15: 'Left-15',
-                ALTINO_Steering_Angle_Left20: 'Left-20',
-                ALTINO_Steering_Angle_Left5: 'Left-5',
-                ALTINO_Steering_Angle_Right10: 'Right-10',
-                ALTINO_Steering_Angle_Right15: 'Right-15',
-                ALTINO_Steering_Angle_Right20: 'Right-20',
-                ALTINO_Steering_Angle_Right5: 'Right-5',
-                ALTINO_TEM: 'Temperature',
-                ALTINO_TOR1: 'M-Current Right',
-                ALTINO_TOR2: 'M-Current Left',
-                ALTINO_Value: 'output value',
-                ALTINO_a: 'A(la)',
-                ALTINO_a2: 'A#(la#)',
-                ALTINO_b: 'B(si)',
-                ALTINO_c: 'C(do)',
-                ALTINO_c2: 'C#(do#)',
-                ALTINO_d: 'D(re)',
-                ALTINO_d2: 'D#(re#)',
-                ALTINO_dot_display_1: 'one char',
-                ALTINO_dot_display_2: 'display',
-                ALTINO_e: 'E(mi)',
-                ALTINO_f: 'F(fa)',
-                ALTINO_f2: 'F#(fa#)',
-                ALTINO_g: 'G(sol)',
-                ALTINO_g2: 'G#(sol#)',
-                ALTINO_sound_oct: 'Oct',
-                ALTINO_h: 'Off',
-                ALTINO_h2: 'On',
-                ALTINO_leftWheel: 'left',
-                ALTINO_melody_ms: 'play',
-                ALTINO_outputValue: 'output',
-                ALTINO_rightWheel: 'right',
-                ALTINO_set: ' display',
-                ALTINO_stopAll: 'All',
-                ALTINO_stopDrive: 'Drive',
-                ALTINO_stopSteering: 'Steering',
-                ALTINO_stopSound: 'Sound',
-                ALTINO_stopLight: 'Light',
-                ALTINO_stopDisplay: 'Display',
-                ALTINO_dot_line_1: 'Line-1',
-                ALTINO_dot_line_2: 'Line-2',
-                ALTINO_dot_line_3: 'Line-3',
-                ALTINO_dot_line_4: 'Line-4',
-                ALTINO_dot_line_5: 'Line-5',
-                ALTINO_dot_line_6: 'Line-6',
-                ALTINO_dot_line_7: 'Line-7',
-                ALTINO_dot_line_8: 'Line-8',
+                altino_neo_BAT: 'BAT',
+                altino_neo_CDS: 'CDS',
+                altino_neo_TOF1: 'TOF-1',
+                altino_neo_TOF2: 'TOF-2',
+                altino_neo_TOF3: 'TOF-3',
+                altino_neo_TOF4: 'TOF-4',
+                altino_neo_TOF5: 'TOF-5',
+                altino_neo_TOF6: 'TOF-6',
+                altino_neo_ACC_X: 'ACC-X',
+                altino_neo_ACC_Y: 'ACC-Y',
+                altino_neo_ACC_Z: 'ACC-Z',
+                altino_neo_MAG_X: 'MAG-X',
+                altino_neo_MAG_Y: 'MAG-Y',
+                altino_neo_MAG_Z: 'MAG-Z',
+                altino_neo_GYRO_X: 'GYRO-X',
+                altino_neo_GYRO_Y: 'GYRO-Y',
+                altino_neo_GYRO_Z: 'GYRO-Z',
+                altino_neo_AHRS_Roll: 'ROLL',
+                altino_neo_AHRS_Pitch: 'PITCH',
+                altino_neo_AHRS_Yaw: 'YAW',
+                altino_neo_Temp: 'TEMP',
+                altino_neo_Left_Wheel_Torque: 'LEFT TORQUE',
+                altino_neo_Right_Wheel_Torque: 'RIGHT TORQUE',
+                altino_neo_Led_Brake_Light: 'Brake',
+                altino_neo_Led_Forward_Light: 'Forward',
+                altino_neo_Led_Backward_Light: 'Backward',
+                altino_neo_Led_Turn_Left_Light: 'Turn Left',
+                altino_neo_Led_Turn_Right_Light: 'Turn Right',
+                altino_neo_Line: 'line',
+                altino_neo_Steering_Angle_Center: 'Center-0',
+                altino_neo_Steering_Angle_Left10: 'Left-10',
+                altino_neo_Steering_Angle_Left15: 'Left-15',
+                altino_neo_Steering_Angle_Left20: 'Left-20',
+                altino_neo_Steering_Angle_Left5: 'Left-5',
+                altino_neo_Steering_Angle_Right10: 'Right-10',
+                altino_neo_Steering_Angle_Right15: 'Right-15',
+                altino_neo_Steering_Angle_Right20: 'Right-20',
+                altino_neo_Steering_Angle_Right5: 'Right-5',
+                altino_neo_Value: 'output value',
+                altino_neo_a: 'A(la)',
+                altino_neo_a2: 'A#(la#)',
+                altino_neo_b: 'B(si)',
+                altino_neo_c: 'C(do)',
+                altino_neo_c2: 'C#(do#)',
+                altino_neo_d: 'D(re)',
+                altino_neo_d2: 'D#(re#)',
+                altino_neo_dot_display_1: 'one char',
+                altino_neo_dot_display_2: 'display',
+                altino_neo_e: 'E(mi)',
+                altino_neo_f: 'F(fa)',
+                altino_neo_f2: 'F#(fa#)',
+                altino_neo_g: 'G(sol)',
+                altino_neo_g2: 'G#(sol#)',
+                altino_neo_sound_oct: 'Oct',
+                altino_neo_h: 'Off',
+                altino_neo_h2: 'On',
+                altino_neo_leftWheel: 'left',
+                altino_neo_melody_ms: 'play',
+                altino_neo_outputValue: 'output',
+                altino_neo_rightWheel: 'right',
+                altino_neo_set: ' display',
+                altino_neo_stopAll: 'All',
+                altino_neo_stopDrive: 'Drive',
+                altino_neo_stopSteering: 'Steering',
+                altino_neo_stopSound: 'Sound',
+                altino_neo_stopLight: 'Light',
+                altino_neo_stopDisplay: 'Display',
+                altino_neo_dot_line_1: 'Line-1',
+                altino_neo_dot_line_2: 'Line-2',
+                altino_neo_dot_line_3: 'Line-3',
+                altino_neo_dot_line_4: 'Line-4',
+                altino_neo_dot_line_5: 'Line-5',
+                altino_neo_dot_line_6: 'Line-6',
+                altino_neo_dot_line_7: 'Line-7',
+                altino_neo_dot_line_8: 'Line-8',
             },
             template: {
-                altino_analogValue: 'Altino %1 sensor value',
-                altino_stopAll: 'Stop %1%2',
-                altino_dot_display: 'Display %1 %2',
-                altino_dot_display_line: 'Display %1 %2 %3 %4 %5 %6 %7 %8 %9 %10',
-                altino_dot_display_hex: 'Display %1 %2 %3 %4 %5 %6 %7 %8 %9',
-                altino_dot_display_matrix_on: 'Display On X:%1 Y:%2 %3',
-                altino_dot_display_matrix_off: 'Display Off X:%1 Y:%2 %3',
-                altino_light: 'Light %1 %2 %3',
-                altino_light_hex: 'Light %1 %2 %3',
-                altino_sound_hex: 'Sound %1 %2',
-                altino_rear_wheel: 'Go L:%1 R:%2%3',
-                altino_sound: 'Sound %1 %2 %3',
-                altino_steering_hex: 'Steering %1%2',
-                altino_steering: 'Steering %1°%2',
-                altino_ir_reset: 'Reset Altino IR Sensor%1',
+                altino_neo_analogValue: 'Altino neo %1 sensor value',
+                altino_neo_stopAll: 'Stop %1°%2',
+                altino_neo_dot_display: 'Display %1 %2',
+                altino_neo_dot_display_line: 'Display %1 %2 %3 %4 %5 %6 %7 %8 %9 %10',
+                altino_neo_dot_display_hex: 'Display %1 %2 %3 %4 %5 %6 %7 %8 %9',
+                altino_neo_dot_display_matrix_on: 'Display On X:%1 Y:%2 %3',
+                altino_neo_dot_display_matrix_off: 'Display Off X:%1 Y:%2 %3',
+                altino_neo_light: 'Light %1 %2 %3',
+                altino_neo_light_hex: 'Light %1 %2 %3',
+                altino_neo_sound_hex: 'Sound %1 %2',
+                altino_neo_rear_wheel: 'Go L:%1 R:%2%3',
+                altino_neo_sound: 'Sound %1 %2 %3',
+                altino_neo_steering_hex: 'Steering %1%2',
+                altino_neo_steering: 'Steering %1°%2',
             },
         },
     };
 };
 
-Entry.Altino.getBlocks = function() {
+Entry.AltinoNeo.getBlocks = function() {
     return {
         //region Altino 알티노
-        altino_analogValue: {
+        altino_neo_analogValue: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -285,29 +281,29 @@ Entry.Altino.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.ALTINO_CDS, 'cds'],
-                        [Lang.Blocks.ALTINO_IR1, 'ir1'],
-                        [Lang.Blocks.ALTINO_IR2, 'ir2'],
-                        [Lang.Blocks.ALTINO_IR3, 'ir3'],
-                        [Lang.Blocks.ALTINO_IR4, 'ir4'],
-                        [Lang.Blocks.ALTINO_IR5, 'ir5'],
-                        [Lang.Blocks.ALTINO_IR6, 'ir6'],
-                        [Lang.Blocks.ALTINO_ACCX, 'accx'],
-                        [Lang.Blocks.ALTINO_ACCY, 'accy'],
-                        [Lang.Blocks.ALTINO_ACCZ, 'accz'],
-                        [Lang.Blocks.ALTINO_MAGX, 'magx'],
-                        [Lang.Blocks.ALTINO_MAGY, 'magy'],
-                        [Lang.Blocks.ALTINO_MAGZ, 'magz'],
-                        [Lang.Blocks.ALTINO_GYROX, 'gyrox'],
-                        [Lang.Blocks.ALTINO_GYROY, 'gyroy'],
-                        [Lang.Blocks.ALTINO_GYROZ, 'gyroz'],
-                        [Lang.Blocks.ALTINO_TEM, 'tem'],
-                        [Lang.Blocks.ALTINO_TOR2, 'tor2'],
-                        [Lang.Blocks.ALTINO_TOR1, 'tor1'],
-                        //[Lang.Blocks.ALTINO_STVAR, 'stvar'],
-                        [Lang.Blocks.ALTINO_STTOR, 'sttor'],
-                        [Lang.Blocks.ALTINO_BAT, 'bat'],
-                        //[Lang.Blocks.ALTINO_REMOTE, 'remote'],
+                        [Lang.Blocks.altino_neo_CDS, 'cds'],
+                        [Lang.Blocks.altino_neo_TOF1, 'tof1'],
+                        [Lang.Blocks.altino_neo_TOF2, 'tof2'],
+                        [Lang.Blocks.altino_neo_TOF3, 'tof3'],
+                        [Lang.Blocks.altino_neo_TOF4, 'tof4'],
+                        [Lang.Blocks.altino_neo_TOF5, 'tof5'],
+                        [Lang.Blocks.altino_neo_TOF6, 'tof6'],
+                        [Lang.Blocks.altino_neo_BAT, 'bat'],
+                        [Lang.Blocks.altino_neo_ACC_X, 'accx'],
+                        [Lang.Blocks.altino_neo_ACC_Y, 'accy'],
+                        [Lang.Blocks.altino_neo_ACC_Z, 'accz'],
+                        [Lang.Blocks.altino_neo_MAG_X, 'magx'],
+                        [Lang.Blocks.altino_neo_MAG_Y, 'magy'],
+                        [Lang.Blocks.altino_neo_MAG_Z, 'magz'],
+                        [Lang.Blocks.altino_neo_GYRO_X, 'gyrox'],
+                        [Lang.Blocks.altino_neo_GYRO_Y, 'gyroy'],
+                        [Lang.Blocks.altino_neo_GYRO_Z, 'gyroz'],
+                        [Lang.Blocks.altino_neo_AHRS_Roll, 'roll'],
+                        [Lang.Blocks.altino_neo_AHRS_Pitch, 'pitch'],
+                        [Lang.Blocks.altino_neo_AHRS_Yaw, 'yaw'],
+                        [Lang.Blocks.altino_neo_Temp, 'temp'],
+                        [Lang.Blocks.altino_neo_Left_Wheel_Torque, 'leftTorque'],
+                        [Lang.Blocks.altino_neo_Right_Wheel_Torque, 'rightTorque'],
                     ],
                     value: 'cds',
                     fontSize: 11,
@@ -318,21 +314,21 @@ Entry.Altino.getBlocks = function() {
             events: {},
             def: {
                 params: [null],
-                type: 'altino_analogValue',
+                type: 'altino_neo_analogValue',
             },
             paramsKeyMap: {
                 DEVICE: 0,
             },
-            class: 'altino_sensor',
-            isNotFor: ['altino'],
+            class: 'altino_neo_sensor',
+            isNotFor: ['altino_neo'],
             func: function(sprite, script) {
                 var pd = Entry.hw.portData;
                 var dev = script.getField('DEVICE');
                 return pd[dev];
             },
-            syntax: { js: [], py: ['Altino.analog_value(%1)'] },
+            syntax: { js: [], py: ['AltinoNeo.analog_value(%1)'] },
         },
-        altino_stopAll: {
+        altino_neo_stopAll: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -341,12 +337,12 @@ Entry.Altino.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.ALTINO_stopAll, 'All'],
-                        [Lang.Blocks.ALTINO_stopDrive, 'Drive'],
-                        [Lang.Blocks.ALTINO_stopSteering, 'Steering'],
-                        [Lang.Blocks.ALTINO_stopSound, 'Sound'],
-                        [Lang.Blocks.ALTINO_stopLight, 'Light'],
-                        [Lang.Blocks.ALTINO_stopDisplay, 'Display'],
+                        [Lang.Blocks.altino_neo_stopAll, 'All'],
+                        [Lang.Blocks.altino_neo_stopDrive, 'Drive'],
+                        [Lang.Blocks.altino_neo_stopSteering, 'Steering'],
+                        [Lang.Blocks.altino_neo_stopSound, 'Sound'],
+                        [Lang.Blocks.altino_neo_stopLight, 'Light'],
+                        [Lang.Blocks.altino_neo_stopDisplay, 'Display'],
                     ],
                     value: 'All',
                     fontSize: 11,
@@ -362,13 +358,13 @@ Entry.Altino.getBlocks = function() {
             events: {},
             def: {
                 params: [null],
-                type: 'altino_stopAll',
+                type: 'altino_neo_stopAll',
             },
             paramsKeyMap: {
                 DIRECTION: 0,
             },
-            class: 'altino_output',
-            isNotFor: ['altino'],
+            class: 'altino_neo_output',
+            isNotFor: ['altino_neo'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var direction = script.getField('DIRECTION', script);
@@ -378,8 +374,8 @@ Entry.Altino.getBlocks = function() {
                     sq.rightWheel = 0;
                     sq.leftWheel = 0;
                     sq.note = 0;
-                    sq.led = 0;
-                    sq.led2 = sq.led2 & 0x3f;
+                    sq.led1 = 0;
+                    sq.led2 = 0;
                     sq.ascii = 0;
                     sq.dot1 = 0;
                     sq.dot2 = 0;
@@ -397,15 +393,8 @@ Entry.Altino.getBlocks = function() {
                 } else if (direction == 'Sound') {
                     sq.note = 0;
                 } else if (direction == 'Light') {
-                    sq.led = 0;
-                    sq.led2 = sq.led2 & 0x3f;
-                    /*
-                    sq.led = sq.led & 0xfc;
-                    sq.led = sq.led & 0xf3;
-                    sq.led2 = sq.led2 & 0x3f;
-                    sq.led = sq.led & 0x5f;
-                    sq.led = sq.led & 0xaf;
-                    */
+                    sq.led1 = 0;
+                    sq.led2 = 0;
                 } else if (direction == 'Display') {
                     sq.ascii = 0;
                     sq.dot1 = 0;
@@ -420,9 +409,9 @@ Entry.Altino.getBlocks = function() {
 
                 return script.callReturn();
             },
-            syntax: { js: [],  py: ['Altino.stop(%1)']},
+            syntax: { js: [], py: ['AltinoNeo.stop(%1)'] },
         },
-        altino_steering: {
+        altino_neo_steering: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -431,15 +420,15 @@ Entry.Altino.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.ALTINO_Steering_Angle_Center, 'Center'],
-                        [Lang.Blocks.ALTINO_Steering_Angle_Left5, 'Left5'],
-                        [Lang.Blocks.ALTINO_Steering_Angle_Left10, 'Left10'],
-                        [Lang.Blocks.ALTINO_Steering_Angle_Left15, 'Left15'],
-                        [Lang.Blocks.ALTINO_Steering_Angle_Left20, 'Left20'],
-                        [Lang.Blocks.ALTINO_Steering_Angle_Right5, 'Right5'],
-                        [Lang.Blocks.ALTINO_Steering_Angle_Right10, 'Right10'],
-                        [Lang.Blocks.ALTINO_Steering_Angle_Right15, 'Right15'],
-                        [Lang.Blocks.ALTINO_Steering_Angle_Right20, 'Right20'],
+                        [Lang.Blocks.altino_neo_Steering_Angle_Center, 'Center'],
+                        [Lang.Blocks.altino_neo_Steering_Angle_Left5, 'Left5'],
+                        [Lang.Blocks.altino_neo_Steering_Angle_Left10, 'Left10'],
+                        [Lang.Blocks.altino_neo_Steering_Angle_Left15, 'Left15'],
+                        [Lang.Blocks.altino_neo_Steering_Angle_Left20, 'Left20'],
+                        [Lang.Blocks.altino_neo_Steering_Angle_Right5, 'Right5'],
+                        [Lang.Blocks.altino_neo_Steering_Angle_Right10, 'Right10'],
+                        [Lang.Blocks.altino_neo_Steering_Angle_Right15, 'Right15'],
+                        [Lang.Blocks.altino_neo_Steering_Angle_Right20, 'Right20'],
                     ],
                     value: 'Center',
                     fontSize: 11,
@@ -455,41 +444,41 @@ Entry.Altino.getBlocks = function() {
             events: {},
             def: {
                 params: [null, null],
-                type: 'altino_steering',
+                type: 'altino_neo_steering',
             },
             paramsKeyMap: {
                 DIRECTION: 0,
             },
-            class: 'altino_output',
-            isNotFor: ['altino'],
+            class: 'altino_neo_output',
+            isNotFor: ['altino_neo'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var direction = script.getField('DIRECTION', script);
 
                 if (direction == 'Center') {
-                    sq.steering = 2;
+                    sq.steering = 0;
                 } else if (direction == 'Left5') {
-                    sq.steering = 160;
+                    sq.steering = 0xe0;
                 } else if (direction == 'Left10') {
-                    sq.steering = 192;
+                    sq.steering = 0xc0;
                 } else if (direction == 'Left15') {
-                    sq.steering = 224;
+                    sq.steering = 0xa1;
                 } else if (direction == 'Left20') {
-                    sq.steering = 255;
+                    sq.steering = 0x81;
                 } else if (direction == 'Right5') {
-                    sq.steering = 32;
+                    sq.steering = 31;
                 } else if (direction == 'Right10') {
-                    sq.steering = 64;
+                    sq.steering = 63;
                 } else if (direction == 'Right15') {
-                    sq.steering = 96;
+                    sq.steering = 94;
                 } else if (direction == 'Right20') {
-                    sq.steering = 127;
+                    sq.steering = 126;
                 }
                 return script.callReturn();
             },
-            syntax: { js: [], py: ['Altino.steering(%1)'] },
+            syntax: { js: [], py: ['AltinoNeo.steering(%1)'] },
         },
-        altino_steering_hex: {
+        altino_neo_steering_hex: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -514,22 +503,21 @@ Entry.Altino.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'altino_steering_hex',
+                type: 'altino_neo_steering_hex',
             },
             paramsKeyMap: {
                 steerVal: 0,
             },
-            class: 'altino_expert',
-            isNotFor: ['altino'],
+            class: 'altino_neo_expert',
+            isNotFor: ['altino_neo'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
-                console.log(parseInt(Number(script.getStringValue('steerVal')), 10));
                 sq.steering = parseInt(Number(script.getStringValue('steerVal')), 10);
                 return script.callReturn();
             },
-            syntax: { js: [], py: ['Altino.steering_hex(%1)'] },
+            syntax: { js: [], py: ['AltinoNeo.steering_hex(%1)'] },
         },
-        altino_sound_hex: {
+        altino_neo_sound_hex: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -554,21 +542,21 @@ Entry.Altino.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'altino_sound_hex',
+                type: 'altino_neo_sound_hex',
             },
             paramsKeyMap: {
                 soundVal: 0,
             },
-            class: 'altino_expert',
-            isNotFor: ['altino'],
+            class: 'altino_neo_expert',
+            isNotFor: ['altino_neo'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 sq.note = parseInt(Number(script.getStringValue('soundVal')), 10);
                 return script.callReturn();
             },
-            syntax: { js: [], py: ['Altino.sound_hex(%1)'] },
+            syntax: { js: [], py: ['AltinoNeo.sound_hex(%1)'] },
         },
-        altino_rear_wheel: {
+        altino_neo_rear_wheel: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -601,14 +589,14 @@ Entry.Altino.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'altino_rear_wheel',
+                type: 'altino_neo_rear_wheel',
             },
             paramsKeyMap: {
                 leftWheel: 0,
                 rightWheel: 1,
             },
-            class: 'altino_output',
-            isNotFor: ['altino'],
+            class: 'altino_neo_output',
+            isNotFor: ['altino_neo'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
 
@@ -616,25 +604,25 @@ Entry.Altino.getBlocks = function() {
                 sq.leftWheel = script.getNumberValue('leftWheel');
                 return script.callReturn();
             },
-            syntax: { js: [], py: ['Altino.rear_wheel(%1, %2)'] },
+            syntax: { js: [], py: ['AltinoNeo.rear_wheel(%1, %2)'] },
         },
-        altino_sound: {
+        altino_neo_sound: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
-                {
+                {                    
                     type: 'Dropdown',
                     options: [
-                        ['1-' + Lang.Blocks.ALTINO_sound_oct, '1'],
-                        ['2-' + Lang.Blocks.ALTINO_sound_oct, '2'],
-                        ['3-' + Lang.Blocks.ALTINO_sound_oct, '3'],
-                        ['4-' + Lang.Blocks.ALTINO_sound_oct, '4'],
-                        ['5-' + Lang.Blocks.ALTINO_sound_oct, '5'],
-                        ['6-' + Lang.Blocks.ALTINO_sound_oct, '6'],
-                        ['7-' + Lang.Blocks.ALTINO_sound_oct, '7'],
-                        ['8-' + Lang.Blocks.ALTINO_sound_oct, '8'],
+                        ['1-' + Lang.Blocks.altino_neo_sound_oct, '1'],
+                        ['2-' + Lang.Blocks.altino_neo_sound_oct, '2'],
+                        ['3-' + Lang.Blocks.altino_neo_sound_oct, '3'],
+                        ['4-' + Lang.Blocks.altino_neo_sound_oct, '4'],
+                        ['5-' + Lang.Blocks.altino_neo_sound_oct, '5'],
+                        ['6-' + Lang.Blocks.altino_neo_sound_oct, '6'],
+                        ['7-' + Lang.Blocks.altino_neo_sound_oct, '7'],
+                        ['8-' + Lang.Blocks.altino_neo_sound_oct, '8'],
                     ],
                     value: '4',
                     fontSize: 11,
@@ -644,19 +632,19 @@ Entry.Altino.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.ALTINO_h, 'NOT'],
-                        [Lang.Blocks.ALTINO_c, 'C'],
-                        [Lang.Blocks.ALTINO_c2, 'C#'],
-                        [Lang.Blocks.ALTINO_d, 'D'],
-                        [Lang.Blocks.ALTINO_d2, 'D#'],
-                        [Lang.Blocks.ALTINO_e, 'E'],
-                        [Lang.Blocks.ALTINO_f, 'F'],
-                        [Lang.Blocks.ALTINO_f2, 'F#'],
-                        [Lang.Blocks.ALTINO_g, 'G'],
-                        [Lang.Blocks.ALTINO_g2, 'G#'],
-                        [Lang.Blocks.ALTINO_a, 'A'],
-                        [Lang.Blocks.ALTINO_a2, 'A#'],
-                        [Lang.Blocks.ALTINO_b, 'B'],
+                        [Lang.Blocks.altino_neo_h, 'NOT'],
+                        [Lang.Blocks.altino_neo_c, 'C'],
+                        [Lang.Blocks.altino_neo_c2, 'C#'],
+                        [Lang.Blocks.altino_neo_d, 'D'],
+                        [Lang.Blocks.altino_neo_d2, 'D#'],
+                        [Lang.Blocks.altino_neo_e, 'E'],
+                        [Lang.Blocks.altino_neo_f, 'F'],
+                        [Lang.Blocks.altino_neo_f2, 'F#'],
+                        [Lang.Blocks.altino_neo_g, 'G'],
+                        [Lang.Blocks.altino_neo_g2, 'G#'],
+                        [Lang.Blocks.altino_neo_a, 'A'],
+                        [Lang.Blocks.altino_neo_a2, 'A#'],
+                        [Lang.Blocks.altino_neo_b, 'B'],
                     ],
                     value: 'NOT',
                     fontSize: 11,
@@ -672,14 +660,14 @@ Entry.Altino.getBlocks = function() {
             events: {},
             def: {
                 params: [null, null, null],
-                type: 'altino_sound',
+                type: 'altino_neo_sound',
             },
             paramsKeyMap: {
                 OCTAVE: 0,
                 NOTE: 1,
             },
-            class: 'altino_output',
-            isNotFor: ['altino'],
+            class: 'altino_neo_output',
+            isNotFor: ['altino_neo'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var octave = script.getStringField('OCTAVE', script);
@@ -785,9 +773,9 @@ Entry.Altino.getBlocks = function() {
                 else if (octave_int == '8B') sq.note = 96;
                 return script.callReturn();
             },
-            syntax: { js: [], py: ['Altino.sound(%1, %2)'] },
+            syntax: { js: [], py: ['AltinoNeo.sound(%1, %2)'] },
         },
-        altino_light: {
+        altino_neo_light: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -796,11 +784,11 @@ Entry.Altino.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.ALTINO_Led_Forward_Light, '2'],
-                        [Lang.Blocks.ALTINO_Led_Turn_Left_Light, '5'],
-                        [Lang.Blocks.ALTINO_Led_Turn_Right_Light, '6'],
-                        [Lang.Blocks.ALTINO_Led_Brake_Light, '4'],
-                        [Lang.Blocks.ALTINO_Led_Reverse_Light, '3'],
+                        [Lang.Blocks.altino_neo_Led_Forward_Light, '2'],
+                        [Lang.Blocks.altino_neo_Led_Turn_Left_Light, '5'],
+                        [Lang.Blocks.altino_neo_Led_Turn_Right_Light, '6'],
+                        [Lang.Blocks.altino_neo_Led_Brake_Light, '4'],
+                        [Lang.Blocks.altino_neo_Led_Backward_Light, '3'],
                     ],
                     value: '2',
                     fontSize: 11,
@@ -810,8 +798,8 @@ Entry.Altino.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.ALTINO_h2, '255'],
-                        [Lang.Blocks.ALTINO_h, '0'],
+                        [Lang.Blocks.altino_neo_h2, '255'],
+                        [Lang.Blocks.altino_neo_h, '0'],
                     ],
                     value: '255',
                     fontSize: 11,
@@ -827,55 +815,54 @@ Entry.Altino.getBlocks = function() {
             events: {},
             def: {
                 params: [null, null, null],
-                type: 'altino_light',
+                type: 'altino_neo_light',
             },
             paramsKeyMap: {
                 SELECT: 0,
                 ONOFF: 1,
             },
-            class: 'altino_output',
-            isNotFor: ['altino'],
+            class: 'altino_neo_output',
+            isNotFor: ['altino_neo'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var select = script.getStringField('SELECT', script);
                 var onoff = script.getStringField('ONOFF', script);
 
                 if (select == '2' && onoff == '255') {
-                    sq.led = sq.led | 0x03;
+                    sq.led2 = sq.led2 | 0x03;
                 } else if (select == '2' && onoff == '0') {
-                    sq.led = sq.led & 0xfc;
+                    sq.led2 = sq.led2 & 0xfc;
                 }
 
                 if (select == '3' && onoff == '255') {
-                    sq.led = sq.led | 0x0c;
+                    sq.led2 = sq.led2 | 0x0c;
                 } else if (select == '3' && onoff == '0') {
-                    sq.led = sq.led & 0xf3;
+                    sq.led2 = sq.led2 & 0xf3;
                 }
 
                 if (select == '4' && onoff == '255') {
-                    sq.led2 = sq.led2 | 0xc0;
+                    sq.led1 = sq.led1 | 0x03;
                 } else if (select == '4' && onoff == '0') {
-                    sq.led2 = sq.led2 & 0x3f;
+                    sq.led1 = sq.led1 & 0xfc;
                 }
 
                 if (select == '5' && onoff == '255') {
-                    sq.led = sq.led | 0xa0;
+                    sq.led2 = sq.led2 | 0xa0;
                 } else if (select == '5' && onoff == '0') {
-                    sq.led = sq.led & 0x5f;
+                    sq.led2 = sq.led2 & 0x5f;
                 }
 
                 if (select == '6' && onoff == '255') {
-                    sq.led = sq.led | 0x50;
+                    sq.led2 = sq.led2 | 0x50;
                 } else if (select == '6' && onoff == '0') {
-                    sq.led = sq.led & 0xaf;
+                    sq.led2 = sq.led2 & 0xaf;
                 }
-
                 //sq.led = 0xff;
                 return script.callReturn();
             },
-            syntax: { js: [], py: ['Altino.light(%1, %2)'] },
+            syntax: { js: [], py: ['AltinoNeo.light(%1, %2)'] },
         },
-        altino_dot_display_matrix_on: {
+        altino_neo_dot_display_matrix_on: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -908,19 +895,21 @@ Entry.Altino.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'altino_dot_display_matrix_on',
+                type: 'altino_neo_dot_display_matrix_on',
             },
             paramsKeyMap: {
                 VALUE1: 0,
                 VALUE2: 1,
             },
-            class: 'altino_expert',
-            isNotFor: ['altino'],
+            class: 'altino_neo_expert',
+            isNotFor: ['altino_neo'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var nx = script.getNumberValue('VALUE1');
                 var ny = script.getNumberValue('VALUE2');
                 var mask = 1;
+
+                sq.ascii = 0xff;
 
                 if (ny >= 1 && ny <= 8) {
                     ny = ny - 1;
@@ -946,9 +935,9 @@ Entry.Altino.getBlocks = function() {
 
                 return script.callReturn();
             },
-            syntax: { js: [], py: ['Altino.dot_display_matrix_on(%1, %2)'] },
+            syntax: { js: [], py: ['AltinoNeo.dot_display_matrix_on(%1, %2)'] },
         },
-        altino_dot_display_matrix_off: {
+        altino_neo_dot_display_matrix_off: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -981,19 +970,21 @@ Entry.Altino.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'altino_dot_display_matrix_off',
+                type: 'altino_neo_dot_display_matrix_off',
             },
             paramsKeyMap: {
                 VALUE1: 0,
                 VALUE2: 1,
             },
-            class: 'altino_expert',
-            isNotFor: ['altino'],
+            class: 'altino_neo_expert',
+            isNotFor: ['altino_neo'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var nx = script.getNumberValue('VALUE1');
                 var ny = script.getNumberValue('VALUE2');
                 var mask = 1;
+
+                sq.ascii = 0xff;
 
                 if (ny >= 1 && ny <= 8) {
                     ny = ny - 1;
@@ -1018,9 +1009,9 @@ Entry.Altino.getBlocks = function() {
                 }
                 return script.callReturn();
             },
-            syntax: { js: [], py: ['Altino.dot_display_matrix_off(%1, %2)'] },
+            syntax: { js: [], py: ['AltinoNeo.dot_display_matrix_off(%1, %2)'] },
         },
-        altino_light_hex: {
+        altino_neo_light_hex: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1038,7 +1029,7 @@ Entry.Altino.getBlocks = function() {
                     type: 'Indicator',
                     img: 'block_icon/hardware_icon.svg',
                     size: 12,
-                },
+                }
             ],
             events: {},
             def: {
@@ -1053,27 +1044,31 @@ Entry.Altino.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'altino_light_hex',
+                type: 'altino_neo_light_hex'
             },
             paramsKeyMap: {
                 MSB: 0,
-                LSB: 1,
+                LSB: 1,            
             },
-            class: 'altino_expert',
-            isNotFor: ['altino'],
+            class: 'altino_neo_expert',
+            isNotFor: ['altino_neo'],
             func: function(sprite, script) {
+                // var sq = Entry.hw.sendQueue;
+                // var lsb = parseInt(Number(script.getStringValue('LSB')), 10);
+                // sq.led = lsb;
+
                 var sq = Entry.hw.sendQueue;
                 var msb = parseInt(Number(script.getStringValue('MSB')), 10);
                 var lsb = parseInt(Number(script.getStringValue('LSB')), 10);
 
-                sq.led2 = (msb & 0xc0) | (sq.led2 & 0x3f);
-                sq.led = lsb;
+                sq.led1 = (msb & 0x03) | (sq.led1 & 0xfc);
+                sq.led2 = lsb;
 
                 return script.callReturn();
             },
-            syntax: { js: [], py: ['Altino.light_hex(%1, %2)'] },
+            syntax: { js: [], py: ['AltinoNeo.light_hex(%1, %2)'] },
         },
-        altino_dot_display: {
+        altino_neo_dot_display: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1098,18 +1093,17 @@ Entry.Altino.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'altino_dot_display',
+                type: 'altino_neo_dot_display',
             },
             paramsKeyMap: {
                 VALUE: 0,
             },
-            class: 'altino_output',
-            isNotFor: ['altino'],
+            class: 'altino_neo_output',
+            isNotFor: ['altino_neo'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var str = script.getStringValue('VALUE');
-                var code = str.charCodeAt(0) | 0x80;
-                sq.ascii = code;
+                sq.ascii = str.charCodeAt(0);
 
                 return script.callReturn();
             },
@@ -1117,7 +1111,7 @@ Entry.Altino.getBlocks = function() {
                 js: [],
                 py: [
                     {
-                        syntax: 'Altino.dot_display(%1)',
+                        syntax: 'AltinoNeo.dot_display(%1)',
                         textParams: [
                             {
                                 type: 'Block',
@@ -1128,7 +1122,7 @@ Entry.Altino.getBlocks = function() {
                 ],
             },
         },
-        altino_dot_display_line: {
+        altino_neo_dot_display_line: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1137,14 +1131,14 @@ Entry.Altino.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.ALTINO_dot_line_1, '1'],
-                        [Lang.Blocks.ALTINO_dot_line_2, '2'],
-                        [Lang.Blocks.ALTINO_dot_line_3, '3'],
-                        [Lang.Blocks.ALTINO_dot_line_4, '4'],
-                        [Lang.Blocks.ALTINO_dot_line_5, '5'],
-                        [Lang.Blocks.ALTINO_dot_line_6, '6'],
-                        [Lang.Blocks.ALTINO_dot_line_7, '7'],
-                        [Lang.Blocks.ALTINO_dot_line_8, '8'],
+                        [Lang.Blocks.altino_neo_dot_line_1, '1'],
+                        [Lang.Blocks.altino_neo_dot_line_2, '2'],
+                        [Lang.Blocks.altino_neo_dot_line_3, '3'],
+                        [Lang.Blocks.altino_neo_dot_line_4, '4'],
+                        [Lang.Blocks.altino_neo_dot_line_5, '5'],
+                        [Lang.Blocks.altino_neo_dot_line_6, '6'],
+                        [Lang.Blocks.altino_neo_dot_line_7, '7'],
+                        [Lang.Blocks.altino_neo_dot_line_8, '8'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -1154,8 +1148,8 @@ Entry.Altino.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.ALTINO_h2, '1'],
-                        [Lang.Blocks.ALTINO_h, '0'],
+                        [Lang.Blocks.altino_neo_h2, '1'],
+                        [Lang.Blocks.altino_neo_h, '0'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -1165,8 +1159,8 @@ Entry.Altino.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.ALTINO_h2, '1'],
-                        [Lang.Blocks.ALTINO_h, '0'],
+                        [Lang.Blocks.altino_neo_h2, '1'],
+                        [Lang.Blocks.altino_neo_h, '0'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -1176,8 +1170,8 @@ Entry.Altino.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.ALTINO_h2, '1'],
-                        [Lang.Blocks.ALTINO_h, '0'],
+                        [Lang.Blocks.altino_neo_h2, '1'],
+                        [Lang.Blocks.altino_neo_h, '0'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -1187,8 +1181,8 @@ Entry.Altino.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.ALTINO_h2, '1'],
-                        [Lang.Blocks.ALTINO_h, '0'],
+                        [Lang.Blocks.altino_neo_h2, '1'],
+                        [Lang.Blocks.altino_neo_h, '0'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -1198,8 +1192,8 @@ Entry.Altino.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.ALTINO_h2, '1'],
-                        [Lang.Blocks.ALTINO_h, '0'],
+                        [Lang.Blocks.altino_neo_h2, '1'],
+                        [Lang.Blocks.altino_neo_h, '0'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -1209,8 +1203,8 @@ Entry.Altino.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.ALTINO_h2, '1'],
-                        [Lang.Blocks.ALTINO_h, '0'],
+                        [Lang.Blocks.altino_neo_h2, '1'],
+                        [Lang.Blocks.altino_neo_h, '0'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -1220,8 +1214,8 @@ Entry.Altino.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.ALTINO_h2, '1'],
-                        [Lang.Blocks.ALTINO_h, '0'],
+                        [Lang.Blocks.altino_neo_h2, '1'],
+                        [Lang.Blocks.altino_neo_h, '0'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -1231,8 +1225,8 @@ Entry.Altino.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.ALTINO_h2, '1'],
-                        [Lang.Blocks.ALTINO_h, '0'],
+                        [Lang.Blocks.altino_neo_h2, '1'],
+                        [Lang.Blocks.altino_neo_h, '0'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -1248,7 +1242,7 @@ Entry.Altino.getBlocks = function() {
             events: {},
             def: {
                 params: [null, null, null, null, null, null, null, null, null, null],
-                type: 'altino_dot_display_line',
+                type: 'altino_neo_dot_display_line',
             },
             paramsKeyMap: {
                 LINE: 0,
@@ -1261,11 +1255,14 @@ Entry.Altino.getBlocks = function() {
                 SW7: 7,
                 SW8: 8,
             },
-            class: 'altino_output',
-            isNotFor: ['altino'],
+            class: 'altino_neo_output',
+            isNotFor: ['altino_neo'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var line = script.getStringField('LINE', script);
+
+                sq.ascii = 0xff;
+
                 var dots = [
                     script.getStringField('SW1', script),
                     script.getStringField('SW2', script),
@@ -1348,9 +1345,9 @@ Entry.Altino.getBlocks = function() {
                 //sq.led = 0xff;
                 return script.callReturn();
             },
-            syntax: { js: [], py: ['Altino.dot_display_line(%1, %2, %3, %4, %5, %6, %7, %8)'] },
+            syntax: { js: [], py: ['AltinoNeo.dot_display_line(%1, %2, %3, %4, %5, %6, %7, %8)'] },
         },
-        altino_dot_display_hex: {
+        altino_neo_dot_display_hex: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1431,7 +1428,7 @@ Entry.Altino.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'altino_dot_display_hex',
+                type: 'altino_neo_dot_display_hex',
             },
             paramsKeyMap: {
                 VALUE1: 0,
@@ -1443,11 +1440,11 @@ Entry.Altino.getBlocks = function() {
                 VALUE7: 6,
                 VALUE8: 7,
             },
-            class: 'altino_expert',
-            isNotFor: ['altino'],
+            class: 'altino_neo_expert',
+            isNotFor: ['altino_neo'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
-                sq.ascii = 0;
+                sq.ascii = 0xff;
                 sq.dot1 = parseInt(Number(script.getStringValue('VALUE8')), 10);
                 sq.dot2 = parseInt(Number(script.getStringValue('VALUE7')), 10);
                 sq.dot3 = parseInt(Number(script.getStringValue('VALUE6')), 10);
@@ -1459,9 +1456,9 @@ Entry.Altino.getBlocks = function() {
 
                 return script.callReturn();
             },
-            syntax: { js: [], py: ['Altino.dot_display_hex(%1, %2, %3, %4, %5, %6, %7, %8)'] },
+            syntax: { js: [], py: ['AltinoNeo.dot_display_hex(%1, %2, %3, %4, %5, %6, %7, %8)'] },
         },
-        altino_ir_reset: {
+        altino_neo_ir_reset: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1478,23 +1475,23 @@ Entry.Altino.getBlocks = function() {
                 params: [
                     null,
                 ],
-                type: 'altino_ir_reset',
+                type: 'altino_neo_ir_reset',
             },
             paramsKeyMap: {
                 DEVICE : 0,
             },
-            class: 'altino_output',
-            isNotFor: ['altino'],
+            class: 'altino_neo_output',
+            isNotFor: ['altino_neo'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
 
-                sq.command = 252;
+                sq.ir = 6;
                 return script.callReturn();
             },
-            syntax: { js: [], py: ['Altino.ir_reset'] },
+            syntax: { js: [], py: ['AltinoNeo.ir_reset'] },
         },
         //endregion Altino 알티노
     };
 };
 
-module.exports = Entry.Altino;
+module.exports = Entry.AltinoNeo;

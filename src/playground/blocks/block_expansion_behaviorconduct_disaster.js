@@ -250,7 +250,7 @@ Entry.EXPANSION_BLOCK.behaviorConductDisaster.getBlocks = function () {
             isNotFor: ['behaviorConductDisaster'],
             func(sprite, script) {
                 const number = script.getStringValue('NUMBER', script);
-                const defaultValue = Lang.Blocks.no_data;
+                const defaultValue = Lang.Blocks.deprecated;
                 const params = {
                     category: Entry.EXPANSION_BLOCK.behaviorConductDisaster.apiType,
                     subCategory: script.getField('CATEGORY', script),
