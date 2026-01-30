@@ -536,7 +536,6 @@ module.exports = {
                         sprite.paint.opacity = newOpacity;
                         sprite.paint.endFill();
                         const rgb = sprite.paint.rgb;
-                        console.log('rgb', rgb);
                         sprite.paint.beginFill(
                             `rgba(${rgb.r},${rgb.g},${rgb.b},${1 - sprite.paint.opacity / 100})`
                         );

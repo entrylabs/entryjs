@@ -339,7 +339,7 @@ class AudioUtils {
 
         this._stopMediaRecorder();
         this._audioContext.suspend();
-        this.stream.getTracks().forEach((track) => {
+        this?.stream?.getTracks().forEach((track) => {
             track.stop();
         });
         clearTimeout(this._properStopCall);
