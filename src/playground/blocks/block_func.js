@@ -466,10 +466,12 @@ module.exports = {
                     }
 
                     this.funcExecutor.result = this.funcExecutor.scope;
-                    this.funcExecutor.scope = new Entry.Scope(
-                        this.funcExecutor.scope.block.statements[0].getFirstBlock(),
-                        this.funcExecutor
-                    );
+
+                    const firstBlock =
+                        this.funcExecutor?.scope?.block?.statements[0]?.getFirstBlock();
+                    if (firstBlock) {
+                        this.funcExecutor.scope = new Entry.Scope(firstBlock, this.funcExecutor);
+                    }
                     const { promises } = this.funcExecutor.execute();
 
                     if (!this.funcExecutor.isEnd()) {
