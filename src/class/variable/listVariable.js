@@ -7,10 +7,35 @@ class ListVariable extends Variable {
         return 5000;
     }
 
+    _isListFull() {
+        const currentLength = this.array_ ? this.array_.length : 0;
+        return currentLength >= this.LIST_MAX_LENGTH;
+    }
+
+    _showListFullWarning() {
+        Entry.toast?.warning(
+            Lang?.Workspace?.list_cant_add_item || 'List limit exceeded',
+            Lang?.Workspace?.list_max_length_exceeded ||
+                `Cannot add more than ${this.LIST_MAX_LENGTH} items to list.`
+        );
+    }
+
     constructor(variable) {
         Entry.assert(variable.variableType === 'list', 'Invalid variable type given');
         super(variable);
-        this.array_ = variable.array ? variable.array : [];
+
+        let array = variable.array ? variable.array : [];
+        if (array.length > this.LIST_MAX_LENGTH) {
+            array = array.slice(0, this.LIST_MAX_LENGTH);
+            setTimeout(() => {
+                Entry.modal?.alert(
+                    Lang?.Workspace?.list_truncated_on_load ||
+                        `List "${variable.name}" exceeded ${this.LIST_MAX_LENGTH} items and was truncated.`,
+                    Lang?.Workspace?.list_cant_add_item || 'List limit exceeded'
+                );
+            }, 100);
+        }
+        this.array_ = array;
 
         if (!variable.isClone) {
             this.width_ = variable.width ? variable.width : 100;
@@ -62,11 +87,11 @@ class ListVariable extends Variable {
         this.resizeHandle_.list = this;
 
         GEDragHelper.handleDrag(this.resizeHandle_);
-        this.resizeHandle_.on(GEDragHelper.types.OVER, function() {
+        this.resizeHandle_.on(GEDragHelper.types.OVER, function () {
             this.cursor = 'nwse-resize';
         });
 
-        this.resizeHandle_.on(GEDragHelper.types.DOWN, function(evt) {
+        this.resizeHandle_.on(GEDragHelper.types.DOWN, function (evt) {
             // if(Entry.type != 'workspace') return;
             this.list.isResizing = true;
             this.offset = {
@@ -75,18 +100,18 @@ class ListVariable extends Variable {
             };
             this.parent.cursor = 'nwse-resize';
         });
-        this.resizeHandle_.on(GEDragHelper.types.MOVE, function(evt) {
+        this.resizeHandle_.on(GEDragHelper.types.MOVE, function (evt) {
             // if(Entry.type != 'workspace') return;
             this.list.setWidth(evt.stageX * 0.75 - this.offset.x);
             this.list.setHeight(evt.stageY * 0.75 - this.offset.y);
             this.list.updateView();
         });
 
-        this.view_.on(GEDragHelper.types.OVER, function() {
+        this.view_.on(GEDragHelper.types.OVER, function () {
             this.cursor = 'move';
         });
 
-        this.view_.on(GEDragHelper.types.DOWN, function(evt) {
+        this.view_.on(GEDragHelper.types.DOWN, function (evt) {
             if (Entry.type !== 'workspace' || this.variable.isResizing) {
                 return;
             }
@@ -97,12 +122,12 @@ class ListVariable extends Variable {
             this.cursor = 'move';
         });
 
-        this.view_.on(GEDragHelper.types.UP, function() {
+        this.view_.on(GEDragHelper.types.UP, function () {
             this.cursor = 'initial';
             this.variable.isResizing = false;
         });
 
-        this.view_.on(GEDragHelper.types.MOVE, function(evt) {
+        this.view_.on(GEDragHelper.types.MOVE, function (evt) {
             if (Entry.type !== 'workspace' || this.variable.isResizing) {
                 return;
             }
@@ -122,12 +147,12 @@ class ListVariable extends Variable {
         this.scrollButton_.y = 25;
 
         this.scrollButton_.list = this;
-        this.scrollButton_.on(GEDragHelper.types.DOWN, function(evt) {
+        this.scrollButton_.on(GEDragHelper.types.DOWN, function (evt) {
             // if(Entry.type != 'workspace') return;
             this.list.isResizing = true;
             this.offsetY = evt.stageY - this.y / 0.75;
         });
-        this.scrollButton_.on(GEDragHelper.types.MOVE, function(evt) {
+        this.scrollButton_.on(GEDragHelper.types.MOVE, function (evt) {
             // if(Entry.type != 'workspace') return;
 
             const stageY = evt.stageY;
@@ -193,6 +218,11 @@ class ListVariable extends Variable {
     }
 
     appendValue(value) {
+        if (this._isListFull()) {
+            this._showListFullWarning();
+            return this.isRealTime_ ? Promise.resolve() : undefined;
+        }
+
         if (!this.isRealTime_) {
             if (!this.array_) {
                 this.array_ = [];
@@ -254,6 +284,11 @@ class ListVariable extends Variable {
     }
 
     insertValue(index, data) {
+        if (this._isListFull()) {
+            this._showListFullWarning();
+            return this.isRealTime_ ? Promise.resolve() : undefined;
+        }
+
         if (!this.isRealTime_) {
             this.array_.splice(index - 1, 0, { data });
             this.updateView();
