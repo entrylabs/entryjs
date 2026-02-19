@@ -1,0 +1,9 @@
+{
+    "name": "RobotisKoalabotLite",
+    "version": "1.0.0",
+    "type": "hardware",
+    "title": "코알라봇",
+    "description": "로보티즈",
+    "imageName": "robotis_koalabot_lite",
+    "moduleId": "070C01"
+}

@@ -22,62 +22,62 @@ Entry.Arduino = {
         width: 605,
         height: 434,
         listPorts: {
-            '2': {
+            2: {
                 name: `${Lang.Hw.port_en} 2 ${Lang.Hw.port_ko}`,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
-            '3': {
+            3: {
                 name: `${Lang.Hw.port_en} 3 ${Lang.Hw.port_ko}`,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
-            '4': {
+            4: {
                 name: `${Lang.Hw.port_en} 4 ${Lang.Hw.port_ko}`,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
-            '5': {
+            5: {
                 name: `${Lang.Hw.port_en} 5 ${Lang.Hw.port_ko}`,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
-            '6': {
+            6: {
                 name: `${Lang.Hw.port_en} 6 ${Lang.Hw.port_ko}`,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
-            '7': {
+            7: {
                 name: `${Lang.Hw.port_en} 7 ${Lang.Hw.port_ko}`,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
-            '8': {
+            8: {
                 name: `${Lang.Hw.port_en} 8 ${Lang.Hw.port_ko}`,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
-            '9': {
+            9: {
                 name: `${Lang.Hw.port_en} 9 ${Lang.Hw.port_ko}`,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
-            '10': {
+            10: {
                 name: `${Lang.Hw.port_en} 10 ${Lang.Hw.port_ko}`,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
-            '11': {
+            11: {
                 name: `${Lang.Hw.port_en} 11 ${Lang.Hw.port_ko}`,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
-            '12': {
+            12: {
                 name: `${Lang.Hw.port_en} 12 ${Lang.Hw.port_ko}`,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
-            '13': {
+            13: {
                 name: `${Lang.Hw.port_en} 13 ${Lang.Hw.port_ko}`,
                 type: 'input',
                 pos: { x: 0, y: 0 },
@@ -117,15 +117,15 @@ Entry.Arduino = {
     },
 };
 
-Entry.Arduino.setLanguage = function() {
+Entry.Arduino.setLanguage = function () {
     return {
         ko: {
             template: {
-                arduino_get_number_sensor_value: '아날로그 %1 번 센서값  ',
-                arduino_get_digital_value: '디지털 %1 번 센서값  ',
+                arduino_get_number_sensor_value: '아날로그 %1 번 값 ',
+                arduino_get_digital_value: '디지털 %1 번 값',
                 arduino_toggle_led: '디지털 %1 번 핀 %2 %3',
                 arduino_toggle_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
-                arduino_convert_scale: '%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 바꾼값  ',
+                arduino_convert_scale: '%1 번 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 바꾼 값',
             },
             Device: {
                 arduino: '아두이노',
@@ -133,20 +133,38 @@ Entry.Arduino.setLanguage = function() {
             Menus: {
                 arduino: '아두이노',
             },
+            Helper: {
+                arduino_get_number_sensor_value: '선택한 핀의 아날로그 값입니다. (0 ~ 1023)',
+                arduino_convert_scale: '선택한 핀의 아날로그 값을 입력한 범위로 바꾼 값입니다.',
+                arduino_get_digital_value:
+                    '선택한 핀의 디지털 값입니다. 핀이 켜진 경우 "참"으로 판단합니다.',
+                arduino_toggle_led: '선택한 핀을 켜거나 끕니다.',
+                arduino_toggle_pwm: '선택한 핀을 입력한 값으로 정합니다.',
+            },
         },
         en: {
             template: {
-                arduino_get_number_sensor_value: 'Analog %1 Sensor value  ',
-                arduino_get_digital_value: 'Digital %1 Sensor value  ',
-                arduino_toggle_led: 'Digital %1 Pin %2 %3',
-                arduino_toggle_pwm: 'Digital %1 Pin %2 %3',
-                arduino_convert_scale: 'Map Value %1 %2 ~ %3 to %4 ~ %5  ',
+                arduino_get_number_sensor_value: 'analog %1 value  ',
+                arduino_get_digital_value: 'digital %1 value  ',
+                arduino_toggle_led: '%2 digital %1 pin %3',
+                arduino_toggle_pwm: 'Set digital %1 pin to %2 %3',
+                arduino_convert_scale: 'mapped value of analog %1 that %2 ~ %3 to %4 ~ %5',
             },
             Device: {
                 arduino: 'arduino',
             },
             Menus: {
                 arduino: 'Arduino',
+            },
+            Helper: {
+                arduino_get_number_sensor_value:
+                    'Reports the value that analog signal of the selected pin. (0 ~ 1023)',
+                arduino_convert_scale:
+                    'Reports the value that analog signal of the selected pin mapping original range onto input range.',
+                arduino_get_digital_value:
+                    'Checks whether the selected pin is turned on. If it turned on, it is judged as "True".',
+                arduino_toggle_led: 'Turn on or turn off the selected pin.',
+                arduino_toggle_pwm: 'Set the selected pin to input value.',
             },
         },
     };
@@ -160,7 +178,7 @@ Entry.Arduino.blockMenuBlocks = [
     'arduino_convert_scale',
 ];
 
-Entry.Arduino.getBlocks = function() {
+Entry.Arduino.getBlocks = function () {
     return {
         //region arduino 아두이노
         arduino_text: {
@@ -208,12 +226,12 @@ Entry.Arduino.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['0', 'A0'],
-                        ['1', 'A1'],
-                        ['2', 'A2'],
-                        ['3', 'A3'],
-                        ['4', 'A4'],
-                        ['5', 'A5'],
+                        ['A0', 'A0'],
+                        ['A1', 'A1'],
+                        ['A2', 'A2'],
+                        ['A3', 'A3'],
+                        ['A4', 'A4'],
+                        ['A5', 'A5'],
                     ],
                     value: 'A0',
                     fontSize: 11,

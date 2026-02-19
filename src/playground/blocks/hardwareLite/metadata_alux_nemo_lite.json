@@ -1,0 +1,9 @@
+{
+    "name": "ProboNemoLite",
+    "version": "1.0.1",
+    "type": "hardware",
+    "title": "네모",
+    "description": "에이럭스",
+    "imageName": "alux_nemo_lite.png",
+    "moduleId": "630101"
+}

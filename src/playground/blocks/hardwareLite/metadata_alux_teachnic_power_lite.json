@@ -1,0 +1,9 @@
+{
+    "name": "ProboTechnicPowerLite",
+    "version": "1.0.1",
+    "type": "hardware",
+    "title": "프로보 테크닉(파워)",
+    "description": "에이럭스",
+    "imageName": "alux_technic_power_lite.png",
+    "moduleId": "630201"
+}

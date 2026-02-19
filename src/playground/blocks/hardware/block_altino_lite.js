@@ -16,6 +16,7 @@ Entry.AltinoLite = {
         dot6: 0,
         dot7: 0,
         dot8: 0,
+        ir: 0
     },
     setZero: function() {
         var portMap = Entry.AltinoLite.PORT_MAP;
@@ -24,8 +25,8 @@ Entry.AltinoLite = {
             sq[port] = portMap[port];
         }
         Entry.hw.update();
-        var Altino = Entry.Altino;
-        Altino.removeAllTimeouts();
+        // var Altino = Entry.Altino;
+        // Altino.removeAllTimeouts();
     },
     timeouts: [],
     removeTimeout: function(id) {
@@ -68,6 +69,7 @@ Entry.AltinoLite.blockMenuBlocks = [
     'altino_lite_dot_display_hex',
     'altino_lite_dot_display_matrix_on',
     'altino_lite_dot_display_matrix_off',
+    'altino_lite_ir_reset',
 ];
 
 Entry.AltinoLite.setLanguage = function() {
@@ -137,7 +139,7 @@ Entry.AltinoLite.setLanguage = function() {
             },
             template: {
                 altino_lite_analogValue: '알티노 라이트 %1 센서값',
-                altino_lite_stopAll: '정지 %1°%2',
+                altino_lite_stopAll: '정지 %1 %2',
                 altino_lite_dot_display: '표시하기 %1 %2',
                 altino_lite_dot_display_line: '표시하기 %1 %2 %3 %4 %5 %6 %7 %8 %9 %10',
                 altino_lite_dot_display_hex: '표시하기 %1 %2 %3 %4 %5 %6 %7 %8 %9',
@@ -150,6 +152,7 @@ Entry.AltinoLite.setLanguage = function() {
                 altino_lite_sound: '소리 %1 %2 %3',
                 altino_lite_steering_hex: '조향 %1%2',
                 altino_lite_steering: '조향 %1°%2',
+                altino_lite_ir_reset: '알티노 라이트 IR 센서 초기화%1',
             },
         },
         en: {
@@ -230,6 +233,7 @@ Entry.AltinoLite.setLanguage = function() {
                 altino_lite_sound: 'Sound %1 %2 %3',
                 altino_lite_steering_hex: 'Steering %1%2',
                 altino_lite_steering: 'Steering %1°%2',
+                altino_lite_ir_reset: 'Reset Altino lite IR Sensor%1',
             },
         },
     };
@@ -287,7 +291,7 @@ Entry.AltinoLite.getBlocks = function() {
             statements: [],
             params: [
                 {
-                    type: 'DropdownDynamic',
+                    type: 'Dropdown',
                     options: [
                         [Lang.Blocks.altino_lite_stopAll, 'All'],
                         [Lang.Blocks.altino_lite_stopDrive, 'Drive'],
@@ -562,7 +566,7 @@ Entry.AltinoLite.getBlocks = function() {
             skeleton: 'basic',
             statements: [],
             params: [
-                {
+                {                    
                     type: 'Dropdown',
                     options: [
                         ['1-' + Lang.Blocks.altino_lite_sound_oct, '1'],
@@ -1384,6 +1388,38 @@ Entry.AltinoLite.getBlocks = function() {
                 return script.callReturn();
             },
             syntax: { js: [], py: ['AltinoLite.dot_display_hex(%1, %2, %3, %4, %5, %6, %7, %8)'] },
+        },
+        altino_lite_ir_reset: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                ],
+                type: 'altino_lite_ir_reset',
+            },
+            paramsKeyMap: {
+                DEVICE : 0,
+            },
+            class: 'altino_lite_output',
+            isNotFor: ['altino_lite'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+
+                sq.ir = 6;
+                return script.callReturn();
+            },
+            syntax: { js: [], py: ['AltinoLite.ir_reset'] },
         },
         //endregion Altino 알티노
     };

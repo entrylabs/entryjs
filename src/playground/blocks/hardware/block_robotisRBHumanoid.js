@@ -144,7 +144,7 @@ Entry.Robotis_rb_H.setLanguage = function() {
                 robotis_RB_cm_buzzer_index: "제어기 음계값 %1 을(를) %2 옥타브로 %3 초 동안 %4 %5",
                 robotis_RB_cm_screen: "제어기 화면 배경을 알쥐 %1 로 선택 %2",
                 robotis_RB_cm_anim_screen: "제어기 화면 애니메이션을 알쥐 %1 로 선택 %2",
-                robotis_RB_rsp_screen: "제어기 화면에 %1 출력하기 %2",
+                robotis_RB_rsp_screen: "제어기 화면에 %1 출력하기 %5",
 
                 robotis_RB_LCDBright: "제어기 화면 밝기를 %1로 정하기 %2",
                 robotis_RB_LCDColor: "제어기 화면 색상을 %1 으로 정하기 %2",
@@ -351,7 +351,7 @@ Entry.Robotis_rb_H.setLanguage = function() {
                 robotis_RB_cm_buzzer_index:"%1 at %2 octaves for %3 second(s) -> %4 %5",
                 robotis_RB_cm_screen:"Choose %1 as a screen background %2",
                 robotis_RB_cm_anim_screen: "Choose %1 as a screen animation %2",
-                robotis_RB_rsp_screen:"Print %1 on the screen %2",
+                robotis_RB_rsp_screen:"Print %1 on the screen %5",
                 
                 robotis_RB_LCDBright:"Adjust screen brightness to %1 %2",
                 robotis_RB_LCDColor:"Set screen color to %1 %2",

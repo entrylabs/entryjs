@@ -36,7 +36,7 @@ Entry.ArduinoExt = {
         TIMER: 8,
     },
     toneTable: {
-        '0': 0,
+        0: 0,
         C: 1,
         CS: 2,
         D: 3,
@@ -51,48 +51,82 @@ Entry.ArduinoExt = {
         B: 12,
     },
     toneMap: {
-        '1': [33, 65, 131, 262, 523, 1046, 2093, 4186],
-        '2': [35, 69, 139, 277, 554, 1109, 2217, 4435],
-        '3': [37, 73, 147, 294, 587, 1175, 2349, 4699],
-        '4': [39, 78, 156, 311, 622, 1245, 2849, 4978],
-        '5': [41, 82, 165, 330, 659, 1319, 2637, 5274],
-        '6': [44, 87, 175, 349, 698, 1397, 2794, 5588],
-        '7': [46, 92, 185, 370, 740, 1480, 2960, 5920],
-        '8': [49, 98, 196, 392, 784, 1568, 3136, 6272],
-        '9': [52, 104, 208, 415, 831, 1661, 3322, 6645],
-        '10': [55, 110, 220, 440, 880, 1760, 3520, 7040],
-        '11': [58, 117, 233, 466, 932, 1865, 3729, 7459],
-        '12': [62, 123, 247, 494, 988, 1976, 3951, 7902],
+        1: [33, 65, 131, 262, 523, 1046, 2093, 4186],
+        2: [35, 69, 139, 277, 554, 1109, 2217, 4435],
+        3: [37, 73, 147, 294, 587, 1175, 2349, 4699],
+        4: [39, 78, 156, 311, 622, 1245, 2849, 4978],
+        5: [41, 82, 165, 330, 659, 1319, 2637, 5274],
+        6: [44, 87, 175, 349, 698, 1397, 2794, 5588],
+        7: [46, 92, 185, 370, 740, 1480, 2960, 5920],
+        8: [49, 98, 196, 392, 784, 1568, 3136, 6272],
+        9: [52, 104, 208, 415, 831, 1661, 3322, 6645],
+        10: [55, 110, 220, 440, 880, 1760, 3520, 7040],
+        11: [58, 117, 233, 466, 932, 1865, 3729, 7459],
+        12: [62, 123, 247, 494, 988, 1976, 3951, 7902],
     },
     highList: ['high', '1', 'on'],
     lowList: ['low', '0', 'off'],
     BlockState: {},
 };
 
-Entry.ArduinoExt.setLanguage = function() {
+Entry.ArduinoExt.setLanguage = function () {
     return {
         ko: {
             template: {
-                arduino_ext_get_analog_value: '아날로그 %1 번 센서값',
-                arduino_ext_get_analog_value_map: '%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값',
-                arduino_ext_get_ultrasonic_value: '울트라소닉 Trig %1 Echo %2 센서값',
+                arduino_ext_get_analog_value: '아날로그 %1 번 값',
+                arduino_ext_get_analog_value_map:
+                    '%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 바꾼 값',
+                arduino_ext_get_ultrasonic_value:
+                    '디지털 %1 번 핀을 Trig에 디지털 %2 번 핀을 Echo에 연결한 초음파 센서 값',
                 arduino_ext_toggle_led: '디지털 %1 번 핀 %2 %3',
                 arduino_ext_digital_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
-                arduino_ext_set_tone: '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5',
-                arduino_ext_set_servo: '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
-                arduino_ext_get_digital: '디지털 %1 번 센서값',
+                arduino_ext_set_tone: '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 울리기 %5',
+                arduino_ext_set_servo: '디지털 %1 번 핀의 서보모터를 %2 도로 정하기 %3',
+                arduino_ext_get_digital: '디지털 %1 번 값',
+            },
+            Helper: {
+                arduino_ext_get_analog_value: '선택한 핀의 아날로그 값입니다. (0 ~ 1023)',
+                arduino_ext_get_analog_value_map:
+                    '선택한 핀의 아날로그 값을 입력한 범위로 바꾼 값입니다.',
+                arduino_ext_get_ultrasonic_value: '선택한 핀에 연결한 초음파 센서 값입니다.',
+                arduino_ext_set_servo: '선택한 핀에 연결한 서보모터의 각도를 정합니다.',
+                arduino_ext_set_tone:
+                    '선택한 핀에 연결한 버저를 선택한 음으로 입력한 시간 동안 울립니다.',
+                arduino_ext_get_digital:
+                    '선택한 핀의 디지털 값입니다. 핀이 켜진 경우 "참"으로 판단합니다.',
+                arduino_ext_toggle_led: '선택한 핀을 켜거나 끕니다.',
+                arduino_ext_digital_pwm: '선택한 핀을 입력한 값으로 정합니다.',
             },
         },
         en: {
             template: {
-                arduino_ext_get_analog_value: 'Analog %1 Sensor value',
-                arduino_ext_get_analog_value_map: 'Map Value %1 %2 ~ %3 to %4 ~ %5',
-                arduino_ext_get_ultrasonic_value: 'Read ultrasonic sensor trig pin %1 echo pin %2',
-                arduino_ext_toggle_led: 'Digital %1 Pin %2 %3',
-                arduino_ext_digital_pwm: 'Digital %1 Pin %2 %3',
-                arduino_ext_set_tone: 'Play tone pin %1 on note %2 octave %3 beat %4 %5',
-                arduino_ext_set_servo: 'Set servo pin %1 angle as %2 %3',
-                arduino_ext_get_digital: 'Digital %1 Sensor value',
+                arduino_ext_get_analog_value: 'analog %1 value',
+                arduino_ext_get_analog_value_map:
+                    'mapped value of analog %1 that %2 ~ %3 to %4 ~ %5',
+                arduino_ext_get_ultrasonic_value:
+                    'ultrasonic sensor value that connects pin %1 to Trig and pin %2 to Echo',
+                arduino_ext_toggle_led: '%2 digital %1 pin %3',
+                arduino_ext_digital_pwm: 'Set digital %1 pin to %2 %3',
+                arduino_ext_set_tone:
+                    'Ring buzzer of pin %1 on note %2 octave %3 for %4 second(s) %5',
+                arduino_ext_set_servo: 'Set servo motor of pin %1 to %2 degree %3',
+                arduino_ext_get_digital: 'digital %1 value',
+            },
+            Helper: {
+                arduino_ext_get_analog_value:
+                    'Reports the value that analog signal of the selected pin. (0 ~ 1023)',
+                arduino_ext_get_analog_value_map:
+                    'Reports the value that analog signal of the selected pin mapping original range onto input range.',
+                arduino_ext_get_ultrasonic_value:
+                    'Reports the value of ultrasonic sensor that connects pin.',
+                arduino_ext_set_servo:
+                    'Set the degree of servo motor that connected with selected pin.',
+                arduino_ext_set_tone:
+                    'Rings buzzer connected with selected pin during input seconds.',
+                arduino_ext_get_digital:
+                    'Checks whether the selected pin is turned on. If it turned on, it is judged as "True".',
+                arduino_ext_toggle_led: 'Turn on or turn off the selected pin.',
+                arduino_ext_digital_pwm: 'Set the selected pin to input value.',
             },
         },
     };
@@ -110,7 +144,7 @@ Entry.ArduinoExt.blockMenuBlocks = [
 ];
 
 //region arduinoExt 아두이노 확장모드
-Entry.ArduinoExt.getBlocks = function() {
+Entry.ArduinoExt.getBlocks = function () {
     return {
         arduino_ext_analog_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -518,7 +552,10 @@ Entry.ArduinoExt.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [[Lang.Blocks.ARDUINO_on, 'on'], [Lang.Blocks.ARDUINO_off, 'off']],
+                    options: [
+                        [Lang.Blocks.ARDUINO_on, 'on'],
+                        [Lang.Blocks.ARDUINO_off, 'off'],
+                    ],
                     value: 'on',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
