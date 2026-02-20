@@ -49,6 +49,8 @@ Entry.HEXABOARD = new (class HEXABOARD {
     OLED_HEXA: 0x37, //Hexa 앞의 oled 값 요청
     WRITE_VEHICLE_LED: 0x38, //차량LED 값 요청
     OLED_PRINT: 0x39, //OLED 출력
+    READ_GYRO_INTENSITY: 0x40, //자이로센서 세기 값 요청
+    CUSTOM_NEOPIXEL_LED: 0x41, //네오픽셀 매트릭스 LED 상태 변경
     };
     // 자이로 센서에 대한 추가적인 세부 명령 정의
     this.gyro_command = {
@@ -65,6 +67,29 @@ Entry.HEXABOARD = new (class HEXABOARD {
     this.command = {
       READ: 1,
       WRITE: 0,
+    };
+    // 센서 초기화 플래그들
+    this.sensorInitialized = {
+      digitalRead: false,
+      analogRead: false,
+      weather: false,
+      line: false,
+      dust: false,
+      weight: false,
+      button: false,
+      waterTemperature: false,
+      waterQuality: false,
+      sound: false,
+      pressure: false,
+      dht: false,
+      co2: false,
+      gyro: false,
+      gyroAngle: false,
+      gyroIntensity: false,
+      ultrasonic: false,
+      color: false,
+      rgbColor: false,
+      touch: false,
     };
     this.blockMenuBlocks = [
       'makeitnow_input_title',
@@ -96,6 +121,7 @@ Entry.HEXABOARD = new (class HEXABOARD {
       'makeitnow_gyro_title',
       'makeitnow_gyro_hexa',
       'makeitnow_gyro_direction_hexa',
+      'makeitnow_gyro_intensity_hexa',
       'makeitnow_ultrasonic_title',
       'makeitnow_sensor_ultrasonic',
       'makeitnow_color_title',
@@ -128,6 +154,8 @@ Entry.HEXABOARD = new (class HEXABOARD {
       'makeitnow_display_oled_hexa',
       'makeitnow_oled_print_hexa',
       'makeitnow_oled_clear_hexa',
+      'makeitnow_percentage_conversion_title',
+      'makeitnow_percentage_conversion',
       'makeitnow_wireless_title',
     ];
   }
@@ -157,6 +185,11 @@ Entry.HEXABOARD = new (class HEXABOARD {
     // for(let i = 2 ; i <= 13 ; i++) {
     //   Entry.hw.sendQueue.PORT[i] = 0;
     // }
+    // 모든 센서 초기화 플래그 리셋
+    Object.keys(this.sensorInitialized).forEach(key => {
+      this.sensorInitialized[key] = false;
+    });
+    console.log('setZero: 모든 센서 초기화 플래그 리셋');
     if (!Entry.hw.sendQueue.SET) {
       Entry.hw.sendQueue.SET = {};
     }
@@ -177,7 +210,7 @@ Entry.HEXABOARD = new (class HEXABOARD {
     ko: {
       // ko.js에 작성하던 내용
       template: {
-        hexaboard_show_custom_image: 'LED %1 밝히기 %2',
+        hexaboard_show_custom_image: 'LED 출력하기 %1 색상 %2 ',
         neopixel_set_led: 'LED의 X: %1 Y: %2 를 밝기 %3 (으)로 밝히기 %4',
         makeitnow_input_title : '입력',
         makeitnow_input_subtitle : '입력',
@@ -208,6 +241,7 @@ Entry.HEXABOARD = new (class HEXABOARD {
         makeitnow_gyro_title : '자이로 센서',
         makeitnow_gyro_hexa : '보드가 %1로 기울어진진 각도',
         makeitnow_gyro_direction_hexa : '보드가 %1방향으로 기울었을 때',
+        makeitnow_gyro_intensity_hexa : '움직임 세기 값 읽기',
         makeitnow_ultrasonic_title : '초음파 센서',
         makeitnow_sensor_ultrasonic: '초음파센서에서 %1값 읽기',
         makeitnow_color_title : '컬러 센서',
@@ -254,13 +288,15 @@ Entry.HEXABOARD = new (class HEXABOARD {
         // makeitnow_wireless_serverSend_hexa : '가상핀 %1에 %2값 전송 %3',
         // makeitnow_wireless_serverReceived_hexa: '가상핀 ( V%1 )값을 가져오기',
         makeitnow_wireless_blynk_title : '',
+        makeitnow_percentage_conversion_title: '값 변환',
+        makeitnow_percentage_conversion: '값 %1의 범위 %2 ~ %3 을 %4 ~ %5 로 변환',
       }
     },
     en: {
       // en.js에 작성하던 내용
       template: {
-        hexaboard_show_custom_image: 'LED %1 밝히기 %2',
-        neopixel_set_led: 'LED의 X: %1 Y: %2 를 밝기 %3 (으)로 밝히기 %4',
+        hexaboard_show_custom_image: 'LED %1 %2 color brightness %3',
+        neopixel_set_led: 'LED %1 %2 color brightness %3',
         makeitnow_input_title : 'input',
         makeitnow_input_subtitle : 'input',
         makeitnow_weather_title : 'Weather Sensor',
@@ -290,6 +326,7 @@ Entry.HEXABOARD = new (class HEXABOARD {
         makeitnow_gyro_title : 'Gyro Sensor',
         makeitnow_gyro_hexa: 'Board tilt angle %1',
         makeitnow_gyro_direction_hexa: 'Direction of board tilt %1',
+        makeitnow_gyro_intensity_hexa: 'Read movement intensity value',
         makeitnow_ultrasonic_title : 'Ultrasonic Sensor',
         makeitnow_sensor_ultrasonic: 'ultrasonic sensor %1 value',
         makeitnow_color_title : 'Color Sensor',
@@ -333,7 +370,9 @@ Entry.HEXABOARD = new (class HEXABOARD {
         // makeitnow_wireless_title: 'Wireless Communication',
         // makeitnow_wireless_wifiConnect_hexa: 'Connect to WiFi name %1 password %2 auth %3 %4',
         // makeitnow_wireless_serverReceived_hexa: 'Retrieve value from virtual pin ( V%1 )',
-        makeitnow_wireless_blynk_title: 'Blynk Wireless'
+        makeitnow_wireless_blynk_title: 'Blynk Wireless',
+        makeitnow_percentage_conversion_title: 'Value Conversion',
+        makeitnow_percentage_conversion: 'Convert value %1 range %2 ~ %3 to %4 ~ %5',
 
       }
     }
@@ -429,18 +468,22 @@ Entry.HEXABOARD = new (class HEXABOARD {
       func: function(sprite, script) {
         const pin_num = script.getField('PIN', script);
 
-        if (!Entry.hw.sendQueue.SET) {
-          Entry.hw.sendQueue.SET = {};
+        // 최초 한번만 하드웨어 업데이트 실행
+        if (!Entry.HEXABOARD.sensorInitialized.digitalRead) {
+          if (!Entry.hw.sendQueue.SET) {
+            Entry.hw.sendQueue.SET = {};
+          }
+          Entry.hw.sendQueue.SET = {
+            type: Entry.HEXABOARD.command.READ,
+            data: {
+              command : Entry.HEXABOARD.sensorTypes.DIGITAL_READ,
+              pin : pin_num,
+            },
+          };
+          Entry.hw.update();
+          delete Entry.hw.sendQueue.SET;
+          Entry.HEXABOARD.sensorInitialized.digitalRead = true;
         }
-        Entry.hw.sendQueue.SET = {
-          type: Entry.HEXABOARD.command.READ,
-          data: {
-            command : Entry.HEXABOARD.sensorTypes.DIGITAL_READ,
-            pin : pin_num,
-          },
-        };
-        Entry.hw.update();
-        delete Entry.hw.sendQueue.SET;
 
         let hwVal = Entry.hw.portData[pin_num];
         if (hwVal !== undefined) {
@@ -488,18 +531,22 @@ Entry.HEXABOARD = new (class HEXABOARD {
         const pin = script.getField('PIN', script);
         const pinName = `A${pin}`
 
-        if (!Entry.hw.sendQueue.SET) {
-          Entry.hw.sendQueue.SET = {};
+        // 최초 한번만 하드웨어 업데이트 실행
+        if (!Entry.HEXABOARD.sensorInitialized.analogRead) {
+          if (!Entry.hw.sendQueue.SET) {
+            Entry.hw.sendQueue.SET = {};
+          }
+          Entry.hw.sendQueue.SET = {
+            type: Entry.HEXABOARD.command.READ,
+            data: {
+              command : Entry.HEXABOARD.sensorTypes.ANALOG_READ,
+              pin :  pin,
+            },
+          };
+          Entry.hw.update();
+          delete Entry.hw.sendQueue.SET;
+          Entry.HEXABOARD.sensorInitialized.analogRead = true;
         }
-        Entry.hw.sendQueue.SET = {
-          type: Entry.HEXABOARD.command.READ,
-          data: {
-            command : Entry.HEXABOARD.sensorTypes.ANALOG_READ,
-            pin :  pin,
-          },
-        };
-        Entry.hw.update();
-        delete Entry.hw.sendQueue.SET;
 
         let hwVal = Entry.hw.portData[pinName];
         console.log('[ANALOG READ]', pinName, hwVal);
@@ -573,19 +620,22 @@ Entry.HEXABOARD = new (class HEXABOARD {
       func: function (sprite, script) {
         const pin = script.getField('PIN', script);
         
-        // 하드웨어 큐에 데이터 추가
-        if (!Entry.hw.sendQueue.SET) {
-          Entry.hw.sendQueue.SET = {};
+        // 최초 한번만 하드웨어 업데이트 실행
+        if (!Entry.HEXABOARD.sensorInitialized.weather) {
+          if (!Entry.hw.sendQueue.SET) {
+            Entry.hw.sendQueue.SET = {};
+          }
+          Entry.hw.sendQueue.SET = {
+            type: Entry.HEXABOARD.command.READ,
+            data: {
+              command : Entry.HEXABOARD.sensorTypes.READ_WEATHER_SENSOR,
+              pin : pin,
+            },
+          };
+          Entry.hw.update();
+          delete Entry.hw.sendQueue.SET;
+          Entry.HEXABOARD.sensorInitialized.weather = true;
         }
-        Entry.hw.sendQueue.SET = {
-          type: Entry.HEXABOARD.command.READ,
-          data: {
-            command : Entry.HEXABOARD.sensorTypes.READ_WEATHER_SENSOR,
-            pin : pin,
-          },
-        };
-        Entry.hw.update();
-        delete Entry.hw.sendQueue.SET;
 
         let hwVal = Entry.hw.portData[`W${pin}`];
         if (hwVal !== undefined ){
@@ -662,21 +712,24 @@ Entry.HEXABOARD = new (class HEXABOARD {
         const pin = Number(script.getField('PIN', script));
         const pinnumber = `L${pin}`;
         
-        // 하드웨어 큐에 데이터 추가
-        if (!Entry.hw.sendQueue.SET) {
-          Entry.hw.sendQueue.SET = {};
+        // 최초 한번만 하드웨어 업데이트 실행
+        if (!Entry.HEXABOARD.sensorInitialized.line) {
+          if (!Entry.hw.sendQueue.SET) {
+            Entry.hw.sendQueue.SET = {};
+          }
+          Entry.hw.sendQueue.SET = {
+            type: Entry.HEXABOARD.command.READ,
+            data: {
+              command : Entry.HEXABOARD.sensorTypes.READ_LINE_SENSOR,
+              pin : pin,
+            },
+          };
+          console.log('[PROX REQUEST]', Entry.hw.sendQueue.SET);
+          Entry.hw.update();
+          console.log('[PORTDATA AFTER]', pinnumber, Entry.hw.portData[pinnumber]);
+          delete Entry.hw.sendQueue.SET;
+          Entry.HEXABOARD.sensorInitialized.line = true;
         }
-        Entry.hw.sendQueue.SET = {
-          type: Entry.HEXABOARD.command.READ,
-          data: {
-            command : Entry.HEXABOARD.sensorTypes.READ_LINE_SENSOR,
-            pin : pin,
-          },
-        };
-        console.log('[PROX REQUEST]', Entry.hw.sendQueue.SET);
-        Entry.hw.update();
-        console.log('[PORTDATA AFTER]', pinnumber, Entry.hw.portData[pinnumber]);
-        delete Entry.hw.sendQueue.SET;
 
         let hwVal = Entry.hw.portData[pinnumber];
         console.log('[PROX READ]', pinnumber, hwVal);
@@ -761,20 +814,24 @@ Entry.HEXABOARD = new (class HEXABOARD {
         const pin = script.getField('PIN', script);
         const pm = script.getField('PM', script);
 
-        if (!Entry.hw.sendQueue.SET) {
-          Entry.hw.sendQueue.SET = {};
-        }
-        Entry.hw.sendQueue.SET = {
-          type: Entry.HEXABOARD.command.READ,
-          data: {
-            command : Entry.HEXABOARD.sensorTypes.READ_DUST_SENSOR,
-            pin : pin,
-            pm : pm,
-          },
-        };
+        // 최초 한번만 하드웨어 업데이트 실행
+        if (!Entry.HEXABOARD.sensorInitialized.dust) {
+          if (!Entry.hw.sendQueue.SET) {
+            Entry.hw.sendQueue.SET = {};
+          }
+          Entry.hw.sendQueue.SET = {
+            type: Entry.HEXABOARD.command.READ,
+            data: {
+              command : Entry.HEXABOARD.sensorTypes.READ_DUST_SENSOR,
+              pin : pin,
+              pm : pm,
+            },
+          };
 
-        Entry.hw.update();
-        delete Entry.hw.sendQueue.SET;
+          Entry.hw.update();
+          delete Entry.hw.sendQueue.SET;
+          Entry.HEXABOARD.sensorInitialized.dust = true;
+        }
 
         const dustKey = `DU${pm}`;
         let hwVal = Entry.hw.portData[dustKey];
@@ -853,20 +910,23 @@ Entry.HEXABOARD = new (class HEXABOARD {
       func: function (sprite, script) {
         const pin = script.getField('PIN', script);
         const sck = script.getField('SCK', script);
-        // 하드웨어 큐에 데이터 추가
-        if (!Entry.hw.sendQueue.SET) {
-          Entry.hw.sendQueue.SET = {};
+        // 최초 한번만 하드웨어 업데이트 실행
+        if (!Entry.HEXABOARD.sensorInitialized.weight) {
+          if (!Entry.hw.sendQueue.SET) {
+            Entry.hw.sendQueue.SET = {};
+          }
+          Entry.hw.sendQueue.SET = {
+            type: Entry.HEXABOARD.command.READ,
+            data: {
+              command : Entry.HEXABOARD.sensorTypes.READ_WEIGHT_SENSOR,
+              pin : pin,
+              sck : sck,
+            },
+          };
+          Entry.hw.update();
+          delete Entry.hw.sendQueue.SET;
+          Entry.HEXABOARD.sensorInitialized.weight = true;
         }
-        Entry.hw.sendQueue.SET = {
-          type: Entry.HEXABOARD.command.READ,
-          data: {
-            command : Entry.HEXABOARD.sensorTypes.READ_WEIGHT_SENSOR,
-            pin : pin,
-            sck : sck,
-          },
-        };
-        Entry.hw.update();
-        delete Entry.hw.sendQueue.SET;
 
         let hwVal = Entry.hw.portData[`WD${pin}`];
         if (hwVal !== undefined ){
@@ -914,6 +974,7 @@ Entry.HEXABOARD = new (class HEXABOARD {
             [ "A", "35" ],
             [ "B", "34" ],
           ],
+          "value": "35",
           "fontSize": 11,
           bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
           arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -931,8 +992,24 @@ Entry.HEXABOARD = new (class HEXABOARD {
       paramsKeyMap: {
         PIN : 0,
       },
-      func: async function (sprite, script) {
+      func: function (sprite, script) {
         const pin_num = script.getField('PIN', script);
+        // 최초 한번만 하드웨어 업데이트 실행
+        if (!Entry.HEXABOARD.sensorInitialized.button) {
+          if (!Entry.hw.sendQueue.SET) {
+            Entry.hw.sendQueue.SET = {};
+          }
+          Entry.hw.sendQueue.SET = {
+            type: Entry.HEXABOARD.command.READ,
+            data: {
+              command : Entry.HEXABOARD.sensorTypes.DIGITAL_READ,
+              pin : pin_num,
+            },
+          };
+          Entry.hw.update();
+          delete Entry.hw.sendQueue.SET;
+          Entry.HEXABOARD.sensorInitialized.button = true;
+        }
 
         let hwVal = Entry.hw.portData[pin_num];
         if ( hwVal !== undefined ){
@@ -1002,19 +1079,22 @@ Entry.HEXABOARD = new (class HEXABOARD {
       func: function (sprite, script) {
         const pin = script.getField('PIN', script);
         
-        // 하드웨어 큐에 데이터 추가
-        if (!Entry.hw.sendQueue.SET) {
-          Entry.hw.sendQueue.SET = {};
+        // 최초 한번만 하드웨어 업데이트 실행
+        if (!Entry.HEXABOARD.sensorInitialized.waterTemperature) {
+          if (!Entry.hw.sendQueue.SET) {
+            Entry.hw.sendQueue.SET = {};
+          }
+          Entry.hw.sendQueue.SET = {
+            type: Entry.HEXABOARD.command.READ,
+            data: {
+              command : Entry.HEXABOARD.sensorTypes.READ_WATERTEMPERATURE_SENSOR,
+              pin : pin,
+            },
+          };
+          Entry.hw.update();
+          delete Entry.hw.sendQueue.SET;
+          Entry.HEXABOARD.sensorInitialized.waterTemperature = true;
         }
-        Entry.hw.sendQueue.SET = {
-          type: Entry.HEXABOARD.command.READ,
-          data: {
-            command : Entry.HEXABOARD.sensorTypes.READ_WATERTEMPERATURE_SENSOR,
-            pin : pin,
-          },
-        };
-        Entry.hw.update();
-        delete Entry.hw.sendQueue.SET;
 
         let hwVal = Entry.hw.portData[`WA${pin}`];
         if (hwVal !== undefined ){
@@ -1084,21 +1164,24 @@ Entry.HEXABOARD = new (class HEXABOARD {
       func: function(sprite, script) {
         const pin = script.getField('PIN', script);  //pin번호로 key받아오기 
 
-        // 하드웨어 큐에 데이터 추가
-        if (!Entry.hw.sendQueue.SET) {
-          Entry.hw.sendQueue.SET = {};
+        // 최초 한번만 하드웨어 업데이트 실행
+        if (!Entry.HEXABOARD.sensorInitialized.waterQuality) {
+          if (!Entry.hw.sendQueue.SET) {
+            Entry.hw.sendQueue.SET = {};
+          }
+          Entry.hw.sendQueue.SET = {
+            type: Entry.HEXABOARD.command.READ,
+            data: {
+              command : Entry.HEXABOARD.sensorTypes.READ_WATERQUALITY_SENSOR,
+              pin : pin,
+            },
+          };
+          console.log('[PROX REQUEST]', Entry.hw.sendQueue.SET);
+          Entry.hw.update();
+          console.log('[PORTDATA AFTER]', pin, Entry.hw.portData[`WQ${pin}`]);
+          delete Entry.hw.sendQueue.SET;
+          Entry.HEXABOARD.sensorInitialized.waterQuality = true;
         }
-        Entry.hw.sendQueue.SET = {
-          type: Entry.HEXABOARD.command.READ,
-          data: {
-            command : Entry.HEXABOARD.sensorTypes.READ_WATERQUALITY_SENSOR,
-            pin : pin,
-          },
-        };
-        console.log('[PROX REQUEST]', Entry.hw.sendQueue.SET);
-        Entry.hw.update();
-        console.log('[PORTDATA AFTER]', pin, Entry.hw.portData[`WQ${pin}`]);
-        delete Entry.hw.sendQueue.SET;
 
         let hwVal = Entry.hw.portData[`WQ${pin}`];
         if (hwVal !== undefined ){
@@ -1168,18 +1251,22 @@ Entry.HEXABOARD = new (class HEXABOARD {
       func: function(sprite, script) {
         const pin = script.getField('PIN', script);  //pin번호로 key받아오기 
 
-        if (!Entry.hw.sendQueue.SET) {
-          Entry.hw.sendQueue.SET = {};
+        // 최초 한번만 하드웨어 업데이트 실행
+        if (!Entry.HEXABOARD.sensorInitialized.sound) {
+          if (!Entry.hw.sendQueue.SET) {
+            Entry.hw.sendQueue.SET = {};
+          }
+          Entry.hw.sendQueue.SET = {
+            type: Entry.HEXABOARD.command.READ,
+            data: {
+              command : Entry.HEXABOARD.sensorTypes.READ_SOUND_SENSOR,
+              pin :  pin,
+            },
+          };
+          Entry.hw.update();  
+          delete Entry.hw.sendQueue.SET;
+          Entry.HEXABOARD.sensorInitialized.sound = true;
         }
-        Entry.hw.sendQueue.SET = {
-          type: Entry.HEXABOARD.command.READ,
-          data: {
-            command : Entry.HEXABOARD.sensorTypes.READ_SOUND_SENSOR,
-            pin :  pin,
-          },
-        };
-        Entry.hw.update();  
-        delete Entry.hw.sendQueue.SET;
 
         let hwVal = Entry.hw.portData[`S${pin}`];
         if (hwVal !== undefined ){
@@ -1248,19 +1335,22 @@ Entry.HEXABOARD = new (class HEXABOARD {
       func: function(sprite, script) {
         const pin = script.getField('PIN', script);  //pin번호로 key받아오기 
 
-        // TODO
-       // 1.엔트리 HW에게 보내는 데이터 Command를 정리하기
-        // {}
-
-        Entry.hw.sendQueue.SET = {
-          type: Entry.HEXABOARD.command.READ,
-          data: {
-            command : Entry.HEXABOARD.sensorTypes.READ_PRESSURE_SENSOR,
-            pin : pin,
-          },
-        };
-        Entry.hw.update();
-        delete Entry.hw.sendQueue.SET;
+        // 최초 한번만 하드웨어 업데이트 실행
+        if (!Entry.HEXABOARD.sensorInitialized.pressure) {
+          if (!Entry.hw.sendQueue.SET) {
+            Entry.hw.sendQueue.SET = {};
+          }
+          Entry.hw.sendQueue.SET = {
+            type: Entry.HEXABOARD.command.READ,
+            data: {
+              command : Entry.HEXABOARD.sensorTypes.READ_PRESSURE_SENSOR,
+              pin : pin,
+            },
+          };
+          Entry.hw.update();
+          delete Entry.hw.sendQueue.SET;
+          Entry.HEXABOARD.sensorInitialized.pressure = true;
+        }
 
         let hwVal = Entry.hw.portData[`P${pin}`];
         if (hwVal !== undefined ){
@@ -1346,19 +1436,23 @@ Entry.HEXABOARD = new (class HEXABOARD {
         const pin = script.getField('PIN', script);
         const dht11 = script.getField('VALUE', script);
 
-        if (!Entry.hw.sendQueue.SET) {
-          Entry.hw.sendQueue.SET = {};
+        // 최초 한번만 하드웨어 업데이트 실행
+        if (!Entry.HEXABOARD.sensorInitialized.dht) {
+          if (!Entry.hw.sendQueue.SET) {
+            Entry.hw.sendQueue.SET = {};
+          }
+          Entry.hw.sendQueue.SET = {
+            type: Entry.HEXABOARD.command.READ,
+            data: {
+              command : Entry.HEXABOARD.sensorTypes.READ_DHT_SENSOR,
+              pin : pin,
+              value : dht11,
+            },
+          };
+          Entry.hw.update();
+          delete Entry.hw.sendQueue.SET;
+          Entry.HEXABOARD.sensorInitialized.dht = true;
         }
-        Entry.hw.sendQueue.SET = {
-          type: Entry.HEXABOARD.command.READ,
-          data: {
-            command : Entry.HEXABOARD.sensorTypes.READ_DHT_SENSOR,
-            pin : pin,
-            value : dht11,
-          },
-        };
-        Entry.hw.update();
-        delete Entry.hw.sendQueue.SET;
 
         let hwVal = Entry.hw.portData[dht11];
         if (hwVal !== undefined ){
@@ -1429,18 +1523,22 @@ Entry.HEXABOARD = new (class HEXABOARD {
       func: function(sprite, script) {
         const pin = script.getField('PIN', script);  //pin번호로 key받아오기 
 
-        if (!Entry.hw.sendQueue.SET) {
-          Entry.hw.sendQueue.SET = {};
+        // 최초 한번만 하드웨어 업데이트 실행
+        if (!Entry.HEXABOARD.sensorInitialized.co2) {
+          if (!Entry.hw.sendQueue.SET) {
+            Entry.hw.sendQueue.SET = {};
+          }
+          Entry.hw.sendQueue.SET = {
+            type: Entry.HEXABOARD.command.READ,
+            data: {
+              command : Entry.HEXABOARD.sensorTypes.READ_CO2_SENSOR,
+              pin :  pin,
+            },
+          };
+          Entry.hw.update();
+          delete Entry.hw.sendQueue.SET;
+          Entry.HEXABOARD.sensorInitialized.co2 = true;
         }
-        Entry.hw.sendQueue.SET = {
-          type: Entry.HEXABOARD.command.READ,
-          data: {
-            command : Entry.HEXABOARD.sensorTypes.READ_CO2_SENSOR,
-            pin :  pin,
-          },
-        };
-        Entry.hw.update();
-        delete Entry.hw.sendQueue.SET;
 
         let hwVal = Entry.hw.portData[`CO2${pin}`];
         if (hwVal !== undefined ){
@@ -1488,10 +1586,11 @@ Entry.HEXABOARD = new (class HEXABOARD {
         {
           "type": "Dropdown",
           "options": [
-            [ "좌우", HEXABOARD.gyro_command.ANGLE_X ],
-            [ "상하", HEXABOARD.gyro_command.ANGLE_Y ],
-            [ "앞뒤", HEXABOARD.gyro_command.ANGLE_Z ],
+            [ "좌우", 0 ],
+            [ "상하", 1 ],
+            [ "앞뒤", 2 ],
           ],
+          "value": 0,
           "fontSize": 11,
           bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
           arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1502,7 +1601,7 @@ Entry.HEXABOARD = new (class HEXABOARD {
       isNotFor: ['HEXABOARD'],
       def: {
         // def의 params의 경우는 초기값을 지정할수 있습니다.
-        params: [HEXABOARD.gyro_command.ANGLE_X],
+        params: [0],
         type: "makeitnow_gyro_hexa",
       },
       class : 'input',
@@ -1512,7 +1611,26 @@ Entry.HEXABOARD = new (class HEXABOARD {
       func: function (sprite, script) {
         const gyro = script.getField('GYRO', script); // 핀 번호를 가져옵니다.
 
-        let hwVal = Entry.hw.portData[gyro] ?? 0;
+        // 최초 한번만 하드웨어 업데이트 실행
+        if (!Entry.HEXABOARD.sensorInitialized.gyro) {
+          if (!Entry.hw.sendQueue.SET) {
+            Entry.hw.sendQueue.SET = {};
+          }
+          Entry.hw.sendQueue.SET = {
+            type: Entry.HEXABOARD.command.READ,
+            data: {
+              command : Entry.HEXABOARD.sensorTypes.READ_GYRO_SENSOR,
+              pin :  gyro,
+            },
+          };
+          Entry.hw.update();
+          delete Entry.hw.sendQueue.SET;
+          Entry.HEXABOARD.sensorInitialized.gyro = true;
+        }
+
+        // 하드웨어 모듈에서 'A${port}' 형식으로 저장하므로 동일한 형식으로 접근
+        const portKey = `A${gyro}`;
+        let hwVal = Entry.hw.portData[portKey] ?? 0;
         if (hwVal !== undefined){
           return hwVal;
         }else {
@@ -1553,13 +1671,85 @@ Entry.HEXABOARD = new (class HEXABOARD {
         type: "makeitnow_gyro_direction_hexa",
       },
       class : 'input',
+      // isNotFor: ['HEXABOARD'],
       paramsKeyMap: {
         GYRO : 0,
       },
       func: function (sprite, script) {
         const gyro = script.getField('GYRO', script); // 핀 번호를 가져옵니다.
+        // 최초 한번만 하드웨어 업데이트 실행
+        if (!Entry.HEXABOARD.sensorInitialized.gyroAngle) {
+          if (!Entry.hw.sendQueue.SET) {
+            Entry.hw.sendQueue.SET = {};
+          }
+          Entry.hw.sendQueue.SET = {
+            type: Entry.HEXABOARD.command.READ,
+            data: {
+              command : Entry.HEXABOARD.sensorTypes.READ_GYRO_ANGLE_SENSOR,
+              pin :  gyro,
+            },
+          };
+          Entry.hw.update();
+          delete Entry.hw.sendQueue.SET;
+          Entry.HEXABOARD.sensorInitialized.gyroAngle = true;
+        }
+
         // 하드웨어 큐에 데이터 추가
         let hwVal = Entry.hw.portData[gyro];
+        if ( hwVal !== undefined ){
+          return hwVal;
+        }else {
+          return script.callReturn();
+        }
+      },
+    },
+
+    makeitnow_gyro_intensity_hexa : {
+      color: EntryStatic.colorSet.block.default.HARDWARE,
+      outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+      fontColor: '#ffffff',
+      skeleton: 'basic_string_field', // 블록 모양 템플릿. 자세한 목록은 docs 를 참고해주세요
+      statements: [],
+      params: [],
+      def: {
+        type: 'makeitnow_gyro_intensity_hexa',
+      },
+      class : 'input',
+      // isNotFor: ['HEXABOARD'],
+
+      params: [
+        { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+      ],
+
+      isNotFor: ['HEXABOARD'],
+      class: 'input',
+
+      paramsKeyMap: {
+        GYRO : 0,
+      },
+
+      func: function (sprite, script) {
+        const gi = script.getField('GYRO', script);
+
+        // 최초 한번만 하드웨어 업데이트 실행
+        if (!Entry.HEXABOARD.sensorInitialized.gyroIntensity) {
+          if (!Entry.hw.sendQueue.SET) {
+            Entry.hw.sendQueue.SET = {};
+          }
+          Entry.hw.sendQueue.SET = {
+            type: Entry.HEXABOARD.command.READ,
+            data: {
+              command : Entry.HEXABOARD.sensorTypes.READ_GYRO_INTENSITY,
+              pin :  gi,
+            },
+          };
+          Entry.hw.update();
+          delete Entry.hw.sendQueue.SET;
+          Entry.HEXABOARD.sensorInitialized.gyroIntensity = true;
+        }
+
+        // 하드웨어 큐에 데이터 추가
+        let hwVal = Entry.hw.portData['GI'];
         if ( hwVal !== undefined ){
           return hwVal;
         }else {
@@ -1633,19 +1823,22 @@ Entry.HEXABOARD = new (class HEXABOARD {
         const pin = script.getField('PIN', script);
         const pinnumber = `U${pin}`;
 
-        // 하드웨어 큐에 데이터 추가
-        if (!Entry.hw.sendQueue.SET) {
-          Entry.hw.sendQueue.SET = {};
+        // 최초 한번만 하드웨어 업데이트 실행
+        if (!Entry.HEXABOARD.sensorInitialized.ultrasonic) {
+          if (!Entry.hw.sendQueue.SET) {
+            Entry.hw.sendQueue.SET = {};
+          }
+          Entry.hw.sendQueue.SET = {
+            type: Entry.HEXABOARD.command.READ,
+            data: {
+              command : Entry.HEXABOARD.sensorTypes.READ_ULTRASONIC_SENSOR,
+              pin : pin,
+            },
+          };
+          Entry.hw.update();
+          delete Entry.hw.sendQueue.SET;
+          Entry.HEXABOARD.sensorInitialized.ultrasonic = true;
         }
-        Entry.hw.sendQueue.SET = {
-          type: Entry.HEXABOARD.command.READ,
-          data: {
-            command : Entry.HEXABOARD.sensorTypes.READ_ULTRASONIC_SENSOR,
-            pin : pin,
-          },
-        };
-        Entry.hw.update();
-        delete Entry.hw.sendQueue.SET;
 
         let hwVal = Entry.hw.portData[pinnumber];
         if (hwVal !== undefined ){
@@ -1690,12 +1883,12 @@ Entry.HEXABOARD = new (class HEXABOARD {
         {
           "type": "Dropdown",
           "options": [
-            [ "빨강", "C0" ],
-            [ "초록", "C1" ],
-            [ "파랑", "C2" ],
-            [ "밝기(lux)", "C3" ],
+            [ "빨강", "0" ],
+            [ "초록", "1" ],
+            [ "파랑", "2" ],
+            [ "밝기(lux)", "3" ],
           ],
-          "value": "r",
+          "value": "0",
           "fontSize": 11,
           bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
           arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1705,7 +1898,7 @@ Entry.HEXABOARD = new (class HEXABOARD {
       ],
       def: {
         // def의 params의 경우는 초기값을 지정할수 있습니다.
-        params: ["C3"],
+        params: ["3"],
         type: "makeitnow_getColor_hexa",
       },
       isNotFor: ['HEXABOARD'],
@@ -1716,19 +1909,22 @@ Entry.HEXABOARD = new (class HEXABOARD {
       func: function (sprite, script) {
         //TODO : 이 곳에 통신 코드 작성하기
         const pin_num = script.getField('PIN', script);
-        // 하드웨어 큐에 데이터 추가
-        if (!Entry.hw.sendQueue.SET) {
-          Entry.hw.sendQueue.SET = {};
+        // 최초 한번만 하드웨어 업데이트 실행
+        if (!Entry.HEXABOARD.sensorInitialized.color) {
+          if (!Entry.hw.sendQueue.SET) {
+            Entry.hw.sendQueue.SET = {};
+          }
+          Entry.hw.sendQueue.SET = {
+            type: Entry.HEXABOARD.command.READ,
+            data: {
+              command : Entry.HEXABOARD.sensorTypes.READ_COLOR_SENSOR,
+              pin : pin_num,
+            },
+          };
+          Entry.hw.update();
+          delete Entry.hw.sendQueue.SET;
+          Entry.HEXABOARD.sensorInitialized.color = true;
         }
-        Entry.hw.sendQueue.SET = {
-          type: Entry.HEXABOARD.command.READ,
-          data: {
-            command : Entry.HEXABOARD.sensorTypes.READ_COLOR_SENSOR,
-            pin : pin_num,
-          },
-        };
-        Entry.hw.update();
-        delete Entry.hw.sendQueue.SET;
         
         let hwVal = Entry.hw.portData[`C${pin_num}`];
         // console.log(`pin_num : ${pin_num} , hwVal : ${hwVal}`);
@@ -1751,11 +1947,11 @@ Entry.HEXABOARD = new (class HEXABOARD {
         {
           "type": "Dropdown",
           "options": [
-            [ "빨강", "C0" ],
-            [ "초록", "C1" ],
-            [ "파랑", "C2" ],
+            [ "빨강", "0" ],
+            [ "초록", "1" ],
+            [ "파랑", "2" ],
           ],
-          "value": "r",
+          "value": "0",
           "fontSize": 11,
           bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
           arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1767,7 +1963,7 @@ Entry.HEXABOARD = new (class HEXABOARD {
       class : 'input',
       def: {
         // def의 params의 경우는 초기값을 지정할수 있습니다.
-        params: ["C0"],
+        params: ["0"],
         type: "makeitnow_get_RGBColor_hexa",
       },
       paramsKeyMap: {
@@ -1776,16 +1972,41 @@ Entry.HEXABOARD = new (class HEXABOARD {
       func: function (sprite, script) {
         //TODO : 이 곳에 통신 코드 작성하기
         const colorChoice = script.getField('VALUE', script);
-        const redValue = Entry.hw.portData['C0'];
-        const greenValue = Entry.hw.portData['C1'];
-        const blueValue = Entry.hw.portData['C2'];
+        const redValue = Entry.hw.portData[`C${0}`];
+        const greenValue = Entry.hw.portData[`C${1}`];
+        const blueValue = Entry.hw.portData[`C${2}`];
 
-        if (colorChoice === "C0") { // 빨강 선택
-          return redValue > greenValue && redValue > blueValue;
-        } else if (colorChoice === "C1") { // 초록 선택
-          return greenValue > redValue && greenValue > blueValue;
-        } else if (colorChoice === "C2") { // 파랑 선택
-          return blueValue > redValue && blueValue > greenValue;
+        // 최초 한번만 하드웨어 업데이트 실행
+        if (!Entry.HEXABOARD.sensorInitialized.rgbColor) {
+          if (!Entry.hw.sendQueue.SET) {
+            Entry.hw.sendQueue.SET = {};
+          }
+          Entry.hw.sendQueue.SET = {
+            type: Entry.HEXABOARD.command.READ,
+            data: {
+              command : Entry.HEXABOARD.sensorTypes.READ_COLOR_SENSOR,
+              pin : colorChoice,  
+            },
+          };
+          Entry.hw.update();
+          delete Entry.hw.sendQueue.SET;
+          Entry.HEXABOARD.sensorInitialized.rgbColor = true;
+        }
+
+        // let hwVal = Entry.hw.portData[`C${colorChoice}`];
+        // // console.log(`pin_num : ${pin_num} , hwVal : ${hwVal}`);
+        // if ( hwVal !== undefined ){
+        //   return hwVal; // 하드웨어에서 읽은 값 반환
+        // }else{
+        //   return script.callReturn();
+        // }
+
+        if (colorChoice === "0") { // 빨강 선택
+          return (redValue > greenValue && redValue > blueValue) ? 1 : 0;
+        } else if (colorChoice === "1") { // 초록 선택
+          return (greenValue > redValue && greenValue > blueValue) ? 1 : 0;
+        } else if (colorChoice === "2") { // 파랑 선택
+          return (blueValue > redValue && blueValue > greenValue) ? 1 : 0;
         }
         return script.callReturn();
       },
@@ -1851,18 +2072,22 @@ Entry.HEXABOARD = new (class HEXABOARD {
       func: function(sprite, script) {
         const pin = script.getField('PIN', script);
 
-        if (!Entry.hw.sendQueue.SET) {
-          Entry.hw.sendQueue.SET = {};
+        // 최초 한번만 하드웨어 업데이트 실행
+        if (!Entry.HEXABOARD.sensorInitialized.touch) {
+          if (!Entry.hw.sendQueue.SET) {
+            Entry.hw.sendQueue.SET = {};
+          }
+          Entry.hw.sendQueue.SET = {
+            type: Entry.HEXABOARD.command.READ,
+            data: {
+              command : Entry.HEXABOARD.sensorTypes.READ_TOUCH_SENSOR,
+              pin :  pin,
+            },
+          };
+          Entry.hw.update();
+          delete Entry.hw.sendQueue.SET;
+          Entry.HEXABOARD.sensorInitialized.touch = true;
         }
-        Entry.hw.sendQueue.SET = {
-          type: Entry.HEXABOARD.command.READ,
-          data: {
-            command : Entry.HEXABOARD.sensorTypes.READ_TOUCH_SENSOR,
-            pin :  pin,
-          },
-        };
-        Entry.hw.update();
-        delete Entry.hw.sendQueue.SET;
 
         let hwVal = Entry.hw.portData[`T${pin}`];
         // console.log('[TOUCH READ]', pinName, hwVal);
@@ -1878,7 +2103,7 @@ Entry.HEXABOARD = new (class HEXABOARD {
 
 
     /*
-    * 출력력 블록 섹션
+    * 출력 블록 섹션
     * */
 
     makeitnow_output_title :{
@@ -2129,8 +2354,9 @@ Entry.HEXABOARD = new (class HEXABOARD {
       func: function (sprite, script) {
         const octave = script.getField('OCTAVE', script); // 핀 번호를 가져옵니다.
         const scale = script.getField('SCALE', script); // 핀 번호를 가져옵니다.
-        const duration = script.getNumberValue('DURATION', script); // 설정할 값을 가져옵니다.
+        const duration = Math.round(script.getNumberValue('DURATION', script) * 10) / 10; // 소수점 첫째 자리까지 반올림
 
+        console.log(`duration: ${duration}`);
         let multiplier = Math.pow(2, octave - 1);
         let note_value = Math.round(scale * multiplier);
 
@@ -2310,7 +2536,6 @@ Entry.HEXABOARD = new (class HEXABOARD {
       func: function (sprite, script) {
         const motor = script.getField('MOTOR', script);
         let value = script.getStringValue('ANGLE', script);
-    
         if (!Entry.hw.sendQueue.SET) Entry.hw.sendQueue.SET = {};
         Entry.hw.sendQueue.SET = {
           type: Entry.HEXABOARD.command.WRITE,
@@ -2518,6 +2743,9 @@ Entry.HEXABOARD = new (class HEXABOARD {
               type: 'Led2',
           },
           {
+            type : "Color",
+          },
+          {
               type: 'Indicator',
               img: 'block_icon/hardware_icon.svg',
               size: 12,
@@ -2525,87 +2753,43 @@ Entry.HEXABOARD = new (class HEXABOARD {
       ],
       events: {},
       isNotFor: ['HEXABOARD'],
+
       class: 'neopixel_hexa',
       // isNotFor: ['microbit2'],
       def: {
-          params: [HEXABOARD.defaultLed],
+          params: [HEXABOARD.defaultLed, null],
           type: 'hexaboard_show_custom_image',
       },
+      
       paramsKeyMap: {
           VALUE: 0,
-      },
-      func: function(sprite, script) {
-          const value = script.getField('VALUE');
+          COLOR: 1,
+        },
+        func: function(sprite, script) {
+          const value = script.getField('VALUE');      // Led2 매트릭스
+          const color_value = script.getField('COLOR'); // "#RRGGBB"
+          console.log(value);
+          console.log(color_value);
+        
           const processedValue = [];
-          for (const i in value) {
-              processedValue[i] = value[i].join();
-          }
+          for (const i in value) processedValue[i] = value[i].join();
           const parsedPayload = `${processedValue.join(':').replace(/,/gi, '')}`;
-          
-          if (!Entry.hw.sendQueue.SET) {
-              Entry.hw.sendQueue.SET = {};
-          }
+          console.log(parsedPayload);
+
           Entry.hw.sendQueue.SET = {
-              type: Entry.HEXABOARD.command.WRITE,
-              data: {
-                  command: Entry.HEXABOARD.sensorTypes.UPDATE_ALL_NEOPIXEL,
-                  payload: parsedPayload,
-              },
+            type: Entry.HEXABOARD.command.WRITE,
+            data: {
+              command: Entry.HEXABOARD.sensorTypes.CUSTOM_NEOPIXEL_LED,
+              payload: parsedPayload,
+              color: color_value,
+            },
           };
           Entry.hw.update();
           delete Entry.hw.sendQueue.SET;
           return script.callReturn();
-      },
+        },
   },
 
-
-    makeitnow_neo_bitmap_hexa : {
-      color: EntryStatic.colorSet.block.default.HARDWARE,
-      outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-      fontColor: '#ffffff',
-      skeleton: 'basic', // 블록 모양 템플릿. 자세한 목록은 docs 를 참고해주세요
-      statements: [],
-      params: [
-        //입력될 파라미터들의 속성을 정의
-        { type: "Color", },
-        { type: "Color", },
-        { type: "Color", },
-        { type: "Color", },
-        { type: "Color", },
-        { type: "Color", },
-        { type: "Color", },
-        { type: "Color", },
-        { type: "Color", },
-        { type: "Color", },
-        { type: "Color", },
-        { type: "Color", },
-        { type: "Color", },
-        { type: "Color", },
-        { type: "Color", },
-        { type: "Color", },
-        { type: "Color", },
-        { type: "Color", },
-        { type: "Color", },
-        { type: "Color", },
-        // basic skeleton 의 마지막엔 인디케이터를 추가해주셔야 합니다.
-        // { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
-      ],
-      events: {},
-      def: {
-        // def의 params의 경우는 초기값을 지정할수 있습니다.
-        params: [null, null, null, null, null,
-          null, null, null, null, null,
-          null, null, null, null, null,
-          null, null, null, null, null,
-          null, null, null, null, null],
-        type: "makeitnow_neo_bitmap_hexa",
-      },
-      isNotFor: ['HEXABOARD'],
-      class: 'neopixel_hexa',
-      func: function (sprite, script) {
-        //TODO : 이 곳에 통신 코드 작성하기
-      },
-    },
     makeitnow_neoled_onecolorset_hexa : {
       color: EntryStatic.colorSet.block.default.HARDWARE,
       outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -3143,11 +3327,6 @@ Entry.HEXABOARD = new (class HEXABOARD {
       outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
       fontColor: '#ffffff',
       skeleton: 'basic', // 블록 모양 템플릿. 자세한 목록은 docs 를 참고해주세요
-      statements: [
-        {
-          accept: 'basic',
-        },
-      ],
       params: [
         { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
       ],
@@ -3180,11 +3359,6 @@ Entry.HEXABOARD = new (class HEXABOARD {
       outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
       fontColor: '#ffffff',
       skeleton: 'basic', // 블록 모양 템플릿. 자세한 목록은 docs 를 참고해주세요
-      statements: [
-        {
-          accept: 'basic',
-        },
-      ],
       params: [
         // basic skeleton 의 마지막엔 인디케이터를 추가해주셔야 합니다.
         { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
@@ -3214,6 +3388,72 @@ Entry.HEXABOARD = new (class HEXABOARD {
         return script.callReturn();
       },
     },
+    
+    makeitnow_percentage_conversion_title: {
+      skeleton: 'basic_text',
+      color: EntryStatic.colorSet.common.TRANSPARENT,
+      fontColor: '#333333',
+      skeletonOptions: {
+        contentPos: {
+          x: 20,
+          y: 10,
+        },
+      },
+      params: [
+        {
+          type: 'Text',
+          text: Lang.template.makeitnow_percentage_conversion_title,
+          color: '#333333',
+          align: 'left',
+        },
+      ],
+      isNotFor: ['HEXABOARD'],
+      class: 'function',
+    },
+
+    makeitnow_percentage_conversion: {
+      color: EntryStatic.colorSet.block.default.HARDWARE,
+      outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+      fontColor: '#ffffff',
+      skeleton: 'basic_string_field',
+      params: [
+        { type: "Block", accept: "string" }, // VALUE
+        { type: "Block", accept: "number" }, // MIN
+        { type: "Block", accept: "number" }, // MAX
+        { type: "Block", accept: "number" }, // NEW_MIN
+        { type: "Block", accept: "number" }, // NEW_MAX
+        { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 14 },
+      ],
+      def: {
+        type: "makeitnow_percentage_conversion",
+        params: [0, 0, 4095, 0, 100], // 기본값 꼭 주기
+      },
+      paramsKeyMap: {
+        VALUE: 0,
+        MIN: 1,
+        MAX: 2,
+        NEW_MIN: 3,
+        NEW_MAX: 4,
+      },
+      isNotFor: ['HEXABOARD'],
+      class: 'function',
+      func: function (sprite, script) {
+        const value  = script.getNumberValue('VALUE', script);
+        const min    = script.getNumberValue('MIN', script);
+        const max    = script.getNumberValue('MAX', script);
+        const newMin = script.getNumberValue('NEW_MIN', script);
+        const newMax = script.getNumberValue('NEW_MAX', script);
+    
+        // 0으로 나누기 방지
+        if (max === min) return newMin;
+    
+        const result = (value - min) * (newMax - newMin) / (max - min) + newMin;
+    
+        // 범위 클램핑 (결과값이 newMin~newMax 범위를 벗어나지 않도록)
+        const clampedResult = Math.max(newMin, Math.min(newMax, result));
+        return Math.round(clampedResult);
+      },
+    },
 
     /*
  * 디스플레이 : 무선통신
@@ -3240,6 +3480,51 @@ Entry.HEXABOARD = new (class HEXABOARD {
       isNotFor: ['HEXABOARD'],
       class : 'wireless_hexa',
     },
+    
+
+    // makeitnow_percentage_conversion : {
+    //   color: EntryStatic.colorSet.block.default.HARDWARE,
+    //   outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+    //   fontColor: '#ffffff',
+    //   skeleton: 'basic_string_field', // 블록 모양 템플릿. 자세한 목록은 docs 를 참고해주세요
+    //   params: [
+    //     {
+    //       type : "Block",
+    //       accept : "string",
+    //     },
+    //     {
+    //       type : "Block",
+    //       accept : "number",
+    //     },
+    //     {
+    //       type : "Block",
+    //       accept : "number",
+    //     },
+    //     {
+    //       type : "Block",
+    //       accept : "number",
+    //     },
+    //     {
+    //       type : "Block",
+    //       accept : "number",
+    //     },
+    //     { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 14 },
+    //   ],
+    //   def: {
+    //     type: "makeitnow_percentage_conversion",
+    //   },
+    //   isNotFor: ['HEXABOARD'],
+    //   class: 'input',
+    //   func: function (sprite, script) {
+    //     const value = script.getField('VALUE', script);
+    //     const min = script.getNumberValue('MIN', script);
+    //     const max = script.getNumberValue('MAX', script);
+    //     const newMin = script.getNumberValue('NEW_MIN', script);
+    //     const newMax = script.getNumberValue('NEW_MAX', script);
+    //     const result = Math.round((value - min) * (newMax - newMin) / (max - min) + newMin);
+    //     return script.callReturn(result);
+    //   },
+    // },
 
     // ***************WIFI 연결 ***************
     // makeitnow_wireless_wifiConnect_hexa : {
