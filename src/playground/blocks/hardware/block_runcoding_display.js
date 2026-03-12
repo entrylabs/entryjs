@@ -275,7 +275,7 @@ Entry.Runcoding_led.getBlocks = function() {
                 PORT: 0,
             },
             class: 'runcoding_led_get',
-            isNotFor: ['Runcoding_led'],
+            isNotFor: ['Runcoding_display'],
             func(sprite, script) {
                 let port = script.getValue('PORT', script);
                 const ANALOG = Entry.hw.portData.ANALOG;
@@ -371,7 +371,7 @@ Entry.Runcoding_led.getBlocks = function() {
                 VALUE5: 4,
             },
             class: 'runcoding_led_get',
-            isNotFor: ['Runcoding_led'],
+            isNotFor: ['Runcoding_display'],
             func(sprite, script) {
                 let result = script.getValue('PORT', script);
                 const ANALOG = Entry.hw.portData.ANALOG;
@@ -472,7 +472,7 @@ Entry.Runcoding_led.getBlocks = function() {
                 PORT: 0,
             },
             class: 'RuncodingGet',
-            isNotFor: ['Runcoding_led'],
+            isNotFor: ['Runcoding_display'],
             func(sprite, script) {
                 const { hwModule = {} } = Entry.hw;
                 const { name } = hwModule;
@@ -583,7 +583,7 @@ Entry.Runcoding_led.getBlocks = function() {
                 PORT: 0,
             },
             class: 'runcoding_led_get',
-            isNotFor: ['Runcoding_led'],
+            isNotFor: ['Runcoding_display'],
             func(sprite, script) {
                 const port = script.getNumberValue('PORT', script);
                 const PULSEIN = Entry.hw.portData.PULSEIN;
@@ -625,7 +625,7 @@ Entry.Runcoding_led.getBlocks = function() {
             },
             paramsKeyMap: {},
             class: 'runcoding_led_get',
-            isNotFor: ['Runcoding_led'],
+            isNotFor: ['Runcoding_display'],
             func(sprite, script) {
                 const TIMER = Entry.hw.portData.TIMER;
                 if (!Entry.hw.sendQueue.GET) {
@@ -689,7 +689,7 @@ Entry.Runcoding_led.getBlocks = function() {
                 VALUE: 1,
             },
             class: 'Runcoding',
-            isNotFor: ['Runcoding_led'],
+            isNotFor: ['Runcoding_display'],
             func(sprite, script) {
                 const port = script.getNumberValue('PORT');
                 let value = script.getValue('VALUE');
@@ -774,7 +774,7 @@ Entry.Runcoding_led.getBlocks = function() {
                 VALUE: 1,
             },
             class: 'Runcoding',
-            isNotFor: ['Runcoding_led'],
+            isNotFor: ['Runcoding_display'],
             func(sprite, script) {
                 const port = script.getNumberValue('PORT');
                 let value = script.getNumberValue('VALUE');
@@ -875,7 +875,7 @@ Entry.Runcoding_led.getBlocks = function() {
                 SIZE: 3,
             },
             class: 'Runcoding_display',
-            isNotFor: ['Runcoding_led'],
+            isNotFor: ['Runcoding_display'],
             func(sprite, script) {
                 const sq = Entry.hw.sendQueue;
                 let text = script.getValue('TEXT', script);
@@ -975,7 +975,7 @@ Entry.Runcoding_led.getBlocks = function() {
             },
             paramsKeyMap: {},
             class: 'Runcoding_display',
-            isNotFor: ['Runcoding_led'],
+            isNotFor: ['Runcoding_display'],
             func(sprite, script) {
                 const sq = Entry.hw.sendQueue;
                 
@@ -1037,7 +1037,7 @@ Entry.Runcoding_led.getBlocks = function() {
             },
             paramsKeyMap: {},
             class: 'Runcoding_display',
-            isNotFor: ['Runcoding_led'],
+            isNotFor: ['Runcoding_display'],
             func(sprite, script) {
                 const sq = Entry.hw.sendQueue;
                 
@@ -1109,7 +1109,7 @@ Entry.Runcoding_led.getBlocks = function() {
             },
             paramsKeyMap: {},
             class: 'Runcoding_display',
-            isNotFor: ['Runcoding_led'],
+            isNotFor: ['Runcoding_display'],
             func(sprite, script) {
                 const sq = Entry.hw.sendQueue;
                 
@@ -1182,7 +1182,7 @@ Entry.Runcoding_led.getBlocks = function() {
                 EMOTION: 0,
             },
             class: 'Runcoding_display',
-            isNotFor: ['Runcoding_led'],
+            isNotFor: ['Runcoding_display'],
             func(sprite, script) {
                 const sq = Entry.hw.sendQueue;
                 const emotion = script.getValue('EMOTION', script);
@@ -1287,7 +1287,7 @@ Entry.Runcoding_led.getBlocks = function() {
                 SPEED: 1,
             },
             class: 'Runcoding_animation',
-            isNotFor: ['Runcoding_led'],
+            isNotFor: ['Runcoding_display'],
             func(sprite, script) {
                 const sq = Entry.hw.sendQueue;
                 const count = script.getNumberValue('COUNT', script);
@@ -1405,7 +1405,7 @@ Entry.Runcoding_led.getBlocks = function() {
                 SPEED: 1,
             },
             class: 'Runcoding_animation',
-            isNotFor: ['Runcoding_led'],
+            isNotFor: ['Runcoding_display'],
             func(sprite, script) {
                 const sq = Entry.hw.sendQueue;
                 const count = script.getNumberValue('COUNT', script);
@@ -1523,7 +1523,7 @@ Entry.Runcoding_led.getBlocks = function() {
                 SPEED: 1,
             },
             class: 'Runcoding_animation',
-            isNotFor: ['Runcoding_led'],
+            isNotFor: ['Runcoding_display'],
             func(sprite, script) {
                 const sq = Entry.hw.sendQueue;
                 const count = script.getNumberValue('COUNT', script);
@@ -1618,7 +1618,7 @@ Entry.Runcoding_led.getBlocks = function() {
             },
             paramsKeyMap: {},
             class: 'Runcoding_animation',
-            isNotFor: ['Runcoding_led'],
+            isNotFor: ['Runcoding_display'],
             func(sprite, script) {
                 const sq = Entry.hw.sendQueue;
                 
