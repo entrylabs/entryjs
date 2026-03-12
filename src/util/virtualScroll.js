@@ -4,6 +4,7 @@ Entry.VirtualScroll = class VirtualScroll {
     constructor(dom = document.body, option = {}) {
         const { itemHeight, dataWrapper, data, groupSize } = option;
         this.dom = dom;
+        this.parentDom = dom.parentElement;
         this._currGroup = -1;
         this.scrollTop = 0;
         this.data = data || [];
@@ -12,7 +13,7 @@ Entry.VirtualScroll = class VirtualScroll {
         this._itemHeight = itemHeight || 0;
         this.dataWrapper = dataWrapper;
         this.scroll = this.scroll.bind(this);
-        dom.addEventListener('scroll', _.throttle(this.scroll, 16));
+        this.parentDom.addEventListener('scroll', _.throttle(this.scroll, 16));
     }
 
     get groupSize() {
@@ -38,7 +39,7 @@ Entry.VirtualScroll = class VirtualScroll {
     }
 
     get currGroup() {
-        return parseInt(this.dom.scrollTop / this.groupHeight, 10);
+        return parseInt(this.parentDom.scrollTop / this.groupHeight, 10);
     }
 
     get groupHeight() {

@@ -23,6 +23,7 @@ import blockAiLearningDecisiontree from '../playground/blocks/block_ai_learning_
 import blockAiLearningSvm from '../playground/blocks/block_ai_learning_svm';
 import blockAiUtilizeMediaPipe from '../playground/blocks/block_ai_utilize_media_pipe';
 import InputPopup from './learning/InputPopup';
+import _isEmpty from 'lodash/isEmpty';
 
 Entry.MlPopup = InputPopup;
 const basicBlockList = [
@@ -127,44 +128,14 @@ export default class AILearning {
         this.destroy();
     }
 
-    async load(modelInfo) {
-        const {
-            labels,
-            type,
-            classes = [],
-            model,
-            id,
-            url,
-            _id,
-            isActive = true,
-            name,
-            recordTime,
-            trainParam,
-            tableData,
-            result,
-        } = modelInfo || {};
-        if (!this.#dataApi) {
-            console.log('there is no dataApi');
-            return;
-        }
+    async loadModel({ url, trainParam, tableData, isActive, classes }) {
         const modelPath = await this.#dataApi?.getModelDownloadUrl(url);
         if (!modelPath || !this.isEnable || !isActive) {
             return;
         }
-        this.destroy();
-
-        this.#labels = labels || classes.map(({ name }) => name);
-        this.#type = type;
-        this.#url = url;
-        this.#oid = _id;
-        this.name = name;
-        this.#modelId = model || id;
-        this.#recordTime = recordTime;
-        this.result = result;
-
-        if (this.#playground) {
-            this.#playground.reloadPlayground();
-        }
+        const type = this.#type;
+        const name = this.name;
+        const recordTime = this.#recordTime;
 
         if (type === 'text') {
             this.#module = new TextLearning({
@@ -178,7 +149,7 @@ export default class AILearning {
             this.#tableData = tableData || createDataTable(classes, name);
             this.#module = new NumberClassification({
                 name,
-                result,
+                result: this.result,
                 url: modelPath,
                 trainParam,
                 table: this.#tableData,
@@ -190,7 +161,7 @@ export default class AILearning {
             this.#tableData = tableData || createDataTable(classes, name);
             this.#module = new Cluster({
                 name,
-                result,
+                result: this.result,
                 trainParam,
                 table: this.#tableData,
             });
@@ -198,7 +169,7 @@ export default class AILearning {
             this.#tableData = tableData || createDataTable(classes, name);
             this.#module = new Regression({
                 name,
-                result,
+                result: this.result,
                 url: modelPath,
                 trainParam,
                 table: this.#tableData,
@@ -220,7 +191,7 @@ export default class AILearning {
             this.#tableData = tableData || createDataTable(classes, name);
             this.#module = new LogisticRegression({
                 name,
-                result,
+                result: this.result,
                 url: modelPath,
                 trainParam,
                 table: this.#tableData,
@@ -229,7 +200,7 @@ export default class AILearning {
             this.#tableData = tableData || createDataTable(classes, name);
             this.#module = new DecisionTree({
                 name,
-                result,
+                result: this.result,
                 url: modelPath,
                 trainParam,
                 table: this.#tableData,
@@ -240,7 +211,7 @@ export default class AILearning {
             this.#tableData = tableData || createDataTable(classes, name);
             this.#module = new Svm({
                 name,
-                result,
+                result: this.result,
                 url: modelPath,
                 trainParam,
                 table: this.#tableData,
@@ -253,6 +224,58 @@ export default class AILearning {
             this.unbanBlocks();
             this.isLoaded = true;
         }
+    }
+    async load(modelInfo) {
+        const {
+            labels,
+            type,
+            classes = [],
+            model,
+            id,
+            url,
+            _id,
+            isActive = true,
+            name,
+            recordTime,
+            trainParam,
+            tableData,
+            result,
+        } = modelInfo || {};
+        if (!this.#dataApi) {
+            console.log('there is no dataApi');
+            return;
+        } else if (_isEmpty(modelInfo)) {
+            console.log('empty modelInfo');
+            return;
+        }
+        this.destroy();
+
+        if (!labels) {
+            const parsed =
+                classes.length === 1 && typeof classes[0] === 'string'
+                    ? JSON.parse(classes[0])
+                    : classes;
+            this.#labels = parsed.map(({ name }) => name);
+        } else {
+            this.#labels = labels;
+        }
+        this.#type = type;
+        this.#url = url;
+        this.#oid = _id;
+        this.name = name;
+        this.#modelId = model || id;
+        this.#recordTime = recordTime;
+        this.result = result;
+
+        if (this.#playground) {
+            this.#playground.reloadPlayground();
+        }
+
+        this.loadModel({ url, trainParam, tableData, isActive, classes });
+    }
+
+    async reload(url) {
+        await this.#module?.reload?.(url);
     }
 
     openInputPopup() {
@@ -401,10 +424,11 @@ function createDataTable(classes, name) {
         const [{ samples }] = classes;
         const [sample = {}] = samples || [];
         let data = sample.data;
+        data.id = data.id || data._id;
         if (typeof data === 'string') {
             data = JSON.parse(data);
         }
-        if (data && data.id && !DataTable.getSource(data.id)) {
+        if (data && data?.id && !DataTable.getSource(data?.id)) {
             DataTable.addSource(data, false);
         }
         return data;

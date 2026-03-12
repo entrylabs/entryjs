@@ -13,21 +13,31 @@ class Scope {
     }
 
     getParam(index) {
-        const fieldBlock = this.block.params[index];
-        const newScope = new Entry.Scope(fieldBlock, this.executor);
-        const result = newScope.run(this.entity, true);
-        return result;
+        const param = this.block.params[index];
+        if (param instanceof Entry.Block) {
+            const newScope = new Entry.Scope(param, this.executor);
+            const result = newScope.run(this.entity, true);
+            return result;
+        } else {
+            return this.filterReservedKeywords(param);
+        }
+    }
+
+    // 클래스 레벨에서 한 번만 생성
+    static _reservedKeywords = new Set(['__proto__']);
+
+    filterReservedKeywords(param) {
+        return Scope._reservedKeywords.has(param) ? '' : param;
     }
 
     getParams() {
-        const that = this;
         return this.block.params.map((param) => {
             if (param instanceof Entry.Block) {
                 const fieldBlock = param;
-                const newScope = new Entry.Scope(fieldBlock, that.executor);
+                const newScope = new Entry.Scope(fieldBlock, this.executor);
                 return newScope.run(this.entity, true);
             } else {
-                return param;
+                return this.filterReservedKeywords(param);
             }
         });
     }
@@ -137,7 +147,7 @@ class Scope {
     }
 
     getField(key) {
-        return this.block.params[this._getParamIndex(key)];
+        return this.filterReservedKeywords(this.block.params[this._getParamIndex(key)]);
     }
 
     getStringField(key) {
@@ -178,7 +188,6 @@ class Scope {
         }
         const values = this.getParams();
         const isPromise = values.some((value) => value instanceof Promise);
-        // const schema = this.block.getSchema();
         if (!schema.func) {
             return;
         }

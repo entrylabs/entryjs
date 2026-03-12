@@ -71,6 +71,11 @@ class Classification {
     async load(url) {
         this.model = await tf.loadLayersModel(url);
     }
+
+    async reload(url) {
+        this.model = await tf.loadLayersModel(url || this.#url);
+        this.isLoaded = true;
+    }
 }
 
 export default Classification;

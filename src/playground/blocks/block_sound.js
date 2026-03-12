@@ -293,9 +293,12 @@ module.exports = {
                             script.playState = 1;
                             const instance = Entry.Utils.playSound(sound.id);
                             Entry.Utils.addSoundInstances(instance, sprite);
-                            setTimeout(() => {
+                            const duration = Math.floor(
+                                (sound.duration * 1000) / Entry.playbackRateValue
+                            );
+                            Entry.engine.setTimeout(() => {
                                 script.playState = 0;
-                            }, sound.duration * 1000);
+                            }, duration);
                         }
                         return script;
                     } else if (script.playState == 1) {
@@ -381,7 +384,7 @@ module.exports = {
                             const instance = Entry.Utils.playSound(sound.id);
                             Entry.Utils.addSoundInstances(instance, sprite);
                             const timeValue = script.getNumberValue('SECOND', script);
-                            setTimeout(() => {
+                            Entry.engine.setTimeout(() => {
                                 instance.stop();
                                 script.playState = 0;
                             }, timeValue * 1000);
@@ -495,7 +498,7 @@ module.exports = {
                             });
                             Entry.Utils.addSoundInstances(instance, sprite);
 
-                            setTimeout(() => {
+                            Entry.engine.setTimeout(() => {
                                 script.playState = 0;
                             }, duration);
                         }

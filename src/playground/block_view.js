@@ -88,7 +88,7 @@ Entry.BlockView = class BlockView {
         }
 
         this.isInBlockMenu = this.getBoard() instanceof Entry.BlockMenu;
-        this.mouseHandler = function(e) {
+        this.mouseHandler = function (e) {
             (_.result(that.block.events, 'mousedown') || []).forEach((fn) => {
                 if (Entry.documentMousedown) {
                     Entry.documentMousedown.notify(e);
@@ -1019,9 +1019,9 @@ Entry.BlockView = class BlockView {
                 magnet = this.magnet.previous;
                 const dragHeight = dragBlock.getBelowHeight();
                 const nextX = _get(dragBlock, 'magnet.next.x');
-                transform = `translate(${pos.scaleX + magnet.x - nextX},${pos.scaleY +
-                    magnet.y -
-                    dragHeight})`;
+                transform = `translate(${pos.scaleX + magnet.x - nextX},${
+                    pos.scaleY + magnet.y - dragHeight
+                })`;
             }
 
             const $shadow = $(shadow);
@@ -1421,9 +1421,28 @@ Entry.BlockView = class BlockView {
             const { block, isInBlockMenu, copyable } = blockView;
             const { options: EntryOptions = {} } = Entry;
             const {
-                Blocks: { Duplication_option, CONTEXT_COPY_option, Delete_Blocks },
+                Blocks: {
+                    AI_analyze_option,
+                    Duplication_option,
+                    CONTEXT_COPY_option,
+                    cut_blocks,
+                    Delete_Blocks,
+                },
                 Menus: { save_as_image },
             } = Lang;
+
+            const aiAnalyze = {
+                text: AI_analyze_option,
+                enable: copyable && !isBoardReadOnly,
+                callback() {
+                    // NOTICE : Entry.do는 필요할지 고려 > 뒤로가기 적용이 필요한지
+                    const blocksData = { ...block.copy() };
+
+                    Entry.dispatchEvent('analyzeBlock', {
+                        data: JSON.stringify(blocksData),
+                    });
+                },
+            };
 
             const copyAndPaste = {
                 text: Duplication_option,
@@ -1438,6 +1457,16 @@ Entry.BlockView = class BlockView {
                 enable: copyable && !isBoardReadOnly,
                 callback() {
                     block.copyToClipboard();
+                },
+            };
+
+            const cut = {
+                text: cut_blocks,
+                enable: copyable && block.isDeletable() && !isBoardReadOnly,
+                callback() {
+                    block.copyToClipboard();
+                    Entry.do('destroyBlockBelow', block);
+                    blockView.getBoard().setSelectedBlock(null);
                 },
             };
 
@@ -1484,15 +1513,27 @@ Entry.BlockView = class BlockView {
             }
 
             if (!isInBlockMenu) {
-                options = [copyAndPaste, copy, remove, addStorage, ...options, comment].filter(
-                    (x) => x
-                );
+                options = [
+                    Entry.aiAssistantEnable && aiAnalyze,
+                    copyAndPaste,
+                    copy,
+                    cut,
+                    remove,
+                    addStorage,
+                    ...options,
+                    comment,
+                ].filter((x) => x);
             }
 
             return options;
 
             function _isDownloadable() {
-                return Entry.Utils.isChrome() && Entry.type === 'workspace' && !Entry.isMobile();
+                return (
+                    Entry.blockSaveImageEnable &&
+                    Entry.Utils.isChrome() &&
+                    Entry.type === 'workspace' &&
+                    !Entry.isMobile()
+                );
             }
         }
     }
@@ -1601,7 +1642,7 @@ Entry.BlockView = class BlockView {
             halfWidth = 20;
         }
         return {
-            getBoundingClientRect: function() {
+            getBoundingClientRect: function () {
                 const coord = this.getAbsoluteCoordinate();
                 const boardOffset = this._board.relativeOffset;
                 const magnet = this.magnet[selector];
@@ -1726,7 +1767,7 @@ Entry.BlockView = class BlockView {
             canvas.height = height;
             const ctx = canvas.getContext('2d');
 
-            img.onload = function() {
+            img.onload = function () {
                 try {
                     ctx.drawImage(img, 0, 0, width, height);
                     const data = canvas.toDataURL('image/png');
@@ -1739,7 +1780,7 @@ Entry.BlockView = class BlockView {
                 }
             };
 
-            img.onerror = function() {
+            img.onerror = function () {
                 return reject('error occured');
             };
             img.src = src;

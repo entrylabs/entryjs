@@ -15,6 +15,15 @@ Entry.Engine = class Engine {
         this.popup = null;
         this.isUpdating = true;
         this.speeds = [1, 15, 30, 45, 60];
+        this.engineTimer = {
+            isInit: false,
+            isPaused: false,
+            start: 0,
+            pauseStart: 0,
+            pausedTime: 0,
+        };
+        this._engineTimeouts = [];
+        this._engineTimeoutSeq = 0;
 
         this.attachKeyboardCapture();
 
@@ -82,7 +91,7 @@ Entry.Engine = class Engine {
                     'entryEngineButtonWorkspace_w'
                 )
                 .appendTo(this.view_)
-                .bindOnClick(function(e) {
+                .bindOnClick(function (e) {
                     Entry.engine.toggleSpeedPanel();
                     this.blur();
                 });
@@ -94,7 +103,7 @@ Entry.Engine = class Engine {
                     'entryMaximizeButtonWorkspace_w'
                 )
                 .appendTo(this.view_)
-                .bindOnClick(function(e) {
+                .bindOnClick(function (e) {
                     Entry.engine.toggleFullScreen();
                     this.blur();
                 });
@@ -106,7 +115,7 @@ Entry.Engine = class Engine {
                     'entryCoordinateButtonWorkspace_w'
                 )
                 .appendTo(this.view_)
-                .bindOnClick(function(e) {
+                .bindOnClick(function (e) {
                     if (this.hasClass('toggleOn')) {
                         this.removeClass('toggleOn');
                     } else {
@@ -136,7 +145,7 @@ Entry.Engine = class Engine {
             this.addButton = Entry.createElement('button')
                 .addClass('entryEngineButtonWorkspace_w')
                 .addClass('entryAddButtonWorkspace_w')
-                .bindOnClick(function() {
+                .bindOnClick(function () {
                     Entry.do('addObjectButtonClick');
                     this.blur();
                 })
@@ -164,7 +173,7 @@ Entry.Engine = class Engine {
                 .addClass('entryPauseButtonWorkspace_w')
                 .addClass('entryRemove')
                 .appendTo(this.buttonWrapper)
-                .bindOnClick(function(e) {
+                .bindOnClick(function (e) {
                     this.blur();
                     Entry.engine.togglePause();
                 });
@@ -174,7 +183,7 @@ Entry.Engine = class Engine {
                 .addClass('entryPauseButtonWorkspace_full')
                 .addClass('entryRemove')
                 .appendTo(this.buttonWrapper)
-                .bindOnClick(function() {
+                .bindOnClick(function () {
                     this.blur();
                     Entry.engine.togglePause();
                 });
@@ -191,7 +200,7 @@ Entry.Engine = class Engine {
                 .addClass('entryEngineButtonWorkspace_w')
                 .addClass('entryStopButtonWorkspace_w2')
                 .addClass('entryRemove')
-                .bindOnClick(function() {
+                .bindOnClick(function () {
                     this.blur();
                     Entry.engine.toggleStop();
                 })
@@ -215,7 +224,7 @@ Entry.Engine = class Engine {
             this.coordinateButton.addClass('entryEngineButtonMinimize');
             this.coordinateButton.addClass('entryCoordinateButtonMinimize');
             this.view_.appendChild(this.coordinateButton);
-            this.coordinateButton.bindOnClick(function(e) {
+            this.coordinateButton.bindOnClick(function (e) {
                 if (this.hasClass('toggleOn')) {
                     this.removeClass('toggleOn');
                 } else {
@@ -230,7 +239,7 @@ Entry.Engine = class Engine {
             this.stopButton.addClass('entryRemove');
             this.stopButton.textContent = Lang.Workspace.stop;
             this.view_.appendChild(this.stopButton);
-            this.stopButton.bindOnClick(function(e) {
+            this.stopButton.bindOnClick(function (e) {
                 this.blur();
                 Entry.engine.toggleStop();
             });
@@ -241,7 +250,7 @@ Entry.Engine = class Engine {
             this.pauseButton.addClass('entryPauseButtonMinimize');
             this.pauseButton.addClass('entryRemove');
             this.view_.appendChild(this.pauseButton);
-            this.pauseButton.bindOnClick(function(e) {
+            this.pauseButton.bindOnClick(function (e) {
                 this.blur();
                 Entry.engine.togglePause();
             });
@@ -265,15 +274,22 @@ Entry.Engine = class Engine {
                 this.isLoaded = true;
                 const isSoundEmpty = Entry.soundQueue.urls.size < 1;
                 if (isSoundEmpty || Entry.soundQueue.loadComplete) {
-                    this.runButtonCurtain = Entry.Dom('div', {
-                        class: 'entryRunButtonBigMinimizeCurtain',
-                        parent: $('#entryCanvasWrapper'),
-                    });
-                    this.runButton = Entry.Dom('div', {
-                        class: 'entryRunButtonBigMinimize',
-                        parent: this.runButtonCurtain,
-                    });
-                    this.runButton.bindOnClick(() => Entry.engine.toggleRun());
+                    if (!this.runButtonCurtain) {
+                        this.runButtonCurtain = Entry.Dom('div', {
+                            class: 'entryRunButtonBigMinimizeCurtain',
+                            parent: $('#entryCanvasWrapper'),
+                        });
+                    }
+                    if (!this.runButton) {
+                        this.runButton = Entry.Dom('div', {
+                            class: 'entryRunButtonBigMinimize',
+                            parent: this.runButtonCurtain,
+                        });
+                        this.runButton.bindOnClick(() => Entry.engine.toggleRun());
+                    }
+                    if (Entry.options.isStartOnLoaded && Entry.engine.state === 'stop') {
+                        Entry.engine.toggleRun();
+                    }
                 }
             };
 
@@ -474,11 +490,9 @@ Entry.Engine = class Engine {
             this.speedPanelOn = false;
             this.speedButton.removeClass('on');
 
-            $(this.speedLabel_)
-                .parent()
-                .remove();
+            $(this.speedLabel_).parent().remove();
             delete this.speedLabel_;
-            $(this.speedProgress_).fadeOut(null, function(e) {
+            $(this.speedProgress_).fadeOut(null, function (e) {
                 $(this).remove();
                 delete this.speedProgress_;
             });
@@ -553,6 +567,8 @@ Entry.Engine = class Engine {
         audioUtils.stopRecord();
         clearInterval(this.ticker);
         this.ticker = null;
+        this._stopEngineTimer();
+        this._clearEngineTimeouts();
     }
 
     /**
@@ -565,6 +581,7 @@ Entry.Engine = class Engine {
             if (Entry.hw.communicationType !== 'manual') {
                 Entry.hw.update();
             }
+            this._processEngineTimeouts();
         }
     };
 
@@ -641,6 +658,7 @@ Entry.Engine = class Engine {
             container.takeSequenceSnapshot();
             Entry.scene.takeStartSceneSnapshot();
             this.state = EntryEngineState.run;
+            this._resetEngineTimer();
             this.fireEvent('start');
             this.achieveEnabled = !(disableAchieve === false);
         }
@@ -783,10 +801,12 @@ Entry.Engine = class Engine {
         }
 
         this.state = EntryEngineState.stop;
+        this._stopEngineTimer();
+        this._clearEngineTimeouts();
         this.setEnableInputField(false);
         Entry.dispatchEvent('stop');
         Entry.stage.hideInputField();
-        (function(w) {
+        (function (w) {
             w && w.getMode() === Entry.Workspace.MODE_VIMBOARD && w.codeToText();
         })(Entry.getMainWS());
         Entry.dispatchEvent('dispatchEventDidToggleStop');
@@ -817,6 +837,7 @@ Entry.Engine = class Engine {
                 delete timer.pauseStart;
             }
             this.state = EntryEngineState.run;
+            this._resumeEngineTimer();
             Entry.Utils.recoverSoundInstances();
             if (visible && this.runButton) {
                 this.setPauseButton(this.option);
@@ -844,6 +865,7 @@ Entry.Engine = class Engine {
                 timer.pausedTime += new Date().getTime() - timer.pauseStart;
                 timer.pauseStart = new Date().getTime();
             }
+            this._pauseEngineTimer();
             Entry.Utils.pauseSoundInstances();
             if (visible && this.runButton) {
                 this.setPauseButton(this.option);
@@ -1025,6 +1047,7 @@ Entry.Engine = class Engine {
         }
 
         if (!this.popup) {
+            Entry.view_.addClass('fullscreen');
             this.popup = new Entry.Popup(popupClassName);
             if (Entry.engine.speedPanelOn) {
                 Entry.engine.toggleSpeedPanel();
@@ -1047,23 +1070,31 @@ Entry.Engine = class Engine {
             }
 
             if (window.top !== window.self) {
-                window.top.addEventListener('pointermove', this.copyEvent);
-                window.top.addEventListener('pointerdown', this.copyEvent);
-                window.top.addEventListener('pointerup', this.copyEvent);
-                window.top.addEventListener('pointerupoutside', this.copyEvent);
-                window.top.addEventListener('pointercancel', this.copyEvent);
-                window.top.addEventListener('mouseup', this.copyEvent);
-                window.top.addEventListener('mousemove', this.copyEvent);
+                if (Entry.iframeDomAccess === 'direct') {
+                    window.top.addEventListener('pointermove', this.copyEvent);
+                    window.top.addEventListener('pointerdown', this.copyEvent);
+                    window.top.addEventListener('pointerup', this.copyEvent);
+                    window.top.addEventListener('pointerupoutside', this.copyEvent);
+                    window.top.addEventListener('pointercancel', this.copyEvent);
+                    window.top.addEventListener('mouseup', this.copyEvent);
+                    window.top.addEventListener('mousemove', this.copyEvent);
+                } else if (Entry.iframeDomAccess === 'message') {
+                    window.top.postMessage({ type: 'toggleFullScreen', value: 'addEvent' }, '*');
+                }
             }
         } else {
             if (window.top !== window.self) {
-                window.top.removeEventListener('pointermove', this.copyEvent);
-                window.top.removeEventListener('pointerdown', this.copyEvent);
-                window.top.removeEventListener('pointerup', this.copyEvent);
-                window.top.removeEventListener('pointerupoutside', this.copyEvent);
-                window.top.removeEventListener('pointercancel', this.copyEvent);
-                window.top.removeEventListener('mouseup', this.copyEvent);
-                window.top.removeEventListener('mousemove', this.copyEvent);
+                if (Entry.iframeDomAccess === 'direct') {
+                    window.top.removeEventListener('pointermove', this.copyEvent);
+                    window.top.removeEventListener('pointerdown', this.copyEvent);
+                    window.top.removeEventListener('pointerup', this.copyEvent);
+                    window.top.removeEventListener('pointerupoutside', this.copyEvent);
+                    window.top.removeEventListener('pointercancel', this.copyEvent);
+                    window.top.removeEventListener('mouseup', this.copyEvent);
+                    window.top.removeEventListener('mousemove', this.copyEvent);
+                } else if (Entry.iframeDomAccess === 'message') {
+                    window.top.postMessage({ type: 'toggleFullScreen', value: 'removeEvent' }, '*');
+                }
             }
             this.popup.remove();
             this.popup = null;
@@ -1275,12 +1306,106 @@ Entry.Engine = class Engine {
         this.execPromises = this.trimPromiseExecutor();
         const index = this.execPromises.length;
         promises.forEach((promise, i) => {
-            const execPromise = (async function() {
+            const execPromise = (async function () {
                 const result = await promise;
                 const j = Entry.engine.execPromises.indexOf(execPromise);
                 Entry.engine.execPromises[j] = result;
             })();
             this.execPromises[index + i] = execPromise;
         });
+    }
+
+    _resetEngineTimer() {
+        const timer = this.engineTimer;
+        timer.start = new Date().getTime();
+        timer.pausedTime = 0;
+        timer.pauseStart = 0;
+        timer.isPaused = false;
+        timer.isInit = true;
+    }
+
+    _pauseEngineTimer() {
+        const timer = this.engineTimer;
+        if (!timer.isInit || timer.isPaused) {
+            return;
+        }
+        timer.isPaused = true;
+        timer.pauseStart = new Date().getTime();
+    }
+
+    _resumeEngineTimer() {
+        const timer = this.engineTimer;
+        if (!timer.isInit || !timer.isPaused) {
+            return;
+        }
+        if (timer.pauseStart) {
+            timer.pausedTime += new Date().getTime() - timer.pauseStart;
+        }
+        timer.pauseStart = 0;
+        timer.isPaused = false;
+    }
+
+    _stopEngineTimer() {
+        const timer = this.engineTimer;
+        timer.isInit = false;
+        timer.isPaused = false;
+        timer.start = 0;
+        timer.pauseStart = 0;
+        timer.pausedTime = 0;
+    }
+
+    _getEngineTimeMs() {
+        const timer = this.engineTimer;
+        if (!timer.isInit) {
+            return 0;
+        }
+        const now = timer.isPaused && timer.pauseStart ? timer.pauseStart : new Date().getTime();
+        return Math.max(now - timer.start - timer.pausedTime, 0);
+    }
+
+    _processEngineTimeouts() {
+        if (!this._engineTimeouts.length) {
+            return;
+        }
+        const nowMs = this._getEngineTimeMs();
+        const timeouts = this._engineTimeouts;
+        let writeIndex = 0;
+        for (let i = 0; i < timeouts.length; i++) {
+            const item = timeouts[i];
+            if (item.targetTimeMs <= nowMs) {
+                try {
+                    item.callback();
+                } catch (e) {
+                    console.error('Engine setTimeout callback error', e);
+                }
+            } else {
+                timeouts[writeIndex++] = item;
+            }
+        }
+        if (writeIndex !== timeouts.length) {
+            timeouts.length = writeIndex;
+        }
+    }
+
+    _clearEngineTimeouts() {
+        this._engineTimeouts = [];
+    }
+
+    setTimeout(callback, delay) {
+        if (typeof callback !== 'function') {
+            return null;
+        }
+        const id = ++this._engineTimeoutSeq;
+        const targetTimeMs = this._getEngineTimeMs() + Math.max(Number(delay) || 0, 0);
+        this._engineTimeouts.push({
+            id,
+            callback,
+            targetTimeMs,
+        });
+        return id;
+    }
+
+    clearTimeout(id) {
+        this._engineTimeouts = this._engineTimeouts.filter((item) => item.id !== id);
     }
 };

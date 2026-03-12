@@ -22,6 +22,7 @@ export default class HardwareLite {
     private playground: any;
     private hwMonitor?: HardwareMonitor;
     static getStatus: any;
+    private customPromptPayload: String;
 
     constructor(playground: any) {
         this.playground = playground;
@@ -64,7 +65,7 @@ export default class HardwareLite {
     setExternalModule(moduleObject: EntryHWLiteBaseModule) {
         this.hwModule = moduleObject;
         this.banClassAllHardwareLite();
-        Entry.block.changeBlockText('arduino_lite_device_name', this.hwModule.title.ko);
+        Entry.block.changeBlockText('hardware_device_name_content', this.hwModule.title.ko);
         Entry.dispatchEvent('hwLiteChanged');
         this.setWebConnector();
         this.setFlasher();
@@ -212,6 +213,7 @@ export default class HardwareLite {
             console.error(err);
         } finally {
             this.hwModule = null;
+            this.customPromptPayload = null;
             this.status = 'disconnected';
             this.removeWebConnector();
             this.removeFlasher();
@@ -265,7 +267,7 @@ export default class HardwareLite {
     }
 
     setFlasher() {
-        if (this.hwModule.firmwareFlash) {
+        if (this.hwModule.supportFirmwareFlash) {
             this.flasher = new WebUsbFlasher();
         }
     }
@@ -278,6 +280,34 @@ export default class HardwareLite {
     }
     setStatus(state: HWLiteStatus) {
         this.status = state;
+    }
+
+    getCustomPromptPayload() {
+        return this.customPromptPayload;
+    }
+
+    setCustomPromptPayload(payload: String) {
+        this.customPromptPayload = payload;
+    }
+
+    // INFO: customPrompt 테스트용. entryjs 단독으로 테스트하는 경우 아래 함수를 사용
+    testCustomPromptPayload() {
+        if (!this.hwModule) {
+            window.alert('"Entry.hwLite.hwModule" is not set. use "addHardwareLiteModule" first.');
+            return;
+        }
+        if (!this.hwModule.customPrompt) {
+            window.alert(
+                'Entry.hwLite.hwModule.customPrompt is not set. check your hardware module.'
+            );
+            return;
+        }
+        const payload = window.prompt(
+            `${this.hwModule.customPrompt.title} \n ${this.hwModule.customPrompt.description}`,
+            this.hwModule.customPrompt.defaultValue || ''
+        );
+        this.setCustomPromptPayload(payload);
+        console.log('Entry.hwLite.customPromptPayload : ', this.customPromptPayload);
     }
 }
 

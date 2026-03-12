@@ -72,6 +72,7 @@ Entry.EXPANSION_BLOCK.behaviorConductDisaster = {
     description: Lang.Msgs.expansion_behaviorConductDisaster_description,
     descriptionKey: 'Msgs.expansion_behaviorConductDisaster_description',
     isInitialized: false,
+    disabled: true,
     init() {
         if (this.isInitialized) {
             return;
@@ -82,9 +83,9 @@ Entry.EXPANSION_BLOCK.behaviorConductDisaster = {
     apiType: '01',
 };
 
-Entry.EXPANSION_BLOCK.behaviorConductDisaster.getBlocks = function() {
+Entry.EXPANSION_BLOCK.behaviorConductDisaster.getBlocks = function () {
     const categoryMap = getInitialCategoryMap();
-    const getCategory = function() {
+    const getCategory = function () {
         return Object.keys(categoryMap).map((category) => [categoryMap[category].lang, category]);
     };
     const defaultCategory = Object.keys(categoryMap)[0];
@@ -215,6 +216,7 @@ Entry.EXPANSION_BLOCK.behaviorConductDisaster.getBlocks = function() {
                 js: [],
                 py: [],
             },
+            wikiClass: 'emergencyActionGuidelines',
         },
         get_disaster_behavior: {
             color: EntryStatic.colorSet.block.default.EXPANSION,
@@ -248,7 +250,7 @@ Entry.EXPANSION_BLOCK.behaviorConductDisaster.getBlocks = function() {
             isNotFor: ['behaviorConductDisaster'],
             func(sprite, script) {
                 const number = script.getStringValue('NUMBER', script);
-                const defaultValue = Lang.Blocks.no_data;
+                const defaultValue = Lang.Blocks.deprecated;
                 const params = {
                     category: Entry.EXPANSION_BLOCK.behaviorConductDisaster.apiType,
                     subCategory: script.getField('CATEGORY', script),
@@ -261,6 +263,7 @@ Entry.EXPANSION_BLOCK.behaviorConductDisaster.getBlocks = function() {
                 js: [],
                 py: [],
             },
+            wikiClass: 'emergencyActionGuidelines',
         },
     };
 };
