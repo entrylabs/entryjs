@@ -369,7 +369,7 @@ Entry.createDom = function (container, type) {
             logoView.addClass('entryLogoView');
             topFloatingView.appendChild(logoView);
             this.logoView = logoView;
-            logoView.textContent = 'ⓒ NAVER Connect Foundation';
+            logoView.textContent = 'ⓒ NAVER Connect';
 
             const blockCountViewerView = Entry.createElement('div');
             blockCountViewerView.addClass('entryBlockCountView');
