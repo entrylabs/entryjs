@@ -23,8 +23,25 @@ body {
         }
     }
 
+    .entryLogoView {
+        width: 187px;
+        display: flex;
+        align-items: center;
+        line-height: 24px;
+        font-size: 12px;
+        z-index: 10;
+        padding: 0 8px;
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+        background-color: @baseblue;
+        color: @white;
+        user-select: none;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
     .entryBlockCountView {
-        width: 155px;
         background-color: @baseblue;
         z-index: 10;
         display: flex;
@@ -171,7 +188,7 @@ body {
 
 .entrySceneInputCover.entryDisabledScene::before {
     display: block;
-    content: " ";
+    content: ' ';
     width: 100%;
     height: 100%;
     position: absolute;
