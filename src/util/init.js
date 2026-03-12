@@ -365,6 +365,12 @@ Entry.createDom = function (container, type) {
             this.sceneView = sceneView;
             this.scene.generateView(this.sceneView, type);
 
+            const logoView = Entry.createElement('div');
+            logoView.addClass('entryLogoView');
+            topFloatingView.appendChild(logoView);
+            this.logoView = logoView;
+            logoView.textContent = 'ⓒ NAVER Connect Foundation';
+
             const blockCountViewerView = Entry.createElement('div');
             blockCountViewerView.addClass('entryBlockCountView');
             topFloatingView.appendChild(blockCountViewerView);
