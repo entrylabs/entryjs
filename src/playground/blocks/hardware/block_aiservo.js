@@ -12,7 +12,7 @@ if (typeof global.Entry !== 'object') {
 }
 
 Entry.aiservo = {
-    id: '282199',
+    id: '41.3',
     name: 'aiservo',
     url: 'http://neo3ds.com',
     imageName: 'aiservo.png',
@@ -581,3 +581,4 @@ Entry.aiservo.getBlocks = function() {
 };
 
 module.exports = Entry.aiservo;
+
