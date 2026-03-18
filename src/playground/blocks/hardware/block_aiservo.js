@@ -129,6 +129,7 @@ Entry.aiservo.getBlocks = function() {
             def: { params: [null], type: 'aiservo_get_sensor_value' },
             paramsKeyMap: { SIGNAL: 0 },
             class: 'aiservo_sensor',
+            isNotFor: ['aiservo'],
             func: function(sprite, script) {
                 return Entry.hw.portData[script.getField('SIGNAL', script)] || 0;
             },
@@ -153,6 +154,7 @@ Entry.aiservo.getBlocks = function() {
             def: { params: [null], type: 'aiservo_get_cds_value' },
             paramsKeyMap: { SIGNAL: 0 },
             class: 'aiservo_sensor',
+            isNotFor: ['aiservo'],
             func: function(sprite, script) {
                 var val = Entry.hw.portData[script.getField('SIGNAL', script)] || 0;
                 return 255 - val;
@@ -185,6 +187,7 @@ Entry.aiservo.getBlocks = function() {
             },
             paramsKeyMap: { PORT: 0, VALUE: 1 },
             class: 'aiservo_control',
+            isNotFor: ['aiservo'],
             func: function(sprite, script) {
                 var port = script.getField('PORT', script);
                 var val = Math.max(0, Math.min(180, script.getNumberValue('VALUE', script)));
@@ -215,6 +218,7 @@ Entry.aiservo.getBlocks = function() {
             def: { params: [null, null], type: 'aiservo_set_servo_lr' },
             paramsKeyMap: { VALUE: 0 },
             class: 'aiservo_control',
+            isNotFor: ['aiservo'],
             func: function(sprite, script) {
                 Entry.hw.sendQueue['SERVO2'] = script.getField('VALUE', script);
                 Entry.hw.sendQueue['MODE'] = 1;
@@ -243,6 +247,7 @@ Entry.aiservo.getBlocks = function() {
             def: { params: [null, null], type: 'aiservo_set_servo_ud' },
             paramsKeyMap: { VALUE: 0 },
             class: 'aiservo_control',
+            isNotFor: ['aiservo'],
             func: function(sprite, script) {
                 Entry.hw.sendQueue['SERVO1'] = script.getField('VALUE', script);
                 Entry.hw.sendQueue['MODE'] = 1;
@@ -271,6 +276,7 @@ Entry.aiservo.getBlocks = function() {
             def: { params: [null, null], type: 'aiservo_set_gripper' },
             paramsKeyMap: { VALUE: 0 },
             class: 'aiservo_control',
+            isNotFor: ['aiservo'],
             func: function(sprite, script) {
                 Entry.hw.sendQueue['SERVO3'] = script.getField('VALUE', script);
                 Entry.hw.sendQueue['MODE'] = 1;
@@ -299,6 +305,7 @@ Entry.aiservo.getBlocks = function() {
             def: { params: [null, null], type: 'aiservo_set_basket' },
             paramsKeyMap: { VALUE: 0 },
             class: 'aiservo_control',
+            isNotFor: ['aiservo'],
             func: function(sprite, script) {
                 Entry.hw.sendQueue['SERVO3'] = script.getField('VALUE', script);
                 Entry.hw.sendQueue['MODE'] = 1;
@@ -315,6 +322,7 @@ Entry.aiservo.getBlocks = function() {
             ],
             def: { params: [{ type: 'number', params: ['1'] }, null], type: 'aiservo_save_pose' },
             paramsKeyMap: { ID: 0 },
+            isNotFor: ['aiservo'],
             func: function(sprite, script) {
                 var id = script.getNumberValue('ID', script);
                 Entry.aiservo.poses[id] = {
@@ -335,6 +343,7 @@ Entry.aiservo.getBlocks = function() {
             ],
             def: { params: [{ type: 'number', params: ['1'] }, null], type: 'aiservo_load_pose' },
             paramsKeyMap: { ID: 0 },
+            isNotFor: ['aiservo'],
             func: function(sprite, script) {
                 var id = script.getNumberValue('ID', script);
                 var pose = Entry.aiservo.poses[id];
@@ -370,6 +379,7 @@ Entry.aiservo.getBlocks = function() {
             def: { params: [null, '#ff0000', null], type: 'aiservo_set_led_color' },
             paramsKeyMap: { INDEX: 0, COLOR: 1 },
             class: 'aiservo_control',
+            isNotFor: ['aiservo'],
             func: function(sprite, script) {
                 if (!script.isStart) {
                     script.isStart = true;
@@ -423,6 +433,7 @@ Entry.aiservo.getBlocks = function() {
             },
             paramsKeyMap: { INDEX: 0, R: 1, G: 2, B: 3 },
             class: 'aiservo_control',
+            isNotFor: ['aiservo'],
             func: function(sprite, script) {
                 if (!script.isStart) {
                     script.isStart = true;
@@ -455,6 +466,7 @@ Entry.aiservo.getBlocks = function() {
             params: [{ type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 }],
             def: { params: [null], type: 'aiservo_set_led_off' },
             class: 'aiservo_control',
+            isNotFor: ['aiservo'],
             func: function(sprite, script) {
                 Entry.hw.sendQueue['PIXEL_IDX'] = 2; // '모두' 인덱스로 변경
                 Entry.hw.sendQueue['RED'] = 0;
@@ -485,6 +497,7 @@ Entry.aiservo.getBlocks = function() {
             def: { params: [null, null], type: 'aiservo_set_blue_led_onoff' },
             paramsKeyMap: { VALUE: 0 },
             class: 'aiservo_control',
+            isNotFor: ['aiservo'],
             func: function(sprite, script) {
                 Entry.hw.sendQueue['BLUE_LED'] = script.getField('VALUE', script);
                 Entry.hw.sendQueue['MODE'] = 1;
@@ -505,6 +518,7 @@ Entry.aiservo.getBlocks = function() {
             },
             paramsKeyMap: { VALUE: 0 },
             class: 'aiservo_control',
+            isNotFor: ['aiservo'],
             func: function(sprite, script) {
                 Entry.hw.sendQueue['BLUE_LED'] = Math.max(
                     0,
@@ -553,6 +567,7 @@ Entry.aiservo.getBlocks = function() {
             },
             paramsKeyMap: { OCTAVE: 0, NOTE: 1, DURATION: 2 },
             class: 'aiservo_control',
+            isNotFor: ['aiservo'],
             func: function(sprite, script) {
                 if (!script.isStart) {
                     script.isStart = true;
