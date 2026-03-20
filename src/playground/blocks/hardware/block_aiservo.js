@@ -3,8 +3,10 @@
 /***************************************************************************************
  * AI 로봇집게 플레이그라운드 블록 정의 (사양 업데이트)
  * - 수정 사항:
- * 1. 네오픽셀 개수 조정: 3개 -> 2개
- * 2. 네오픽셀 '모두' 인덱스 변경: 3 -> 2
+ * 1. 관절(좌우): 왼쪽(180), 가운데(90), 오른쪽(0)
+ * 2. 관절(상하): 위(0), 가운데(90), 아래(180)
+ * 3. 관절(집게): 열기(0), 가운데(90), 닫기(180)
+ * 4. 관절(버켓): 담기(0), 가운데(90), 붓기(180) - 바스켓에서 버켓으로 명칭 변경
  ***************************************************************************************/
 
 if (typeof global.Entry !== 'object') {
@@ -14,6 +16,7 @@ if (typeof global.Entry !== 'object') {
 Entry.aiservo = {
     id: '41.3',
     name: 'aiservo',
+    isNotFor: [],
     url: 'http://neo3ds.com',
     imageName: 'aiservo.png',
     title: { ko: 'AI로봇집게', en: 'AIROBOTARM' },
@@ -25,7 +28,7 @@ Entry.aiservo = {
             SERVO1: 90,
             SERVO2: 90,
             SERVO3: 90,
-            PIXEL_IDX: 2, // '모두' 인덱스가 3에서 2로 변경됨
+            PIXEL_IDX: 2,
             RED: 0,
             GREEN: 0,
             BLUE: 0,
@@ -49,7 +52,7 @@ Entry.aiservo.setLanguage = function() {
                 aiservo_set_servo_lr: '관절(좌우)를 %1 (으)로 이동 %2',
                 aiservo_set_servo_ud: '관절(상하)를 %1 (으)로 이동 %2',
                 aiservo_set_gripper: '집게를 %1 %2',
-                aiservo_set_basket: '바스켓을 %1 %2',
+                aiservo_set_basket: '버켓을 %1 %2', // 바스켓 -> 버켓
                 aiservo_save_pose: '현재 포즈를 %1 번에 저장하기 %2',
                 aiservo_load_pose: '%1 번 포즈로 이동하기 %2',
                 aiservo_set_led_color: '네오픽셀 %1 색상을 %2 (으)로 켜기 %3',
@@ -68,7 +71,7 @@ Entry.aiservo.setLanguage = function() {
                 aiservo_joint_1: '관절(상하)',
                 aiservo_joint_2: '관절(좌우)',
                 aiservo_joint_3: '관절(집게)',
-                aiservo_joint_4: '관절(바스켓)',
+                aiservo_joint_4: '관절(버켓)', // 바스켓 -> 버켓
                 aiservo_left: '왼쪽',
                 aiservo_right: '오른쪽',
                 aiservo_up: '위',
@@ -155,7 +158,8 @@ Entry.aiservo.getBlocks = function() {
             class: 'aiservo_sensor',
             func: function(sprite, script) {
                 var val = Entry.hw.portData[script.getField('SIGNAL', script)] || 0;
-                return 255 - val;
+                var result = (255 - val) * 4 - 400;
+                return Math.min(1023, result);
             },
         },
         aiservo_set_servo: {
@@ -201,9 +205,9 @@ Entry.aiservo.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.aiservo_left, 0],
+                        [Lang.Blocks.aiservo_left, 180], // 왼쪽: 180
                         [Lang.Blocks.aiservo_middle, 90],
-                        [Lang.Blocks.aiservo_right, 180],
+                        [Lang.Blocks.aiservo_right, 0], // 오른쪽: 0
                     ],
                     value: 90,
                     fontSize: 11,
@@ -229,9 +233,9 @@ Entry.aiservo.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.aiservo_up, 180],
+                        [Lang.Blocks.aiservo_up, 0], // 위: 0
                         [Lang.Blocks.aiservo_middle, 90],
-                        [Lang.Blocks.aiservo_down, 0],
+                        [Lang.Blocks.aiservo_down, 180], // 아래: 180
                     ],
                     value: 90,
                     fontSize: 11,
@@ -257,9 +261,9 @@ Entry.aiservo.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.aiservo_open, 180],
+                        [Lang.Blocks.aiservo_open, 0], // 열기: 0
                         [Lang.Blocks.aiservo_middle, 90],
-                        [Lang.Blocks.aiservo_close, 0],
+                        [Lang.Blocks.aiservo_close, 180], // 닫기: 180
                     ],
                     value: 90,
                     fontSize: 11,
@@ -285,9 +289,9 @@ Entry.aiservo.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.aiservo_release, 180],
+                        [Lang.Blocks.aiservo_release, 0], // 담기: 0
                         [Lang.Blocks.aiservo_middle, 90],
-                        [Lang.Blocks.aiservo_pour, 0],
+                        [Lang.Blocks.aiservo_pour, 180], // 붓기: 180
                     ],
                     value: 90,
                     fontSize: 11,
@@ -357,7 +361,7 @@ Entry.aiservo.getBlocks = function() {
                     options: [
                         ['1번', 0],
                         ['2번', 1],
-                        ['모두', 2], // 3에서 2로 변경
+                        ['모두', 2],
                     ],
                     value: 2,
                     fontSize: 11,
@@ -399,7 +403,7 @@ Entry.aiservo.getBlocks = function() {
                     options: [
                         ['1번', 0],
                         ['2번', 1],
-                        ['모두', 2], // 3에서 2로 변경
+                        ['모두', 2],
                     ],
                     value: 2,
                     fontSize: 11,
@@ -456,7 +460,7 @@ Entry.aiservo.getBlocks = function() {
             def: { params: [null], type: 'aiservo_set_led_off' },
             class: 'aiservo_control',
             func: function(sprite, script) {
-                Entry.hw.sendQueue['PIXEL_IDX'] = 2; // '모두' 인덱스로 변경
+                Entry.hw.sendQueue['PIXEL_IDX'] = 2;
                 Entry.hw.sendQueue['RED'] = 0;
                 Entry.hw.sendQueue['GREEN'] = 0;
                 Entry.hw.sendQueue['BLUE'] = 0;
@@ -581,4 +585,3 @@ Entry.aiservo.getBlocks = function() {
 };
 
 module.exports = Entry.aiservo;
-
