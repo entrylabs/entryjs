@@ -7,16 +7,18 @@ class ListVariable extends Variable {
         return 5000;
     }
 
-    _isListFull() {
-        const currentLength = this.array_ ? this.array_.length : 0;
-        return currentLength >= this.LIST_MAX_LENGTH;
+    _trimToMaxLength() {
+        if (this.array_ && this.array_.length > this.LIST_MAX_LENGTH) {
+            this.array_ = this.array_.slice(-this.LIST_MAX_LENGTH);
+            this._showListFullWarning();
+        }
     }
 
     _showListFullWarning() {
         Entry.toast?.warning(
-            Lang?.Workspace?.list_cant_add_item || 'List limit exceeded',
+            Lang?.Workspace?.list_cant_add_item || 'Warning',
             Lang?.Workspace?.list_max_length_exceeded ||
-                `Cannot add more than ${this.LIST_MAX_LENGTH} items to list.`
+                `You can add up to ${this.LIST_MAX_LENGTH} items to a list.`
         );
     }
 
@@ -26,12 +28,12 @@ class ListVariable extends Variable {
 
         let array = variable.array ? variable.array : [];
         if (array.length > this.LIST_MAX_LENGTH) {
-            array = array.slice(0, this.LIST_MAX_LENGTH);
+            array = array.slice(-this.LIST_MAX_LENGTH);
             setTimeout(() => {
                 Entry.modal?.alert(
                     Lang?.Workspace?.list_truncated_on_load ||
-                        `List "${variable.name}" exceeded ${this.LIST_MAX_LENGTH} items and was truncated.`,
-                    Lang?.Workspace?.list_cant_add_item || 'List limit exceeded'
+                        `The list exceeded ${this.LIST_MAX_LENGTH} items.`,
+                    Lang?.Workspace?.list_truncated_on_load_title || 'Notice'
                 );
             }, 100);
         }
@@ -218,11 +220,6 @@ class ListVariable extends Variable {
     }
 
     appendValue(value) {
-        if (this._isListFull()) {
-            this._showListFullWarning();
-            return this.isRealTime_ ? Promise.resolve() : undefined;
-        }
-
         if (!this.isRealTime_) {
             if (!this.array_) {
                 this.array_ = [];
@@ -230,6 +227,7 @@ class ListVariable extends Variable {
             this.array_.push({
                 data: value,
             });
+            this._trimToMaxLength();
             this.updateView();
         } else {
             return new Promise(async (resolve, reject) => {
@@ -284,13 +282,9 @@ class ListVariable extends Variable {
     }
 
     insertValue(index, data) {
-        if (this._isListFull()) {
-            this._showListFullWarning();
-            return this.isRealTime_ ? Promise.resolve() : undefined;
-        }
-
         if (!this.isRealTime_) {
             this.array_.splice(index - 1, 0, { data });
+            this._trimToMaxLength();
             this.updateView();
         } else {
             return new Promise(async (resolve, reject) => {
