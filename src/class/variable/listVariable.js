@@ -15,7 +15,7 @@ class ListVariable extends Variable {
     }
 
     _showListFullWarning() {
-        Entry.toast?.warning(
+        Entry.toast?.alert(
             Lang?.Workspace?.list_cant_add_item || 'Warning',
             Lang?.Workspace?.list_max_length_exceeded ||
                 `You can add up to ${this.LIST_MAX_LENGTH} items to a list.`
