@@ -799,7 +799,7 @@ module.exports = {
                         case 'unnatural': {
                             returnVal = new BigNumber(value).minus(Math.floor(value));
                             returnVal = returnVal.toNumber();
-                            if (value < 0) {
+                            if (value < 0 && returnVal !== 0) {
                                 returnVal = 1 - returnVal;
                             }
                             break;
