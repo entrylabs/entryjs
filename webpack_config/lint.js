@@ -9,11 +9,12 @@ module.exports = {
     entry: {
         entry: './src/entry.js',
     },
-    output: {
-        path: path.resolve(__dirname'dist'),
-        publicPath: '/dist/',
-        filename: '[name].js',
-    },
+   output: {
+    path: path.resolve(__dirname, 'dist'),   // ← 여기 쉼표 빠져있던 거 고침
+    publicPath: '/dist/',
+    filename: '[name].js',
+    clean: false,          // ← 이 줄 추가! (가장 중요)
+},
 
     module: {
         rules: [
