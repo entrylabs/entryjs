@@ -3,7 +3,6 @@
 const path = require('path');
 const autoprefixer = require('autoprefixer');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 const webpack = require('webpack');
 const CopyPlugin = require('copy-webpack-plugin');
@@ -13,7 +12,7 @@ module.exports = {
         entry: './src/entry.js',
     },
     output: {
-        path: path.resolve('./dist'),
+        path: path.resolve(__dirname'dist'),
         publicPath: '/dist/',
         filename: '[name].js',
     },
@@ -131,9 +130,6 @@ module.exports = {
         '@entrylabs/legacy-video': 'EntryVideoLegacy',
     },
     plugins: [
-        new CleanWebpackPlugin(['dist'], {
-            root: path.join(__dirname, '..'),
-        }),
         new WebpackManifestPlugin(),
         new webpack.ProvidePlugin({
             Buffer: ['buffer', 'Buffer'],
