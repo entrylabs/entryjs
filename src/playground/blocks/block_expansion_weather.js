@@ -3,12 +3,16 @@ const { getStateOptions, getCityOptions, locationData } = require('../../util/lo
 const { callApi } = require('../../util/common');
 
 function resolveData(weatherData, type, dateStr) {
-    if (type === 'now') {
-        return weatherData[Object.keys(weatherData)[0]];
-    } else if (type === 'hour') {
-        return weatherData[dateStr];
-    } else {
-        return weatherData[Entry.EXPANSION_BLOCK.weather.getDate(dateStr)];
+    try {
+        if (type === 'now') {
+            return weatherData[Object.keys(weatherData)[0]];
+        } else if (type === 'hour') {
+            return weatherData[dateStr];
+        } else {
+            return weatherData[Entry.EXPANSION_BLOCK.weather.getDate(dateStr)];
+        }
+    } catch (e) {
+        return Entry.EXPANSION_BLOCK.weather.defaultData;
     }
 }
 
