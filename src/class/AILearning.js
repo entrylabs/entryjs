@@ -250,7 +250,15 @@ export default class AILearning {
         }
         this.destroy();
 
-        this.#labels = labels || classes.map(({ name }) => name);
+        if (!labels) {
+            const parsed =
+                classes.length === 1 && typeof classes[0] === 'string'
+                    ? JSON.parse(classes[0])
+                    : classes;
+            this.#labels = parsed.map(({ name }) => name);
+        } else {
+            this.#labels = labels;
+        }
         this.#type = type;
         this.#url = url;
         this.#oid = _id;

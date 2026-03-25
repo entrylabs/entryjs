@@ -15,13 +15,14 @@ const Common = {
                 .map((k) => `${k}=${obj[k]}`)
                 .join('&')
         ),
-    callApi: _memoize(async (key, opt) => {
+    callApi: _memoize(async (key, opt, header) => {
         const options = _assign(
             {
                 method: 'GET',
                 headers: {
                     Accept: 'application/json',
                     'Content-Type': 'application/json',
+                    ...header,
                 },
             },
             opt

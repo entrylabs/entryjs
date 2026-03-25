@@ -189,7 +189,7 @@ Entry.PingpongG1 = new (class PingpongG1 {
                     type: 'pingpong_g1_when_button_pressed',
                 },
                 class: 'PingpongG1',
-                isNotFor: ['PingpongG1'],
+                isNotFor: ['PingpongG1','PingpongPracticalArts'],
                 event: 'pp_when_button_pressed',
                 func(sprite, script) {
                     const buttonData = Entry.hw.portData.BUTTON;
@@ -230,7 +230,7 @@ Entry.PingpongG1 = new (class PingpongG1 {
                     TILT_DIR: 1,
                 },
                 class: 'PingpongG1',
-                isNotFor: ['PingpongG1'],
+                isNotFor: ['PingpongG1','PingpongPracticalArts'],
                 event: 'pp_when_tilted',
                 func(sprite, script) {
                     const tiltDir = script.getStringField('TILT_DIR');
@@ -273,7 +273,7 @@ Entry.PingpongG1 = new (class PingpongG1 {
                 },
                 //paramsKeyMap: { },
                 class: 'PingpongG1',
-                isNotFor: ['PingpongG1'],
+                isNotFor: ['PingpongG1','PingpongPracticalArts'],
                 func(sprite, script) {
                     const pd = Entry.hw.portData;
                     //return Entry.PingpongG1.sensor_data.BUTTON == 1;
@@ -301,7 +301,7 @@ Entry.PingpongG1 = new (class PingpongG1 {
                     TILT_DIR: 0,
                 },
                 class: 'PingpongG1',
-                isNotFor: ['PingpongG1'],
+                isNotFor: ['PingpongG1','PingpongPracticalArts'],
                 func(sprite, script) {
                     const tiltDir = script.getStringField('TILT_DIR', script);
                     const pd = Entry.hw.portData;
@@ -367,7 +367,7 @@ Entry.PingpongG1 = new (class PingpongG1 {
                 },
                 paramsKeyMap: { DIR: 0 },
                 class: 'PingpongG1',
-                isNotFor: ['PingpongG1'],
+                isNotFor: ['PingpongG1','PingpongPracticalArts'],
                 func(sprite, script) {
                     const dir = script.getStringField('DIR', script);
                     const pd = Entry.hw.portData;
@@ -411,7 +411,7 @@ Entry.PingpongG1 = new (class PingpongG1 {
                 def: { params: [], type: 'pingpong_g1_get_sensor_value' },
                 paramsKeyMap: { SENSOR: 0 },
                 class: 'PingpongG1',
-                isNotFor: ['PingpongG1'],
+                isNotFor: ['PingpongG1','PingpongPracticalArts'],
                 func(sprite, script) {
                     const sensorType = script.getStringField('SENSOR', script);
                     const pd = Entry.hw.portData;
@@ -450,7 +450,7 @@ Entry.PingpongG1 = new (class PingpongG1 {
                     TILT_DIR: 0,
                 },
                 class: 'PingpongG1',
-                isNotFor: ['PingpongG1'],
+                isNotFor: ['PingpongG1','PingpongPracticalArts'],
                 func(sprite, script) {
                     const tiltDir = script.getStringField('TILT_DIR', script);
                     const pd = Entry.hw.portData;
@@ -500,7 +500,7 @@ Entry.PingpongG1 = new (class PingpongG1 {
                 },
                 paramsKeyMap: { DIR: 0, DEGREE: 1 },
                 class: 'PingpongG1_motor',
-                isNotFor: ['PingpongG1'],
+                isNotFor: ['PingpongG1','PingpongPracticalArts'],
                 func(sprite, script) {
                     return Entry.PingpongG1.postCallReturn(script, () => {
                         const dir = script.getStringField('DIR');
@@ -557,7 +557,7 @@ Entry.PingpongG1 = new (class PingpongG1 {
                 },
                 paramsKeyMap: { SPEED: 0 },
                 class: 'PingpongG1_motor',
-                isNotFor: ['PingpongG1'],
+                isNotFor: ['PingpongG1','PingpongPracticalArts'],
                 func(sprite, script) {
                     return Entry.PingpongG1.postCallReturn(script, () => {
                         let speed = script.getNumberValue('SPEED');
@@ -604,7 +604,7 @@ Entry.PingpongG1 = new (class PingpongG1 {
                 },
                 paramsKeyMap: {},
                 class: 'PingpongG1_motor',
-                isNotFor: ['PingpongG1'],
+                isNotFor: ['PingpongG1','PingpongPracticalArts'],
                 func(sprite, script) {
                     return Entry.PingpongG1.postCallReturn(script, () => {
                         const opt = [2, 0, 0, 1, 0, 0];
@@ -635,7 +635,7 @@ Entry.PingpongG1 = new (class PingpongG1 {
                 def: { params: [{ type: 'angle' }], type: 'pingpong_g1_rotate_servo_mortor' },
                 paramsKeyMap: { DEGREE: 0 },
                 class: 'PingpongG1_motor',
-                isNotFor: ['PingpongG1'],
+                isNotFor: ['PingpongG1','PingpongPracticalArts'],
                 func(sprite, script) {
                     return Entry.PingpongG1.postCallReturn(script, () => {
                         let angle = script.getNumberValue('DEGREE', script);
@@ -680,7 +680,7 @@ Entry.PingpongG1 = new (class PingpongG1 {
                 },
                 paramsKeyMap: { X: 0, Y: 1, onoff: 2 },
                 class: 'PingpongG1_peripheral_LED',
-                isNotFor: ['PingpongG1'],
+                isNotFor: ['PingpongG1','PingpongPracticalArts'],
                 func(sprite, script) {
                     return Entry.PingpongG1.postCallReturn(script, () => {
                         let dotX = script.getNumberValue('X', script);
@@ -718,7 +718,7 @@ Entry.PingpongG1 = new (class PingpongG1 {
                 def: { params: [null, null], type: 'pingpong_g1_set_dot_string' },
                 paramsKeyMap: { STR: 0, DURATION: 1 },
                 class: 'PingpongG1_peripheral_LED',
-                isNotFor: ['PingpongG1'],
+                isNotFor: ['PingpongG1','PingpongPracticalArts'],
                 func(sprite, script) {
                     return Entry.PingpongG1.postCallReturn(script, () => {
                         const str = script.getStringValue('STR', script);
@@ -754,7 +754,7 @@ Entry.PingpongG1 = new (class PingpongG1 {
                 def: { params: [], type: 'pingpong_g1_set_dot_clear' },
                 paramsKeyMap: {},
                 class: 'PingpongG1_peripheral_LED',
-                isNotFor: ['PingpongG1'],
+                isNotFor: ['PingpongG1','PingpongPracticalArts'],
                 func(sprite, script) {
                     return Entry.PingpongG1.postCallReturn(script, () => {
                         const packet = Entry.PingpongG1.makePacket(0xa2, 0xe3, [0x70, 1, 0, ' ']);
@@ -788,7 +788,7 @@ Entry.PingpongG1 = new (class PingpongG1 {
                 def: { params: [], type: 'pingpong_g1_playNoteForBeats' },
                 paramsKeyMap: { NOTE: 0, BEATS: 1 },
                 class: 'PingpongG1_Music',
-                isNotFor: ['PingpongG1'],
+                isNotFor: ['PingpongG1','PingpongPracticalArts'],
                 func(sprite, script) {
                     return Entry.PingpongG1.postCallReturn(script, () => {
                         const NOTE = script.getNumberField('NOTE', script);
@@ -822,7 +822,7 @@ Entry.PingpongG1 = new (class PingpongG1 {
                 def: { params: [], type: 'pingpong_g1_restForBeats' },
                 paramsKeyMap: { BEATS: 0 },
                 class: 'PingpongG1_Music',
-                isNotFor: ['PingpongG1'],
+                isNotFor: ['PingpongG1','PingpongPracticalArts'],
                 func(sprite, script) {
                     return Entry.PingpongG1.postCallReturn(script, () => {
                         const BEATS = script.getNumberValue('BEATS', script);
@@ -852,7 +852,7 @@ Entry.PingpongG1 = new (class PingpongG1 {
                 def: { params: [], type: 'pingpong_g1_setTempo' },
                 paramsKeyMap: { TEMPO: 0 },
                 class: 'PingpongG1_Music',
-                isNotFor: ['PingpongG1'],
+                isNotFor: ['PingpongG1','PingpongPracticalArts'],
                 func(sprite, script) {
                     let tempo = script.getNumberValue('TEMPO', script);
                     Entry.PingpongG1.tempo = Entry.PingpongG1._clampTempo(tempo);
@@ -869,9 +869,92 @@ Entry.PingpongG1 = new (class PingpongG1 {
                 def: { params: [], type: 'pingpong_g1_getTempo' },
                 paramsKeyMap: {},
                 class: 'PingpongG1_Music',
-                isNotFor: ['PingpongG1'],
+                isNotFor: ['PingpongG1','PingpongPracticalArts'],
                 func(sprite, script) {
                     return Entry.PingpongG1.tempo;
+                },
+            },
+
+            set_steering_direction: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks.pingpong_opts_mono,
+                        value: 90,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12, },
+                ],
+                events: {},
+                def: { params: [], type: 'set_steering_direction' },
+                paramsKeyMap: { DEGREE: 0,},
+                class: 'PingpongG1_motor',
+                isNotFor: ['PingpongPracticalArts'],
+                func(sprite, script) {
+                    return Entry.PingpongG1.postCallReturn(script, () => {
+                        let angle = script.getNumberValue('DEGREE', script);
+
+                        angle = Math.min(Math.max(angle, 0), 180);
+
+                        const packet = Entry.PingpongG1.makePacket(0xe1, 0x00, [2, 0, angle, 1]);
+                        return [packet, 400];
+                    });
+                },
+            },
+
+            move_by_distance: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks.pingpong_direction,
+                        value: Lang.Blocks.pingpong_direction[0][1],
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: 10 },
+                    { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12, },
+                ],
+                events: {},
+                def: { params: [], type: 'move_by_distance' },
+                paramsKeyMap: { DIR: 0, CM: 1 },
+                class: 'PingpongG1_motor',
+                isNotFor: ['PingpongPracticalArts'],
+                func(sprite, script) {
+                    return Entry.PingpongG1.postCallReturn(script, () => {
+                        const direction = script.getStringField('DIR');
+                        let degree = script.getNumberValue('CM');
+                        degree = degree*9; // convert cm to degree
+
+                        let speed = 800;
+                        if (direction == 'back') {
+                            speed *= -1;
+                        }
+
+                        degree = Math.min(Math.max(degree, 0), 5000);
+
+                        let step = Math.round(degree * 5.5);
+                        if (step > 32768) {
+                            step = 32768;
+                        }
+
+                        const opt = [2, 1, 0, 2, 0, 0, 0, 0, 0, 0];
+                        const packet = Entry.PingpongG1.makePacket(0xc1, 0x0004, opt); // SETP_MOTOR
+
+                        packet.writeInt16BE(speed, 13);
+                        packet.writeUInt16BE(step, 17);
+
+                        const waitTime = Math.round(((1100 - Math.abs(speed)) / 99) * step) + 400;
+                        return [packet, waitTime];
+                    });
                 },
             },
         };
@@ -899,10 +982,17 @@ Entry.PingpongG1 = new (class PingpongG1 {
                     pingpong_g1_restForBeats: '%1 박자 쉬기 %2',
                     pingpong_g1_setTempo: '악보 빠르기를 %1 으로 정하기 %2',
                     pingpong_g1_getTempo: '악보 빠르기',
+                    set_steering_direction: '조향 바퀴를 %1 방향으로 설정',
+                    move_by_distance: '%1으로%2cm 이동하기',
                 },
                 Blocks: {
                     pingpong_right: '오른쪽',
                     pingpong_left: '왼쪽',
+
+                    pingpong_direction :[
+                        ['앞쪽','front'],
+                        ['뒤쪽','back']
+                    ],
 
                     pingpong_rotate_cw: '시계',
                     pingpong_rotate_ccw: '반시계',
@@ -958,6 +1048,28 @@ Entry.PingpongG1 = new (class PingpongG1 {
                         ['시  (B5)', 71],
                         ['도  (C6)', 72],
                     ],
+
+                    pingpong_opts_mono :[
+                        ['왼쪽 45°'   ,45],
+                        ['왼쪽 40°'   ,50],
+                        ['왼쪽 35°'   ,55],
+                        ['왼쪽 30°'   ,60],
+                        ['왼쪽 25°'   ,65],
+                        ['왼쪽 20°'   ,70],
+                        ['왼쪽 15°'   ,75],
+                        ['왼쪽 10°'   ,80],
+                        ['왼쪽 5°'    ,85],
+                        ['정면'     ,90],
+                        ['오른쪽 5°'  ,95],
+                        ['오른쪽 10°' ,100],
+                        ['오른쪽 15°' ,105],
+                        ['오른쪽 20°' ,110],
+                        ['오른쪽 25°' ,115],
+                        ['오른쪽 30°' ,120],
+                        ['오른쪽 35°' ,125],
+                        ['오른쪽 40°' ,130],
+                        ['오른쪽 45°' ,135],
+                    ]
                 },
             },
             en: {
@@ -980,10 +1092,17 @@ Entry.PingpongG1 = new (class PingpongG1 {
                     pingpong_g1_restForBeats: 'rest for %1 beats %2',
                     pingpong_g1_setTempo: 'set tempo to %1 %2',
                     pingpong_g1_getTempo: 'tempo',
+                    set_steering_direction: 'Set the steering wheel to %1 direction',
+                    move_by_distance: 'Move %1 by %2 cm',
                 },
                 Blocks: {
                     pingpong_right: 'right',
                     pingpong_left: 'left',
+
+                    pingpong_direction :[
+                        ['Front','front'],
+                        ['Back','back']
+                    ],
 
                     pingpong_rotate_cw: 'clockwise',
                     pingpong_rotate_ccw: 'counter clockwise',
@@ -1038,6 +1157,28 @@ Entry.PingpongG1 = new (class PingpongG1 {
                         ['Ti  (B5)', 71],
                         ['Do  (C6)', 72],
                     ],
+
+                    pingpong_opts_mono: [
+                        ['Left 45°', 45],
+                        ['Left 40°', 50],
+                        ['Left 35°', 55],
+                        ['Left 30°', 60],
+                        ['Left 25°', 65],
+                        ['Left 20°', 70],
+                        ['Left 15°', 75],
+                        ['Left 10°', 80],
+                        ['Left 5°', 85],
+                        ['Center', 90],
+                        ['Right 5°', 95],
+                        ['Right 10°', 100],
+                        ['Right 15°', 105],
+                        ['Right 20°', 110],
+                        ['Right 25°', 115],
+                        ['Right 30°', 120],
+                        ['Right 35°', 125],
+                        ['Right 40°', 130],
+                        ['Right 45°', 135],
+                    ]
                 },
             },
         };
@@ -1099,4 +1240,53 @@ Entry.PingpongG1 = new (class PingpongG1 {
     };
 })();
 
-module.exports = Entry.PingpongG1;
+Entry.PingpongPracticalArts = new (class PingpongPracticalArts {
+    constructor() {
+        this.id = '35.5';
+        this.name = 'PingpongPracticalArts';
+        this.url = 'https://www.roborisen.com';
+        this.imageName = 'pingpong_g1.png';
+        this.delayTime = 50;
+        this.title = {
+            ko: '핑퐁(실과수업용)',
+            en: 'Pingpong (for Practical Arts class)',
+        };
+        this.communicationType = 'manual';
+
+        this.blockMenuBlocks = [
+            'pingpong_g1_when_button_pressed',
+            'pingpong_g1_is_button_pressed',
+            'pingpong_g1_when_tilted',
+            'pingpong_g1_is_tilted',
+            'pingpong_g1_get_tilt_value',
+            'pingpong_g1_is_top_shape',
+            'pingpong_g1_get_sensor_value',
+            'pingpong_g1_motor_rotate',
+            'pingpong_g1_start_motor_rotate',
+            'pingpong_g1_stop_motor_rotate',
+            'pingpong_g1_rotate_servo_mortor',
+            'set_steering_direction',
+            'move_by_distance',
+            'pingpong_g1_set_dot_pixel',
+            'pingpong_g1_set_dot_string',
+            'pingpong_g1_set_dot_clear',
+            'pingpong_g1_playNoteForBeats',
+            'pingpong_g1_restForBeats',
+            'pingpong_g1_setTempo',
+            'pingpong_g1_getTempo',
+        ];
+    }
+
+    setZero() {return Entry.PingpongG1.setZero();}
+    sendCommand(packet) {return Entry.PingpongG1.sendCommand(packet);}
+    afterReceive(pd) {return Entry.PingpongG1.afterReceive(pd);}
+    postCallReturn(script, myfunc) {return Entry.PingpongG1.postCallReturn(script, myfunc);}
+    _clampBeats(beats) {return Entry.PingpongG1._clampBeats(beats);}
+    _clampTempo(tempo) {return Entry.PingpongG1._clampTempo(tempo);}
+    _beatsToDuration(beats) {return Entry.PingpongG1._beatsToDuration(beats);}
+    makePacket(opcode, taskid, opt) {return Entry.PingpongG1.makePacket(opcode, taskid, opt);}
+    getBlocks() {return Entry.PingpongG1.getBlocks()}
+    setLanguage() {return Entry.PingpongG1.setLanguage();}
+
+})();
+module.exports = [Entry.PingpongG1, Entry.PingpongPracticalArts];

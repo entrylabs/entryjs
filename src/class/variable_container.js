@@ -3053,6 +3053,11 @@ Entry.VariableContainer = class VariableContainer {
 
             if (value >= limitValue) {
                 value = limitValue;
+                Entry.toast?.alert(
+                    Lang?.Workspace?.list_cant_add_item || 'Warning',
+                    Lang?.Workspace?.list_max_length_exceeded ||
+                        'You can add up to 5,000 items to a list.'
+                );
             }
 
             Entry.do('listChangeLength', v.id_, Number(value));
@@ -3079,6 +3084,11 @@ Entry.VariableContainer = class VariableContainer {
                 const selectedLength = array_.length;
 
                 if (selectedLength >= limitValue) {
+                    Entry.toast?.alert(
+                        Lang?.Workspace?.list_cant_add_item || 'Warning',
+                        Lang?.Workspace?.list_max_length_exceeded ||
+                            'You can add up to 5,000 items to a list.'
+                    );
                     Entry.do('listChangeLength', id_, '');
                 } else {
                     Entry.do('listChangeLength', id_, 'plus');

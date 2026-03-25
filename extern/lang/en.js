@@ -5231,7 +5231,7 @@ Lang.Msgs = {
         'It is a collection of blocks that can read text in a variety of voice using the Clova.',
     hardware_need_update_title: 'Entry HW update',
     hardware_need_update_content:
-        "Please update to the latest version,\nif you are using below version.\nEntry website only supported v1.9.64 or later.\nPlease remove the web browser cache,\nif any block doesn't appear after updating.",
+        "Please update to the latest version,\nif you are using below version.\nEntry website only supported v1.9.73 or later.\nPlease remove the web browser cache,\nif any block doesn't appear after updating.",
     ai_utilize_audio_description:
         'It is a collection of blocks that recognize speech using microphone.',
     ai_utilize_video_description:
@@ -5635,6 +5635,11 @@ Lang.Workspace = {
     variable_name_auto_edited_content: 'variable name cannot exceed 10 characters',
     list_name_auto_edited_title: 'list name auto-edited',
     list_name_auto_edited_content: 'list name cannot exceed 10 characters',
+    list_cant_add_item: 'Warning',
+    list_max_length_exceeded: 'You can add up to 5,000 items to a list.',
+    list_truncated_on_load:
+        'The number of list items in this project exceeds 5,000, so some may not be displayed.\n\nFor stable use,\nplease reduce the list to 5,000 or fewer.',
+    list_truncated_on_load_title: 'Notice',
     cloned_scene: 'Cloned_',
     default_mode: 'Standard',
     practical_course_mode: 'Textbook',
