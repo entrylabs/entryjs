@@ -27,7 +27,7 @@ class ListVariable extends Variable {
         super(variable);
 
         let array = variable.array ? variable.array : [];
-        if (array.length > this.LIST_MAX_LENGTH) {
+        if (array.length > this.LIST_MAX_LENGTH && Entry.type === 'workspace') {
             array = array.slice(-this.LIST_MAX_LENGTH);
             setTimeout(() => {
                 Entry.modal?.alert(
