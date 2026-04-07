@@ -715,7 +715,6 @@ import _range from 'lodash/range';
                     },
                 },
             };
-            console.log(this.name,'blocks',blocks);
             return blocks;
         }
 
