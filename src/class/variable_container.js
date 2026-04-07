@@ -3378,4 +3378,5 @@ Entry.VariableContainer = class VariableContainer {
     hasFuncBlockInFunction = _memoize((funcId) =>
         *some(this.functions*, (func) => Boolean(func.getFuncBlockByFuncId(func_${funcId})))
     );
-};
+}; // 끝
+
