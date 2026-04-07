@@ -111,7 +111,6 @@ class PingpongConnectLite {
         const self = this;
         const originalDisconnect = Entry.hwLite.disconnect;
         Entry.hwLite.disconnect = function (...params) {
-            console.log('PingpongConnect:disconnect 호출');
 
             try {
                 if (Entry.hwLite && Entry.hwLite.serial) {
@@ -121,7 +120,7 @@ class PingpongConnectLite {
                 console.warn('PingpongConnect:disconnect 전송 중 오류:', e);
             } finally {
                 setTimeout(() => {
-                    console.log('PingpongConnect:disconnect - 원래 disconnect 함수 호출');
+                    console.log('PingpongConnect:disconnect 실행, 연결 상태 초기화');
                     self.isAllConnected = false;
                     Entry.hwLite.disconnect = originalDisconnect;
                     return originalDisconnect.apply(this, params);
@@ -157,13 +156,9 @@ class PingpongConnectLite {
             connect:       [0xdd,0xdd,this.groupID,0x00,0x00,0x00,0xda,0x00,0x0b,0x00,0x00],
             checkDongle:   [0xdd,0xdd,0xdd,0xdd,0x00,0x01,0xda,0x00,0x0b,0x00,0x0d],
             clearDongle:   [0xdd,0xdd,0xdd,0xdd,0x00,0x01,0xda,0x00,0x0b,0x00,0xcd],
-
-            test:          [0xff,0xff,0xff,0xaa,0x40,0x00,0xcd,0x00,0x59,0x02,0x01,0x00,0x00,0xff,0xff,0xff,0x00,0x00,0x00,0xc1,0x00,0x13,0x02,0x01,0x00,0x02,0x03,0x20,0x00,0x00,0x00,0x37,0xff,0xff,0xff,0x01,0x00,0x00,0xc1,0x00,0x13,0x02,0x01,0x00,0x02,0x03,0x20,0x00,0x00,0x01,0xef,0xff,0xff,0xff,0x02,0x00,0x00,0xc1,0x00,0x13,0x02,0x01,0x00,0x02,0x03,0x20,0x00,0x00,0x01,0xef,0xff,0xff,0xff,0x03,0x00,0x00,0xc1,0x00,0x13,0x02,0x01,0x00,0x02,0x03,0x20,0x00,0x00,0x01,0xef]
         };
 
-        return packetMap[method] ?
-        (console.log('makePacket:', method),Buffer.from(packetMap[method])) :
-        (console.log(`존재하지 않는 method: ${method}\n가능한 목록:\n- ${Object.keys(packetMap).join('\n- ')}`), null);
+        return packetMap[method]
     }
 
     makePacket(opcode, taskid, cubeNo, opt) {
@@ -305,12 +300,11 @@ class PingpongConnectLite {
         if (opcode === 0xda) {
             switch (data[9]) {
                 case 0xc0:
-                    console.log('C0');
-                    Entry.toast.alert(Lang.template.cube_connection_lost,Lang.template.cube_reconnect_notice,false);
+                    Entry.toast.alert(Lang.template.pingpong_lite_cube_connection_lost,Lang.template.pingpong_lite_cube_reconnect_notice,false);
                     this.requestLocalData(this.makePackets(`connect`));
                     break;
                 case 0xc1:
-                    Entry.toast.success(Lang.template.cube_connection_first,Lang.template.cube_first_connected,false);
+                    Entry.toast.success(Lang.template.pingpong_lite_cube_connection_first,Lang.template.pingpong_lite_cube_first_connected,false);
                     setTimeout(() => {
                         this.requestLocalData(this.makePackets(`connect${this.cubeCount}`));
                     }, 1000);
@@ -320,7 +314,7 @@ class PingpongConnectLite {
 
         //큐브1개 연결된 경우
         if (opcode === 0xce) {
-            Entry.toast.success(Lang.template.cube_connection_success,Lang.template.cube_all_connected,false);
+            Entry.toast.success(Lang.template.pingpong_lite_cube_connection_success,Lang.template.pingpong_lite_cube_all_connected,false);
             setTimeout(() => {
                 this.requestLocalData(this.makePackets('getSensorData'));
             }, 3000);
@@ -329,7 +323,7 @@ class PingpongConnectLite {
         //큐브 여러개 연결된 경우, 마지막 큐브가 연결됐다는 응답이 왔을 때 센서데이터 요청
         if (opcode === 0xad) {
             if (bufferData[9]==this.cubeCount-1) {
-                Entry.toast.success(Lang.template.cube_connection_success,Lang.template.cube_all_connected,false);
+                Entry.toast.success(Lang.template.pingpong_lite_cube_connection_success,Lang.template.pingpong_lite_cube_all_connected,false);
                 setTimeout(() => {this.requestLocalData(this.makePackets('getSensorData'));}, 3000);
                 this.isAllConnected = true;
             } else if (this.isAllConnected) {
@@ -349,14 +343,6 @@ class PingpongConnectLite {
         console.log(`Tx[${opcode.toString(16).padStart(2, '0')}]: ${bufferData.toString('hex').match(/.{1,2}/g).join(' ')} /${bufferData.length}`);
         Entry.hwLite.serial.sendAsciiAsBuffer(bufferData);
         return;
-    }
-
-    test(name){
-        console.log('테스트실행');
-        Entry.toast.warning('1','2',false);
-        Entry.toast.success('1','2',false);
-        Entry.toast.alert(3,3,false);
-        this.requestLocalData(this.makePackets(name));
     }
 
     //#region functions
@@ -514,7 +500,6 @@ class PingpongConnectLite {
         } else if (tiltDir == 'R_STAR') {
             tiltValue = pd[cubeNo].TILT_Y * -1;
         }
-        console.log();
         return tiltValue;
     }
 
@@ -603,79 +588,76 @@ class PingpongConnectLite {
 
     //#region setLanguage
     setLanguage(){
-        return {
+        const lang = {
             ko: {
                 template: {
-                    cube_connection_first: "큐브 연결 준비됨",
-                    cube_first_connected: "첫 번째 큐브가 연결되었습니다",
-                    cube_connection_lost: "연결 끊어짐",
-                    cube_reconnect_notice: "큐브의 연결이 끊어졌습니다.\n연결을 재시도합니다",
-                    cube_connection_success: "연결 완료",
-                    cube_all_connected: "모든 큐브가 연결되었습니다",
-
-                    pingpong_lite_g1_when_button_pressed: '%1 큐브 버튼을 눌렀을 때',
-                    [`pingpong_lite_g${this.name}_when_button_pressed`]: '%1 %2 큐브 버튼을 눌렀을 때',
-
-                    pingpong_lite_g1_when_tilted: '%1 큐브를 %2 방향으로 기울였을 때',
-                    [`pingpong_lite_g${this.name}_when_tilted`]: '%1 %2 큐브를 %3로 기울였을 때',
-
-                    pingpong_lite_g1_is_button_pressed: '큐브 버튼이 눌렸는가?',
-                    [`pingpong_lite_g${this.name}_is_button_pressed`]: '%1 큐브 버튼이 눌렸는가?',
-
-                    pingpong_lite_g1_is_tilted: '큐브가 %1 방향으로 기울어졌는가?',
-                    [`pingpong_lite_g${this.name}_is_tilted`]: '%1 큐브가 %2로 기울어졌는가?',
-
-                    pingpong_lite_g1_get_tilt_value: '%1 방향 큐브 기울기',
-                    [`pingpong_lite_g${this.name}_get_tilt_value`]: '%1 큐브의 %2 방향 기울기',
-
-                    pingpong_lite_g1_get_sensor_value: '%1 센서값',
-                    [`pingpong_lite_g${this.name}_get_sensor_value`]: '%1 큐브의 %2 센서값',
-
-                    pingpong_lite_g1_motor_rotate: '모터를 %1 방향으로 %2 도 회전하기 %3',
-                    [`pingpong_lite_g${this.name}_motor_rotate`]: '%1 모터를 %2 방향으로 %3 도 회전하기 %4',
-
-                    pingpong_lite_g1_start_motor_rotate: '모터의 속도를 %1으로 계속 회전하기 %2',
-                    [`pingpong_lite_g${this.name}_start_motor_rotate`]: '%1 모터의 속도를 %2으로 계속 회전하기 %3',
-
-                    pingpong_lite_g1_stop_motor_rotate: '모터 멈추기 %1',
-                    [`pingpong_lite_g${this.name}_stop_motor_rotate`]: '%1 모터 멈추기 %2',
-
-                    pingpong_lite_g1_is_top_shape: '큐브 윗면에 %1 모양이 있는가?',
-                    [`pingpong_lite_g${this.name}_is_top_shape`]: '%1 큐브의 윗면에 %2 모양이 있는가?',
-
-                    pingpong_lite_g1_rotate_servo_mortor: '서보모터를 %1도로 설정하기 %2',
-                    [`pingpong_lite_g${this.name}_rotate_servo_mortor`]: '%1 번째 큐브의 서보모터 %2도로 설정하기 %3',
-
-                    pingpong_lite_g1_set_dot_pixel: '도트 X:%1 Y:%2 %3 %4',
-                    [`pingpong_lite_g${this.name}_set_dot_pixel`]: '%1 번째 큐브의 도트 X:%2 Y:%3 %4 %5',
-
-                    pingpong_lite_g1_set_dot_string: '도트에 문자열 %1  %2초동안 출력 %3',
-                    [`pingpong_lite_g${this.name}_set_dot_string`]: '%1 번째 큐브에 도트 문자열 %2 %3초동안 보여주기 %4',
-
-                    pingpong_lite_g1_set_dot_clear: '도트 화면 지우기 %1',
-                    [`pingpong_lite_g${this.name}_set_dot_clear`]: '%1 번째 큐브의 화면 지우기 %2',
-
-                    pingpong_lite_g1_playNoteForBeats: '%1 음을 %2 박자로 연주하기 %3',
-                    [`pingpong_lite_g${this.name}_playNoteForBeats`]: '%1 큐브의 %2 음을 %3 박자로 연주하기 %4',
-
-                    [`pingpong_lite_g${this.name}_restForBeats`]: '%1 박자 쉬기 %2',
-                    [`pingpong_lite_g${this.name}_setTempo`]: '악보 빠르기를 %1 으로 정하기 %2',
-                    [`pingpong_lite_g${this.name}_getTempo`]: '악보 빠르기',
-
-                    pingpong_lite_g2_multi_motor_rotate: '모터1: %1 방향 %2 도, 모터2: %3 방향 %4 도 회전하기 %5',
-                    pingpong_lite_g3_multi_motor_rotate: '모터1: %1 방향 %2 도, 모터2: %3 방향 %4 도, 모터3: %5방향 %6도 회전하기 %7',
-                    pingpong_lite_g4_multi_motor_rotate: '모터1: %1 방향 %2 도, 모터2: %3 방향 %4 도, 모터3: %5방향 %6도, 모터4: %7 방향 %8 도 회전하기 %9',
-
-                    pingpong_lite_g2_start_multi_motor_rotate: '모터1 속도를 %1, 모터2 속도를 %2으로 계속 회전하기 %3',
-                    pingpong_lite_g3_start_multi_motor_rotate: '모터1 속도를 %1, 모터2 속도를 %2, 모터3 속도를 %3으로 계속 회전하기 %4',
-                    pingpong_lite_g4_start_multi_motor_rotate: '모터1 속도를 %1, 모터2 속도를 %2, 모터3 속도를 %3, 모터4 속도를 %4으로 계속 회전하기 %5',
-
-                    pingpong_lite_g2_playChordForBeats: '큐브1: %1, 큐브2: %2, %3박자로 연주하기 %4',
-                    pingpong_lite_g3_playChordForBeats: '큐브1: %1, 큐브2: %2, 큐브3: %3, %4박자로 연주하기 %5',
-                    pingpong_lite_g4_playChordForBeats: '큐브1: %1, 큐브2: %2, 큐브3: %3, 큐브4: %4, %5박자로 연주하기 %6',
-
-                    set_steering_direction: '조향 바퀴를 %1 방향으로 설정',
-                    move_by_distance: '%1으로%2cm 이동하기',
+                    pingpong_lite_cube_connection_first: "큐브 연결 준비됨",
+                    pingpong_lite_cube_first_connected: "첫 번째 큐브가 연결되었습니다",
+                    pingpong_lite_cube_connection_lost: "연결 끊어짐",
+                    pingpong_lite_cube_reconnect_notice: "큐브의 연결이 끊어졌습니다.\n연결을 재시도합니다",
+                    pingpong_lite_cube_connection_success: "연결 완료",
+                    pingpong_lite_cube_all_connected: "모든 큐브가 연결되었습니다",
+                    ...(this.cubeCount === 1 ?{
+                        pingpong_lite_g1_when_button_pressed: '%1 큐브 버튼을 눌렀을 때',
+                        pingpong_lite_g1_when_tilted: '%1 큐브를 %2 방향으로 기울였을 때',
+                        pingpong_lite_g1_is_button_pressed: '큐브 버튼이 눌렸는가?',
+                        pingpong_lite_g1_is_tilted: '큐브가 %1 방향으로 기울어졌는가?',
+                        pingpong_lite_g1_get_tilt_value: '%1 방향 큐브 기울기',
+                        pingpong_lite_g1_get_sensor_value: '%1 센서값',
+                        pingpong_lite_g1_motor_rotate: '모터를 %1 방향으로 %2 도 회전하기 %3',
+                        pingpong_lite_g1_start_motor_rotate: '모터의 속도를 %1으로 계속 회전하기 %2',
+                        pingpong_lite_g1_stop_motor_rotate: '모터 멈추기 %1',
+                        pingpong_lite_g1_is_top_shape: '큐브 윗면에 %1 모양이 있는가?',
+                        pingpong_lite_g1_rotate_servo_mortor: '서보모터를 %1도로 설정하기 %2',
+                        pingpong_lite_g1_set_dot_pixel: '도트 X:%1 Y:%2 %3 %4',
+                        pingpong_lite_g1_set_dot_string: '도트에 문자열 %1  %2초동안 출력 %3',
+                        pingpong_lite_g1_set_dot_clear: '도트 화면 지우기 %1',
+                        pingpong_lite_g1_playNoteForBeats: '%1 음을 %2 박자로 연주하기 %3',
+                        pingpong_lite_art_set_steering_direction: '조향 바퀴를 %1 방향으로 설정',
+                        pingpong_lite_art_move_by_distance: '%1으로%2cm 이동하기',
+                        pingpong_lite_g1_restForBeats: '%1 박자 쉬기 %2',
+                        pingpong_lite_g1_setTempo: '악보 빠르기를 %1 으로 정하기 %2',
+                        pingpong_lite_g1_getTempo: '악보 빠르기',
+                    }:{
+                        [`pingpong_lite_g${this.cubeCount}_when_button_pressed`]: '%1 %2 큐브 버튼을 눌렀을 때',
+                        [`pingpong_lite_g${this.cubeCount}_when_tilted`]: '%1 %2 큐브를 %3로 기울였을 때',
+                        [`pingpong_lite_g${this.cubeCount}_is_button_pressed`]: '%1 큐브 버튼이 눌렸는가?',
+                        [`pingpong_lite_g${this.cubeCount}_is_tilted`]: '%1 큐브가 %2로 기울어졌는가?',
+                        [`pingpong_lite_g${this.cubeCount}_get_tilt_value`]: '%1 큐브의 %2 방향 기울기',
+                        [`pingpong_lite_g${this.cubeCount}_get_sensor_value`]: '%1 큐브의 %2 센서값',
+                        [`pingpong_lite_g${this.cubeCount}_motor_rotate`]: '%1 모터를 %2 방향으로 %3 도 회전하기 %4',
+                        [`pingpong_lite_g${this.cubeCount}_start_motor_rotate`]: '%1 모터의 속도를 %2으로 계속 회전하기 %3',
+                        [`pingpong_lite_g${this.cubeCount}_stop_motor_rotate`]: '%1 모터 멈추기 %2',
+                        [`pingpong_lite_g${this.cubeCount}_is_top_shape`]: '%1 큐브의 윗면에 %2 모양이 있는가?',
+                        [`pingpong_lite_g${this.cubeCount}_rotate_servo_mortor`]: '%1 번째 큐브의 서보모터 %2도로 설정하기 %3',
+                        [`pingpong_lite_g${this.cubeCount}_set_dot_pixel`]: '%1 번째 큐브의 도트 X:%2 Y:%3 %4 %5',
+                        [`pingpong_lite_g${this.cubeCount}_set_dot_string`]: '%1 번째 큐브에 도트 문자열 %2 %3초동안 보여주기 %4',
+                        [`pingpong_lite_g${this.cubeCount}_set_dot_clear`]: '%1 번째 큐브의 화면 지우기 %2',
+                        [`pingpong_lite_g${this.cubeCount}_playNoteForBeats`]: '%1 큐브의 %2 음을 %3 박자로 연주하기 %4',
+                        [`pingpong_lite_g${this.cubeCount}_restForBeats`]: '%1 박자 쉬기 %2',
+                        [`pingpong_lite_g${this.cubeCount}_setTempo`]: '악보 빠르기를 %1 으로 정하기 %2',
+                        [`pingpong_lite_g${this.cubeCount}_getTempo`]: '악보 빠르기',
+                        ...(() => {
+                            switch (this.cubeCount) {
+                                case 2: return {
+                                        pingpong_lite_g2_multi_motor_rotate: '모터1: %1 방향 %2 도, 모터2: %3 방향 %4 도 회전하기 %5',
+                                        pingpong_lite_g2_multi_start_motor_rotate: '모터1 속도를 %1, 모터2 속도를 %2으로 계속 회전하기 %3',
+                                        pingpong_lite_g2_multi_playChordForBeats: '큐브1: %1, 큐브2: %2, %3박자로 연주하기 %4',
+                                    };
+                                case 3: return {
+                                        pingpong_lite_g3_multi_motor_rotate: '모터1: %1 방향 %2 도, 모터2: %3 방향 %4 도, 모터3: %5방향 %6도 회전하기 %7',
+                                        pingpong_lite_g3_multi_start_motor_rotate: '모터1 속도를 %1, 모터2 속도를 %2, 모터3 속도를 %3으로 계속 회전하기 %4',
+                                        pingpong_lite_g3_multi_playChordForBeats: '큐브1: %1, 큐브2: %2, 큐브3: %3, %4박자로 연주하기 %5',
+                                    };
+                                case 4: return {
+                                        pingpong_lite_g4_multi_motor_rotate: '모터1: %1 방향 %2 도, 모터2: %3 방향 %4 도, 모터3: %5방향 %6도, 모터4: %7 방향 %8 도 회전하기 %9',
+                                        pingpong_lite_g4_multi_start_motor_rotate: '모터1 속도를 %1, 모터2 속도를 %2, 모터3 속도를 %3, 모터4 속도를 %4으로 계속 회전하기 %5',
+                                        pingpong_lite_g4_multi_playChordForBeats: '큐브1: %1, 큐브2: %2, 큐브3: %3, 큐브4: %4, %5박자로 연주하기 %6',
+                                    };
+                                default: return {};
+                            }
+                        })(),
+                    }),
                 },
 
                 Blocks: {
@@ -805,85 +787,84 @@ class PingpongConnectLite {
             },
             en: {
                 template: {
-                    cube_connection_first: "Cube connection ready",
-                    cube_first_connected: "The first cube has been connected",
-                    cube_connection_lost: "Connection lost",
-                    cube_reconnect_notice: "The cube connection has been lost.\nReconnecting...",
-                    cube_connection_success: "Connection successful",
-                    cube_all_connected: "All cubes are connected",
+                    pingpong_lite_cube_connection_first: "Cube connection ready",
+                    pingpong_lite_cube_first_connected: "First cube connected",
+                    pingpong_lite_cube_connection_lost: "Connection lost",
+                    pingpong_lite_cube_reconnect_notice: "Cube connection lost.\nRetrying connection",
+                    pingpong_lite_cube_connection_success: "Connection successful",
+                    pingpong_lite_cube_all_connected: "All cubes connected",
 
-                    pingpong_lite_g1_when_button_pressed: '%1 When the cube button is pressed',
-                    [`pingpong_lite_g${this.name}_when_button_pressed`]: '%1 %2 When the cube button is pressed',
+                    ...(this.cubeCount === 1 ? {
+                        pingpong_lite_g1_when_button_pressed: 'When %1 cube button is pressed',
+                        pingpong_lite_g1_when_tilted: 'When %1 cube is tilted to %2',
+                        pingpong_lite_g1_is_button_pressed: 'Is the cube button pressed?',
+                        pingpong_lite_g1_is_tilted: 'Is the cube tilted to %1?',
+                        pingpong_lite_g1_get_tilt_value: 'Cube tilt value (%1)',
+                        pingpong_lite_g1_get_sensor_value: '%1 sensor value',
+                        pingpong_lite_g1_motor_rotate: 'Rotate motor %2 degrees to %1 direction %3',
+                        pingpong_lite_g1_start_motor_rotate: 'Rotate motor continuously at speed %1 %2',
+                        pingpong_lite_g1_stop_motor_rotate: 'Stop motor %1',
+                        pingpong_lite_g1_is_top_shape: 'Is there a %1 shape on top of the cube?',
+                        pingpong_lite_g1_rotate_servo_mortor: 'Set servo motor to %1 degrees %2',
+                        pingpong_lite_g1_set_dot_pixel: 'Dot X:%1 Y:%2 %3 %4',
+                        pingpong_lite_g1_set_dot_string: 'Display "%1" on dot for %2 seconds %3',
+                        pingpong_lite_g1_set_dot_clear: 'Clear dot display %1',
+                        pingpong_lite_g1_playNoteForBeats: 'Play note %1 for %2 beats %3',
+                        pingpong_lite_art_set_steering_direction: 'Set steering wheel to %1 direction',
+                        pingpong_lite_art_move_by_distance: 'Move %2 cm to %1',
+                        pingpong_lite_g1_restForBeats: 'Rest for %1 beats %2',
+                        pingpong_lite_g1_setTempo: 'Set tempo to %1 %2',
+                        pingpong_lite_g1_getTempo: 'Tempo',
+                    } : {
+                        [`pingpong_lite_g${this.cubeCount}_when_button_pressed`]: 'When %1 %2 cube button is pressed',
+                        [`pingpong_lite_g${this.cubeCount}_when_tilted`]: 'When %1 %2 cube is tilted to %3',
+                        [`pingpong_lite_g${this.cubeCount}_is_button_pressed`]: 'Is %1 cube button pressed?',
+                        [`pingpong_lite_g${this.cubeCount}_is_tilted`]: 'Is %1 cube tilted to %2?',
+                        [`pingpong_lite_g${this.cubeCount}_get_tilt_value`]: '%1 cube tilt value (%2)',
+                        [`pingpong_lite_g${this.cubeCount}_get_sensor_value`]: '%1 cube %2 sensor value',
+                        [`pingpong_lite_g${this.cubeCount}_motor_rotate`]: 'Rotate %1 motor %3 degrees to %2 direction %4',
+                        [`pingpong_lite_g${this.cubeCount}_start_motor_rotate`]: 'Rotate %1 motor continuously at speed %2 %3',
+                        [`pingpong_lite_g${this.cubeCount}_stop_motor_rotate`]: 'Stop %1 motor %2',
+                        [`pingpong_lite_g${this.cubeCount}_is_top_shape`]: 'Is there a %2 shape on top of %1 cube?',
+                        [`pingpong_lite_g${this.cubeCount}_rotate_servo_mortor`]: 'Set servo motor of cube %1 to %2 degrees %3',
+                        [`pingpong_lite_g${this.cubeCount}_set_dot_pixel`]: 'Cube %1 dot X:%2 Y:%3 %4 %5',
+                        [`pingpong_lite_g${this.cubeCount}_set_dot_string`]: 'Display "%2" on cube %1 for %3 seconds %4',
+                        [`pingpong_lite_g${this.cubeCount}_set_dot_clear`]: 'Clear display of cube %1 %2',
+                        [`pingpong_lite_g${this.cubeCount}_playNoteForBeats`]: 'Play note %2 on cube %1 for %3 beats %4',
+                        [`pingpong_lite_g${this.cubeCount}_restForBeats`]: 'Rest for %1 beats %2',
+                        [`pingpong_lite_g${this.cubeCount}_setTempo`]: 'Set tempo to %1 %2',
+                        [`pingpong_lite_g${this.cubeCount}_getTempo`]: 'Tempo',
 
-                    pingpong_lite_g1_when_tilted: '%1 When the cube is tilted to %2 direction',
-                    [`pingpong_lite_g${this.name}_when_tilted`]: '%1 %2 When the cube is tilted to %3',
-
-                    pingpong_lite_g1_is_button_pressed: 'Is the cube button pressed?',
-                    [`pingpong_lite_g${this.name}_is_button_pressed`]: 'Is the %1 cube button pressed?',
-
-                    pingpong_lite_g1_is_tilted: 'Is the cube tilted to %1 direction?',
-                    [`pingpong_lite_g${this.name}_is_tilted`]: 'Is the %1 cube tilted to %2?',
-
-                    pingpong_lite_g1_get_tilt_value: '%1 direction cube tilt',
-                    [`pingpong_lite_g${this.name}_get_tilt_value`]: '%1 cube %2 direction tilt',
-
-                    pingpong_lite_g1_get_sensor_value: '%1 sensor value',
-                    [`pingpong_lite_g${this.name}_get_sensor_value`]: '%1 cube %2 sensor value',
-
-                    pingpong_lite_g1_motor_rotate: 'Rotate motor %2 degrees to %1 direction %3',
-                    [`pingpong_lite_g${this.name}_motor_rotate`]: 'Rotate %1 motor %3 degrees to %2 direction %4',
-
-                    pingpong_lite_g1_start_motor_rotate: 'Rotate motor continuously at speed %1 %2',
-                    [`pingpong_lite_g${this.name}_start_motor_rotate`]: 'Rotate %1 motor continuously at speed %2 %3',
-
-                    pingpong_lite_g1_stop_motor_rotate: 'Stop motor %1',
-                    [`pingpong_lite_g${this.name}_stop_motor_rotate`]: 'Stop %1 motor %2',
-
-                    pingpong_lite_g1_is_top_shape: 'Is there a %1 shape on the top of the cube?',
-                    [`pingpong_lite_g${this.name}_is_top_shape`]: 'Is there a %2 shape on the top of %1 cube?',
-
-                    pingpong_lite_g1_rotate_servo_mortor: 'Set servo motor to %1 degrees %2',
-                    [`pingpong_lite_g${this.name}_rotate_servo_mortor`]: 'Set servo motor of cube %1 to %2 degrees %3',
-
-                    pingpong_lite_g1_set_dot_pixel: 'Dot X:%1 Y:%2 %3 %4',
-                    [`pingpong_lite_g${this.name}_set_dot_pixel`]: 'Cube %1 dot X:%2 Y:%3 %4 %5',
-
-                    pingpong_lite_g1_set_dot_string: 'Display string %1 on dot for %2 seconds %3',
-                    [`pingpong_lite_g${this.name}_set_dot_string`]: 'Display string %2 on cube %1 dot for %3 seconds %4',
-
-                    pingpong_lite_g1_set_dot_clear: 'Clear dot display %1',
-                    [`pingpong_lite_g${this.name}_set_dot_clear`]: 'Clear display of cube %1 %2',
-
-                    pingpong_lite_g1_playNoteForBeats: 'Play note %1 for %2 beats %3',
-                    [`pingpong_lite_g${this.name}_playNoteForBeats`]: 'Play note %2 of cube %1 for %3 beats %4',
-
-                    [`pingpong_lite_g${this.name}_restForBeats`]: 'Rest for %1 beats %2',
-                    [`pingpong_lite_g${this.name}_setTempo`]: 'Set tempo to %1 %2',
-                    [`pingpong_lite_g${this.name}_getTempo`]: 'Tempo',
-
-                    pingpong_lite_g2_multi_motor_rotate: 'Motor1: %1 dir %2 deg, Motor2: %3 dir %4 deg rotate %5',
-                    pingpong_lite_g3_multi_motor_rotate: 'Motor1: %1 dir %2 deg, Motor2: %3 dir %4 deg, Motor3: %5 dir %6 deg rotate %7',
-                    pingpong_lite_g4_multi_motor_rotate: 'Motor1: %1 dir %2 deg, Motor2: %3 dir %4 deg, Motor3: %5 dir %6 deg, Motor4: %7 dir %8 deg rotate %9',
-
-                    pingpong_lite_g2_start_multi_motor_rotate: 'Motor1 speed %1, Motor2 speed %2 continuous rotate %3',
-                    pingpong_lite_g3_start_multi_motor_rotate: 'Motor1 speed %1, Motor2 speed %2, Motor3 speed %3 continuous rotate %4',
-                    pingpong_lite_g4_start_multi_motor_rotate: 'Motor1 speed %1, Motor2 speed %2, Motor3 speed %3, Motor4 speed %4 continuous rotate %5',
-
-                    pingpong_lite_g2_playChordForBeats: 'Cube 1: %1, Cube 2: %2, Play for %3 beats %4',
-                    pingpong_lite_g3_playChordForBeats: 'Cube 1: %1, Cube 2: %2, Cube 3: %3, Play for %4 beats %5',
-                    pingpong_lite_g4_playChordForBeats: 'Cube 1: %1, Cube 2: %2, Cube 3: %3, Cube 4: %4, Play for %5 beats %6',
-
-                    [`set_steering_direction${this.name}`]: 'Set the steering wheel to %1 direction',
-                    [`move_by_distance${this.name}`]: 'Move %1 by %2 cm',
+                        ...(() => {
+                            switch (this.cubeCount) {
+                                case 2: return {
+                                    pingpong_lite_g2_multi_motor_rotate: 'Motor1: rotate %2 degrees %1, Motor2: rotate %4 degrees %3 %5',
+                                    pingpong_lite_g2_multi_start_motor_rotate: 'Motor1 speed %1, Motor2 speed %2 continuous rotation %3',
+                                    pingpong_lite_g2_multi_playChordForBeats: 'Cube1: %1, Cube2: %2, play for %3 beats %4',
+                                };
+                                case 3: return {
+                                    pingpong_lite_g3_multi_motor_rotate: 'Motor1: rotate %2 degrees %1, Motor2: rotate %4 degrees %3, Motor3: rotate %6 degrees %5 %7',
+                                    pingpong_lite_g3_multi_start_motor_rotate: 'Motor1 speed %1, Motor2 speed %2, Motor3 speed %3 continuous rotation %4',
+                                    pingpong_lite_g3_multi_playChordForBeats: 'Cube1: %1, Cube2: %2, Cube3: %3, play for %4 beats %5',
+                                };
+                                case 4: return {
+                                    pingpong_lite_g4_multi_motor_rotate: 'Motor1: rotate %2 degrees %1, Motor2: rotate %4 degrees %3, Motor3: rotate %6 degrees %5, Motor4: rotate %8 degrees %7 %9',
+                                    pingpong_lite_g4_multi_start_motor_rotate: 'Motor1 speed %1, Motor2 speed %2, Motor3 speed %3, Motor4 speed %4 continuous rotation %5',
+                                    pingpong_lite_g4_multi_playChordForBeats: 'Cube1: %1, Cube2: %2, Cube3: %3, Cube4: %4, play for %5 beats %6',
+                                };
+                                default: return {};
+                            }
+                        })(),
+                    }),
                 },
 
                 Blocks: {
                     pingpong_right: 'Right',
                     pingpong_left: 'Left',
 
-                    pingpong_direction :[
-                        ['Front','front'],
-                        ['Back','back']
+                    pingpong_direction: [
+                        ['Forward', 'front'],
+                        ['Backward', 'back']
                     ],
 
                     pingpong_rotate_cw: 'Clockwise',
@@ -912,34 +893,34 @@ class PingpongConnectLite {
                     ],
 
                     pingpong_opts_music_notes: [
-                        ['A3', 45],
-                        ['A#3', 46],
-                        ['B3', 47],
-                        ['C4', 48],
-                        ['C#4', 49],
-                        ['D4', 50],
-                        ['D#4', 51],
-                        ['E4', 52],
-                        ['F4', 53],
-                        ['F#4', 54],
-                        ['G4', 55],
-                        ['G#4', 56],
-                        ['A4', 57],
-                        ['A#4', 58],
-                        ['B4', 59],
-                        ['C5', 60],
-                        ['C#5', 61],
-                        ['D5', 62],
-                        ['D#5', 63],
-                        ['E5', 64],
-                        ['F5', 65],
-                        ['F#5', 66],
-                        ['G5', 67],
-                        ['G#5', 68],
-                        ['A5', 69],
-                        ['A#5', 70],
-                        ['B5', 71],
-                        ['C6', 72],
+                        ['A (A3)', 45],
+                        ['A# (A3#)', 46],
+                        ['B (B3)', 47],
+                        ['C (C4)', 48],
+                        ['C# (C4#)', 49],
+                        ['D (D4)', 50],
+                        ['D# (D4#)', 51],
+                        ['E (E4)', 52],
+                        ['F (F4)', 53],
+                        ['F# (F4#)', 54],
+                        ['G (G4)', 55],
+                        ['G# (G4#)', 56],
+                        ['A (A4)', 57],
+                        ['A# (A4#)', 58],
+                        ['B (B4)', 59],
+                        ['C (C5)', 60],
+                        ['C# (C5#)', 61],
+                        ['D (D5)', 62],
+                        ['D# (D5#)', 63],
+                        ['E (E5)', 64],
+                        ['F (F5)', 65],
+                        ['F# (F5#)', 66],
+                        ['G (G5)', 67],
+                        ['G# (G5#)', 68],
+                        ['A (A5)', 69],
+                        ['A# (A5#)', 70],
+                        ['B (B5)', 71],
+                        ['C (C6)', 72],
                     ],
 
                     pingpong_opts_mono: [
@@ -963,45 +944,1313 @@ class PingpongConnectLite {
                         ['Right 40°', 130],
                         ['Right 45°', 135],
                     ],
-
-                    pingpong_lite_g2_cube_id: [
-                        ['1', 0],
-                        ['2', 1],
-                    ],
-                    pingpong_lite_g2_cube_all: [
-                        ['1', 0],
-                        ['2', 1],
-                        ['All', -1],
-                    ],
-
-                    pingpong_lite_g3_cube_id: [
-                        ['1', 0],
-                        ['2', 1],
-                        ['3', 2],
-                    ],
-                    pingpong_lite_g3_cube_all: [
-                        ['1', 0],
-                        ['2', 1],
-                        ['3', 2],
-                        ['All', -1],
-                    ],
-
-                    pingpong_lite_g4_cube_id: [
-                        ['1', 0],
-                        ['2', 1],
-                        ['3', 2],
-                        ['4', 3],
-                    ],
-                    pingpong_lite_g4_cube_all: [
-                        ['1', 0],
-                        ['2', 1],
-                        ['3', 2],
-                        ['4', 3],
-                        ['All', -1],
-                    ],
                 },
             }
-        }
+        };
+        console.log(this.name,'lang',lang);
+        return lang;
+    }
+
+    //#region getBlocks
+    getBlocks() {
+        const self = this;
+        const blocks = {
+            [`pingpong_lite_g${self.cubeCount}_when_button_pressed`]: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic_event',
+                statements: [],
+                params: [
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/start_icon_hardware.svg',
+                        size: 14,
+                        position: { x: 0, y: -2 },
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks[`pingpong_lite_g${self.cubeCount}_cube_id`],
+                        value: 0,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null],
+                    type: `pingpong_lite_g${self.cubeCount}_when_button_pressed`,
+                },
+                paramsKeyMap: {
+                    CUBEID: 1,
+                },
+                class: 'PingpongGN',
+                isNotFor: [`PingpongG${self.cubeCount}Lite`],
+                event: 'pp_when_button_pressed',
+                func(sprite, script) {
+                    const cubeId = script.getNumberField('CUBEID');
+                    const pd = self.sensor_data;
+
+                    return (pd[cubeId]?.BUTTON == 1)
+                        ? script.callReturn()
+                        : this.die();
+                },
+            },
+            [`pingpong_lite_g${self.cubeCount}_when_tilted`]: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic_event',
+                statements: [],
+                params: [
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/start_icon_hardware.svg',
+                        size: 14,
+                        position: { x: 0, y: -2 },
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks[`pingpong_lite_g${self.cubeCount}_cube_id`],
+                        value: 0,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks.pingpong_opts_cube_tiltDir,
+                        value: 'F_CIRCLE',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null, null],
+                    type: `pingpong_lite_g${self.cubeCount}_when_tilted`,
+                },
+                paramsKeyMap: {
+                    CUBEID: 1,
+                    TILT_DIR: 2,
+                },
+                class: 'PingpongGN',
+                isNotFor: [`PingpongG${self.cubeCount}Lite`],
+                event: 'pp_when_tilted',
+                func(sprite, script) {
+                    const cubeId = script.getNumberField('CUBEID');
+                    const tiltDir = script.getStringField('TILT_DIR');
+
+                    const tiltValue = self._getTiltValue(cubeId, tiltDir);
+                    if (tiltValue >= self.TILT_THRESHOLD) {
+                        return script.callReturn();
+                    }
+
+                    return this.die();
+                },
+            },
+            [`pingpong_lite_g${self.cubeCount}_is_button_pressed`]: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic_boolean_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks[`pingpong_lite_g${self.cubeCount}_cube_id`],
+                        value: 0,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                ],
+                def: {
+                    params: [null],
+                    type: `pingpong_lite_g${self.cubeCount}_is_button_pressed`,
+                },
+                paramsKeyMap: {
+                    CUBEID: 0,
+                },
+                class: 'PingpongGN',
+                isNotFor: [`PingpongG${self.cubeCount}Lite`],
+                func(sprite, script) {
+                    const cubeId = script.getNumberField('CUBEID');
+                    return self.sensor_data[cubeId].BUTTON == 1;
+                },
+            },
+            [`pingpong_lite_g${self.cubeCount}_is_tilted`]: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic_boolean_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks[`pingpong_lite_g${self.cubeCount}_cube_id`],
+                        value: 0,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks.pingpong_opts_cube_tiltDir,
+                        value: 'F_CIRCLE',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                ],
+                events: {},
+                def: { params: [], type: `pingpong_lite_g${self.cubeCount}_is_tilted` },
+                paramsKeyMap: {
+                    CUBEID: 0,
+                    TILT_DIR: 1,
+                },
+                class: 'PingpongGN',
+                isNotFor: [`PingpongG${self.cubeCount}Lite`],
+                func(sprite, script) {
+                    const cubeId = script.getNumberField('CUBEID');
+                    const tiltDir = script.getStringField('TILT_DIR');
+
+                    const tiltValue = self._getTiltValue(cubeId, tiltDir);
+
+                    return tiltValue >= self.TILT_THRESHOLD;
+                },
+            },
+            [`pingpong_lite_g${self.cubeCount}_get_tilt_value`]: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic_string_field',
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks[`pingpong_lite_g${self.cubeCount}_cube_id`],
+                        value: 0,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks.pingpong_opts_cube_tiltDir,
+                        value: 'F_CIRCLE',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null],
+                    type: `pingpong_lite_g${self.cubeCount}_get_tilt_value`,
+                },
+                paramsKeyMap: { CUBEID: 0, DIR: 1 },
+                class: 'PingpongGN',
+                isNotFor: [`PingpongG${self.cubeCount}Lite`],
+                func(sprite, script) {
+                    const cubeId = script.getNumberField('CUBEID');
+                    const tiltDir = script.getStringField('DIR', script);
+
+                    return self._getTiltValue(cubeId, tiltDir);
+                },
+            },
+            [`pingpong_lite_g${self.cubeCount}_get_sensor_value`]: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic_string_field',
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks[`pingpong_lite_g${self.cubeCount}_cube_id`],
+                        value: 0,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.pingpong_sensor_proximity, 'PROXIMITY'],
+                            [Lang.Blocks.pingpong_sensor_ain, 'AIN'],
+                        ],
+                        value: 'PROXIMITY',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                ],
+                def: { params: [], type: `pingpong_lite_g${self.cubeCount}_get_sensor_value` },
+                paramsKeyMap: { CUBEID: 0, SENSOR: 1 },
+                class: 'PingpongGN',
+                isNotFor: [`PingpongG${self.cubeCount}Lite`],
+                func(sprite, script) {
+                    const cubeId = script.getNumberField('CUBEID');
+                    const sensorType = script.getStringField('SENSOR', script);
+                    const pd = self.sensor_data;
+
+                    return pd[cubeId][sensorType];
+                },
+            },
+            [`pingpong_lite_g${self.cubeCount}_is_top_shape`]: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic_boolean_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks[`pingpong_lite_g${self.cubeCount}_cube_id`],
+                        value: 0,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks.pingpong_opts_cube_dir6,
+                        value: 'DF_RECTANGLE',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                ],
+                events: {},
+                def: { params: [], type: `pingpong_lite_g${self.cubeCount}_is_top_shape` },
+                paramsKeyMap: { CUBEID: 0, TILT_DIR: 1 },
+                class: 'PingpongGN',
+                isNotFor: [`PingpongG${self.cubeCount}Lite`],
+                func(sprite, script) {
+                    const cubeId = script.getNumberField('CUBEID');
+                    const tiltDir = script.getStringField('TILT_DIR', script);
+                    return self._isUpperDir(cubeId, tiltDir);
+                },
+            },
+            [`pingpong_lite_g${self.cubeCount}_motor_rotate`]: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks[`pingpong_lite_g${self.cubeCount}_cube_all`],
+                        value: 0,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.pingpong_rotate_cw, 'RIGHT'],
+                            [Lang.Blocks.pingpong_rotate_ccw, 'LEFT'],
+                        ],
+                        value: 'RIGHT',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                        value: 10,
+                    },
+                    { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                ],
+                events: {},
+                def: {
+                    params: [null, null, null],
+                    type: `pingpong_lite_g${self.cubeCount}_motor_rotate`,
+                },
+                paramsKeyMap: { CUBEID: 0, DIR: 1, DEGREE: 2 },
+                class: 'PingpongGN_motor',
+                isNotFor: [`PingpongG${self.cubeCount}Lite`],
+                func(sprite, script) {
+                    return self.postCallReturn(script, () => {
+                        const cubeId = script.getNumberField('CUBEID');
+                        const dir = script.getStringField('DIR');
+                        const degree = script.getNumberValue('DEGREE');
+                        const speed = 80 * (dir === 'LEFT' ? -1 : 1);
+
+                        const [arr, waitTime] = self.makeSingleStepPacket(cubeId,speed,degree);
+                        const packet = Buffer.from(arr);
+                        return [packet, waitTime];
+                    });
+                },
+            },
+            [`pingpong_lite_g${self.cubeCount}_start_motor_rotate`]: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks[`pingpong_lite_g${self.cubeCount}_cube_all`],
+                        value: 0,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                        value: 100,
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                def: {
+                    params: [null, null],
+                    type: `pingpong_lite_g${self.cubeCount}_start_motor_rotate`,
+                },
+                paramsKeyMap: { CUBEID: 0, SPEED: 1 },
+                class: 'PingpongGN_motor',
+                isNotFor: [`PingpongG${self.cubeCount}Lite`],
+                func(sprite, script) {
+                    return self.postCallReturn(script, () => {
+                        const cubeId = script.getNumberField('CUBEID');
+                        const speed = script.getNumberValue('SPEED');
+
+                        const arr = self.makeContStepPacket(cubeId, speed);
+                        const packet = Buffer.from(arr);
+
+                        return [packet];
+                    });
+                },
+            },
+            [`pingpong_lite_g${self.cubeCount}_stop_motor_rotate`]: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks[`pingpong_lite_g${self.cubeCount}_cube_all`],
+                        value: 0,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                def: {
+                    params: [],
+                    type: `pingpong_lite_g${self.cubeCount}_stop_motor_rotate`,
+                },
+                paramsKeyMap: { CUBEID: 0 },
+                class: 'PingpongGN_motor',
+                isNotFor: [`PingpongG${self.cubeCount}Lite`],
+                func(sprite, script) {
+                    return self.postCallReturn(script, () => {
+                        const cubeId = script.getNumberField('CUBEID');
+
+                        const arr = self.makeContStepPacket(cubeId, 0);
+                        const packet = Buffer.from(arr);
+
+                        return [packet];
+                    });
+                },
+            },
+            [`pingpong_lite_g${self.cubeCount}_rotate_servo_mortor`]: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: '1' },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                def: { params: [null, { type: 'angle' }], type: `pingpong_lite_g${self.cubeCount}_rotate_servo_mortor` },
+                paramsKeyMap: { cubeno: 0, DEGREE: 1 },
+                class: 'PingpongGN_motor',
+                isNotFor: [`PingpongG${self.cubeCount}Lite`],
+                func(sprite, script) {
+                    return self.postCallReturn(script, () => {
+                        const cubeId = self._getCubeNoFromBlock(script);
+                        let angle = script.getNumberValue('DEGREE', script);
+
+                        angle = Math.min(Math.max(angle, 0), 180);
+
+                        const opt = [2, 0, angle, 1];
+                        const packet = self.makePacket(self.OPCODE.SERVO, 0x00, cubeId, opt);
+                        return [packet];
+                    });
+                },
+            },
+            [`pingpong_lite_g${self.cubeCount}_set_dot_pixel`]: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: '1' },
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: '0' },
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: '0' },
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.pingpong_dot_on, 1],
+                            [Lang.Blocks.pingpong_dot_off, 0],
+                        ],
+                        value: 1,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null, null, null],
+                    type: `pingpong_lite_g${self.cubeCount}_set_dot_pixel`,
+                },
+                paramsKeyMap: { cubeno: 0, X: 1, Y: 2, onoff: 3 },
+                class: 'PingpongGN_peripheral_LED',
+                isNotFor: [`PingpongG${self.cubeCount}Lite`],
+                func(sprite, script) {
+                    return self.postCallReturn(script, () => {
+                        const cubeId = self._getCubeNoFromBlock(script);
+                        let dotX = script.getNumberValue('X', script);
+                        let dotY = script.getNumberValue('Y', script);
+                        const onoff = script.getNumberField('onoff', script);
+
+                        dotX = Math.min(Math.max(dotX, 0), 7);
+                        dotY = Math.min(Math.max(dotY, 0), 7);
+
+                        const opt = [0x70, dotY, dotX, onoff];
+                        const packet = self.makePacket(
+                            self.OPCODE.LEDMATRIX,
+                            0xe1,
+                            cubeId,
+                            opt
+                        );
+                        return [packet];
+                    });
+                },
+            },
+            [`pingpong_lite_g${self.cubeCount}_set_dot_string`]: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: '1' },
+                    { type: 'Block', accept: 'string', value: 'Hello!' },
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: '2' },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                def: { params: [null, null], type: `pingpong_lite_g${self.cubeCount}_set_dot_string` },
+                paramsKeyMap: { cubeno: 0, STR: 1, DURATION: 2 },
+                class: 'PingpongGN_peripheral_LED',
+                isNotFor: [`PingpongG${self.cubeCount}Lite`],
+                func(sprite, script) {
+                    return self.postCallReturn(script, () => {
+                        const cubeId = self._getCubeNoFromBlock(script);
+                        const str = script.getStringValue('STR', script);
+                        const duration = script.getNumberValue('DURATION', script);
+
+                        let period = Math.round((duration * 100) / (str.length * 8));
+                        period = Math.min(Math.max(period, 1), 200);
+
+                        const opt = Buffer.concat([
+                            Buffer.from([0x70, period, 0]),
+                            Buffer.from(str.substring(0, 20)),
+                        ]);
+
+                        const packet = self.makePacket(
+                            self.OPCODE.LEDMATRIX,
+                            0xe3,
+                            cubeId,
+                            opt
+                        );
+                        const waitTime = period * str.length * 8 * 10 + 400; // add wait for 400ms
+                        return [packet, waitTime];
+                    });
+                },
+            },
+            [`pingpong_lite_g${self.cubeCount}_set_dot_clear`]: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: '1' },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                def: { params: [], type: `pingpong_lite_g${self.cubeCount}_set_dot_clear` },
+                paramsKeyMap: { cubeno: 0 },
+                class: 'PingpongGN_peripheral_LED',
+                isNotFor: [`PingpongG${self.cubeCount}Lite`],
+                func(sprite, script) {
+                    return self.postCallReturn(script, () => {
+                        const cubeId = self._getCubeNoFromBlock(script);
+                        const opt = [0x70, 1, 0, ' '];
+                        const packet = self.makePacket(
+                            self.OPCODE.LEDMATRIX,
+                            0xe3,
+                            cubeId,
+                            opt
+                        );
+                        return [packet, 400];
+                    });
+                },
+            },
+            [`pingpong_lite_g${self.cubeCount}_playNoteForBeats`]: {
+                //'%1 큐브의 %2 번 음을 %3 박자로 연주하기 %4',
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks[`pingpong_lite_g${self.cubeCount}_cube_id`],
+                        value: 0,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks.pingpong_opts_music_notes,
+                        value: 48,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: '1' },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                def: { params: [], type: `pingpong_lite_g${self.cubeCount}_playNoteForBeats` },
+                paramsKeyMap: { CUBEID: 0, NOTE: 1, BEATS: 2 },
+                class: 'PingpongGN_Music',
+                isNotFor: [`PingpongG${self.cubeCount}Lite`],
+                func(sprite, script) {
+                    return self.postCallReturn(script, () => {
+                        const cubeId = script.getNumberField('CUBEID');
+                        const NOTE = script.getNumberField('NOTE', script);
+                        const BEATS = script.getNumberValue('BEATS', script);
+
+                        const cBeats = self._clampBeats(BEATS);
+                        const durationSec = self._beatsToDuration(cBeats);
+
+                        const waitTime = durationSec * 10 + 60;
+                        const arr = self.makeMusicNotePacket(cubeId, NOTE, durationSec);
+                        const packet = Buffer.from(arr);
+
+                        return [packet, waitTime];
+                    });
+                },
+            },
+            [`pingpong_lite_g${self.cubeCount}_restForBeats`]: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                params: [
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: '1' },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                def: { params: [], type: `pingpong_lite_g${self.cubeCount}_restForBeats` },
+                paramsKeyMap: { BEATS: 0 },
+                class: 'PingpongGN_Music',
+                isNotFor: [`PingpongG${self.cubeCount}Lite`],
+                func(sprite, script) {
+                    return self.postCallReturn(script, () => {
+                        const BEATS = script.getNumberValue('BEATS', script);
+
+                        const cBeats = self._clampBeats(BEATS);
+                        const durationSec = self._beatsToDuration(cBeats);
+
+                        const waitTime = durationSec * 10 + 60;
+
+                        return [null, waitTime];
+                    });
+                },
+            },
+            [`pingpong_lite_g${self.cubeCount}_setTempo`]: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                params: [
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: '60' },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                def: { params: [], type: `pingpong_lite_g${self.cubeCount}_setTempo` },
+                paramsKeyMap: { TEMPO: 0 },
+                class: 'PingpongGN_Music',
+                isNotFor: [`PingpongG${self.cubeCount}Lite`],
+                func(sprite, script) {
+                    let tempo = script.getNumberValue('TEMPO', script);
+                    self.tempo = self._clampTempo(tempo);
+                    return script.callReturn();
+                },
+            },
+            [`pingpong_lite_g${self.cubeCount}_getTempo`]: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic_string_field',
+                params: [],
+                def: { params: [], type: `pingpong_lite_g${self.cubeCount}_getTempo` },
+                paramsKeyMap: {},
+                class: 'PingpongGN_Music',
+                isNotFor: [`PingpongG${self.cubeCount}Lite`],
+                func(sprite, script) {
+                    return self.tempo;
+                },
+            },
+            pingpong_lite_g2_multi_motor_rotate: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.pingpong_rotate_cw, 'RIGHT'],
+                            [Lang.Blocks.pingpong_rotate_ccw, 'LEFT'],
+                        ],
+                        value: 'RIGHT',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                        value: 10,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.pingpong_rotate_cw, 'RIGHT'],
+                            [Lang.Blocks.pingpong_rotate_ccw, 'LEFT'],
+                        ],
+                        value: 'RIGHT',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                        value: 10,
+                    },
+                    { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                ],
+                def: {
+                    params: [null],
+                    type: 'pingpong_lite_g2_multi_motor_rotate',
+                },
+                paramsKeyMap: { DIR_1: 0, DEGREE_1: 1, DIR_2: 2, DEGREE_2: 3 },
+                class: 'PingpongGN_motor',
+                isNotFor: ['PingpongG2Lite'],
+                func(sprite, script) {
+                    return self.postCallReturn(script, () => {
+                        const dir1 = script.getStringField('DIR_1');
+                        const dir2 = script.getStringField('DIR_2');
+                        const dir3 = script.getStringField('DIR_3');
+                        const dir4 = script.getStringField('DIR_4');
+                        const degree1 = script.getNumberValue('DEGREE_1');
+                        const degree2 = script.getNumberValue('DEGREE_2');
+                        const degree3 = script.getNumberValue('DEGREE_3');
+                        const degree4 = script.getNumberValue('DEGREE_4');
+
+                        const speed1 = 80 * (dir1 === 'LEFT' ? -1 : 1);
+                        const speed2 = 80 * (dir2 === 'LEFT' ? -1 : 1);
+                        const speed3 = 80 * (dir3 === 'LEFT' ? -1 : 1);
+                        const speed4 = 80 * (dir4 === 'LEFT' ? -1 : 1);
+
+                        const [arr1, delay1] = self.makeSingleStepPacket(0,speed1,degree1);
+                        const [arr2, delay2] = self.makeSingleStepPacket(1,speed2,degree2);
+                        const [arr3, delay3] = self.makeSingleStepPacket(2,speed3,degree3);
+                        const [arr4, delay4] = self.makeSingleStepPacket(3,speed4,degree4);
+
+                        const opt = [self.MODE.MULTIROLE, 1, 0, 2];
+                        const packet = self.makeAggregatePacket(self.OPCODE.AGGREGATE_STEPS,0,[arr1, arr2, arr3, arr4],opt);
+                        const waitTime = Math.max(delay1, delay2, delay3, delay4);
+
+                        return [packet, waitTime];
+                    });
+                },
+            },
+            pingpong_lite_g2_multi_start_motor_rotate: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                params: [
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: 100 },
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: 100 },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                def: {
+                    params: [],
+                    type: 'pingpong_lite_g2_multi_start_motor_rotate',
+                },
+                paramsKeyMap: { SPEED_1: 0, SPEED_2: 1 },
+                class: 'PingpongGN_motor',
+                isNotFor: ['PingpongG2Lite'],
+                func(sprite, script) {
+                    return self.postCallReturn(script, () => {
+                        const speed1 = script.getNumberValue('SPEED_1');
+                        const speed2 = script.getNumberValue('SPEED_2');
+                        const speed3 = script.getNumberValue('SPEED_3');
+                        const speed4 = script.getNumberValue('SPEED_4');
+
+                        const arr1 = self.makeContStepPacket(0, speed1);
+                        const arr2 = self.makeContStepPacket(1, speed2);
+                        const arr3 = self.makeContStepPacket(2, speed3);
+                        const arr4 = self.makeContStepPacket(3, speed4);
+
+                        const opt = [self.MODE.MULTIROLE, 0, 0, 2];
+                        const packet = self.makeAggregatePacket(self.OPCODE.AGGREGATE_STEPS,0,[arr1, arr2, arr3, arr4],opt);
+
+                        return [packet];
+                    });
+                },
+            },
+            pingpong_lite_g2_multi_playChordForBeats: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks.pingpong_opts_music_notes,
+                        value: 48,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks.pingpong_opts_music_notes,
+                        value: 48,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: '1' },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                def: { params: [], type: 'pingpong_lite_g2_multi_playChordForBeats' },
+                paramsKeyMap: {
+                    NOTE_1: 0,
+                    NOTE_2: 1,
+                    BEATS: 2,
+                },
+                class: 'PingpongGN_Music',
+                isNotFor: ['PingpongG2Lite'],
+                func(sprite, script) {
+                    return self.postCallReturn(script, () => {
+                        const NOTE1 = script.getNumberField('NOTE_1', script);
+                        const NOTE2 = script.getNumberField('NOTE_2', script);
+                        const NOTE3 = script.getNumberField('NOTE_3', script);
+                        const NOTE4 = script.getNumberField('NOTE_4', script);
+
+                        const BEATS = script.getNumberValue('BEATS', script);
+                        const cBeats = self._clampBeats(BEATS);
+                        const durationSec = self._beatsToDuration(cBeats);
+
+                        const waitTime = durationSec * 10 + 60;
+
+                        const arr1 = self.makeMusicNotePacket(0,NOTE1,durationSec);
+                        const arr2 = self.makeMusicNotePacket(1,NOTE2,durationSec);
+                        const arr3 = self.makeMusicNotePacket(2,NOTE3,durationSec);
+                        const arr4 = self.makeMusicNotePacket(3,NOTE4,durationSec);
+
+                        const packet = self.makeAggregatePacket(self.OPCODE.MUSIC,0xa2,[arr1, arr2, arr3, arr4],[0, 0]);
+
+                        return [packet, waitTime];
+                    });
+                },
+            },
+            pingpong_lite_g3_multi_motor_rotate: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.pingpong_rotate_cw, 'RIGHT'],
+                            [Lang.Blocks.pingpong_rotate_ccw, 'LEFT'],
+                        ],
+                        value: 'RIGHT',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: 10 },
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.pingpong_rotate_cw, 'RIGHT'],
+                            [Lang.Blocks.pingpong_rotate_ccw, 'LEFT'],
+                        ],
+                        value: 'RIGHT',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                        value: 10,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.pingpong_rotate_cw, 'RIGHT'],
+                            [Lang.Blocks.pingpong_rotate_ccw, 'LEFT'],
+                        ],
+                        value: 'RIGHT',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: 10 },
+                    { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                ],
+                def: {
+                    params: [],
+                    type: 'pingpong_lite_g3_multi_motor_rotate',
+                },
+                paramsKeyMap: {
+                    DIR_1: 0,
+                    DEGREE_1: 1,
+                    DIR_2: 2,
+                    DEGREE_2: 3,
+                    DIR_3: 4,
+                    DEGREE_3: 5,
+                },
+                class: 'PingpongGN_motor',
+                isNotFor: ['PingpongG3Lite'],
+                func(sprite, script) {
+                    return self.postCallReturn(script, () => {
+                        const dir1 = script.getStringField('DIR_1');
+                        const dir2 = script.getStringField('DIR_2');
+                        const dir3 = script.getStringField('DIR_3');
+                        const dir4 = script.getStringField('DIR_4');
+                        const degree1 = script.getNumberValue('DEGREE_1');
+                        const degree2 = script.getNumberValue('DEGREE_2');
+                        const degree3 = script.getNumberValue('DEGREE_3');
+                        const degree4 = script.getNumberValue('DEGREE_4');
+
+                        const speed1 = 80 * (dir1 === 'LEFT' ? -1 : 1);
+                        const speed2 = 80 * (dir2 === 'LEFT' ? -1 : 1);
+                        const speed3 = 80 * (dir3 === 'LEFT' ? -1 : 1);
+                        const speed4 = 80 * (dir4 === 'LEFT' ? -1 : 1);
+
+                        const [arr1, delay1] = self.makeSingleStepPacket(0,speed1,degree1);
+                        const [arr2, delay2] = self.makeSingleStepPacket(1,speed2,degree2);
+                        const [arr3, delay3] = self.makeSingleStepPacket(2,speed3,degree3);
+                        const [arr4, delay4] = self.makeSingleStepPacket(3,speed4,degree4);
+
+                        const opt = [self.MODE.MULTIROLE, 1, 0, 2];
+                        const packet = self.makeAggregatePacket(self.OPCODE.AGGREGATE_STEPS,0,[arr1, arr2, arr3, arr4],opt);
+                        const waitTime = Math.max(delay1, delay2, delay3, delay4);
+
+                        return [packet, waitTime];
+                    });
+                },
+            },
+            pingpong_lite_g3_multi_start_motor_rotate: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                params: [
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: 100 },
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: 100 },
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: 100 },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                def: {
+                    params: [],
+                    type: 'pingpong_lite_g3_multi_start_motor_rotate',
+                },
+                paramsKeyMap: { SPEED_1: 0, SPEED_2: 1, SPEED_3: 2 },
+                class: 'PingpongGN_motor',
+                isNotFor: ['PingpongG3Lite'],
+                func(sprite, script) {
+                    return self.postCallReturn(script, () => {
+                        const speed1 = script.getNumberValue('SPEED_1');
+                        const speed2 = script.getNumberValue('SPEED_2');
+                        const speed3 = script.getNumberValue('SPEED_3');
+                        const speed4 = script.getNumberValue('SPEED_4');
+
+                        const arr1 = self.makeContStepPacket(0, speed1);
+                        const arr2 = self.makeContStepPacket(1, speed2);
+                        const arr3 = self.makeContStepPacket(2, speed3);
+                        const arr4 = self.makeContStepPacket(3, speed4);
+
+                        const opt = [self.MODE.MULTIROLE, 0, 0, 2];
+                        const packet = self.makeAggregatePacket(self.OPCODE.AGGREGATE_STEPS,0,[arr1, arr2, arr3, arr4],opt);
+
+                        return [packet];
+                    });
+                },
+            },
+            pingpong_lite_g3_multi_playChordForBeats: {
+                //'%1 큐브 %2, %3 큐브 %4, %5 큐브 %6 %7 박자로 연주하기 %8',
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks.pingpong_opts_music_notes,
+                        value: 48,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks.pingpong_opts_music_notes,
+                        value: 48,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks.pingpong_opts_music_notes,
+                        value: 48,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: '1' },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                def: { params: [], type: 'pingpong_lite_g3_multi_playChordForBeats' },
+                paramsKeyMap: {
+                    NOTE_1: 0,
+                    NOTE_2: 1,
+                    NOTE_3: 2,
+                    BEATS: 3,
+                },
+                class: 'PingpongGN_Music',
+                isNotFor: ['PingpongG3Lite'],
+                func(sprite, script) {
+                    return self.postCallReturn(script, () => {
+                        const NOTE1 = script.getNumberField('NOTE_1', script);
+                        const NOTE2 = script.getNumberField('NOTE_2', script);
+                        const NOTE3 = script.getNumberField('NOTE_3', script);
+                        const NOTE4 = script.getNumberField('NOTE_4', script);
+
+                        const BEATS = script.getNumberValue('BEATS', script);
+                        const cBeats = self._clampBeats(BEATS);
+                        const durationSec = self._beatsToDuration(cBeats);
+
+                        const waitTime = durationSec * 10 + 60;
+
+                        const arr1 = self.makeMusicNotePacket(0,NOTE1,durationSec);
+                        const arr2 = self.makeMusicNotePacket(1,NOTE2,durationSec);
+                        const arr3 = self.makeMusicNotePacket(2,NOTE3,durationSec);
+                        const arr4 = self.makeMusicNotePacket(3,NOTE4,durationSec);
+
+                        const packet = self.makeAggregatePacket(self.OPCODE.MUSIC,0xa2,[arr1, arr2, arr3, arr4],[0, 0]);
+
+                        return [packet, waitTime];
+                    });
+                },
+            },
+            pingpong_lite_g4_multi_motor_rotate: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.pingpong_rotate_cw, 'RIGHT'],
+                            [Lang.Blocks.pingpong_rotate_ccw, 'LEFT'],
+                        ],
+                        value: 'RIGHT',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: 10 },
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.pingpong_rotate_cw, 'RIGHT'],
+                            [Lang.Blocks.pingpong_rotate_ccw, 'LEFT'],
+                        ],
+                        value: 'RIGHT',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: 10 },
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.pingpong_rotate_cw, 'RIGHT'],
+                            [Lang.Blocks.pingpong_rotate_ccw, 'LEFT'],
+                        ],
+                        value: 'RIGHT',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: 10 },
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.pingpong_rotate_cw, 'RIGHT'],
+                            [Lang.Blocks.pingpong_rotate_ccw, 'LEFT'],
+                        ],
+                        value: 'RIGHT',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: 10 },
+                    { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+                ],
+                def: {
+                    params: [],
+                    type: 'pingpong_lite_g4_multi_motor_rotate',
+                },
+                paramsKeyMap: {
+                    DIR_1: 0,
+                    DEGREE_1: 1,
+                    DIR_2: 2,
+                    DEGREE_2: 3,
+                    DIR_3: 4,
+                    DEGREE_3: 5,
+                    DIR_4: 6,
+                    DEGREE_4: 7,
+                },
+                class: 'PingpongGN_motor',
+                isNotFor: ['PingpongG4Lite'],
+                func(sprite, script) {
+                    return self.postCallReturn(script, () => {
+                        const dir1 = script.getStringField('DIR_1');
+                        const dir2 = script.getStringField('DIR_2');
+                        const dir3 = script.getStringField('DIR_3');
+                        const dir4 = script.getStringField('DIR_4');
+                        const degree1 = script.getNumberValue('DEGREE_1');
+                        const degree2 = script.getNumberValue('DEGREE_2');
+                        const degree3 = script.getNumberValue('DEGREE_3');
+                        const degree4 = script.getNumberValue('DEGREE_4');
+
+                        const speed1 = 80 * (dir1 === 'LEFT' ? -1 : 1);
+                        const speed2 = 80 * (dir2 === 'LEFT' ? -1 : 1);
+                        const speed3 = 80 * (dir3 === 'LEFT' ? -1 : 1);
+                        const speed4 = 80 * (dir4 === 'LEFT' ? -1 : 1);
+
+                        const [arr1, delay1] = self.makeSingleStepPacket(0,speed1,degree1);
+                        const [arr2, delay2] = self.makeSingleStepPacket(1,speed2,degree2);
+                        const [arr3, delay3] = self.makeSingleStepPacket(2,speed3,degree3);
+                        const [arr4, delay4] = self.makeSingleStepPacket(3,speed4,degree4);
+
+                        const opt = [self.MODE.MULTIROLE, 1, 0, 2];
+                        const packet = self.makeAggregatePacket(self.OPCODE.AGGREGATE_STEPS,0,[arr1, arr2, arr3, arr4],opt);
+                        const waitTime = Math.max(delay1, delay2, delay3, delay4);
+
+                        return [packet, waitTime];
+                    });
+                },
+            },
+            pingpong_lite_g4_multi_start_motor_rotate: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                params: [
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: 100 },
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: 100 },
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: 100 },
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: 100 },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                def: {
+                    params: [],
+                    type: 'pingpong_lite_g4_multi_start_motor_rotate',
+                },
+                paramsKeyMap: { SPEED_1: 0, SPEED_2: 1, SPEED_3: 2, SPEED_4: 3 },
+                class: 'PingpongGN_motor',
+                isNotFor: ['PingpongG4Lite'],
+                func(sprite, script) {
+                    return self.postCallReturn(script, () => {
+                        const speed1 = script.getNumberValue('SPEED_1');
+                        const speed2 = script.getNumberValue('SPEED_2');
+                        const speed3 = script.getNumberValue('SPEED_3');
+                        const speed4 = script.getNumberValue('SPEED_4');
+
+                        const arr1 = self.makeContStepPacket(0, speed1);
+                        const arr2 = self.makeContStepPacket(1, speed2);
+                        const arr3 = self.makeContStepPacket(2, speed3);
+                        const arr4 = self.makeContStepPacket(3, speed4);
+
+                        const opt = [self.MODE.MULTIROLE, 0, 0, 2];
+                        const packet = self.makeAggregatePacket(self.OPCODE.AGGREGATE_STEPS,0,[arr1, arr2, arr3, arr4],opt);
+
+                        return [packet];
+                    });
+                },
+            },
+            pingpong_lite_g4_multi_playChordForBeats: {
+                //'%1 큐브 %2, %3 큐브 %4, %5 큐브 %6 %7 박자로 연주하기 %8',
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks.pingpong_opts_music_notes,
+                        value: 48,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks.pingpong_opts_music_notes,
+                        value: 48,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks.pingpong_opts_music_notes,
+                        value: 48,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks.pingpong_opts_music_notes,
+                        value: 48,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: '1' },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                def: { params: [], type: 'pingpong_lite_g4_multi_playChordForBeats' },
+                paramsKeyMap: {
+                    NOTE_1: 0,
+                    NOTE_2: 1,
+                    NOTE_3: 2,
+                    NOTE_4: 3,
+                    BEATS: 4,
+                },
+                class: 'PingpongGN_Music',
+                isNotFor: ['PingpongG4Lite'],
+                func(sprite, script) {
+                    return self.postCallReturn(script, () => {
+                        const NOTE1 = script.getNumberField('NOTE_1', script);
+                        const NOTE2 = script.getNumberField('NOTE_2', script);
+                        const NOTE3 = script.getNumberField('NOTE_3', script);
+                        const NOTE4 = script.getNumberField('NOTE_4', script);
+
+                        const BEATS = script.getNumberValue('BEATS', script);
+                        const cBeats = self._clampBeats(BEATS);
+                        const durationSec = self._beatsToDuration(cBeats);
+
+                        const waitTime = durationSec * 10 + 60;
+
+                        const arr1 = self.makeMusicNotePacket(0,NOTE1,durationSec);
+                        const arr2 = self.makeMusicNotePacket(1,NOTE2,durationSec);
+                        const arr3 = self.makeMusicNotePacket(2,NOTE3,durationSec);
+                        const arr4 = self.makeMusicNotePacket(3,NOTE4,durationSec);
+
+                        const packet = self.makeAggregatePacket(self.OPCODE.MUSIC,0xa2,[arr1, arr2, arr3, arr4],[0, 0]);
+
+                        return [packet, waitTime];
+                    });
+                },
+            },
+        };
+        console.log(this.name,'blocks',blocks);
+        return blocks;
     }
 }
 

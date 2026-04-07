@@ -4,7 +4,7 @@ import _range from 'lodash/range';
 
 (function() {
     const PingpongConnectLite = require('./block_pingpongConnect_lite');
-    self.Lite = new (class PingpongG1Lite extends PingpongConnectLite {
+    Entry.PingpongG1Lite = new (class PingpongG1Lite extends PingpongConnectLite {
         constructor() {
             super(1,'PingpongG1Lite');
             this.id = '350101';
@@ -35,7 +35,7 @@ import _range from 'lodash/range';
         //#region getBlocks
         getBlocks() {
             const self = this;
-            return {
+            const blocks = {
                 pingpong_lite_g1_when_button_pressed: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -618,17 +618,14 @@ import _range from 'lodash/range';
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic_string_field',
-                    params: [],
                     def: { params: [], type: 'pingpong_lite_g1_getTempo' },
-                    paramsKeyMap: {},
                     class: 'PingpongG1_Music',
                     isNotFor: ['PingpongG1Lite', 'PingpongPracticalartsLite'],
                     func(sprite, script) {
                         return self.tempo;
                     },
                 },
-
-                set_steering_direction: {
+                pingpong_lite_art_set_steering_direction: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -644,23 +641,22 @@ import _range from 'lodash/range';
                         { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12, },
                     ],
                     events: {},
-                    def: { params: [], type: 'set_steering_direction' },
+                    def: { params: [], type: 'pingpong_lite_art_set_steering_direction' },
                     paramsKeyMap: { DEGREE: 0,},
                     class: 'PingpongG1_motor',
-                    isNotFor: ['PingpongPracticalArtsLite'],
+                    isNotFor: ['PingpongPracticalartsLite'],
                     func(sprite, script) {
                         return self.postCallReturn(script, () => {
                             let angle = script.getNumberValue('DEGREE', script);
 
                             angle = Math.min(Math.max(angle, 0), 180);
 
-                            const packet = self.makePacket(0xe1, 0x00, [2, 0, angle, 1]);
+                            const packet = self.makePacket(0xe1, 0x00, 0, [2, 0, angle, 1]);
                             return [packet, 400];
                         });
                     },
                 },
-
-                move_by_distance: {
+                pingpong_lite_art_move_by_distance: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -677,43 +673,84 @@ import _range from 'lodash/range';
                         { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12, },
                     ],
                     events: {},
-                    def: { params: [], type: 'move_by_distance' },
+                    def: { params: [], type: 'pingpong_lite_art_move_by_distance' },
                     paramsKeyMap: { DIR: 0, CM: 1 },
                     class: 'PingpongG1_motor',
-                    isNotFor: ['PingpongPracticalArtsLite'],
+                    isNotFor: ['PingpongPracticalartsLite'],
                     func(sprite, script) {
                         return self.postCallReturn(script, () => {
                             const direction = script.getStringField('DIR');
-                            let degree = script.getNumberValue('CM');
-                            degree = degree*9; // convert cm to degree
+                            const distanceCm = script.getNumberValue('CM');
 
-                            let speed = 800;
-                            if (direction == 'back') {
-                                speed *= -1;
-                            }
+                            const degreePerCm = 9;
+                            const baseSpeed = 800;
+                            const maxDegree = 5000;
+                            const stepRatio = 5.5;
+                            const maxStep = 32768;
+                            const waitTimeOffset = 400;
 
-                            degree = Math.min(Math.max(degree, 0), 5000);
+                            const degree = distanceCm * degreePerCm;
+                            const clampedDegree = Math.min(Math.max(degree, 0), maxDegree);
+                            const speed = direction === 'back' ? -baseSpeed : baseSpeed;
 
-                            let step = Math.round(degree * 5.5);
-                            if (step > 32768) {
-                                step = 32768;
-                            }
+                            const step = Math.min(
+                                Math.round(clampedDegree * stepRatio),
+                                maxStep
+                            );
 
-                            const opt = [2, 1, 0, 2, 0, 0, 0, 0, 0, 0];
-                            const packet = self.makePacket(0xc1, 0x0004, opt); // SETP_MOTOR
+                            const options = [2, 1, 0, 2, 0, 0, 0, 0, 0, 0];
+                            const packet = self.makePacket(0xc1, 0x0004, 0, options); // STEP_MOTOR
 
-                            packet.writeInt16BE(speed, 13);
-                            packet.writeUInt16BE(step, 17);
+                            packet[13] = (speed >> 8) & 0xff;
+                            packet[14] = speed & 0xff;
 
-                            const waitTime = Math.round(((1100 - Math.abs(speed)) / 99) * step) + 400;
+                            packet[17] = (step >> 8) & 0xff;
+                            packet[18] = step & 0xff;
+
+                            const waitTime =
+                                Math.round(((1100 - Math.abs(speed)) / 99) * step) + waitTimeOffset;
+
                             return [packet, waitTime];
                         });
                     },
                 },
             };
+            console.log(this.name,'blocks',blocks);
+            return blocks;
         }
 
     })();
+    Entry.PingpongPracticalartsLite = new (class PingpongPracticalartsLite extends PingpongConnectLite {
+        constructor() {
+            super(1,'PingpongPracticalartsLite');
+            this.id = '350501';
+            this.imageName = 'PingpongPracticalartsLite.png';
+
+            this.blockMenuBlocks = [
+                'pingpong_g1_when_button_pressed',
+                'pingpong_g1_is_button_pressed',
+                'pingpong_g1_when_tilted',
+                'pingpong_g1_is_tilted',
+                'pingpong_g1_get_tilt_value',
+                'pingpong_g1_is_top_shape',
+                'pingpong_g1_get_sensor_value',
+                'pingpong_g1_motor_rotate',
+                'pingpong_g1_start_motor_rotate',
+                'pingpong_g1_stop_motor_rotate',
+                'pingpong_g1_rotate_servo_mortor',
+                'pingpong_lite_art_set_steering_direction',
+                'pingpong_lite_art_move_by_distance',
+                'pingpong_g1_set_dot_pixel',
+                'pingpong_g1_set_dot_string',
+                'pingpong_g1_set_dot_clear',
+                'pingpong_g1_playNoteForBeats',
+                'pingpong_g1_restForBeats',
+                'pingpong_g1_setTempo',
+                'pingpong_g1_getTempo',
+            ];
+        }
+        getBlocks() {return Entry.PingpongG1Lite.getBlocks();}
+    })();
 })();
 
-module.exports = self.Lite;
+module.exports = [Entry.PingpongG1Lite, Entry.PingpongPracticalartsLite];
