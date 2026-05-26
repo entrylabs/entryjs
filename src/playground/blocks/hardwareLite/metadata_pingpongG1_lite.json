@@ -1,0 +1,9 @@
+{
+    "name": "PingpongG1Lite",
+    "version": "1.0.0",
+    "type": "hardware",
+    "title": "핑퐁 G1",
+    "description": "로보라이즌",
+    "imageName": "PingpongG1Lite",
+    "moduleId": "350101"
+}
