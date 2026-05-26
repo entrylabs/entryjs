@@ -270,6 +270,7 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
 
     applyValue(value, isNotUpdate) {
         let result = value;
+
         if (this.optionWidget) {
             switch (this.optionWidget.type) {
                 case 'angleWidget':
@@ -289,6 +290,12 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
             this.optionInput.val(result);
         }
 
+        if (this._block?.data?.type === 'function_field_label') {
+            const reg = /(%\d)/im;
+            if (result && reg.test(result)) {
+                result = result.replace(/%(\d)/gi, '$1');
+            }
+        }
         this.setValue(result);
         this._setTextValue();
         this.resize();
@@ -316,6 +323,11 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
         if (this.optionInput) {
             this.optionInput.remove();
             delete this.optionInput;
+        }
+
+        const reg = /(%\d)/im;
+        if (this.value && reg.test(this.value)) {
+            this.applyValue(this.value.replace(/%(\d)/gi, '$1'));
         }
 
         super.destroyOption(skipCommand, forceCommand);
