@@ -1,0 +1,10 @@
+{
+    "name": "PingpongPracticalartsLite",
+    "version": "1.0.0",
+    "type": "hardware",
+    "title": "핑퐁(실과수업용)",
+    "description": "로보라이즌",
+    "imageName": "PingpongPracticalartsLite",
+    "moduleId": "350501"
+}
+
