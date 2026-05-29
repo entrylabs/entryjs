@@ -2,7 +2,6 @@
 
 const _set = require('lodash/set');
 const _get = require('lodash/get');
-const _merge = require('lodash/merge');
 
 Entry.Davinci = new class Davinci {
     constructor() {
@@ -73,9 +72,7 @@ Entry.Davinci = new class Davinci {
             scope.timeFlag = 1;
             this.nowBlockId = blockId;
             this.blockIds[blockId] = false;
-            _merge(Entry.hw.sendQueue, {
-                [blockId]: data,
-            });
+            Entry.hw.sendQueue[blockId] = data;
             Entry.hw.update();
             setTimeout(() => {
                 scope.timeFlag = 0;

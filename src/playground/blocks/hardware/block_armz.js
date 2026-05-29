@@ -1,9 +1,5 @@
 ﻿'use strict';
 
-const _set = require('lodash/set');
-const _get = require('lodash/get');
-const _merge = require('lodash/merge');
-
 Entry.Armz = new class Armz {
     constructor() {
 //        this.id = 'FF.FF'; 
@@ -104,9 +100,7 @@ Entry.Armz = new class Armz {
 
     postSendQueue({ script, data }, scope) {
 				const blockId = this.getHashKey();
-				_merge(Entry.hw.sendQueue, {
-				    [blockId]: data,
-				});
+				Entry.hw.sendQueue[blockId] = data;
     }
 
     postCallReturn(args) { 
