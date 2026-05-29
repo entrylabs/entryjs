@@ -651,9 +651,16 @@ Entry.kkmoo.getBlocks = function () {
             class: 'Make_Motion',
             isNotFor: ['kkmoo'],
             func: function (sprite, script) {
-                const motnum = script.getField('MOTNUM', script);
+                const motnum = Number(script.getField('MOTNUM', script));
                 const angle = script.getValue('ANGLE', script);
                 Entry.hw.update();
+                if (
+                    !Number.isInteger(motnum) ||
+                    motnum < 0 ||
+                    motnum >= Entry.kkmoo.motData.length
+                ) {
+                    return script;
+                }
                 if (script.isStart != true) {
                     script.isStart = true;
                     if (angle >= -90 && angle <= 90) {
@@ -853,8 +860,15 @@ Entry.kkmoo.getBlocks = function () {
             class: 'Save_Motion',
             isNotFor: ['kkmoo'],
             func: function (sprite, script) {
-                const motnum = script.getField('FRAME', script);
+                const motnum = Number(script.getField('FRAME', script));
                 Entry.hw.update();
+                if (
+                    !Number.isInteger(motnum) ||
+                    motnum < 0 ||
+                    motnum >= Entry.kkmoo.motionFrame.length
+                ) {
+                    return script;
+                }
                 if (script.isStart != true) {
                     script.isStart = true;
                     var data = Entry.kkmoo.copyObj(Entry.kkmoo.motData);
@@ -972,9 +986,16 @@ Entry.kkmoo.getBlocks = function () {
             class: 'Save_Motion',
             isNotFor: ['kkmoo'],
             func: function (sprite, script) {
-                const motnum = script.getField('FRAME', script);
+                const motnum = Number(script.getField('FRAME', script));
                 const time = script.getValue('TIME', script);
                 Entry.hw.update();
+                if (
+                    !Number.isInteger(motnum) ||
+                    motnum < 0 ||
+                    motnum >= Entry.kkmoo.motionFrame.length
+                ) {
+                    return script;
+                }
                 if (script.isStart != true) {
                     script.isStart = true;
                     Entry.kkmoo.motionFrame[motnum].time = time;

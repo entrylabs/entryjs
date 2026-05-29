@@ -27,7 +27,11 @@ class Scope {
     static _reservedKeywords = new Set(['__proto__']);
 
     filterReservedKeywords(param) {
-        return Scope._reservedKeywords.has(param) ? '' : param;
+        // 배열/객체를 객체 키로 사용할 때 toString 변환(예: ["__proto__"] → "__proto__")으로
+        // 예약어를 우회하는 것을 차단한다.
+        const normalized =
+            typeof param === 'object' && param !== null ? String(param) : param;
+        return Scope._reservedKeywords.has(normalized) ? '' : param;
     }
 
     getParams() {
