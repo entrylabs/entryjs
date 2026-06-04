@@ -1321,10 +1321,11 @@ class BlockMenu extends ModelClass<Schema> {
             return;
         }
         if (e.ctrlKey && Entry.type === 'workspace' && keyCode > 48 && keyCode < 58) {
+            const categoryIndex = keyCode - 49;
             e.preventDefault();
             setTimeout(() => {
                 this._cancelDynamic(true);
-                this._dSelectMenu(keyCode, true);
+                this._dSelectMenu(categoryIndex, true);
             }, 200);
         }
     }
