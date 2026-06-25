@@ -486,8 +486,7 @@ Entry.Utils.generateId = function () {
  * @param {Function} callback 리스트를 갱신하는 동기 콜백
  */
 Entry.Utils.runWithScrollPreserved = function (containerEl, callback) {
-    const getScrollEl = () =>
-        containerEl && containerEl.querySelector('.rcs-inner-container');
+    const getScrollEl = () => containerEl && containerEl.querySelector('.rcs-inner-container');
     const before = getScrollEl();
     const top = before ? before.scrollTop : 0;
     const left = before ? before.scrollLeft : 0;
