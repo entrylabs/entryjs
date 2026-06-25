@@ -9,7 +9,7 @@
  *
  *  MIT License
  */
-(function() {
+(function () {
     // create a buffer that stores all inputs so that tabbing
     // between them is made possible.
     var inputs = []; // initialize the Canvas Input
@@ -46,15 +46,15 @@
         self._placeHolder = o.placeHolder || '';
         self._value = o.value || self._placeHolder;
 
-        self._onsubmit = o.onsubmit || function() {};
+        self._onsubmit = o.onsubmit || function () {};
 
-        self._onkeydown = o.onkeydown || function() {};
+        self._onkeydown = o.onkeydown || function () {};
 
-        self._onkeyup = o.onkeyup || function() {};
+        self._onkeyup = o.onkeyup || function () {};
 
-        self._onfocus = o.onfocus || function() {};
+        self._onfocus = o.onfocus || function () {};
 
-        self._onblur = o.onblur || function() {};
+        self._onblur = o.onblur || function () {};
 
         self._cursor = false;
         self._cursorPos = 0;
@@ -95,7 +95,7 @@
         if (self._canvas) {
             self._canvas.addEventListener(
                 'mousemove',
-                function(e) {
+                function (e) {
                     e = e || window.event;
                     self.mousemove(e, self);
                 },
@@ -104,7 +104,7 @@
 
             self._canvas.addEventListener(
                 'mousedown',
-                function(e) {
+                function (e) {
                     e = e || window.event;
                     self.mousedown(e, self);
                 },
@@ -113,7 +113,7 @@
 
             self._canvas.addEventListener(
                 'touchstart',
-                function(e) {
+                function (e) {
                     e = e || window.event;
                     self.mousedown(e, self);
                 },
@@ -122,7 +122,7 @@
 
             self._canvas.addEventListener(
                 'mouseup',
-                function(e) {
+                function (e) {
                     e = e || window.event;
                     self.mouseup(e, self);
                 },
@@ -132,7 +132,7 @@
 
         window.addEventListener(
             'mouseup',
-            function(e) {
+            function (e) {
                 //e = e || window.event;
                 //if (self._hasFocus && !self._mouseDown) {
                 //self.blur();
@@ -160,7 +160,7 @@
         document.body.appendChild(self._hiddenInput);
         self._hiddenInput.value = self._value; // setup the keydown listener
 
-        self._hiddenInput.addEventListener('keydown', function(e) {
+        self._hiddenInput.addEventListener('keydown', function (e) {
             e = e || window.event;
 
             if (self._hasFocus) {
@@ -168,7 +168,7 @@
             }
         }); // setup the keyup listener
 
-        self._hiddenInput.addEventListener('keyup', function(e) {
+        self._hiddenInput.addEventListener('keyup', function (e) {
             e = e || window.event; // update the canvas input state information from the hidden input
 
             self._value = self._hiddenInput.value;
@@ -726,8 +726,8 @@
                 clearInterval(self._cursorInterval);
             }
 
-            requestAnimationFrame(function() {
-                self._cursorInterval = setInterval(function() {
+            requestAnimationFrame(function () {
+                self._cursorInterval = setInterval(function () {
                     self._cursor = !self._cursor;
                     self.render();
                 }, 500); // check if this is Chrome for Android (there is a bug with returning incorrect character key codes)
@@ -741,6 +741,8 @@
 
             var isMobile = typeof window.orientation !== 'undefined';
             var hasHiddenFocus = false;
+            var inputParent =
+                document.fullscreenElement || document.webkitFullscreenElement || document.body;
             if (
                 isMobile &&
                 !isChromeMobile &&
@@ -763,11 +765,11 @@
                 input.style.height = 0;
                 const form = document.createElement('form');
                 form.appendChild(input);
-                document.body.appendChild(form);
+                inputParent.appendChild(form);
                 input.focus();
                 input.addEventListener(
                     'blur',
-                    function() {
+                    function () {
                         if (!hasHiddenFocus) {
                             self.blur(self);
                         }
@@ -787,6 +789,9 @@
 
             var hasSelection = self._selection[0] > 0 || self._selection[1] > 0;
             hasHiddenFocus = true;
+            if (self._hiddenInput.parentNode !== inputParent) {
+                inputParent.appendChild(self._hiddenInput);
+            }
             self._hiddenInput.focus();
             hasHiddenFocus = false;
             self._hiddenInput.selectionStart = hasSelection ? self._selection[0] : self._cursorPos;
@@ -869,7 +874,7 @@
                 if (inputs.length > 1) {
                     var next = inputs[self._inputsIndex + 1] ? self._inputsIndex + 1 : 0;
                     self.blur();
-                    setTimeout(function() {
+                    setTimeout(function () {
                         inputs[next].focus();
                     }, 5);
                 }
@@ -1088,7 +1093,7 @@
                 ctx.shadowBlur = 0;
             } // draw the text box background
 
-            self._drawTextBox(function() {
+            self._drawTextBox(function () {
                 // make sure all shadows are reset
                 ctx.shadowOffsetX = 0;
                 ctx.shadowOffsetY = 0;
@@ -1234,7 +1239,7 @@
                 var img = new Image();
                 img.src = self._backgroundImage;
 
-                img.onload = function() {
+                img.onload = function () {
                     ctx.drawImage(
                         img,
                         0,

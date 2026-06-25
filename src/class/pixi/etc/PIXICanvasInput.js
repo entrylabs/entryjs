@@ -8,14 +8,14 @@
  *  MIT License
  */
 import * as PIXI from 'pixi.js';
-(function() {
+(function () {
     // create a buffer that stores all inputs so that tabbing
     // between them is made possible.
     const inputs = [];
 
     // initialize the Canvas Input
     // eslint-disable-next-line no-multi-assign
-    const CanvasInput = (window.PIXICanvasInput = function(o) {
+    const CanvasInput = (window.PIXICanvasInput = function (o) {
         const self = this;
 
         o = o ? o : {};
@@ -48,11 +48,11 @@ import * as PIXI from 'pixi.js';
         self._selectionColor = o.selectionColor || 'rgba(179, 212, 253, 0.8)';
         self._placeHolder = o.placeHolder || '';
         self._value = `${o.value || self._placeHolder}`;
-        self._onsubmit = o.onsubmit || function() {};
-        self._onkeydown = o.onkeydown || function() {};
-        self._onkeyup = o.onkeyup || function() {};
-        self._onfocus = o.onfocus || function() {};
-        self._onblur = o.onblur || function() {};
+        self._onsubmit = o.onsubmit || function () {};
+        self._onkeydown = o.onkeydown || function () {};
+        self._onkeyup = o.onkeyup || function () {};
+        self._onfocus = o.onfocus || function () {};
+        self._onblur = o.onblur || function () {};
         self._cursor = false;
         self._cursorPos = 0;
         self._hasFocus = false;
@@ -772,6 +772,8 @@ import * as PIXI from 'pixi.js';
             // add support for mobile
             const isMobile = typeof window.orientation !== 'undefined';
             var hasHiddenFocus = false;
+            const inputParent =
+                document.fullscreenElement || document.webkitFullscreenElement || document.body;
             if (
                 isMobile &&
                 !isChromeMobile &&
@@ -782,17 +784,17 @@ import * as PIXI from 'pixi.js';
                 input.type = 'text';
                 input.style.opacity = 0;
                 input.style.position = 'absolute';
-                input.style.left = `${self._x +
-                    self._extraX +
-                    (self._canvas ? self._canvas.offsetLeft : 0)}px`;
-                input.style.top = `${self._y +
-                    self._extraY +
-                    (self._canvas ? self._canvas.offsetTop : 0)}px`;
+                input.style.left = `${
+                    self._x + self._extraX + (self._canvas ? self._canvas.offsetLeft : 0)
+                }px`;
+                input.style.top = `${
+                    self._y + self._extraY + (self._canvas ? self._canvas.offsetTop : 0)
+                }px`;
                 input.style.width = self._width;
                 input.style.height = 0;
                 const form = document.createElement('form');
                 form.appendChild(input);
-                document.body.appendChild(form);
+                inputParent.appendChild(form);
                 input.focus();
                 input.addEventListener(
                     'blur',
@@ -817,6 +819,9 @@ import * as PIXI from 'pixi.js';
             // move the real focus to the hidden input
             const hasSelection = self._selection[0] > 0 || self._selection[1] > 0;
             hasHiddenFocus = true;
+            if (self._hiddenInput.parentNode !== inputParent) {
+                inputParent.appendChild(self._hiddenInput);
+            }
             self._hiddenInput.focus();
             hasHiddenFocus = false;
             self._hiddenInput.selectionStart = hasSelection ? self._selection[0] : self._cursorPos;
@@ -1284,7 +1289,7 @@ import * as PIXI from 'pixi.js';
             } else {
                 const img = new Image();
                 img.src = self._backgroundImage;
-                img.onload = function() {
+                img.onload = function () {
                     ctx.drawImage(
                         img,
                         0,
