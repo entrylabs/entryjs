@@ -118,6 +118,7 @@ module.exports = {
                         sprite.type === 'textBox' &&
                         !GEHelper.getTransformedBounds(sprite.object)
                     ) {
+                        sprite.collision = Entry.Utils.COLLISION.NONE;
                         return script.callReturn();
                     }
                     const threshold = 0;
