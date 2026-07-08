@@ -25,8 +25,8 @@ Entry.CodingBoxV2 = new (class CodingBoxV2 {
         this.url = '';
         this.imageName = 'codingboxv2.png';
         this.title = {
-            en: 'CodingBox V2',
-            ko: '코딩박스 V2',
+            en: 'PLAYCODING BOX V2.0',
+            ko: '플레이코딩 박스 V2.0',
         };
         this.name = 'codingboxv2';
         this.communicationType = 'manual';
@@ -1320,7 +1320,7 @@ Entry.CodingBoxV2 = new (class CodingBoxV2 {
                         type: 'Block',
                         accept: 'string',
                         defaultType: 'text',
-                        value: 'CodingBox Web Panel',
+                        value: 'PLAYCODING BOX V2.0 Web Panel',
                     },
                     {
                         type: 'Indicator',
@@ -1335,7 +1335,7 @@ Entry.CodingBoxV2 = new (class CodingBoxV2 {
                     params: [
                         {
                             type: 'text',
-                            params: ['CodingBox Web Panel'],
+                            params: ['PLAYCODING BOX V2.0 Web Panel'],
                         },
                         null,
                     ],
@@ -1346,7 +1346,7 @@ Entry.CodingBoxV2 = new (class CodingBoxV2 {
                 },
                 func: (sprite, script) => {
                     const title =
-                        script.getStringValue('TITLE') || 'CodingBox Web Panel';
+                        script.getStringValue('TITLE') || 'PLAYCODING BOX V2.0 Web Panel';
 
                     this.requestCommand(
                         this.functionKeys.WEBPANEL_TITLE,
