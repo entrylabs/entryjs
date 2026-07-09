@@ -195,6 +195,9 @@ export default class HardwareLite {
             );
         } catch (error) {
             console.error(error);
+            // 연결에 실패해도 앞서 열어둔 포트는 열린 채 남는다. 여기서 닫아주지 않으면
+            // 같은 기기로 다시 연결할 때 open()이 "이미 열려 있음" 오류로 계속 실패한다.
+            await this.serial?.removeSerialPort().catch((err: Error) => console.error(err));
             Entry.toast.alert(
                 Lang.Msgs.hw_connection_failed_title,
                 Lang.Msgs.hw_connection_failed_desc,
