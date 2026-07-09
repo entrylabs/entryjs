@@ -63,6 +63,11 @@ export default class HardwareLite {
     }
 
     setExternalModule(moduleObject: EntryHWLiteBaseModule) {
+        // 이전 연결의 포트를 닫지 않고 커넥터를 교체하면, 그 포트는 닫을 방법이 없어져
+        // 페이지 새로고침 전까지 재연결이 막힌다. 그래서 교체 전에 먼저 닫는다.
+        // 닫기 완료를 기다리지는 않는다(이 메서드는 동기 유지). 다음 연결은 어차피 사용자가
+        // 버튼을 누른 뒤에 시작되고, 작품 로드 경로에서는 연결된 적이 없어 이 줄은 그냥 지나간다.
+        this.serial?.removeSerialPort().catch((err: Error) => console.error(err));
         this.hwModule = moduleObject;
         this.banClassAllHardwareLite();
         Entry.block.changeBlockText('hardware_device_name_content', this.hwModule.title.ko);
