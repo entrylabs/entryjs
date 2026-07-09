@@ -167,7 +167,7 @@ export default class WebSerialConnector extends WebApiConnector {
 
     async constantServing() {
         try {
-            if (this.hwLite.getStatus() === 'disconnected') {
+            if (this.hwLite.getStatus() !== 'connected') {
                 return;
             }
             if (this.hwModule?.portData?.constantServing !== 'ReadOnly') {
@@ -181,7 +181,11 @@ export default class WebSerialConnector extends WebApiConnector {
 
             const { value, done } = await this.reader.read();
             if (done) {
-                this.hwLite.getConnectFailedMenu();
+                // read가 done으로 끝나는 경우는 두 가지다: 실제 연결 문제, 또는 포트 정리 과정의 reader 취소.
+                // 포트 정리는 정상 동작이므로, 연결 중이었을 때만 실패로 처리한다.
+                if (this.hwLite.getStatus() === 'connected') {
+                    this.hwLite.getConnectFailedMenu();
+                }
                 return;
             }
             this.hwModule?.handleLocalData(value);
