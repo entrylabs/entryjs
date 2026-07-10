@@ -24,11 +24,12 @@ Entry.addEventListener = function (eventName, fn) {
  * @param {*} args
  */
 Entry.dispatchEvent = function (eventName, ...args) {
-    if (!Entry.events_) {
-        Entry.events_ = {};
+    if (!this.events_) {
+        this.events_ = {};
+        return;
     }
 
-    const events = Entry.events_[eventName];
+    const events = this.events_[eventName];
     if (_.isEmpty(events)) {
         return;
     }

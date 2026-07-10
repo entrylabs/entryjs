@@ -1,6 +1,5 @@
 'use strict';
 
-import _ from 'lodash';
 import { GEHelper } from '../graphicEngine/GEHelper';
 import _uniq from 'lodash/uniq';
 import _intersection from 'lodash/intersection';
