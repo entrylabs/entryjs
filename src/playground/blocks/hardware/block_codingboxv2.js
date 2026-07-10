@@ -22,7 +22,7 @@ Entry.CodingBoxV2 = new (class CodingBoxV2 {
             WEBPANEL_READOUT: 'webpanel-readout',
         };
 
-        this.id = ['990001', '99.0', 'C.D', 'codingboxv2'];
+        this.id = ['6F.1'];
         this.url = '';
         this.imageName = 'codingboxv2.png';
         this.title = {
