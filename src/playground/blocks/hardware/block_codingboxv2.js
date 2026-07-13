@@ -66,6 +66,7 @@ Entry.CodingBoxV2 = new (class CodingBoxV2 {
 
             'codingboxv2_set_rainbow_all',
             'codingboxv2_set_rainbow_one',
+            'codingboxv2_set_rainbow_one_rgb',
             'codingboxv2_set_rainbow_list',
             'codingboxv2_clear_rainbow',
 
@@ -196,6 +197,7 @@ Entry.CodingBoxV2 = new (class CodingBoxV2 {
                     codingboxv2_get_rfid: 'RFID ID',            
                     codingboxv2_set_rainbow_all: '레인보우 LED 전체를 %1 색으로 정하기',
                     codingboxv2_set_rainbow_one: '레인보우 LED %1 번째를 %2 색으로 정하기',
+                    codingboxv2_set_rainbow_one_rgb: '레인보우 LED %1 번째를 R %2 G %3 B %4 색으로 정하기',
                     codingboxv2_set_rainbow_list: '레인보우 LED 색을 %1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 으로 정하기',
                     codingboxv2_clear_rainbow: '레인보우 LED 모두 끄기',
                     codingboxv2_wifi_connect: '와이파이 이름 %1 비밀번호 %2 로 연결하기',
@@ -232,6 +234,7 @@ Entry.CodingBoxV2 = new (class CodingBoxV2 {
                     codingboxv2_get_rfid: 'RFID에서 인식한 카드 또는 태그의 ID를 확인합니다.',
                     codingboxv2_set_rainbow_all: '모든 레인보우 LED를 선택한 색으로 정합니다.',
                     codingboxv2_set_rainbow_one: '선택한 번호의 레인보우 LED 색을 지정한 색으로 정합니다.',
+                    codingboxv2_set_rainbow_one_rgb: '선택한 번호의 레인보우 LED 색을 R, G, B 값으로 정합니다.',
                     codingboxv2_set_rainbow_list: '12개의 레인보우 LED 색을 각각 지정한 색으로 정합니다.',
                     codingboxv2_clear_rainbow: '모든 레인보우 LED를 끕니다.',
                     codingboxv2_wifi_connect: '입력한 와이파이 이름과 비밀번호를 사용하여 와이파이에 연결합니다.',
@@ -270,6 +273,7 @@ Entry.CodingBoxV2 = new (class CodingBoxV2 {
                     codingboxv2_get_rfid: 'RFID ID',
                     codingboxv2_set_rainbow_all: 'set all rainbow LEDs to %1',
                     codingboxv2_set_rainbow_one: 'set rainbow LED %1 to %2',
+                    codingboxv2_set_rainbow_one_rgb: 'set rainbow LED %1 to R %2 G %3 B %4',
                     codingboxv2_set_rainbow_list: 'set rainbow LED colors to %1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12',
                     codingboxv2_clear_rainbow: 'turn off all rainbow LEDs',
                     codingboxv2_wifi_connect: 'connect to Wi-Fi %1 with password %2',
@@ -306,6 +310,7 @@ Entry.CodingBoxV2 = new (class CodingBoxV2 {
                     codingboxv2_get_rfid: 'Gets the ID of the card or tag detected by the RFID reader.',
                     codingboxv2_set_rainbow_all: 'Sets all rainbow LEDs to the selected color.',
                     codingboxv2_set_rainbow_one: 'Sets the selected rainbow LED to the specified color.',
+                    codingboxv2_set_rainbow_one_rgb: 'Sets the selected rainbow LED using R, G, and B values.',
                     codingboxv2_set_rainbow_list: 'Sets each of the 12 rainbow LEDs to the specified color.',
                     codingboxv2_clear_rainbow: 'Turns off all rainbow LEDs.',
                     codingboxv2_wifi_connect: 'Connects to Wi-Fi using the entered Wi-Fi name and password.',
@@ -1197,6 +1202,99 @@ Entry.CodingBoxV2 = new (class CodingBoxV2 {
                     this.requestCommand(
                         this.functionKeys.RAINBOW_ONE,
                         `${number},${r},${g},${b}`
+                    );
+                },
+            },
+
+            // 레인보우 LED 하나 RGB 값으로 설정
+            codingboxv2_set_rainbow_one_rgb: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                fontColor: '#ffffff',
+                skeleton: 'basic',
+                statements: [],
+                template: Lang.template.codingboxv2_set_rainbow_one_rgb,
+                params: [
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                        value: 1,
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                        value: 255,
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                        value: 0,
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                        value: 0,
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                class: 'codingboxv2_rainbow',
+                isNotFor: ['codingboxv2'],
+                def: {
+                    params: [
+                        {
+                            type: 'number',
+                            params: ['1'],
+                        },
+                        {
+                            type: 'number',
+                            params: ['255'],
+                        },
+                        {
+                            type: 'number',
+                            params: ['0'],
+                        },
+                        {
+                            type: 'number',
+                            params: ['0'],
+                        },
+                        null,
+                    ],
+                    type: 'codingboxv2_set_rainbow_one_rgb',
+                },
+                paramsKeyMap: {
+                    NUMBER: 0,
+                    RED: 1,
+                    GREEN: 2,
+                    BLUE: 3,
+                },
+                func: (sprite, script) => {
+                    let number = script.getNumberValue('NUMBER');
+                    let red = script.getNumberValue('RED');
+                    let green = script.getNumberValue('GREEN');
+                    let blue = script.getNumberValue('BLUE');
+
+                    number = Math.round(number);
+                    red = Math.round(red);
+                    green = Math.round(green);
+                    blue = Math.round(blue);
+
+                    number = Math.max(1, Math.min(12, number));
+                    red = Math.max(0, Math.min(255, red));
+                    green = Math.max(0, Math.min(255, green));
+                    blue = Math.max(0, Math.min(255, blue));
+
+                    this.requestCommand(
+                        this.functionKeys.RAINBOW_ONE,
+                        `${number},${red},${green},${blue}`
                     );
                 },
             },
