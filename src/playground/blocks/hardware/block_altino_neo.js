@@ -458,21 +458,21 @@ Entry.AltinoNeo.getBlocks = function() {
                 if (direction == 'Center') {
                     sq.steering = 0;
                 } else if (direction == 'Left5') {
-                    sq.steering = 0xe0;
+                    sq.steering = -31;
                 } else if (direction == 'Left10') {
-                    sq.steering = 0xc0;
+                    sq.steering = -63;
                 } else if (direction == 'Left15') {
-                    sq.steering = 0xa1;
+                    sq.steering = -95;
                 } else if (direction == 'Left20') {
-                    sq.steering = 0x81;
+                    sq.steering = -127;
                 } else if (direction == 'Right5') {
                     sq.steering = 31;
                 } else if (direction == 'Right10') {
                     sq.steering = 63;
                 } else if (direction == 'Right15') {
-                    sq.steering = 94;
+                    sq.steering = 95;
                 } else if (direction == 'Right20') {
-                    sq.steering = 126;
+                    sq.steering = 127;
                 }
                 return script.callReturn();
             },
