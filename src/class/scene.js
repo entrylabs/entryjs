@@ -172,7 +172,11 @@ Entry.Scene = class {
     updateSceneView() {
         const items = this._getSortableSceneList();
         if (this.sceneSortableListWidget) {
-            setTimeout(() => this.sceneSortableListWidget.setData({ items }), 0);
+            setTimeout(() => {
+                Entry.Utils.runWithScrollPreserved(this.listView_, () => {
+                    this.sceneSortableListWidget.setData({ items });
+                });
+            }, 0);
         }
     }
 

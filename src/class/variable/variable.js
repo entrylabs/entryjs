@@ -9,6 +9,15 @@ import BinPacking from '../../util/binPacking';
 const VariableBP = new BinPacking(460, 250);
 const bpReplace = _throttle(VariableBP.replace.bind(VariableBP));
 
+/*
+ * 변수 표시창 좌표 허용 범위.
+ * Number.MAX_VALUE 같은 극단값이 좌표로 저장된 프로젝트의 경우 스테이지 스케일과 곱해질 때
+ * Infinity 로 오버플로되고, easeljs 히트테스트의 setTransform 이 non-finite 인자로 무시되어
+ * 마우스 커서가 항상 변수 뷰에 걸리는 문제가 있었음.
+ * 표시창을 화면 밖으로 숨기는 용도는 이 범위로 충분하다.
+ */
+const COORDINATE_LIMIT = 10000;
+
 /**
  * 기본 변수블록 객체
  * @param {Object} variable variableMetadata
@@ -65,9 +74,9 @@ class Variable {
             this.visible_ =
                 variable.visible || typeof variable.visible === 'boolean' ? variable.visible : true;
             /** @type {number} */
-            this.x_ = variable.x ? variable.x : null;
+            this.x_ = variable.x ? Variable.sanitizeCoordinate(variable.x) : null;
             /** @type {number} */
-            this.y_ = variable.y ? variable.y : null;
+            this.y_ = variable.y ? Variable.sanitizeCoordinate(variable.y) : null;
             const fontFamily = EntryStatic.fontFamily || "NanumGothic, 'Nanum Gothic'";
             this.BORDER = 6;
             this.FONT = `10pt ${fontFamily}`;
@@ -377,12 +386,26 @@ class Variable {
     }
 
     /**
+     * 좌표값을 유한한 허용 범위로 보정한다.
+     * 숫자가 아니거나 NaN 이면 0, 범위를 벗어나면 ±COORDINATE_LIMIT 로 clamp.
+     * @param {number} value
+     * @return {number}
+     */
+    static sanitizeCoordinate(value) {
+        const num = Number(value);
+        if (!Number.isFinite(num)) {
+            return 0;
+        }
+        return Entry.adjustValueWithMaxMin(num, -COORDINATE_LIMIT, COORDINATE_LIMIT);
+    }
+
+    /**
      * X coordinate setter
      * @param {number} x
      */
     setX(x) {
         /** @type {number} */
-        this.x_ = x;
+        this.x_ = Variable.sanitizeCoordinate(x);
         this.updateView();
     }
 
@@ -400,7 +423,7 @@ class Variable {
      */
     setY(y) {
         /** @type {number} */
-        this.y_ = y;
+        this.y_ = Variable.sanitizeCoordinate(y);
         this.updateView();
     }
 

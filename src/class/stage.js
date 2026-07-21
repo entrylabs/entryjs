@@ -580,6 +580,8 @@ Entry.Stage = class Stage {
         this.inputField.show();
         this.canvas.addChild(this.inputSubmitButton);
 
+        this._bindInputFieldFullScreenChange();
+
         Entry.requestUpdateTwice = true;
 
         function _createInputField() {
@@ -662,6 +664,32 @@ Entry.Stage = class Stage {
         this.canvas.removeChild(this.inputSubmitButton);
 
         Entry.requestUpdate = true;
+    }
+
+    _bindInputFieldFullScreenChange() {
+        if (this._inputFieldFullScreenChangeBound) {
+            return;
+        }
+        this._inputFieldFullScreenChangeBound = true;
+
+        const relocate = () => {
+            const inputField = this.inputField;
+            const hiddenInput = inputField && inputField._hiddenInput;
+            if (!hiddenInput) {
+                return;
+            }
+            const inputParent =
+                document.fullscreenElement || document.webkitFullscreenElement || document.body;
+            if (hiddenInput.parentNode !== inputParent) {
+                inputParent.appendChild(hiddenInput);
+                if (inputField._hasFocus) {
+                    hiddenInput.focus();
+                }
+            }
+        };
+
+        document.addEventListener('fullscreenchange', relocate);
+        document.addEventListener('webkitfullscreenchange', relocate);
     }
 
     /**

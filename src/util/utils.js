@@ -479,6 +479,27 @@ Entry.Utils.generateId = function () {
     return `0000${((Math.random() * Math.pow(36, 4)) << 0).toString(36)}`.substr(-4);
 };
 
+/**
+ * Sortable 위젯의 setData 등 리렌더 콜백 실행 중에도
+ * 내부 스크롤 컨테이너(.rcs-inner-container)의 스크롤 위치를 유지한다.
+ * @param {HTMLElement} containerEl Sortable이 마운트된 컨테이너
+ * @param {Function} callback 리스트를 갱신하는 동기 콜백
+ */
+Entry.Utils.runWithScrollPreserved = function (containerEl, callback) {
+    const getScrollEl = () => containerEl && containerEl.querySelector('.rcs-inner-container');
+    const before = getScrollEl();
+    const top = before ? before.scrollTop : 0;
+    const left = before ? before.scrollLeft : 0;
+
+    callback();
+
+    const after = getScrollEl();
+    if (after) {
+        after.scrollTop = top;
+        after.scrollLeft = left;
+    }
+};
+
 Entry.Utils.randomColor = function () {
     const letters = '0123456789ABCDEF';
     let color = '#';

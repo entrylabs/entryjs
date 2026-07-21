@@ -78,7 +78,7 @@ importers:
         specifier: ^0.2.1
         version: 0.2.1
       lodash:
-        specifier: ^4.17.15
+        specifier: ^4.17.21
         version: 4.17.23
       mathjs:
         specifier: ^7.1.0

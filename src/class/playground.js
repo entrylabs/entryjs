@@ -704,9 +704,11 @@ Entry.Playground = class Playground {
 
     updatePictureView() {
         if (this.pictureSortableListWidget) {
-            this.pictureSortableListWidget.setData({ items: [] });
-            this.pictureSortableListWidget.setData({
-                items: this._getSortablePictureList(),
+            Entry.Utils.runWithScrollPreserved(this.pictureListView_, () => {
+                this.pictureSortableListWidget.setData({ items: [] });
+                this.pictureSortableListWidget.setData({
+                    items: this._getSortablePictureList(),
+                });
             });
         }
         this.reloadPlayground();
@@ -1102,8 +1104,10 @@ Entry.Playground = class Playground {
 
     updateSoundsView() {
         if (this.soundSortableListWidget) {
-            this.soundSortableListWidget.setData({
-                items: this._getSortableSoundList(),
+            Entry.Utils.runWithScrollPreserved(this.soundListView_, () => {
+                this.soundSortableListWidget.setData({
+                    items: this._getSortableSoundList(),
+                });
             });
         }
 
