@@ -58,9 +58,7 @@ Entry.AsomeKit = {
             scope.timeFlag = 1;
             this.nowBlockId = blockId;
             this.blockIds[blockId] = false;
-            _merge(Entry.hw.sendQueue, {
-                [blockId]: data,
-            });
+            Entry.hw.sendQueue[blockId] = data;
             Entry.hw.update();
             setTimeout(() => {
                 scope.timeFlag = 0;

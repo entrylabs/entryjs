@@ -653,15 +653,23 @@ Entry.kkmoo.getBlocks = function () {
             func: function (sprite, script) {
                 const motnum = script.getField('MOTNUM', script);
                 const angle = script.getValue('ANGLE', script);
+                const index = Number(motnum);
+                if (
+                    !Number.isInteger(index) ||
+                    index < 0 ||
+                    index >= Entry.kkmoo.motData.length
+                ) {
+                    return script.callReturn();
+                }
                 Entry.hw.update();
                 if (script.isStart != true) {
                     script.isStart = true;
                     if (angle >= -90 && angle <= 90) {
-                        Entry.kkmoo.motData[motnum].angle = angle;
+                        Entry.kkmoo.motData[index].angle = angle;
                     } else if (angle > 90) {
-                        Entry.kkmoo.motData[motnum].angle = 90;
+                        Entry.kkmoo.motData[index].angle = 90;
                     } else {
-                        Entry.kkmoo.motData[motnum].angle = -90;
+                        Entry.kkmoo.motData[index].angle = -90;
                     }
                     return script;
                 } else {
@@ -854,11 +862,19 @@ Entry.kkmoo.getBlocks = function () {
             isNotFor: ['kkmoo'],
             func: function (sprite, script) {
                 const motnum = script.getField('FRAME', script);
+                const index = Number(motnum);
+                if (
+                    !Number.isInteger(index) ||
+                    index < 0 ||
+                    index >= Entry.kkmoo.motionFrame.length
+                ) {
+                    return script.callReturn();
+                }
                 Entry.hw.update();
                 if (script.isStart != true) {
                     script.isStart = true;
                     var data = Entry.kkmoo.copyObj(Entry.kkmoo.motData);
-                    Entry.kkmoo.motionFrame[motnum].data = data;
+                    Entry.kkmoo.motionFrame[index].data = data;
                     return script;
                 } else {
                     delete script.isStart;
@@ -974,10 +990,18 @@ Entry.kkmoo.getBlocks = function () {
             func: function (sprite, script) {
                 const motnum = script.getField('FRAME', script);
                 const time = script.getValue('TIME', script);
+                const index = Number(motnum);
+                if (
+                    !Number.isInteger(index) ||
+                    index < 0 ||
+                    index >= Entry.kkmoo.motionFrame.length
+                ) {
+                    return script.callReturn();
+                }
                 Entry.hw.update();
                 if (script.isStart != true) {
                     script.isStart = true;
-                    Entry.kkmoo.motionFrame[motnum].time = time;
+                    Entry.kkmoo.motionFrame[index].time = time;
                     return script;
                 } else {
                     delete script.isStart;
