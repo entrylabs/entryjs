@@ -7,6 +7,7 @@ on:
             - develop-hw
             - develop2
             - develop
+    workflow_dispatch:
 
 jobs:
     build-and-deploy:
@@ -20,6 +21,7 @@ jobs:
                   TOOL_NODE_FLAGS: '--max-old-space-size=4096'
               with:
                   node-version: 20
+                  registry-url: 'https://registry.npmjs.org'
             - uses: pnpm/action-setup@v3
               name: Install pnpm
               with:
@@ -30,6 +32,31 @@ jobs:
                   NODE_OPTIONS: '--max-old-space-size=4096'
                   TOOL_NODE_FLAGS: '--max-old-space-size=4096'
               run: pnpm prod
+            # dev 채널: develop push 마다 새 prerelease 를 dev 태그로 배포한다.
+            # 버전은 러너에서만 바꾸고 커밋하지 않으므로, publish 후 package.json 을 원복해
+            # 뒤따르는 build.sh/deploy.sh 가 dist 브랜치에 담는 내용물은 기존과 동일하게 유지한다.
+            - name: publish dev
+              if: github.ref == 'refs/heads/develop'
+              shell: bash
+              run: |
+                  set -euo pipefail
+                  NEXT=$(node -p "const v = require('./package.json').version.split('-')[0].split('.').map(Number); v[2] += 1; v.join('.')")
+                  VERSION="$NEXT-dev.${{ github.run_number }}"
+                  # 버전 계산이 조용히 실패한 채 publish 되는 것을 막는다.
+                  [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+-dev\.[0-9]+$ ]] || { echo "::error::계산된 버전이 올바르지 않습니다: $VERSION"; exit 1; }
+                  echo "publish @entrylabs/entry@$VERSION (dist-tag: dev)"
+                  npm pkg set version="$VERSION"
+                  npm publish --tag dev
+                  git checkout -- package.json
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+            # latest 채널: master push 시, package.json 버전이 npm 에 아직 없을 때만 배포된다.
+            # 이미 있는 버전이면 액션이 조용히 skip 하므로 master push 마다 돌려도 안전하다.
+            - name: publish latest
+              if: github.ref == 'refs/heads/master'
+              uses: JS-DevTools/npm-publish@v3
+              with:
+                  token: ${{ secrets.NPM_TOKEN }}
             - name: Define branch name
               id: target_branch
               shell: bash
