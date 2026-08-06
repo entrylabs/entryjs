@@ -41,7 +41,13 @@ jobs:
               run: |
                   set -euo pipefail
                   NEXT=$(node -p "const v = require('./package.json').version.split('-')[0].split('.').map(Number); v[2] += 1; v.join('.')")
-                  VERSION="$NEXT-dev.${{ github.run_number }}"
+                  # github.run_number 는 이 워크플로 전체의 누적 실행 횟수라 dev 채널 도입 시점에 이미 313 이었다.
+                  # dev 번호를 1 부터 시작시키려고 도입 직전 실행 번호를 기준점으로 뺀다.
+                  # master/develop2/deploy 브랜치 push 도 같은 카운터를 올리므로 번호는 건너뛸 수 있지만,
+                  # 재publish 가 거부되지 않도록 단조증가하기만 하면 되므로 연속성은 필요하지 않다.
+                  DEV_SEQ=$(( ${{ github.run_number }} - 313 ))
+                  (( DEV_SEQ >= 1 )) || { echo "::error::dev 번호가 1 미만입니다 (run_number=${{ github.run_number }}, 기준점=313)"; exit 1; }
+                  VERSION="$NEXT-dev.$DEV_SEQ"
                   # 버전 계산이 조용히 실패한 채 publish 되는 것을 막는다.
                   [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+-dev\.[0-9]+$ ]] || { echo "::error::계산된 버전이 올바르지 않습니다: $VERSION"; exit 1; }
                   echo "publish @entrylabs/entry@$VERSION (dist-tag: dev)"
