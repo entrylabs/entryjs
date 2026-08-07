@@ -40,17 +40,22 @@ jobs:
               shell: bash
               run: |
                   set -euo pipefail
+                  PKG=$(node -p "require('./package.json').name")
                   NEXT=$(node -p "const v = require('./package.json').version.split('-')[0].split('.').map(Number); v[2] += 1; v.join('.')")
-                  # github.run_number 는 이 워크플로 전체의 누적 실행 횟수라 dev 채널 도입 시점에 이미 313 이었다.
-                  # dev 번호를 1 부터 시작시키려고 도입 직전 실행 번호를 기준점으로 뺀다.
-                  # master/develop2/deploy 브랜치 push 도 같은 카운터를 올리므로 번호는 건너뛸 수 있지만,
-                  # 재publish 가 거부되지 않도록 단조증가하기만 하면 되므로 연속성은 필요하지 않다.
-                  DEV_SEQ=$(( ${{ github.run_number }} - 313 ))
-                  (( DEV_SEQ >= 1 )) || { echo "::error::dev 번호가 1 미만입니다 (run_number=${{ github.run_number }}, 기준점=313)"; exit 1; }
+                  # 이미 npm 에 올라간 <NEXT>-dev.N 중 가장 큰 N 에 1 을 더한다.
+                  # 정식 버전이 올라가 NEXT 가 바뀌면 그 base 의 dev 가 하나도 없으므로
+                  # 번호가 자동으로 1 부터 다시 시작한다. (4.0.23-dev.3 -> 4.0.24-dev.1)
+                  # 발행 이력을 근거로 삼으니 재publish 가 거부될 일도 없다.
+                  DEV_SEQ=$(npm view "$PKG" versions --json | NEXT="$NEXT" node -e '
+                      let vs = JSON.parse(require("fs").readFileSync(0, "utf8") || "[]");
+                      if (!Array.isArray(vs)) vs = [vs];
+                      const re = new RegExp("^" + process.env.NEXT.replace(/\./g, "\\.") + "-dev\\.(\\d+)$");
+                      console.log(vs.reduce((max, v) => { const hit = re.exec(v); return hit ? Math.max(max, +hit[1]) : max; }, 0) + 1);
+                  ')
                   VERSION="$NEXT-dev.$DEV_SEQ"
                   # 버전 계산이 조용히 실패한 채 publish 되는 것을 막는다.
                   [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+-dev\.[0-9]+$ ]] || { echo "::error::계산된 버전이 올바르지 않습니다: $VERSION"; exit 1; }
-                  echo "publish @entrylabs/entry@$VERSION (dist-tag: dev)"
+                  echo "publish $PKG@$VERSION (dist-tag: dev)"
                   npm pkg set version="$VERSION"
                   npm publish --tag dev
                   git checkout -- package.json
