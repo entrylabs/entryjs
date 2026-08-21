@@ -149,8 +149,7 @@ Entry.FieldOutput = class FieldOutput extends Entry.Field {
             return;
         }
 
-        this._sizeObserver && this._sizeObserver.destroy();
-        this._posObserver && this._posObserver.destroy();
+        this._destroyObservers();
 
         block = this._setValueBlock(block);
         if (block) {
@@ -163,6 +162,12 @@ Entry.FieldOutput = class FieldOutput extends Entry.Field {
         }
 
         this._blockView.dAlignContent();
+    }
+
+    _destroyObservers() {
+        const _destroyFunc = _.partial(_.result, _, 'destroy');
+        _destroyFunc(this._sizeObserver);
+        _destroyFunc(this._posObserver);
     }
 
     getPrevBlock(block) {
