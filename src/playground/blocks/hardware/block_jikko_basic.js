@@ -15,7 +15,11 @@ Entry.jikko_basic = {
 
     //정지시 초기화 함수
     setZero: function() {
-        if (!Entry.hw.sendQueue.SET) {
+        if (
+            !Entry.hw.sendQueue.SET ||
+            typeof Entry.hw.sendQueue.SET !== 'object' ||
+            Array.isArray(Entry.hw.sendQueue.SET)
+        ) {
             Entry.hw.sendQueue = {
                 GET: {},
                 SET: {},
@@ -23,17 +27,33 @@ Entry.jikko_basic = {
         } else {
             var keySet = Object.keys(Entry.hw.sendQueue.SET);
             keySet.forEach((key) => {
-                if (Entry.hw.sendQueue.SET[key].type == Entry.jikko_basic.sensorTypes.SERVO) {
-                    Entry.hw.sendQueue.SET[key].data = 200;
-                    Entry.hw.sendQueue.SET[key].time = new Date().getTime();
-                } else if (
-                    Entry.hw.sendQueue.SET[key].type == Entry.jikko_basic.sensorTypes.SERVO2
+                var command = Entry.hw.sendQueue.SET[key];
+
+                // 다른 하드웨어가 사용하는 단일 패킷 형식(protocol, packet 등)은
+                // jikko_basic의 핀별 명령이 아니므로 정지 처리 대상에서 제외한다.
+                if (
+                    !command ||
+                    typeof command !== 'object' ||
+                    Array.isArray(command) ||
+                    !Object.prototype.hasOwnProperty.call(command, 'type')
                 ) {
-                    Entry.hw.sendQueue.SET[key].data.value1 = 200;
-                    Entry.hw.sendQueue.SET[key].time = new Date().getTime();
+                    delete Entry.hw.sendQueue.SET[key];
+                    return;
+                }
+
+                if (command.type == Entry.jikko_basic.sensorTypes.SERVO) {
+                    command.data = 200;
+                    command.time = new Date().getTime();
+                } else if (
+                    command.type == Entry.jikko_basic.sensorTypes.SERVO2
+                ) {
+                    if (command.data && typeof command.data === 'object') {
+                        command.data.value1 = 200;
+                    }
+                    command.time = new Date().getTime();
                 } else {
-                    Entry.hw.sendQueue.SET[key].data = 0;
-                    Entry.hw.sendQueue.SET[key].time = new Date().getTime();
+                    command.data = 0;
+                    command.time = new Date().getTime();
                 }
             });
         }
@@ -112,6 +132,15 @@ Entry.jikko_basic.setLanguage = function() {
     return {
         ko: {
             template: {
+                jikko_basic_pin_title: '핀',
+                jikko_basic_input_title: '입력',
+                jikko_basic_led_title: 'LED',
+                jikko_basic_motor_title: '모터',
+                jikko_basic_piezobuzzer_title: '피에조부저',
+                jikko_basic_mp3_title: 'MP3',
+                jikko_basic_lcd_title: 'I2C LCD',
+                jikko_basic_neopixel_title: '네오픽셀',
+                jikko_basic_dotmatrix_title: '도트매트릭스',
                 jikko_basic_toggle_on: '켜기',
                 jikko_basic_toggle_off: '끄기',
                 jikko_basic_lcd_first_line: '첫 번째',
@@ -172,6 +201,15 @@ Entry.jikko_basic.setLanguage = function() {
         },
         en: {
             template: {
+                jikko_basic_pin_title: 'Pin',
+                jikko_basic_input_title: 'Input',
+                jikko_basic_led_title: 'LED',
+                jikko_basic_motor_title: 'Motor',
+                jikko_basic_piezobuzzer_title: 'Piezo buzzer',
+                jikko_basic_mp3_title: 'MP3',
+                jikko_basic_lcd_title: 'I2C LCD',
+                jikko_basic_neopixel_title: 'NeoPixel',
+                jikko_basic_dotmatrix_title: 'Dot matrix',
                 jikko_basic_toggle_on: 'on',
                 jikko_basic_toggle_off: 'off',
                 jikko_basic_lcd_first_line: 'first',
@@ -224,16 +262,25 @@ Entry.jikko_basic.setLanguage = function() {
     };
 };
 Entry.jikko_basic.blockMenuBlocks = [
+    'jikko_basic_pin_title',
     'jikko_basic_set_digital_toggle',
-    'jikko_basic_get_analog_value',
     'jikko_basic_get_digital',
+    'jikko_basic_get_analog_value',
     'jikko_basic_get_analog_mapping',
     'jikko_basic_mapping1',
     'jikko_basic_mapping2',
 
+    'jikko_basic_led_title',
     'jikko_basic_set_led_toggle',
     'jikko_basic_set_digital_pwm',
 
+    'jikko_basic_motor_title',
+    'jikko_basic_set_digital_dcmotor',
+    'jikko_basic_set_analog_dcmotor',
+    'jikko_basic_set_digital_servo',
+    'jikko_basic_set_digital_servo2',
+
+    'jikko_basic_input_title',
     'jikko_basic_get_digital_ultrasonic',
     'jikko_basic_get_digital_toggle',
     'jikko_basic_get_light_value',
@@ -242,32 +289,35 @@ Entry.jikko_basic.blockMenuBlocks = [
     'jikko_basic_get_pullup',
     'jikko_basic_get_button',
 
-    'jikko_basic_set_digital_dcmotor',
-    'jikko_basic_set_analog_dcmotor',
-    'jikko_basic_set_digital_servo',
-    'jikko_basic_set_digital_servo2',
+    'jikko_basic_piezobuzzer_title',
     'jikko_basic_set_digital_buzzer_toggle',
     'jikko_basic_set_digital_buzzer_volume',
     'jikko_basic_set_digital_buzzer',
+
+    'jikko_basic_mp3_title',
+    'jikko_basic_set_mp3_init',
+    'jikko_basic_set_mp3_vol',
+    'jikko_basic_set_mp3_play',
+    'jikko_basic_set_mp3_play2',
+
+    'jikko_basic_lcd_title',
+    'jikko_basic_lcd_init',
+    'jikko_basic_module_digital_lcd',
+    'jikko_basic_lcd_clear',
+
+    'jikko_basic_neopixel_title',
     'jikko_basic_set_neopixel_init',
     'jikko_basic_set_neopixel_bright',
     'jikko_basic_set_neopixel',
     'jikko_basic_set_neopixel_all',
     'jikko_basic_set_neopixel_clear',
+
+    'jikko_basic_dotmatrix_title',
     'jikko_basic_set_dotmatrix_init',
     'jikko_basic_set_dotmatrix_bright',
     'jikko_basic_set_dotmatrix',
     'jikko_basic_set_dotmatrix_emoji',
     'jikko_basic_set_dotmatrix_clear',
-    'jikko_basic_lcd_init',
-    'jikko_basic_module_digital_lcd',
-    'jikko_basic_get_lcd_row',
-    'jikko_basic_get_lcd_col',
-    'jikko_basic_lcd_clear',
-    'jikko_basic_set_mp3_init',
-    'jikko_basic_set_mp3_vol',
-    'jikko_basic_set_mp3_play',
-    'jikko_basic_set_mp3_play2',
 
     // 'jikko_basic_get_digital_bluetooth',
     // 'jikko_basic_module_digital_bluetooth',
@@ -275,8 +325,66 @@ Entry.jikko_basic.blockMenuBlocks = [
 Entry.jikko_basic.getBlocks = function() {
     var tx;
     var din;
+    var title = function(blockName, template, className) {
+        return {
+            skeleton: 'basic_text',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            fontColor: '#333333',
+            skeletonOptions: { contentPos: { x: 10, y: 10 } },
+            params: [{ type: 'Text', text: template, color: '#333333', align: 'left' }],
+            def: { type: blockName },
+            isNotFor: ['jikko_basic'],
+            class: className,
+            fontSize: 22,
+        };
+    };
 
-    return {
+    var blocks = {
+        jikko_basic_pin_title: title(
+            'jikko_basic_pin_title',
+            Lang.template.jikko_basic_pin_title,
+            'jikko_basicPin'
+        ),
+        jikko_basic_input_title: title(
+            'jikko_basic_input_title',
+            Lang.template.jikko_basic_input_title,
+            'jikko_basicGet'
+        ),
+        jikko_basic_led_title: title(
+            'jikko_basic_led_title',
+            Lang.template.jikko_basic_led_title,
+            'jikko_basicLed'
+        ),
+        jikko_basic_motor_title: title(
+            'jikko_basic_motor_title',
+            Lang.template.jikko_basic_motor_title,
+            'jikko_basicSet'
+        ),
+        jikko_basic_piezobuzzer_title: title(
+            'jikko_basic_piezobuzzer_title',
+            Lang.template.jikko_basic_piezobuzzer_title,
+            'jikko_basicBuzzer'
+        ),
+        jikko_basic_mp3_title: title(
+            'jikko_basic_mp3_title',
+            Lang.template.jikko_basic_mp3_title,
+            'mp3'
+        ),
+        jikko_basic_lcd_title: title(
+            'jikko_basic_lcd_title',
+            Lang.template.jikko_basic_lcd_title,
+            'jikko_basicModule'
+        ),
+        jikko_basic_neopixel_title: title(
+            'jikko_basic_neopixel_title',
+            Lang.template.jikko_basic_neopixel_title,
+            'neo'
+        ),
+        jikko_basic_dotmatrix_title: title(
+            'jikko_basic_dotmatrix_title',
+            Lang.template.jikko_basic_dotmatrix_title,
+            'dot'
+        ),
         jikko_basic_list_analog_basic: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -526,8 +634,8 @@ Entry.jikko_basic.getBlocks = function() {
         },
 
         jikko_basic_set_neopixel_init: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            color: '#FF9800',
+            outerLine: '#D97D00',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -604,8 +712,8 @@ Entry.jikko_basic.getBlocks = function() {
             },
         },
         jikko_basic_set_neopixel_bright: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            color: '#FF9800',
+            outerLine: '#D97D00',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -688,8 +796,8 @@ Entry.jikko_basic.getBlocks = function() {
             },
         },
         jikko_basic_set_neopixel: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            color: '#FF9800',
+            outerLine: '#D97D00',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -795,8 +903,8 @@ Entry.jikko_basic.getBlocks = function() {
             },
         },
         jikko_basic_set_neopixel_all: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            color: '#FF9800',
+            outerLine: '#D97D00',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -888,8 +996,8 @@ Entry.jikko_basic.getBlocks = function() {
             },
         },
         jikko_basic_set_neopixel_clear: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            color: '#FF9800',
+            outerLine: '#D97D00',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1385,8 +1493,8 @@ Entry.jikko_basic.getBlocks = function() {
         },
 
         jikko_basic_set_dotmatrix_init: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            color: '#6D4C41',
+            outerLine: '#51362F',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1484,8 +1592,8 @@ Entry.jikko_basic.getBlocks = function() {
             },
         },
         jikko_basic_set_dotmatrix_bright: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            color: '#6D4C41',
+            outerLine: '#51362F',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1557,8 +1665,8 @@ Entry.jikko_basic.getBlocks = function() {
             },
         },
         jikko_basic_set_dotmatrix_clear: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            color: '#6D4C41',
+            outerLine: '#51362F',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1611,8 +1719,8 @@ Entry.jikko_basic.getBlocks = function() {
             },
         },
         jikko_basic_set_dotmatrix: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            color: '#6D4C41',
+            outerLine: '#51362F',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1718,8 +1826,8 @@ Entry.jikko_basic.getBlocks = function() {
             },
         },
         jikko_basic_set_dotmatrix_emoji: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            color: '#6D4C41',
+            outerLine: '#51362F',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3367,8 +3475,8 @@ Entry.jikko_basic.getBlocks = function() {
             },
         },
         jikko_basic_get_dht: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            color: '#5254DC',
+            outerLine: '#3739B8',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -3752,6 +3860,111 @@ Entry.jikko_basic.getBlocks = function() {
             },
         },
     };
+
+    var categoryColors = {
+        jikko_basicPin: { color: '#EF3F4A', dark: '#CC2835' },
+        jikko_basicLed: { color: '#DF3075', dark: '#B91F5B' },
+        jikko_basicSet: { color: '#A944D4', dark: '#872DB0' },
+        jikko_basicGet: { color: '#5254DC', dark: '#3739B8' },
+        jikko_basicBuzzer: { color: '#315EEA', dark: '#2144BD' },
+        mp3: { color: '#169CB0', dark: '#0B7A8B' },
+        jikko_basicModule: { color: '#0DB27B', dark: '#07865B' },
+        neo: { color: '#FF9800', dark: '#D97D00' },
+        dot: { color: '#6D4C41', dark: '#51362F' },
+    };
+    var forcedCategoryByType = {
+        jikko_basic_get_dht: 'jikko_basicGet',
+        jikko_basic_set_neopixel_init: 'neo',
+        jikko_basic_set_neopixel_bright: 'neo',
+        jikko_basic_set_neopixel: 'neo',
+        jikko_basic_set_neopixel_all: 'neo',
+        jikko_basic_set_neopixel_clear: 'neo',
+        jikko_basic_set_dotmatrix_init: 'dot',
+        jikko_basic_set_dotmatrix_bright: 'dot',
+        jikko_basic_set_dotmatrix: 'dot',
+        jikko_basic_set_dotmatrix_emoji: 'dot',
+        jikko_basic_set_dotmatrix_clear: 'dot',
+    };
+    var getCategoryColors = function(type, block) {
+        return categoryColors[forcedCategoryByType[type] || (block && block.class)];
+    };
+    var applyParamColors = function(params, colors) {
+        (params || []).forEach(function(param) {
+            if (!param || typeof param !== 'object') {
+                return;
+            }
+            if (param.bgColor) {
+                param.bgColor = colors.dark;
+            }
+            if (param.arrowColor) {
+                param.arrowColor = '#FFFFFF';
+            }
+        });
+    };
+
+    // LCD 열·행 선택 블록은 LCD에서만 사용하므로 타입을 복제하지 않고 직접 색상을 상속한다.
+    blocks.jikko_basic_get_lcd_col.class = 'jikko_basicModule';
+    blocks.jikko_basic_get_lcd_row.class = 'jikko_basicModule';
+
+    // 핀, 음계처럼 여러 카테고리가 함께 사용하던 값 블록을 카테고리별로 복제한다.
+    // 부모 블록의 색을 따라가게 하면서 기존 값 블록 타입은 호환성을 위해 유지한다.
+    Object.keys(blocks).forEach(function(type) {
+        var block = blocks[type];
+        var colors = getCategoryColors(type, block);
+        var defParams = block && block.def && block.def.params;
+        if (!colors || !Array.isArray(defParams) || block.skeleton === 'basic_text') {
+            return;
+        }
+
+        defParams.forEach(function(param) {
+            var sourceType = param && param.type;
+            if (
+                sourceType === 'jikko_basic_get_lcd_col' ||
+                sourceType === 'jikko_basic_get_lcd_row'
+            ) {
+                return;
+            }
+            var sourceBlock =
+                sourceType &&
+                (blocks[sourceType] ||
+                    (sourceType === 'arduino_get_port_number'
+                        ? blocks.jikko_basic_list_digital_basic
+                        : Entry.block[sourceType]));
+            if (!sourceBlock || sourceBlock.skeleton === 'basic_text') {
+                return;
+            }
+
+            var coloredType = sourceType + '__' + block.class;
+            if (!blocks[coloredType]) {
+                blocks[coloredType] = Object.assign({}, sourceBlock, {
+                    color: colors.color,
+                    outerLine: colors.dark,
+                    class: block.class,
+                    params: (sourceBlock.params || []).map(function(sourceParam) {
+                        return Object.assign({}, sourceParam, {
+                            bgColor: sourceParam.bgColor ? colors.dark : sourceParam.bgColor,
+                            arrowColor: sourceParam.arrowColor ? '#FFFFFF' : sourceParam.arrowColor,
+                        });
+                    }),
+                    def: Object.assign({}, sourceBlock.def, { type: coloredType }),
+                });
+            }
+            param.type = coloredType;
+        });
+    });
+
+    Object.keys(blocks).forEach(function(type) {
+        var block = blocks[type];
+        var colors = getCategoryColors(type, block);
+        if (!colors || block.skeleton === 'basic_text') {
+            return;
+        }
+        block.color = colors.color;
+        block.outerLine = colors.dark;
+        applyParamColors(block.params, colors);
+    });
+
+    return blocks;
 };
 
 module.exports = Entry.jikko_basic;
