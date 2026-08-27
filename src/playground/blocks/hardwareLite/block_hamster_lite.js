@@ -1,6 +1,9 @@
 'use strict';
 
 (function() {
+    // 연결 시 정체 라인(FF01) 대기 상한. 페어링된 동글은 ms 단위로 응답하므로 5초면 충분.
+    const HANDSHAKE_TIMEOUT_MS = 5000;
+
     const COLOR_TO_RGB = [
         [0, 0, 0],
         [0, 0, 255],
@@ -164,6 +167,7 @@
                 readAscii: true,
                 flowControl: 'hardware',
             };
+            this.handshakeTimeoutMs = HANDSHAKE_TIMEOUT_MS; // 테스트에서 주입 가능
             this.setZero();
         }
 
@@ -341,6 +345,9 @@
             this.ioTimer = undefined;
             this.tempo = 60;
             this.timeouts = [];
+            this.invalidFrameCount = 0;
+            this.pendingIdentity = undefined;
+            this.pendingIdentityTtl = 0;
 
             this.__removeAllTimeouts();
             if (Entry.hwLite && Entry.hwLite.serial) {
@@ -6100,6 +6107,39 @@
 
         handleLocalData(data) {
             // data: string
+            const identity = this.parseIdentityData(data);
+            if (identity) {
+                // 연결 유지 중 동글의 페어링 로봇이 바뀌면 정체 라인이 다시 온다.
+                // 1회성 라인(노이즈)으로 주행 중 정지하지 않도록 동일 정체 2회 확인 후 전환한다.
+                if (identity.isHamsterS !== this.isHamsterS || identity.address !== this.address) {
+                    var pending = this.pendingIdentity;
+                    if (
+                        pending &&
+                        pending.isHamsterS === identity.isHamsterS &&
+                        pending.address === identity.address
+                    ) {
+                        this.pendingIdentity = undefined;
+                        this.setRobotIdentity(identity);
+                        // 현장 디버깅 breadcrumb: 세션 중 재식별은 "로봇이 갑자기 멈춤"의 원인 후보
+                        console.info('HamsterLite: runtime robot identity switch', identity);
+                        // 주의: setZero()는 Entry.hwLite.serial.update()를 통해
+                        // 새 정체 기준의 정지 패킷을 즉시 1회 write한다(의도된 동작).
+                        this.setZero();
+                    } else {
+                        this.pendingIdentity = identity;
+                        // 확인용 두 번째 정체가 이 프레임 수 안에 오지 않으면 보류를 폐기한다.
+                        // 한참 떨어져 들어온 외부 정체 2회로 잘못 전환되는 것을 막는다(약 2초).
+                        this.pendingIdentityTtl = 60;
+                    }
+                } else {
+                    this.pendingIdentity = undefined;
+                }
+                this.invalidFrameCount = 0;
+                return;
+            }
+            if (this.pendingIdentity && --this.pendingIdentityTtl <= 0) {
+                this.pendingIdentity = undefined;
+            }
             if (data?.length != 53) {
                 return;
             }
@@ -6107,7 +6147,11 @@
             if (this.isHamsterS) {
                 var str = data.slice(0, 1);
                 var value = parseInt(str, 16);
-                if (value != 1) return; // invalid data
+                if (value != 1) {
+                    this.reportInvalidFrame();
+                    return;
+                }
+                this.invalidFrameCount = 0;
 
                 var sensory = this.sensory;
                 // left proximity
@@ -6205,7 +6249,11 @@
             } else {
                 var str = data.slice(4, 5);
                 var value = parseInt(str, 16);
-                if (value != 1) return; // invalid data
+                if (value != 1) {
+                    this.reportInvalidFrame();
+                    return;
+                }
+                this.invalidFrameCount = 0;
 
                 var sensory = this.sensory;
                 // signal strength
@@ -6320,37 +6368,101 @@
             return 'FF\r';
         }
 
-        async initialHandshake() {
-            let status = false;
-            while (true) {
-                const { value: data, done } = await Entry.hwLite.serial.reader.read();
-                if (done) {
-                    return false;
-                }
-                if (data && data.slice(0, 2) == 'FF') {
-                    var info = data.split(/[,\n]+/);
-                    if (info && info.length >= 5) {
-                        if (info[1] == 'Hamster' && info[2] == '04' && info[4].length >= 12) {
-                            this.id = '0204' + info[3];
-                            this.address = info[4].substring(0, 12);
-                            this.isHamsterS = false;
-                            status = true;
-                            break;
-                        } else if (info[2] == '0E' && info[4].length >= 12) {
-                            this.id = '0204' + info[3];
-                            this.address = info[4].substring(0, 12);
-                            this.isHamsterS = true;
-                            status = true;
-                            break;
-                        } else {
-                            break;
-                        }
+        // 이름 필드는 사용자가 바꿀 수 있고 다국어라, 콤마가 섞이면 앞에서부터 센 위치가 밀린다.
+        // 종단 CR/LF만 제거하고 콤마로 분리한 뒤 고정 구조(모델/변형/주소)를 뒤에서 집는다.
+        // 실측 포맷: FF01,<이름>,<모델2hex>,<변형2hex>,<주소12hex>
+        parseIdentityData(data) {
+            if (typeof data !== 'string' || data.slice(0, 2) != 'FF') {
+                return undefined;
+            }
+            var info = data.replace(/[\r\n]+$/, '').split(',');
+            if (info.length < 5) {
+                return undefined;
+            }
+            var model = info[info.length - 3];
+            var variant = info[info.length - 2];
+            var address = info[info.length - 1];
+            // 주소는 실측상 항상 16진수 12자리이며 뒤에 덧붙는 문자가 없다. 레거시의
+            // length>=12 + substring(0,12)로 느슨하게 받던 것보다 좁게 잡았다(entry-hw와 동일 정책).
+            if (!/^[0-9A-Fa-f]{2}$/.test(variant) || !/^[0-9A-Fa-f]{12}$/.test(address)) {
+                return undefined;
+            }
+            if (model == '04' || model == '0E') {
+                return { isHamsterS: model == '0E', address: address };
+            }
+            return undefined;
+        }
+
+        setRobotIdentity(identity) {
+            this.isHamsterS = identity.isHamsterS;
+            this.address = identity.address;
+        }
+
+        // 검증 실패 프레임이 연속되면 로봇/모드 불일치 가능성이 높다 → 정체를 다시 묻는다.
+        // 스트림 약 30fps 기준 1초 연속 불일치에서 1회 발화.
+        // (다른 기종으로 바뀔 때 총 전환 지연은 정체 2회 확인 구조라 약 2~3초)
+        reportInvalidFrame() {
+            this.invalidFrameCount = (this.invalidFrameCount || 0) + 1;
+            if (this.invalidFrameCount >= 30) {
+                this.invalidFrameCount = 0;
+                try {
+                    if (Entry.hwLite && Entry.hwLite.serial) {
+                        Entry.hwLite.serial.sendAsciiAsBuffer(this.requestInitialData());
                     }
-                } else {
-                    Entry.hwLite.serial.sendAsciiAsBuffer(this.requestInitialData());
+                } catch (error) {
+                    // teardown 중 writer가 이미 해제된 경우. 프로브는 실패해도 무시한다
+                    console.error(error);
                 }
             }
-            return status;
+        }
+
+        async initialHandshake() {
+            var serial = Entry.hwLite.serial;
+            var identity;
+            var timedOut = false;
+            var timer;
+            var timeoutPromise = new Promise((resolve) => {
+                timer = setTimeout(() => {
+                    timedOut = true;
+                    resolve('timeout');
+                }, this.handshakeTimeoutMs);
+            });
+            try {
+                // 동글이 자발 송출을 안 하는 상태(미페어링 등)에서도 응답을 유도한다.
+                serial.sendAsciiAsBuffer(this.requestInitialData());
+                while (!timedOut) {
+                    // 반복마다 진행 중인 read는 항상 정확히 1개다.
+                    // 타임아웃 패자로 남는 pending read는 removeSerialPort()의 reader.cancel()이
+                    // {done:true}로 settle하므로 누수/unhandled rejection이 없다.
+                    var result = await Promise.race([serial.reader.read(), timeoutPromise]);
+                    if (result === 'timeout' || result.done) {
+                        break;
+                    }
+                    identity = this.parseIdentityData(result.value);
+                    if (identity) {
+                        break;
+                    }
+                    if (typeof result.value !== 'string' || result.value.slice(0, 2) != 'FF') {
+                        // 원본 동작 유지: FF로 시작하는 라인에는 재요청하지 않는다(프로브 증폭 방지)
+                        serial.sendAsciiAsBuffer(this.requestInitialData());
+                    }
+                }
+            } catch (error) {
+                // 스트림 에러(연결 중 동글 제거 등)로 read가 reject하거나 write가 동기
+                // throw해도 아래 정리 경로로 합류시킨다. throw로 빠지면 포트 정리가
+                // 건너뛰어져 "실패 시 포트 방치" 결함이 이 창에서 재발한다.
+                console.error(error);
+                identity = undefined;
+            }
+            clearTimeout(timer);
+            if (!identity) {
+                // 실패 시 코어(hw_lite.connect catch)는 포트를 닫지 않는다. 열린 포트가 방치되면
+                // 같은 동글은 port.open() InvalidStateError로 새로고침 전까지 재연결 불가 → 모듈이 직접 정리.
+                await serial.removeSerialPort();
+                return false;
+            }
+            this.setRobotIdentity(identity);
+            return true;
         }
     })();
 })();
