@@ -216,7 +216,7 @@
                 readAscii: true,
                 flowControl: 'hardware',
             };
-            this.handshakeTimeoutMs = HANDSHAKE_TIMEOUT_MS; // 테스트에서 주입 가능
+            this.handshakeTimeoutMs = HANDSHAKE_TIMEOUT_MS;
             this.setZero();
         }
 
@@ -384,6 +384,11 @@
                 index: 0,
                 count: 0,
             };
+            // 상태를 비우기 전에 대기 중인 블록들에 완료를 알린다.
+            // 비운 뒤에 부르면 콜백을 찾을 수 없어 블록이 영원히 멈춘다.
+            ['wheelDone', 'noteDone', 'ioDone', 'lineTracerCallback', 'boardCallback'].forEach(
+                (key) => this.__resolvePending(key)
+            );
             this.lineTracerModeId = 0;
             this.lineTracerStateId = -1;
             this.blockId = 0;
@@ -400,7 +405,10 @@
             this.ioBlockId = 0;
             this.ioTimer = undefined;
             this.tempo = 60;
-            this.timeouts = [];
+            // this.timeouts는 여기서 비우지 않는다. 비우면 아래 __removeAllTimeouts()가
+            // 빈 배열을 돌아 실제 타이머를 하나도 못 지운다. 살아남은 타이머는 핸들도 잊혀서
+            // 이후 어떤 취소로도 닿을 수 없고, blockId까지 0으로 되돌아가 다음 블록의 id와
+            // 충돌해 새 블록의 완료 신호를 지운다. (__removeAllTimeouts가 목록을 스스로 비운다)
             this.invalidFrameCount = 0;
             this.pendingIdentity = undefined;
             this.pendingIdentityTtl = 0;
@@ -440,12 +448,24 @@
             return this.wheelBlockId;
         }
 
+        // 취소될 때 대기 블록에 완료를 알린다. 알리지 않으면 블록이 완료 표시를 기다리며
+        // 영원히 폴링한다(화면에 오류가 없어 "블록이 안 넘어가요"로만 보고된다).
+        // 먼저 비우고 부른다. 콜백 안에서 다시 취소가 걸려도 두 번 불리지 않게.
+        __resolvePending(key) {
+            const done = this[key];
+            if (done) {
+                this[key] = undefined;
+                done();
+            }
+        }
+
         __cancelWheel() {
             this.wheelBlockId = 0;
             if (this.wheelTimer !== undefined) {
                 this.__removeTimeout(this.wheelTimer);
             }
             this.wheelTimer = undefined;
+            this.__resolvePending('wheelDone');
         }
 
         __setLineTracerMode(mode) {
@@ -455,14 +475,14 @@
         }
 
         __cancelLineTracer() {
-            this.lineTracerCallback = undefined;
+            this.__resolvePending('lineTracerCallback');
         }
 
         __cancelBoard() {
             this.boardCommand = 0;
             this.boardState = 0;
             this.boardCount = 0;
-            this.boardCallback = undefined;
+            this.__resolvePending('boardCallback');
         }
 
         __issueNoteBlockId() {
@@ -480,6 +500,7 @@
             }
             this.noteTimer1 = undefined;
             this.noteTimer2 = undefined;
+            this.__resolvePending('noteDone');
         }
 
         __issueIoBlockId() {
@@ -493,6 +514,7 @@
                 this.__removeTimeout(this.ioTimer);
             }
             this.ioTimer = undefined;
+            this.__resolvePending('ioDone');
         }
 
         handleSensory() {
@@ -503,11 +525,8 @@
                     self.lineTracerStateId = sensory.lineTracerStateId;
                     if (sensory.lineTracerState == 0x40) {
                         self.__setLineTracerMode(0);
-                        var callback = self.lineTracerCallback;
+                        // 취소가 완료를 알린다(__resolvePending). 여기서 또 부르면 두 번 불린다.
                         self.__cancelLineTracer();
-                        if (callback) {
-                            callback();
-                        }
                     }
                 }
             }
@@ -557,11 +576,8 @@
                         case 4: {
                             motoring.leftWheel = 0;
                             motoring.rightWheel = 0;
-                            var callback = self.boardCallback;
+                            // 취소가 완료를 알린다(__resolvePending). 여기서 또 부르면 두 번 불린다.
                             self.__cancelBoard();
-                            if (callback) {
-                                callback();
-                            }
                             break;
                         }
                     }
@@ -606,11 +622,8 @@
                             if (diff > -15) {
                                 motoring.leftWheel = 0;
                                 motoring.rightWheel = 0;
-                                var callback = self.boardCallback;
+                                // 취소가 완료를 알린다(__resolvePending). 여기서 또 부르면 두 번 불린다.
                                 self.__cancelBoard();
-                                if (callback) {
-                                    callback();
-                                }
                             } else {
                                 motoring.leftWheel = diff * 0.5;
                                 motoring.rightWheel = -diff * 0.5;
@@ -659,11 +672,8 @@
                             if (diff > -15) {
                                 motoring.leftWheel = 0;
                                 motoring.rightWheel = 0;
-                                var callback = self.boardCallback;
+                                // 취소가 완료를 알린다(__resolvePending). 여기서 또 부르면 두 번 불린다.
                                 self.__cancelBoard();
-                                if (callback) {
-                                    callback();
-                                }
                             } else {
                                 motoring.leftWheel = -diff * 0.5;
                                 motoring.rightWheel = diff * 0.5;
@@ -773,6 +783,9 @@
 
         __board(leftVelocity, rightVelocity, command, callback) {
             const motoring = this.motoring;
+            // 같은 계열을 먼저 취소해야 앞 스레드의 완료 신호가 덮이지 않고 전달된다.
+            // 아래에서 boardCallback을 덮어쓰므로, 취소하지 않으면 그 신호가 사라진다.
+            this.__cancelBoard();
             this.__cancelWheel();
             this.__cancelLineTracer();
 
@@ -844,11 +857,13 @@
                 motoring.rightWheel = rightVelocity;
                 motoring.motion = type;
                 self.__setLineTracerMode(0);
+                self.wheelDone = callback; // 취소되면 __cancelWheel이 대신 알린다
                 self.wheelTimer = setTimeout(() => {
                     if (self.wheelBlockId == id) {
                         motoring.leftWheel = 0;
                         motoring.rightWheel = 0;
                         motoring.motion = 0;
+                        self.wheelDone = undefined; // 정상 완료. 아래에서 직접 부르므로 중복 방지
                         self.__cancelWheel();
                         callback();
                     }
@@ -1500,6 +1515,8 @@
             if (!script.isStart) {
                 script.isStart = true;
                 script.isMoving = true;
+                // 같은 계열을 먼저 취소해야 앞 스레드의 완료 신호가 덮이지 않는다.
+                this.__cancelLineTracer();
                 this.__cancelBoard();
                 this.__cancelWheel();
 
@@ -1612,6 +1629,9 @@
         __runBeep(count, id, callback) {
             if (count) {
                 const self = this;
+                if (id && callback) {
+                    self.noteDone = callback; // 취소되면 __cancelNote가 대신 알린다
+                }
                 const motoring = self.motoring;
                 if (!motoring.buzzer) {
                     motoring.buzzer = 440;
@@ -1635,9 +1655,14 @@
                         if (count < 0) {
                             self.__runBeep(-1, id, callback);
                         } else if (count == 1) {
-                            self.__cancelNote();
                             if (id && callback) {
+                                // 정상 완료. 아래에서 직접 부르므로 중복 방지로 먼저 비운다.
+                                // id가 없는 fire-and-forget 체인은 이 슬롯의 주인이 아니므로 건드리지 않는다.
+                                self.noteDone = undefined;
+                                self.__cancelNote();
                                 callback();
+                            } else {
+                                self.__cancelNote();
                             }
                         } else {
                             self.__runBeep(count - 1, id, callback);
@@ -1786,7 +1811,7 @@
                 let octave = script.getNumberField('OCTAVE');
                 let beat = script.getNumberValue('BEAT');
 
-                note = parseInt(self.__NOTES[note]);
+                note = parseInt(self.__NOTES[note], 10);
                 octave = parseInt(octave);
                 beat = parseFloat(beat);
                 motoring.buzzer = 0;
@@ -1815,9 +1840,13 @@
                         }, timeValue - 100);
                         self.timeouts.push(self.noteTimer1);
                     }
+                    self.noteDone = () => {
+                        script.isPlaying = false;
+                    };
                     self.noteTimer2 = setTimeout(() => {
                         if (self.noteBlockId == id) {
                             motoring.note = 0;
+                            self.noteDone = undefined; // 정상 완료. 아래에서 직접 처리
                             self.__cancelNote();
                             script.isPlaying = false;
                         }
@@ -1855,8 +1884,12 @@
                 if (beat && beat > 0 && self.tempo > 0) {
                     const id = self.__issueNoteBlockId();
                     const timeValue = (beat * 60 * 1000) / self.tempo;
+                    self.noteDone = () => {
+                        script.isPlaying = false;
+                    };
                     self.noteTimer1 = setTimeout(() => {
                         if (self.noteBlockId == id) {
+                            self.noteDone = undefined; // 정상 완료. 아래에서 직접 처리
                             self.__cancelNote();
                             script.isPlaying = false;
                         }
@@ -1992,8 +2025,12 @@
                     motoring.outputA = 0;
                     motoring.outputB = 1;
                 }
+                self.ioDone = () => {
+                    script.isPlaying = false;
+                };
                 self.ioTimer = setTimeout(() => {
                     if (self.ioBlockId == id) {
+                        self.ioDone = undefined; // 정상 완료. 아래에서 직접 처리
                         self.__cancelIo();
                         script.isPlaying = false;
                     }
@@ -6173,7 +6210,7 @@
                 // 연결 유지 중 동글의 페어링 로봇이 바뀌면 정체 라인이 다시 온다.
                 // 1회성 라인(노이즈)으로 주행 중 정지하지 않도록 동일 정체 2회 확인 후 전환한다.
                 if (identity.isHamsterS !== this.isHamsterS || identity.address !== this.address) {
-                    var pending = this.pendingIdentity;
+                    const pending = this.pendingIdentity;
                     if (
                         pending &&
                         pending.isHamsterS === identity.isHamsterS &&
@@ -6187,7 +6224,8 @@
                             return;
                         }
                         this.setRobotIdentity(identity);
-                        // 현장 디버깅 breadcrumb: 세션 중 재식별은 "로봇이 갑자기 멈춤"의 원인 후보
+                        // 세션 중 로봇이 바뀐 시점을 남긴다. 이 전환은 사용자에게
+                        // "로봇이 갑자기 멈췄다"로 보이므로 원인 추적에 필요하다.
                         console.info('HamsterLite: runtime robot identity switch', identity);
                         // 주의: setZero()는 Entry.hwLite.serial.update()를 통해
                         // 새 정체 기준의 정지 패킷을 즉시 1회 write한다(의도된 동작).
@@ -6447,20 +6485,20 @@
             if (typeof data !== 'string' || data.slice(0, 2) != 'FF') {
                 return undefined;
             }
-            var info = data.replace(/[\r\n]+$/, '').split(',');
+            const info = data.replace(/[\r\n]+$/, '').split(',');
             if (info.length < 5) {
                 return undefined;
             }
-            var model = info[info.length - 3];
-            var variant = info[info.length - 2];
-            var address = info[info.length - 1];
+            const model = info[info.length - 3];
+            const variant = info[info.length - 2];
+            const address = info[info.length - 1];
             // 주소는 실측상 항상 16진수 12자리이며 뒤에 덧붙는 문자가 없다. 레거시의
             // length>=12 + substring(0,12)로 느슨하게 받던 것보다 좁게 잡았다(entry-hw와 동일 정책).
             if (!/^[0-9A-Fa-f]{2}$/.test(variant) || !/^[0-9A-Fa-f]{12}$/.test(address)) {
                 return undefined;
             }
             if (model == '04' || model == '0E') {
-                return { isHamsterS: model == '0E', address: address };
+                return { isHamsterS: model == '0E', address };
             }
             return undefined;
         }
@@ -6473,8 +6511,7 @@
         // 이 항목이 받아들이는 기종인지. 기본 항목은 두 기종을 모두 받는다.
         // 판정을 setRobotIdentity 재정의로 하면 안 된다. 세션 중 경로는 값을 갱신하지 않은 채
         // 다음 프레임에 같은 판정을 다시 하게 되어 수렴하지 않는다.
-        // eslint-disable-next-line no-unused-vars
-        acceptsIdentity(identity) {
+        acceptsIdentity() {
             return true;
         }
 
@@ -6508,11 +6545,11 @@
         }
 
         async initialHandshake() {
-            var serial = Entry.hwLite.serial;
-            var identity;
-            var timedOut = false;
-            var timer;
-            var timeoutPromise = new Promise((resolve) => {
+            const serial = Entry.hwLite.serial;
+            let identity;
+            let timedOut = false;
+            let timer;
+            const timeoutPromise = new Promise((resolve) => {
                 timer = setTimeout(() => {
                     timedOut = true;
                     resolve('timeout');
@@ -6525,7 +6562,7 @@
                     // 반복마다 진행 중인 read는 항상 정확히 1개다.
                     // 타임아웃 패자로 남는 pending read는 removeSerialPort()의 reader.cancel()이
                     // {done:true}로 settle하므로 누수/unhandled rejection이 없다.
-                    var result = await Promise.race([serial.reader.read(), timeoutPromise]);
+                    const result = await Promise.race([serial.reader.read(), timeoutPromise]);
                     if (result === 'timeout' || result.done) {
                         break;
                     }
