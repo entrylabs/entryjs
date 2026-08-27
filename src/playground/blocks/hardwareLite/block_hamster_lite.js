@@ -15,7 +15,56 @@
         [255, 255, 255],
     ];
 
-    Entry.HamsterLite = new (class HamsterLite {
+    // 블록 정의 표를 두 인스턴스가 공유하므로, 어느 인스턴스를 구동할지는
+    // 등록 시점이 아니라 호출 시점에 정해야 한다.
+    // 햄스터S 전용 문구. setLanguage()를 재정의하면 기존 항목이 실행하는 공유 메서드가
+    // diff에 들어가고, 채우지 않은 로케일은 빈 토스트가 된다(로케일은 ko/en/jp/vn 넷).
+    const S_MSGS = {
+        ko: {
+            rejectTitle: '햄스터S가 아닙니다',
+            rejectDesc:
+                '이 항목은 햄스터S 전용입니다. 구형 햄스터는 목록에서 "햄스터"를 선택해 주세요. 다시 연결할 때 포트를 한 번 더 선택해야 합니다.',
+            foreignTitle: '다른 로봇이 연결되었습니다',
+            foreignDesc:
+                '햄스터S가 아닌 로봇이 연결되었습니다. 이 항목에서는 이 로봇을 제어할 수 없습니다. 연결을 끊고 햄스터S를 연결하거나, 목록에서 "햄스터"를 선택해 주세요.',
+        },
+        en: {
+            rejectTitle: 'Not a Hamster S',
+            rejectDesc:
+                'This entry is for Hamster S only. For the older Hamster, choose "Hamster" from the list. You will need to pick the port again when reconnecting.',
+            foreignTitle: 'A different robot is connected',
+            foreignDesc:
+                'A robot other than Hamster S is connected. This entry cannot control it. Disconnect and connect a Hamster S, or choose "Hamster" from the list.',
+        },
+        jp: {
+            rejectTitle: 'ハムスターSではありません',
+            rejectDesc:
+                'この項目はハムスターS専用です。旧型ハムスターは一覧から「ハムスター」を選んでください。再接続の際はポートをもう一度選択する必要があります。',
+            foreignTitle: '別のロボットが接続されました',
+            foreignDesc:
+                'ハムスターS以外のロボットが接続されています。この項目ではこのロボットを制御できません。接続を切ってハムスターSを接続するか、一覧から「ハムスター」を選んでください。',
+        },
+        vn: {
+            rejectTitle: 'Đây không phải Hamster S',
+            rejectDesc:
+                'Mục này chỉ dành cho Hamster S. Với Hamster đời cũ, hãy chọn "Hamster" trong danh sách. Khi kết nối lại, bạn cần chọn cổng một lần nữa.',
+            foreignTitle: 'Đã kết nối một robot khác',
+            foreignDesc:
+                'Một robot không phải Hamster S đang được kết nối. Mục này không thể điều khiển nó. Hãy ngắt kết nối và kết nối Hamster S, hoặc chọn "Hamster" trong danh sách.',
+        },
+    };
+
+    // Entry.hwLite.hwModule은 연결 상태가 아니라 "현재 선택된 모듈"이다(모듈 추가 시점에
+    // 설정되고 해제 시 null). 선택된 것이 없거나 타사 모듈이면 기존 인스턴스로 떨어뜨려
+    // 블록이 예외 대신 0/false를 돌려주게 한다. 이 폴백이 헬퍼의 존재 이유다.
+    // 알려진 제약: 실제 송수신과 완료 콜백은 커넥터가 생성 시점에 붙잡아 둔 모듈을 쓴다.
+    // 연결 중 모듈을 다시 추가하면 이전 커넥터가 정리되지 않아 둘이 어긋날 수 있다(코어 결함).
+    function activeHamster() {
+        const m = Entry.hwLite && Entry.hwLite.hwModule;
+        return m === Entry.HamsterLite || m === Entry.HamsterSLite ? m : Entry.HamsterLite;
+    }
+
+    class HamsterLite {
         constructor() {
             this.id = '020401';
             this.url = 'http://www.robomation.net';
@@ -173,7 +222,14 @@
 
         get monitorTemplate() {
             return {
-                imgPath: 'hw_lite/hamsterlite.png',
+                // 인스턴스에서 파생한다. 게터 형태는 반드시 유지할 것:
+                // 코어가 이 객체에 쓰는 값들이 버려지는 현재 동작이 여기에 의존한다.
+                imgPath: `hw_lite/${this.imageName}`,
+                // 센서 점 좌표는 이 게터에 하드코딩돼 있고, 오른쪽을 향한 구형 사진 기준이다.
+                // 좌표는 256 좌표계의 절대 위치이며(hardwareMonitor가 사진을 256으로 늘려 그린다),
+                // 사진 크기와 무관하다.
+                // 햄스터S 사진은 좌우가 반대이므로(바퀴가 왼쪽) 이 좌표를 쓸 수 없다.
+                // HamsterSLite가 이 게터를 물려받아 위치만 갈아끼운다.
                 width: 256,
                 height: 256,
                 listPorts: {
@@ -1730,7 +1786,7 @@
                 let octave = script.getNumberField('OCTAVE');
                 let beat = script.getNumberValue('BEAT');
 
-                note = parseInt(Entry.HamsterLite.__NOTES[note]);
+                note = parseInt(self.__NOTES[note]);
                 octave = parseInt(octave);
                 beat = parseFloat(beat);
                 motoring.buzzer = 0;
@@ -2525,9 +2581,9 @@
                         type: 'hamsterlite_hand_found',
                     },
                     class: 'hamsterlite_sensor',
-                    isNotFor: ['HamsterLite'],
+                    isNotFor: ['HamsterLite', 'HamsterSLite'],
                     func(sprite, script) {
-                        return Entry.HamsterLite.checkHandFound(script) || false;
+                        return activeHamster().checkHandFound(script) || false;
                     },
                     syntax: {
                         js: [],
@@ -2574,9 +2630,9 @@
                         DEVICE: 0,
                     },
                     class: 'hamsterlite_sensor',
-                    isNotFor: ['HamsterLite'],
+                    isNotFor: ['HamsterLite', 'HamsterSLite'],
                     func(sprite, script) {
-                        return Entry.HamsterLite.checkBoolean(script) || false;
+                        return activeHamster().checkBoolean(script) || false;
                     },
                     syntax: {
                         js: [],
@@ -2656,9 +2712,9 @@
                         DEVICE: 0,
                     },
                     class: 'hamsterlite_sensor',
-                    isNotFor: ['HamsterLite'],
+                    isNotFor: ['HamsterLite', 'HamsterSLite'],
                     func(sprite, script) {
-                        return Entry.HamsterLite.getValue(script);
+                        return activeHamster().getValue(script);
                     },
                     syntax: {
                         js: [],
@@ -2739,9 +2795,9 @@
                         type: 'hamsterlite_move_forward_once',
                     },
                     class: 'hamsterlite_board',
-                    isNotFor: ['HamsterLite'],
+                    isNotFor: ['HamsterLite', 'HamsterSLite'],
                     func(sprite, script) {
-                        return Entry.HamsterLite.boardForward(script);
+                        return activeHamster().boardForward(script);
                     },
                     syntax: {
                         js: [],
@@ -2784,9 +2840,9 @@
                         DIRECTION: 0,
                     },
                     class: 'hamsterlite_board',
-                    isNotFor: ['HamsterLite'],
+                    isNotFor: ['HamsterLite', 'HamsterSLite'],
                     func(sprite, script) {
-                        return Entry.HamsterLite.boardTurn(script);
+                        return activeHamster().boardTurn(script);
                     },
                     syntax: {
                         js: [],
@@ -2842,9 +2898,9 @@
                         SECS: 0,
                     },
                     class: 'hamsterlite_wheel',
-                    isNotFor: ['HamsterLite'],
+                    isNotFor: ['HamsterLite', 'HamsterSLite'],
                     func(sprite, script) {
-                        return Entry.HamsterLite.moveForwardSecs(script);
+                        return activeHamster().moveForwardSecs(script);
                     },
                     syntax: {
                         js: [],
@@ -2892,9 +2948,9 @@
                         SECS: 0,
                     },
                     class: 'hamsterlite_wheel',
-                    isNotFor: ['HamsterLite'],
+                    isNotFor: ['HamsterLite', 'HamsterSLite'],
                     func(sprite, script) {
-                        return Entry.HamsterLite.moveBackwardSecs(script);
+                        return activeHamster().moveBackwardSecs(script);
                     },
                     syntax: {
                         js: [],
@@ -2955,9 +3011,9 @@
                         SECS: 1,
                     },
                     class: 'hamsterlite_wheel',
-                    isNotFor: ['HamsterLite'],
+                    isNotFor: ['HamsterLite', 'HamsterSLite'],
                     func(sprite, script) {
-                        return Entry.HamsterLite.turnSecs(script);
+                        return activeHamster().turnSecs(script);
                     },
                     syntax: {
                         js: [],
@@ -3026,9 +3082,9 @@
                         RIGHT: 1,
                     },
                     class: 'hamsterlite_wheel',
-                    isNotFor: ['HamsterLite'],
+                    isNotFor: ['HamsterLite', 'HamsterSLite'],
                     func(sprite, script) {
-                        return Entry.HamsterLite.changeWheels(script);
+                        return activeHamster().changeWheels(script);
                     },
                     syntax: {
                         js: [],
@@ -3089,9 +3145,9 @@
                         RIGHT: 1,
                     },
                     class: 'hamsterlite_wheel',
-                    isNotFor: ['HamsterLite'],
+                    isNotFor: ['HamsterLite', 'HamsterSLite'],
                     func(sprite, script) {
-                        return Entry.HamsterLite.setWheels(script);
+                        return activeHamster().setWheels(script);
                     },
                     syntax: {
                         js: [],
@@ -3157,9 +3213,9 @@
                         VELOCITY: 1,
                     },
                     class: 'hamsterlite_wheel',
-                    isNotFor: ['HamsterLite'],
+                    isNotFor: ['HamsterLite', 'HamsterSLite'],
                     func(sprite, script) {
-                        return Entry.HamsterLite.changeWheel(script);
+                        return activeHamster().changeWheel(script);
                     },
                     syntax: {
                         js: [],
@@ -3234,9 +3290,9 @@
                         VELOCITY: 1,
                     },
                     class: 'hamsterlite_wheel',
-                    isNotFor: ['HamsterLite'],
+                    isNotFor: ['HamsterLite', 'HamsterSLite'],
                     func(sprite, script) {
-                        return Entry.HamsterLite.setWheel(script);
+                        return activeHamster().setWheel(script);
                     },
                     syntax: {
                         js: [],
@@ -3311,9 +3367,9 @@
                         SENSOR: 1,
                     },
                     class: 'hamsterlite_wheel',
-                    isNotFor: ['HamsterLite'],
+                    isNotFor: ['HamsterLite', 'HamsterSLite'],
                     func(sprite, script) {
-                        return Entry.HamsterLite.followLine(script);
+                        return activeHamster().followLine(script);
                     },
                     syntax: {
                         js: [],
@@ -3397,9 +3453,9 @@
                         DIRECTION: 1,
                     },
                     class: 'hamsterlite_wheel',
-                    isNotFor: ['HamsterLite'],
+                    isNotFor: ['HamsterLite', 'HamsterSLite'],
                     func(sprite, script) {
-                        return Entry.HamsterLite.followLineUntil(script);
+                        return activeHamster().followLineUntil(script);
                     },
                     syntax: {
                         js: [],
@@ -3476,9 +3532,9 @@
                         SPEED: 0,
                     },
                     class: 'hamsterlite_wheel',
-                    isNotFor: ['HamsterLite'],
+                    isNotFor: ['HamsterLite', 'HamsterSLite'],
                     func(sprite, script) {
-                        return Entry.HamsterLite.setLineTracerSpeed(script);
+                        return activeHamster().setLineTracerSpeed(script);
                     },
                     syntax: {
                         js: [],
@@ -3528,9 +3584,9 @@
                         type: 'hamsterlite_stop',
                     },
                     class: 'hamsterlite_wheel',
-                    isNotFor: ['HamsterLite'],
+                    isNotFor: ['HamsterLite', 'HamsterSLite'],
                     func(sprite, script) {
-                        return Entry.HamsterLite.stop(script);
+                        return activeHamster().stop(script);
                     },
                     syntax: {
                         js: [],
@@ -3591,9 +3647,9 @@
                         COLOR: 1,
                     },
                     class: 'hamsterlite_led',
-                    isNotFor: ['HamsterLite'],
+                    isNotFor: ['HamsterLite', 'HamsterSLite'],
                     func(sprite, script) {
-                        return Entry.HamsterLite.setLed(script);
+                        return activeHamster().setLed(script);
                     },
                     syntax: {
                         js: [],
@@ -3886,9 +3942,9 @@
                         LED: 0,
                     },
                     class: 'hamsterlite_led',
-                    isNotFor: ['HamsterLite'],
+                    isNotFor: ['HamsterLite', 'HamsterSLite'],
                     func(sprite, script) {
-                        return Entry.HamsterLite.clearLed(script);
+                        return activeHamster().clearLed(script);
                     },
                     syntax: {
                         js: [],
@@ -3932,9 +3988,9 @@
                         type: 'hamsterlite_beep',
                     },
                     class: 'hamsterlite_buzzer',
-                    isNotFor: ['HamsterLite'],
+                    isNotFor: ['HamsterLite', 'HamsterSLite'],
                     func(sprite, script) {
-                        return Entry.HamsterLite.beep(script);
+                        return activeHamster().beep(script);
                     },
                     syntax: {
                         js: [],
@@ -3976,9 +4032,9 @@
                         HZ: 0,
                     },
                     class: 'hamsterlite_buzzer',
-                    isNotFor: ['HamsterLite'],
+                    isNotFor: ['HamsterLite', 'HamsterSLite'],
                     func(sprite, script) {
-                        return Entry.HamsterLite.changeBuzzer(script);
+                        return activeHamster().changeBuzzer(script);
                     },
                     syntax: {
                         js: [],
@@ -4020,9 +4076,9 @@
                         HZ: 0,
                     },
                     class: 'hamsterlite_buzzer',
-                    isNotFor: ['HamsterLite'],
+                    isNotFor: ['HamsterLite', 'HamsterSLite'],
                     func(sprite, script) {
-                        return Entry.HamsterLite.setBuzzer(script);
+                        return activeHamster().setBuzzer(script);
                     },
                     syntax: {
                         js: [],
@@ -4051,9 +4107,9 @@
                         type: 'hamsterlite_clear_buzzer',
                     },
                     class: 'hamsterlite_buzzer',
-                    isNotFor: ['HamsterLite'],
+                    isNotFor: ['HamsterLite', 'HamsterSLite'],
                     func(sprite, script) {
-                        return Entry.HamsterLite.clearBuzzer(script);
+                        return activeHamster().clearBuzzer(script);
                     },
                     syntax: {
                         js: [],
@@ -4123,9 +4179,9 @@
                         OCTAVE: 1,
                     },
                     class: 'hamsterlite_buzzer',
-                    isNotFor: ['HamsterLite'],
+                    isNotFor: ['HamsterLite', 'HamsterSLite'],
                     func(sprite, script) {
-                        return Entry.HamsterLite.playNote(script);
+                        return activeHamster().playNote(script);
                     },
                     syntax: {
                         js: [],
@@ -4757,9 +4813,9 @@
                         BEAT: 2,
                     },
                     class: 'hamsterlite_buzzer',
-                    isNotFor: ['HamsterLite'],
+                    isNotFor: ['HamsterLite', 'HamsterSLite'],
                     func(sprite, script) {
-                        return Entry.HamsterLite.playNoteBeat(script);
+                        return activeHamster().playNoteBeat(script);
                     },
                     syntax: {
                         js: [],
@@ -5362,9 +5418,9 @@
                         BEAT: 0,
                     },
                     class: 'hamsterlite_buzzer',
-                    isNotFor: ['HamsterLite'],
+                    isNotFor: ['HamsterLite', 'HamsterSLite'],
                     func(sprite, script) {
-                        return Entry.HamsterLite.restBeat(script);
+                        return activeHamster().restBeat(script);
                     },
                     syntax: {
                         js: [],
@@ -5412,9 +5468,9 @@
                         BPM: 0,
                     },
                     class: 'hamsterlite_buzzer',
-                    isNotFor: ['HamsterLite'],
+                    isNotFor: ['HamsterLite', 'HamsterSLite'],
                     func(sprite, script) {
-                        return Entry.HamsterLite.changeTempo(script);
+                        return activeHamster().changeTempo(script);
                     },
                     syntax: {
                         js: [],
@@ -5462,9 +5518,9 @@
                         BPM: 0,
                     },
                     class: 'hamsterlite_buzzer',
-                    isNotFor: ['HamsterLite'],
+                    isNotFor: ['HamsterLite', 'HamsterSLite'],
                     func(sprite, script) {
-                        return Entry.HamsterLite.setTempo(script);
+                        return activeHamster().setTempo(script);
                     },
                     syntax: {
                         js: [],
@@ -5529,9 +5585,9 @@
                         MODE: 1,
                     },
                     class: 'hamsterlite_port',
-                    isNotFor: ['HamsterLite'],
+                    isNotFor: ['HamsterLite', 'HamsterSLite'],
                     func(sprite, script) {
-                        return Entry.HamsterLite.setIoMode(script);
+                        return activeHamster().setIoMode(script);
                     },
                     syntax: {
                         js: [],
@@ -5754,9 +5810,9 @@
                         VALUE: 1,
                     },
                     class: 'hamsterlite_port',
-                    isNotFor: ['HamsterLite'],
+                    isNotFor: ['HamsterLite', 'HamsterSLite'],
                     func(sprite, script) {
-                        return Entry.HamsterLite.changeOutput(script);
+                        return activeHamster().changeOutput(script);
                     },
                     syntax: {
                         js: [],
@@ -5831,9 +5887,9 @@
                         VALUE: 1,
                     },
                     class: 'hamsterlite_port',
-                    isNotFor: ['HamsterLite'],
+                    isNotFor: ['HamsterLite', 'HamsterSLite'],
                     func(sprite, script) {
-                        return Entry.HamsterLite.setOutput(script);
+                        return activeHamster().setOutput(script);
                     },
                     syntax: {
                         js: [],
@@ -5895,9 +5951,9 @@
                         ACTION: 0,
                     },
                     class: 'hamsterlite_port',
-                    isNotFor: ['HamsterLite'],
+                    isNotFor: ['HamsterLite', 'HamsterSLite'],
                     func(sprite, script) {
-                        return Entry.HamsterLite.gripper(script);
+                        return activeHamster().gripper(script);
                     },
                     syntax: {
                         js: [],
@@ -5940,9 +5996,9 @@
                         type: 'hamsterlite_release_gripper',
                     },
                     class: 'hamsterlite_port',
-                    isNotFor: ['HamsterLite'],
+                    isNotFor: ['HamsterLite', 'HamsterSLite'],
                     func(sprite, script) {
-                        return Entry.HamsterLite.releaseGripper(script);
+                        return activeHamster().releaseGripper(script);
                     },
                     syntax: {
                         js: [],
@@ -6109,6 +6165,11 @@
             // data: string
             const identity = this.parseIdentityData(data);
             if (identity) {
+                // 받아들이는 기종의 정체를 본 시점. 같은 로봇이 되돌아오면 아래 변경 감지
+                // 분기에 걸리지 않으므로, 거부 상태 해제는 반드시 여기서 처리해야 한다.
+                if (this.acceptsIdentity(identity)) {
+                    this.onAcceptedIdentity(identity);
+                }
                 // 연결 유지 중 동글의 페어링 로봇이 바뀌면 정체 라인이 다시 온다.
                 // 1회성 라인(노이즈)으로 주행 중 정지하지 않도록 동일 정체 2회 확인 후 전환한다.
                 if (identity.isHamsterS !== this.isHamsterS || identity.address !== this.address) {
@@ -6119,6 +6180,12 @@
                         pending.address === identity.address
                     ) {
                         this.pendingIdentity = undefined;
+                        if (!this.acceptsIdentity(identity)) {
+                            // 이 항목이 받지 않는 기종이다. 코어 teardown은 부르지 않는다:
+                            // disconnect()는 작품에 저장된 하드웨어 선택까지 비운다.
+                            this.onForeignRobot(identity);
+                            return;
+                        }
                         this.setRobotIdentity(identity);
                         // 현장 디버깅 breadcrumb: 세션 중 재식별은 "로봇이 갑자기 멈춤"의 원인 후보
                         console.info('HamsterLite: runtime robot identity switch', identity);
@@ -6139,6 +6206,11 @@
             }
             if (this.pendingIdentity && --this.pendingIdentityTtl <= 0) {
                 this.pendingIdentity = undefined;
+            }
+            // 받지 않는 기종이 붙어 있는 동안에는 센서 프레임을 해석하지 않는다.
+            // 해석하면 다른 기종의 프레임을 이 기종 규격으로 읽어 센서값에 쓰레기가 들어간다.
+            if (!this.shouldParseSensory()) {
+                return;
             }
             if (data?.length != 53) {
                 return;
@@ -6398,6 +6470,25 @@
             this.address = identity.address;
         }
 
+        // 이 항목이 받아들이는 기종인지. 기본 항목은 두 기종을 모두 받는다.
+        // 판정을 setRobotIdentity 재정의로 하면 안 된다. 세션 중 경로는 값을 갱신하지 않은 채
+        // 다음 프레임에 같은 판정을 다시 하게 되어 수렴하지 않는다.
+        // eslint-disable-next-line no-unused-vars
+        acceptsIdentity(identity) {
+            return true;
+        }
+
+        // 기본 항목은 거부하지 않으므로 이 경로에 오지 않는다. 방어용 no-op.
+        onForeignRobot() {}
+
+        // 받아들이는 기종의 정체를 봤을 때. 기본 항목은 할 일이 없다.
+        onAcceptedIdentity() {}
+
+        // 센서 프레임을 해석해도 되는 상태인지. 기본 항목은 항상 해석한다.
+        shouldParseSensory() {
+            return true;
+        }
+
         // 검증 실패 프레임이 연속되면 로봇/모드 불일치 가능성이 높다 → 정체를 다시 묻는다.
         // 스트림 약 30fps 기준 1초 연속 불일치에서 1회 발화.
         // (다른 기종으로 바뀔 때 총 전환 지연은 정체 2회 확인 구조라 약 2~3초)
@@ -6461,10 +6552,147 @@
                 await serial.removeSerialPort();
                 return false;
             }
+            if (!this.acceptsIdentity(identity)) {
+                // 고른 항목이 받지 않는 기종이다. 위 실패 분기와 같은 정리를 반드시 거친다:
+                // 건너뛰면 같은 동글이 새로고침 전까지 재연결 불가가 된다.
+                // 정리를 먼저 한다. 토스트가 던지면 포트가 열린 채 남아,
+                // 같은 동글이 새로고침 전까지 재연결 불가가 된다.
+                await serial.removeSerialPort();
+                this.onRejectedAtConnect();
+                return false;
+            }
             this.setRobotIdentity(identity);
             return true;
         }
-    })();
+    } // class HamsterLite 끝
+
+    Entry.HamsterLite = new HamsterLite();
+
+    class HamsterSLite extends HamsterLite {
+        constructor() {
+            super();
+            this.id = '020E01'; // 햄스터S 모듈 번호
+            this.name = 'HamsterSLite';
+            this.imageName = 'hamsterslite.png';
+            // 초기값. 공유 setRobotIdentity가 핸드셰이크와 세션 중 재식별에서 이 값에 대입하므로
+            // 읽기 전용 접근자로 만들면 안 된다. 다른 기종을 거부하는 일은
+            // acceptsIdentity()와 두 호출부가 담당한다(설정자를 재정의하지 않는다).
+            this.isHamsterS = true;
+            // metadata 주입이 실패하면 코어가 title.ko를 역참조해 작품 로딩이 중단된다. 기본값을 둔다.
+            this.title = { ko: '햄스터S' };
+            // 거부 상태. setZero()는 세션 상태를 대부분 초기화하지만 이 둘은 건드리면 안 된다:
+            // 지우면 onForeignRobot 안에서 setZero를 부르는 순간 안내가 무한 반복된다.
+            this.foreignAttached = false; // 지금 받지 않는 기종이 붙어 있는가 (쓰기, 프로브, 파싱 차단)
+            this.rejectedAddress = undefined; // 안내 중복 방지용 주소 기억
+        }
+
+        // 파일의 다른 코드와 같이 Lang을 전역으로 읽는다. 미지원 로케일은 en으로 떨어뜨린다.
+        __messages() {
+            const type = typeof Lang !== 'undefined' && Lang && Lang.type;
+            return S_MSGS[type] || S_MSGS.en;
+        }
+
+        // 햄스터S 사진은 구형과 좌우가 반대다(바퀴가 왼쪽). 상위 좌표를 그대로 물려받으면
+        // 점 9개가 전부 어긋나므로 위치만 항목별로 갈아끼운다. 이름과 종류는 상위 것을 그대로 쓴다.
+        // 게터 형태를 유지해야 상위와 같은 신선도를 갖는다(코어가 이 객체에 쓰는 값은 버려진다).
+        //
+        // 출처: 아래 7개는 설치형 엔트리가 같은 사진(hw/hamster_s.png)에 이미 쓰고 있는 값을
+        // 그대로 가져왔다(hardware/block_hamster_s.js). 설치형에 없는 두 개(leftLed, rightLed)는
+        // 설치형이 그 7개에 적용한 것과 같은 규칙으로 옮겼다. x를 256에서 빼고 왼쪽과 오른쪽
+        // 이름을 맞바꾼다(거울상이라 반대편 부품이 그 자리에 온다).
+        get monitorTemplate() {
+            const template = super.monitorTemplate;
+            const positions = {
+                leftProximity: { x: 246, y: 110 },
+                rightProximity: { x: 128, y: 156 },
+                leftFloor: { x: 243, y: 186 },
+                rightFloor: { x: 150, y: 236 },
+                light: { x: 195, y: 190 },
+                leftWheel: { x: 190, y: 30 },
+                rightWheel: { x: 40, y: 115 },
+                leftLed: { x: 232, y: 168 },
+                rightLed: { x: 169, y: 210 },
+            };
+            Object.keys(positions).forEach((key) => {
+                if (template.ports[key]) {
+                    template.ports[key].pos = positions[key];
+                }
+            });
+            return template;
+        }
+
+        acceptsIdentity(identity) {
+            return !!identity && identity.isHamsterS === true;
+        }
+
+        // 정상 기종의 정체를 보면 거부 상태를 푼다. 같은 로봇이 되돌아오는 경우까지
+        // 덮으려면 변경 감지 분기가 아니라 이 훅에서 처리해야 한다:
+        // setRobotIdentity에 걸어두면 "바뀌지 않은 정체"에서는 호출되지 않아 영구히 잠긴다.
+        onAcceptedIdentity() {
+            this.foreignAttached = false;
+            this.rejectedAddress = undefined;
+        }
+
+        onRejectedAtConnect() {
+            const t = this.__messages();
+            Entry.toast.alert(t.rejectTitle, t.rejectDesc, true);
+        }
+
+        // 세션 중 다른 기종이 붙었다. 거부한 주소를 기억해 같은 로봇에 대해서는 한 번만 반응한다.
+        // 기억하지 않으면 setRobotIdentity가 갱신되지 않으므로 프레임마다 재판정되고,
+        // 매번 정지 패킷을 써서 초당 수십 번 쓰기가 발생한다(수렴하지 않는다).
+        onForeignRobot(identity) {
+            if (this.rejectedAddress === identity.address) {
+                return;
+            }
+            this.rejectedAddress = identity.address; // 안내 중복 방지(주소별 1회)
+            this.foreignAttached = true; // 프로브 억제 스위치. 정상 정체를 보면 풀린다
+            this.setZero();
+            const t = this.__messages();
+            Entry.toast.alert(t.foreignTitle, t.foreignDesc, true);
+        }
+
+        // 거부 상태에서는 모터/센서 요청 패킷을 아예 만들지 않는다. 커넥터는 falsy면 쓰기를
+        // 건너뛰므로(webSerialConnector의 두 쓰기 지점 모두 확인) 실제로 한 바이트도 나가지 않는다.
+        // 이렇게 해야 "이 로봇을 제어할 수 없다"는 안내가 실제와 맞는다. 잠그지 않으면
+        // 실행 중인 작품이 다음 프레임에 모터값을 다시 채워 계속 쓴다.
+        requestLocalData() {
+            if (this.foreignAttached) {
+                return undefined;
+            }
+            return super.requestLocalData();
+        }
+
+        shouldParseSensory() {
+            return !this.foreignAttached;
+        }
+
+        // 거부 상태에서는 FF 프로브를 보내지 않는다. 프로브가 정체 라인을 다시 끌어와
+        // 같은 처리를 반복시키는 것을 막는다.
+        reportInvalidFrame() {
+            // 억제 기준은 중복 방지 기억이 아니라 "지금 외부 로봇이 붙어 있는가"다.
+            // 기억을 기준으로 삼으면, 원래 로봇이 되돌아와도 억제가 풀리지 않아 탐지가 영구히 죽는다.
+            if (this.foreignAttached) {
+                return;
+            }
+            super.reportInvalidFrame();
+        }
+    }
+
+    Entry.HamsterSLite = new HamsterSLite();
 })();
 
-module.exports = Entry.HamsterLite;
+// 배열 순서에 두 가지가 걸려 있다. 바꾸기 전에 둘 다 확인할 것.
+//
+// 1) 번호가 둘 저장된 작품을 열 때 어느 항목이 선택되는가.
+//    utils.js는 저장된 번호를 모두 순회하며 모듈을 추가하고(break 없음) 마지막이 이긴다.
+//    HARDWARE_LITE_LIST의 열거 순서는 숫자처럼 생긴 키가 먼저 오름차순으로 나오고
+//    그 다음 문자열 키가 삽입 순서대로 나온다. '020401'과 '020E01'은 앞자리 0 때문에
+//    둘 다 문자열 키라서 서로 간에는 삽입 순서가 유지된다. 따라서 햄스터S를 앞에 두면
+//    기존 항목이 마지막에 들어가 이긴다. 두 기종을 다 받는 쪽이 이겨야 안전하다.
+//
+// 2) 블록 정의 병합에서 어느 쪽이 이기는가.
+//    blocks/index.js가 모듈마다 getBlocks()를 Object.assign으로 합치므로 뒤쪽이 덮는다.
+//    지금은 두 인스턴스의 정의가 같아서 무해하지만, 항목별로 다른 블록을 주는 날에는
+//    이 순서가 어느 정의가 살아남는지를 결정한다.
+module.exports = [Entry.HamsterSLite, Entry.HamsterLite];
