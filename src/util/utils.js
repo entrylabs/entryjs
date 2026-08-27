@@ -464,11 +464,14 @@ Entry.overridePrototype = function () {
 // INFO: 기존에 사용하던 isNaN에는 숫자 체크의 문자가 있을수 있기때문에 regex로 체크하는 로직으로 변경
 // isNaN 문제는 https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/isNaN
 // 에서 확인.
+// INFO: 지수 표기(1e+21)도 숫자로 인정한다. JS 는 |x| >= 1e21 부터 String(x) 와
+// Number.prototype.toFixed() 가 지수 표기를 반환하므로, 엔트리가 스스로 만들어낸
+// 값이 다시 입력으로 들어왔을 때 숫자로 판정되지 않던 문제가 있었다.
 Entry.Utils.isNumber = function (num) {
     if (typeof num === 'number') {
         return true;
     }
-    const reg = /^-?\d+\.?\d*$/;
+    const reg = /^-?\d+\.?\d*(?:[eE][+-]?\d+)?$/;
     if (typeof num === 'string' && reg.test(num)) {
         return true;
     }
