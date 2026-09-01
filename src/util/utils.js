@@ -2160,6 +2160,9 @@ Entry.Utils.stopProjectWithToast = _throttle(
         message = message || 'Runtime Error';
         const toast = error.toast;
         const engine = Entry.engine;
+        const funcExecutor = scope.funcExecutor;
+        const funcErrorBlock = funcExecutor && funcExecutor.scope.block;
+        const funcErrorBlockId = funcErrorBlock && funcErrorBlock.id;
 
         if (engine && engine.isState('run')) {
             await engine.toggleStop();
@@ -2167,9 +2170,9 @@ Entry.Utils.stopProjectWithToast = _throttle(
         if (Entry.type === 'workspace') {
             if (scope.block && 'funcBlock' in scope.block) {
                 block = scope.block.funcBlock;
-            } else if (scope.funcExecutor) {
-                const errorBlock = scope.funcExecutor.scope.block;
-                const errorBlockId = errorBlock && errorBlock.id;
+            } else if (funcExecutor) {
+                const errorBlock = funcErrorBlock;
+                const errorBlockId = funcErrorBlockId;
                 const funcId = (/(func_)?(.*)/.exec(scope.type) || [])[2];
 
                 // 한 번 실행에서 서로 다른 블록의 런타임 에러가 여러 번 올라올 수 있다.
