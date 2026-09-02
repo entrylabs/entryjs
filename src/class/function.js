@@ -182,7 +182,7 @@ class EntryFunc {
             localVariables || this.localVariables,
             (localVariable) => localVariable.id === variableId
         );
-        return localVariable?.value || 0;
+        return localVariable?.value !== undefined ? localVariable.value : 0;
     }
 
     setValue(value, variableId, localVariables) {
