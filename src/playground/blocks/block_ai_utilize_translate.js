@@ -187,7 +187,7 @@ Entry.AI_UTILIZE_BLOCK.translate = {
     apiType: 'n2mt',
 };
 
-Entry.AI_UTILIZE_BLOCK.translate.getBlocks = function () {
+Entry.AI_UTILIZE_BLOCK.translate.getBlocks = function() {
     const params = {
         getType(isPython) {
             const param = {
@@ -277,7 +277,7 @@ Entry.AI_UTILIZE_BLOCK.translate.getBlocks = function () {
             return param;
         },
     };
-    const getProjectId = function () {
+    const getProjectId = function() {
         if (Entry.projectId) {
             Entry.AI_UTILIZE_BLOCK.translate.delayKey = Entry.projectId;
         }
@@ -294,15 +294,11 @@ Entry.AI_UTILIZE_BLOCK.translate.getBlocks = function () {
         params.projectId = getProjectId();
         const key = `translate-${type}${JSON.stringify(params)}`;
         return new PromiseManager()
-            .Promise(async (resolve) => {
-                callApi(
-                    key,
-                    {
-                        url: `${Entry.AI_UTILIZE_BLOCK.translate.api}translate/${type}`,
-                        params,
-                    },
-                    window.isOffline ? await window.getPapagoHeaderInfo() : {}
-                )
+            .Promise((resolve) => {
+                callApi(key, {
+                    url: `${Entry.AI_UTILIZE_BLOCK.translate.api}translate/${type}`,
+                    params,
+                })
                     .then((result) => {
                         if (result.data) {
                             return resolve(result.data.translatedText);
@@ -318,14 +314,10 @@ Entry.AI_UTILIZE_BLOCK.translate.getBlocks = function () {
         const langCodeMap = getInitialCodeMap();
         return new PromiseManager()
             .Promise((resolve) => {
-                callApi(
-                    `translate-detect-${query}`,
-                    {
-                        url: `${Entry.AI_UTILIZE_BLOCK.translate.api}dect/langs`,
-                        params: { query, projectId: getProjectId() },
-                    },
-                    window.isOffline ? window.getPapagoHeaderInfo() : {}
-                )
+                callApi(`translate-detect-${query}`, {
+                    url: `${Entry.AI_UTILIZE_BLOCK.translate.api}dect/langs`,
+                    params: { query, projectId: getProjectId() },
+                })
                     .then((result) => {
                         if (
                             result.data &&
@@ -341,7 +333,7 @@ Entry.AI_UTILIZE_BLOCK.translate.getBlocks = function () {
             .catch(() => defaultValue);
     };
 
-    const checkText = function (text) {
+    const checkText = function(text) {
         const result = {
             result: false,
             message: Lang.Blocks.unknown_sentence,
