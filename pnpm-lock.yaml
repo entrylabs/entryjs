@@ -54,24 +54,9 @@ importers:
       '@tensorflow/tfjs':
         specifier: ^4.17.0
         version: 4.22.0(encoding@0.1.13)(seedrandom@3.0.5)
-      '@types/crypto-js':
-        specifier: ^4.0.1
-        version: 4.2.2
-      '@types/hammerjs':
-        specifier: ^2.0.41
-        version: 2.0.46
-      '@types/isomorphic-fetch':
-        specifier: ^0.0.35
-        version: 0.0.35
-      autoprefixer:
-        specifier: ^9.4.3
-        version: 9.8.8
       buffer:
         specifier: ^6.0.3
         version: 6.0.3
-      copy-webpack-plugin:
-        specifier: ^12.0.2
-        version: 12.0.2(webpack@5.104.1)
       core-js:
         specifier: ^3.6.4
         version: 3.48.0
@@ -90,15 +75,9 @@ importers:
       hammerjs:
         specifier: ^2.0.8
         version: 2.0.8
-      html-webpack-plugin:
-        specifier: ^5.5.3
-        version: 5.6.6(webpack@5.104.1)
       isomorphic-fetch:
         specifier: ^2.2.1
         version: 2.2.1
-      jest:
-        specifier: ^24.9.0
-        version: 24.9.0
       khaiii:
         specifier: ^0.0.2
         version: 0.0.2
@@ -117,9 +96,6 @@ importers:
       pixi.js:
         specifier: 5.3.7
         version: 5.3.7
-      postcss-flexbugs-fixes:
-        specifier: ^4.1.0
-        version: 4.2.1
       simplebar:
         specifier: ^5.3.0
         version: 5.3.9
@@ -135,12 +111,6 @@ importers:
       uid:
         specifier: ^0.0.2
         version: 0.0.2
-      webpack:
-        specifier: ^5.85.0
-        version: 5.104.1(webpack-cli@5.1.4)
-      worker-loader:
-        specifier: ^3.0.8
-        version: 3.0.8(webpack@5.104.1)
       xss-filters:
         specifier: ^1.2.7
         version: 1.2.7
@@ -184,6 +154,15 @@ importers:
       '@types/createjs':
         specifier: ^0.0.29
         version: 0.0.29
+      '@types/crypto-js':
+        specifier: ^4.0.1
+        version: 4.2.2
+      '@types/hammerjs':
+        specifier: ^2.0.41
+        version: 2.0.46
+      '@types/isomorphic-fetch':
+        specifier: ^0.0.35
+        version: 0.0.35
       '@types/jquery':
         specifier: ^3.3.38
         version: 3.5.33
@@ -208,6 +187,9 @@ importers:
       audiobuffer-to-wav:
         specifier: ^1.0.0
         version: 1.0.0
+      autoprefixer:
+        specifier: ^9.4.3
+        version: 9.8.8
       babel-loader:
         specifier: ^8.0.6
         version: 8.4.1(@babel/core@7.29.7)(webpack@5.104.1)
@@ -217,6 +199,9 @@ importers:
       clean-webpack-plugin:
         specifier: ^1.0.1
         version: 1.0.1
+      copy-webpack-plugin:
+        specifier: ^12.0.2
+        version: 12.0.2(webpack@5.104.1)
       cross-env:
         specifier: ^5.1.4
         version: 5.2.1
@@ -244,6 +229,12 @@ importers:
       file-loader:
         specifier: ^4.2.0
         version: 4.3.0(webpack@5.104.1)
+      html-webpack-plugin:
+        specifier: ^5.5.3
+        version: 5.6.6(webpack@5.104.1)
+      jest:
+        specifier: ^24.9.0
+        version: 24.9.0
       less:
         specifier: ^3.10.1
         version: 3.13.1
@@ -253,6 +244,9 @@ importers:
       mini-css-extract-plugin:
         specifier: ^2.7.6
         version: 2.10.0(webpack@5.104.1)
+      postcss-flexbugs-fixes:
+        specifier: ^4.1.0
+        version: 4.2.1
       postcss-loader:
         specifier: ^3.0.0
         version: 3.0.0
@@ -277,6 +271,9 @@ importers:
       url-loader:
         specifier: ^1.0.1
         version: 1.1.2(webpack@5.104.1)
+      webpack:
+        specifier: ^5.85.0
+        version: 5.104.1(webpack-cli@5.1.4)
       webpack-cli:
         specifier: ^5.1.1
         version: 5.1.4(webpack-dev-server@4.15.2)(webpack@5.104.1)
@@ -292,6 +289,9 @@ importers:
       webpack-strip-block:
         specifier: ^0.3.0
         version: 0.3.0(webpack@5.104.1)
+      worker-loader:
+        specifier: ^3.0.8
+        version: 3.0.8(webpack@5.104.1)
 
 packages:
 
