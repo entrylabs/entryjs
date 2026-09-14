@@ -1442,7 +1442,35 @@ Entry.VariableContainer = class VariableContainer {
         for (const id in functions) {
             functions[id].content.removeBlocksByType(functionType);
         }
+        this.removeFuncBlocksFromClipboard(functionType);
         this.updateList();
+    }
+
+    /**
+     * 복사해 둔 블록이 붙여넣기로 되살아나 정의 없는 함수 호출이 생기지 않도록,
+     * 스크립트와 동일하게 클립보드에서도 해당 함수 호출 블록을 제거합니다.
+     * params 슬롯은 인자 위치가 유지되도록 제거 대신 빈 슬롯(null)으로 바꿉니다.
+     * @param {string} functionType
+     */
+    removeFuncBlocksFromClipboard(functionType) {
+        if (!Array.isArray(Entry.clipboard)) {
+            return;
+        }
+
+        const isFuncBlock = (value) =>
+            value && typeof value === 'object' && value.type === functionType;
+        const removeFromBlock = (block) => ({
+            ...block,
+            params: (block.params || []).map((param) =>
+                isFuncBlock(param) ? null : param && param.type ? removeFromBlock(param) : param
+            ),
+            statements: (block.statements || []).map(removeFromThread),
+        });
+        const removeFromThread = (thread) =>
+            thread.filter((block) => !isFuncBlock(block)).map(removeFromBlock);
+
+        const cleaned = removeFromThread(Entry.clipboard);
+        Entry.clipboard = cleaned.length ? cleaned : null;
     }
 
     removeNotPythonSupportedFunction() {
@@ -1458,6 +1486,7 @@ Entry.VariableContainer = class VariableContainer {
                 for (const id in functions) {
                     functions[id].content.removeBlocksByType(functionType);
                 }
+                this.removeFuncBlocksFromClipboard(functionType);
             }
         });
         this.updateList();
