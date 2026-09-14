@@ -14,18 +14,17 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - name: Use Node.js 20.x
+            - name: Use Node.js 24.x
               uses: actions/setup-node@v4
               env:
                   NODE_OPTIONS: '--max-old-space-size=4096'
                   TOOL_NODE_FLAGS: '--max-old-space-size=4096'
               with:
-                  node-version: 20
+                  node-version: 24
                   registry-url: 'https://registry.npmjs.org'
-            - uses: pnpm/action-setup@v3
+            - uses: pnpm/action-setup@v4
               name: Install pnpm
               with:
-                  version: 9
                   run_install: true
             - name: entry build
               env:
