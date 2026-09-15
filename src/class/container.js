@@ -482,9 +482,11 @@ Entry.Container = class Container {
         const object = this.getObject(id);
         const index = objects.indexOf(object);
 
+        const removedObjectId = object.id;
         object.destroy();
         objects.splice(index, 1);
-        Entry.variableContainer.removeLocalVariables(object.id);
+        Entry.variableContainer.removeLocalVariables(removedObjectId);
+        Entry.variableContainer.removeRefs(removedObjectId);
         Entry.engine.hideProjectTimer();
 
         if (isPass === true) {

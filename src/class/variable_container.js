@@ -3255,6 +3255,18 @@ Entry.VariableContainer = class VariableContainer {
         });
     }
 
+    removeRefs(objectId) {
+        if (!objectId) {
+            return;
+        }
+        ['_variableRefs', '_messageRefs', '_functionRefs'].forEach((type) => {
+            this[type] = this[type].filter(
+                (ref) => !ref.object || ref.object.id !== objectId
+            );
+        });
+        this.view_ && Entry.playground.viewMode_ !== 'default' && this.updateList();
+    }
+
     addRef(type, blockData) {
         const wsMode = _.result(Entry.getMainWS(), 'getMode');
         if (!this.view_ || wsMode !== Entry.Workspace.MODE_BOARD) {
