@@ -13231,6 +13231,4074 @@ CheeseRobot.prototype.hat010SetBrightnessTo = function(script) {
     return script.callReturn();
 };
 
+/**PioButtonChecker**/
+function PioButtonChecker() {
+    this.reset();
+}
+
+PioButtonChecker.prototype.reset = function() {
+    this.__state = 0;
+    this.__pressTime = 0;
+    this.__clicked = false;
+    this.__longPressed = false;
+    this.__prevPressed = false;
+    this.__pressedEvent = false;
+    this.__releasedEvent = false;
+    this.__clickedEvent = false;
+    this.__longPressedEvent = false;
+};
+
+PioButtonChecker.prototype.clearEvent = function() {
+    this.__pressedEvent = false;
+    this.__releasedEvent = false;
+    this.__clickedEvent = false;
+    this.__longPressedEvent = false;
+};
+
+PioButtonChecker.prototype.check = function(pressed) {
+    this.__clicked = false;
+    this.__longPressed = false;
+    switch (this.__state) {
+        case 0: // ready state and wait for press
+            if (pressed) {
+                this.__pressTime = Date.now();
+                this.__state = 1;
+            }
+            break;
+        case 1: // check how long button is pressed
+            if (pressed) {
+                if (Date.now() - this.__pressTime > 1500) {
+                    this.__longPressed = true;
+                    this.__state = 2;
+                }
+            } else {
+                if (Date.now() - this.__pressTime < 750) {
+                    this.__clicked = true;
+                }
+                this.__state = 0;
+            }
+            break;
+        case 2: // check release of long-click
+            if (!pressed) this.__state = 0;
+            break;
+    }
+    if (!this.__prevPressed && pressed) this.__pressedEvent = true;
+    if (this.__prevPressed && !pressed) this.__releasedEvent = true;
+    if (this.__clicked) this.__clickedEvent = true;
+    if (this.__longPressed) this.__longPressedEvent = true;
+    this.__prevPressed = pressed;
+};
+
+PioButtonChecker.prototype.isPressed = function() {
+    return this.__pressedEvent;
+};
+
+PioButtonChecker.prototype.isReleased = function() {
+    return this.__releasedEvent;
+};
+
+PioButtonChecker.prototype.isClicked = function() {
+    return this.__clickedEvent;
+};
+
+PioButtonChecker.prototype.isLongPressed = function() {
+    return this.__longPressedEvent;
+};
+
+/**PioRobot**/
+function PioRobot(index) {
+    this.sensory = {
+        signalStrength: 0,
+        forwardButton: 0,
+        backwardButton: 0,
+        leftButton: 0,
+        rightButton: 0,
+        runButton: 0,
+        behaviorButton: 0,
+        repeatButton: 0,
+        clearButton: 0,
+        wheelStateId: 0,
+        neckEncoder: 0,
+        neckStateId: 0,
+        soundStateId: 0,
+        batteryState: 3,
+        usbState: 0,
+        chargeState: 0,
+    };
+    this.motoring = {
+        group: 'pio',
+        module: 'pio',
+        index,
+    };
+    // sensory.*StateId는 0부터 증가하는 카운터이므로 0으로 초기화한다.
+    // -1이면 첫 완료(0->1)가 감지되지 않아 블록 콜백이 실행되지 않는다.
+    this.wheelStateId = 0;
+    this.neckStateId = 0;
+    this.soundStateId = 0;
+    this.blockId = 0;
+    this.wheelMoving = false;
+    this.motionCallback = undefined;
+    this.motioning = false;
+    this.boardCommand = 0;
+    this.boardState = 0;
+    this.boardCallback = undefined;
+    this.boarding = false;
+    this.neckMotionCallback = undefined;
+    this.neckMotioning = false;
+    this.currentSound = 0;
+    this.soundRepeat = 1;
+    this.soundCallback = undefined;
+    this.sounding = false;
+    this.buzzing = false;
+    this.noteId = 0;
+    this.noteTimer1 = undefined;
+    this.noteTimer2 = undefined;
+    this.noting = false;
+    this.resting = false;
+    this.tempo = 60;
+    this.timeouts = [];
+    this.buttons = new Array(8);
+    this.buttonCheckers = new Array(8);
+    for (let i = 0; i < 8; ++i) {
+        this.buttons[i] = 0;
+        this.buttonCheckers[i] = new PioButtonChecker();
+    }
+}
+
+PioRobot.prototype.__PORT_MAP = {
+    group: 'pio',
+    module: 'pio',
+    leftWheel: 0,
+    rightWheel: 0,
+    leftEyeRed: 0,
+    leftEyeGreen: 0,
+    leftEyeBlue: 0,
+    rightEyeRed: 0,
+    rightEyeGreen: 0,
+    rightEyeBlue: 0,
+    buzzer: 0,
+    turboId: 0,
+    turbo: 0,
+    pulseId: 0,
+    pulse: 0,
+    neckSpeedId: 0,
+    neckSpeed: 4,
+    neckAngleId: 0,
+    neckAngle: 0,
+    eyePatternId: 0,
+    eyePattern: 0,
+    noteId: 0,
+    note: 0,
+    soundId: 0,
+    sound: 0,
+    motionId: 0,
+    motionType: 0,
+    motionUnit: 0,
+    motionSpeed: 0,
+    motionValue: 0,
+    motionRadius: 0,
+};
+
+// 벤더 규격이 정한 값 범위. 출처는 제조사 문서 BabyChicken_Doc.md 다.
+// 바퀴 "0은 정지. 최대 100 %", 목 Mode 3 "Angle은 -90~+90도 범위",
+// 버저 "16bit 값으로 1부터 최대 65535 ... 최대값 65535은 6553.5Hz", 눈 RGB 0~255.
+PioRobot.prototype.__LIMITS = {
+    wheel: { min: -100, max: 100, unit: '' },
+    // 이 ±90 은 Mode 3 상대 명령의 프로토콜 범위다. 물리 가동 범위는 ±45 이고 넘기면
+    // 소리 없이 탈조한다. 상대 명령이라 ±45 클램프로도 막히지 않는다.
+    // 안전한 상한이 확정되지 않았으므로 여기 숫자를 안전 범위로 읽지 말 것.
+    neckAngle: { min: -90, max: 90, unit: '°' },
+    eyeRgb: { min: 0, max: 255, unit: '' },
+    buzzer: { min: 0, max: 6553.5, unit: 'Hz' },
+};
+
+// 이동/회전 거리는 entry-hw 가 펄스로 바꿔 16비트 필드에 싣는다. 배수는 entry-hw pio.js 의
+// CM_TO_PULSE / DEG_TO_PULSE_* 와 같아야 한다. 넘치면 하위 16비트만 남아 엉뚱한 거리를 간다.
+PioRobot.prototype.__MAX_PULSE = 65535;
+PioRobot.prototype.__PULSE_PER_UNIT = {
+    1: 968,
+    2: 968,
+    3: 15104 / 360,
+    4: 15104 / 360,
+    5: 30375 / 360,
+    6: 30375 / 360,
+    7: 30336 / 360,
+    8: 30336 / 360,
+};
+
+// 유한한 수일 때만 값을 돌려준다. getNumberValue 는 NaN 을 내지 않지만 Infinity 는 통과시키고,
+// 누적하는 블록에서 Infinity 끼리 만나면 NaN 이 되어 버퍼에 영구히 남는다.
+PioRobot.prototype.__finite = function(value) {
+    const n = parseFloat(value);
+    return Number.isFinite(n) ? n : undefined;
+};
+
+PioRobot.prototype.__clamp = function(key, value, min, max, unit) {
+    // NaN 과 undefined 는 포화시킬 방향이 없다. 중립값으로 둔다(entry-hw _sat 과 같은 정책).
+    // (이 방어가 없으면 두 비교가 모두 거짓이 되어 max 로 떨어진다: 바퀴 100, 눈 255.)
+    // 부호 있는 무한대는 여기서 걸러내지 않는다. 아래 비교가 각 끝값으로 보내고, 그것이
+    // 기존 동작이자 _sat 의 동작이다(_sat 도 isNaN 만 본다).
+    if (Number.isNaN(Number(value))) return min <= 0 && max >= 0 ? 0 : min;
+    if (value >= min && value <= max) return value;
+    const clamped = value < min ? min : max;
+    this.__warnLimit(key, min, max, clamped, unit);
+    return clamped;
+};
+
+// 실행당 항목별 1회만 알린다. setZero(엔진 정지)에서 초기화된다.
+PioRobot.prototype.__warnLimit = function(key, min, max, clamped, unit) {
+    if (!this.limitWarned) this.limitWarned = {};
+    if (this.limitWarned[key]) return;
+    // 가드를 플래그보다 먼저 본다. 워크스페이스 초기화 전에는 Entry.toast 가 없는데, 먼저
+    // 플래그를 세우면 실행당 1회 예산이 소진돼 그 뒤로 영구히 안내가 안 뜬다.
+    // 값 제한 자체는 안내와 무관하게 적용된다.
+    if (!Entry.toast) return;
+    if (typeof Lang === 'undefined' || !Lang.Msgs || !Lang.Msgs.pio_value_out_of_range) return;
+    this.limitWarned[key] = true;
+    // 도(°)는 숫자에 붙여 쓰고 cm 와 Hz 는 띄어 쓴다.
+    const u = !unit ? '' : unit === '°' ? unit : ' ' + unit;
+    Entry.toast.warning(
+        Lang.Msgs.pio_value_out_of_range_title,
+        Lang.Msgs.pio_value_out_of_range
+            .replace('%1', min + u + ' ~ ' + max + u)
+            .replace('%2', clamped + u)
+    );
+};
+
+// 목 각도가 프로토콜 범위를 넘었을 때. 범위도 조정값도 말하지 않는다(__setNeckAngle 주석 참고).
+PioRobot.prototype.__warnNeckRange = function() {
+    if (!this.limitWarned) this.limitWarned = {};
+    if (this.limitWarned.neck) return;
+    if (!Entry.toast) return;
+    if (typeof Lang === 'undefined' || !Lang.Msgs || !Lang.Msgs.pio_neck_angle_too_large) return;
+    this.limitWarned.neck = true;
+    Entry.toast.warning(
+        Lang.Msgs.pio_neck_angle_too_large_title,
+        Lang.Msgs.pio_neck_angle_too_large
+    );
+};
+
+// setTimeout 의 지연은 32비트 부호 있는 정수(최대 2147483647ms, 약 24.8일)까지만 유효하다.
+// 넘는 값을 넘기면 엔진이 지연을 1ms 로 취급해 콜백을 즉시 실행한다. 길게 요청할수록 빨리
+// 끝나는 뒤집힌 동작이 된다. 박자와 초 단위 대기는 상한이 없어 이 한계를 넘길 수 있다.
+PioRobot.prototype.__MAX_DELAY_MS = 2147483647;
+
+// 대기 시간을 유효 범위로 제한한다. 조정되면 실행당 1회 알린다.
+PioRobot.prototype.__clampDelay = function(ms) {
+    const n = parseFloat(ms);
+    // NaN, 0, 음수는 전부 즉시 실행이다. 특히 NaN 은 "값이 없다"는 뜻이지 "너무 길다"가
+    // 아니므로 상한으로 보내면 안 된다(__clamp 와 같은 정책). 알리지도 않는다.
+    // 상한 초과와 무한대만 알린다.
+    if (!(n > 0)) return 0;
+    if (n <= this.__MAX_DELAY_MS) return n;
+    this.__warnDelay();
+    return this.__MAX_DELAY_MS;
+};
+
+// 범위도 조정값도 말하지 않는다. 24.8일이라는 숫자는 사용자에게 의미가 없다.
+PioRobot.prototype.__warnDelay = function() {
+    if (!this.limitWarned) this.limitWarned = {};
+    if (this.limitWarned.delay) return;
+    // 가드를 플래그보다 먼저 본다(__warnLimit 주석 참고).
+    if (!Entry.toast) return;
+    if (typeof Lang === 'undefined' || !Lang.Msgs || !Lang.Msgs.pio_delay_too_long) return;
+    this.limitWarned.delay = true;
+    Entry.toast.warning(Lang.Msgs.pio_delay_too_long_title, Lang.Msgs.pio_delay_too_long);
+};
+
+// 이동/회전 입력값의 상한. 초 단위는 펄스를 쓰지 않아 상한이 없다.
+PioRobot.prototype.__motionLimit = function(type, unit) {
+    if (unit === 3) return { max: this.__MAX_PULSE, unit: '' };
+    if (unit !== 1) return null;
+    const per = this.__PULSE_PER_UNIT[type];
+    if (!per) return null;
+    // 안내 문구에 적히는 한계값과 실제로 전송되는 값이 같도록 소수 1자리에서 내린다.
+    return { max: Math.floor((this.__MAX_PULSE / per) * 10) / 10, unit: type <= 2 ? 'cm' : '°' };
+};
+
+// 누적하는 블록이 있으므로 델타가 아니라 누적 결과를 제한한다.
+PioRobot.prototype.__clampWheels = function() {
+    const motoring = this.motoring;
+    const L = this.__LIMITS.wheel;
+    motoring.leftWheel = this.__clamp('wheel', motoring.leftWheel, L.min, L.max, L.unit);
+    motoring.rightWheel = this.__clamp('wheel', motoring.rightWheel, L.min, L.max, L.unit);
+};
+
+PioRobot.prototype.__EYE_CHANNELS = [
+    'leftEyeRed',
+    'leftEyeGreen',
+    'leftEyeBlue',
+    'rightEyeRed',
+    'rightEyeGreen',
+    'rightEyeBlue',
+];
+
+PioRobot.prototype.__clampEyes = function() {
+    const motoring = this.motoring;
+    const L = this.__LIMITS.eyeRgb;
+    for (const key of this.__EYE_CHANNELS) {
+        motoring[key] = this.__clamp('eye', motoring[key], L.min, L.max, L.unit);
+    }
+};
+
+// (x % 255) + 1 로 증가하는 명령 id 카운터. setZero에서 0으로 재시드하지 않고 보존한다
+// (entry-hw 모듈의 _prev_*Id와의 충돌 방지. setZero 주석 참고).
+PioRobot.prototype.__ID_PORTS = [
+    'turboId',
+    'pulseId',
+    'neckSpeedId',
+    'neckAngleId',
+    'eyePatternId',
+    'noteId',
+    'soundId',
+    'motionId',
+];
+
+PioRobot.prototype.setZero = function() {
+    this.limitWarned = {}; // 실행마다 안내를 다시 낼 수 있게
+    // *Id 카운터는 세션 내 단조 증가로 보존한다(0 재시드 금지). entry-hw 모듈의 _prev_*Id는
+    // 워크스페이스 소켓이 살아있는 한 유지되는데, 카운터를 0으로 되돌리면 다음 실행이 만드는
+    // id가 이전 실행과 같은 값에 도달해 명령이 통째로 삼켜진다(정지 후 재실행 시 터보 무반응,
+    // 이어지는 이동 블록이 완료 신호를 못 받아 무한 대기). 옛 재시드가 겸하던 정지
+    // 부수효과(터보 해제, 펄스/모션/음/소리 정지, 목 중립 복귀)는 아래에서 명시적 id 증가
+    // 명령으로 재현한다.
+    const portMap = this.__PORT_MAP;
+    const motoring = this.motoring;
+    const idPorts = this.__ID_PORTS;
+    for (const port in portMap) {
+        if (idPorts.indexOf(port) >= 0 && motoring[port] !== undefined) {
+            continue; // 카운터 보존 (undefined면 아래 시드로 0 초기화)
+        }
+        motoring[port] = portMap[port];
+    }
+    // 정지 부수효과 재현 (각 id 증가 포함, entry-hw가 실제로 반영)
+    this.__setTurbo(0); // 터보 기본값(off): 이전 실행의 터보 모드가 새 실행으로 누수되지 않게
+    this.__setPulse(0);
+    this.__setMotion(0, 0, 0, 0, 0);
+    this.__setNeckSpeed(4); // 목 속도 기본값
+    // 목 중립 복귀. 알려진 좁은 한계: 이 복귀 명령의 완료 신호가, 목 회전 블록을 쓰는
+    // 프로그램을 목이 아직 복귀 중일 때 초고속 재시작하면 그 블록의 완료 기준선 캡처 직후
+    // 도착해 조기 완료될 수 있다(사람 조작 간격에선 복귀가 먼저 끝나 발생 안 함).
+    this.__setNeckAngle(0);
+    this.__setNote(0); // 음 정지
+    this.__setSound(0); // 소리 정지
+    // 센서 카운터 시작값(0)에 맞춘다(-1 아님). 생성자 주석 참고.
+    this.wheelStateId = 0;
+    this.neckStateId = 0;
+    this.soundStateId = 0;
+    this.blockId = 0;
+    this.wheelMoving = false;
+    this.motionCallback = undefined;
+    this.motioning = false;
+    this.boardCommand = 0;
+    this.boardState = 0;
+    this.boardCallback = undefined;
+    this.boarding = false;
+    this.neckMotionCallback = undefined;
+    this.neckMotioning = false;
+    this.currentSound = 0;
+    this.soundRepeat = 1;
+    this.soundCallback = undefined;
+    this.sounding = false;
+    this.buzzing = false;
+    this.noteId = 0;
+    this.noteTimer1 = undefined;
+    this.noteTimer2 = undefined;
+    this.noting = false;
+    this.resting = false;
+    this.tempo = 60;
+    for (let i = 0; i < 8; ++i) {
+        this.buttons[i] = 0;
+        this.buttonCheckers[i].reset();
+    }
+    this.__removeAllTimeouts();
+};
+
+PioRobot.prototype.afterReceive = function(pd) {
+    this.sensory = pd;
+    this.handleSensory();
+};
+
+PioRobot.prototype.afterSend = function(sq) {};
+
+PioRobot.prototype.setMotoring = function(motoring) {
+    this.motoring = motoring;
+    // getRobot()은 블록 실행마다 this.motoring을 공유 Entry.hw.sendQueue로 바꾼다.
+    // 그 객체에는 Pio의 motoring 필드가 아직 없을 수 있으므로 빠진 필드를 채운다.
+    // 그래야 (this.motoring.xId % 255) + 1 계산이 undefined를 읽어 NaN이 되지 않는다.
+    const portMap = this.__PORT_MAP;
+    for (const port in portMap) {
+        if (motoring[port] === undefined) {
+            motoring[port] = portMap[port];
+        }
+    }
+};
+
+PioRobot.prototype.__setModule = function() {
+    this.motoring.group = 'pio';
+    this.motoring.module = 'pio';
+};
+
+PioRobot.prototype.clearEvent = function() {
+    for (let i = 0; i < 8; ++i) {
+        this.buttonCheckers[i].clearEvent();
+    }
+};
+
+PioRobot.prototype.__BUTTON_INDEX = {
+    MOVE_FORWARD: 0,
+    MOVE_BACKWARD: 1,
+    MOVE_LEFT: 2,
+    MOVE_RIGHT: 3,
+    RUN: 4,
+    BEHAVIOR: 5,
+    REPEAT: 6,
+    CLEAR: 7,
+};
+
+PioRobot.prototype.__BUTTONS = [
+    'forwardButton',
+    'backwardButton',
+    'leftButton',
+    'rightButton',
+    'runButton',
+    'behaviorButton',
+    'repeatButton',
+    'clearButton',
+];
+
+PioRobot.prototype.__removeTimeout = function(id) {
+    clearTimeout(id);
+    const idx = this.timeouts.indexOf(id);
+    if (idx >= 0) {
+        this.timeouts.splice(idx, 1);
+    }
+};
+
+PioRobot.prototype.__removeAllTimeouts = function() {
+    const timeouts = this.timeouts;
+    for (const i in timeouts) {
+        clearTimeout(timeouts[i]);
+    }
+    this.timeouts = [];
+};
+
+PioRobot.prototype.__setTurbo = function(turbo) {
+    this.motoring.turbo = turbo;
+    this.motoring.turboId = (this.motoring.turboId % 255) + 1;
+};
+
+PioRobot.prototype.__setPulse = function(pulse) {
+    this.motoring.pulse = pulse;
+    this.motoring.pulseId = (this.motoring.pulseId % 255) + 1;
+};
+
+PioRobot.prototype.__setNeckSpeed = function(speed) {
+    this.motoring.neckSpeed = speed;
+    this.motoring.neckSpeedId = (this.motoring.neckSpeedId % 255) + 1;
+};
+
+// 목은 공용 안내 문구를 쓰지 않는다. __LIMITS.neckAngle 의 ±90 은 Mode 3 프로토콜 범위이고
+// 물리 가동 범위는 ±45 다. 공용 문구는 "%1 범위를 벗어나 %2 로 조정했다"고 말하는데, 목에서는
+// 두 숫자 다 사실이 아니다. 90 도는 쓸 수 있는 값이 아니고 조정 결과도 안전하지 않다.
+// 안전한 상한이 확정되지 않았으므로 범위를 단정하지 않는 문구로 대신한다.
+// clamp 는 와이어 유효성 때문에 남긴다: 제한이 없으면 toHex(3000) 이 int8 -72 가 되어
+// 반대 방향으로 돈다.
+PioRobot.prototype.__setNeckAngle = function(deg) {
+    const L = this.__LIMITS.neckAngle;
+    if (!Number.isFinite(deg)) deg = 0;
+    else if (deg < L.min || deg > L.max) {
+        deg = deg < L.min ? L.min : L.max;
+        this.__warnNeckRange();
+    }
+    this.motoring.neckAngle = deg;
+    this.motoring.neckAngleId = (this.motoring.neckAngleId % 255) + 1;
+    this.neckMotioning = deg != 0;
+};
+
+PioRobot.prototype.__setNote = function(note) {
+    this.motoring.note = note;
+    this.motoring.noteId = (this.motoring.noteId % 255) + 1;
+};
+
+PioRobot.prototype.__issueNoteId = function() {
+    this.noteId = this.blockId = (this.blockId % 65535) + 1;
+    return this.noteId;
+};
+
+PioRobot.prototype.__cancelNote = function() {
+    this.noteId = 0;
+    if (this.noteTimer1 !== undefined) {
+        this.__removeTimeout(this.noteTimer1);
+    }
+    if (this.noteTimer2 !== undefined) {
+        this.__removeTimeout(this.noteTimer2);
+    }
+    this.noteTimer1 = undefined;
+    this.noteTimer2 = undefined;
+};
+
+PioRobot.prototype.__setSound = function(sound) {
+    this.motoring.sound = sound;
+    this.motoring.soundId = (this.motoring.soundId % 255) + 1;
+};
+
+PioRobot.prototype.__runSound = function(sound, count) {
+    if (typeof count != 'number') count = 1;
+    if (count < 0) count = -1;
+    if (count) {
+        this.currentSound = sound;
+        this.soundRepeat = count;
+        this.__setSound(sound);
+    }
+    this.sounding = sound != 0;
+};
+
+PioRobot.prototype.__cancelSound = function() {
+    this.soundCallback = undefined;
+};
+
+PioRobot.prototype.__setMotion = function(type, unit, speed, value, radius) {
+    const motoring = this.motoring;
+    motoring.motionType = type;
+    motoring.motionUnit = unit;
+    motoring.motionSpeed = speed;
+    motoring.motionValue = value;
+    motoring.motionRadius = radius;
+    this.motoring.motionId = (this.motoring.motionId % 255) + 1;
+    this.motioning = type != 0;
+};
+
+// 완료 처리(handleSensory)는 motionCallback / boardCallback 이 살아있는 것을 게이트로 쓴다.
+// 취소가 콜백만 지우고 진행 플래그를 남기면, 플래그를 내리는 코드에 다시 도달할 수 없어
+// isWheelMoving 이 로봇 상태와 무관하게 계속 참이 된다. 취소는 진행 플래그까지 내린다.
+PioRobot.prototype.__cancelMotion = function() {
+    this.motionCallback = undefined;
+    this.motioning = false;
+};
+
+PioRobot.prototype.__cancelBoard = function() {
+    this.boardCommand = 0;
+    this.boardState = 0;
+    this.boardCallback = undefined;
+    this.boarding = false;
+};
+
+// __cancelMotion/__cancelBoard 와 같은 이유로 진행 플래그까지 내린다. 완료 처리는
+// neckMotionCallback 이 살아있는 것을 게이트로 쓰므로, 콜백만 지우면 neckMotioning 을
+// 내릴 코드에 다시 도달할 수 없어 isNeckMoving 이 계속 참으로 남는다.
+PioRobot.prototype.__cancelNeckMotion = function() {
+    this.neckMotionCallback = undefined;
+    this.neckMotioning = false;
+};
+
+PioRobot.prototype.__checkWheelMoving = function() {
+    const motoring = this.motoring;
+    this.wheelMoving = motoring.leftWheel != 0 || motoring.rightWheel != 0;
+};
+
+PioRobot.prototype.__checkSoundPlaying = function() {
+    const motoring = this.motoring;
+    this.buzzing = motoring.buzzer != 0;
+    this.noting = motoring.note != 0;
+    this.resting = false;
+};
+
+PioRobot.prototype.handleSensory = function() {
+    const sensory = this.sensory;
+
+    // 버튼 엣지 이벤트는 매 수신 패킷 시작 시(재감지 전) 지운다. afterSend가 아니다.
+    // afterReceive가 직후 'pioWhenButtonState'를 발생시키고 해당 햇 블록은 다음 엔진
+    // 틱에서 실행되므로, 지우는 시점을 패킷 주기에 맞춰야 엣지 플래그가 패킷 사이
+    // 구간 동안 살아 있어 햇이 엣지당 한 번씩 감지한다.
+    this.clearEvent();
+    for (let i = 0; i < 8; ++i) {
+        this.buttons[i] = sensory[this.__BUTTONS[i]];
+        this.buttonCheckers[i].check(this.buttons[i] == 1);
+    }
+    if (this.boardCallback && sensory.wheelStateId !== undefined) {
+        const t = sensory.wheelStateId;
+        if (t != this.wheelStateId) {
+            if (this.wheelStateId != -1) {
+                const motoring = this.motoring;
+                if (this.boardCommand == 1 || this.boardCommand == 2) {
+                    motoring.leftWheel = 0;
+                    motoring.rightWheel = 0;
+                    const callback = this.boardCallback;
+                    this.__cancelBoard();
+                    this.boarding = false;
+                    this.__checkWheelMoving();
+                    if (callback) callback();
+                } else if (this.boardCommand == 3) {
+                    switch (this.boardState) {
+                        case 1:
+                            this.__board(3, 2, 3, 90, this.boardCallback);
+                            break;
+                        case 2:
+                            this.__board(3, 3, 1, 11.45, this.boardCallback);
+                            break;
+                        case 3: {
+                            motoring.leftWheel = 0;
+                            motoring.rightWheel = 0;
+                            const callback = this.boardCallback;
+                            this.__cancelBoard();
+                            this.boarding = false;
+                            this.__checkWheelMoving();
+                            if (callback) callback();
+                            break;
+                        }
+                    }
+                } else if (this.boardCommand == 4) {
+                    switch (this.boardState) {
+                        case 1:
+                            this.__board(4, 2, 4, 90, this.boardCallback);
+                            break;
+                        case 2:
+                            this.__board(4, 3, 1, 11.45, this.boardCallback);
+                            break;
+                        case 3: {
+                            motoring.leftWheel = 0;
+                            motoring.rightWheel = 0;
+                            const callback = this.boardCallback;
+                            this.__cancelBoard();
+                            this.boarding = false;
+                            this.__checkWheelMoving();
+                            if (callback) callback();
+                            break;
+                        }
+                    }
+                } else if (this.boardCommand == 5) {
+                    switch (this.boardState) {
+                        case 1:
+                            this.__board(5, 2, 3, 90, this.boardCallback);
+                            break;
+                        case 2:
+                            this.__board(5, 3, 1, 1.45, this.boardCallback);
+                            break;
+                        case 3: {
+                            motoring.leftWheel = 0;
+                            motoring.rightWheel = 0;
+                            const callback = this.boardCallback;
+                            this.__cancelBoard();
+                            this.boarding = false;
+                            this.__checkWheelMoving();
+                            if (callback) callback();
+                            break;
+                        }
+                    }
+                } else if (this.boardCommand == 6) {
+                    switch (this.boardState) {
+                        case 1:
+                            this.__board(6, 2, 4, 90, this.boardCallback);
+                            break;
+                        case 2:
+                            this.__board(6, 3, 1, 1.45, this.boardCallback);
+                            break;
+                        case 3: {
+                            motoring.leftWheel = 0;
+                            motoring.rightWheel = 0;
+                            const callback = this.boardCallback;
+                            this.__cancelBoard();
+                            this.boarding = false;
+                            this.__checkWheelMoving();
+                            if (callback) callback();
+                            break;
+                        }
+                    }
+                }
+            }
+            this.wheelStateId = t;
+        }
+    }
+    if (this.motionCallback && sensory.wheelStateId !== undefined) {
+        const t = sensory.wheelStateId;
+        if (t != this.wheelStateId) {
+            if (this.wheelStateId != -1) {
+                this.motoring.leftWheel = 0;
+                this.motoring.rightWheel = 0;
+                this.motioning = false;
+                const callback = this.motionCallback;
+                this.__cancelMotion();
+                this.__checkWheelMoving();
+                if (callback) callback();
+            }
+            this.wheelStateId = t;
+        }
+    }
+    if (this.neckMotionCallback && sensory.neckStateId !== undefined) {
+        const t = sensory.neckStateId;
+        if (t != this.neckStateId) {
+            if (this.neckStateId != -1) {
+                this.neckMotioning = false;
+                const callback = this.neckMotionCallback;
+                this.__cancelNeckMotion();
+                if (callback) callback();
+            }
+            this.neckStateId = t;
+        }
+    }
+    if (sensory.soundStateId !== undefined) {
+        const t = sensory.soundStateId;
+        if (t != this.soundStateId) {
+            if (this.soundStateId != -1) {
+                if (this.currentSound > 0) {
+                    if (this.soundRepeat < 0) {
+                        this.__runSound(this.currentSound, -1);
+                    } else if (this.soundRepeat > 1) {
+                        this.soundRepeat--;
+                        this.__runSound(this.currentSound, this.soundRepeat);
+                    } else {
+                        this.currentSound = 0;
+                        this.soundRepeat = 1;
+                        this.sounding = false;
+                        const callback = this.soundCallback;
+                        this.__cancelSound();
+                        this.__checkSoundPlaying();
+                        if (callback) callback();
+                    }
+                } else {
+                    this.currentSound = 0;
+                    this.soundRepeat = 1;
+                    this.sounding = false;
+                    const callback = this.soundCallback;
+                    this.__cancelSound();
+                    this.__checkSoundPlaying();
+                    if (callback) callback();
+                }
+            }
+            this.soundStateId = t;
+        }
+    }
+};
+
+PioRobot.prototype.__board = function(command, state, type, value, callback) {
+    const motoring = this.motoring;
+    this.__cancelMotion();
+
+    motoring.leftWheel = 0;
+    motoring.rightWheel = 0;
+    this.boardCommand = command;
+    this.boardState = state;
+    this.boardCallback = callback;
+    // 완료 기준선 캡처: entry-hw wheelStateId는 세션 내내 이어지는 카운터라(재실행에도
+    // 리셋 안 됨) 절대값 비교가 재실행 때 어긋난다. 시작 시점의 현재값을 기준으로 잡고
+    // 이후 카운터가 증가할 때만 완료로 판정한다(재실행 조기완료, 콜백유실 둘 다 방지).
+    this.wheelStateId = this.sensory.wheelStateId;
+    this.boarding = true;
+    this.__setPulse(0);
+    motoring.motionType = type;
+    motoring.motionUnit = 1;
+    motoring.motionSpeed = 0;
+    motoring.motionValue = value;
+    motoring.motionRadius = 0;
+    this.motoring.motionId = (this.motoring.motionId % 255) + 1;
+    this.__checkWheelMoving();
+};
+
+PioRobot.prototype.__UNITS = {
+    CM: 1,
+    DEGREES: 1,
+    SECONDS: 2,
+    PULSES: 3,
+};
+
+PioRobot.prototype.__motion = function(type, callback) {
+    const motoring = this.motoring;
+    this.__cancelBoard();
+
+    motoring.leftWheel = 0;
+    motoring.rightWheel = 0;
+    this.__setPulse(0);
+    this.__setMotion(type, 1, 0, 0, 0); // type, unit, speed, value, radius
+    this.motionCallback = callback;
+    this.wheelStateId = this.sensory.wheelStateId; // 완료 기준선 캡처(재실행 desync 방지, __board 주석 참고)
+    this.__checkWheelMoving();
+};
+
+PioRobot.prototype.__motionUnit = function(type, unit, value, callback) {
+    const motoring = this.motoring;
+    this.__cancelBoard();
+    this.__cancelMotion();
+
+    motoring.leftWheel = 0;
+    motoring.rightWheel = 0;
+    this.__setPulse(0);
+    value = this.__finite(value);
+    if (value && value > 0) {
+        const limit = this.__motionLimit(type, unit);
+        if (limit) {
+            value = this.__clamp('motion:' + limit.max + limit.unit, value, 0, limit.max, limit.unit);
+        }
+        this.__setMotion(type, unit, 0, value, 0); // type, unit, speed, value, radius
+        this.motionCallback = callback;
+        this.wheelStateId = this.sensory.wheelStateId; // 완료 기준선 캡처(재실행 desync 방지, __board 주석 참고)
+        this.__checkWheelMoving();
+    } else {
+        this.__setMotion(0, 0, 0, 0, 0);
+        this.__checkWheelMoving();
+        callback();
+    }
+};
+
+PioRobot.prototype.__RGBS = {
+    RED: [255, 0, 0],
+    ORANGE: [255, 63, 0],
+    YELLOW: [255, 255, 0],
+    GREEN: [0, 255, 0],
+    SKY_BLUE: [0, 255, 255],
+    BLUE: [0, 0, 255],
+    VIOLET: [63, 0, 255],
+    PURPLE: [255, 0, 255],
+    WHITE: [255, 255, 255],
+};
+
+PioRobot.prototype.__setRgb = function(eye, red, green, blue) {
+    const motoring = this.motoring;
+    red = this.__finite(red);
+    green = this.__finite(green);
+    blue = this.__finite(blue);
+    if (eye == 'LEFT') {
+        if (red !== undefined) motoring.leftEyeRed = red;
+        if (green !== undefined) motoring.leftEyeGreen = green;
+        if (blue !== undefined) motoring.leftEyeBlue = blue;
+    } else if (eye == 'RIGHT') {
+        if (red !== undefined) motoring.rightEyeRed = red;
+        if (green !== undefined) motoring.rightEyeGreen = green;
+        if (blue !== undefined) motoring.rightEyeBlue = blue;
+    } else {
+        if (red !== undefined) {
+            motoring.leftEyeRed = red;
+            motoring.rightEyeRed = red;
+        }
+        if (green !== undefined) {
+            motoring.leftEyeGreen = green;
+            motoring.rightEyeGreen = green;
+        }
+        if (blue !== undefined) {
+            motoring.leftEyeBlue = blue;
+            motoring.rightEyeBlue = blue;
+        }
+    }
+    this.__clampEyes();
+};
+
+PioRobot.prototype.__changeRgb = function(eye, red, green, blue) {
+    const motoring = this.motoring;
+    red = this.__finite(red);
+    green = this.__finite(green);
+    blue = this.__finite(blue);
+    if (eye == 'LEFT') {
+        if (red !== undefined) motoring.leftEyeRed += red;
+        if (green !== undefined) motoring.leftEyeGreen += green;
+        if (blue !== undefined) motoring.leftEyeBlue += blue;
+    } else if (eye == 'RIGHT') {
+        if (red !== undefined) motoring.rightEyeRed += red;
+        if (green !== undefined) motoring.rightEyeGreen += green;
+        if (blue !== undefined) motoring.rightEyeBlue += blue;
+    } else {
+        if (red !== undefined) {
+            motoring.leftEyeRed += red;
+            motoring.rightEyeRed += red;
+        }
+        if (green !== undefined) {
+            motoring.leftEyeGreen += green;
+            motoring.rightEyeGreen += green;
+        }
+        if (blue !== undefined) {
+            motoring.leftEyeBlue += blue;
+            motoring.rightEyeBlue += blue;
+        }
+    }
+    this.__clampEyes();
+};
+
+PioRobot.prototype.__SOUNDS = {
+    BEEP: 1,
+    RANDOM_BEEP: 2,
+    NOISE: 10,
+    SIREN: 3,
+    ENGINE: 4,
+    CHOP: 11,
+    ROBOT: 5,
+    DIBIDIBIDIP: 8,
+    GOOD_JOB: 9,
+    RANDOM_MELODY: 18,
+    POO: 20,
+    HAPPY: 12,
+    ANGRY: 13,
+    SAD: 14,
+    SLEEP: 15,
+    MARCH: 6,
+    BIRTHDAY: 7,
+    BATH: 21,
+};
+
+PioRobot.prototype.__playSound = function(soundField, count) {
+    const motoring = this.motoring;
+    this.__cancelNote();
+    this.__cancelSound();
+
+    const sound = this.__SOUNDS[soundField];
+    count = parseInt(count);
+    motoring.buzzer = 0;
+    this.__setNote(0);
+    if (sound && count) {
+        this.__runSound(sound, count);
+    } else {
+        this.__runSound(0);
+    }
+    this.__checkSoundPlaying();
+};
+
+PioRobot.prototype.__NOTES = {
+    C: 4,
+    CS: 5,
+    D: 6,
+    DS: 7,
+    E: 8,
+    F: 9,
+    FS: 10,
+    G: 11,
+    GS: 12,
+    A: 13,
+    AS: 14,
+    B: 15,
+};
+
+PioRobot.prototype.__BATTERY_STATES = {
+    NORMAL: 3,
+    MIDDLE: 2,
+    LOW: 1,
+    EMPTY: 0,
+};
+
+// -------------------- block methods (motion) --------------------
+
+PioRobot.prototype.boardMove = function(script) {
+    this.__setModule();
+    if (!script.isStart) {
+        script.isStart = true;
+        script.isMoving = true;
+        const direction = script.getField('DIRECTION');
+        const callback = () => {
+            script.isMoving = false;
+        };
+        if (direction == 'FORWARD') {
+            this.__board(1, 1, 1, 10, callback);
+        } else if (direction == 'BACKWARD') {
+            this.__board(2, 1, 2, 10, callback);
+        } else if (direction == 'LEFT') {
+            this.__board(3, 1, 2, 1.45, callback);
+        } else {
+            this.__board(4, 1, 2, 1.45, callback);
+        }
+        return script;
+    } else if (script.isMoving) {
+        return script;
+    } else {
+        delete script.isStart;
+        delete script.isMoving;
+        Entry.engine.isContinue = false;
+        return script.callReturn();
+    }
+};
+
+PioRobot.prototype.boardTurn = function(script) {
+    this.__setModule();
+    if (!script.isStart) {
+        script.isStart = true;
+        script.isMoving = true;
+        const direction = script.getField('DIRECTION');
+        const callback = () => {
+            script.isMoving = false;
+        };
+        if (direction == 'LEFT') {
+            this.__board(5, 1, 2, 1.45, callback);
+        } else {
+            this.__board(6, 1, 2, 1.45, callback);
+        }
+        return script;
+    } else if (script.isMoving) {
+        return script;
+    } else {
+        delete script.isStart;
+        delete script.isMoving;
+        Entry.engine.isContinue = false;
+        return script.callReturn();
+    }
+};
+
+PioRobot.prototype.moveForward = function(script) {
+    this.__setModule();
+    if (!script.isStart) {
+        script.isStart = true;
+        script.isMoving = true;
+        this.__motion(101, () => {
+            script.isMoving = false;
+        });
+        return script;
+    } else if (script.isMoving) {
+        return script;
+    } else {
+        delete script.isStart;
+        delete script.isMoving;
+        Entry.engine.isContinue = false;
+        return script.callReturn();
+    }
+};
+
+PioRobot.prototype.moveBackward = function(script) {
+    this.__setModule();
+    if (!script.isStart) {
+        script.isStart = true;
+        script.isMoving = true;
+        this.__motion(102, () => {
+            script.isMoving = false;
+        });
+        return script;
+    } else if (script.isMoving) {
+        return script;
+    } else {
+        delete script.isStart;
+        delete script.isMoving;
+        Entry.engine.isContinue = false;
+        return script.callReturn();
+    }
+};
+
+PioRobot.prototype.turn = function(script) {
+    this.__setModule();
+    if (!script.isStart) {
+        script.isStart = true;
+        script.isMoving = true;
+        const direction = script.getField('DIRECTION');
+        const callback = () => {
+            script.isMoving = false;
+        };
+        if (direction == 'LEFT') {
+            this.__motion(103, callback);
+        } else {
+            this.__motion(104, callback);
+        }
+        return script;
+    } else if (script.isMoving) {
+        return script;
+    } else {
+        delete script.isStart;
+        delete script.isMoving;
+        Entry.engine.isContinue = false;
+        return script.callReturn();
+    }
+};
+
+PioRobot.prototype.moveForwardUnit = function(script) {
+    this.__setModule();
+    if (!script.isStart) {
+        script.isStart = true;
+        script.isMoving = true;
+        const value = script.getNumberValue('VALUE');
+        const unit = this.__UNITS[script.getField('UNIT')];
+        const callback = () => {
+            script.isMoving = false;
+        };
+        if (value < 0) {
+            this.__motionUnit(2, unit, -value, callback);
+        } else {
+            this.__motionUnit(1, unit, value, callback);
+        }
+        return script;
+    } else if (script.isMoving) {
+        return script;
+    } else {
+        delete script.isStart;
+        delete script.isMoving;
+        Entry.engine.isContinue = false;
+        return script.callReturn();
+    }
+};
+
+PioRobot.prototype.moveBackwardUnit = function(script) {
+    this.__setModule();
+    if (!script.isStart) {
+        script.isStart = true;
+        script.isMoving = true;
+        const value = script.getNumberValue('VALUE');
+        const unit = this.__UNITS[script.getField('UNIT')];
+        const callback = () => {
+            script.isMoving = false;
+        };
+        if (value < 0) {
+            this.__motionUnit(1, unit, -value, callback);
+        } else {
+            this.__motionUnit(2, unit, value, callback);
+        }
+        return script;
+    } else if (script.isMoving) {
+        return script;
+    } else {
+        delete script.isStart;
+        delete script.isMoving;
+        Entry.engine.isContinue = false;
+        return script.callReturn();
+    }
+};
+
+PioRobot.prototype.turnUnit = function(script) {
+    this.__setModule();
+    if (!script.isStart) {
+        script.isStart = true;
+        script.isMoving = true;
+        const direction = script.getField('DIRECTION');
+        const value = script.getNumberValue('VALUE');
+        const unit = this.__UNITS[script.getField('UNIT')];
+        const callback = () => {
+            script.isMoving = false;
+        };
+        if (direction == 'LEFT') {
+            if (value < 0) {
+                this.__motionUnit(4, unit, -value, callback);
+            } else {
+                this.__motionUnit(3, unit, value, callback);
+            }
+        } else {
+            if (value < 0) {
+                this.__motionUnit(3, unit, -value, callback);
+            } else {
+                this.__motionUnit(4, unit, value, callback);
+            }
+        }
+        return script;
+    } else if (script.isMoving) {
+        return script;
+    } else {
+        delete script.isStart;
+        delete script.isMoving;
+        Entry.engine.isContinue = false;
+        return script.callReturn();
+    }
+};
+
+PioRobot.prototype.pivotUnit = function(script) {
+    this.__setModule();
+    if (!script.isStart) {
+        script.isStart = true;
+        script.isMoving = true;
+        const wheel = script.getField('WHEEL');
+        const value = script.getNumberValue('VALUE');
+        const unit = this.__UNITS[script.getField('UNIT')];
+        const toward = script.getField('TOWARD');
+        const callback = () => {
+            script.isMoving = false;
+        };
+        if (wheel == 'LEFT') {
+            if (toward == 'FORWARD') {
+                if (value < 0) this.__motionUnit(6, unit, -value, callback);
+                else this.__motionUnit(5, unit, value, callback);
+            } else {
+                if (value < 0) this.__motionUnit(5, unit, -value, callback);
+                else this.__motionUnit(6, unit, value, callback);
+            }
+        } else {
+            if (toward == 'FORWARD') {
+                if (value < 0) this.__motionUnit(8, unit, -value, callback);
+                else this.__motionUnit(7, unit, value, callback);
+            } else {
+                if (value < 0) this.__motionUnit(7, unit, -value, callback);
+                else this.__motionUnit(8, unit, value, callback);
+            }
+        }
+        return script;
+    } else if (script.isMoving) {
+        return script;
+    } else {
+        delete script.isStart;
+        delete script.isMoving;
+        Entry.engine.isContinue = false;
+        return script.callReturn();
+    }
+};
+
+PioRobot.prototype.changeWheels = function(script) {
+    this.__setModule();
+    const motoring = this.motoring;
+    this.__cancelBoard();
+    this.__cancelMotion();
+
+    const leftVelocity = this.__finite(script.getNumberValue('LEFT'));
+    const rightVelocity = this.__finite(script.getNumberValue('RIGHT'));
+    if (leftVelocity !== undefined) motoring.leftWheel += leftVelocity;
+    if (rightVelocity !== undefined) motoring.rightWheel += rightVelocity;
+    this.__setPulse(0);
+    this.__setMotion(0, 0, 0, 0, 0);
+    this.__clampWheels();
+    this.__checkWheelMoving();
+    return script.callReturn();
+};
+
+PioRobot.prototype.setWheels = function(script) {
+    this.__setModule();
+    const motoring = this.motoring;
+    this.__cancelBoard();
+    this.__cancelMotion();
+
+    const leftVelocity = this.__finite(script.getNumberValue('LEFT'));
+    const rightVelocity = this.__finite(script.getNumberValue('RIGHT'));
+    if (leftVelocity !== undefined) motoring.leftWheel = leftVelocity;
+    if (rightVelocity !== undefined) motoring.rightWheel = rightVelocity;
+    this.__setPulse(0);
+    this.__setMotion(0, 0, 0, 0, 0);
+    this.__clampWheels();
+    this.__checkWheelMoving();
+    return script.callReturn();
+};
+
+PioRobot.prototype.changeWheel = function(script) {
+    this.__setModule();
+    const motoring = this.motoring;
+    this.__cancelBoard();
+    this.__cancelMotion();
+
+    const wheel = script.getField('WHEEL');
+    const velocity = this.__finite(script.getNumberValue('VALUE'));
+    if (velocity !== undefined) {
+        if (wheel == 'LEFT') {
+            motoring.leftWheel += velocity;
+        } else if (wheel == 'RIGHT') {
+            motoring.rightWheel += velocity;
+        } else {
+            motoring.leftWheel += velocity;
+            motoring.rightWheel += velocity;
+        }
+    }
+    this.__setPulse(0);
+    this.__setMotion(0, 0, 0, 0, 0);
+    this.__clampWheels();
+    this.__checkWheelMoving();
+    return script.callReturn();
+};
+
+PioRobot.prototype.setWheel = function(script) {
+    this.__setModule();
+    const motoring = this.motoring;
+    this.__cancelBoard();
+    this.__cancelMotion();
+
+    const wheel = script.getField('WHEEL');
+    const velocity = this.__finite(script.getNumberValue('VALUE'));
+    if (velocity !== undefined) {
+        if (wheel == 'LEFT') {
+            motoring.leftWheel = velocity;
+        } else if (wheel == 'RIGHT') {
+            motoring.rightWheel = velocity;
+        } else {
+            motoring.leftWheel = velocity;
+            motoring.rightWheel = velocity;
+        }
+    }
+    this.__setPulse(0);
+    this.__setMotion(0, 0, 0, 0, 0);
+    this.__clampWheels();
+    this.__checkWheelMoving();
+    return script.callReturn();
+};
+
+PioRobot.prototype.stop = function(script) {
+    this.__setModule();
+    const motoring = this.motoring;
+    this.__cancelBoard();
+    this.__cancelMotion();
+
+    motoring.leftWheel = 0;
+    motoring.rightWheel = 0;
+    this.__setPulse(0);
+    this.__setMotion(0, 0, 0, 0, 0);
+    this.__checkWheelMoving();
+    return script.callReturn();
+};
+
+PioRobot.prototype.setTurboMode = function(script) {
+    this.__setModule();
+    const mode = script.getField('MODE');
+    if (mode == 'ON') this.__setTurbo(1);
+    else this.__setTurbo(0);
+    return script.callReturn();
+};
+
+PioRobot.prototype.isWheelMoving = function(script) {
+    return this.wheelMoving || this.motioning || this.boarding;
+};
+
+PioRobot.prototype.setNeckSpeed = function(script) {
+    this.__setModule();
+    const speed = parseInt(script.getField('SPEED'));
+    this.__setNeckSpeed(speed);
+    return script.callReturn();
+};
+
+PioRobot.prototype.rotateNeck = function(script) {
+    this.__setModule();
+    if (!script.isStart) {
+        script.isStart = true;
+        script.isMoving = true;
+        const direction = script.getField('DIRECTION');
+        let deg = this.__finite(script.getNumberValue('VALUE'));
+        this.__cancelNeckMotion();
+        if (deg !== undefined) {
+            if (direction == 'LEFT') deg *= -1;
+            this.__setNeckAngle(deg);
+            this.neckStateId = this.sensory.neckStateId; // 완료 기준선 캡처(재실행 desync 방지, __board 주석 참고)
+            this.neckMotionCallback = () => {
+                script.isMoving = false;
+            };
+        } else {
+            script.isMoving = false;
+        }
+        return script;
+    } else if (script.isMoving) {
+        return script;
+    } else {
+        delete script.isStart;
+        delete script.isMoving;
+        Entry.engine.isContinue = false;
+        return script.callReturn();
+    }
+};
+
+PioRobot.prototype.stopNeck = function(script) {
+    this.__setModule();
+    this.__cancelNeckMotion();
+    this.__setNeckAngle(0);
+    return script.callReturn();
+};
+
+PioRobot.prototype.isNeckMoving = function(script) {
+    return this.neckMotioning;
+};
+
+// -------------------- block methods (looks / eye) --------------------
+
+PioRobot.prototype.setEyeColor = function(script) {
+    this.__setModule();
+    const eye = script.getField('EYE');
+    const rgb = this.__RGBS[script.getField('COLOR')];
+    if (rgb) {
+        this.__setRgb(eye, rgb[0], rgb[1], rgb[2]);
+    }
+    return script.callReturn();
+};
+
+PioRobot.prototype.setEyeColorPicker = function(script) {
+    this.__setModule();
+    const eye = script.getField('EYE');
+    const color = script.getField('COLOR');
+    const red = parseInt(color.slice(1, 3), 16);
+    const green = parseInt(color.slice(3, 5), 16);
+    const blue = parseInt(color.slice(5, 7), 16);
+    this.__setRgb(eye, red, green, blue);
+    return script.callReturn();
+};
+
+PioRobot.prototype.changeEyeRgb = function(script) {
+    this.__setModule();
+    const eye = script.getField('EYE');
+    const red = script.getNumberValue('RED');
+    const green = script.getNumberValue('GREEN');
+    const blue = script.getNumberValue('BLUE');
+    this.__changeRgb(eye, red, green, blue);
+    return script.callReturn();
+};
+
+PioRobot.prototype.setEyeRgb = function(script) {
+    this.__setModule();
+    const eye = script.getField('EYE');
+    const red = script.getNumberValue('RED');
+    const green = script.getNumberValue('GREEN');
+    const blue = script.getNumberValue('BLUE');
+    this.__setRgb(eye, red, green, blue);
+    return script.callReturn();
+};
+
+PioRobot.prototype.clearEye = function(script) {
+    this.__setModule();
+    const eye = script.getField('EYE');
+    this.__setRgb(eye, 0, 0, 0);
+    return script.callReturn();
+};
+
+// -------------------- block methods (sound) --------------------
+
+PioRobot.prototype.playSound = function(script) {
+    this.__setModule();
+    this.__playSound(script.getField('SOUND'), 1);
+    return script.callReturn();
+};
+
+PioRobot.prototype.playSoundTimes = function(script) {
+    this.__setModule();
+    this.__playSound(script.getField('SOUND'), script.getNumberValue('REPEAT'));
+    return script.callReturn();
+};
+
+PioRobot.prototype.playSoundUntil = function(script) {
+    this.__setModule();
+    if (!script.isStart) {
+        script.isStart = true;
+        script.isMoving = true;
+        const motoring = this.motoring;
+        this.__cancelNote();
+        this.__cancelSound();
+        const sound = this.__SOUNDS[script.getField('SOUND')];
+        let count = parseInt(script.getNumberValue('REPEAT'));
+        // 음수는 __runSound 의 "끝없이 반복" 센티널이라 완료 분기가 콜백 대신 재무장한다.
+        // 기다리는 블록이므로 영영 끝나지 않는다. 0 은 이미 0 과 -0.5 가 그러하듯 재생하지
+        // 않고 정상 종료하는 값이다. 기다리지 않는 playSoundTimes 는 정지하지 않으므로
+        // 공용 __playSound 는 건드리지 않는다.
+        if (count < 0) count = 0;
+        motoring.buzzer = 0;
+        this.__setNote(0);
+        if (sound && count) {
+            this.__runSound(sound, count);
+            // soundStateId 완료 분기는 콜백에 게이트되지 않아 idle 패킷마다 재동기화되므로
+            // 보통은 어긋나지 않지만, stop 직후 패킷 없이 곧바로 재실행 첫 블록으로 들어오는
+            // 극단 케이스를 닫기 위해 wheel/neck와 동일하게 시작 시점 기준선을 캡처한다.
+            this.soundStateId = this.sensory.soundStateId;
+            this.soundCallback = () => {
+                script.isMoving = false;
+            };
+            this.__checkSoundPlaying();
+        } else {
+            this.__runSound(0);
+            this.__checkSoundPlaying();
+            script.isMoving = false;
+        }
+        return script;
+    } else if (script.isMoving) {
+        return script;
+    } else {
+        delete script.isStart;
+        delete script.isMoving;
+        Entry.engine.isContinue = false;
+        return script.callReturn();
+    }
+};
+
+PioRobot.prototype.changeBuzzer = function(script) {
+    this.__setModule();
+    const motoring = this.motoring;
+    this.__cancelNote();
+    this.__cancelSound();
+
+    const hz = this.__finite(script.getNumberValue('HZ'));
+    if (hz !== undefined) {
+        const L = this.__LIMITS.buzzer;
+        motoring.buzzer += hz;
+        // __checkSoundPlaying 이 buzzer != 0 으로 재생 여부를 판단하므로 그 앞에서 제한한다.
+        motoring.buzzer = this.__clamp('buzzer', motoring.buzzer, L.min, L.max, L.unit);
+    }
+    this.__setNote(0);
+    this.__runSound(0);
+    this.__checkSoundPlaying();
+    return script.callReturn();
+};
+
+PioRobot.prototype.setBuzzer = function(script) {
+    this.__setModule();
+    const motoring = this.motoring;
+    this.__cancelNote();
+    this.__cancelSound();
+
+    const hz = this.__finite(script.getNumberValue('HZ'));
+    if (hz !== undefined) {
+        const L = this.__LIMITS.buzzer;
+        motoring.buzzer = hz;
+        // __checkSoundPlaying 이 buzzer != 0 으로 재생 여부를 판단하므로 그 앞에서 제한한다.
+        motoring.buzzer = this.__clamp('buzzer', motoring.buzzer, L.min, L.max, L.unit);
+    }
+    this.__setNote(0);
+    this.__runSound(0);
+    this.__checkSoundPlaying();
+    return script.callReturn();
+};
+
+PioRobot.prototype.clearSound = function(script) {
+    this.__setModule();
+    this.__cancelNote();
+    this.__cancelSound();
+    this.motoring.buzzer = 0;
+    this.__setNote(0);
+    this.__runSound(0);
+    this.__checkSoundPlaying();
+    return script.callReturn();
+};
+
+PioRobot.prototype.playNote = function(script) {
+    this.__setModule();
+    const motoring = this.motoring;
+    this.__cancelNote();
+    this.__cancelSound();
+
+    let note = this.__NOTES[script.getField('NOTE')];
+    const octave = parseInt(script.getField('OCTAVE'));
+    motoring.buzzer = 0;
+    if (note && octave && octave > 0 && octave < 8) {
+        note += (octave - 1) * 12;
+        this.__setNote(note);
+    } else {
+        this.__setNote(0);
+    }
+    this.__runSound(0);
+    this.__checkSoundPlaying();
+    return script.callReturn();
+};
+
+PioRobot.prototype.playNoteBeat = function(script) {
+    this.__setModule();
+    const self = this;
+    if (!script.isStart) {
+        script.isStart = true;
+        script.isMoving = true;
+        const motoring = self.motoring;
+        self.__cancelNote();
+        self.__cancelSound();
+
+        let note = self.__NOTES[script.getField('NOTE')];
+        const octave = parseInt(script.getField('OCTAVE'));
+        const beat = parseFloat(script.getNumberValue('BEAT'));
+        const callback = () => {
+            script.isMoving = false;
+        };
+        motoring.buzzer = 0;
+        if (note && octave && octave > 0 && octave < 8 && beat && beat > 0 && self.tempo > 0) {
+            const id = self.__issueNoteId();
+            note += (octave - 1) * 12;
+            self.__setNote(note);
+            const timeout = self.__clampDelay((beat * 60 * 1000) / self.tempo);
+            const tail = timeout > 100 ? 100 : 0;
+            if (tail > 0) {
+                self.noteTimer1 = setTimeout(() => {
+                    if (self.noteId == id) {
+                        self.__setNote(0);
+                        if (self.noteTimer1 !== undefined) self.__removeTimeout(self.noteTimer1);
+                        self.noteTimer1 = undefined;
+                    }
+                }, timeout - tail);
+                self.timeouts.push(self.noteTimer1);
+            }
+            self.noteTimer2 = setTimeout(() => {
+                if (self.noteId == id) {
+                    self.__setNote(0);
+                    self.__cancelNote();
+                    self.__checkSoundPlaying();
+                    callback();
+                }
+            }, timeout);
+            self.timeouts.push(self.noteTimer2);
+            self.__runSound(0);
+            self.__checkSoundPlaying();
+        } else {
+            self.__setNote(0);
+            self.__runSound(0);
+            self.__checkSoundPlaying();
+            callback();
+        }
+        return script;
+    } else if (script.isMoving) {
+        return script;
+    } else {
+        delete script.isStart;
+        delete script.isMoving;
+        Entry.engine.isContinue = false;
+        return script.callReturn();
+    }
+};
+
+PioRobot.prototype.restBeat = function(script) {
+    this.__setModule();
+    const self = this;
+    if (!script.isStart) {
+        script.isStart = true;
+        script.isMoving = true;
+        const motoring = self.motoring;
+        self.__cancelNote();
+        self.__cancelSound();
+
+        const beat = parseFloat(script.getNumberValue('BEAT'));
+        const callback = () => {
+            script.isMoving = false;
+        };
+        motoring.buzzer = 0;
+        self.__setNote(0);
+        self.__runSound(0);
+        if (beat && beat > 0 && self.tempo > 0) {
+            const id = self.__issueNoteId();
+            self.noteTimer1 = setTimeout(() => {
+                if (self.noteId == id) {
+                    self.__cancelNote();
+                    self.__checkSoundPlaying();
+                    callback();
+                }
+            }, self.__clampDelay((beat * 60 * 1000) / self.tempo));
+            self.timeouts.push(self.noteTimer1);
+            self.__checkSoundPlaying();
+            self.resting = true;
+        } else {
+            self.__checkSoundPlaying();
+            callback();
+        }
+        return script;
+    } else if (script.isMoving) {
+        return script;
+    } else {
+        delete script.isStart;
+        delete script.isMoving;
+        Entry.engine.isContinue = false;
+        return script.callReturn();
+    }
+};
+
+PioRobot.prototype.changeTempo = function(script) {
+    this.__setModule();
+    const bpm = parseFloat(script.getNumberValue('BPM'));
+    if (typeof bpm == 'number') {
+        this.tempo += bpm;
+        if (this.tempo < 1) this.tempo = 1;
+    }
+    return script.callReturn();
+};
+
+PioRobot.prototype.setTempo = function(script) {
+    this.__setModule();
+    const bpm = parseFloat(script.getNumberValue('BPM'));
+    if (typeof bpm == 'number') {
+        this.tempo = bpm;
+        if (this.tempo < 1) this.tempo = 1;
+    }
+    return script.callReturn();
+};
+
+PioRobot.prototype.isSoundPlaying = function(script) {
+    return this.sounding || this.buzzing || this.noting || this.resting;
+};
+
+// -------------------- block methods (sensing) --------------------
+
+PioRobot.prototype.getButton = function(script) {
+    const index = this.__BUTTON_INDEX[script.getField('BUTTON')];
+    if (typeof index == 'number') {
+        return this.buttons[index];
+    }
+    return 0;
+};
+
+PioRobot.prototype.getSignalStrength = function(script) {
+    return this.sensory.signalStrength;
+};
+
+PioRobot.prototype.checkButtonState = function(script) {
+    const index = this.__BUTTON_INDEX[script.getField('BUTTON')];
+    const state = script.getField('STATE');
+    if (typeof index == 'number') {
+        switch (state) {
+            case 'PRESSED':
+                return this.buttonCheckers[index].isPressed();
+            case 'RELEASED':
+                return this.buttonCheckers[index].isReleased();
+            case 'LONG_PRESSED':
+                return this.buttonCheckers[index].isLongPressed();
+            case 'CLICKED':
+                return this.buttonCheckers[index].isClicked();
+        }
+    }
+    return false;
+};
+
+PioRobot.prototype.isButtonState = function(script) {
+    const index = this.__BUTTON_INDEX[script.getField('BUTTON')];
+    const state = script.getField('STATE');
+    if (typeof index == 'number') {
+        switch (state) {
+            case 'PRESSED':
+                return this.buttons[index] == 1;
+            case 'RELEASED':
+                return this.buttons[index] == 0;
+            case 'LONG_PRESSED':
+                return this.buttonCheckers[index].isLongPressed();
+            case 'CLICKED':
+                return this.buttonCheckers[index].isClicked();
+        }
+    }
+    return false;
+};
+
+PioRobot.prototype.checkBatteryState = function(script) {
+    return this.sensory.batteryState == this.__BATTERY_STATES[script.getField('BATTERY')];
+};
+
+PioRobot.prototype.isCharging = function(script) {
+    return this.sensory.chargeState == 1;
+};
+
+PioRobot.prototype.hasButtonEvent = function() {
+    for (let i = 0; i < 8; ++i) {
+        const checker = this.buttonCheckers[i];
+        if (
+            checker.isPressed() ||
+            checker.isReleased() ||
+            checker.isClicked() ||
+            checker.isLongPressed()
+        ) {
+            return true;
+        }
+    }
+    return false;
+};
+
+/**RaccoonRobot**/
+function RaccoonRobot(index) {
+    this.sensory = {
+        signalStrength: 0,
+        encoder1: 0,
+        encoder2: 0,
+        encoder3: 0,
+        encoder4: 0,
+        teachButton: 0,
+        playButton: 0,
+        deleteButton: 0,
+        teachClickedId: 0,
+        playClickedId: 0,
+        deleteClickedId: 0,
+        teachLongPressedId: 0,
+        playLongPressedId: 0,
+        deleteLongPressedId: 0,
+        warning: 0,
+        moving: 0,
+        collision1Id: 0,
+        collision2Id: 0,
+        collision3Id: 0,
+        collision4Id: 0,
+        jointStateId: 0,
+        soundStateId: 0,
+        batteryState: 2,
+        chargeState: 0,
+        slotR1Id: 0,
+        slotR1: [0, 0, 0, 0, 0, 0, 0, 0],
+        slotR2Id: 0,
+        slotR2: [0, 0, 0, 0, 0, 0, 0, 0],
+        slotR3Id: 0,
+        slotR3: [0, 0, 0, 0, 0, 0, 0, 0],
+    };
+    this.motoring = {
+        group: 'raccoon',
+        module: 'raccoon',
+        index,
+    };
+    // 각도 명령은 프로토콜상 네 관절 값을 모두 싣는데, motoring.jointAngleN은 장치에서 읽은 값이
+    // 아니라 "마지막으로 명령한 값"이다. 속도 블록이나 전원 끄기로 움직인 관절은 그 값이 실제와
+    // 어긋나므로 다음 각도 명령 때 실측값(sensory.encoderN)으로 다시 채워야 한다. 관절별로 표시해
+    // 두고, 지정하지 않은 관절의 진행 중 목표를 덮어쓰지 않는다.
+    // 연결 직후에는 버퍼가 기본 자세를 주장하는데 팔은 이전 세션 자세에 있으므로 전부 true로 시작한다.
+    this.jointAngleStale = [true, true, true, true];
+    // 보낼 수 없는 자세라 명령을 건너뛴 것을 실행당 1회만 알린다.
+    this.unreachablePoseWarned = false;
+    this.delayWarned = false;
+    this.jointVelocity1 = 0;
+    this.jointVelocity2 = 0;
+    this.jointVelocity3 = 0;
+    this.jointVelocity4 = 0;
+    this.teachClickedId = -1;
+    this.playClickedId = -1;
+    this.deleteClickedId = -1;
+    this.teachLongPressedId = -1;
+    this.playLongPressedId = -1;
+    this.deleteLongPressedId = -1;
+    this.collision1Id = -1;
+    this.collision2Id = -1;
+    this.collision3Id = -1;
+    this.collision4Id = -1;
+    this.jointStateId = -1;
+    this.soundStateId = -1;
+    this.slotR1Id = -1;
+    this.slotR2Id = -1;
+    this.slotR3Id = -1;
+    this.blockId = 0;
+    this.angleCallback = undefined;
+    this.resetting = false;
+    this.resetTimer = undefined;
+    this.currentSound = 0;
+    this.soundRepeat = 1;
+    this.soundCallback = undefined;
+    this.soundTimeoutTimer = undefined;
+    this.sounding = false;
+    this.noteId = 0;
+    this.noteTimer1 = undefined;
+    this.noteTimer2 = undefined;
+    this.noting = false;
+    this.resting = false;
+    this.ioId = 0;
+    this.ioTimer = undefined;
+    this.teachButton = 0;
+    this.playButton = 0;
+    this.deleteButton = 0;
+    this.teachPressed = false;
+    this.playPressed = false;
+    this.deletePressed = false;
+    this.teachReleased = false;
+    this.playReleased = false;
+    this.deleteReleased = false;
+    this.teachClicked = false;
+    this.playClicked = false;
+    this.deleteClicked = false;
+    this.teachLongPressed = false;
+    this.playLongPressed = false;
+    this.deleteLongPressed = false;
+    this.collided1 = false;
+    this.collided2 = false;
+    this.collided3 = false;
+    this.collided4 = false;
+    this.jointMode = this.JOINT_MODE_VELOCITY;
+    this.precisionMode = 0;
+    this.tempo = 60;
+    this.posRef = { x: 0, y: 0, z: 0 };
+    this.posRefAbs = { x: 0, y: 0, z: 0 };
+    this.posRefRel = { x: 0, y: 0, z: 0 };
+    this.posRefDev = this.REF_GRIPPER;
+    this.pos = { x: 0, y: 0, z: 0 };
+    this.joints = [0, 0, 0, 0];
+    this.gripper = { type: -1, state: -1 };
+    this.extType = 0;
+    // 컨베이어 주변장치. 라쿤 SLOT1 채널을 사용한다.
+    // 바이트 계층(slotW1/slotR1)은 entry-hw raccoon.js에 있다.
+    this.conveyor = {
+        motoring: { mode: 0, velocity: 0, distanceId: 0, distance: 0 },
+        sensory: {
+            mode: 0,
+            velocity: 0,
+            distance: 0,
+            button: 0,
+            clickedId: 0,
+            longPressedId: 0,
+            stateId: 0,
+            moving: 0,
+        },
+        clickedId: -1,
+        longPressedId: -1,
+        stateId: -1,
+        distanceCallback: undefined,
+        movingId: 0,
+        movingTimer: undefined,
+        moving: false,
+        button: 0,
+        pressed: false,
+        released: false,
+        clicked: false,
+        longPressed: false,
+    };
+    this.timeouts = [];
+}
+
+RaccoonRobot.prototype.__TO_RADIAN = Math.PI / 180.0;
+RaccoonRobot.prototype.__TO_DEGREE = 180.0 / Math.PI;
+RaccoonRobot.prototype.__L1 = 8.25;
+RaccoonRobot.prototype.__L2 = 10;
+RaccoonRobot.prototype.__L3 = 10;
+RaccoonRobot.prototype.JOINT_MODE_VELOCITY = 0;
+RaccoonRobot.prototype.JOINT_MODE_ANGLE = 1;
+RaccoonRobot.prototype.JOINT_MODE_VELOCITY_HORZ = 2;
+RaccoonRobot.prototype.JOINT_MODE_VELOCITY_VERT = 3;
+RaccoonRobot.prototype.JOINT_MODE_ANGLE_HORZ = 4;
+RaccoonRobot.prototype.JOINT_MODE_ANGLE_VERT = 5;
+RaccoonRobot.prototype.REF_NONE = 0;
+RaccoonRobot.prototype.REF_WRIST = 1;
+RaccoonRobot.prototype.REF_GRIPPER = 2;
+RaccoonRobot.prototype.__INCH_TO_CM = 2.54;
+RaccoonRobot.prototype.__MM_TO_CM = 0.1;
+RaccoonRobot.prototype.__RESET_TIMEOUT_MS = 3000;
+RaccoonRobot.prototype.__SOUND_TIMEOUT_MS = 10000;
+
+RaccoonRobot.prototype.__PORT_MAP = {
+    group: 'raccoon',
+    module: 'raccoon',
+    jointVelocity1: 0,
+    jointVelocity2: 0,
+    jointVelocity3: 0,
+    jointVelocity4: 0,
+    jointSpeed: 100,
+    jointAngleId: 0,
+    jointAngle1: 0,
+    jointAngle2: -10,
+    jointAngle3: -140,
+    jointAngle4: 60,
+    jointModeId: 0,
+    jointMode: 0,
+    noteId: 0,
+    note: 0,
+    soundId: 0,
+    sound: 0,
+    slotW1Id: 0,
+    slotW1: [0x10, 0, 0, 0, 0, 0, 0, 0],
+    slotW2Id: 0,
+    slotW2: [0x20, 0, 0, 0, 0, 0, 0, 0],
+    slotW3Id: 0,
+    slotW3: [0x30, 0, 0, 0, 0, 0, 0, 0],
+};
+
+// (x % 255) + 1 로 증가하는 명령 id 카운터. setZero에서 0으로 재시드하지 않고 보존한다
+// (entry-hw 모듈의 _prev_*Id와의 충돌 방지. setZero 주석 참고).
+RaccoonRobot.prototype.__ID_PORTS = [
+    'jointAngleId',
+    'jointModeId',
+    'noteId',
+    'soundId',
+    'slotW1Id',
+    'slotW2Id',
+    'slotW3Id',
+];
+
+RaccoonRobot.prototype.__seedPort = function(motoring, port) {
+    const def = this.__PORT_MAP[port];
+    // sendQueue 객체는 공유/직렬화되므로 배열은 새 복사본이어야 한다.
+    motoring[port] = Array.isArray(def) ? def.slice() : def;
+};
+
+RaccoonRobot.prototype.setZero = function() {
+    this.unreachablePoseWarned = false; // 실행마다 안내를 다시 낼 수 있게
+    this.delayWarned = false;
+    // 프로그램 정지 시 reset(): 속도/사운드를 0으로, 그리퍼를 열고, 기본 자세를
+    // 명령한다(resetting=true). 정지 시 팔이 원위치로 돌아가는 것이 장치 동작이다.
+    // 엔진 정지 후에도 afterReceive는 계속 동작하므로(hw.ts가 'data'를 별도 바인딩)
+    // 완료 신호를 받을 수 있고, 아래 3초 타임아웃이 신호가 안 오는 경우를 처리한다.
+    //
+    // *Id 카운터는 세션 내 단조 증가로 보존한다(0 재시드 금지). entry-hw 모듈의 _prev_*Id는
+    // 워크스페이스 소켓이 살아있는 한 유지되는데, 카운터를 0으로 되돌리면 다음 실행이 만드는
+    // id가 이전 실행과 같은 값에 도달해 명령이 통째로 삼켜진다(정지 후 재실행 무반응).
+    // 옛 재시드가 겸하던 부수효과(soundId=0 전송=소리 정지, slotW3Id=0 전송=W3 중립 재전송)는
+    // 아래에서 명시적 id 증가 명령으로 재현한다.
+    const portMap = this.__PORT_MAP;
+    const motoring = this.motoring;
+    const idPorts = this.__ID_PORTS;
+    for (const port in portMap) {
+        if (idPorts.indexOf(port) >= 0 && motoring[port] !== undefined) {
+            continue; // 카운터 보존 (undefined면 아래 시드로 0 초기화)
+        }
+        this.__seedPort(motoring, port);
+    }
+    this.__setNote(0); // 음 정지 (noteId 증가 포함)
+    this.__setSound(0); // 소리 정지 (soundId 증가 포함)
+    this.__issueSlotW3(); // W3 중립 payload 재전송
+    this.jointVelocity1 = 0;
+    this.jointVelocity2 = 0;
+    this.jointVelocity3 = 0;
+    this.jointVelocity4 = 0;
+    this.teachClickedId = -1;
+    this.playClickedId = -1;
+    this.deleteClickedId = -1;
+    this.teachLongPressedId = -1;
+    this.playLongPressedId = -1;
+    this.deleteLongPressedId = -1;
+    this.collision1Id = -1;
+    this.collision2Id = -1;
+    this.collision3Id = -1;
+    this.collision4Id = -1;
+    this.soundStateId = -1;
+    this.blockId = 0;
+    this.angleCallback = undefined;
+    this.currentSound = 0;
+    this.soundRepeat = 1;
+    this.soundCallback = undefined;
+    this.sounding = false;
+    this.noteId = 0;
+    this.noteTimer1 = undefined;
+    this.noteTimer2 = undefined;
+    this.soundTimeoutTimer = undefined;
+    this.noting = false;
+    this.resting = false;
+    this.ioId = 0;
+    this.ioTimer = undefined;
+    this.resetTimer = undefined;
+    this.teachButton = 0;
+    this.playButton = 0;
+    this.deleteButton = 0;
+    this.clearEvent();
+    this.jointMode = this.JOINT_MODE_VELOCITY;
+    this.precisionMode = 0;
+    this.tempo = 60;
+    const posRefAbs = this.posRefAbs;
+    posRefAbs.x = 0;
+    posRefAbs.y = 0;
+    posRefAbs.z = 0;
+    const posRefRel = this.posRefRel;
+    posRefRel.x = 0;
+    posRefRel.y = 0;
+    posRefRel.z = 0;
+    this.posRefDev = this.REF_GRIPPER;
+    const pos = this.pos;
+    pos.x = 0;
+    pos.y = 0;
+    pos.z = 0;
+    const gripper = this.gripper;
+    gripper.type = -1;
+    gripper.state = -1;
+    this.extType = 0;
+    this.__removeAllTimeouts();
+    this.__resetGripper();
+    this.__resetConveyor();
+    this.__resetPose();
+};
+
+RaccoonRobot.prototype.afterReceive = function(pd) {
+    this.sensory = pd;
+    this.handleSensory();
+};
+
+RaccoonRobot.prototype.afterSend = function(sq) {};
+
+RaccoonRobot.prototype.setMotoring = function(motoring) {
+    this.motoring = motoring;
+    // getRobot()은 블록 실행마다 this.motoring을 공유 Entry.hw.sendQueue로 바꾼다.
+    // 빠진 필드를 채운다(배열 포함. undefined slotW는 entry-hw 인코더를 망가뜨린다).
+    // 그래야 (xId % 255) + 1이 undefined를 읽지 않는다.
+    const portMap = this.__PORT_MAP;
+    for (const port in portMap) {
+        if (motoring[port] === undefined) {
+            this.__seedPort(motoring, port);
+        }
+    }
+};
+
+RaccoonRobot.prototype.__setModule = function() {
+    this.motoring.group = 'raccoon';
+    this.motoring.module = 'raccoon';
+};
+
+RaccoonRobot.prototype.clearEvent = function() {
+    this.teachPressed = false;
+    this.playPressed = false;
+    this.deletePressed = false;
+    this.teachReleased = false;
+    this.playReleased = false;
+    this.deleteReleased = false;
+    this.teachClicked = false;
+    this.playClicked = false;
+    this.deleteClicked = false;
+    this.teachLongPressed = false;
+    this.playLongPressed = false;
+    this.deleteLongPressed = false;
+    this.collided1 = false;
+    this.collided2 = false;
+    this.collided3 = false;
+    this.collided4 = false;
+    const conveyor = this.conveyor;
+    conveyor.pressed = false;
+    conveyor.released = false;
+    conveyor.clicked = false;
+    conveyor.longPressed = false;
+};
+
+RaccoonRobot.prototype.__removeTimeout = function(id) {
+    clearTimeout(id);
+    const idx = this.timeouts.indexOf(id);
+    if (idx >= 0) {
+        this.timeouts.splice(idx, 1);
+    }
+};
+
+RaccoonRobot.prototype.__removeAllTimeouts = function() {
+    const timeouts = this.timeouts;
+    for (const i in timeouts) {
+        clearTimeout(timeouts[i]);
+    }
+    this.timeouts = [];
+};
+
+// ---------------- joint mode / velocity / angle internals ----------------
+
+RaccoonRobot.prototype.__checkJointMode = function(mode) {
+    if (mode == this.JOINT_MODE_VELOCITY) {
+        if (
+            this.jointMode == this.JOINT_MODE_VELOCITY_HORZ ||
+            this.jointMode == this.JOINT_MODE_ANGLE_HORZ
+        ) {
+            this.jointMode = this.JOINT_MODE_VELOCITY_HORZ;
+        } else if (
+            this.jointMode == this.JOINT_MODE_VELOCITY_VERT ||
+            this.jointMode == this.JOINT_MODE_ANGLE_VERT
+        ) {
+            this.jointMode = this.JOINT_MODE_VELOCITY_VERT;
+        } else {
+            this.jointMode = this.JOINT_MODE_VELOCITY;
+        }
+    } else if (mode == this.JOINT_MODE_ANGLE) {
+        if (
+            this.jointMode == this.JOINT_MODE_ANGLE_HORZ ||
+            this.jointMode == this.JOINT_MODE_VELOCITY_HORZ
+        ) {
+            this.jointMode = this.JOINT_MODE_ANGLE_HORZ;
+        } else if (
+            this.jointMode == this.JOINT_MODE_ANGLE_VERT ||
+            this.jointMode == this.JOINT_MODE_VELOCITY_VERT
+        ) {
+            this.jointMode = this.JOINT_MODE_ANGLE_VERT;
+        } else {
+            this.jointMode = this.JOINT_MODE_ANGLE;
+        }
+    }
+    return this.jointMode;
+};
+
+RaccoonRobot.prototype.__setJointVelocity = function(joint, vel) {
+    // 전체 관절 기본 분기는 명시적 ALL(-1) 센티널 전용이다. 알 수 없는 드롭다운
+    // 값(손상된 프로젝트나 OPT_JOINT 불일치)이 네 관절을 모두 움직여선 안 된다.
+    if (joint === undefined) return;
+    let motoringVel;
+    if (vel == 127) {
+        motoringVel = 127;
+        vel = 0;
+    } else {
+        if (vel < -100) vel = -100;
+        else if (vel > 100) vel = 100;
+        motoringVel = vel;
+    }
+    const motoring = this.motoring;
+    switch (joint) {
+        case 1:
+            motoring.jointVelocity1 = motoringVel;
+            this.jointVelocity1 = vel;
+            break;
+        case 2:
+            motoring.jointVelocity2 = motoringVel;
+            this.jointVelocity2 = vel;
+            break;
+        case 3:
+            motoring.jointVelocity3 = motoringVel;
+            this.jointVelocity3 = vel;
+            break;
+        case 4:
+            motoring.jointVelocity4 = motoringVel;
+            this.jointVelocity4 = vel;
+            break;
+        default:
+            motoring.jointVelocity1 = motoringVel;
+            motoring.jointVelocity2 = motoringVel;
+            motoring.jointVelocity3 = motoringVel;
+            motoring.jointVelocity4 = motoringVel;
+            this.jointVelocity1 = vel;
+            this.jointVelocity2 = vel;
+            this.jointVelocity3 = vel;
+            this.jointVelocity4 = vel;
+            break;
+    }
+};
+
+RaccoonRobot.prototype.__setFourJointVelocities = function(vel1, vel2, vel3, vel4) {
+    if (vel1 < -100) vel1 = -100;
+    else if (vel1 > 100) vel1 = 100;
+    if (vel2 < -100) vel2 = -100;
+    else if (vel2 > 100) vel2 = 100;
+    if (vel3 < -100) vel3 = -100;
+    else if (vel3 > 100) vel3 = 100;
+    if (vel4 < -100) vel4 = -100;
+    else if (vel4 > 100) vel4 = 100;
+    const motoring = this.motoring;
+    motoring.jointVelocity1 = vel1;
+    motoring.jointVelocity2 = vel2;
+    motoring.jointVelocity3 = vel3;
+    motoring.jointVelocity4 = vel4;
+    this.jointVelocity1 = vel1;
+    this.jointVelocity2 = vel2;
+    this.jointVelocity3 = vel3;
+    this.jointVelocity4 = vel4;
+};
+
+RaccoonRobot.prototype.__changeJointVelocity = function(joint, vel) {
+    if (joint === undefined) return; // __setJointVelocity 참고
+    if (joint >= 1 && joint <= 4) {
+        const cache = ['jointVelocity1', 'jointVelocity2', 'jointVelocity3', 'jointVelocity4'][
+            joint - 1
+        ];
+        vel += this[cache];
+        if (vel < -100) vel = -100;
+        else if (vel > 100) vel = 100;
+        this.motoring[cache] = vel;
+        this[cache] = vel;
+    } else {
+        this.__changeFourJointVelocities(vel, vel, vel, vel);
+    }
+};
+
+RaccoonRobot.prototype.__changeFourJointVelocities = function(vel1, vel2, vel3, vel4) {
+    this.__setFourJointVelocities(
+        vel1 + this.jointVelocity1,
+        vel2 + this.jointVelocity2,
+        vel3 + this.jointVelocity3,
+        vel4 + this.jointVelocity4
+    );
+};
+
+RaccoonRobot.prototype.__canSetJointAngle = function(joint, deg) {
+    switch (joint) {
+        case 1:
+            if (deg < -120 || deg > 120) return false;
+            break;
+        case 2:
+            if (deg < -90 || deg > 30) return false;
+            break;
+        case 3:
+            if (deg < -150 || deg > 0) return false;
+            break;
+        case 4:
+            if (deg < -105 || deg > 105) return false;
+            break;
+        default:
+            return this.__canSetFourJointAngles(deg, deg, deg, deg);
+    }
+    return true;
+};
+
+RaccoonRobot.prototype.__canSetFourJointAngles = function(deg1, deg2, deg3, deg4) {
+    if (deg1 < -120 || deg1 > 120) return false;
+    if (deg2 < -90 || deg2 > 30) return false;
+    if (deg3 < -150 || deg3 > 0) return false;
+    if (deg4 < -105 || deg4 > 105) return false;
+    return true;
+};
+
+RaccoonRobot.prototype.__canChangeJointAngleToTargets = function(joint, deg, t1, t2, t3, t4) {
+    if (deg == 0) return true;
+    switch (joint) {
+        case 1:
+            if (t1 < -120 || t1 > 120) return false;
+            break;
+        case 2:
+            if (t2 < -90 || t2 > 30) return false;
+            break;
+        case 3:
+            if (t3 < -150 || t3 > 0) return false;
+            break;
+        case 4:
+            if (t4 < -105 || t4 > 105) return false;
+            break;
+        default:
+            return this.__canChangeFourJointAnglesToTargets(deg, deg, deg, deg, t1, t2, t3, t4);
+    }
+    return true;
+};
+
+RaccoonRobot.prototype.__canChangeFourJointAnglesToTargets = function(
+    deg1,
+    deg2,
+    deg3,
+    deg4,
+    t1,
+    t2,
+    t3,
+    t4
+) {
+    if (deg1 == 0 && deg2 == 0 && deg3 == 0 && deg4 == 0) return true;
+    if (t1 < -120 || t1 > 120) return false;
+    if (t2 < -90 || t2 > 30) return false;
+    if (t3 < -150 || t3 > 0) return false;
+    if (t4 < -105 || t4 > 105) return false;
+    return true;
+};
+
+RaccoonRobot.prototype.__setJointAngle = function(joint, deg) {
+    this.resetting = false;
+    const motoring = this.motoring;
+    switch (joint) {
+        case 1:
+            motoring.jointAngle1 = deg;
+            break;
+        case 2:
+            motoring.jointAngle2 = deg;
+            break;
+        case 3:
+            motoring.jointAngle3 = deg;
+            break;
+        case 4:
+            motoring.jointAngle4 = deg;
+            break;
+        default:
+            motoring.jointAngle1 = deg;
+            motoring.jointAngle2 = deg;
+            motoring.jointAngle3 = deg;
+            motoring.jointAngle4 = deg;
+            break;
+    }
+    this.__clearJointStale(joint);
+    motoring.jointAngleId = (motoring.jointAngleId % 255) + 1;
+};
+
+RaccoonRobot.prototype.__setFourJointAngles = function(deg1, deg2, deg3, deg4) {
+    this.resetting = false;
+    const motoring = this.motoring;
+    motoring.jointAngle1 = deg1;
+    motoring.jointAngle2 = deg2;
+    motoring.jointAngle3 = deg3;
+    motoring.jointAngle4 = deg4;
+    this.__clearJointStale(-1);
+    motoring.jointAngleId = (motoring.jointAngleId % 255) + 1;
+};
+
+RaccoonRobot.prototype.__changeJointAngleToTargets = function(joint, t1, t2, t3, t4) {
+    this.resetting = false;
+    const motoring = this.motoring;
+    switch (joint) {
+        case 1:
+            motoring.jointAngle1 = t1;
+            break;
+        case 2:
+            motoring.jointAngle2 = t2;
+            break;
+        case 3:
+            motoring.jointAngle3 = t3;
+            break;
+        case 4:
+            motoring.jointAngle4 = t4;
+            break;
+        default:
+            motoring.jointAngle1 = t1;
+            motoring.jointAngle2 = t2;
+            motoring.jointAngle3 = t3;
+            motoring.jointAngle4 = t4;
+            break;
+    }
+    this.__clearJointStale(joint);
+    motoring.jointAngleId = (motoring.jointAngleId % 255) + 1;
+};
+
+RaccoonRobot.prototype.__changeFourJointAnglesToTargets = function(t1, t2, t3, t4) {
+    this.resetting = false;
+    const motoring = this.motoring;
+    motoring.jointAngle1 = t1;
+    motoring.jointAngle2 = t2;
+    motoring.jointAngle3 = t3;
+    motoring.jointAngle4 = t4;
+    this.__clearJointStale(-1);
+    motoring.jointAngleId = (motoring.jointAngleId % 255) + 1;
+};
+
+RaccoonRobot.prototype.__setJointMode = function(mode) {
+    this.motoring.jointMode = mode;
+    this.motoring.jointModeId = (this.motoring.jointModeId % 255) + 1;
+};
+
+RaccoonRobot.prototype.__issueSlotW1 = function() {
+    this.motoring.slotW1Id = (this.motoring.slotW1Id % 255) + 1;
+};
+
+RaccoonRobot.prototype.__issueSlotW2 = function() {
+    this.motoring.slotW2Id = (this.motoring.slotW2Id % 255) + 1;
+};
+
+RaccoonRobot.prototype.__issueSlotW3 = function() {
+    this.motoring.slotW3Id = (this.motoring.slotW3Id % 255) + 1;
+};
+
+RaccoonRobot.prototype.__cancelJointAngle = function() {
+    this.angleCallback = undefined;
+};
+
+// ---------------- reset-pose / gripper internals ----------------
+
+RaccoonRobot.prototype.__resetGripper = function() {
+    const sw2 = this.motoring.slotW2;
+    sw2[0] = 0x21;
+    for (let i = 1; i < 8; ++i) {
+        sw2[i] = 0;
+    }
+    this.__issueSlotW2();
+};
+
+RaccoonRobot.prototype.__resetPose = function() {
+    this.__cancelJointAngle();
+    this.__setJointMode(this.__checkJointMode(this.JOINT_MODE_ANGLE));
+    this.__setJointVelocity(-1, 0);
+    this.__setFourJointAngles(0, -10, -140, 60);
+    this.resetting = true;
+    // 타임아웃 가드: jointState 완료가 오지 않으면(복귀 중 연결 끊김, 장치 멈춤)
+    // 로컬 리셋을 강제해 상태가 resetting/ANGLE 모드에 갇히지 않게 한다. 정상 완료
+    // 경로가 취소할 수 있도록 핸들은 보관한다(__cancelSoundTimeout과 동일).
+    this.__cancelResetTimeout();
+    const timer = setTimeout(() => {
+        this.resetTimer = undefined;
+        this.__removeTimeout(timer);
+        if (this.resetting) {
+            this.resetting = false;
+            this.__reset();
+            // __reset은 명령을 보내지 않고 버퍼만 기본 자세로 덮는다. 팔은 복귀 도중이거나
+            // 연결이 끊긴 자리에 있으므로 버퍼를 믿을 수 없다.
+            this.__markJointStale(-1);
+        }
+    }, this.__RESET_TIMEOUT_MS);
+    this.resetTimer = timer;
+    this.timeouts.push(timer);
+};
+
+RaccoonRobot.prototype.__cancelResetTimeout = function() {
+    if (this.resetTimer !== undefined) {
+        this.__removeTimeout(this.resetTimer);
+        this.resetTimer = undefined;
+    }
+};
+
+RaccoonRobot.prototype.__reset = function() {
+    // _reset(): motoring을 자세 복귀 후 기본값으로 되돌리고 jointState 첫 샘플
+    // 캐시를 다시 준비한다. jointAngleId/jointModeId 카운터는 건드리지 않는다
+    // (0 재시드 시 다음 실행의 id가 entry-hw _prev와 충돌해 명령이 삼켜짐. setZero 주석 참고).
+    const motoring = this.motoring;
+    motoring.jointSpeed = 100;
+    motoring.jointAngle1 = 0;
+    motoring.jointAngle2 = -10;
+    motoring.jointAngle3 = -140;
+    motoring.jointAngle4 = 60;
+    motoring.jointMode = 0;
+    this.jointStateId = -1;
+};
+
+// ---------------- note / sound internals ----------------
+
+RaccoonRobot.prototype.__setNote = function(note) {
+    this.motoring.note = note;
+    this.motoring.noteId = (this.motoring.noteId % 255) + 1;
+};
+
+RaccoonRobot.prototype.__issueNoteId = function() {
+    this.noteId = this.blockId = (this.blockId % 65535) + 1;
+    return this.noteId;
+};
+
+RaccoonRobot.prototype.__cancelNote = function() {
+    this.noteId = 0;
+    if (this.noteTimer1 !== undefined) {
+        this.__removeTimeout(this.noteTimer1);
+    }
+    if (this.noteTimer2 !== undefined) {
+        this.__removeTimeout(this.noteTimer2);
+    }
+    this.noteTimer1 = undefined;
+    this.noteTimer2 = undefined;
+};
+
+RaccoonRobot.prototype.__setSound = function(sound) {
+    this.motoring.sound = sound;
+    this.motoring.soundId = (this.motoring.soundId % 255) + 1;
+};
+
+RaccoonRobot.prototype.__runSound = function(sound, count) {
+    if (typeof count != 'number') count = 1;
+    if (count < 0) count = -1;
+    if (count) {
+        this.currentSound = sound;
+        this.soundRepeat = count;
+        this.__setSound(sound);
+    }
+    this.sounding = sound != 0;
+};
+
+RaccoonRobot.prototype.__cancelSound = function() {
+    this.soundCallback = undefined;
+    this.__cancelSoundTimeout();
+};
+
+RaccoonRobot.prototype.__cancelSoundTimeout = function() {
+    if (this.soundTimeoutTimer !== undefined) {
+        this.__removeTimeout(this.soundTimeoutTimer);
+        this.soundTimeoutTimer = undefined;
+    }
+};
+
+RaccoonRobot.prototype.__armSoundTimeout = function() {
+    // 타임아웃 가드: 장치 soundState가 이미 완료된 채로 시작되면 play-and-wait가
+    // 멈출 수 있으므로 이 타임아웃으로 대기 시간을 제한한다.
+    this.__cancelSoundTimeout();
+    const timer = setTimeout(() => {
+        this.soundTimeoutTimer = undefined;
+        this.__removeTimeout(timer);
+        const callback = this.soundCallback;
+        this.currentSound = 0;
+        this.soundRepeat = 1;
+        this.sounding = false;
+        this.soundCallback = undefined;
+        this.__checkSoundPlaying();
+        if (callback) callback();
+    }, this.__SOUND_TIMEOUT_MS);
+    this.soundTimeoutTimer = timer;
+    this.timeouts.push(timer);
+};
+
+RaccoonRobot.prototype.__checkSoundPlaying = function() {
+    this.noting = this.motoring.note != 0;
+    this.resting = false;
+};
+
+RaccoonRobot.prototype.__issueIoId = function() {
+    this.ioId = this.blockId = (this.blockId % 65535) + 1;
+    return this.ioId;
+};
+
+RaccoonRobot.prototype.__cancelIo = function() {
+    this.ioId = 0;
+    if (this.ioTimer !== undefined) {
+        this.__removeTimeout(this.ioTimer);
+    }
+    this.ioTimer = undefined;
+};
+
+// ---------------- sensory ----------------
+
+RaccoonRobot.prototype.handleSensory = function() {
+    const sensory = this.sensory;
+    // 패킷 주기에 맞춰 먼저 지우고 감지한다. 햇이 엣지당 한 번씩만 감지하도록.
+    this.clearEvent();
+
+    if (sensory.teachButton != this.teachButton) {
+        if (this.teachButton == 0 && sensory.teachButton == 1) this.teachPressed = true;
+        else if (this.teachButton == 1 && sensory.teachButton == 0) this.teachReleased = true;
+        this.teachButton = sensory.teachButton;
+    }
+    if (sensory.playButton != this.playButton) {
+        if (this.playButton == 0 && sensory.playButton == 1) this.playPressed = true;
+        else if (this.playButton == 1 && sensory.playButton == 0) this.playReleased = true;
+        this.playButton = sensory.playButton;
+    }
+    if (sensory.deleteButton != this.deleteButton) {
+        if (this.deleteButton == 0 && sensory.deleteButton == 1) this.deletePressed = true;
+        else if (this.deleteButton == 1 && sensory.deleteButton == 0) this.deleteReleased = true;
+        this.deleteButton = sensory.deleteButton;
+    }
+
+    if (sensory.teachClickedId != this.teachClickedId) {
+        if (this.teachClickedId != -1) this.teachClicked = true;
+        this.teachClickedId = sensory.teachClickedId;
+    }
+    if (sensory.playClickedId != this.playClickedId) {
+        if (this.playClickedId != -1) this.playClicked = true;
+        this.playClickedId = sensory.playClickedId;
+    }
+    if (sensory.deleteClickedId != this.deleteClickedId) {
+        if (this.deleteClickedId != -1) this.deleteClicked = true;
+        this.deleteClickedId = sensory.deleteClickedId;
+    }
+
+    if (sensory.teachLongPressedId != this.teachLongPressedId) {
+        if (this.teachLongPressedId != -1) this.teachLongPressed = true;
+        this.teachLongPressedId = sensory.teachLongPressedId;
+    }
+    if (sensory.playLongPressedId != this.playLongPressedId) {
+        if (this.playLongPressedId != -1) this.playLongPressed = true;
+        this.playLongPressedId = sensory.playLongPressedId;
+    }
+    if (sensory.deleteLongPressedId != this.deleteLongPressedId) {
+        if (this.deleteLongPressedId != -1) this.deleteLongPressed = true;
+        this.deleteLongPressedId = sensory.deleteLongPressedId;
+    }
+
+    if (sensory.collision1Id != this.collision1Id) {
+        if (this.collision1Id != -1) this.collided1 = true;
+        this.collision1Id = sensory.collision1Id;
+    }
+    if (sensory.collision2Id != this.collision2Id) {
+        if (this.collision2Id != -1) this.collided2 = true;
+        this.collision2Id = sensory.collision2Id;
+    }
+    if (sensory.collision3Id != this.collision3Id) {
+        if (this.collision3Id != -1) this.collided3 = true;
+        this.collision3Id = sensory.collision3Id;
+    }
+    if (sensory.collision4Id != this.collision4Id) {
+        if (this.collision4Id != -1) this.collided4 = true;
+        this.collision4Id = sensory.collision4Id;
+    }
+
+    if (sensory.jointStateId !== undefined) {
+        let t = sensory.jointStateId;
+        if (t != this.jointStateId) {
+            if (this.jointStateId != -1 && (this.angleCallback || this.resetting)) {
+                const callback = this.angleCallback;
+                this.__cancelJointAngle();
+                this.__setJointMode(this.__checkJointMode(this.JOINT_MODE_VELOCITY));
+                // 완료 시 velocity(-1, 0) = 속도 0 유지(토크 ON, 자세 유지).
+                // 레퍼런스 raccoonRobot.js 완료 분기와 동일. 127(전원 차단)은 명시적
+                // turnOff 블록 전용이며, 완료 때 127을 쓰면 이동 완료 직후 팔 힘이 빠진다.
+                this.__setJointVelocity(-1, 0);
+                if (this.resetting) {
+                    this.resetting = false;
+                    this.__cancelResetTimeout();
+                    this.__reset();
+                    t = -1;
+                }
+                if (callback) callback();
+            }
+            this.jointStateId = t;
+        }
+    }
+    if (sensory.soundStateId !== undefined) {
+        const t = sensory.soundStateId;
+        if (t != this.soundStateId) {
+            if (this.soundStateId != -1) {
+                if (this.currentSound > 0) {
+                    if (this.soundRepeat < 0) {
+                        this.__runSound(this.currentSound, -1);
+                    } else if (this.soundRepeat > 1) {
+                        this.soundRepeat--;
+                        this.__runSound(this.currentSound, this.soundRepeat);
+                        if (this.soundCallback) this.__armSoundTimeout();
+                    } else {
+                        this.currentSound = 0;
+                        this.soundRepeat = 1;
+                        this.sounding = false;
+                        const callback = this.soundCallback;
+                        this.__cancelSound();
+                        this.__checkSoundPlaying();
+                        if (callback) callback();
+                    }
+                } else {
+                    this.currentSound = 0;
+                    this.soundRepeat = 1;
+                    this.sounding = false;
+                    const callback = this.soundCallback;
+                    this.__cancelSound();
+                    this.__checkSoundPlaying();
+                    if (callback) callback();
+                }
+            }
+            this.soundStateId = t;
+        }
+    }
+    if (sensory.slotR1Id !== undefined) {
+        const t = sensory.slotR1Id;
+        if (t != this.slotR1Id) {
+            if (sensory.slotR1 !== undefined) {
+                const type = sensory.slotR1[0] & 0x0f;
+                this.extType = type;
+                if (type == 1) {
+                    this.__conveyorHandleSensory(sensory.slotR1);
+                }
+            }
+            this.slotR1Id = t;
+        }
+    }
+    if (sensory.slotR2Id !== undefined) {
+        const t = sensory.slotR2Id;
+        if (t != this.slotR2Id) {
+            if (sensory.slotR2 !== undefined) {
+                const slotR2 = sensory.slotR2;
+                this.gripper.type = slotR2[0] & 0x0f;
+                this.gripper.state = slotR2[2] & 0xff;
+            }
+            this.slotR2Id = t;
+        }
+    }
+    if (sensory.slotR3Id !== undefined) {
+        const t = sensory.slotR3Id;
+        if (t != this.slotR3Id) {
+            this.slotR3Id = t;
+        }
+    }
+    this.__calcKinematics();
+};
+
+// ---------------- kinematics ----------------
+
+RaccoonRobot.prototype.__getPosRef = function() {
+    if (this.posRefDev == this.REF_WRIST) {
+        const posRef = this.posRef;
+        const posRefRel = this.posRefRel;
+        posRef.x = posRefRel.x;
+        posRef.y = posRefRel.y;
+        posRef.z = posRefRel.z;
+    } else if (this.posRefDev == this.REF_GRIPPER) {
+        const posRef = this.posRef;
+        posRef.x = 0;
+        posRef.y = 0;
+        posRef.z = 0;
+        const posRefRel = this.posRefRel;
+        if (this.gripper.type == 3 || this.gripper.type == 4) {
+            // 서보/DC 그리퍼
+            posRef.x = 8;
+            posRef.y = -0.6;
+        } else if (this.gripper.type == 2) {
+            // 진공
+            posRef.x = 7.5;
+        }
+        posRef.x += posRefRel.x;
+        posRef.y += posRefRel.y;
+        posRef.z += posRefRel.z;
+    } else {
+        const posRef = this.posRef;
+        const posRefAbs = this.posRefAbs;
+        const posRefRel = this.posRefRel;
+        posRef.x = posRefAbs.x + posRefRel.x;
+        posRef.y = posRefAbs.y + posRefRel.y;
+        posRef.z = posRefAbs.z + posRefRel.z;
+    }
+    return this.posRef;
+};
+
+RaccoonRobot.prototype.__calcKinematics = function() {
+    const sensory = this.sensory;
+    const posRef = this.__getPosRef();
+    const th1 = sensory.encoder1 * this.__TO_RADIAN;
+    const th2 = sensory.encoder2 * this.__TO_RADIAN;
+    const th3 = sensory.encoder3 * this.__TO_RADIAN;
+    const th4 = sensory.encoder4 * this.__TO_RADIAN;
+    const c1 = Math.cos(th1);
+    const s1 = Math.sin(th1);
+    const c4 = Math.cos(th4);
+    const s4 = Math.sin(th4);
+    const c23 = Math.cos(th2 + th3);
+    const s23 = Math.sin(th2 + th3);
+    const M1 = c4 * posRef.x - s4 * posRef.y + this.__L3;
+    const M2 = s4 * posRef.x + c4 * posRef.y;
+    const M = s23 * M1 + c23 * M2 + Math.sin(th2) * this.__L2;
+    const x = -c1 * M + s1 * posRef.z;
+    const y = -s1 * M - c1 * posRef.z;
+    const z = c23 * M1 - s23 * M2 + Math.cos(th2) * this.__L2 + this.__L1;
+    const pos = this.pos;
+    pos.x = -y;
+    pos.y = x;
+    pos.z = z;
+};
+
+RaccoonRobot.prototype.__calcInvKinematics = function(xx, yy, z) {
+    let x = yy;
+    let y = -xx;
+    const sensory = this.sensory;
+    const posRef = this.__getPosRef();
+    let th2 = sensory.encoder2 * this.__TO_RADIAN;
+    let th3 = sensory.encoder3 * this.__TO_RADIAN;
+    const th4 = sensory.encoder4 * this.__TO_RADIAN;
+    const alpha = th2 + th3 + th4 + 90 * this.__TO_RADIAN;
+    const beta = Math.atan2(posRef.y, posRef.x);
+    const L = Math.sqrt(posRef.x * posRef.x + posRef.y * posRef.y);
+    const Lx = L * Math.cos(alpha + beta);
+    const Ly = L * Math.sin(alpha + beta);
+    const th1 = Math.atan2(y, x);
+    x = x - Lx * Math.cos(th1);
+    y = y - Lx * Math.sin(th1);
+    z = z - Ly;
+    const c1 = Math.cos(th1);
+    const s1 = Math.sin(th1);
+    const zL1 = z - this.__L1;
+    const c3 =
+        (x * x + y * y + zL1 * zL1 - this.__L2 * this.__L2 - this.__L3 * this.__L3) /
+        (2 * this.__L2 * this.__L3);
+    let c32 = c3 * c3;
+    if (c32 > 1 + 1e-9) return null;
+    if (c32 > 1) c32 = 1;
+    const s3 = -Math.sqrt(1 - c32);
+    th3 = Math.atan2(s3, c3);
+    const M1 = c3 * this.__L3 + this.__L2;
+    const M2 = z - this.__L1;
+    const M3 = s3 * this.__L3;
+    const M4 = c1 * x + s1 * y;
+    const c2 = M1 * M2 - M3 * M4;
+    const s2 = -M2 * M3 - M1 * M4;
+    th2 = Math.atan2(s2, c2);
+    const joints = this.joints;
+    joints[0] = th1 * this.__TO_DEGREE;
+    joints[1] = th2 * this.__TO_DEGREE;
+    joints[2] = th3 * this.__TO_DEGREE;
+    joints[3] = alpha * this.__TO_DEGREE - 90 - joints[1] - joints[2];
+    // 비유한 입력은 위쪽 c32 가드를 그냥 통과한다. NaN 과의 비교는 전부 false다. 좌표 블록은
+    // posRef 를 누적하므로 Infinity 를 양쪽으로 넣으면 NaN 이 만들어진다. 그대로 내보내면
+    // 관절 범위 검사(역시 비교)도 통과하고 _degToStep -> toHex2 가 NaN 을 0 으로 접어
+    // 네 관절이 모두 0도로 명령된다. 3번 관절은 0도가 가동 끝이다.
+    // 호출부(__moveToXyzUntil)가 이미 null 을 거르므로 여기서 null 로 돌려보낸다.
+    if (!joints.every(Number.isFinite)) return null;
+    return joints;
+};
+
+// ---------------- lookup maps (Entry dropdown values) ----------------
+
+RaccoonRobot.prototype.__JOINTS = {
+    JOINT1: 1,
+    JOINT2: 2,
+    JOINT3: 3,
+    JOINT4: 4,
+    ALL: -1,
+};
+
+RaccoonRobot.prototype.__AXES = {
+    X: 1,
+    Y: 2,
+    Z: 0,
+};
+
+// Entry 드롭다운 -> 사운드 코드 (entry-hw가 바이트로 변환)
+RaccoonRobot.prototype.__SOUNDS = {
+    BEEP: 1,
+    RANDOM_BEEP: 2,
+    NOISE: 10,
+    SIREN: 3,
+    ENGINE: 4,
+    CHOP: 11,
+    ROBOT: 5,
+    DIBIDIBIDIP: 8,
+    GOOD_JOB: 9,
+    RANDOM_MELODY: 18,
+    WAKE_UP: 22,
+    START: 23,
+    BYE: 24,
+};
+
+// Entry 드롭다운 -> 옥타브-1 음 값 (장치: C_1=4, 옥타브당 +12)
+RaccoonRobot.prototype.__NOTES = {
+    C: 4,
+    CS: 5,
+    D: 6,
+    DS: 7,
+    E: 8,
+    F: 9,
+    FS: 10,
+    G: 11,
+    GS: 12,
+    A: 13,
+    AS: 14,
+    B: 15,
+};
+
+RaccoonRobot.prototype.__BATTERY_STATES = {
+    NORMAL: 2,
+    LOW: 1,
+    EMPTY: 0,
+};
+
+RaccoonRobot.prototype.__unitFactor = function(unit) {
+    return unit == 'INCHES' ? this.__INCH_TO_CM : 1;
+};
+
+RaccoonRobot.prototype.__errorSound = function() {
+    this.__cancelNote();
+    this.__cancelSound();
+    this.__setNote(0);
+    this.__runSound(127, 1);
+    this.__checkSoundPlaying();
+};
+
+// ---------------- command cores ----------------
+
+// 관절 각도 버퍼가 실제와 어긋났음을 표시한다. 분기는 __setJointVelocity의 계약을 그대로 따른다:
+// undefined(알 수 없는 드롭다운 값)는 무시, 1~4는 해당 관절, 그 외(ALL = -1)는 네 관절 전부.
+// stop/turnOff 블록은 드롭다운 기본값이 ALL이라 -1이 들어온다.
+RaccoonRobot.prototype.__markJointStale = function(joint) {
+    if (joint === undefined) return;
+    const stale = this.jointAngleStale;
+    if (joint >= 1 && joint <= 4) stale[joint - 1] = true;
+    else stale[0] = stale[1] = stale[2] = stale[3] = true;
+};
+
+// 그 관절의 버퍼가 다시 권위 있게 됐을 때 지운다. 실측값으로 채웠거나 명령으로 덮은 경우다.
+RaccoonRobot.prototype.__clearJointStale = function(joint) {
+    // __markJointStale과 같은 계약. 지우기는 "버퍼가 권위 있다"는 주장이므로 알 수 없는
+    // 값에 네 개를 지우면 안 된다(표시는 중복 재시드 1회로 끝나지만 지우기는 결함이 된다).
+    if (joint === undefined) return;
+    const stale = this.jointAngleStale;
+    if (joint >= 1 && joint <= 4) stale[joint - 1] = false;
+    else stale[0] = stale[1] = stale[2] = stale[3] = false;
+};
+
+RaccoonRobot.prototype.__canTrustEncoders = function() {
+    const s = this.sensory;
+    const e = [s.encoder1, s.encoder2, s.encoder3, s.encoder4];
+    // afterReceive가 sensory를 통째로 교체하므로 생성자 기본값이 남지 않는다. 필드가 빠지면
+    // undefined가 섞이고, 그대로 쓰면 _degToStep -> toHex2가 NaN을 0으로 접어 네 관절 모두
+    // 0도로 명령된다(3번 관절은 0도가 가동 끝이다).
+    if (!e.every(Number.isFinite)) return false;
+    // 유효 패킷을 아직 못 받았으면 entry-hw raccoon.js의 기본값 0이 그대로 온다(손상 프레임은
+    // 조기 반환, 재연결 시 reset()이 0으로 되돌림). 네 값이 정확히 0이면 측정 전으로 본다.
+    // 실제로 네 관절이 0인 경우를 걸러도 기존 동작으로 돌아갈 뿐이라 무해하다.
+    if (e[0] === 0 && e[1] === 0 && e[2] === 0 && e[3] === 0) return false;
+    return true;
+};
+
+// 표시된 관절만 실측값으로 채우고 표시를 지운다. 반올림은 표시용이며, 엔코더 분해능이
+// 0.0879도/step이라 _degToStep의 반올림이 같은 step을 복원한다.
+RaccoonRobot.prototype.__seedStaleJointAngles = function() {
+    if (!this.__canTrustEncoders()) return;
+    const sensory = this.sensory;
+    const motoring = this.motoring;
+    const stale = this.jointAngleStale;
+    for (let i = 1; i <= 4; ++i) {
+        if (!stale[i - 1]) continue;
+        motoring['jointAngle' + i] = Math.round(sensory['encoder' + i] * 100) / 100;
+        stale[i - 1] = false;
+    }
+};
+
+// setTimeout 의 지연은 32비트 부호 있는 정수(최대 2147483647ms, 약 24.8일)까지만 유효하다.
+// 넘는 값을 넘기면 엔진이 지연을 1ms 로 취급해 콜백을 즉시 실행한다. 길게 요청할수록 빨리
+// 끝나는 뒤집힌 동작이 된다. 박자와 초 단위 대기는 상한이 없어 이 한계를 넘길 수 있다.
+RaccoonRobot.prototype.__MAX_DELAY_MS = 2147483647;
+
+RaccoonRobot.prototype.__clampDelay = function(ms) {
+    const n = parseFloat(ms);
+    // NaN, 0, 음수는 전부 즉시 실행이다. 특히 NaN 은 "값이 없다"는 뜻이지 "너무 길다"가
+    // 아니므로 상한으로 보내면 안 된다(__clamp 와 같은 정책). 알리지도 않는다.
+    // 상한 초과와 무한대만 알린다.
+    if (!(n > 0)) return 0;
+    if (n <= this.__MAX_DELAY_MS) return n;
+    this.__warnDelay();
+    return this.__MAX_DELAY_MS;
+};
+
+RaccoonRobot.prototype.__warnDelay = function() {
+    if (this.delayWarned) return;
+    if (!Entry.toast) return;
+    if (typeof Lang === 'undefined' || !Lang.Msgs || !Lang.Msgs.raccoon_delay_too_long) return;
+    this.delayWarned = true;
+    Entry.toast.warning(Lang.Msgs.raccoon_delay_too_long_title, Lang.Msgs.raccoon_delay_too_long);
+};
+
+// 각도 명령이 거부되면 지금까지는 장치 경고음만 났다. 화면에도 한 줄 남긴다.
+// 거부 사유를 구분하지 않는다. 관절 가동 범위를 넘은 경우와 좌표가 팔이 닿지 않는
+// 위치인 경우 둘 다 같은 분기로 들어오고, 사용자가 할 일도 같다(값을 줄여 다시 시도).
+RaccoonRobot.prototype.__warnUnreachablePose = function() {
+    if (this.unreachablePoseWarned) return;
+    // 가드를 플래그보다 먼저 본다(__warnLimit 주석 참고). 명령 건너뛰기 자체는 그래도 동작한다.
+    if (!Entry.toast) return;
+    if (typeof Lang === 'undefined' || !Lang.Msgs || !Lang.Msgs.raccoon_unreachable_pose) return;
+    this.unreachablePoseWarned = true;
+    Entry.toast.warning(
+        Lang.Msgs.raccoon_unreachable_pose_title,
+        Lang.Msgs.raccoon_unreachable_pose
+    );
+};
+
+RaccoonRobot.prototype.__anglesCore = function(wait, canFn, applyFn, callback) {
+    // 진행 중 콜백 취소도 전송 경로 안에서 한다. 거부된 명령이 취소하면, 다른 스크립트가
+    // 기다리던 각도 이동의 완료 콜백이 사라져 그 스크립트가 영원히 끝나지 않는다.
+    // 완료 처리(handleSensory)가 angleCallback 존재를 게이트로 쓰므로 완료 정리도 함께
+    // 건너뛰어, 로봇이 각도 모드에 갇힌다.
+    // 모드 전환, 속도 초기화, 실측 채우기도 같은 이유로 canFn 통과 후에 한다.
+    //
+    // entry-hw는 jointMode를 id 게이트 없이 매 주기 읽는다(raccoon.js handleRemoteData의
+    // 의도적 비대칭). 그래서 각도 모드로 바꾸는 순간, 아직 새 각도를 싣지 않았어도 다음
+    // 프레임이 마지막으로 latch된 네 관절 값을 그대로 내보낸다. 장치는 그 값으로 서보하므로
+    // 거부된 명령이 팔을 이전 자세로 튀게 만든다. 전원 끄기로 처진 팔이 직전
+    // 각도로 돌아간다.
+    //
+    // 속도도 같이 미룬다. 각도 모드에서는 속도가 프레임에 실리지 않지만, 모드 전환을
+    // 미루면 거부 경로가 속도 모드로 남으므로 여기서 0을 쓰면 전원 끄기(127)를 덮어
+    // 팔에 다시 힘이 들어간다.
+    if (canFn()) {
+        this.__cancelJointAngle();
+        this.__setJointMode(this.__checkJointMode(this.JOINT_MODE_ANGLE));
+        this.__setJointVelocity(-1, 0);
+        // 채우기도 전송 경로 전용이다. entry-hw는 jointAngleId가 바뀔 때만 네 관절 값을
+        // latch하고 id를 올리는 것은 applyFn뿐이라, 거부 경로에서 채우면 플래그만 소진돼
+        // 다음 명령이 낡은 버퍼를 그대로 내보낸다.
+        this.__seedStaleJointAngles();
+        applyFn();
+        if (this.precisionMode == 1) {
+            this.angleCallback = () => {
+                this.__cancelJointAngle();
+                // 본 경로와 같은 이유로 전송 경로에서만 모드를 바꾼다. 이 콜백은 완료 처리부에서
+                // 불리는데 거기서 이미 속도 모드 + 속도 0으로 돌려놨다. 재확인이 실패하면
+                // 그 상태를 그대로 두는 것이 맞다.
+                if (canFn()) {
+                    this.__setJointMode(this.__checkJointMode(this.JOINT_MODE_ANGLE));
+                    this.__setJointVelocity(-1, 0);
+                    applyFn();
+                    if (wait) {
+                        this.angleCallback = callback;
+                    }
+                } else if (wait) {
+                    // 재확인이 실패하면 기다리는 블록을 끝낸다. 이 분기가 없으면
+                    // angleCallback 이 이미 비워진 상태라 아무도 블록을 깨우지 못해
+                    // 스크립트가 영구 정지한다.
+                    // 경고음과 안내는 내지 않는다. 1차 통과로 팔은 이미 움직였고,
+                    // "블록을 건너뛰었습니다" 는 사실이 아니다. 정밀 보정만 못 한 것이다.
+                    callback();
+                }
+            };
+            if (!wait) callback();
+        } else if (wait) {
+            this.angleCallback = callback;
+        } else {
+            callback();
+        }
+    } else {
+        this.__errorSound();
+        this.__warnUnreachablePose();
+        callback();
+    }
+};
+
+RaccoonRobot.prototype.__changeAnglesUntil = function(wait, deg1, deg2, deg3, deg4, callback) {
+    deg1 = parseFloat(deg1);
+    deg2 = parseFloat(deg2);
+    deg3 = parseFloat(deg3);
+    deg4 = parseFloat(deg4);
+    if (isNaN(deg1) || isNaN(deg2) || isNaN(deg3) || isNaN(deg4)) {
+        callback();
+        return;
+    }
+    const s = this.sensory;
+    const t1 = s.encoder1 + deg1;
+    const t2 = s.encoder2 + deg2;
+    const t3 = s.encoder3 + deg3;
+    const t4 = s.encoder4 + deg4;
+    this.__anglesCore(
+        wait,
+        () => this.__canChangeFourJointAnglesToTargets(deg1, deg2, deg3, deg4, t1, t2, t3, t4),
+        () => this.__changeFourJointAnglesToTargets(t1, t2, t3, t4),
+        callback
+    );
+};
+
+RaccoonRobot.prototype.__setAnglesUntil = function(wait, deg1, deg2, deg3, deg4, callback) {
+    deg1 = parseFloat(deg1);
+    deg2 = parseFloat(deg2);
+    deg3 = parseFloat(deg3);
+    deg4 = parseFloat(deg4);
+    if (isNaN(deg1) || isNaN(deg2) || isNaN(deg3) || isNaN(deg4)) {
+        callback();
+        return;
+    }
+    this.__anglesCore(
+        wait,
+        () => this.__canSetFourJointAngles(deg1, deg2, deg3, deg4),
+        () => this.__setFourJointAngles(deg1, deg2, deg3, deg4),
+        callback
+    );
+};
+
+RaccoonRobot.prototype.__changeAngleUntil = function(wait, joint, deg, callback) {
+    deg = parseFloat(deg);
+    if (isNaN(deg) || joint === undefined) {
+        callback();
+        return;
+    }
+    const s = this.sensory;
+    const t1 = s.encoder1 + deg;
+    const t2 = s.encoder2 + deg;
+    const t3 = s.encoder3 + deg;
+    const t4 = s.encoder4 + deg;
+    this.__anglesCore(
+        wait,
+        () => this.__canChangeJointAngleToTargets(joint, deg, t1, t2, t3, t4),
+        () => this.__changeJointAngleToTargets(joint, t1, t2, t3, t4),
+        callback
+    );
+};
+
+RaccoonRobot.prototype.__setAngleUntil = function(wait, joint, deg, callback) {
+    deg = parseFloat(deg);
+    if (isNaN(deg) || joint === undefined) {
+        callback();
+        return;
+    }
+    this.__anglesCore(
+        wait,
+        () => this.__canSetJointAngle(joint, deg),
+        () => this.__setJointAngle(joint, deg),
+        callback
+    );
+};
+
+RaccoonRobot.prototype.__moveToXyzUntil = function(wait, x, y, z, callback) {
+    // 시도마다 역기구학을 다시 계산한다(정밀 모드 포함).
+    const attempt = () => this.__calcInvKinematics(x, y, z);
+    let th = null;
+    this.__anglesCore(
+        wait,
+        () => {
+            th = attempt();
+            return th != null && this.__canSetFourJointAngles(th[0], th[1], th[2], th[3]);
+        },
+        () => this.__setFourJointAngles(th[0], th[1], th[2], th[3]),
+        callback
+    );
+};
+
+// ---------------- Entry block methods ----------------
+
+// ---------------- conveyor peripheral ----------------
+
+RaccoonRobot.prototype.__conveyorIssueDistance = function() {
+    this.conveyor.motoring.distanceId = (this.conveyor.motoring.distanceId % 255) + 1;
+};
+
+RaccoonRobot.prototype.__conveyorCancelDistance = function() {
+    this.conveyor.distanceCallback = undefined;
+};
+
+RaccoonRobot.prototype.__conveyorIssueMoving = function() {
+    this.conveyor.movingId = this.blockId = (this.blockId % 65535) + 1;
+    return this.conveyor.movingId;
+};
+
+RaccoonRobot.prototype.__conveyorCancelMoving = function() {
+    const conveyor = this.conveyor;
+    conveyor.movingId = 0;
+    if (conveyor.movingTimer !== undefined) {
+        this.__removeTimeout(conveyor.movingTimer);
+    }
+    conveyor.movingTimer = undefined;
+};
+
+RaccoonRobot.prototype.__conveyorCheckMoving = function() {
+    this.conveyor.moving = this.conveyor.motoring.velocity != 0;
+};
+
+RaccoonRobot.prototype.__conveyorUpdate = function() {
+    const sw1 = this.motoring.slotW1;
+    const conveyorMotoring = this.conveyor.motoring;
+    sw1[0] = 0x11;
+    sw1[1] = conveyorMotoring.mode;
+    sw1[2] = conveyorMotoring.velocity;
+    sw1[3] = conveyorMotoring.distanceId;
+    sw1[4] = (conveyorMotoring.distance >> 8) & 0xff;
+    sw1[5] = conveyorMotoring.distance & 0xff;
+    for (let i = 6; i < 8; ++i) {
+        sw1[i] = 0;
+    }
+    this.__issueSlotW1();
+};
+
+RaccoonRobot.prototype.__conveyorHandleSensory = function(slotR1) {
+    const conveyor = this.conveyor;
+    const conveyorSensory = conveyor.sensory;
+    conveyorSensory.mode = slotR1[1] & 0xff;
+    conveyorSensory.distance = ((slotR1[2] & 0xff) << 8) | (slotR1[3] & 0xff);
+    conveyorSensory.button = slotR1[4] & 0x01;
+    conveyorSensory.clickedId = (slotR1[4] >> 1) & 0x03;
+    conveyorSensory.longPressedId = (slotR1[4] >> 3) & 0x03;
+    conveyorSensory.moving = slotR1[5] & 0x01;
+    conveyorSensory.stateId = (slotR1[5] >> 1) & 0x03;
+    conveyorSensory.velocity = slotR1[6];
+
+    if (conveyorSensory.button != conveyor.button) {
+        if (conveyor.button == 0 && conveyorSensory.button == 1) conveyor.pressed = true;
+        else if (conveyor.button == 1 && conveyorSensory.button == 0) conveyor.released = true;
+        conveyor.button = conveyorSensory.button;
+    }
+    if (conveyorSensory.clickedId != conveyor.clickedId) {
+        if (conveyor.clickedId != -1) conveyor.clicked = true;
+        conveyor.clickedId = conveyorSensory.clickedId;
+    }
+    if (conveyorSensory.longPressedId != conveyor.longPressedId) {
+        if (conveyor.longPressedId != -1) conveyor.longPressed = true;
+        conveyor.longPressedId = conveyorSensory.longPressedId;
+    }
+    if (conveyorSensory.stateId !== undefined) {
+        const t = conveyorSensory.stateId;
+        if (t != conveyor.stateId) {
+            if (conveyor.stateId != -1 && conveyor.distanceCallback) {
+                const callback = conveyor.distanceCallback;
+                this.__conveyorCancelDistance();
+                conveyor.motoring.mode = 0;
+                conveyor.motoring.velocity = 0;
+                this.__conveyorCheckMoving();
+                if (callback) callback();
+            }
+            conveyor.stateId = t;
+        }
+    }
+};
+
+RaccoonRobot.prototype.__conveyorStopInternal = function() {
+    this.__conveyorCancelDistance();
+    this.__conveyorCancelMoving();
+    const conveyorMotoring = this.conveyor.motoring;
+    conveyorMotoring.mode = 0;
+    conveyorMotoring.velocity = 0;
+    this.__conveyorUpdate();
+    this.__conveyorCheckMoving();
+};
+
+RaccoonRobot.prototype.__resetConveyor = function() {
+    this.__conveyorStopInternal();
+    const conveyor = this.conveyor;
+    const conveyorMotoring = conveyor.motoring;
+    conveyorMotoring.mode = 0;
+    conveyorMotoring.velocity = 0;
+    conveyorMotoring.distance = 0;
+    const conveyorSensory = conveyor.sensory;
+    conveyorSensory.mode = 0;
+    conveyorSensory.velocity = 0;
+    conveyorSensory.distance = 0;
+    conveyorSensory.button = 0;
+    conveyorSensory.clickedId = 0;
+    conveyorSensory.longPressedId = 0;
+    conveyorSensory.stateId = 0;
+    conveyorSensory.moving = 0;
+    conveyor.clickedId = -1;
+    conveyor.longPressedId = -1;
+    conveyor.stateId = -1;
+    conveyor.distanceCallback = undefined;
+    conveyor.movingId = 0;
+    conveyor.movingTimer = undefined;
+    conveyor.moving = false;
+    conveyor.button = 0;
+    conveyor.pressed = false;
+    conveyor.released = false;
+    conveyor.clicked = false;
+    conveyor.longPressed = false;
+};
+
+// 단위 값은 Entry 드롭다운의 대문자 값이다(CM/MM/INCHES/SECONDS).
+RaccoonRobot.prototype.__conveyorMoveInternal = function(value, unit, speed, callback) {
+    this.__conveyorCancelDistance();
+    this.__conveyorCancelMoving();
+    const conveyorMotoring = this.conveyor.motoring;
+    value = parseFloat(value);
+    speed = parseFloat(speed);
+    if (!isNaN(value) && !isNaN(speed) && value != 0 && speed != 0) {
+        if (speed < -100) speed = -100;
+        else if (speed > 100) speed = 100;
+        if (unit == 'SECONDS') {
+            const id = this.__conveyorIssueMoving();
+            conveyorMotoring.mode = 0;
+            conveyorMotoring.velocity = speed;
+            const timer = setTimeout(() => {
+                if (this.conveyor.movingId == id) {
+                    conveyorMotoring.mode = 0;
+                    conveyorMotoring.velocity = 0;
+                    this.__conveyorUpdate();
+                    this.__conveyorCancelMoving();
+                    this.__conveyorCheckMoving();
+                    callback();
+                }
+            }, this.__clampDelay(value * 1000));
+            this.conveyor.movingTimer = timer;
+            this.timeouts.push(timer);
+            this.__conveyorUpdate();
+            this.__conveyorCheckMoving();
+        } else {
+            if (unit == 'MM') {
+                value *= this.__MM_TO_CM;
+            } else if (unit == 'INCHES') {
+                value *= this.__INCH_TO_CM;
+            }
+            if (value < 0) {
+                value = -value;
+                speed = -speed;
+            }
+            conveyorMotoring.mode = 1;
+            // 장치 WRITE_DISTANCE 범위 [0,65535]로 클램프 후 내림한다. entry-hw
+            // _copySlot은 바이트 단위로만 클램프하므로 오버플로를 여기서 막아야 한다.
+            // value는 위에서 이미 음수가 아니게 처리됐다.
+            let dist = Math.floor(value * 100);
+            if (dist < 0) dist = 0;
+            else if (dist > 65535) dist = 65535;
+            conveyorMotoring.distance = dist;
+            conveyorMotoring.velocity = speed;
+            this.conveyor.distanceCallback = callback;
+            this.__conveyorIssueDistance();
+            this.__conveyorUpdate();
+            this.__conveyorCheckMoving();
+        }
+    } else {
+        conveyorMotoring.mode = 0;
+        conveyorMotoring.velocity = 0;
+        this.__conveyorUpdate();
+        this.__conveyorCheckMoving();
+        callback();
+    }
+};
+
+RaccoonRobot.prototype.conveyorMove = function(script) {
+    return this.__waitBlock(script, (cb) => {
+        this.__conveyorMoveInternal(
+            script.getNumberValue('VALUE'),
+            script.getField('UNIT'),
+            script.getNumberValue('SPEED'),
+            cb
+        );
+    });
+};
+
+RaccoonRobot.prototype.conveyorChangeVelocity = function(script) {
+    this.__setModule();
+    this.__conveyorCancelDistance();
+    this.__conveyorCancelMoving();
+    const conveyorMotoring = this.conveyor.motoring;
+    conveyorMotoring.mode = 0;
+    let velocity = parseFloat(script.getNumberValue('VELOCITY'));
+    if (!isNaN(velocity)) {
+        velocity += conveyorMotoring.velocity;
+        if (velocity < -100) velocity = -100;
+        else if (velocity > 100) velocity = 100;
+        conveyorMotoring.velocity = velocity;
+        this.__conveyorUpdate();
+    }
+    this.__conveyorCheckMoving();
+    return script.callReturn();
+};
+
+RaccoonRobot.prototype.conveyorSetVelocity = function(script) {
+    this.__setModule();
+    this.__conveyorCancelDistance();
+    this.__conveyorCancelMoving();
+    const conveyorMotoring = this.conveyor.motoring;
+    conveyorMotoring.mode = 0;
+    let velocity = parseFloat(script.getNumberValue('VELOCITY'));
+    if (!isNaN(velocity)) {
+        if (velocity < -100) velocity = -100;
+        else if (velocity > 100) velocity = 100;
+        conveyorMotoring.velocity = velocity;
+        this.__conveyorUpdate();
+    }
+    this.__conveyorCheckMoving();
+    return script.callReturn();
+};
+
+RaccoonRobot.prototype.conveyorStop = function(script) {
+    this.__setModule();
+    this.__conveyorStopInternal();
+    return script.callReturn();
+};
+
+RaccoonRobot.prototype.isConveyorMoving = function(script) {
+    return this.conveyor.sensory.moving == 1;
+};
+
+RaccoonRobot.prototype.getConveyorButton = function(script) {
+    return this.conveyor.sensory.button;
+};
+
+RaccoonRobot.prototype.__conveyorButtonEventFlag = function(state) {
+    const conveyor = this.conveyor;
+    switch (state) {
+        case 'PRESSED':
+            return conveyor.pressed;
+        case 'RELEASED':
+            return conveyor.released;
+        case 'CLICKED':
+            return conveyor.clicked;
+        case 'LONG_PRESSED':
+            return conveyor.longPressed;
+    }
+    return false;
+};
+
+RaccoonRobot.prototype.hasConveyorButtonEvent = function() {
+    const conveyor = this.conveyor;
+    return conveyor.pressed || conveyor.released || conveyor.clicked || conveyor.longPressed;
+};
+
+RaccoonRobot.prototype.checkConveyorButtonEvent = function(script) {
+    return this.__conveyorButtonEventFlag(script.getField('STATE'));
+};
+
+RaccoonRobot.prototype.isConveyorButtonState = function(script) {
+    const state = script.getField('STATE');
+    if (state == 'PRESSED') return this.conveyor.sensory.button == 1;
+    if (state == 'RELEASED') return this.conveyor.sensory.button == 0;
+    return this.__conveyorButtonEventFlag(state);
+};
+
+RaccoonRobot.prototype.__waitBlock = function(script, starter) {
+    this.__setModule();
+    if (!script.isStart) {
+        script.isStart = true;
+        script.isMoving = true;
+        starter(() => {
+            script.isMoving = false;
+        });
+        return script;
+    } else if (script.isMoving) {
+        return script;
+    } else {
+        delete script.isStart;
+        delete script.isMoving;
+        Entry.engine.isContinue = false;
+        return script.callReturn();
+    }
+};
+
+RaccoonRobot.prototype.returnToBasicPose = function(script) {
+    return this.__waitBlock(script, (cb) => {
+        this.unlockGripperInternal();
+        this.__withGripperInternal('PLACE', () => {
+            this.__setAnglesUntil(true, 0, -10, -140, 60, cb);
+        });
+    });
+};
+
+RaccoonRobot.prototype.changeJointAnglesBy = function(script) {
+    this.__setModule();
+    this.__changeAnglesUntil(
+        false,
+        script.getNumberValue('DEGREE1'),
+        script.getNumberValue('DEGREE2'),
+        script.getNumberValue('DEGREE3'),
+        script.getNumberValue('DEGREE4'),
+        () => {}
+    );
+    return script.callReturn();
+};
+
+RaccoonRobot.prototype.changeJointAnglesByUntil = function(script) {
+    return this.__waitBlock(script, (cb) => {
+        this.__changeAnglesUntil(
+            true,
+            script.getNumberValue('DEGREE1'),
+            script.getNumberValue('DEGREE2'),
+            script.getNumberValue('DEGREE3'),
+            script.getNumberValue('DEGREE4'),
+            cb
+        );
+    });
+};
+
+RaccoonRobot.prototype.setJointAnglesTo = function(script) {
+    this.__setModule();
+    this.__setAnglesUntil(
+        false,
+        script.getNumberValue('DEGREE1'),
+        script.getNumberValue('DEGREE2'),
+        script.getNumberValue('DEGREE3'),
+        script.getNumberValue('DEGREE4'),
+        () => {}
+    );
+    return script.callReturn();
+};
+
+RaccoonRobot.prototype.setJointAnglesToUntil = function(script) {
+    return this.__waitBlock(script, (cb) => {
+        this.__setAnglesUntil(
+            true,
+            script.getNumberValue('DEGREE1'),
+            script.getNumberValue('DEGREE2'),
+            script.getNumberValue('DEGREE3'),
+            script.getNumberValue('DEGREE4'),
+            cb
+        );
+    });
+};
+
+RaccoonRobot.prototype.changeAngleBy = function(script) {
+    this.__setModule();
+    const joint = this.__JOINTS[script.getField('JOINT')];
+    this.__changeAngleUntil(false, joint, script.getNumberValue('DEGREE'), () => {});
+    return script.callReturn();
+};
+
+RaccoonRobot.prototype.changeAngleByUntil = function(script) {
+    return this.__waitBlock(script, (cb) => {
+        const joint = this.__JOINTS[script.getField('JOINT')];
+        this.__changeAngleUntil(true, joint, script.getNumberValue('DEGREE'), cb);
+    });
+};
+
+RaccoonRobot.prototype.setAngleTo = function(script) {
+    this.__setModule();
+    const joint = this.__JOINTS[script.getField('JOINT')];
+    this.__setAngleUntil(false, joint, script.getNumberValue('DEGREE'), () => {});
+    return script.callReturn();
+};
+
+RaccoonRobot.prototype.setAngleToUntil = function(script) {
+    return this.__waitBlock(script, (cb) => {
+        const joint = this.__JOINTS[script.getField('JOINT')];
+        this.__setAngleUntil(true, joint, script.getNumberValue('DEGREE'), cb);
+    });
+};
+
+RaccoonRobot.prototype.__readXyzParams = function(script) {
+    const f = this.__unitFactor(script.getField('UNIT'));
+    return {
+        x: script.getNumberValue('X') * f,
+        y: script.getNumberValue('Y') * f,
+        z: script.getNumberValue('Z') * f,
+    };
+};
+
+RaccoonRobot.prototype.changePositionByXYZ = function(script) {
+    this.__setModule();
+    const p = this.__readXyzParams(script);
+    const pos = this.pos;
+    this.__moveToXyzUntil(false, pos.x + p.x, pos.y + p.y, pos.z + p.z, () => {});
+    return script.callReturn();
+};
+
+RaccoonRobot.prototype.changePositionByXYZUntil = function(script) {
+    return this.__waitBlock(script, (cb) => {
+        const p = this.__readXyzParams(script);
+        const pos = this.pos;
+        this.__moveToXyzUntil(true, pos.x + p.x, pos.y + p.y, pos.z + p.z, cb);
+    });
+};
+
+RaccoonRobot.prototype.setPositionToXYZ = function(script) {
+    this.__setModule();
+    const p = this.__readXyzParams(script);
+    this.__moveToXyzUntil(false, p.x, p.y, p.z, () => {});
+    return script.callReturn();
+};
+
+RaccoonRobot.prototype.setPositionToXYZUntil = function(script) {
+    return this.__waitBlock(script, (cb) => {
+        const p = this.__readXyzParams(script);
+        this.__moveToXyzUntil(true, p.x, p.y, p.z, cb);
+    });
+};
+
+RaccoonRobot.prototype.changePositionBy = function(script) {
+    return this.__waitBlock(script, (cb) => {
+        const axis = this.__AXES[script.getField('XYZ')];
+        const value = script.getNumberValue('VALUE') * this.__unitFactor(script.getField('UNIT'));
+        const pos = this.pos;
+        let x = pos.x;
+        let y = pos.y;
+        let z = pos.z;
+        if (axis == 1) x += value;
+        else if (axis == 2) y += value;
+        else if (axis == 0) z += value;
+        this.__moveToXyzUntil(true, x, y, z, cb);
+    });
+};
+
+RaccoonRobot.prototype.setPositionTo = function(script) {
+    return this.__waitBlock(script, (cb) => {
+        const axis = this.__AXES[script.getField('XYZ')];
+        const value = script.getNumberValue('VALUE') * this.__unitFactor(script.getField('UNIT'));
+        const pos = this.pos;
+        let x = pos.x;
+        let y = pos.y;
+        let z = pos.z;
+        if (axis == 1) x = value;
+        else if (axis == 2) y = value;
+        else if (axis == 0) z = value;
+        this.__moveToXyzUntil(true, x, y, z, cb);
+    });
+};
+
+RaccoonRobot.prototype.setPositionRefTo = function(script) {
+    this.__setModule();
+    this.posRefDev = script.getField('REF') == 'GRIPPER' ? this.REF_GRIPPER : this.REF_WRIST;
+    return script.callReturn();
+};
+
+RaccoonRobot.prototype.changePositionRefByFrontUp = function(script) {
+    this.__setModule();
+    const f = this.__unitFactor(script.getField('UNIT'));
+    const y = script.getNumberValue('Y') * f;
+    const z = script.getNumberValue('Z') * f;
+    const posRefRel = this.posRefRel;
+    if (script.getField('FRONT_REAR') == 'FRONT') posRefRel.x += y;
+    else posRefRel.x -= y;
+    if (script.getField('UP_DOWN') == 'UP') posRefRel.y += z;
+    else posRefRel.y -= z;
+    return script.callReturn();
+};
+
+RaccoonRobot.prototype.setPositionRefToFrontUp = function(script) {
+    this.__setModule();
+    const f = this.__unitFactor(script.getField('UNIT'));
+    const y = script.getNumberValue('Y') * f;
+    const z = script.getNumberValue('Z') * f;
+    const posRefAbs = this.posRefAbs;
+    posRefAbs.x = script.getField('FRONT_REAR') == 'FRONT' ? y : -y;
+    posRefAbs.y = script.getField('UP_DOWN') == 'UP' ? z : -z;
+    posRefAbs.z = 0;
+    this.posRefDev = this.REF_NONE;
+    return script.callReturn();
+};
+
+RaccoonRobot.prototype.changeJointVelocitiesBy = function(script) {
+    this.__setModule();
+    this.__cancelJointAngle();
+    this.__setJointMode(this.__checkJointMode(this.JOINT_MODE_VELOCITY));
+    this.__changeFourJointVelocities(
+        script.getNumberValue('VELOCITY1'),
+        script.getNumberValue('VELOCITY2'),
+        script.getNumberValue('VELOCITY3'),
+        script.getNumberValue('VELOCITY4')
+    );
+    this.__markJointStale(-1);
+    return script.callReturn();
+};
+
+RaccoonRobot.prototype.setJointVelocitiesTo = function(script) {
+    this.__setModule();
+    this.__cancelJointAngle();
+    this.__setJointMode(this.__checkJointMode(this.JOINT_MODE_VELOCITY));
+    this.__setFourJointVelocities(
+        script.getNumberValue('VELOCITY1'),
+        script.getNumberValue('VELOCITY2'),
+        script.getNumberValue('VELOCITY3'),
+        script.getNumberValue('VELOCITY4')
+    );
+    this.__markJointStale(-1);
+    return script.callReturn();
+};
+
+RaccoonRobot.prototype.changeVelocityBy = function(script) {
+    this.__setModule();
+    this.__cancelJointAngle();
+    this.__setJointMode(this.__checkJointMode(this.JOINT_MODE_VELOCITY));
+    const joint = this.__JOINTS[script.getField('JOINT')];
+    this.__changeJointVelocity(joint, script.getNumberValue('VELOCITY'));
+    this.__markJointStale(joint);
+    return script.callReturn();
+};
+
+RaccoonRobot.prototype.setVelocityTo = function(script) {
+    this.__setModule();
+    this.__cancelJointAngle();
+    this.__setJointMode(this.__checkJointMode(this.JOINT_MODE_VELOCITY));
+    const joint = this.__JOINTS[script.getField('JOINT')];
+    this.__setJointVelocity(joint, script.getNumberValue('VELOCITY'));
+    this.__markJointStale(joint);
+    return script.callReturn();
+};
+
+RaccoonRobot.prototype.stop = function(script) {
+    this.__setModule();
+    this.__cancelJointAngle();
+    this.__setJointMode(this.__checkJointMode(this.JOINT_MODE_VELOCITY));
+    const joint = this.__JOINTS[script.getField('JOINT')];
+    this.__setJointVelocity(joint, 0);
+    this.__markJointStale(joint);
+    return script.callReturn();
+};
+
+RaccoonRobot.prototype.turnOff = function(script) {
+    this.__setModule();
+    this.__cancelJointAngle();
+    this.__setJointMode(this.__checkJointMode(this.JOINT_MODE_VELOCITY));
+    const joint = this.__JOINTS[script.getField('JOINT')];
+    this.__setJointVelocity(joint, 127);
+    this.__markJointStale(joint);
+    return script.callReturn();
+};
+
+RaccoonRobot.prototype.turnPrecisionMode = function(script) {
+    this.__setModule();
+    this.precisionMode = script.getField('ON_OFF') == 'ON' ? 1 : 0;
+    return script.callReturn();
+};
+
+RaccoonRobot.prototype.isMoving = function(script) {
+    return this.sensory.moving == 1;
+};
+
+// ---------------- gripper ----------------
+
+RaccoonRobot.prototype.__withGripperInternal = function(action, callback) {
+    this.__cancelIo();
+    const id = this.__issueIoId();
+    const sw2 = this.motoring.slotW2;
+    sw2[0] = 0x21;
+    sw2[1] = 0x00;
+    sw2[2] = action == 'PICK' ? 1 : 0;
+    for (let i = 3; i < 8; ++i) {
+        sw2[i] = 0;
+    }
+    this.__issueSlotW2();
+    const timer = setTimeout(() => {
+        if (this.ioId == id) {
+            this.__cancelIo();
+            callback();
+        }
+    }, 500);
+    this.ioTimer = timer;
+    this.timeouts.push(timer);
+};
+
+RaccoonRobot.prototype.withGripper = function(script) {
+    return this.__waitBlock(script, (cb) => {
+        this.__withGripperInternal(script.getField('ACTION'), cb);
+    });
+};
+
+RaccoonRobot.prototype.__lockGripperInternal = function(wait, direction, callback) {
+    if (direction == 'HORIZONTAL') {
+        if (
+            this.jointMode == this.JOINT_MODE_VELOCITY ||
+            this.jointMode == this.JOINT_MODE_VELOCITY_HORZ ||
+            this.jointMode == this.JOINT_MODE_VELOCITY_VERT
+        ) {
+            this.jointMode = this.JOINT_MODE_VELOCITY_HORZ;
+        } else {
+            this.jointMode = this.JOINT_MODE_ANGLE_HORZ;
+        }
+    } else {
+        if (
+            this.jointMode == this.JOINT_MODE_VELOCITY ||
+            this.jointMode == this.JOINT_MODE_VELOCITY_HORZ ||
+            this.jointMode == this.JOINT_MODE_VELOCITY_VERT
+        ) {
+            this.jointMode = this.JOINT_MODE_VELOCITY_VERT;
+        } else {
+            this.jointMode = this.JOINT_MODE_ANGLE_VERT;
+        }
+    }
+    this.__setJointMode(this.jointMode);
+    this.__changeAngleUntil(wait, -1, 0, callback);
+};
+
+RaccoonRobot.prototype.lockGripper = function(script) {
+    this.__setModule();
+    this.__lockGripperInternal(false, script.getField('DIRECTION'), () => {});
+    return script.callReturn();
+};
+
+RaccoonRobot.prototype.lockGripperUntil = function(script) {
+    return this.__waitBlock(script, (cb) => {
+        this.__lockGripperInternal(true, script.getField('DIRECTION'), cb);
+    });
+};
+
+RaccoonRobot.prototype.unlockGripperInternal = function() {
+    if (
+        this.jointMode == this.JOINT_MODE_VELOCITY ||
+        this.jointMode == this.JOINT_MODE_VELOCITY_HORZ ||
+        this.jointMode == this.JOINT_MODE_VELOCITY_VERT
+    ) {
+        this.jointMode = this.JOINT_MODE_VELOCITY;
+    } else {
+        this.jointMode = this.JOINT_MODE_ANGLE;
+    }
+    this.__setJointMode(this.jointMode);
+};
+
+RaccoonRobot.prototype.unlockGripper = function(script) {
+    this.__setModule();
+    this.unlockGripperInternal();
+    return script.callReturn();
+};
+
+RaccoonRobot.prototype.getGripperState = function(script) {
+    return this.gripper.state;
+};
+
+// ---------------- sound / note blocks ----------------
+
+RaccoonRobot.prototype.__playSoundCore = function(sound, count, wait, callback) {
+    this.__cancelNote();
+    this.__cancelSound();
+    this.__setNote(0);
+    if (sound && count) {
+        this.__runSound(sound, count);
+        if (wait) {
+            this.soundCallback = callback;
+            // 타임아웃은 유한 반복에만 적용된다. 무한 반복(count<0)은 완료되지
+            // 않으며 영원히 도는 동작을 유지한다.
+            if (count > 0) this.__armSoundTimeout();
+            this.__checkSoundPlaying();
+        } else {
+            this.__checkSoundPlaying();
+            callback();
+        }
+    } else {
+        this.__runSound(0);
+        this.__checkSoundPlaying();
+        callback();
+    }
+};
+
+RaccoonRobot.prototype.playSound = function(script) {
+    this.__setModule();
+    this.__playSoundCore(this.__SOUNDS[script.getField('SOUND')], 1, false, () => {});
+    return script.callReturn();
+};
+
+RaccoonRobot.prototype.__readRepeat = function(script) {
+    // 각도/박자 경로와 마찬가지로, 비거나 숫자가 아닌 REPEAT는 무시(no-op)가
+    // 아니라 한 번 재생한다.
+    const count = parseInt(script.getNumberValue('REPEAT'), 10);
+    return isNaN(count) ? 1 : count;
+};
+
+RaccoonRobot.prototype.playSoundTimes = function(script) {
+    this.__setModule();
+    this.__playSoundCore(
+        this.__SOUNDS[script.getField('SOUND')],
+        this.__readRepeat(script),
+        false,
+        () => {}
+    );
+    return script.callReturn();
+};
+
+RaccoonRobot.prototype.playSoundTimesUntil = function(script) {
+    return this.__waitBlock(script, (cb) => {
+        // 삐오 playSoundUntil 과 같은 이유로 음수만 막는다. 기다리지 않는
+        // playSoundTimes 는 정지하지 않으므로 __readRepeat 은 그대로 둔다.
+        const count = this.__readRepeat(script);
+        this.__playSoundCore(
+            this.__SOUNDS[script.getField('SOUND')],
+            count < 0 ? 0 : count,
+            true,
+            cb
+        );
+    });
+};
+
+RaccoonRobot.prototype.clearSound = function(script) {
+    this.__setModule();
+    this.__cancelNote();
+    this.__cancelSound();
+    this.__setNote(0);
+    this.__runSound(0);
+    this.__checkSoundPlaying();
+    return script.callReturn();
+};
+
+RaccoonRobot.prototype.__noteValue = function(script) {
+    const note = this.__NOTES[script.getField('NOTE')];
+    let octave = parseInt(script.getField('OCTAVE'));
+    if (note && octave && octave > 0 && octave < 8) {
+        octave %= 7;
+        if (octave == 0) octave = 7;
+        return note + (octave - 1) * 12;
+    }
+    return 0;
+};
+
+RaccoonRobot.prototype.playNote = function(script) {
+    this.__setModule();
+    this.__cancelNote();
+    this.__cancelSound();
+    this.__setNote(this.__noteValue(script));
+    this.__runSound(0);
+    this.__checkSoundPlaying();
+    return script.callReturn();
+};
+
+RaccoonRobot.prototype.playNoteBeat = function(script) {
+    return this.__waitBlock(script, (cb) => {
+        this.__cancelNote();
+        this.__cancelSound();
+        const note = this.__noteValue(script);
+        const beat = parseFloat(script.getNumberValue('BEAT'));
+        if (note && beat && beat > 0 && this.tempo > 0) {
+            const id = this.__issueNoteId();
+            this.__setNote(note);
+            const timeout = this.__clampDelay((beat * 60 * 1000) / this.tempo);
+            const tail = timeout > 100 ? 100 : 0;
+            if (tail > 0) {
+                const t1 = setTimeout(() => {
+                    if (this.noteId == id) {
+                        this.__setNote(0);
+                        if (this.noteTimer1 !== undefined) this.__removeTimeout(this.noteTimer1);
+                        this.noteTimer1 = undefined;
+                    }
+                }, timeout - tail);
+                this.noteTimer1 = t1;
+                this.timeouts.push(t1);
+            }
+            const t2 = setTimeout(() => {
+                if (this.noteId == id) {
+                    this.__setNote(0);
+                    this.__cancelNote();
+                    this.__checkSoundPlaying();
+                    cb();
+                }
+            }, timeout);
+            this.noteTimer2 = t2;
+            this.timeouts.push(t2);
+            this.__runSound(0);
+            this.__checkSoundPlaying();
+        } else {
+            this.__setNote(0);
+            this.__runSound(0);
+            this.__checkSoundPlaying();
+            cb();
+        }
+    });
+};
+
+RaccoonRobot.prototype.restBeat = function(script) {
+    return this.__waitBlock(script, (cb) => {
+        this.__cancelNote();
+        this.__cancelSound();
+        const beat = parseFloat(script.getNumberValue('BEAT'));
+        this.__setNote(0);
+        this.__runSound(0);
+        if (beat && beat > 0 && this.tempo > 0) {
+            const id = this.__issueNoteId();
+            const t1 = setTimeout(() => {
+                if (this.noteId == id) {
+                    this.__cancelNote();
+                    this.__checkSoundPlaying();
+                    cb();
+                }
+            }, this.__clampDelay((beat * 60 * 1000) / this.tempo));
+            this.noteTimer1 = t1;
+            this.timeouts.push(t1);
+            this.__checkSoundPlaying();
+            this.resting = true;
+        } else {
+            this.__checkSoundPlaying();
+            cb();
+        }
+    });
+};
+
+RaccoonRobot.prototype.changeTempo = function(script) {
+    this.__setModule();
+    const bpm = parseFloat(script.getNumberValue('BPM'));
+    if (!isNaN(bpm)) {
+        this.tempo += bpm;
+        if (this.tempo < 1) this.tempo = 1;
+    }
+    return script.callReturn();
+};
+
+RaccoonRobot.prototype.setTempo = function(script) {
+    this.__setModule();
+    const bpm = parseFloat(script.getNumberValue('BPM'));
+    if (!isNaN(bpm)) {
+        this.tempo = bpm;
+        if (this.tempo < 1) this.tempo = 1;
+    }
+    return script.callReturn();
+};
+
+RaccoonRobot.prototype.isSoundPlaying = function(script) {
+    return this.sounding || this.noting || this.resting;
+};
+
+// ---------------- sensing ----------------
+
+RaccoonRobot.prototype.getEncoder1 = function(script) {
+    return this.sensory.encoder1;
+};
+
+RaccoonRobot.prototype.getEncoder2 = function(script) {
+    return this.sensory.encoder2;
+};
+
+RaccoonRobot.prototype.getEncoder3 = function(script) {
+    return this.sensory.encoder3;
+};
+
+RaccoonRobot.prototype.getEncoder4 = function(script) {
+    return this.sensory.encoder4;
+};
+
+RaccoonRobot.prototype.getPositionX = function(script) {
+    return this.pos.x;
+};
+
+RaccoonRobot.prototype.getPositionY = function(script) {
+    return this.pos.y;
+};
+
+RaccoonRobot.prototype.getPositionZ = function(script) {
+    return this.pos.z;
+};
+
+RaccoonRobot.prototype.getPositionXInch = function(script) {
+    return this.pos.x / this.__INCH_TO_CM;
+};
+
+RaccoonRobot.prototype.getPositionYInch = function(script) {
+    return this.pos.y / this.__INCH_TO_CM;
+};
+
+RaccoonRobot.prototype.getPositionZInch = function(script) {
+    return this.pos.z / this.__INCH_TO_CM;
+};
+
+RaccoonRobot.prototype.getTeachButton = function(script) {
+    return this.sensory.teachButton;
+};
+
+RaccoonRobot.prototype.getPlayButton = function(script) {
+    return this.sensory.playButton;
+};
+
+RaccoonRobot.prototype.getDeleteButton = function(script) {
+    return this.sensory.deleteButton;
+};
+
+RaccoonRobot.prototype.getSignalStrength = function(script) {
+    return this.sensory.signalStrength;
+};
+
+RaccoonRobot.prototype.__buttonEventFlag = function(button, state) {
+    switch (button) {
+        case 'TEACH':
+            switch (state) {
+                case 'PRESSED':
+                    return this.teachPressed;
+                case 'RELEASED':
+                    return this.teachReleased;
+                case 'CLICKED':
+                    return this.teachClicked;
+                case 'LONG_PRESSED':
+                    return this.teachLongPressed;
+            }
+            break;
+        case 'PLAY':
+            switch (state) {
+                case 'PRESSED':
+                    return this.playPressed;
+                case 'RELEASED':
+                    return this.playReleased;
+                case 'CLICKED':
+                    return this.playClicked;
+                case 'LONG_PRESSED':
+                    return this.playLongPressed;
+            }
+            break;
+        case 'DELETE':
+            switch (state) {
+                case 'PRESSED':
+                    return this.deletePressed;
+                case 'RELEASED':
+                    return this.deleteReleased;
+                case 'CLICKED':
+                    return this.deleteClicked;
+                case 'LONG_PRESSED':
+                    return this.deleteLongPressed;
+            }
+            break;
+    }
+    return false;
+};
+
+RaccoonRobot.prototype.hasButtonEvent = function() {
+    return (
+        this.teachPressed ||
+        this.playPressed ||
+        this.deletePressed ||
+        this.teachReleased ||
+        this.playReleased ||
+        this.deleteReleased ||
+        this.teachClicked ||
+        this.playClicked ||
+        this.deleteClicked ||
+        this.teachLongPressed ||
+        this.playLongPressed ||
+        this.deleteLongPressed
+    );
+};
+
+RaccoonRobot.prototype.checkButtonEvent = function(script) {
+    return this.__buttonEventFlag(script.getField('BUTTON'), script.getField('STATE'));
+};
+
+RaccoonRobot.prototype.isButtonState = function(script) {
+    const button = script.getField('BUTTON');
+    const state = script.getField('STATE');
+    if (state == 'PRESSED' || state == 'RELEASED') {
+        const level =
+            button == 'TEACH'
+                ? this.sensory.teachButton
+                : button == 'PLAY'
+                ? this.sensory.playButton
+                : this.sensory.deleteButton;
+        return state == 'PRESSED' ? level == 1 : level == 0;
+    }
+    return this.__buttonEventFlag(button, state);
+};
+
+RaccoonRobot.prototype.checkBatteryState = function(script) {
+    return this.sensory.batteryState == this.__BATTERY_STATES[script.getField('BATTERY')];
+};
+
+RaccoonRobot.prototype.isCharging = function(script) {
+    return this.sensory.chargeState == 1;
+};
+
 Entry.Robomation = {
     robots: {},
     robotsByGroup: {},
@@ -13270,6 +17338,20 @@ Entry.Robomation = {
                 group = 'line';
                 module = 'sally';
                 break;
+            case 0x20:
+                // Pio: roboid 핸드셰이크로 확인한 장치 모델 바이트
+                // (PioConnectionChecker는 info[2] === '20'을 요구). entry-hw는
+                // portData에 회사 0x02 / 모델 0x20을 실어 보낸다.
+                group = 'pio';
+                module = 'pio';
+                break;
+            case 0x30:
+                // Raccoon: roboid 핸드셰이크 토큰 '30'
+                // (RaccoonConnectionChecker는 info[2] === '30'을 요구). entry-hw는
+                // portData에 회사 0x02 / 모델 0x30을 실어 보낸다.
+                group = 'raccoon';
+                module = 'raccoon';
+                break;
             case 0xff:
                 group = pd.group;
                 module = pd.module;
@@ -13293,6 +17375,10 @@ Entry.Robomation = {
                     robot = new LineRobot(index, module);
                 } else if (module == 'sally') {
                     robot = new LineRobot(index, module);
+                } else if (module == 'pio') {
+                    robot = new PioRobot(index);
+                } else if (module == 'raccoon') {
+                    robot = new RaccoonRobot(index);
                 }
                 if (robot) {
                     this.robots[key] = robot;
