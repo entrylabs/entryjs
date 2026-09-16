@@ -46,6 +46,7 @@ Entry.Runcoding_display = {
         DIGITAL: 1,
         ANALOG: 2,
         PWM: 3,
+        SERVO_PIN: 4,
         PULSEIN: 6,
         TIMER: 8,
         OLED_ADDR: 23,
@@ -76,6 +77,7 @@ Entry.Runcoding_led.setLanguage = function() {
                 runcoding_led_get_digital: '디지털 %1 번 센서값',
                 runcoding_led_toggle_led: '디지털 %1 번 핀 %2 %3',
                 runcoding_led_digital_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
+                runcoding_led_set_servo: '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
 
                 runcoding_led_display: 'OLED %1 표현하기 X: %2 Y: %3 크기: %4 %5',
                 runcoding_led_display_clear: 'OLED 화면 지우기 %1',
@@ -83,9 +85,9 @@ Entry.Runcoding_led.setLanguage = function() {
                 runcoding_led_display_sad: '슬픈표정 표현하기 %1',
                 runcoding_led_display_angry: '화난얼굴 표현하기 %1',
                 runcoding_led_display_emotion: '%1 표정 표현하기 %2',
-                runcoding_led_animation_star: 'OLED 별 떨어지기 개수:%1(max:20) 속도:%2(max:10) %3',
-                runcoding_led_animation_flower: 'OLED 꽃송이 떨어지기 개수:%1(max:20) 속도:%2(max:10) %3',
-                runcoding_led_animation_snow: 'OLED 눈송이 떨어지기 개수:%1(max:20) 속도:%2(max:10) %3',
+                runcoding_led_animation_star: 'OLED 별 떨어지기 개수:%1(max:12) 속도:%2(max:10) %3',
+                runcoding_led_animation_flower: 'OLED 꽃송이 떨어지기 개수:%1(max:12) 속도:%2(max:10) %3',
+                runcoding_led_animation_snow: 'OLED 눈송이 떨어지기 개수:%1(max:12) 속도:%2(max:10) %3',
                 runcoding_led_animation_stop: 'OLED 애니메이션 정지하기 %1',
             },
         },
@@ -96,6 +98,7 @@ Entry.Runcoding_led.setLanguage = function() {
                 runcoding_led_get_digital: 'digital %1 sensor value',
                 runcoding_led_toggle_led: 'digital %1 pin %2 %3',
                 runcoding_led_digital_pwm: 'set digital %1 pin to %2 %3',
+                runcoding_led_set_servo: 'Set servo pin %1 angle as %2 %3',
 
                 runcoding_led_display: 'display %1 on OLED X:%2 Y:%3 size:%4 %5',
                 runcoding_led_display_clear: 'clear OLED display %1',
@@ -103,9 +106,9 @@ Entry.Runcoding_led.setLanguage = function() {
                 runcoding_led_display_sad: 'display sad face %1',
                 runcoding_led_display_angry: 'display angry face %1',
                 runcoding_led_display_emotion: 'display %1 emotion %2',
-                runcoding_led_animation_star: 'OLED falling stars count:%1(max:20) speed:%2(max:10) %3',
-                runcoding_led_animation_flower: 'OLED falling flowers count:%1(max:20) speed:%2(max:10) %3',
-                runcoding_led_animation_snow: 'OLED falling snowflakes count:%1(max:20) speed:%2(max:10) %3',
+                runcoding_led_animation_star: 'OLED falling stars count:%1(max:12) speed:%2(max:10) %3',
+                runcoding_led_animation_flower: 'OLED falling flowers count:%1(max:12) speed:%2(max:10) %3',
+                runcoding_led_animation_snow: 'OLED falling snowflakes count:%1(max:12) speed:%2(max:10) %3',
                 runcoding_led_animation_stop: 'stop OLED animation %1',
             },
         },
@@ -118,6 +121,7 @@ Entry.Runcoding_led.blockMenuBlocks = [
     'runcoding_led_get_digital',
     'runcoding_led_toggle_led',
     'runcoding_led_digital_pwm',
+    'runcoding_led_set_servo',
     'runcoding_led_display',
     'runcoding_led_display_emotion',
     'runcoding_led_display_clear',
@@ -810,6 +814,87 @@ Entry.Runcoding_led.getBlocks = function() {
                 ],
             },
         },
+        runcoding_led_set_servo: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'arduino_get_port_number',
+                        params: ['4'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['90'],
+                    },
+                    null,
+                ],
+                type: 'runcoding_led_set_servo',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                VALUE: 1,
+            },
+            class: 'Runcoding',
+            isNotFor: ['Runcoding_display'],
+            func(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const port = script.getNumberValue('PORT', script);
+                let value = script.getNumberValue('VALUE', script);
+                value = Math.round(value);
+                value = Math.min(180, value);
+                value = Math.max(0, value);
+
+                if (!sq.SET) {
+                    sq.SET = {};
+                }
+                sq.SET[port] = {
+                    type: Entry.Runcoding_led.sensorTypes.SERVO_PIN,
+                    data: value,
+                    time: new Date().getTime(),
+                };
+
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Arduino.servomotorWrite(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
         runcoding_led_display: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1303,15 +1388,15 @@ Entry.Runcoding_led.getBlocks = function() {
                     var fps = Entry.FPS || 60;
                     var timeValue = (60 / fps) * 50;
 
-                    // 값 제한 (범위: 1~20, 1~10)
-                    const limitedCount = Math.max(1, Math.min(20, count));
+                    // 값 제한 (범위: 1~12, 1~10)
+                    const limitedCount = Math.max(1, Math.min(12, count));
                     const limitedSpeed = Math.max(1, Math.min(10, speed));
                     
                     // 범위를 벗어난 입력 시 경고 로그
                     if (count < 1) {
                         console.log(`[OLED Animation] 개수 ${count}는 최소값 1 미만이므로 1로 조정되었습니다.`);
-                    } else if (count > 20) {
-                        console.log(`[OLED Animation] 개수 ${count}는 최대값 20을 초과하여 20으로 조정되었습니다.`);
+                    } else if (count > 12) {
+                        console.log(`[OLED Animation] 개수 ${count}는 최대값 12를 초과하여 12로 조정되었습니다.`);
                     }
                     
                     if (speed < 1) {
@@ -1421,15 +1506,15 @@ Entry.Runcoding_led.getBlocks = function() {
                     var fps = Entry.FPS || 60;
                     var timeValue = (60 / fps) * 50;
 
-                    // 값 제한 (범위: 1~20, 1~10)
-                    const limitedCount = Math.max(1, Math.min(20, count));
+                    // 값 제한 (범위: 1~12, 1~10)
+                    const limitedCount = Math.max(1, Math.min(12, count));
                     const limitedSpeed = Math.max(1, Math.min(10, speed));
                     
                     // 범위를 벗어난 입력 시 경고 로그
                     if (count < 1) {
                         console.log(`[OLED Animation] 개수 ${count}는 최소값 1 미만이므로 1로 조정되었습니다.`);
-                    } else if (count > 20) {
-                        console.log(`[OLED Animation] 개수 ${count}는 최대값 20을 초과하여 20으로 조정되었습니다.`);
+                    } else if (count > 12) {
+                        console.log(`[OLED Animation] 개수 ${count}는 최대값 12를 초과하여 12로 조정되었습니다.`);
                     }
                     
                     if (speed < 1) {
@@ -1539,15 +1624,15 @@ Entry.Runcoding_led.getBlocks = function() {
                     var fps = Entry.FPS || 60;
                     var timeValue = (60 / fps) * 50;
 
-                    // 값 제한 (범위: 1~20, 1~10)
-                    const limitedCount = Math.max(1, Math.min(20, count));
+                    // 값 제한 (범위: 1~12, 1~10)
+                    const limitedCount = Math.max(1, Math.min(12, count));
                     const limitedSpeed = Math.max(1, Math.min(10, speed));
                     
                     // 범위를 벗어난 입력 시 경고 로그
                     if (count < 1) {
                         console.log(`[OLED Animation] 개수 ${count}는 최소값 1 미만이므로 1로 조정되었습니다.`);
-                    } else if (count > 20) {
-                        console.log(`[OLED Animation] 개수 ${count}는 최대값 20을 초과하여 20으로 조정되었습니다.`);
+                    } else if (count > 12) {
+                        console.log(`[OLED Animation] 개수 ${count}는 최대값 12를 초과하여 12로 조정되었습니다.`);
                     }
                     
                     if (speed < 1) {
