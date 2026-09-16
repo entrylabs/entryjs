@@ -634,8 +634,8 @@ Entry.jikko_basic.getBlocks = function() {
         },
 
         jikko_basic_set_neopixel_init: {
-            color: '#FF9800',
-            outerLine: '#D97D00',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -712,8 +712,8 @@ Entry.jikko_basic.getBlocks = function() {
             },
         },
         jikko_basic_set_neopixel_bright: {
-            color: '#FF9800',
-            outerLine: '#D97D00',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -796,8 +796,8 @@ Entry.jikko_basic.getBlocks = function() {
             },
         },
         jikko_basic_set_neopixel: {
-            color: '#FF9800',
-            outerLine: '#D97D00',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -903,8 +903,8 @@ Entry.jikko_basic.getBlocks = function() {
             },
         },
         jikko_basic_set_neopixel_all: {
-            color: '#FF9800',
-            outerLine: '#D97D00',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -996,8 +996,8 @@ Entry.jikko_basic.getBlocks = function() {
             },
         },
         jikko_basic_set_neopixel_clear: {
-            color: '#FF9800',
-            outerLine: '#D97D00',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1493,8 +1493,8 @@ Entry.jikko_basic.getBlocks = function() {
         },
 
         jikko_basic_set_dotmatrix_init: {
-            color: '#6D4C41',
-            outerLine: '#51362F',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1592,8 +1592,8 @@ Entry.jikko_basic.getBlocks = function() {
             },
         },
         jikko_basic_set_dotmatrix_bright: {
-            color: '#6D4C41',
-            outerLine: '#51362F',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1665,8 +1665,8 @@ Entry.jikko_basic.getBlocks = function() {
             },
         },
         jikko_basic_set_dotmatrix_clear: {
-            color: '#6D4C41',
-            outerLine: '#51362F',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1719,8 +1719,8 @@ Entry.jikko_basic.getBlocks = function() {
             },
         },
         jikko_basic_set_dotmatrix: {
-            color: '#6D4C41',
-            outerLine: '#51362F',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1826,8 +1826,8 @@ Entry.jikko_basic.getBlocks = function() {
             },
         },
         jikko_basic_set_dotmatrix_emoji: {
-            color: '#6D4C41',
-            outerLine: '#51362F',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3475,8 +3475,8 @@ Entry.jikko_basic.getBlocks = function() {
             },
         },
         jikko_basic_get_dht: {
-            color: '#5254DC',
-            outerLine: '#3739B8',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -3862,15 +3862,15 @@ Entry.jikko_basic.getBlocks = function() {
     };
 
     var categoryColors = {
-        jikko_basicPin: { color: '#EF3F4A', dark: '#CC2835' },
-        jikko_basicLed: { color: '#DF3075', dark: '#B91F5B' },
-        jikko_basicSet: { color: '#A944D4', dark: '#872DB0' },
-        jikko_basicGet: { color: '#5254DC', dark: '#3739B8' },
-        jikko_basicBuzzer: { color: '#315EEA', dark: '#2144BD' },
-        mp3: { color: '#169CB0', dark: '#0B7A8B' },
-        jikko_basicModule: { color: '#0DB27B', dark: '#07865B' },
-        neo: { color: '#FF9800', dark: '#D97D00' },
-        dot: { color: '#6D4C41', dark: '#51362F' },
+        jikko_basicPin: { color: EntryStatic.colorSet.block.default.HARDWARE, dark: EntryStatic.colorSet.block.darken.HARDWARE },
+        jikko_basicLed: { color: EntryStatic.colorSet.block.default.HARDWARE, dark: EntryStatic.colorSet.block.darken.HARDWARE },
+        jikko_basicSet: { color: EntryStatic.colorSet.block.default.HARDWARE, dark: EntryStatic.colorSet.block.darken.HARDWARE },
+        jikko_basicGet: { color: EntryStatic.colorSet.block.default.HARDWARE, dark: EntryStatic.colorSet.block.darken.HARDWARE },
+        jikko_basicBuzzer: { color: EntryStatic.colorSet.block.default.HARDWARE, dark: EntryStatic.colorSet.block.darken.HARDWARE },
+        mp3: { color: EntryStatic.colorSet.block.default.HARDWARE, dark: EntryStatic.colorSet.block.darken.HARDWARE },
+        jikko_basicModule: { color: EntryStatic.colorSet.block.default.HARDWARE, dark: EntryStatic.colorSet.block.darken.HARDWARE },
+        neo: { color: EntryStatic.colorSet.block.default.HARDWARE, dark: EntryStatic.colorSet.block.darken.HARDWARE },
+        dot: { color: EntryStatic.colorSet.block.default.HARDWARE, dark: EntryStatic.colorSet.block.darken.HARDWARE },
     };
     var forcedCategoryByType = {
         jikko_basic_get_dht: 'jikko_basicGet',
@@ -3897,7 +3897,7 @@ Entry.jikko_basic.getBlocks = function() {
                 param.bgColor = colors.dark;
             }
             if (param.arrowColor) {
-                param.arrowColor = '#FFFFFF';
+                param.arrowColor = EntryStatic.colorSet.arrow.default.HARDWARE;
             }
         });
     };
@@ -3943,7 +3943,7 @@ Entry.jikko_basic.getBlocks = function() {
                     params: (sourceBlock.params || []).map(function(sourceParam) {
                         return Object.assign({}, sourceParam, {
                             bgColor: sourceParam.bgColor ? colors.dark : sourceParam.bgColor,
-                            arrowColor: sourceParam.arrowColor ? '#FFFFFF' : sourceParam.arrowColor,
+                            arrowColor: sourceParam.arrowColor ? EntryStatic.colorSet.arrow.default.HARDWARE : sourceParam.arrowColor,
                         });
                     }),
                     def: Object.assign({}, sourceBlock.def, { type: coloredType }),

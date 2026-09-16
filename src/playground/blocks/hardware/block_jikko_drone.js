@@ -427,7 +427,7 @@ Entry.JIKKO_DRONE = new (class JIKKO_DRONE {
             isNotFor: ['JIKKO_DRONE'],
             fontSize: 22,
         });
-        const droneTheme = { color: '#FF5656', dark: '#F03D37' };
+        const droneTheme = { color: EntryStatic.colorSet.block.default.HARDWARE, dark: EntryStatic.colorSet.block.darken.HARDWARE };
         const hidBase = (theme, skeleton, params, def, paramsKeyMap, func) => ({
             color: theme.color,
             outerLine: theme.dark,

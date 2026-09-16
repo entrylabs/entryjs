@@ -856,10 +856,10 @@ Entry.JIKKO_DARAE = new (class JIKKO_DARAE {
         };
 
         const categoryColors = {
-            led: { color: '#DF3075', dark: '#B91F5B' },
-            input: { color: '#6747F5', dark: '#4D31CC' },
-            motor: { color: '#B544D4', dark: '#902EB0' },
-            wifi: { color: '#4668EF', dark: '#2F4DC5' },
+            led: { color: EntryStatic.colorSet.block.default.HARDWARE, dark: EntryStatic.colorSet.block.darken.HARDWARE },
+            input: { color: EntryStatic.colorSet.block.default.HARDWARE, dark: EntryStatic.colorSet.block.darken.HARDWARE },
+            motor: { color: EntryStatic.colorSet.block.default.HARDWARE, dark: EntryStatic.colorSet.block.darken.HARDWARE },
+            wifi: { color: EntryStatic.colorSet.block.default.HARDWARE, dark: EntryStatic.colorSet.block.darken.HARDWARE },
         };
         const categoryByType = {
             jikko_darae_led: 'led',
@@ -899,7 +899,7 @@ Entry.JIKKO_DARAE = new (class JIKKO_DARAE {
             (block.params || []).forEach((param) => {
                 if (param && param.type === 'Dropdown') {
                     param.bgColor = colors.dark;
-                    param.arrowColor = '#FFFFFF';
+                    param.arrowColor = EntryStatic.colorSet.arrow.default.HARDWARE;
                 }
             });
         });
