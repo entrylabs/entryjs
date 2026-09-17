@@ -1,0 +1,52 @@
+# pnpm 10 부터 package.json 의 resolutions / pnpm.overrides 를 읽지 않는다.
+# 오버라이드는 이 파일에서만 유효하다. packages 필드는 생략 불가 —
+# 없으면 pnpm 이 "packages field missing or empty" 로 즉시 실패한다.
+packages:
+  - '.'
+
+# pnpm 10 부터 의존성의 install 스크립트는 기본 차단이고, 판단을 내려두지 않으면
+# 설치가 ERR_PNPM_IGNORED_BUILDS 로 exit 1 한다 (CI 가 여기서 죽는다).
+# pnpm 11 은 이 판단을 allowBuilds 맵으로 받는다.
+#   core-js  : postinstall 이 후원 안내 메시지 출력뿐 -> 실행 불필요
+#   fsevents : jest 24 의 chokidar 2 가 끌고 오는 1.2.13 레거시 네이티브 모듈.
+#              NAN 구 API 를 써서 Node 22+ 에서는 빌드 자체가 실패하고,
+#              없으면 폴링 감시로 폴백된다. webpack 5 는 별개의 fsevents 2 를 쓴다.
+allowBuilds:
+  core-js: false
+  fsevents: false
+
+overrides:
+  'pixi.js': '5.3.7'
+  'socket.io-parser@^3.3.0': '~3.3.6'
+  'xmlhttprequest-ssl@^1': '^1.6.3'
+  'form-data@^2': '^2.5.6'
+  'form-data@^4': '^4.0.6'
+  'shell-quote@^1': '^1.9.0'
+  'websocket-driver@^0.7': '^0.7.5'
+  'minimist@<1': '^0.2.4'
+  'minimist@^1': '^1.2.6'
+  'fast-uri@^3': '^3.1.6'
+  'browserslist@^4': '^4.28.7'
+  'js-yaml@^3': '^3.15.2'
+  'js-yaml@^4': '^4.3.2'
+  'minimatch@^3': '^3.1.4'
+  'minimatch@^9': '^9.0.7'
+  'brace-expansion@^1': '^1.1.18'
+  'brace-expansion@^2': '^2.1.2'
+  'node-forge@^1': '^1.4.0'
+  'picomatch@^2': '^2.3.2'
+  'path-to-regexp@^0.1': '^0.1.13'
+  'flatted@^3': '^3.4.2'
+  'ws@^5': '^5.2.5'
+  'ws@^7': '^7.5.11'
+  'ws@^8': '^8.21.0'
+  'serialize-javascript@^6': '^7.0.5'
+  '@babel/plugin-transform-modules-systemjs@^7': '^7.29.4'
+  'ajv@^6': '^6.14.0'
+  'ajv@^8': '^8.18.0'
+  'qs@^6': '^6.16.0'
+  'body-parser@^1': '^1.20.6'
+  'follow-redirects@^1': '^1.16.0'
+  'http-proxy-middleware@^2': '^2.0.10'
+  'launch-editor@^2': '^2.14.1'
+  'postcss-selector-parser@^6': '^6.1.3'

@@ -1,0 +1,9 @@
+{
+    "name": "HamsterSLite",
+    "version": "1.0.0",
+    "type": "hardware",
+    "title": "햄스터S",
+    "description": "로보메이션",
+    "imageName": "hamsterslite",
+    "moduleId": "020E01"
+}

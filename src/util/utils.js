@@ -464,11 +464,14 @@ Entry.overridePrototype = function () {
 // INFO: 기존에 사용하던 isNaN에는 숫자 체크의 문자가 있을수 있기때문에 regex로 체크하는 로직으로 변경
 // isNaN 문제는 https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/isNaN
 // 에서 확인.
+// INFO: 지수 표기(1e+21)도 숫자로 인정한다. JS 는 |x| >= 1e21 부터 String(x) 와
+// Number.prototype.toFixed() 가 지수 표기를 반환하므로, 엔트리가 스스로 만들어낸
+// 값이 다시 입력으로 들어왔을 때 숫자로 판정되지 않던 문제가 있었다.
 Entry.Utils.isNumber = function (num) {
     if (typeof num === 'number') {
         return true;
     }
-    const reg = /^-?\d+\.?\d*$/;
+    const reg = /^-?\d+\.?\d*(?:[eE][+-]?\d+)?$/;
     if (typeof num === 'string' && reg.test(num)) {
         return true;
     }
@@ -2160,6 +2163,9 @@ Entry.Utils.stopProjectWithToast = _throttle(
         message = message || 'Runtime Error';
         const toast = error.toast;
         const engine = Entry.engine;
+        const funcExecutor = scope.funcExecutor;
+        const funcErrorBlock = funcExecutor && funcExecutor.scope.block;
+        const funcErrorBlockId = funcErrorBlock && funcErrorBlock.id;
 
         if (engine && engine.isState('run')) {
             await engine.toggleStop();
@@ -2167,15 +2173,38 @@ Entry.Utils.stopProjectWithToast = _throttle(
         if (Entry.type === 'workspace') {
             if (scope.block && 'funcBlock' in scope.block) {
                 block = scope.block.funcBlock;
-            } else if (scope.funcExecutor) {
-                block = scope.funcExecutor.scope.block;
-                Entry.Func.edit(scope.type);
+            } else if (funcExecutor) {
+                const errorBlock = funcErrorBlock;
+                const errorBlockId = funcErrorBlockId;
+                const funcId = (/(func_)?(.*)/.exec(scope.type) || [])[2];
+
+                // 한 번 실행에서 서로 다른 블록의 런타임 에러가 여러 번 올라올 수 있다.
+                // 그때마다 Entry.Func.edit 을 다시 호출하면 cancelEdit → initEditView 로
+                // 함수 보드가 재렌더되어 앞서 붙인 하이라이트가 지워진다. 마지막 호출이
+                // 하이라이트를 복구하지 못하면 경고만 남고 테두리는 사라진다.
+                // 이미 같은 함수를 편집 중이면 다시 열지 않는다.
+                const isEditingSameFunc =
+                    Entry.Func.isEdit &&
+                    Entry.Func.targetFunc &&
+                    Entry.Func.targetFunc.id === funcId;
+
+                if (!isEditingSameFunc) {
+                    Entry.Func.edit(scope.type);
+                }
+
+                // edit 가 실행된 경우 Block 인스턴스가 교체될 수 있으므로 id 로 다시 찾는다.
+                const func = funcId && Entry.variableContainer.getFunction(funcId);
+                const reloadedBlock =
+                    errorBlockId && func && func.content && func.content.findById(errorBlockId);
+
+                block = reloadedBlock || errorBlock;
             }
 
             if (block) {
-                const id = block.getCode().object && block.getCode().object.id;
+                const code = block.getCode();
+                const id = code && code.object && code.object.id;
                 if (id) {
-                    Entry.container.selectObject(block.getCode().object.id, true);
+                    Entry.container.selectObject(id, true);
                 }
                 const view = block.view;
                 view && view.getBoard().activateBlock(block);

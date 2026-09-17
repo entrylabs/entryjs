@@ -192,6 +192,7 @@ Entry.BlockView = class BlockView {
         mode = _.isUndefined(mode) ? this.renderMode : mode;
 
         const _removeFunc = _.partial(_.result, _, 'remove');
+        const _destroyObserversFunc = _.partial(_.result, _, '_destroyObservers');
 
         _removeFunc(this.contentSvgGroup);
         _removeFunc(this.statementSvgGroup);
@@ -200,6 +201,9 @@ Entry.BlockView = class BlockView {
         }
 
         this.contentSvgGroup = this.svgGroup.elem('g');
+        //버려지는 필드가 슬롯 안 블록에 걸어둔 옵저버를 끊는다.
+        //끊지 않으면 이미 버려진 필드가 나중에 깨어나 params 를 빈 슬롯 기본값으로 덮어쓴다.
+        (this._contents || []).forEach(_destroyObserversFunc);
         this._contents = [];
 
         const schema = this._schema;
