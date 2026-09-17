@@ -1,3 +1,5 @@
+import { GEHelper } from '../../graphicEngine/GEHelper';
+
 module.exports = {
     getBlocks() {
         function moveInToBound(object, wall) {
@@ -110,6 +112,15 @@ module.exports = {
                 class: 'walk',
                 isNotFor: [],
                 func(sprite, script) {
+                    // 내용이 빈 글상자는 캔버스 렌더러에서 bounds가 null이라
+                    // 벽 충돌을 계산할 수 없으므로 튕기지 않고 넘어간다.
+                    if (
+                        sprite.type === 'textBox' &&
+                        !GEHelper.getTransformedBounds(sprite.object)
+                    ) {
+                        sprite.collision = Entry.Utils.COLLISION.NONE;
+                        return script.callReturn();
+                    }
                     const threshold = 0;
                     const method = sprite.parent.getRotateMethod();
 

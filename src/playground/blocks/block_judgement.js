@@ -167,6 +167,11 @@ module.exports = {
                     const reg = /wall/;
                     const ath = 0.2;
                     const object = sprite.object;
+                    // 내용이 빈 글상자는 캔버스 렌더러에서 bounds가 null이라
+                    // 충돌을 판정할 수 없으므로 닿지 않은 것으로 처리한다.
+                    if (sprite.type === 'textBox' && !GEHelper.getTransformedBounds(object)) {
+                        return false;
+                    }
                     const isWall = reg.test(targetSpriteId);
                     const collision = ndgmr.checkPixelCollision;
                     if (isWall) {

@@ -1348,6 +1348,10 @@ Entry.getKeyCodeMap = function () {
 };
 
 Entry.checkCollisionRect = function (rectA, rectB) {
+    // 내용이 빈 글상자처럼 bounds를 구할 수 없는(null) 대상은 충돌하지 않은 것으로 처리한다.
+    if (!rectA || !rectB) {
+        return false;
+    }
     return !(
         rectA.y + rectA.height < rectB.y ||
         rectA.y > rectB.y + rectB.height ||
