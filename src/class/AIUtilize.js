@@ -2,11 +2,13 @@ import ExtraBlockUtils from '../util/extrablockUtils';
 import '../playground/blocks/block_ai_utilize_audio';
 import '../playground/blocks/block_ai_utilize_tts';
 import '../playground/blocks/block_ai_utilize_translate';
+import '../playground/blocks/block_ai_utilize_ask_ai';
 import '../playground/blocks/block_ai_utilize_video';
 import '../playground/blocks/block_ai_utilize_gesture_recognition';
 import '../playground/blocks/block_ai_utilize_pose_landmarker';
 import '../playground/blocks/block_ai_utilize_face_landmarker';
 import '../playground/blocks/block_ai_utilize_object_detector';
+
 
 export default class AIUtilize {
     constructor(playground) {
