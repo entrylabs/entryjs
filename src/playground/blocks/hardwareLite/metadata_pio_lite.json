@@ -1,0 +1,9 @@
+{
+    "name": "PioLite",
+    "version": "1.0.0",
+    "type": "hardware",
+    "title": "삐오",
+    "description": "로보메이션",
+    "imageName": "piolite",
+    "moduleId": "022001"
+}
