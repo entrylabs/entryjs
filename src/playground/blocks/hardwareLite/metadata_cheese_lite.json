@@ -1,0 +1,9 @@
+{
+    "name": "CheeseLite",
+    "version": "1.0.0",
+    "type": "hardware",
+    "title": "치즈 스틱",
+    "description": "로보메이션",
+    "imageName": "cheeselite",
+    "moduleId": "020D01"
+}
