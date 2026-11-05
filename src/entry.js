@@ -1,4 +1,5 @@
 __webpack_public_path__ = global.PUBLIC_PATH_FOR_ENTRYJS || 'dist/';
+import { recognizeText } from './util/textlensOcr';
 import showConsoleBanner from './util/functions/showConsoleBanner';
 import 'simplebar/dist/simplebar.css';
 
@@ -12,6 +13,24 @@ Entry.ALL_AI_UTILIZE_BLOCK_LIST = {};
 
 module.exports = Entry;
 global.Entry = Entry;
+
+// TextLens OCR API
+Entry.recognizeText = recognizeText;
+
+Entry.recognizeTextToVariable = async (image, variableName) => {
+    const result = await recognizeText(image);
+
+    const variable =
+        Entry.variableContainer.getVariableByName(variableName);
+
+    if (!variable) {
+        throw new Error(`Entry 변수를 찾을 수 없습니다: ${variableName}`);
+    }
+
+    variable.setValue(result.text);
+
+    return result;
+};
 
 require('./core/collection');
 require('./core/db');
@@ -157,4 +176,23 @@ require('./textcoding/util/console');
 require('./textcoding/util/textCodingUtil');
 
 window.Entry = Entry;
+// TextLens OCR API
+Entry.recognizeText = recognizeText;
+
+Entry.recognizeTextToVariable = async (image, variableName) => {
+    const result = await recognizeText(image);
+
+    const variable =
+        Entry.variableContainer.getVariableByName(variableName);
+
+    if (!variable) {
+        throw new Error(
+            `Entry 변수를 찾을 수 없습니다: ${variableName}`
+        );
+    }
+
+    variable.setValue(result.text);
+
+    return result;
+};
 showConsoleBanner();
