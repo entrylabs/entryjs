@@ -98,17 +98,10 @@ class CloudVariableExtension {
             // 데이터가 너무 크거나 운영자가 막은 작품은 서버가 welcome 대신 blocked 를 보내고 접속을 끊는다.
             socket.on('blocked', ({ reason } = {}) => {
                 this.#blocked = true;
-                if (!this.#data) {
-                    try {
-                        this.#data = new dmet(this.#defaultData);
-                    } catch (e) {
-                        console.warn(e);
-                    }
-                }
-                resolve();
-                // 전송 계층이 먼저 끊기면 자동 재접속이 일어나므로, 서버가 끊기를 기다리지 않고 직접 닫는다.
-                socket.close();
                 this.#notifyBlocked(reason);
+                // 전송 계층이 먼저 끊기면 자동 재접속이 일어나므로, 서버가 끊기를 기다리지 않고 직접 닫는다.
+                // 닫으면 아래 disconnect 처리가 불려 기본값으로 동작한다.
+                socket.close();
             });
             socket.on('disconnect', (reason) => {
                 console.log('disconnect', reason);
