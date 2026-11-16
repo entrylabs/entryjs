@@ -349,15 +349,16 @@ class CloudVariableExtension {
     #drain(skipGap = false) {
         clearTimeout(this.#gapTimer);
         this.#gapTimer = null;
+        let canSkip = skipGap;
         while (this.#held.size) {
             let next = this.#seq + 1;
             if (!this.#held.has(next)) {
-                if (!skipGap) {
+                if (!canSkip) {
                     break;
                 }
                 next = Math.min(...this.#held.keys());
             }
-            skipGap = false;
+            canSkip = false;
             const { operation, done } = this.#held.get(next);
             this.#held.delete(next);
             this.#seq = next;
