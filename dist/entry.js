@@ -634029,9 +634029,12 @@ function _checkPrivateRedeclaration(e, t) { if (t.has(e)) throw new TypeError("C
 function _classPrivateFieldSet(s, a, r) { return s.set(_assertClassBrand(s, a), r), r; }
 function _classPrivateFieldGet(s, a) { return s.get(_assertClassBrand(s, a)); }
 function _assertClassBrand(e, t, n) { if ("function" == typeof e ? e === t : e.has(t)) return arguments.length < 3 ? t : n; throw new TypeError("Private element is not present on this object"); }
+// welcome 없이 끊기는 접속을 몇 번까지 다시 시도할지
+var MAX_RECONNECT_WITHOUT_WELCOME = 2;
 var _cvSocket = /*#__PURE__*/new WeakMap();
 var _data = /*#__PURE__*/new WeakMap();
 var _defaultData = /*#__PURE__*/new WeakMap();
+var _blocked = /*#__PURE__*/new WeakMap();
 var _CloudVariableExtension_brand = /*#__PURE__*/new WeakSet();
 var CloudVariableExtension = /*#__PURE__*/function () {
   function CloudVariableExtension() {
@@ -634040,6 +634043,8 @@ var CloudVariableExtension = /*#__PURE__*/function () {
     _classPrivateFieldInitSpec(this, _cvSocket, null);
     _classPrivateFieldInitSpec(this, _data, null);
     _classPrivateFieldInitSpec(this, _defaultData, null);
+    // 서버가 이 작품의 실시간 변수 접속을 막았는지 여부. 한번 막히면 같은 페이지에서는 다시 접속하지 않는다.
+    _classPrivateFieldInitSpec(this, _blocked, false);
   }
   return (0, _createClass2["default"])(CloudVariableExtension, [{
     key: "data",
@@ -634072,11 +634077,11 @@ var CloudVariableExtension = /*#__PURE__*/function () {
     value: function () {
       var _connect = (0, _asyncToGenerator2["default"])(/*#__PURE__*/_regenerator["default"].mark(function _callee(cvServer) {
         var _this = this;
-        var _this$cvServer, url, query, type, socket;
+        var _this$cvServer, url, query, type, socket, isWelcomed, failCount;
         return _regenerator["default"].wrap(function (_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
-              if (!(_classPrivateFieldGet(_cvSocket, this) || !this.cvServer)) {
+              if (!(_classPrivateFieldGet(_blocked, this) || _classPrivateFieldGet(_cvSocket, this) || !this.cvServer)) {
                 _context.next = 1;
                 break;
               }
@@ -634103,7 +634108,13 @@ var CloudVariableExtension = /*#__PURE__*/function () {
                 }
               });
               _classPrivateFieldSet(_cvSocket, this, socket);
+              // welcome 을 받지 못한 채 끊긴 횟수. 재접속에 성공하면 reconnectionAttempts 가 초기화되므로 따로 센다.
+              isWelcomed = false;
+              failCount = 0;
               return _context.abrupt("return", new Promise(function (resolve) {
+                socket.on('connect', function () {
+                  isWelcomed = false;
+                });
                 socket.on('connect_error', function () {
                   console.log('connect_error');
                   if (!_classPrivateFieldGet(_data, _this)) {
@@ -634122,6 +634133,8 @@ var CloudVariableExtension = /*#__PURE__*/function () {
                   var _ref$variables = _ref.variables,
                     variables = _ref$variables === void 0 ? [] : _ref$variables,
                     isOffline = _ref.isOffline;
+                  isWelcomed = true;
+                  failCount = 0;
                   try {
                     _classPrivateFieldSet(_data, _this, new _dmet.dmet(variables));
                     variables.forEach(_assertClassBrand(_CloudVariableExtension_brand, _this, _applyValue));
@@ -634133,12 +634146,25 @@ var CloudVariableExtension = /*#__PURE__*/function () {
                   }
                   resolve();
                 });
+                // 데이터가 너무 크거나 운영자가 막은 작품은 서버가 welcome 대신 blocked 를 보내고 접속을 끊는다.
+                socket.on('blocked', function () {
+                  var _ref2 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+                    reason = _ref2.reason;
+                  _classPrivateFieldSet(_blocked, _this, true);
+                  _assertClassBrand(_CloudVariableExtension_brand, _this, _notifyBlocked).call(_this, reason);
+                  // 전송 계층이 먼저 끊기면 자동 재접속이 일어나므로, 서버가 끊기를 기다리지 않고 직접 닫는다.
+                  // 닫으면 아래 disconnect 처리가 불려 기본값으로 동작한다.
+                  socket.close();
+                });
                 socket.on('disconnect', function (reason) {
                   console.log('disconnect', reason);
                   if (!_classPrivateFieldGet(_data, _this)) {
                     _classPrivateFieldSet(_data, _this, new _dmet.dmet(_classPrivateFieldGet(_defaultData, _this)));
                   }
                   resolve();
+                  if (!isWelcomed && ++failCount > MAX_RECONNECT_WITHOUT_WELCOME) {
+                    socket.close();
+                  }
                 });
                 socket.on('changeMode', function (mode, target) {
                   var isOffline = mode === 'offline';
@@ -634178,41 +634204,47 @@ var CloudVariableExtension = /*#__PURE__*/function () {
         return _regenerator["default"].wrap(function (_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
-              if (_classPrivateFieldGet(_cvSocket, this)) {
+              if (!_classPrivateFieldGet(_blocked, this)) {
                 _context2.next = 1;
                 break;
               }
-              _context2.next = 1;
-              return this.connect();
+              return _context2.abrupt("return");
             case 1:
-              id_ = data.id_, type = data.type, name = data.name;
-              if (!(type === 'variable')) {
-                _context2.next = 3;
+              if (_classPrivateFieldGet(_cvSocket, this)) {
+                _context2.next = 2;
                 break;
               }
               _context2.next = 2;
-              return _assertClassBrand(_CloudVariableExtension_brand, this, _createVariable).call(this, name, id_);
+              return this.connect();
             case 2:
-              _context2.next = 6;
-              break;
-            case 3:
-              if (!(type === 'list')) {
-                _context2.next = 5;
+              id_ = data.id_, type = data.type, name = data.name;
+              if (!(type === 'variable')) {
+                _context2.next = 4;
                 break;
               }
-              _context2.next = 4;
-              return _assertClassBrand(_CloudVariableExtension_brand, this, _createList).call(this, name, id_);
-            case 4:
-              _context2.next = 6;
+              _context2.next = 3;
+              return _assertClassBrand(_CloudVariableExtension_brand, this, _createVariable).call(this, name, id_);
+            case 3:
+              _context2.next = 7;
               break;
-            case 5:
-              if (!(type === 'table')) {
+            case 4:
+              if (!(type === 'list')) {
                 _context2.next = 6;
                 break;
               }
-              _context2.next = 6;
-              return _assertClassBrand(_CloudVariableExtension_brand, this, _createTable).call(this, name, id_);
+              _context2.next = 5;
+              return _assertClassBrand(_CloudVariableExtension_brand, this, _createList).call(this, name, id_);
+            case 5:
+              _context2.next = 7;
+              break;
             case 6:
+              if (!(type === 'table')) {
+                _context2.next = 7;
+                break;
+              }
+              _context2.next = 7;
+              return _assertClassBrand(_CloudVariableExtension_brand, this, _createTable).call(this, name, id_);
+            case 7:
             case "end":
               return _context2.stop();
           }
@@ -634253,19 +634285,19 @@ var CloudVariableExtension = /*#__PURE__*/function () {
       if (!dmetList) {
         console.error('no target ', target);
       }
-      dmetList.from(array.map(function (_ref2) {
-        var data = _ref2.data;
+      dmetList.from(array.map(function (_ref3) {
+        var data = _ref3.data;
         return data;
       }));
     }
   }, {
     key: "append",
     value: function append(target, data) {
-      var _ref3;
+      var _ref4;
       if (!_classPrivateFieldGet(_cvSocket, this)) {
         return;
       }
-      var variable = (_ref3 = this === null || this === void 0 ? void 0 : _classPrivateFieldGet(_data, this)) === null || _ref3 === void 0 ? void 0 : _ref3.get(target);
+      var variable = (_ref4 = this === null || this === void 0 ? void 0 : _classPrivateFieldGet(_data, this)) === null || _ref4 === void 0 ? void 0 : _ref4.get(target);
       if (!variable) {
         return;
       }
@@ -634327,6 +634359,12 @@ var CloudVariableExtension = /*#__PURE__*/function () {
     }
   }]);
 }();
+function _notifyBlocked(reason) {
+  var _Lang, _Lang2, _Entry$toast, _Lang3;
+  var isSizeLimit = reason === 'items' || reason === 'bytes';
+  var message = isSizeLimit ? ((_Lang = Lang) === null || _Lang === void 0 || (_Lang = _Lang.Workspace) === null || _Lang === void 0 ? void 0 : _Lang.real_time_blocked_by_size) || 'The real-time variables and lists of this project hold too much data ' + 'to connect to the server.\nTheir values will not be stored in the server.' : ((_Lang2 = Lang) === null || _Lang2 === void 0 || (_Lang2 = _Lang2.Workspace) === null || _Lang2 === void 0 ? void 0 : _Lang2.real_time_blocked) || 'This project cannot connect to the real-time variable server.\n' + 'Values of real-time variables and lists will not be stored in the server.';
+  (_Entry$toast = Entry.toast) === null || _Entry$toast === void 0 || _Entry$toast.alert(((_Lang3 = Lang) === null || _Lang3 === void 0 || (_Lang3 = _Lang3.Msgs) === null || _Lang3 === void 0 ? void 0 : _Lang3.warn) || 'Warning', message, true);
+}
 function _createVariable(name, id) {
   var _this2 = this;
   if (!_classPrivateFieldGet(_cvSocket, this)) {
