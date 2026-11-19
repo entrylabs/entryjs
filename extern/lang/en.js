@@ -5604,10 +5604,6 @@ Lang.Workspace = {
     list_create_normal: 'Use for list\n(Stored in Project)',
     list_create_cloud: 'Use for shared list \n(Stored in Server)',
     list_create_real_time: 'Use for real-time list\n(Stored in Server)',
-    real_time_blocked:
-        'This project cannot connect to the real-time variable server.\nValues of real-time variables and lists will not be stored in the server.',
-    real_time_blocked_by_size:
-        'The real-time variables and lists of this project hold too much data to connect to the server.\nTheir values will not be stored in the server.',
     confirm_quit: "You didn't saved your changes.",
     confirm_load_temporary: 'You have unsaved project. Do you want to open it?',
     login_to_save: 'Try to save after login.',
@@ -5639,11 +5635,6 @@ Lang.Workspace = {
     variable_name_auto_edited_content: 'variable name cannot exceed 10 characters',
     list_name_auto_edited_title: 'list name auto-edited',
     list_name_auto_edited_content: 'list name cannot exceed 10 characters',
-    list_cant_add_item: 'Warning',
-    list_max_length_exceeded: 'You can add up to 5,000 items to a list.',
-    list_truncated_on_load:
-        'The number of list items in this project exceeds 5,000, so some may not be displayed.\n\nFor stable use,\nplease reduce the list to 5,000 or fewer.',
-    list_truncated_on_load_title: 'Notice',
     cloned_scene: 'Cloned_',
     default_mode: 'Standard',
     practical_course_mode: 'Textbook',
