@@ -5055,6 +5055,8 @@ Lang.Workspace = {
     "list_create_normal": "リストとして使用\n(作品に保存)",
     "list_create_cloud": "共有リストとして使用\n(サーバーに保存されます)",
     "list_create_real_time": "リアルタイムリストとして使用\n(サーバーに保存)",
+    "real_time_blocked": "この作品はリアルタイム変数サーバーに接続できません。\nリアルタイム変数とリストの値はサーバーに保存されません。",
+    "real_time_blocked_by_size": "リアルタイム変数とリストに保存されたデータが多すぎるため、\nサーバーに接続できません。\n値はサーバーに保存されません。",
     "confirm_quit": "変更した内容を保存しませんでした。",
     "confirm_load_temporary": "保存されていない作品があります。開きますか?",
     "login_to_save": "ログイン後に保存してください。",

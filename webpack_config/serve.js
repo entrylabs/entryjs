@@ -39,16 +39,18 @@ module.exports = {
         devMiddleware: {
             publicPath: '/',
         },
-        proxy: {
-            '/lib/entry-js': {
+        proxy: [
+            {
+                context: ['/lib/entry-js'],
                 target: `http://localhost:${devServerPort}`,
                 pathRewrite: { '^/lib/entry-js': '' },
             },
-            '/dist': {
+            {
+                context: ['/dist'],
                 target: `http://localhost:${devServerPort}`,
                 pathRewrite: { '^/dist': '' },
             },
-        },
+        ],
     },
     devtool: 'source-map',
 };

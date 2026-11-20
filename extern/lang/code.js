@@ -5443,6 +5443,10 @@ Lang.Workspace = {
     list_create_normal: '일반 리스트로 사용\n(작품에 저장)',
     list_create_cloud: '공유 리스트로 사용 \n(서버에 저장)',
     list_create_real_time: '실시간 리스트로 사용\n(서버에 저장)',
+    real_time_blocked:
+        '이 작품은 실시간 변수 서버에 연결할 수 없습니다.\n실시간 변수와 리스트의 값이 서버에 저장되지 않습니다.',
+    real_time_blocked_by_size:
+        '실시간 변수와 리스트에 저장된 데이터가 너무 많아\n서버에 연결할 수 없습니다.\n값이 서버에 저장되지 않습니다.',
     confirm_quit: '바꾼 내용을 저장하지 않았습니다.',
     confirm_load_temporary: '저장되지 않은 작품이 있습니다. 여시겠습니까?',
     login_to_save: '로그인후에 저장 바랍니다.',

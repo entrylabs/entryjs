@@ -2004,7 +2004,6 @@ function handleOptionalBlocksActive(item) {
 
 Entry.Utils.addNewBlock = function (item) {
     const {
-        script,
         functions,
         messages,
         variables,
@@ -2013,8 +2012,7 @@ Entry.Utils.addNewBlock = function (item) {
         expansionBlocks = [],
         aiUtilizeBlocks = [],
     } = item;
-    const parseScript = JSON.parse(script);
-    if (!parseScript) {
+    if (!JSON.parse(item.script)) {
         return;
     }
 
@@ -2033,6 +2031,9 @@ Entry.Utils.addNewBlock = function (item) {
             variable.object = _.get(Entry, ['container', 'selectedObject', 'id'], '');
         }
     });
+    // 작품에 같은 id 가 있는데 내용이 다르면 새 id 로 바꾼다. item.script 의 참조도 함께 바뀐다.
+    Entry.variableContainer.resolveImportConflicts(item);
+    const parseScript = JSON.parse(item.script);
     DataTable.setTables(tables);
     if (!Entry.options.aiUtilizeDisable) {
         Entry.aiLearning.load(learning);
@@ -2102,6 +2103,8 @@ Entry.Utils.addNewObject = function (sprite) {
                 }
             }
         });
+        // 작품에 같은 id 가 있는데 내용이 다르면 새 id 로 바꾼다. objects[].script 의 참조도 함께 바뀐다.
+        Entry.variableContainer.resolveImportConflicts(sprite);
         Entry.variableContainer.appendMessages(messages);
         Entry.variableContainer.appendVariables(variables);
         Entry.variableContainer.appendFunctions(functions);
