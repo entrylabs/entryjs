@@ -1,0 +1,9 @@
+{
+    "name": "RaccoonLite",
+    "version": "1.0.0",
+    "type": "hardware",
+    "title": "라쿤",
+    "description": "로보메이션",
+    "imageName": "raccoonlite",
+    "moduleId": "023001"
+}

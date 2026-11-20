@@ -2,10 +2,15 @@ import io from 'socket.io-client';
 import { dmet, dmetList, dmetTable, dmetVariable } from './dmet';
 import singleInstance from '../core/singleInstance';
 
+// welcome 없이 끊기는 접속을 몇 번까지 다시 시도할지
+const MAX_RECONNECT_WITHOUT_WELCOME = 2;
+
 class CloudVariableExtension {
     #cvSocket = null;
     #data = null;
     #defaultData = null;
+    // 서버가 이 작품의 실시간 변수 접속을 막았는지 여부. 한번 막히면 같은 페이지에서는 다시 접속하지 않는다.
+    #blocked = false;
 
     get data() {
         return this.#data;
@@ -30,7 +35,7 @@ class CloudVariableExtension {
     }
 
     async connect(cvServer) {
-        if (this.#cvSocket || !this.cvServer) {
+        if (this.#blocked || this.#cvSocket || !this.cvServer) {
             return;
         }
         const { url, query, type } = this.cvServer;
@@ -55,7 +60,13 @@ class CloudVariableExtension {
         });
 
         this.#cvSocket = socket;
+        // welcome 을 받지 못한 채 끊긴 횟수. 재접속에 성공하면 reconnectionAttempts 가 초기화되므로 따로 센다.
+        let isWelcomed = false;
+        let failCount = 0;
         return new Promise((resolve) => {
+            socket.on('connect', () => {
+                isWelcomed = false;
+            });
             socket.on('connect_error', () => {
                 console.log('connect_error');
                 if (!this.#data) {
@@ -71,6 +82,8 @@ class CloudVariableExtension {
                 socket.emit('imAlive', id);
             });
             socket.on('welcome', ({ variables = [], isOffline }) => {
+                isWelcomed = true;
+                failCount = 0;
                 try {
                     this.#data = new dmet(variables);
                     variables.forEach(this.#applyValue);
@@ -82,12 +95,23 @@ class CloudVariableExtension {
                 }
                 resolve();
             });
+            // 데이터가 너무 크거나 운영자가 막은 작품은 서버가 welcome 대신 blocked 를 보내고 접속을 끊는다.
+            socket.on('blocked', ({ reason } = {}) => {
+                this.#blocked = true;
+                this.#notifyBlocked(reason);
+                // 전송 계층이 먼저 끊기면 자동 재접속이 일어나므로, 서버가 끊기를 기다리지 않고 직접 닫는다.
+                // 닫으면 아래 disconnect 처리가 불려 기본값으로 동작한다.
+                socket.close();
+            });
             socket.on('disconnect', (reason) => {
                 console.log('disconnect', reason);
                 if (!this.#data) {
                     this.#data = new dmet(this.#defaultData);
                 }
                 resolve();
+                if (!isWelcomed && ++failCount > MAX_RECONNECT_WITHOUT_WELCOME) {
+                    socket.close();
+                }
             });
             socket.on('changeMode', (mode, target) => {
                 const isOffline = mode === 'offline';
@@ -97,6 +121,18 @@ class CloudVariableExtension {
                 resolve();
             });
         });
+    }
+
+    #notifyBlocked(reason) {
+        const isSizeLimit = reason === 'items' || reason === 'bytes';
+        const message = isSizeLimit
+            ? Lang?.Workspace?.real_time_blocked_by_size ||
+              'The real-time variables and lists of this project hold too much data ' +
+                  'to connect to the server.\nTheir values will not be stored in the server.'
+            : Lang?.Workspace?.real_time_blocked ||
+              'This project cannot connect to the real-time variable server.\n' +
+                  'Values of real-time variables and lists will not be stored in the server.';
+        Entry.toast?.alert(Lang?.Msgs?.warn || 'Warning', message, true);
     }
 
     setDefaultData(defaultData) {
@@ -109,6 +145,9 @@ class CloudVariableExtension {
     }
 
     async create(data) {
+        if (this.#blocked) {
+            return;
+        }
         if (!this.#cvSocket) {
             await this.connect();
         }
