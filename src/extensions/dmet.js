@@ -479,6 +479,9 @@ class dmetList {
                 attach = {
                     index,
                     data,
+                    // 지금 그 위치에 있는 항목. 서버는 위치가 아니라 이 항목 앞에 넣는다.
+                    // 보내는 사이 다른 사용자가 앞쪽을 바꿔도 넣으려던 자리가 유지된다.
+                    beforeKey: this.get(index)?.key,
                 };
                 break;
             case 'delete':
@@ -541,7 +544,7 @@ class dmetList {
         return this.getOperation({ type: 'append', key, index: -1, data });
     }
 
-    #insert({ key, index, data } = {}) {
+    #insert({ key, index, data, anchor } = {}) {
         if (!key) {
             key = CommonUtils.generateId();
         }
@@ -549,8 +552,17 @@ class dmetList {
             key,
             data,
         };
+        // 서버가 정한 기준 항목(anchor)이 있으면 그 앞에 넣는다. 빈 문자열이면 맨 끝이다.
+        // 위치(index)는 보낸 쪽 화면 기준이라, 화면이 조금이라도 다르면 서로 다른 자리에 들어간다.
+        // 기준이 없거나(예전 서버, 접속 없이 실행) 기준 항목을 찾지 못하면 위치로 넣는다.
+        let position = index;
+        if (anchor === '') {
+            position = this.#array.length;
+        } else if (anchor && this.#object[anchor]) {
+            position = this.#array.indexOf(this.#object[anchor]);
+        }
         this.#object[key] = newData;
-        this.#array.splice(index, 0, newData);
+        this.#array.splice(position, 0, newData);
         return this.getOperation({ type: 'insert', key, index, data });
     }
 
