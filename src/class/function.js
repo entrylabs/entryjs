@@ -16,7 +16,11 @@ class EntryFunc {
         } = func;
         this.id = id;
         this.type = type;
-        this.localVariables = localVariables;
+        this.localVariables = localVariables.map((localVariable) =>
+            localVariable.id
+                ? localVariable
+                : { ...localVariable, id: `${id}_${Entry.generateHash()}` }
+        );
         this.useLocalVariables = useLocalVariables;
         let content;
         //inspect empty content
@@ -86,6 +90,7 @@ class EntryFunc {
 
     defaultLocalVariable(isForce) {
         return {
+            id: `${this.id}_${Entry.generateHash()}`,
             name: this.makeLocalVariableName(isForce),
             value: 0,
         };

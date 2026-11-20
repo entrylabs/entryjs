@@ -97,13 +97,7 @@ module.exports = {
                                 {};
                             const localVariables = func.localVariables || [];
                             if (localVariables.length) {
-                                return localVariables.map((localVariable) => {
-                                    const { id, name } = localVariable;
-                                    if (!id) {
-                                        localVariable.id = `${func.id}_${Entry.generateHash()}`;
-                                    }
-                                    return [name, localVariable.id];
-                                });
+                                return localVariables.map(({ id, name }) => [name, id]);
                             } else {
                                 return [[Lang.Blocks.no_target, 'null']];
                             }
@@ -210,13 +204,7 @@ module.exports = {
                                 {};
                             const localVariables = func.localVariables || [];
                             if (localVariables.length) {
-                                return localVariables.map((localVariable) => {
-                                    const { id, name } = localVariable;
-                                    if (!id) {
-                                        localVariable.id = `${func.id}_${Entry.generateHash()}`;
-                                    }
-                                    return [name, localVariable.id];
-                                });
+                                return localVariables.map(({ id, name }) => [name, id]);
                             } else {
                                 return [[Lang.Blocks.no_target, 'null']];
                             }
