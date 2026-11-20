@@ -95,21 +95,22 @@ module.exports = {
                     {
                         loader: require.resolve('postcss-loader'),
                         options: {
-                            ident: 'postcss',
-                            plugins: () => [
-                                require('postcss-flexbugs-fixes'),
-                                require('cssnano')({ preset: 'default' }),
-                                autoprefixer({
-                                    overrideBrowserslist: [
-                                        '>1%',
-                                        'last 4 versions',
-                                        'Firefox ESR',
-                                        'not ie < 9', // React doesn't support IE8 anyway
-                                    ],
-                                    flexbox: 'no-2009',
-                                    remove: false,
-                                }),
-                            ],
+                            postcssOptions: {
+                                plugins: [
+                                    require('postcss-flexbugs-fixes'),
+                                    require('cssnano')({ preset: 'default' }),
+                                    autoprefixer({
+                                        overrideBrowserslist: [
+                                            '>1%',
+                                            'last 4 versions',
+                                            'Firefox ESR',
+                                            'not ie < 9', // React doesn't support IE8 anyway
+                                        ],
+                                        flexbox: 'no-2009',
+                                        remove: false,
+                                    }),
+                                ],
+                            },
                         },
                     },
                     {
