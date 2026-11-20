@@ -1727,6 +1727,35 @@ Entry.Playground = class Playground {
                 board.clear();
                 board.changeCode(null);
             }
+            this.resetViewWithoutObject();
+        }
+    }
+
+    /**
+     * 선택된 오브젝트가 없을 때 탭과 블록 꾸러미를 맞춘다.
+     * 탭·뷰·블록 메뉴는 injectObject 에서만 갱신되므로, 오브젝트 없이 끝나는 경로에서는
+     * 직전 오브젝트의 화면이나 초기 상태가 그대로 남는다.
+     * 모양·소리·속성 탭은 오브젝트가 없을 때의 화면이 따로 있으므로 보던 탭을 유지한다.
+     */
+    resetViewWithoutObject() {
+        const { text: textTab, picture: pictureTab } = this.tabViewElements || {};
+        if (Entry.pictureEditable) {
+            textTab && textTab.addClass('entryRemove');
+            pictureTab && pictureTab.removeClass('entryRemove');
+        }
+
+        const viewMode = this.viewMode_;
+        if (viewMode === 'default') {
+            this.changeViewMode('code');
+        } else if (viewMode === 'text') {
+            // 글상자 탭은 숨겨지므로 injectObject 와 같이 짝이 되는 모양 탭으로 넘긴다.
+            this.changeViewMode('picture');
+        }
+
+        // 카테고리는 숨겨진 채 만들어지고 오브젝트 유형이 처음 정해질 때 펼쳐진다.
+        // 오브젝트를 한 번도 선택하지 않았다면 여기서 펼쳐준다.
+        if (!this.currentObjectType && this.blockMenu) {
+            this.blockMenu.setMenu(true);
         }
     }
 

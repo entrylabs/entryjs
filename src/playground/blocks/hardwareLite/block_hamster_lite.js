@@ -4,6 +4,353 @@
     // 연결 시 정체 라인(FF01) 대기 상한. 페어링된 동글은 ms 단위로 응답하므로 5초면 충분.
     const HANDSHAKE_TIMEOUT_MS = 5000;
 
+    // 사운드 번호(__SOUNDS 값) -> 로봇이 받는 사운드 ID 바이트.
+    // 출처: entry-hw/app/modules/hamster_s.js 의 switch(motoring.sound). 연속 값이 아니라
+    // 표로 옮긴다. 번호와 ID 사이에 규칙이 없으므로 계산으로 유도하면 틀린다.
+    const SOUND_TO_ID = {
+        1: 0x01, // BEEP
+        2: 0x05, // RANDOM_BEEP
+        3: 0x09, // SIREN
+        4: 0x0b, // ENGINE
+        5: 0x20, // ROBOT
+        6: 0x34, // MARCH
+        7: 0x35, // BIRTHDAY
+        8: 0x21, // DIBIDIBIDIP
+        9: 0x23, // GOOD_JOB
+        10: 0x07, // NOISE
+        11: 0x12, // CHOP
+        12: 0x30, // HAPPY
+        13: 0x31, // ANGRY
+        14: 0x32, // SAD
+        15: 0x33, // SLEEP
+    };
+
+    // 단위 이동 환산 상수. 출처: entry-hw/app/modules/hamster_s.js 의 HamsterS 상수.
+    // 로봇 하드웨어에서 측정한 값이라 유도하지 말고 그대로 옮긴다.
+    const CM_TO_PULSE = 138.2666;
+    const DEG_TO_PULSE = 4.039;
+    const DEG_TO_PULSE_PIVOT = 8.047;
+    const DEFAULT_SPEED = 30;
+    // 펜과 선회용. 바퀴 중심과 펜 위치까지의 거리(cm).
+    const WHEEL_CENTER_DISTANCE = 1.636;
+    const PEN_CENTER_DISTANCE = 2.462;
+
+    // 시리얼 송수신 큐. 설치형 block_robomation.js 의 RoboidWriteQueue / RoboidReadQueue 를 그대로 옮겼다.
+    // 글자를 UTF-8 바이트로 바꿔 18바이트씩 끊어 보내고, 받은 조각을 모아 구분자에서 글자로 되돌린다.
+    // 크기는 2의 거듭제곱이어야 한다(mask 로 감는다). 가득 차면 가장 오래된 바이트를 버린다.
+    class SerialWriteQueue {
+        constructor(size) {
+            this.buffer = new Array(size);
+            this.mask = size - 1;
+            this.provider = 0;
+            this.consumer = 0;
+            this.output = new Array(19);
+        }
+
+        reset() {
+            this.provider = 0;
+            this.consumer = 0;
+        }
+
+        // 출처: google closure-library goog/crypt/crypt.js 의 stringToUtf8ByteArray (설치형과 같은 구현)
+        stringToUtf8ByteArray(str) {
+            const out = [];
+            let p = 0;
+            let c;
+            for (let i = 0; i < str.length; i++) {
+                c = str.charCodeAt(i);
+                if (c < 128) {
+                    out[p++] = c;
+                } else if (c < 2048) {
+                    out[p++] = (c >> 6) | 192;
+                    out[p++] = (c & 63) | 128;
+                } else if (
+                    (c & 0xfc00) == 0xd800 &&
+                    i + 1 < str.length &&
+                    (str.charCodeAt(i + 1) & 0xfc00) == 0xdc00
+                ) {
+                    c = 0x10000 + ((c & 0x03ff) << 10) + (str.charCodeAt(++i) & 0x03ff);
+                    out[p++] = (c >> 18) | 240;
+                    out[p++] = ((c >> 12) & 63) | 128;
+                    out[p++] = ((c >> 6) & 63) | 128;
+                    out[p++] = (c & 63) | 128;
+                } else {
+                    out[p++] = (c >> 12) | 224;
+                    out[p++] = ((c >> 6) & 63) | 128;
+                    out[p++] = (c & 63) | 128;
+                }
+            }
+            return out;
+        }
+
+        push(str, line) {
+            const buffer = this.buffer;
+            const mask = this.mask;
+            let provider = this.provider;
+            let consumer = this.consumer;
+            if (str.length > 0) {
+                const out = this.stringToUtf8ByteArray(str);
+                for (let i = 0; i < out.length; ++i) {
+                    if (((provider - consumer) & mask) == mask) {
+                        consumer = (consumer + 1) & mask;
+                    }
+                    buffer[provider] = out[i];
+                    provider = (provider + 1) & mask;
+                }
+            }
+            if (line) {
+                if (((provider - consumer) & mask) == mask) {
+                    consumer = (consumer + 1) & mask;
+                }
+                buffer[provider] = 0x0d;
+                provider = (provider + 1) & mask;
+            }
+            this.provider = provider;
+            this.consumer = consumer;
+        }
+
+        pop() {
+            const provider = this.provider;
+            let consumer = this.consumer;
+            if (provider == consumer) {
+                return undefined;
+            }
+            const buffer = this.buffer;
+            const mask = this.mask;
+            const output = this.output;
+            let len = (provider - consumer) & mask;
+            if (len > 18) {
+                len = 18;
+            }
+            output[0] = len;
+            let i = 1;
+            for (; i <= len && consumer != provider; ++i) {
+                output[i] = buffer[consumer];
+                consumer = (consumer + 1) & mask;
+            }
+            for (; i <= 18; ++i) {
+                output[i] = 0;
+            }
+            this.consumer = consumer;
+            return output;
+        }
+    }
+
+    class SerialReadQueue {
+        constructor(size) {
+            this.buffer = new Array(size);
+            this.mask = size - 1;
+            this.provider = 0;
+            this.consumer = 0;
+        }
+
+        reset() {
+            this.provider = 0;
+            this.consumer = 0;
+        }
+
+        utf8ByteArrayToString(bytes, start, end) {
+            let current = start;
+            const mask = this.mask;
+            const out = [];
+            let c = 0;
+            let c1;
+            let c2;
+            let c3;
+            let c4;
+            let u;
+            while (current != end) {
+                c1 = bytes[current];
+                current = (current + 1) & mask;
+                if (c1 < 128) {
+                    out[c++] = String.fromCharCode(c1);
+                } else if (c1 > 191 && c1 < 224) {
+                    if (current == end) {
+                        break;
+                    }
+                    c2 = bytes[current];
+                    current = (current + 1) & mask;
+                    out[c++] = String.fromCharCode(((c1 & 31) << 6) | (c2 & 63));
+                } else if (c1 > 239 && c1 < 365) {
+                    if (current == end) {
+                        break;
+                    }
+                    c2 = bytes[current];
+                    current = (current + 1) & mask;
+                    if (current == end) {
+                        break;
+                    }
+                    c3 = bytes[current];
+                    current = (current + 1) & mask;
+                    if (current == end) {
+                        break;
+                    }
+                    c4 = bytes[current];
+                    current = (current + 1) & mask;
+                    u =
+                        (((c1 & 7) << 18) | ((c2 & 63) << 12) | ((c3 & 63) << 6) | (c4 & 63)) -
+                        0x10000;
+                    out[c++] = String.fromCharCode(0xd800 + (u >> 10));
+                    out[c++] = String.fromCharCode(0xdc00 + (u & 1023));
+                } else {
+                    if (current == end) {
+                        break;
+                    }
+                    c2 = bytes[current];
+                    current = (current + 1) & mask;
+                    if (current == end) {
+                        break;
+                    }
+                    c3 = bytes[current];
+                    current = (current + 1) & mask;
+                    out[c++] = String.fromCharCode(
+                        ((c1 & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63)
+                    );
+                }
+            }
+            this.consumer = current;
+            return out.join('');
+        }
+
+        push(packet, offset) {
+            let len = packet[offset];
+            if (len > 0) {
+                if (len > 18) {
+                    len = 18;
+                }
+                const buffer = this.buffer;
+                const mask = this.mask;
+                let provider = this.provider;
+                let consumer = this.consumer;
+                const end = len + offset;
+                for (let i = 1 + offset; i <= end; ++i) {
+                    if (((provider - consumer) & mask) == mask) {
+                        consumer = (consumer + 1) & mask;
+                    }
+                    buffer[provider] = packet[i];
+                    provider = (provider + 1) & mask;
+                }
+                this.provider = provider;
+                this.consumer = consumer;
+            }
+        }
+
+        pop(delimiter) {
+            const provider = this.provider;
+            let consumer = this.consumer;
+            if (provider == consumer) {
+                return undefined;
+            }
+            if (delimiter == 0) {
+                return this.utf8ByteArrayToString(this.buffer, consumer, provider);
+            }
+            const buffer = this.buffer;
+            const mask = this.mask;
+            let found = -1;
+            while (consumer != provider) {
+                if (buffer[consumer] == delimiter) {
+                    found = consumer;
+                    break;
+                }
+                consumer = (consumer + 1) & mask;
+            }
+            if (found >= 0) {
+                const str = this.utf8ByteArrayToString(buffer, this.consumer, found);
+                this.consumer = (this.consumer + 1) & mask;
+                return str;
+            }
+            return undefined;
+        }
+    }
+
+    // 시리얼 블록의 선택지 -> 로봇 값.
+    // 출처: block_robomation.js HamsterSRobot.__SERIAL_DELIMITERS / __SERIAL_BAUDS.
+    const SERIAL_DELIMITERS = {
+        ALL: 0,
+        COMMA: 0x2c,
+        COLON: 0x3a,
+        DOLLAR: 0x24,
+        SHARP: 0x23,
+        NEW_LINE: 0x0d,
+    };
+    const SERIAL_BAUDS = {
+        9600: 176,
+        14400: 177,
+        19200: 178,
+        28800: 179,
+        38400: 180,
+        57600: 181,
+        76800: 182,
+        115200: 183,
+    };
+
+    // 선 따라가기 속도 -> 기본 방향 변화량. 출처: block_robomation.js HamsterSRobot.__GAINS.
+    // 구형 speedToGain 과 1..8 에서 같은 값이다(9 와 10 은 햄스터S 블록이 만들지 않는다).
+    const LINE_TRACER_GAINS = { 1: 6, 2: 6, 3: 5, 4: 5, 5: 4, 6: 4, 7: 3, 8: 3 };
+
+    // entry-hw 가 받은 motoring 값을 자르는 범위. handleRemoteData 의 if(t < a) t = a; else if(t > b)
+    // t = b; 를 그대로 옮겼다(NaN 은 두 비교를 모두 통과해 그대로 남는 것까지 같다).
+    // 구형 항목 = hamster.js, 햄스터S 항목 = hamster_s.js. 두 모듈의 범위가 다르다(버저 등).
+    const OLD_CLAMPS = {
+        leftWheel: [-100, 100],
+        rightWheel: [-100, 100],
+        buzzer: [0, 167772.15],
+        outputA: [0, 255],
+        outputB: [0, 255],
+        topology: [0, 15],
+        leftLed: [0, 7],
+        rightLed: [0, 7],
+        note: [0, 88],
+        lineTracerMode: [0, 15],
+        lineTracerSpeed: [1, 8],
+        ioModeA: [0, 15],
+        ioModeB: [0, 15],
+        configProximity: [1, 7],
+        configGravity: [0, 3],
+        configBandWidth: [1, 8],
+    };
+    const S_CLAMPS = {
+        leftWheel: [-100, 100],
+        rightWheel: [-100, 100],
+        leftRed: [0, 255],
+        leftGreen: [0, 255],
+        leftBlue: [0, 255],
+        rightRed: [0, 255],
+        rightGreen: [0, 255],
+        rightBlue: [0, 255],
+        buzzer: [0, 6500.0],
+        outputA: [0, 255],
+        outputB: [0, 255],
+        pulse: [0, 65535],
+        note: [0, 88],
+        lineTracerMode: [0, 15],
+        lineTracerGain: [1, 10],
+        lineTracerSpeed: [1, 10],
+        ioModeA: [0, 255],
+        ioModeB: [0, 255],
+        motionUnit: [0, 3],
+        motionSpeed: [0, 100],
+        motionValue: [0, 2147483647],
+        motionRadius: [0, 2147483647],
+        motionType: [0, 24],
+    };
+    function clampFields(src, table) {
+        const out = Object.assign({}, src);
+        Object.keys(table).forEach((k) => {
+            const [lo, hi] = table[k];
+            const t = out[k];
+            if (t < lo) {
+                out[k] = lo;
+            } else if (t > hi) {
+                out[k] = hi;
+            }
+        });
+        return out;
+    }
+
+    // 단위 드롭다운 값 -> 내부 단위 번호. CM 과 DEG 는 같은 1번(블록이 어느 쪽인지 안다).
+    const MOTION_UNITS = { CM: 1, DEG: 1, SEC: 2, PULSE: 3 };
+
     const COLOR_TO_RGB = [
         [0, 0, 0],
         [0, 0, 255],
@@ -331,7 +678,26 @@
             };
         }
 
+        // 정지: 상태를 되돌리고 정지 패킷을 곧바로 한 번 보낸다.
         setZero() {
+            this.__resetState();
+            if (Entry.hwLite && Entry.hwLite.serial) {
+                Entry.hwLite.serial.update();
+            }
+        }
+
+        // 보내지 않고 상태만 되돌린다. 연결 시작(initialHandshake)도 이것을 쓴다. 코어는 핸드셰이크
+        // 전에 연결 상태를 켜므로, 거기서 setZero 를 부르면 핸드셰이크 도중에 모터 패킷이 나간다.
+        __resetState() {
+            // 아래에서 새로 만드는 프로토콜 상태 중 카운터만 끝에서 되살린다(생성자 첫 호출엔 없다).
+            const prev = {
+                wheel: this.wheel,
+                sound: this.sound,
+                lineTracer: this.lineTracer,
+                tapEvent: this.tapEvent,
+                battery: this.battery,
+                batteryState: this.sensory && this.sensory.batteryState,
+            };
             this.sensory = {
                 signalStrength: 0,
                 leftProximity: 0,
@@ -360,15 +726,36 @@
                 topology: 0,
                 leftLed: 0,
                 rightLed: 0,
+                // 햄스터S 전용. 구형은 팔레트 번호(leftLed/rightLed) 한 바이트를 쓰지만
+                // 햄스터S 패킷은 RGB 여섯 바이트를 직접 싣는다. 설치형 HamsterSRobot 과 같은 모델.
+                leftRed: 0,
+                leftGreen: 0,
+                leftBlue: 0,
+                rightRed: 0,
+                rightGreen: 0,
+                rightBlue: 0,
+                // 햄스터S 전용. 여기 선언해 두지 않으면 setZero 뒤 undefined 로 남아
+                // "정지 직후 sound 는 0" 이라는 불변식이 깨진다(패킷은 우연히 맞지만 상태는 틀리다).
+                sound: 0,
+                soundRepeat: 1,
+                // 단위 이동 명령. 블록이 여기에 쓰고 requestLocalData 가 펄스로 환산한다.
+                motionType: 0,
+                motionUnit: 0,
+                motionSpeed: 0,
+                motionValue: 0,
+                motionRadius: 0,
+                pulse: 0,
                 note: 0,
                 lineTracerMode: 0,
                 lineTracerModeId: -1,
                 lineTracerSpeed: 5,
+                // 햄스터S 항목 전용(__lineTracerGain 재정의가 읽는다). 4 = 속도 5의 기본값.
+                lineTracerGain: 4,
                 ioModeA: 0,
                 ioModeB: 0,
                 configProximity: 2,
                 configGravity: 0,
-                configBandWidth: 3,
+                configBandWidth: this.__defaultConfigBandWidth(),
             };
             this.lineTracer = {
                 written: false,
@@ -377,6 +764,44 @@
                 state: 0,
                 count: 0,
             };
+            // 사운드 프로토콜 상태(햄스터S 전용). flag 는 "직전 재생과 달라졌는가"를 로봇에 알리는
+            // 토글이라 정지를 넘어 보존돼야 한다. 이 함수 끝에서 되살린다.
+            this.sound = {
+                written: false,
+                flag: 0,
+                event: 0,
+                state: 0,
+                count: 0,
+            };
+            // 단위 이동(cm/도/펄스) 프로토콜 상태(햄스터S 전용). id 와 pulsePrev 는 사운드 flag 와 같이
+            // 이 함수 끝에서 되살린다. id 는 "새 명령"을 로봇에 알리는 카운터이고, pulsePrev 는 id 를 올릴지 판단하는 데 쓴다.
+            // 펄스 0 명령이 연달아 오면 id 를 올리지 않아야 로봇이 같은 정지를 두 번 실행하지 않는다.
+            this.wheel = {
+                written: false,
+                id: 0,
+                pulse: 0,
+                // -1 = "직전 명령 없음". entry-hw 는 생성과 reset() 에서 -1 로 둔다. 0 으로 두면
+                // 첫 명령이 펄스 0(시간 단위 이동, 걸지 않는 명령)일 때 id 가 안 올라 설치형과
+                // 패킷이 한 바이트 달라진다.
+                pulsePrev: -1,
+                event: 0,
+                state: 0,
+                count: 0,
+                move: false, // 주행 중 여부. 두드림 억제에서 쓴다
+                moveCount: 0,
+            };
+            this.motion = {
+                written: false,
+                type: 0,
+                speed: 0,
+            };
+            // 두드림과 자유낙하 엣지 감지(햄스터S 전용). 로봇은 "발생했다"가 아니라 2비트 카운터를
+            // 올려 보내므로, 값이 바뀐 순간을 엣지로 잡는다. -1 은 "아직 기준값이 없다"는 뜻이고
+            // 첫 프레임에서 기준만 잡고 발화하지 않는다(연결 직후 헛 발화 방지).
+            this.tapEvent = { tapId: -1, freeFallId: -1 };
+            // 블록이 읽는 한 프레임짜리 스냅샷. handleSensory 가 매 프레임 갱신한다.
+            this.tap = false;
+            this.freeFall = false;
             this.battery = {
                 state: 2,
                 data: new Array(10),
@@ -386,9 +811,14 @@
             };
             // 상태를 비우기 전에 대기 중인 블록들에 완료를 알린다.
             // 비운 뒤에 부르면 콜백을 찾을 수 없어 블록이 영원히 멈춘다.
-            ['wheelDone', 'noteDone', 'ioDone', 'lineTracerCallback', 'boardCallback'].forEach(
-                (key) => this.__resolvePending(key)
-            );
+            [
+                'wheelDone',
+                'noteDone',
+                'ioDone',
+                'lineTracerCallback',
+                'boardCallback',
+                'soundDone',
+            ].forEach((key) => this.__resolvePending(key));
             this.lineTracerModeId = 0;
             this.lineTracerStateId = -1;
             this.blockId = 0;
@@ -413,10 +843,43 @@
             this.pendingIdentity = undefined;
             this.pendingIdentityTtl = 0;
 
-            this.__removeAllTimeouts();
-            if (Entry.hwLite && Entry.hwLite.serial) {
-                Entry.hwLite.serial.update();
+            // 프로토콜 카운터는 정지에서 보존한다. 설치형의 정지는 블록 쪽 motoring 만
+            // 되돌리고 entry-hw 모듈의 wheel.id / sound.flag / lineTracer 플래그는 그대로 둔다
+            // (entry-hw 는 연결할 때만 reset() 하고, 그때도 이 셋은 남긴다). 0 으로 되돌리면 정지
+            // 뒤 첫 명령이 로봇에게 "직전과 같은 명령"으로 보일 수 있다.
+            if (prev.wheel) {
+                this.wheel.id = prev.wheel.id;
+                this.wheel.pulsePrev = prev.wheel.pulsePrev;
+                // 설치형 정지는 pulse 0 을 새 명령으로 보낸다(pulseId 가 바뀐다). 명령이 한 번이라도
+                // 있었으면 같게 한다. 직전 펄스가 0 이 아니었다면 여기서 id 가 한 번 오른다.
+                if (this.wheel.pulsePrev !== -1) {
+                    this.wheel.written = true;
+                }
             }
+            if (prev.sound) {
+                this.sound.flag = prev.sound.flag;
+            }
+            if (prev.lineTracer) {
+                this.lineTracer.flag = prev.lineTracer.flag;
+                this.lineTracer.state = prev.lineTracer.state;
+            }
+            // 수신 쪽 상태도 정지에서 보존한다. entry-hw 모듈의 두드림과 자유낙하 기준, 주행 중 여부,
+            // 배터리 평균창은 정지와 무관하게 이어진다. 지우면 정지 직후 첫 두드림을 놓치거나(기준을
+            // 새로 잡느라) 주행 직후 헛 두드림이 뜬다(주행 중 여부가 바로 풀려서).
+            if (prev.wheel) {
+                this.wheel.move = prev.wheel.move;
+                this.wheel.moveCount = prev.wheel.moveCount;
+            }
+            if (prev.tapEvent) {
+                this.tapEvent = prev.tapEvent;
+            }
+            if (prev.battery) {
+                this.battery = prev.battery;
+                this.sensory.batteryState = prev.batteryState;
+            }
+
+            this.motionTimer = undefined; // 실제 타이머는 아래 __removeAllTimeouts 가 지운다
+            this.__removeAllTimeouts();
         }
 
         getMonitorPort() {
@@ -472,6 +935,11 @@
             this.lineTracerModeId = (this.lineTracerModeId % 255) + 1;
             this.motoring.lineTracerMode = mode;
             this.motoring.lineTracerModeId = this.lineTracerModeId;
+            // entry-hw 는 handleRemoteData 에서 lineTracerModeId 가 바뀌면 written 을 세운다
+            // (hamster.js, hamster_s.js). lite 에는 그 단계가 없어 여기서 직접 세운다. 세우지 않으면
+            // 선 따라가기 플래그(구형 0x80 토글, 햄스터S 4비트 id)가 바뀌지 않는다.
+            // 이 함수는 매번 id 를 올리므로 "바뀌면 세운다"와 같다.
+            this.lineTracer.written = true;
         }
 
         __cancelLineTracer() {
@@ -520,6 +988,14 @@
         handleSensory() {
             const self = this;
             const sensory = self.sensory;
+            // 한 프레임짜리 신호를 블록이 읽을 수 있게 스냅샷하고 원본을 비운다.
+            // 설치형은 entry-hw 의 requestRemoteData 가 매 주기 sensory.tap/freeFall 을 0으로
+            // 되돌리는데, lite 에는 그 단계가 없어 여기가 대응점이다. 비우지 않으면 한 번 두드린
+            // 뒤 블록이 영원히 참을 돌려준다.
+            self.tap = sensory.tap == 1;
+            self.freeFall = sensory.freeFall == 1;
+            sensory.tap = 0;
+            sensory.freeFall = 0;
             if (self.lineTracerCallback) {
                 if (sensory.lineTracerStateId != self.lineTracerStateId) {
                     self.lineTracerStateId = sensory.lineTracerStateId;
@@ -1632,13 +2108,13 @@
                 if (id && callback) {
                     self.noteDone = callback; // 취소되면 __cancelNote가 대신 알린다
                 }
+                // 440Hz 로 100ms 켜고 100ms 끈다(설치형 HamsterRobot.__runBeep 과 같다).
                 const motoring = self.motoring;
-                if (!motoring.buzzer) {
-                    motoring.buzzer = 440;
-                }
+                motoring.buzzer = 440;
                 motoring.note = 0;
                 self.noteTimer1 = setTimeout(() => {
                     if (!id || self.noteBlockId == id) {
+                        motoring.buzzer = 0;
                         if (self.noteTimer1 !== undefined) {
                             self.__removeTimeout(self.noteTimer1);
                         }
@@ -1648,6 +2124,7 @@
                 self.timeouts.push(self.noteTimer1);
                 self.noteTimer2 = setTimeout(() => {
                     if (!id || self.noteBlockId == id) {
+                        motoring.buzzer = 0;
                         if (self.noteTimer2 !== undefined) {
                             self.__removeTimeout(self.noteTimer2);
                         }
@@ -2603,6 +3080,9 @@
                 },
             };
         }
+        // 구형 블록은 isNotFor: ['HamsterLite'], 즉 "햄스터 항목에서만 보임"이다. 햄스터S 항목은
+        // 설치형과 같은 자기 블록(hamsterslite_*)을 쓴다. 정의는 계속 전역에 등록되므로 이 블록으로
+        // 저장된 기존 햄스터S 작품도 열리고 실행된다. 팔레트에만 안 나온다.
         getBlocks() {
             return {
                 hamsterlite_hand_found: {
@@ -2618,7 +3098,7 @@
                         type: 'hamsterlite_hand_found',
                     },
                     class: 'hamsterlite_sensor',
-                    isNotFor: ['HamsterLite', 'HamsterSLite'],
+                    isNotFor: ['HamsterLite'],
                     func(sprite, script) {
                         return activeHamster().checkHandFound(script) || false;
                     },
@@ -2667,7 +3147,7 @@
                         DEVICE: 0,
                     },
                     class: 'hamsterlite_sensor',
-                    isNotFor: ['HamsterLite', 'HamsterSLite'],
+                    isNotFor: ['HamsterLite'],
                     func(sprite, script) {
                         return activeHamster().checkBoolean(script) || false;
                     },
@@ -2749,7 +3229,7 @@
                         DEVICE: 0,
                     },
                     class: 'hamsterlite_sensor',
-                    isNotFor: ['HamsterLite', 'HamsterSLite'],
+                    isNotFor: ['HamsterLite'],
                     func(sprite, script) {
                         return activeHamster().getValue(script);
                     },
@@ -2832,7 +3312,7 @@
                         type: 'hamsterlite_move_forward_once',
                     },
                     class: 'hamsterlite_board',
-                    isNotFor: ['HamsterLite', 'HamsterSLite'],
+                    isNotFor: ['HamsterLite'],
                     func(sprite, script) {
                         return activeHamster().boardForward(script);
                     },
@@ -2877,7 +3357,7 @@
                         DIRECTION: 0,
                     },
                     class: 'hamsterlite_board',
-                    isNotFor: ['HamsterLite', 'HamsterSLite'],
+                    isNotFor: ['HamsterLite'],
                     func(sprite, script) {
                         return activeHamster().boardTurn(script);
                     },
@@ -2935,7 +3415,7 @@
                         SECS: 0,
                     },
                     class: 'hamsterlite_wheel',
-                    isNotFor: ['HamsterLite', 'HamsterSLite'],
+                    isNotFor: ['HamsterLite'],
                     func(sprite, script) {
                         return activeHamster().moveForwardSecs(script);
                     },
@@ -2985,7 +3465,7 @@
                         SECS: 0,
                     },
                     class: 'hamsterlite_wheel',
-                    isNotFor: ['HamsterLite', 'HamsterSLite'],
+                    isNotFor: ['HamsterLite'],
                     func(sprite, script) {
                         return activeHamster().moveBackwardSecs(script);
                     },
@@ -3048,7 +3528,7 @@
                         SECS: 1,
                     },
                     class: 'hamsterlite_wheel',
-                    isNotFor: ['HamsterLite', 'HamsterSLite'],
+                    isNotFor: ['HamsterLite'],
                     func(sprite, script) {
                         return activeHamster().turnSecs(script);
                     },
@@ -3119,7 +3599,7 @@
                         RIGHT: 1,
                     },
                     class: 'hamsterlite_wheel',
-                    isNotFor: ['HamsterLite', 'HamsterSLite'],
+                    isNotFor: ['HamsterLite'],
                     func(sprite, script) {
                         return activeHamster().changeWheels(script);
                     },
@@ -3182,7 +3662,7 @@
                         RIGHT: 1,
                     },
                     class: 'hamsterlite_wheel',
-                    isNotFor: ['HamsterLite', 'HamsterSLite'],
+                    isNotFor: ['HamsterLite'],
                     func(sprite, script) {
                         return activeHamster().setWheels(script);
                     },
@@ -3250,7 +3730,7 @@
                         VELOCITY: 1,
                     },
                     class: 'hamsterlite_wheel',
-                    isNotFor: ['HamsterLite', 'HamsterSLite'],
+                    isNotFor: ['HamsterLite'],
                     func(sprite, script) {
                         return activeHamster().changeWheel(script);
                     },
@@ -3327,7 +3807,7 @@
                         VELOCITY: 1,
                     },
                     class: 'hamsterlite_wheel',
-                    isNotFor: ['HamsterLite', 'HamsterSLite'],
+                    isNotFor: ['HamsterLite'],
                     func(sprite, script) {
                         return activeHamster().setWheel(script);
                     },
@@ -3404,7 +3884,7 @@
                         SENSOR: 1,
                     },
                     class: 'hamsterlite_wheel',
-                    isNotFor: ['HamsterLite', 'HamsterSLite'],
+                    isNotFor: ['HamsterLite'],
                     func(sprite, script) {
                         return activeHamster().followLine(script);
                     },
@@ -3490,7 +3970,7 @@
                         DIRECTION: 1,
                     },
                     class: 'hamsterlite_wheel',
-                    isNotFor: ['HamsterLite', 'HamsterSLite'],
+                    isNotFor: ['HamsterLite'],
                     func(sprite, script) {
                         return activeHamster().followLineUntil(script);
                     },
@@ -3569,7 +4049,7 @@
                         SPEED: 0,
                     },
                     class: 'hamsterlite_wheel',
-                    isNotFor: ['HamsterLite', 'HamsterSLite'],
+                    isNotFor: ['HamsterLite'],
                     func(sprite, script) {
                         return activeHamster().setLineTracerSpeed(script);
                     },
@@ -3621,7 +4101,7 @@
                         type: 'hamsterlite_stop',
                     },
                     class: 'hamsterlite_wheel',
-                    isNotFor: ['HamsterLite', 'HamsterSLite'],
+                    isNotFor: ['HamsterLite'],
                     func(sprite, script) {
                         return activeHamster().stop(script);
                     },
@@ -3684,7 +4164,7 @@
                         COLOR: 1,
                     },
                     class: 'hamsterlite_led',
-                    isNotFor: ['HamsterLite', 'HamsterSLite'],
+                    isNotFor: ['HamsterLite'],
                     func(sprite, script) {
                         return activeHamster().setLed(script);
                     },
@@ -3979,7 +4459,7 @@
                         LED: 0,
                     },
                     class: 'hamsterlite_led',
-                    isNotFor: ['HamsterLite', 'HamsterSLite'],
+                    isNotFor: ['HamsterLite'],
                     func(sprite, script) {
                         return activeHamster().clearLed(script);
                     },
@@ -4025,7 +4505,7 @@
                         type: 'hamsterlite_beep',
                     },
                     class: 'hamsterlite_buzzer',
-                    isNotFor: ['HamsterLite', 'HamsterSLite'],
+                    isNotFor: ['HamsterLite'],
                     func(sprite, script) {
                         return activeHamster().beep(script);
                     },
@@ -4069,7 +4549,7 @@
                         HZ: 0,
                     },
                     class: 'hamsterlite_buzzer',
-                    isNotFor: ['HamsterLite', 'HamsterSLite'],
+                    isNotFor: ['HamsterLite'],
                     func(sprite, script) {
                         return activeHamster().changeBuzzer(script);
                     },
@@ -4113,7 +4593,7 @@
                         HZ: 0,
                     },
                     class: 'hamsterlite_buzzer',
-                    isNotFor: ['HamsterLite', 'HamsterSLite'],
+                    isNotFor: ['HamsterLite'],
                     func(sprite, script) {
                         return activeHamster().setBuzzer(script);
                     },
@@ -4144,7 +4624,7 @@
                         type: 'hamsterlite_clear_buzzer',
                     },
                     class: 'hamsterlite_buzzer',
-                    isNotFor: ['HamsterLite', 'HamsterSLite'],
+                    isNotFor: ['HamsterLite'],
                     func(sprite, script) {
                         return activeHamster().clearBuzzer(script);
                     },
@@ -4216,7 +4696,7 @@
                         OCTAVE: 1,
                     },
                     class: 'hamsterlite_buzzer',
-                    isNotFor: ['HamsterLite', 'HamsterSLite'],
+                    isNotFor: ['HamsterLite'],
                     func(sprite, script) {
                         return activeHamster().playNote(script);
                     },
@@ -4850,7 +5330,7 @@
                         BEAT: 2,
                     },
                     class: 'hamsterlite_buzzer',
-                    isNotFor: ['HamsterLite', 'HamsterSLite'],
+                    isNotFor: ['HamsterLite'],
                     func(sprite, script) {
                         return activeHamster().playNoteBeat(script);
                     },
@@ -5455,7 +5935,7 @@
                         BEAT: 0,
                     },
                     class: 'hamsterlite_buzzer',
-                    isNotFor: ['HamsterLite', 'HamsterSLite'],
+                    isNotFor: ['HamsterLite'],
                     func(sprite, script) {
                         return activeHamster().restBeat(script);
                     },
@@ -5505,7 +5985,7 @@
                         BPM: 0,
                     },
                     class: 'hamsterlite_buzzer',
-                    isNotFor: ['HamsterLite', 'HamsterSLite'],
+                    isNotFor: ['HamsterLite'],
                     func(sprite, script) {
                         return activeHamster().changeTempo(script);
                     },
@@ -5555,7 +6035,7 @@
                         BPM: 0,
                     },
                     class: 'hamsterlite_buzzer',
-                    isNotFor: ['HamsterLite', 'HamsterSLite'],
+                    isNotFor: ['HamsterLite'],
                     func(sprite, script) {
                         return activeHamster().setTempo(script);
                     },
@@ -5622,7 +6102,7 @@
                         MODE: 1,
                     },
                     class: 'hamsterlite_port',
-                    isNotFor: ['HamsterLite', 'HamsterSLite'],
+                    isNotFor: ['HamsterLite'],
                     func(sprite, script) {
                         return activeHamster().setIoMode(script);
                     },
@@ -5847,7 +6327,7 @@
                         VALUE: 1,
                     },
                     class: 'hamsterlite_port',
-                    isNotFor: ['HamsterLite', 'HamsterSLite'],
+                    isNotFor: ['HamsterLite'],
                     func(sprite, script) {
                         return activeHamster().changeOutput(script);
                     },
@@ -5924,7 +6404,7 @@
                         VALUE: 1,
                     },
                     class: 'hamsterlite_port',
-                    isNotFor: ['HamsterLite', 'HamsterSLite'],
+                    isNotFor: ['HamsterLite'],
                     func(sprite, script) {
                         return activeHamster().setOutput(script);
                     },
@@ -5988,7 +6468,7 @@
                         ACTION: 0,
                     },
                     class: 'hamsterlite_port',
-                    isNotFor: ['HamsterLite', 'HamsterSLite'],
+                    isNotFor: ['HamsterLite'],
                     func(sprite, script) {
                         return activeHamster().gripper(script);
                     },
@@ -6033,7 +6513,7 @@
                         type: 'hamsterlite_release_gripper',
                     },
                     class: 'hamsterlite_port',
-                    isNotFor: ['HamsterLite', 'HamsterSLite'],
+                    isNotFor: ['HamsterLite'],
                     func(sprite, script) {
                         return activeHamster().releaseGripper(script);
                     },
@@ -6085,6 +6565,422 @@
             else if (color < 0) color = 0;
             return COLOR_TO_RGB[color];
         }
+        // 새 단위 이동 명령을 펄스로 환산하고, 지금 걸어야 할 바퀴 속도를 돌려준다.
+        // motoring 을 건드리지 않는다. 이동이 끝나면 사용자가 설정해 둔 속도로 돌아가야 한다.
+        // 출처: entry-hw/app/modules/hamster_s.js 의 requestLocalData 앞부분.
+        // 구형 햄스터는 motionType 을 세우지 않으므로 늘 motoring 값이 그대로 나간다.
+        __applyMotion(motoring = this.motoring) {
+            const motion = this.motion;
+            const wheel = this.wheel;
+
+            if (motion.written) {
+                this.__removeMotionTimeout();
+                motion.type = parseInt(motoring.motionType, 10) || 0;
+                if (motion.type < 0 || motion.type > 30) {
+                    motion.type = 0;
+                }
+                if (motion.type != 0) {
+                    motion.speed = motoring.motionSpeed;
+                    wheel.pulse = 0;
+                    const unit = parseInt(motoring.motionUnit, 10);
+                    const value = motoring.motionValue;
+                    if (unit == MOTION_UNITS.SEC) {
+                        // 시간 단위는 펄스를 쓰지 않는다. 타이머가 끝나면 event = -1 로 두고,
+                        // 수신 상태머신의 -1 분기가 완료를 알린다. 즉 두 단위가 같은 곳에서 끝난다.
+                        if (value == 0) {
+                            this.__endMotionNow();
+                        } else {
+                            this.motionTimer = setTimeout(() => {
+                                this.__endMotionNow();
+                            }, value * 1000);
+                            this.timeouts.push(this.motionTimer);
+                        }
+                    } else {
+                        if (unit == MOTION_UNITS.PULSE) {
+                            wheel.pulse = Math.round(value);
+                        } else if (unit == MOTION_UNITS.CM) {
+                            wheel.pulse = this.__motionPulse(
+                                motion.type,
+                                value,
+                                motoring.motionRadius
+                            );
+                        }
+                        // 펄스는 2바이트 자리다. 65535 를 넘으면 toHex2 가 다섯 자를 내보내
+                        // 이후 필드가 전부 밀리고, 로봇이 그 패킷을 받아들이지 않으면 완료 신호가
+                        // 오지 않아 블록이 영구 대기한다. 경계는 약 474cm(65535 / CM_TO_PULSE).
+                        // 조용히 자르면 이동 거리가 달라지므로, 명령 자체를 받지 않고 즉시 끝낸다.
+                        if (wheel.pulse > 0xffff) {
+                            wheel.pulse = 0;
+                        }
+                        if (wheel.pulse == 0) {
+                            this.__endMotionNow();
+                        }
+                    }
+                }
+            }
+            if (motion.type == 0) {
+                wheel.pulse = motoring.pulse;
+            }
+
+            let left = motoring.leftWheel;
+            let right = motoring.rightWheel;
+            const speed = motion.speed || DEFAULT_SPEED;
+            const drive = this.__motionWheels(motion.type, speed, motoring.motionRadius);
+            if (drive) {
+                left = drive[0];
+                right = drive[1];
+            }
+            // 주행 중 여부. 두드림 억제가 이 값을 본다.
+            if (left == 0 && right == 0) {
+                if (wheel.move && ++wheel.moveCount > 5) {
+                    wheel.move = false;
+                }
+            } else {
+                wheel.move = true;
+                wheel.moveCount = 0;
+            }
+            return { left, right };
+        }
+
+        // 선회할 때 안쪽 바퀴 속도. 출처: entry-hw hamster_s.js calculateInnerSpeed.
+        __innerSpeed(speed, radius) {
+            return (
+                (speed * (radius * 1.052 - WHEEL_CENTER_DISTANCE)) /
+                (radius * 1.052 + WHEEL_CENTER_DISTANCE)
+            );
+        }
+
+        // 선회 각도(도) -> 펄스. 출처: entry-hw hamster_s.js calculateSwingPulse.
+        // entry-hw 는 타입별 환산 상수를 세 번째 인자로 받지만 쓰지 않고 이 실측식 하나를 쓴다.
+        // 받지 않는 인자는 옮기지 않았다.
+        __swingPulse(deg, radius) {
+            return Math.round(deg * (2.3008 * radius + 4.234));
+        }
+
+        // cm 와 도 단위 값 -> 펄스. 모르는 타입이면 0 (즉시 끝난다).
+        // 타입 번호와 식은 entry-hw hamster_s.js requestLocalData 의 표를 그대로 옮겼다.
+        __motionPulse(type, value, radius) {
+            switch (type) {
+                case 1: // 앞으로
+                case 2: // 뒤로
+                    return Math.round(value * CM_TO_PULSE);
+                case 3: // 제자리 왼쪽
+                case 4: // 제자리 오른쪽
+                    return Math.round(value * DEG_TO_PULSE);
+                case 5: // 왼쪽 바퀴 중심 앞
+                case 6: // 왼쪽 바퀴 중심 뒤
+                case 7: // 오른쪽 바퀴 중심 앞
+                case 8: // 오른쪽 바퀴 중심 뒤
+                    return Math.round(value * DEG_TO_PULSE_PIVOT);
+                case 9: // 로봇 중심 반지름 선회 (왼쪽 앞/뒤, 오른쪽 앞/뒤)
+                case 10:
+                case 11:
+                case 12:
+                    return this.__swingPulse(value, radius);
+                case 13: // 왼쪽 펜 중심 앞
+                case 14: // 왼쪽 펜 중심 뒤
+                case 15: // 오른쪽 펜 중심 앞
+                case 16: // 오른쪽 펜 중심 뒤
+                    return this.__swingPulse(value, PEN_CENTER_DISTANCE);
+                case 17: // 왼쪽 펜으로 왼쪽 선회, 오른쪽 펜으로 오른쪽 선회 (펜이 안쪽)
+                case 18:
+                case 23:
+                case 24:
+                    return this.__swingPulse(value, radius + PEN_CENTER_DISTANCE);
+                case 19: // 왼쪽 펜으로 오른쪽 선회, 오른쪽 펜으로 왼쪽 선회 (펜이 바깥쪽)
+                case 20:
+                case 21:
+                case 22:
+                    return this.__swingPulse(value, Math.abs(radius - PEN_CENTER_DISTANCE));
+                case 25: // 바퀴 회전 (블록에서 만들지 않지만 entry-hw 표에 있어 함께 둔다)
+                case 26:
+                case 27:
+                case 28:
+                case 29:
+                case 30:
+                    return Math.round(value * 2.46031746031746);
+                default:
+                    return 0;
+            }
+        }
+
+        // 모션 타입 -> [왼쪽, 오른쪽] 바퀴 속도. 타입 0 이면 null(사용자 설정 속도를 쓴다).
+        // 1..30 전부 속도를 가지므로, 펄스를 받고도 바퀴가 서 있어 완료 신호가 오지 않는
+        // 타입은 없다.
+        __motionWheels(type, speed, radius) {
+            const inner = (r) => this.__innerSpeed(speed, r);
+            const pen = PEN_CENTER_DISTANCE;
+            // 19..22 는 반지름이 펜 거리보다 작으면 선회 방향이 뒤집힌다.
+            const far = radius >= pen;
+            switch (type) {
+                case 1:
+                    return [speed, speed];
+                case 2:
+                    return [-speed, -speed];
+                case 3:
+                    return [-speed, speed];
+                case 4:
+                    return [speed, -speed];
+                case 5:
+                    return [0, speed];
+                case 6:
+                    return [0, -speed];
+                case 7:
+                    return [speed, 0];
+                case 8:
+                    return [-speed, 0];
+                case 9:
+                    return [inner(radius), speed];
+                case 10:
+                    return [-inner(radius), -speed];
+                case 11:
+                    return [speed, inner(radius)];
+                case 12:
+                    return [-speed, -inner(radius)];
+                case 13:
+                    return [inner(pen), speed];
+                case 14:
+                    return [-inner(pen), -speed];
+                case 15:
+                    return [speed, inner(pen)];
+                case 16:
+                    return [-speed, -inner(pen)];
+                case 17:
+                    return [inner(radius + pen), speed];
+                case 18:
+                    return [-inner(radius + pen), -speed];
+                case 19:
+                    return far ? [speed, inner(radius - pen)] : [-inner(pen - radius), -speed];
+                case 20:
+                    return far ? [-speed, -inner(radius - pen)] : [inner(pen - radius), speed];
+                case 21:
+                    return far ? [inner(radius - pen), speed] : [-speed, -inner(pen - radius)];
+                case 22:
+                    return far ? [-inner(radius - pen), -speed] : [speed, inner(pen - radius)];
+                case 23:
+                    return [speed, inner(radius + pen)];
+                case 24:
+                    return [-speed, -inner(radius + pen)];
+                case 25:
+                    return [speed, 0];
+                case 26:
+                    return [-speed, 0];
+                case 27:
+                    return [0, speed];
+                case 28:
+                    return [0, -speed];
+                case 29:
+                    return [speed, speed];
+                case 30:
+                    return [-speed, -speed];
+                default:
+                    return null;
+            }
+        }
+
+        // 시간 단위 이동이 끝났거나 펄스가 0이라 걸 것이 없을 때. 수신 상태머신이 완료를 알리도록
+        // event = -1 을 남긴다. 여기서 바로 콜백을 부르지 않는 이유는 두 단위의 완료 경로를
+        // 하나로 모으기 위해서다(그래야 취소와 선점 규칙이 한 벌로 끝난다).
+        __endMotionNow() {
+            this.__removeMotionTimeout();
+            this.wheel.count = 0;
+            this.wheel.event = -1;
+            this.motion.type = 0;
+        }
+
+        __removeMotionTimeout() {
+            if (this.motionTimer !== undefined) {
+                this.__removeTimeout(this.motionTimer);
+                this.motionTimer = undefined;
+            }
+        }
+
+        // 두드림과 자유낙하. 로봇은 발생 여부가 아니라 2비트 카운터를 올려 보내므로 값이 바뀐
+        // 순간을 엣지로 잡는다. 첫 프레임은 기준만 잡고 발화하지 않는다.
+        // 출처: entry-hw/app/modules/hamster_s.js 의 "free fall" / "tap" 구간.
+        __handleTapFreeFall(internalState, sensory) {
+            const ev = this.tapEvent;
+
+            const freeFallId = (internalState >> 6) & 0x03;
+            if (ev.freeFallId < 0) {
+                ev.freeFallId = freeFallId;
+            } else if (freeFallId != ev.freeFallId) {
+                ev.freeFallId = freeFallId;
+                sensory.freeFall = 1;
+            }
+
+            const tapId = (internalState >> 4) & 0x03;
+            if (ev.tapId < 0) {
+                ev.tapId = tapId;
+            } else if (tapId != ev.tapId && !this.wheel.move) {
+                // 주행 중에는 발화하지 않는다. 바퀴 진동이 두드림으로 잡히기 때문이다.
+                // 이 조건을 빠뜨리면 이동 블록을 쓸 때마다 헛 두드림이 뜬다.
+                // 주행 중에는 기준도 옮기지 않는다(entry-hw 와 같다). 그래서 주행 중에 카운터가
+                // 바뀌었으면 정지 직후 한 번 발화한다. 설치형도 그렇게 동작한다.
+                ev.tapId = tapId;
+                sensory.tap = 1;
+            }
+        }
+
+        // 단위 이동 완료를 감지한다. 사운드(1비트)와 달리 2비트 4상태다.
+        // state 2 = 멈춤, 3 = 목표 도달. 짧은 이동(pulse < 25)은 로봇이 3을 못 내기도 해서
+        // "멈춘 상태가 8프레임 이어지면 완료"라는 별도 유예가 있다.
+        // 출처: entry-hw/app/modules/hamster_s.js 의 "wheel state" 구간.
+        __handleWheelState(state, sensory) {
+            const wheel = this.wheel;
+            if (wheel.event == 1) {
+                if (state == 2) {
+                    if (wheel.pulse > 0 && wheel.pulse < 25) {
+                        if (++wheel.count > 8) {
+                            wheel.event = 2;
+                        }
+                    }
+                } else if (state == 3) {
+                    wheel.event = 2;
+                }
+            }
+            if (wheel.event == 2) {
+                if (state != wheel.state || wheel.count > 8) {
+                    wheel.state = state;
+                    sensory.wheelState = state;
+                    if (state == 2) {
+                        wheel.event = 0;
+                        wheel.count = 0;
+                        this.motion.type = 0;
+                        this.__resolvePending('wheelDone');
+                    }
+                }
+            }
+            if (wheel.event == -1) {
+                // 시간 단위 완료. 다음 프레임에서 무조건 끝낸다.
+                wheel.state = state;
+                sensory.wheelState = 2;
+                wheel.event = 0;
+                wheel.count = 0;
+                this.motion.type = 0;
+                this.__resolvePending('wheelDone');
+            }
+        }
+
+        // 사운드 재생 완료를 감지하고 반복을 이어 돌린다. 반복 횟수는 로봇이 세지 않는다.
+        // 한 번 끝날 때마다 여기서 soundRepeat 를 깎고 같은 소리를 다시 건다.
+        // 출처: entry-hw/app/modules/hamster_s.js 의 "sound state" 구간.
+        // 구형 햄스터는 motoring.sound 를 세우지 않으므로 이 경로가 아무 일도 하지 않는다.
+        __handleSoundState(state, sensory) {
+            const sound = this.sound;
+            const motoring = this.motoring;
+            if (sound.event == 1) {
+                // 재생 시작 직후 한동안은 상태가 아직 0이다. 그 구간을 완료로 오인하지 않도록
+                // 5프레임 유예를 준 뒤에야 완료 판정을 켠다.
+                if (state == 0) {
+                    if (++sound.count > 5) {
+                        sound.event = 2;
+                    }
+                } else {
+                    sound.event = 2;
+                }
+            }
+            if (sound.event != 2) {
+                return;
+            }
+            if (state == sound.state && sound.count <= 5) {
+                return;
+            }
+            sound.state = state;
+            sensory.soundState = state;
+            if (state != 0) {
+                return;
+            }
+            sound.event = 0;
+            sound.count = 0;
+            if (motoring.sound > 0 && motoring.soundRepeat < 0) {
+                this.__runSound(motoring.sound, -1); // 무한 반복
+                return;
+            }
+            if (motoring.sound > 0 && motoring.soundRepeat > 1) {
+                motoring.soundRepeat--;
+                this.__runSound(motoring.sound, motoring.soundRepeat);
+                return;
+            }
+            // 마지막 회차가 끝났다. 대기 중인 블록을 여기서 푼다.
+            motoring.sound = 0;
+            motoring.soundRepeat = 1;
+            sensory.soundStateId = (sensory.soundStateId % 255) + 1;
+            this.__resolvePending('soundDone');
+        }
+
+        // 구형 햄스터는 사운드 기능이 없다. 상위에 두는 이유는 패킷과 수신 경로를 두 기종이
+        // 공유하기 때문이고, motoring.sound 가 늘 0이라 실제로는 호출돼도 무해하다.
+        __runSound(sound, count) {
+            let repeat = typeof count === 'number' ? count : 1;
+            if (repeat < 0) {
+                repeat = -1; // 음수는 전부 "무한 반복" 하나로 모은다
+            }
+            if (repeat) {
+                this.motoring.sound = sound;
+                this.motoring.soundRepeat = repeat;
+                this.sound.written = true;
+            }
+        }
+
+        // 취소는 콜백을 버리지 않고 반드시 완료로 알린다.
+        // 설치형(block_robomation.js)은 `soundCallback = undefined` 로 버리는데, 그쪽은
+        // Entry.hw 가 스크립트를 따로 정리해 줘서 성립한다. lite 의 playSoundUntil 은
+        // isPlaying 이 false 가 될 때까지 스스로 폴링하고 그걸 풀어 주는 곳이 여기뿐이라,
+        // 설치형 모양을 그대로 베끼면 블록이 오류 없이 영원히 멈춘다.
+        __cancelSound() {
+            this.sound.event = 0;
+            this.sound.count = 0;
+            this.motoring.sound = 0;
+            this.motoring.soundRepeat = 1;
+            this.__resolvePending('soundDone');
+        }
+
+        // 햄스터S 패킷에 실을 LED 여섯 바이트를 돌려준다.
+        // 이 인스턴스(구형 항목)는 팔레트 번호 모델을 쓴다. setLed 가 leftLed/rightLed 에만
+        // 쓰므로 여기서 RGB 로 바꿔 준다. 구형 항목으로 햄스터S 를 연결하는
+        // 경로가 이 변환에 의존한다. RGB 필드만 읽으면 그 경로의 LED 가 꺼진다.
+        // m 은 송신용으로 자른 복사본이다(__clampedMotoring). 원본을 읽으면 자르기를 우회한다.
+        __ledRgb(m) {
+            const l = this.colorToRgb(m.leftLed);
+            const r = this.colorToRgb(m.rightLed);
+            return [l[0], l[1], l[2], r[0], r[1], r[2]];
+        }
+
+        // ── 시리얼 훅 ── 구형 항목은 시리얼을 모른다(entry-hw hamster.js 도 첫 자리 2 프레임을 버린다).
+        // HamsterSLite 가 재정의한다.
+        __handleSerialFrame() {
+            return false;
+        }
+
+        __handlePortAck() {}
+
+        __serialPacket() {
+            return null;
+        }
+
+        __onMotorPacketSent() {}
+
+        // 근접 센서 대역폭 기본값. 구형 항목은 entry-hw hamster.js 의 3, 햄스터S 항목은 hamster_s.js 의
+        // 0 이다(HamsterSLite 가 재정의). 이 값을 바꾸는 블록은 없다.
+        __defaultConfigBandWidth() {
+            return 3;
+        }
+
+        // 햄스터S 패킷의 바퀴 속도 배율. 이 인스턴스(구형 항목)는 설치형 "햄스터" 항목이
+        // 햄스터S 로봇을 받을 때, 즉 entry-hw hamster.js 의 isHamsterS 분기와 같게 × 1.14 다.
+        // 햄스터S 항목(hamster_s.js)은 배율이 없다. HamsterSLite 가 1 로 재정의한다.
+        __wheelScale() {
+            return 1.14;
+        }
+
+        clampByte(value) {
+            value = parseInt(value, 10);
+            if (isNaN(value)) return 0;
+            if (value < 0) return 0;
+            if (value > 255) return 255;
+            return value;
+        }
         speedToGain(speed) {
             if (speed > 10) speed = 10;
             else if (speed < 1) speed = 1;
@@ -6108,25 +7004,71 @@
             return 2;
         }
 
+        // 햄스터S 패킷의 선 따라가기 방향 변화량(gain) 4비트. 구형 항목은 gain 블록이 없어
+        // 속도에서 유도한다. 햄스터S 항목은 블록이 정한 값을 쓴다(HamsterSLite 가 재정의).
+        __lineTracerGain(m) {
+            return this.speedToGain(m.lineTracerSpeed);
+        }
+
+        // entry-hw 가 handleRemoteData 에서 받은 값을 자르는 범위를 송신 직전 복사본에 적용한다.
+        // lite 에는 그 단계가 없어 여기서 자른다. 자르지 않으면 바퀴 150 이 0x96(-106)으로 실려
+        // 로봇이 뒤로 달린다. motoring 자체는 자르지 않는다: 설치형도 블록 쪽 값(바꾸기 누적)은
+        // 그대로 두고 entry-hw 쪽 사본만 자른다. 범위는 entry-hw hamster.js 의 것(구형 항목).
+        // HamsterSLite 는 hamster_s.js 의 범위로 재정의한다.
+        __clampedMotoring() {
+            return clampFields(this.motoring, OLD_CLAMPS);
+        }
+
         requestLocalData() {
-            var motoring = this.motoring;
+            var motoring = this.__clampedMotoring();
             var lineTracer = this.lineTracer;
             if (this.isHamsterS) {
+                // 단위 이동이 걸려 있으면 바퀴 속도를 그쪽이 정한다. motoring 을 덮지 않고
+                // 지역 값으로만 쓴다. 덮으면 이동이 끝난 뒤 사용자가 설정해 둔 속도가 사라진다.
+                // 시리얼로 보낼 것이 있으면 이번 송신은 모터 패킷 대신 시리얼 패킷이다(entry-hw 와 같은 순서).
+                const serialPacket = this.__serialPacket();
+                if (serialPacket) {
+                    return serialPacket;
+                }
+                const drive = this.__applyMotion(motoring);
                 var str = '10';
-                if (motoring.leftWheel < 0) str += this.toHex(motoring.leftWheel * 1.14 - 0.5);
-                else str += this.toHex(motoring.leftWheel * 1.14 + 0.5);
-                if (motoring.rightWheel < 0) str += this.toHex(motoring.rightWheel * 1.14 - 0.5);
-                else str += this.toHex(motoring.rightWheel * 1.14 + 0.5);
-                var tmp = this.colorToRgb(motoring.leftLed);
-                str += this.toHex(tmp[0]);
-                str += this.toHex(tmp[1]);
-                str += this.toHex(tmp[2]);
-                tmp = this.colorToRgb(motoring.rightLed);
-                str += this.toHex(tmp[0]);
-                str += this.toHex(tmp[1]);
-                str += this.toHex(tmp[2]);
-                str += '000000';
-                tmp = motoring.lineTracerMode & 0x0f;
+                // 배율은 인스턴스마다 다르다(__wheelScale 참조). 햄스터S 항목은 entry-hw
+                // hamster_s.js 처럼 그대로, 구형 항목은 hamster.js 처럼 × 1.14. 한 벌로 합치면
+                // 둘 중 한 쪽이 설치형보다 14% 어긋난다(시간 단위 이동은 거리까지).
+                const scale = this.__wheelScale();
+                const left = drive.left * scale;
+                const right = drive.right * scale;
+                if (left < 0) str += this.toHex(left - 0.5);
+                else str += this.toHex(left + 0.5);
+                if (right < 0) str += this.toHex(right - 0.5);
+                else str += this.toHex(right + 0.5);
+                // LED 값의 출처는 인스턴스마다 다르다(__ledRgb 참조). 여기서는 받은 값을 싣기만 한다.
+                // toHex 는 폭을 자르지 않아 255 를 넘기면 세 자리가 되어 이후 필드가 전부 밀리므로
+                // 송신 직전에 0..255 로 자른다(entry-hw 는 수신 시 자른다. 자르는 시점만 다르고
+                // 나가는 바이트는 같다).
+                const led = this.__ledRgb(motoring);
+                for (let i = 0; i < 6; i++) {
+                    str += this.toHex(this.clampByte(led[i]));
+                }
+                const wheel = this.wheel;
+                if (this.motion.written || wheel.written) {
+                    this.motion.written = false;
+                    wheel.written = false;
+                    // 펄스가 0 -> 0 이면 id 를 올리지 않는다. 올리면 로봇이 같은 정지를 새 명령으로 본다.
+                    if (wheel.pulse != 0 || wheel.pulsePrev != 0) {
+                        wheel.id = (wheel.id % 255) + 1;
+                    }
+                    wheel.count = 0;
+                    if (wheel.pulse > 0) {
+                        wheel.event = 1;
+                    } else if (wheel.event != -1) {
+                        wheel.event = 0;
+                    }
+                    wheel.pulsePrev = wheel.pulse;
+                }
+                str += this.toHex(wheel.id);
+                str += this.toHex2(wheel.pulse);
+                var tmp = motoring.lineTracerMode & 0x0f;
                 if (tmp > 7) tmp++;
                 if (lineTracer.written) {
                     lineTracer.written = false;
@@ -6141,18 +7083,48 @@
                 tmp |= (lineTracer.flag & 0x0f) << 4;
                 str += this.toHex(tmp);
                 tmp = (motoring.lineTracerSpeed & 0x0f) << 4;
-                tmp |= this.speedToGain(motoring.lineTracerSpeed) & 0x0f;
+                tmp |= this.__lineTracerGain(motoring) & 0x0f;
                 str += this.toHex(tmp);
                 tmp = (motoring.configProximity & 0x07) << 5;
                 tmp |= (motoring.configBandWidth & 0x07) << 2;
                 tmp |= motoring.configGravity & 0x03;
                 str += this.toHex(tmp);
-                tmp = (motoring.ioModeA & 0x0f) << 4;
-                tmp |= motoring.ioModeB & 0x0f;
+                // 전압 입력(5)은 로봇에 아날로그 절대값 입력(4)으로 보낸다. 수신한 값을 전압으로
+                // 바꾸는 일은 handleLocalData 가 한다. 출처: entry-hw hamster_s.js.
+                // 구형 항목의 드롭다운에는 5가 없어 그쪽 패킷은 바뀌지 않는다.
+                // 176 이상은 시리얼 통신 속도(9600~115200)라 바이트 하나를 통째로 쓴다(entry-hw 와 같다).
+                // 구형 항목은 hamster.js 범위(0..15)로 잘려 이 분기에 오지 않는다.
+                if (motoring.ioModeA >= 176) {
+                    tmp = motoring.ioModeA;
+                } else {
+                    const ioA = motoring.ioModeA == 5 ? 4 : motoring.ioModeA;
+                    const ioB = motoring.ioModeB == 5 ? 4 : motoring.ioModeB;
+                    tmp = (ioA & 0x0f) << 4;
+                    tmp |= ioB & 0x0f;
+                }
                 str += this.toHex(tmp);
                 str += this.toHex(motoring.outputA);
                 str += this.toHex(motoring.outputB);
-                if (motoring.note > 0) {
+                // 사운드 / 음 / 버저가 같은 2바이트 자리를 나눠 쓴다. 우선순위는 이 순서다.
+                // 즉 motoring.sound 가 0이 아니면 note 와 buzzer 는 취소 호출 없이도 조용히 밀린다.
+                // 버저나 음을 세우는 쪽에서 반드시 사운드를 먼저 꺼야 하는 이유다.
+                const sound = this.sound;
+                const sndid = SOUND_TO_ID[motoring.sound] || 0;
+                if (sound.written) {
+                    sound.written = false;
+                    sound.count = 0;
+                    if (sndid > 0) {
+                        // 같은 소리를 연속 재생할 때 로봇이 "안 바뀌었다"로 보지 않도록 토글한다.
+                        sound.flag ^= 0x80;
+                        sound.event = 1;
+                    } else {
+                        sound.event = 0;
+                    }
+                }
+                if (sndid > 0) {
+                    str += '00';
+                    str += this.toHex(sndid | sound.flag);
+                } else if (motoring.note > 0) {
                     str += '01';
                     str += this.toHex(motoring.note);
                 } else {
@@ -6161,6 +7133,7 @@
                 str += '-';
                 str += this.address;
                 str += '\r';
+                this.__onMotorPacketSent();
                 return str;
             } else {
                 var str = this.toHex(motoring.topology & 0x0f);
@@ -6257,6 +7230,11 @@
             if (this.isHamsterS) {
                 var str = data.slice(0, 1);
                 var value = parseInt(str, 16);
+                // 첫 자리 2 는 시리얼 수신 프레임이다(햄스터S 항목만 받는다, __handleSerialFrame).
+                if (value == 2 && this.__handleSerialFrame(data)) {
+                    this.handleSensory();
+                    return;
+                }
                 if (value != 1) {
                     this.reportInvalidFrame();
                     return;
@@ -6312,14 +7290,31 @@
                 value = parseInt(str, 16);
                 if (value > 0x7fff) value -= 0x10000;
                 sensory.accelerationZ = value;
-                // input a
+                // input a / b. 전압 입력 모드면 0..255 를 0..3.6V 로 바꾼다(소수 둘째 자리 문자열,
+                // entry-hw hamster_s.js 와 같은 모양).
                 str = data.slice(30, 32);
                 value = parseInt(str, 16);
+                if (this.motoring.ioModeA == 5) {
+                    value = ((value * 3.6) / 255).toFixed(2);
+                }
                 sensory.inputA = value;
-                // input b
                 str = data.slice(32, 34);
                 value = parseInt(str, 16);
+                if (this.motoring.ioModeB == 5) {
+                    value = ((value * 3.6) / 255).toFixed(2);
+                }
                 sensory.inputB = value;
+                // 내부 상태 바이트.
+                // 네 가지가 비트로 들어 있다:
+                //   >>6 & 0x03  freeFall   (아래에서 사용)
+                //   >>4 & 0x03  tap        (아래에서 사용)
+                //   >>2 & 0x03  wheelState (아래에서 사용)
+                //   >>1 & 0x01  soundState (아래에서 사용)
+                str = data.slice(34, 36);
+                const internalState = parseInt(str, 16);
+                this.__handleTapFreeFall(internalState, sensory);
+                this.__handleWheelState((internalState >> 2) & 0x03, sensory);
+                this.__handleSoundState((internalState >> 1) & 0x01, sensory);
                 // signal strength
                 str = data.slice(36, 38);
                 value = parseInt(str, 16);
@@ -6356,6 +7351,7 @@
                     batt.state = value;
                     sensory.batteryState = value;
                 }
+                this.__handlePortAck(value2);
             } else {
                 var str = data.slice(4, 5);
                 var value = parseInt(str, 16);
@@ -6545,6 +7541,24 @@
         }
 
         async initialHandshake() {
+            // 연결할 때 블록 쪽 값을 기본값으로 되돌린다. 설치형은 정지할 때마다 무조건 되돌리는데
+            // (hw.ts 의 stop 이벤트), lite 코어는 연결돼 있을 때만 되돌린다(engine.js). 실행 중 연결이
+            // 끊겨 멈추면 값이 남아, 다시 연결해 실행하면 끊기기 전 바퀴와 LED 값이 먼저 나간다.
+            this.__resetState();
+            // entry-hw 는 연결할 때 reset() 에서 pulsePrev 만 -1("직전 명령 없음")로 두고 id 는 남긴다.
+            // 보낼 것으로 표시된 명령도 지운다(reset() 과 같다).
+            this.wheel.pulsePrev = -1;
+            this.wheel.written = false;
+            this.sound.written = false;
+            this.lineTracer.written = false;
+            // reset() 이 되돌리는 수신 상태도 같이 되돌린다(두드림 기준은 entry-hw 도 안 되돌린다).
+            this.wheel.move = false;
+            this.wheel.moveCount = 0;
+            this.lineTracer.event = 0;
+            this.lineTracer.state = 0;
+            this.lineTracer.count = 0;
+            this.battery = { state: 2, data: new Array(10), sum: 0.0, index: 0, count: 0 };
+            this.sensory.batteryState = 2;
             const serial = Entry.hwLite.serial;
             let identity;
             let timedOut = false;
@@ -6621,12 +7635,4019 @@
             // 지우면 onForeignRobot 안에서 setZero를 부르는 순간 안내가 무한 반복된다.
             this.foreignAttached = false; // 지금 받지 않는 기종이 붙어 있는가 (쓰기, 프로브, 파싱 차단)
             this.rejectedAddress = undefined; // 안내 중복 방지용 주소 기억
+            // 메뉴는 인스턴스별 배열이다(생성자에서 대입되므로 상위와 공유하지 않는다).
+            // 상속받은 구형 목록을 쓰지 않고 설치형 햄스터S(block_hamster_s.js)의 목록으로 바꾼다.
+            // 순서도 설치형 그대로다(42블록).
+            // 팔레트는 모든 모듈 메뉴의 합집합을 isNotFor 로 걸러 만든다(blocks/index.js).
+            // 이 목록만 바꿔서는 구형 블록이 숨지 않는다. 구형 정의의 isNotFor 가 그 일을 한다.
+            this.blockMenuBlocks = [
+                'hamsterslite_hand_found',
+                'hamsterslite_boolean',
+                'hamsterslite_value',
+                'hamsterslite_move_forward_once',
+                'hamsterslite_turn_once',
+                'hamsterslite_move_forward_unit',
+                'hamsterslite_move_backward_unit',
+                'hamsterslite_turn_unit_in_place',
+                'hamsterslite_pivot_around_unit_in_direction',
+                'hamsterslite_turn_unit_with_radius_in_direction',
+                'hamsterslite_change_both_wheels_by',
+                'hamsterslite_set_both_wheels_to',
+                'hamsterslite_change_wheel_by',
+                'hamsterslite_set_wheel_to',
+                'hamsterslite_follow_line_using',
+                'hamsterslite_follow_line_until',
+                'hamsterslite_set_following_speed_to',
+                'hamsterslite_set_following_gain_to',
+                'hamsterslite_stop',
+                'hamsterslite_set_led_to',
+                'hamsterslite_pick_led',
+                'hamsterslite_change_led_by_rgb',
+                'hamsterslite_set_led_to_rgb',
+                'hamsterslite_clear_led',
+                'hamsterslite_play_sound_times',
+                'hamsterslite_play_sound_times_until_done',
+                'hamsterslite_change_buzzer_by',
+                'hamsterslite_set_buzzer_to',
+                'hamsterslite_clear_sound',
+                'hamsterslite_play_note',
+                'hamsterslite_play_note_for',
+                'hamsterslite_rest_for',
+                'hamsterslite_change_tempo_by',
+                'hamsterslite_set_tempo_to',
+                'hamsterslite_set_port_to',
+                'hamsterslite_change_output_by',
+                'hamsterslite_set_output_to',
+                'hamsterslite_gripper',
+                'hamsterslite_release_gripper',
+                'hamsterslite_write_serial',
+                'hamsterslite_read_serial_until',
+                'hamsterslite_set_serial_rate_to',
+            ];
         }
 
         // 파일의 다른 코드와 같이 Lang을 전역으로 읽는다. 미지원 로케일은 en으로 떨어뜨린다.
         __messages() {
             const type = typeof Lang !== 'undefined' && Lang && Lang.type;
             return S_MSGS[type] || S_MSGS.en;
+        }
+
+        // 햄스터S 항목은 RGB 모델이다. 팔레트 8색으로는 주황(FF3F00)과 보라(3F00FF)를 표현할 수
+        // 없어 RGB 필드를 그대로 싣는다. 범위 밖 값은 패킷 조립 때 자른다.
+        __ledRgb(m) {
+            return [m.leftRed, m.leftGreen, m.leftBlue, m.rightRed, m.rightGreen, m.rightBlue];
+        }
+
+        __applyRgb(led, r, g, b) {
+            const m = this.motoring;
+            if (led !== 'RIGHT') {
+                m.leftRed = r;
+                m.leftGreen = g;
+                m.leftBlue = b;
+            }
+            if (led !== 'LEFT') {
+                m.rightRed = r;
+                m.rightGreen = g;
+                m.rightBlue = b;
+            }
+        }
+
+        // 햄스터S 전용 번역. 상위 결과에 얹는다.
+        // 타입 이름을 바꾸면 블록 글자가 사라진다. 렌더러가 Lang.template[블록타입] 으로
+        // 찾는데 새 이름에 해당하는 항목이 없기 때문이다(block_view.js).
+        // 문구는 설치형 햄스터S(block_hamster_s.js)에서 그대로 옮긴다. 새로 쓰지 않는다.
+        // 같은 로봇의 같은 블록이므로 설치형 문구와 같아야 한다. vn 이 영어인 것도 설치형 그대로다.
+        setLanguage() {
+            const base = super.setLanguage();
+            const add = {
+                ko: {
+                    template: {
+                        hamsterslite_hand_found: '손 찾음?',
+                        hamsterslite_boolean: '%1?',
+                        hamsterslite_value: '%1',
+                        hamsterslite_move_forward_once: '말판 앞으로 한 칸 이동하기 %1',
+                        hamsterslite_turn_once: '말판 %1 으로 한 번 돌기 %2',
+                        hamsterslite_move_forward_unit: '앞으로 %1 %2 이동하기 %3',
+                        hamsterslite_move_backward_unit: '뒤로 %1 %2 이동하기 %3',
+                        hamsterslite_turn_unit_in_place: '%1 으로 %2 %3 제자리 돌기 %4',
+                        hamsterslite_pivot_around_unit_in_direction:
+                            '%1 중심으로 %2 %3 %4 방향으로 돌기 %5',
+                        hamsterslite_turn_unit_with_radius_in_direction:
+                            '%1 %2 으로 %3 %4 반지름 %5 cm를 %6 방향으로 돌기 %7',
+                        hamsterslite_change_both_wheels_by:
+                            '왼쪽 바퀴 %1 오른쪽 바퀴 %2 만큼 바꾸기 %3',
+                        hamsterslite_set_both_wheels_to:
+                            '왼쪽 바퀴 %1 오른쪽 바퀴 %2 (으)로 정하기 %3',
+                        hamsterslite_change_wheel_by: '%1 바퀴 %2 만큼 바꾸기 %3',
+                        hamsterslite_set_wheel_to: '%1 바퀴 %2 (으)로 정하기 %3',
+                        hamsterslite_follow_line_using: '%1 선을 %2 바닥 센서로 따라가기 %3',
+                        hamsterslite_follow_line_until: '%1 선을 따라 %2 교차로까지 이동하기 %3',
+                        hamsterslite_set_following_speed_to:
+                            '선 따라가기 속도를 %1 (으)로 정하기 %2',
+                        hamsterslite_set_following_gain_to:
+                            '선 따라가기 방향 변화량을 %1 (으)로 정하기 %2',
+                        hamsterslite_stop: '정지하기 %1',
+                        hamsterslite_set_led_to: '%1 LED를 %2 으로 정하기 %3',
+                        hamsterslite_pick_led: '%1 LED를 %2로 정하기 %3',
+                        hamsterslite_change_led_by_rgb: '%1 LED를 R: %2 G: %3 B: %4 만큼 바꾸기 %5',
+                        hamsterslite_set_led_to_rgb: '%1 LED를 R: %2 G: %3 B: %4 (으)로 정하기 %5',
+                        hamsterslite_clear_led: '%1 LED 끄기 %2',
+                        hamsterslite_play_sound_times: '%1 소리 %2 번 재생하기 %3',
+                        hamsterslite_play_sound_times_until_done:
+                            '%1 소리 %2 번 재생하고 기다리기 %3',
+                        hamsterslite_change_buzzer_by: '버저 음을 %1 만큼 바꾸기 %2',
+                        hamsterslite_set_buzzer_to: '버저 음을 %1 (으)로 정하기 %2',
+                        hamsterslite_clear_sound: '소리 끄기 %1',
+                        hamsterslite_play_note: '%1 %2 음을 연주하기 %3',
+                        hamsterslite_play_note_for: '%1 %2 음을 %3 박자 연주하기 %4',
+                        hamsterslite_rest_for: '%1 박자 쉬기 %2',
+                        hamsterslite_change_tempo_by: '연주 속도를 %1 만큼 바꾸기 %2',
+                        hamsterslite_set_tempo_to: '연주 속도를 %1 BPM으로 정하기 %2',
+                        hamsterslite_set_port_to: '포트 %1 를 %2 으로 정하기 %3',
+                        hamsterslite_change_output_by: '출력 %1 를 %2 만큼 바꾸기 %3',
+                        hamsterslite_set_output_to: '출력 %1 를 %2 (으)로 정하기 %3',
+                        hamsterslite_gripper: '집게 %1 %2',
+                        hamsterslite_release_gripper: '집게 끄기 %1',
+                        hamsterslite_write_serial: '시리얼 %1 %2 쓰기 %3',
+                        hamsterslite_read_serial_until: '시리얼 %1 읽기 %2',
+                        hamsterslite_set_serial_rate_to: '시리얼 속도를 %1 Bd로 정하기 %2',
+                    },
+                    Blocks: {
+                        hamsterslite_tilt_forward: '앞으로 기울임',
+                        hamsterslite_tilt_backward: '뒤로 기울임',
+                        hamsterslite_tilt_left: '왼쪽으로 기울임',
+                        hamsterslite_tilt_right: '오른쪽으로 기울임',
+                        hamsterslite_tilt_flip: '거꾸로 뒤집음',
+                        hamsterslite_tilt_not: '기울이지 않음',
+                        hamsterslite_tap: '두드림',
+                        hamsterslite_free_fall: '자유 낙하',
+                        hamsterslite_battery_normal: '배터리 정상',
+                        hamsterslite_battery_low: '배터리 부족',
+                        hamsterslite_battery_empty: '배터리 없음',
+                        hamsterslite_sensor_left_proximity: '왼쪽 근접 센서',
+                        hamsterslite_sensor_right_proximity: '오른쪽 근접 센서',
+                        hamsterslite_sensor_left_floor: '왼쪽 바닥 센서',
+                        hamsterslite_sensor_right_floor: '오른쪽 바닥 센서',
+                        hamsterslite_sensor_acceleration_x: 'x축 가속도',
+                        hamsterslite_sensor_acceleration_y: 'y축 가속도',
+                        hamsterslite_sensor_acceleration_z: 'z축 가속도',
+                        hamsterslite_sensor_light: '밝기',
+                        hamsterslite_sensor_temperature: '온도',
+                        hamsterslite_sensor_signal_strength: '신호 세기',
+                        hamsterslite_sensor_input_a: '입력 A',
+                        hamsterslite_sensor_input_b: '입력 B',
+                        hamsterslite_serial_input: '시리얼 입력',
+                        hamsterslite_left: '왼쪽',
+                        hamsterslite_right: '오른쪽',
+                        hamsterslite_unit_cm: 'cm',
+                        hamsterslite_unit_sec: '초',
+                        hamsterslite_unit_pulse: '펄스',
+                        hamsterslite_unit_deg: '도',
+                        hamsterslite_left_pen: '왼쪽 펜',
+                        hamsterslite_right_pen: '오른쪽 펜',
+                        hamsterslite_left_wheel: '왼쪽 바퀴',
+                        hamsterslite_right_wheel: '오른쪽 바퀴',
+                        hamsterslite_forward: '앞쪽',
+                        hamsterslite_backward: '뒤쪽',
+                        hamsterslite_robot: '로봇',
+                        hamsterslite_both: '양쪽',
+                        hamsterslite_color_black: '검은색',
+                        hamsterslite_color_white: '하얀색',
+                        hamsterslite_front: '앞쪽',
+                        hamsterslite_rear: '뒤쪽',
+                        hamsterslite_gain_default: '기본 값',
+                        hamsterslite_color_red: '빨간색',
+                        hamsterslite_color_orange: '주황색',
+                        hamsterslite_color_yellow: '노란색',
+                        hamsterslite_color_green: '초록색',
+                        hamsterslite_color_sky_blue: '하늘색',
+                        hamsterslite_color_blue: '파란색',
+                        hamsterslite_color_violet: '보라색',
+                        hamsterslite_color_purple: '자주색',
+                        hamsterslite_sound_beep: '삐',
+                        hamsterslite_sound_random_beep: '무작위 삐',
+                        hamsterslite_sound_noise: '지지직',
+                        hamsterslite_sound_siren: '사이렌',
+                        hamsterslite_sound_engine: '엔진',
+                        hamsterslite_sound_chop: '쩝',
+                        hamsterslite_sound_robot: '로봇',
+                        hamsterslite_sound_dibidibidip: '디비디비딥',
+                        hamsterslite_sound_good_job: '잘 했어요',
+                        hamsterslite_sound_happy: '행복',
+                        hamsterslite_sound_angry: '화남',
+                        hamsterslite_sound_sad: '슬픔',
+                        hamsterslite_sound_sleep: '졸림',
+                        hamsterslite_sound_march: '행진',
+                        hamsterslite_sound_birthday: '생일',
+                        hamsterslite_note_c: '도',
+                        hamsterslite_note_c_sharp: '도♯(레♭)',
+                        hamsterslite_note_d: '레',
+                        hamsterslite_note_d_sharp: '레♯(미♭)',
+                        hamsterslite_note_e: '미',
+                        hamsterslite_note_f: '파',
+                        hamsterslite_note_f_sharp: '파♯(솔♭)',
+                        hamsterslite_note_g: '솔',
+                        hamsterslite_note_g_sharp: '솔♯(라♭)',
+                        hamsterslite_note_a: '라',
+                        hamsterslite_note_a_sharp: '라♯(시♭)',
+                        hamsterslite_note_b: '시',
+                        hamsterslite_port_a: 'A',
+                        hamsterslite_port_b: 'B',
+                        hamsterslite_port_ab: 'A와 B',
+                        hamsterslite_analog_input: '아날로그 입력',
+                        hamsterslite_digital_input: '디지털 입력',
+                        hamsterslite_digital_input_pull_up: '디지털 입력 (풀업)',
+                        hamsterslite_digital_input_pull_down: '디지털 입력 (풀다운)',
+                        hamsterslite_voltage_input: '전압 입력',
+                        hamsterslite_servo_output: '서보 출력',
+                        hamsterslite_pwm_output: 'PWM 출력',
+                        hamsterslite_digital_output: '디지털 출력',
+                        hamsterslite_open_gripper: '열기',
+                        hamsterslite_close_gripper: '닫기',
+                        hamsterslite_serial_string: '글자',
+                        hamsterslite_serial_string_line: '글자 한 줄',
+                        hamsterslite_serial_all: '모두',
+                        hamsterslite_serial_until_comma: ',(쉼표)까지',
+                        hamsterslite_serial_until_colon: ':(쌍점)까지',
+                        hamsterslite_serial_until_dollar: '$까지',
+                        hamsterslite_serial_until_sharp: '#까지',
+                        hamsterslite_serial_until_new_line: '줄 바꿈까지',
+                    },
+                    Helper: {
+                        hamsterslite_hand_found:
+                            "근접 센서 앞에 손 또는 물체가 있으면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.",
+                        hamsterslite_boolean:
+                            "앞으로 기울임: 앞으로 기울이면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.<br/>뒤로 기울임: " +
+                            "뒤로 기울이면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.<br/>왼쪽으로 기울임: 왼쪽으로 " +
+                            "기울이면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.<br/>오른쪽으로 기울임: 오른쪽으로 기울이면 " +
+                            "'참'으로 판단하고, 아니면 '거짓'으로 판단합니다.<br/>거꾸로 뒤집음: 거꾸로 뒤집으면 '참'으로 " +
+                            "판단하고, 아니면 '거짓'으로 판단합니다.<br/>기울이지 않음: 기울이지 않으면 '참'으로 판단하고, " +
+                            "아니면 '거짓'으로 판단합니다.<br/>배터리 정상: 배터리 잔량이 충분하면 '참'으로 판단하고, 아니면 " +
+                            "'거짓'으로 판단합니다.<br/>배터리 부족: 배터리 잔량이 부족하면 '참'으로 판단하고, 아니면 " +
+                            "'거짓'으로 판단합니다.<br/>배터리 없음: 배터리 잔량이 없으면 '참'으로 판단하고, 아니면 '거짓'으로 " +
+                            '판단합니다.',
+                        hamsterslite_value:
+                            '왼쪽 근접 센서: 왼쪽 근접 센서의 값 (값의 범위: 0 ~ 255, 초기값: 0)<br/>오른쪽 근접 ' +
+                            '센서: 오른쪽 근접 센서의 값 (값의 범위: 0 ~ 255, 초기값: 0)<br/>왼쪽 바닥 센서: 왼쪽 ' +
+                            '바닥 센서의 값 (값의 범위: 0 ~ 100, 초기값: 0)<br/>오른쪽 바닥 센서: 오른쪽 바닥 센서의 ' +
+                            '값 (값의 범위: 0 ~ 100, 초기값: 0)<br/>x축 가속도: 가속도 센서의 X축 값 (값의 범위: ' +
+                            '-32768 ~ 32767, 초기값: 0) 로봇이 전진하는 방향이 X축의 양수 방향입니다.<br/>y축 ' +
+                            '가속도: 가속도 센서의 Y축 값 (값의 범위: -32768 ~ 32767, 초기값: 0) 로봇의 왼쪽 방향이 ' +
+                            'Y축의 양수 방향입니다.<br/>z축 가속도: 가속도 센서의 Z축 값 (값의 범위: -32768 ~ ' +
+                            '32767, 초기값: 0) 로봇의 위쪽 방향이 Z축의 양수 방향입니다.<br/>밝기: 밝기 센서의 값 (값의 ' +
+                            '범위: 0 ~ 65535, 초기값: 0) 밝을 수록 값이 커집니다.<br/>온도: 로봇 내부의 온도 값 ' +
+                            '(값의 범위: 섭씨 -40 ~ 88도, 초기값: 0)<br/>신호 세기: 블루투스 무선 통신의 신호 세기 ' +
+                            '(값의 범위: -128 ~ 0 dBm, 초기값: 0) 신호의 세기가 셀수록 값이 커집니다.<br/>입력 A: ' +
+                            '외부 확장 포트 A로 입력되는 신호의 값 (값의 범위: 아날로그 입력 0 ~ 255, 디지털 입력 0 또는 ' +
+                            '1, 초기값: 0)<br/>입력 B: 외부 확장 포트 B로 입력되는 신호의 값 (값의 범위: 아날로그 입력 ' +
+                            '0 ~ 255, 디지털 입력 0 또는 1, 초기값: 0)',
+                        hamsterslite_move_forward_once: '말판 위에서 한 칸 앞으로 이동합니다.',
+                        hamsterslite_turn_once:
+                            '말판 위에서 왼쪽/오른쪽 방향으로 제자리에서 90도 회전합니다.',
+                        hamsterslite_move_forward_unit:
+                            '입력한 거리(cm)/시간(초)/펄스만큼 앞으로 이동합니다.',
+                        hamsterslite_move_backward_unit:
+                            '입력한 거리(cm)/시간(초)/펄스만큼 뒤로 이동합니다.',
+                        hamsterslite_turn_unit_in_place:
+                            '입력한 각도(도)/시간(초)/펄스만큼 왼쪽/오른쪽 방향으로 제자리에서 회전합니다.',
+                        hamsterslite_pivot_around_unit_in_direction:
+                            '왼쪽/오른쪽 펜/바퀴 중심으로 입력한 각도(도)/시간(초)/펄스만큼 앞쪽/뒤쪽 방향으로 회전합니다.',
+                        hamsterslite_turn_unit_with_radius_in_direction:
+                            '왼쪽/오른쪽 펜이 입력한 반지름의 원을 왼쪽/오른쪽에 그리면서 입력한 각도(도)/시간(초)/펄스만큼 ' +
+                            '앞쪽/뒤쪽 방향으로 회전합니다.',
+                        hamsterslite_change_both_wheels_by:
+                            '왼쪽과 오른쪽 바퀴의 현재 속도 값(%)에 입력한 값을 각각 더합니다. 더한 결과가 양수 값이면 바퀴가 ' +
+                            '앞으로 회전하고, 음수 값이면 뒤로 회전합니다.',
+                        hamsterslite_set_both_wheels_to:
+                            '왼쪽과 오른쪽 바퀴의 속도를 입력한 값(-100 ~ 100%)으로 각각 설정합니다. 양수 값을 입력하면 ' +
+                            '바퀴가 앞으로 회전하고, 음수 값을 입력하면 뒤로 회전합니다. 숫자 0을 입력하면 정지합니다.',
+                        hamsterslite_change_wheel_by:
+                            '왼쪽/오른쪽/양쪽 바퀴의 현재 속도 값(%)에 입력한 값을 더합니다. 더한 결과가 양수 값이면 바퀴가 앞으로 ' +
+                            '회전하고, 음수 값이면 뒤로 회전합니다.',
+                        hamsterslite_set_wheel_to:
+                            '왼쪽/오른쪽/양쪽 바퀴의 속도를 입력한 값(-100 ~ 100%)으로 설정합니다. 양수 값을 입력하면 바퀴가 ' +
+                            '앞으로 회전하고, 음수 값을 입력하면 뒤로 회전합니다. 숫자 0을 입력하면 정지합니다.',
+                        hamsterslite_follow_line_using:
+                            '왼쪽/오른쪽/양쪽 바닥 센서를 사용하여 검은색/하얀색 선을 따라 이동합니다.',
+                        hamsterslite_follow_line_until:
+                            '왼쪽/오른쪽/앞쪽/뒤쪽의 검은색/하얀색 선을 따라 이동하다가 교차로를 만나면 정지합니다.',
+                        hamsterslite_set_following_speed_to:
+                            '선을 따라 이동하는 속도(1 ~ 8)를 설정합니다. 숫자가 클수록 이동하는 속도가 빠릅니다.',
+                        hamsterslite_set_following_gain_to:
+                            '선을 따라 이동하는 방향 변화량(1 ~ 8)을 설정합니다. 숫자가 클수록 급커브를 잘 따라가지만 직선에서 ' +
+                            '좌우로 더 흔들립니다.',
+                        hamsterslite_stop: '양쪽 바퀴를 정지합니다.',
+                        hamsterslite_set_led_to: '왼쪽/오른쪽/양쪽 LED를 선택한 색깔로 켭니다.',
+                        hamsterslite_pick_led: '왼쪽/오른쪽/양쪽 LED를 선택한 색깔로 켭니다.',
+                        hamsterslite_change_led_by_rgb:
+                            '왼쪽/오른쪽/양쪽 LED의 현재 R, G, B 값에 입력한 값을 각각 더합니다.',
+                        hamsterslite_set_led_to_rgb:
+                            '왼쪽/오른쪽/양쪽 LED의 R, G, B 값을 입력한 값으로 각각 설정합니다.',
+                        hamsterslite_clear_led: '왼쪽/오른쪽/양쪽 LED를 끕니다.',
+                        hamsterslite_play_sound_times: '선택한 소리를 입력한 횟수만큼 재생합니다.',
+                        hamsterslite_play_sound_times_until_done:
+                            '선택한 소리를 입력한 횟수만큼 재생하고, 재생이 완료될 때까지 기다립니다.',
+                        hamsterslite_change_buzzer_by:
+                            '버저 소리의 현재 음 높이(Hz)에 입력한 값을 더합니다. 소수점 둘째 자리까지 입력할 수 있습니다.',
+                        hamsterslite_set_buzzer_to:
+                            '버저 소리의 음 높이를 입력한 값(Hz)으로 설정합니다. 소수점 둘째 자리까지 입력할 수 있습니다. 숫자 ' +
+                            '0을 입력하면 버저 소리를 끕니다.',
+                        hamsterslite_clear_sound: '소리를 끕니다.',
+                        hamsterslite_play_note: '선택한 계이름과 옥타브의 음을 소리 냅니다.',
+                        hamsterslite_play_note_for:
+                            '선택한 계이름과 옥타브의 음을 입력한 박자만큼 소리 냅니다.',
+                        hamsterslite_rest_for: '입력한 박자만큼 쉽니다.',
+                        hamsterslite_change_tempo_by:
+                            '연주하거나 쉬는 속도의 현재 BPM(분당 박자 수)에 입력한 값을 더합니다.',
+                        hamsterslite_set_tempo_to:
+                            '연주하거나 쉬는 속도를 입력한 BPM(분당 박자 수)으로 설정합니다.',
+                        hamsterslite_set_port_to:
+                            '선택한 외부 확장 포트의 입출력 모드를 선택한 모드로 설정합니다.',
+                        hamsterslite_change_output_by:
+                            '선택한 외부 확장 포트의 현재 출력 값에 입력한 값을 더합니다. 더한 결과는 외부 확장 포트의 모드에 따라 ' +
+                            '다음의 범위를 가집니다.<br/>서보 출력: 유효한 값의 범위는 1 ~ 180도, 0이면 PWM 펄스 없이 ' +
+                            '항상 0을 출력<br/>PWM 출력: 0 ~ 100%, PWM 파형에서 ON 상태의 ' +
+                            '듀티비(%)<br/>디지털 출력: 0이면 LOW, 0이 아니면 HIGH',
+                        hamsterslite_set_output_to:
+                            '선택한 외부 확장 포트의 출력 값을 입력한 값으로 설정합니다. 입력하는 값은 외부 확장 포트의 모드에 따라 ' +
+                            '다음의 범위를 가집니다.<br/>서보 출력: 유효한 값의 범위는 1 ~ 180도, 0이면 PWM 펄스 없이 ' +
+                            '항상 0을 출력<br/>PWM 출력: 0 ~ 100%, PWM 파형에서 ON 상태의 ' +
+                            '듀티비(%)<br/>디지털 출력: 0이면 LOW, 0이 아니면 HIGH',
+                        hamsterslite_gripper: '집게를 열거나 닫습니다.',
+                        hamsterslite_release_gripper:
+                            '집게의 전원을 끄고 자유롭게 움직일 수 있도록 합니다.',
+                        hamsterslite_write_serial: '시리얼 통신으로 글자를 전송합니다.',
+                        hamsterslite_read_serial_until: '시리얼 통신으로 받은 글자를 읽습니다.',
+                        hamsterslite_set_serial_rate_to: '시리얼 통신의 속도를 설정합니다.',
+                    },
+                },
+                en: {
+                    template: {
+                        hamsterslite_hand_found: 'hand found?',
+                        hamsterslite_boolean: '%1?',
+                        hamsterslite_value: '%1',
+                        hamsterslite_move_forward_once: 'move forward once on board %1',
+                        hamsterslite_turn_once: 'turn %1 once on board %2',
+                        hamsterslite_move_forward_unit: 'move forward %1 %2 %3',
+                        hamsterslite_move_backward_unit: 'move backward %1 %2 %3',
+                        hamsterslite_turn_unit_in_place: 'turn %1 %2 %3 in place %4',
+                        hamsterslite_pivot_around_unit_in_direction:
+                            'pivot around %1 %2 %3 in %4 direction %5',
+                        hamsterslite_turn_unit_with_radius_in_direction:
+                            '%1 turn %2 %3 %4 with radius %5 cm in %6 direction %7',
+                        hamsterslite_change_both_wheels_by:
+                            'change wheels by left: %1 right: %2 %3',
+                        hamsterslite_set_both_wheels_to: 'set wheels to left: %1 right: %2 %3',
+                        hamsterslite_change_wheel_by: 'change %1 wheel by %2 %3',
+                        hamsterslite_set_wheel_to: 'set %1 wheel to %2 %3',
+                        hamsterslite_follow_line_using: 'follow %1 line using %2 floor sensor %3',
+                        hamsterslite_follow_line_until: 'follow %1 line until %2 intersection %3',
+                        hamsterslite_set_following_speed_to: 'set following speed to %1 %2',
+                        hamsterslite_set_following_gain_to:
+                            'set following directional variation to %1 %2',
+                        hamsterslite_stop: 'stop %1',
+                        hamsterslite_set_led_to: 'set %1 led to %2 %3',
+                        hamsterslite_pick_led: 'set %1 led to %2 %3',
+                        hamsterslite_change_led_by_rgb: 'change %1 led by r: %2 g: %3 b: %4 %5',
+                        hamsterslite_set_led_to_rgb: 'set %1 led to r: %2 g: %3 b: %4 %5',
+                        hamsterslite_clear_led: 'clear %1 led %2',
+                        hamsterslite_play_sound_times: 'play sound %1 %2 times %3',
+                        hamsterslite_play_sound_times_until_done:
+                            'play sound %1 %2 times until done %3',
+                        hamsterslite_change_buzzer_by: 'change buzzer by %1 %2',
+                        hamsterslite_set_buzzer_to: 'set buzzer to %1 %2',
+                        hamsterslite_clear_sound: 'clear sound %1',
+                        hamsterslite_play_note: 'play note %1 %2 %3',
+                        hamsterslite_play_note_for: 'play note %1 %2 for %3 beats %4',
+                        hamsterslite_rest_for: 'rest for %1 beats %2',
+                        hamsterslite_change_tempo_by: 'change tempo by %1 %2',
+                        hamsterslite_set_tempo_to: 'set tempo to %1 bpm %2',
+                        hamsterslite_set_port_to: 'set port %1 to %2 %3',
+                        hamsterslite_change_output_by: 'change output %1 by %2 %3',
+                        hamsterslite_set_output_to: 'set output %1 to %2 %3',
+                        hamsterslite_gripper: '%1 gripper %2',
+                        hamsterslite_release_gripper: 'release gripper %1',
+                        hamsterslite_write_serial: 'write %1 %2 to serial %3',
+                        hamsterslite_read_serial_until: 'read serial %1 %2',
+                        hamsterslite_set_serial_rate_to: 'set serial rate to %1 Bd %2',
+                    },
+                    Blocks: {
+                        hamsterslite_tilt_forward: 'tilt forward',
+                        hamsterslite_tilt_backward: 'tilt backward',
+                        hamsterslite_tilt_left: 'tilt left',
+                        hamsterslite_tilt_right: 'tilt right',
+                        hamsterslite_tilt_flip: 'tilt flip',
+                        hamsterslite_tilt_not: 'not tilt',
+                        hamsterslite_tap: 'tap',
+                        hamsterslite_free_fall: 'free fall',
+                        hamsterslite_battery_normal: 'battery normal',
+                        hamsterslite_battery_low: 'battery low',
+                        hamsterslite_battery_empty: 'battery empty',
+                        hamsterslite_sensor_left_proximity: 'left proximity',
+                        hamsterslite_sensor_right_proximity: 'right proximity',
+                        hamsterslite_sensor_left_floor: 'left floor',
+                        hamsterslite_sensor_right_floor: 'right floor',
+                        hamsterslite_sensor_acceleration_x: 'x acceleration',
+                        hamsterslite_sensor_acceleration_y: 'y acceleration',
+                        hamsterslite_sensor_acceleration_z: 'z acceleration',
+                        hamsterslite_sensor_light: 'light',
+                        hamsterslite_sensor_temperature: 'temperature',
+                        hamsterslite_sensor_signal_strength: 'signal strength',
+                        hamsterslite_sensor_input_a: 'input A',
+                        hamsterslite_sensor_input_b: 'input B',
+                        hamsterslite_serial_input: 'serial input',
+                        hamsterslite_left: 'left',
+                        hamsterslite_right: 'right',
+                        hamsterslite_unit_cm: 'cm',
+                        hamsterslite_unit_sec: 'seconds',
+                        hamsterslite_unit_pulse: 'pulses',
+                        hamsterslite_unit_deg: 'degrees',
+                        hamsterslite_left_pen: 'left pen',
+                        hamsterslite_right_pen: 'right pen',
+                        hamsterslite_left_wheel: 'left wheel',
+                        hamsterslite_right_wheel: 'right wheel',
+                        hamsterslite_forward: 'forward',
+                        hamsterslite_backward: 'backward',
+                        hamsterslite_robot: 'robot',
+                        hamsterslite_both: 'both',
+                        hamsterslite_color_black: 'black',
+                        hamsterslite_color_white: 'white',
+                        hamsterslite_front: 'front',
+                        hamsterslite_rear: 'rear',
+                        hamsterslite_gain_default: 'default',
+                        hamsterslite_color_red: 'red',
+                        hamsterslite_color_orange: 'orange',
+                        hamsterslite_color_yellow: 'yellow',
+                        hamsterslite_color_green: 'green',
+                        hamsterslite_color_sky_blue: 'sky blue',
+                        hamsterslite_color_blue: 'blue',
+                        hamsterslite_color_violet: 'violet',
+                        hamsterslite_color_purple: 'purple',
+                        hamsterslite_sound_beep: 'beep',
+                        hamsterslite_sound_random_beep: 'random beep',
+                        hamsterslite_sound_noise: 'noise',
+                        hamsterslite_sound_siren: 'siren',
+                        hamsterslite_sound_engine: 'engine',
+                        hamsterslite_sound_chop: 'chop',
+                        hamsterslite_sound_robot: 'robot',
+                        hamsterslite_sound_dibidibidip: 'dibidibidip',
+                        hamsterslite_sound_good_job: 'good job',
+                        hamsterslite_sound_happy: 'happy',
+                        hamsterslite_sound_angry: 'angry',
+                        hamsterslite_sound_sad: 'sad',
+                        hamsterslite_sound_sleep: 'sleep',
+                        hamsterslite_sound_march: 'march',
+                        hamsterslite_sound_birthday: 'birthday',
+                        hamsterslite_note_c: 'C',
+                        hamsterslite_note_c_sharp: 'C♯(D♭)',
+                        hamsterslite_note_d: 'D',
+                        hamsterslite_note_d_sharp: 'D♯(E♭)',
+                        hamsterslite_note_e: 'E',
+                        hamsterslite_note_f: 'F',
+                        hamsterslite_note_f_sharp: 'F♯(G♭)',
+                        hamsterslite_note_g: 'G',
+                        hamsterslite_note_g_sharp: 'G♯(A♭)',
+                        hamsterslite_note_a: 'A',
+                        hamsterslite_note_a_sharp: 'A♯(B♭)',
+                        hamsterslite_note_b: 'B',
+                        hamsterslite_port_a: 'A',
+                        hamsterslite_port_b: 'B',
+                        hamsterslite_port_ab: 'A and B',
+                        hamsterslite_analog_input: 'analog input',
+                        hamsterslite_digital_input: 'digital input',
+                        hamsterslite_digital_input_pull_up: 'digital input (pull up)',
+                        hamsterslite_digital_input_pull_down: 'digital input (pull down)',
+                        hamsterslite_voltage_input: 'voltage input',
+                        hamsterslite_servo_output: 'servo output',
+                        hamsterslite_pwm_output: 'pwm output',
+                        hamsterslite_digital_output: 'digital output',
+                        hamsterslite_open_gripper: 'open',
+                        hamsterslite_close_gripper: 'close',
+                        hamsterslite_serial_string: 'string',
+                        hamsterslite_serial_string_line: 'string line',
+                        hamsterslite_serial_all: 'all',
+                        hamsterslite_serial_until_comma: 'until ,(comma)',
+                        hamsterslite_serial_until_colon: 'until :(colon)',
+                        hamsterslite_serial_until_dollar: 'until $',
+                        hamsterslite_serial_until_sharp: 'until #',
+                        hamsterslite_serial_until_new_line: 'until new line',
+                    },
+                    Helper: {
+                        hamsterslite_hand_found:
+                            'If there is a hand or object in front of the proximity ' +
+                            'sensor, true, otherwise false',
+                        hamsterslite_boolean:
+                            'tilt forward: If tilted forward, true, otherwise ' +
+                            'false<br/>tilt backward: If tilted backward, true, otherwise ' +
+                            'false<br/>tilt left: If tilted to the left, true, otherwise ' +
+                            'false<br/>tilt right: If tilted to the right, true, ' +
+                            'otherwise false<br/>tilt flip: If upside-down, true, ' +
+                            'otherwise false<br/>not tilt: If not tilted, true, otherwise ' +
+                            'false<br/>battery normal: If the battery is enough, true, ' +
+                            'otherwise false<br/>battery low: If the battery is low, ' +
+                            'true, otherwise false<br/>battery empty: If the battery is ' +
+                            'empty, true, otherwise false',
+                        hamsterslite_value:
+                            'left proximity: value of left proximity sensor (range: 0 to ' +
+                            '255, initial value: 0)<br/>right proximity: value of right ' +
+                            'proximity sensor (range: 0 to 255, initial value: ' +
+                            '0)<br/>left floor: value of left floor sensor (range: 0 to ' +
+                            '100, initial value: 0)<br/>right floor: value of right floor ' +
+                            'sensor (range: 0 to 100, initial value: 0)<br/>x ' +
+                            'acceleration: x-axis value of acceleration sensor (range: ' +
+                            '-32768 to 32767, initial value: 0) The direction in which ' +
+                            'the robot moves forward is the positive direction of the x ' +
+                            'axis.<br/>y acceleration: y-axis value of acceleration ' +
+                            'sensor (range: -32768 to 32767, initial value: 0) The left ' +
+                            'direction of the robot is the positive direction of the y ' +
+                            'axis.<br/>z acceleration: z-axis value of acceleration ' +
+                            'sensor (range: -32768 to 32767, initial value: 0) The upward ' +
+                            'direction of the robot is the positive direction of the z ' +
+                            'axis.<br/>light: value of light sensor (range: 0 to 65535, ' +
+                            'initial value: 0) The brighter, the larger the ' +
+                            'value.<br/>temperature: temperature value inside the robot ' +
+                            '(range: -40 to 88 degrees Celsius, initial value: ' +
+                            '0)<br/>signal strength: signal strength of Bluetooth ' +
+                            'communication (range: -128 to 0 dBm, initial value: 0) As ' +
+                            'the signal strength increases, the value ' +
+                            'increases.<br/>input A: value of signal input to external ' +
+                            'port A (range: analog input 0 to 255, digital input 0 or 1, ' +
+                            'initial value: 0)<br/>input B: value of signal input to ' +
+                            'external port B (range: analog input 0 to 255, digital input ' +
+                            '0 or 1, initial value: 0)',
+                        hamsterslite_move_forward_once: 'Moves one space forward on the board.',
+                        hamsterslite_turn_once: 'Turns left/right 90 degrees on the board.',
+                        hamsterslite_move_forward_unit:
+                            'Moves forward for the number of cm/seconds/pulses entered.',
+                        hamsterslite_move_backward_unit:
+                            'Moves backward for the number of cm/seconds/pulses entered.',
+                        hamsterslite_turn_unit_in_place:
+                            'Turns left/right in place for the number of ' +
+                            'degrees/seconds/pulses entered.',
+                        hamsterslite_pivot_around_unit_in_direction:
+                            'Pivots around the left/right pen/wheel in the ' +
+                            'forward/backward direction for the number of ' +
+                            'degrees/seconds/pulses entered.',
+                        hamsterslite_turn_unit_with_radius_in_direction:
+                            'Turns left/right so that the left/right pen draws the circle ' +
+                            'of the entered radius in the forward/backward direction for ' +
+                            'the number of degrees/seconds/pulses entered.',
+                        hamsterslite_change_both_wheels_by:
+                            'Adds the entered values to the current speed values (%) of ' +
+                            'the left and right wheels respectively. If the result is ' +
+                            'positive, the wheel rotates forward; if negative, the wheel ' +
+                            'rotates backward.',
+                        hamsterslite_set_both_wheels_to:
+                            'Sets the speed of the left and right wheels to the entered ' +
+                            'values (-100 to 100%), respectively. If you enter a positive ' +
+                            'value, the wheel rotates forward. If you enter a negative ' +
+                            'value, the wheel rotates backward. Entering the number 0 ' +
+                            'stops it.',
+                        hamsterslite_change_wheel_by:
+                            'Adds the entered value to the current speed value (%) of the ' +
+                            'left/right/both wheels. If the result is positive, the wheel ' +
+                            'rotates forward; if negative, the wheel rotates backward.',
+                        hamsterslite_set_wheel_to:
+                            'Sets the speed of the left/right/both wheels to the entered ' +
+                            'value (-100 to 100%). If you enter a positive value, the ' +
+                            'wheel rotates forward. If you enter a negative value, the ' +
+                            'wheel rotates backward. Entering the number 0 stops it.',
+                        hamsterslite_follow_line_using:
+                            'Moves along the black/white line by using the ' +
+                            'left/right/both floor sensors.',
+                        hamsterslite_follow_line_until:
+                            'Moves along the black/white line on the ' +
+                            'left/right/front/back, then stops when the robot meets the ' +
+                            'intersection.',
+                        hamsterslite_set_following_speed_to:
+                            'Sets the speed (1 to 8) to move along the line. The larger ' +
+                            'the number, the faster the movement.',
+                        hamsterslite_set_following_gain_to:
+                            'Sets the directional variation (1 to 8) 선을 따라 이동하는 방향 변화량(1 ' +
+                            '~ 8)을 설정합니다. 숫자가 클수록 급커브를 잘 따라가지만 직선에서 좌우로 더 흔들립니다.',
+                        hamsterslite_stop: 'Stops both wheels.',
+                        hamsterslite_set_led_to:
+                            'Turns left/right/both LEDs to the selected color.',
+                        hamsterslite_pick_led: 'Turns left/right/both LEDs to the selected color.',
+                        hamsterslite_change_led_by_rgb:
+                            'Adds the entered values to the current R, G, B values of ' +
+                            'left/right/both LEDs, respectively.',
+                        hamsterslite_set_led_to_rgb:
+                            'Sets the R, G, B values of left/right/both LEDs to the ' +
+                            'entered values.',
+                        hamsterslite_clear_led: 'Turns off the left/right/both LEDs.',
+                        hamsterslite_play_sound_times:
+                            'Plays the selected sound as many times as entered.',
+                        hamsterslite_play_sound_times_until_done:
+                            'Plays the selected sound as many times as entered, and waits ' +
+                            'for completion.',
+                        hamsterslite_change_buzzer_by:
+                            'Adds the entered value to the current pitch (Hz) of the ' +
+                            'buzzer sound. You can enter up to two decimal places.',
+                        hamsterslite_set_buzzer_to:
+                            'Sets the pitch of the buzzer sound to the entered value ' +
+                            '(Hz). You can enter up to two decimal places. Entering the ' +
+                            'number 0 turns off the buzzer sound.',
+                        hamsterslite_clear_sound: 'Turns off sound.',
+                        hamsterslite_play_note: 'It sounds the selected tone and octave.',
+                        hamsterslite_play_note_for:
+                            'It sounds the selected tone and octave as much as the beat ' +
+                            'you entered.',
+                        hamsterslite_rest_for: 'Rests as much as the beat you entered.',
+                        hamsterslite_change_tempo_by:
+                            'Adds the entered value to the current BPM (beats per minute) ' +
+                            'of the playing or resting speed.',
+                        hamsterslite_set_tempo_to:
+                            'Sets the playing or resting speed to the entered BPM (beats ' +
+                            'per minute).',
+                        hamsterslite_set_port_to:
+                            'Sets the io mode of the selected external port to the selected mode.',
+                        hamsterslite_change_output_by:
+                            'Adds the entered value to the current output value of the ' +
+                            'selected external port. The result will be in the following ' +
+                            'range depending on the mode of the external port.<br/>Servo ' +
+                            'output: valid range from 1 to 180 degrees; if 0, output 0 ' +
+                            'without PWM pulse<br/>PWM output: 0 to 100%, duty ratio (%) ' +
+                            'of ON state in PWM waveform<br/>Digital output: LOW when 0, ' +
+                            'otherwise HIGH',
+                        hamsterslite_set_output_to:
+                            'Sets the output value of the selected external port to the ' +
+                            'entered value. The value has the following range according ' +
+                            'to the mode of external port.<br/>Servo output: valid range ' +
+                            'from 1 to 180 degrees; if 0, output 0 without PWM ' +
+                            'pulse<br/>PWM output: 0 to 100%, duty ratio (%) of ON state ' +
+                            'in PWM waveform<br/>Digital output: LOW when 0, otherwise HIGH',
+                        hamsterslite_gripper: 'Opens or closes the gripper.',
+                        hamsterslite_release_gripper:
+                            'Turns off the gripper so that it can be moved freely.',
+                        hamsterslite_write_serial: 'Sends strings via serial communication.',
+                        hamsterslite_read_serial_until:
+                            'Read the strings received by serial communication.',
+                        hamsterslite_set_serial_rate_to: 'Sets the speed of serial communication.',
+                    },
+                },
+                jp: {
+                    template: {
+                        hamsterslite_hand_found: '手を見つけたか?',
+                        hamsterslite_boolean: '%1?',
+                        hamsterslite_value: '%1',
+                        hamsterslite_move_forward_once: 'ボード板上で前へ動かす %1',
+                        hamsterslite_turn_once: 'ボード板上で%1に回す %2',
+                        hamsterslite_move_forward_unit: '前へ%1%2動かす %3',
+                        hamsterslite_move_backward_unit: '後ろへ%1%2動かす %3',
+                        hamsterslite_turn_unit_in_place: '所定位置で%1に%2%3回す %4',
+                        hamsterslite_pivot_around_unit_in_direction:
+                            '%1を中心に%2%3%4方向に回す %5',
+                        hamsterslite_turn_unit_with_radius_in_direction:
+                            '%1%2に%3%4半径%5cmを%6方向に回す %7',
+                        hamsterslite_change_both_wheels_by: '左車輪を%1右車輪を%2ずつ変える %3',
+                        hamsterslite_set_both_wheels_to: '左車輪を%1右車輪を%2にする %3',
+                        hamsterslite_change_wheel_by: '%1車輪を%2ずつ変える %3',
+                        hamsterslite_set_wheel_to: '%1車輪を%2にする %3',
+                        hamsterslite_follow_line_using: '%1線を%2フロアセンサーで追従する %3',
+                        hamsterslite_follow_line_until: '%1線を追従して%2交差点まで動かす %3',
+                        hamsterslite_set_following_speed_to: '線を追従する速度を%1にする %2',
+                        hamsterslite_set_following_gain_to: '線を追従する方向変化量を%1にする %2',
+                        hamsterslite_stop: '停止する %1',
+                        hamsterslite_set_led_to: '%1LEDを%2にする %3',
+                        hamsterslite_pick_led: '%1LEDを%2にする %3',
+                        hamsterslite_change_led_by_rgb: '%1LEDをR:%2G:%3B:%4ずつ変える %5',
+                        hamsterslite_set_led_to_rgb: '%1LEDをR:%2G:%3B:%4にする %5',
+                        hamsterslite_clear_led: '%1LEDをオフ %2',
+                        hamsterslite_play_sound_times: '%1音を%2回鳴らす %3',
+                        hamsterslite_play_sound_times_until_done: '終わるまで%1音を%2回鳴らす %3',
+                        hamsterslite_change_buzzer_by: 'ブザー音を%1ずつ変える %2',
+                        hamsterslite_set_buzzer_to: 'ブザー音を%1にする %2',
+                        hamsterslite_clear_sound: '音を止める %1',
+                        hamsterslite_play_note: '%1%2音を鳴らす %3',
+                        hamsterslite_play_note_for: '%1%2音を%3拍鳴らす %4',
+                        hamsterslite_rest_for: '%1拍休む %2',
+                        hamsterslite_change_tempo_by: 'テンポを%1ずつ変える %2',
+                        hamsterslite_set_tempo_to: 'テンポを%1BPMにする %2',
+                        hamsterslite_set_port_to: 'ポート%1を%2にする %3',
+                        hamsterslite_change_output_by: '出力%1を%2ずつ変える %3',
+                        hamsterslite_set_output_to: '出力%1を%2にする %3',
+                        hamsterslite_gripper: 'グリッパを%1 %2',
+                        hamsterslite_release_gripper: 'グリッパをオフ %1',
+                        hamsterslite_write_serial: 'シリアルに%1%2を書き出す %3',
+                        hamsterslite_read_serial_until: 'シリアルを%1読み取る %2',
+                        hamsterslite_set_serial_rate_to: 'シリアル速度を%1Bdにする %2',
+                    },
+                    Blocks: {
+                        hamsterslite_tilt_forward: '前に傾けたか',
+                        hamsterslite_tilt_backward: '後に傾けたか',
+                        hamsterslite_tilt_left: '左に傾けたか',
+                        hamsterslite_tilt_right: '右に傾けたか',
+                        hamsterslite_tilt_flip: '上下裏返したか',
+                        hamsterslite_tilt_not: '傾けなかったか',
+                        hamsterslite_tap: '叩いたか',
+                        hamsterslite_free_fall: '自由落下したか',
+                        hamsterslite_battery_normal: '電池が正常か',
+                        hamsterslite_battery_low: '電池が足りないか',
+                        hamsterslite_battery_empty: '電池がないか',
+                        hamsterslite_sensor_left_proximity: '左近接センサー',
+                        hamsterslite_sensor_right_proximity: '右近接センサー',
+                        hamsterslite_sensor_left_floor: '左床センサー',
+                        hamsterslite_sensor_right_floor: '右床センサー',
+                        hamsterslite_sensor_acceleration_x: '前後の速さ',
+                        hamsterslite_sensor_acceleration_y: '左右の速さ',
+                        hamsterslite_sensor_acceleration_z: '上下の速さ',
+                        hamsterslite_sensor_light: '照度',
+                        hamsterslite_sensor_temperature: '温度',
+                        hamsterslite_sensor_signal_strength: '信号強度',
+                        hamsterslite_sensor_input_a: '入力A',
+                        hamsterslite_sensor_input_b: '入力B',
+                        hamsterslite_serial_input: 'シリアル入力',
+                        hamsterslite_left: '左',
+                        hamsterslite_right: '右',
+                        hamsterslite_unit_cm: 'cm',
+                        hamsterslite_unit_sec: '秒',
+                        hamsterslite_unit_pulse: 'パルス',
+                        hamsterslite_unit_deg: '°',
+                        hamsterslite_left_pen: '左ペン',
+                        hamsterslite_right_pen: '右ペン',
+                        hamsterslite_left_wheel: '左車輪',
+                        hamsterslite_right_wheel: '右車輪',
+                        hamsterslite_forward: '前',
+                        hamsterslite_backward: '後',
+                        hamsterslite_robot: 'ロボット',
+                        hamsterslite_both: '両方',
+                        hamsterslite_color_black: '黒',
+                        hamsterslite_color_white: '白',
+                        hamsterslite_front: '前',
+                        hamsterslite_rear: '後',
+                        hamsterslite_gain_default: '基本値',
+                        hamsterslite_color_red: '赤',
+                        hamsterslite_color_orange: 'オレンジ',
+                        hamsterslite_color_yellow: '黄色',
+                        hamsterslite_color_green: '緑',
+                        hamsterslite_color_sky_blue: '水色',
+                        hamsterslite_color_blue: '青',
+                        hamsterslite_color_violet: '赤紫',
+                        hamsterslite_color_purple: '紫',
+                        hamsterslite_sound_beep: 'ビープ音',
+                        hamsterslite_sound_random_beep: 'ビープ音のどれか',
+                        hamsterslite_sound_noise: 'ノイズ',
+                        hamsterslite_sound_siren: 'サイレン',
+                        hamsterslite_sound_engine: 'エンジン',
+                        hamsterslite_sound_chop: 'チョップ',
+                        hamsterslite_sound_robot: 'ロボット',
+                        hamsterslite_sound_dibidibidip: 'ディビディビディップ',
+                        hamsterslite_sound_good_job: 'よくできました',
+                        hamsterslite_sound_happy: '幸福',
+                        hamsterslite_sound_angry: '怒った',
+                        hamsterslite_sound_sad: '悲しみ',
+                        hamsterslite_sound_sleep: '睡眠',
+                        hamsterslite_sound_march: '行進',
+                        hamsterslite_sound_birthday: '誕生日',
+                        hamsterslite_note_c: 'ド',
+                        hamsterslite_note_c_sharp: 'ド♯(レ♭)',
+                        hamsterslite_note_d: 'レ',
+                        hamsterslite_note_d_sharp: 'レ♯(ミ♭)',
+                        hamsterslite_note_e: 'ミ',
+                        hamsterslite_note_f: 'ファ',
+                        hamsterslite_note_f_sharp: 'ファ♯(ソ♭)',
+                        hamsterslite_note_g: 'ソ',
+                        hamsterslite_note_g_sharp: 'ソ♯(ラ♭)',
+                        hamsterslite_note_a: 'ラ',
+                        hamsterslite_note_a_sharp: 'ラ♯(シ♭)',
+                        hamsterslite_note_b: 'シ',
+                        hamsterslite_port_a: 'A',
+                        hamsterslite_port_b: 'B',
+                        hamsterslite_port_ab: 'AとB',
+                        hamsterslite_analog_input: 'アナログ入力',
+                        hamsterslite_digital_input: 'デジタル入力',
+                        hamsterslite_digital_input_pull_up: 'デジタル入力 (プルアップ)',
+                        hamsterslite_digital_input_pull_down: 'デジタル入力 (プルダウン)',
+                        hamsterslite_voltage_input: '電圧入力',
+                        hamsterslite_servo_output: 'サーボ出力',
+                        hamsterslite_pwm_output: 'PWM出力',
+                        hamsterslite_digital_output: 'デジタル出力',
+                        hamsterslite_open_gripper: '開く',
+                        hamsterslite_close_gripper: '閉める',
+                        hamsterslite_serial_string: '文字列',
+                        hamsterslite_serial_string_line: '文字列1行',
+                        hamsterslite_serial_all: '全部',
+                        hamsterslite_serial_until_comma: '、(読点)まで',
+                        hamsterslite_serial_until_colon: '：(コロン)まで',
+                        hamsterslite_serial_until_dollar: '$まで',
+                        hamsterslite_serial_until_sharp: '#まで',
+                        hamsterslite_serial_until_new_line: '改行まで',
+                    },
+                    Helper: {
+                        hamsterslite_hand_found:
+                            'If there is a hand or object in front of the proximity ' +
+                            'sensor, true, otherwise false',
+                        hamsterslite_boolean:
+                            'tilt forward: If tilted forward, true, otherwise ' +
+                            'false<br/>tilt backward: If tilted backward, true, otherwise ' +
+                            'false<br/>tilt left: If tilted to the left, true, otherwise ' +
+                            'false<br/>tilt right: If tilted to the right, true, ' +
+                            'otherwise false<br/>tilt flip: If upside-down, true, ' +
+                            'otherwise false<br/>not tilt: If not tilted, true, otherwise ' +
+                            'false<br/>battery normal: If the battery is enough, true, ' +
+                            'otherwise false<br/>battery low: If the battery is low, ' +
+                            'true, otherwise false<br/>battery empty: If the battery is ' +
+                            'empty, true, otherwise false',
+                        hamsterslite_value:
+                            'left proximity: value of left proximity sensor (range: 0 to ' +
+                            '255, initial value: 0)<br/>right proximity: value of right ' +
+                            'proximity sensor (range: 0 to 255, initial value: ' +
+                            '0)<br/>left floor: value of left floor sensor (range: 0 to ' +
+                            '100, initial value: 0)<br/>right floor: value of right floor ' +
+                            'sensor (range: 0 to 100, initial value: 0)<br/>x ' +
+                            'acceleration: x-axis value of acceleration sensor (range: ' +
+                            '-32768 to 32767, initial value: 0) The direction in which ' +
+                            'the robot moves forward is the positive direction of the x ' +
+                            'axis.<br/>y acceleration: y-axis value of acceleration ' +
+                            'sensor (range: -32768 to 32767, initial value: 0) The left ' +
+                            'direction of the robot is the positive direction of the y ' +
+                            'axis.<br/>z acceleration: z-axis value of acceleration ' +
+                            'sensor (range: -32768 to 32767, initial value: 0) The upward ' +
+                            'direction of the robot is the positive direction of the z ' +
+                            'axis.<br/>light: value of light sensor (range: 0 to 65535, ' +
+                            'initial value: 0) The brighter, the larger the ' +
+                            'value.<br/>temperature: temperature value inside the robot ' +
+                            '(range: -40 to 88 degrees Celsius, initial value: ' +
+                            '0)<br/>signal strength: signal strength of Bluetooth ' +
+                            'communication (range: -128 to 0 dBm, initial value: 0) As ' +
+                            'the signal strength increases, the value ' +
+                            'increases.<br/>input A: value of signal input to external ' +
+                            'port A (range: analog input 0 to 255, digital input 0 or 1, ' +
+                            'initial value: 0)<br/>input B: value of signal input to ' +
+                            'external port B (range: analog input 0 to 255, digital input ' +
+                            '0 or 1, initial value: 0)',
+                        hamsterslite_move_forward_once: 'Moves one space forward on the board.',
+                        hamsterslite_turn_once: 'Turns left/right 90 degrees on the board.',
+                        hamsterslite_move_forward_unit:
+                            'Moves forward for the number of cm/seconds/pulses entered.',
+                        hamsterslite_move_backward_unit:
+                            'Moves backward for the number of cm/seconds/pulses entered.',
+                        hamsterslite_turn_unit_in_place:
+                            'Turns left/right in place for the number of ' +
+                            'degrees/seconds/pulses entered.',
+                        hamsterslite_pivot_around_unit_in_direction:
+                            'Pivots around the left/right pen/wheel in the ' +
+                            'forward/backward direction for the number of ' +
+                            'degrees/seconds/pulses entered.',
+                        hamsterslite_turn_unit_with_radius_in_direction:
+                            'Turns left/right so that the left/right pen draws the circle ' +
+                            'of the entered radius in the forward/backward direction for ' +
+                            'the number of degrees/seconds/pulses entered.',
+                        hamsterslite_change_both_wheels_by:
+                            'Adds the entered values to the current speed values (%) of ' +
+                            'the left and right wheels respectively. If the result is ' +
+                            'positive, the wheel rotates forward; if negative, the wheel ' +
+                            'rotates backward.',
+                        hamsterslite_set_both_wheels_to:
+                            'Sets the speed of the left and right wheels to the entered ' +
+                            'values (-100 to 100%), respectively. If you enter a positive ' +
+                            'value, the wheel rotates forward. If you enter a negative ' +
+                            'value, the wheel rotates backward. Entering the number 0 ' +
+                            'stops it.',
+                        hamsterslite_change_wheel_by:
+                            'Adds the entered value to the current speed value (%) of the ' +
+                            'left/right/both wheels. If the result is positive, the wheel ' +
+                            'rotates forward; if negative, the wheel rotates backward.',
+                        hamsterslite_set_wheel_to:
+                            'Sets the speed of the left/right/both wheels to the entered ' +
+                            'value (-100 to 100%). If you enter a positive value, the ' +
+                            'wheel rotates forward. If you enter a negative value, the ' +
+                            'wheel rotates backward. Entering the number 0 stops it.',
+                        hamsterslite_follow_line_using:
+                            'Moves along the black/white line by using the ' +
+                            'left/right/both floor sensors.',
+                        hamsterslite_follow_line_until:
+                            'Moves along the black/white line on the ' +
+                            'left/right/front/back, then stops when the robot meets the ' +
+                            'intersection.',
+                        hamsterslite_set_following_speed_to:
+                            'Sets the speed (1 to 8) to move along the line. The larger ' +
+                            'the number, the faster the movement.',
+                        hamsterslite_set_following_gain_to:
+                            'Sets the directional variation (1 to 8) 선을 따라 이동하는 방향 변화량(1 ' +
+                            '~ 8)을 설정합니다. 숫자가 클수록 급커브를 잘 따라가지만 직선에서 좌우로 더 흔들립니다.',
+                        hamsterslite_stop: 'Stops both wheels.',
+                        hamsterslite_set_led_to:
+                            'Turns left/right/both LEDs to the selected color.',
+                        hamsterslite_pick_led: 'Turns left/right/both LEDs to the selected color.',
+                        hamsterslite_change_led_by_rgb:
+                            'Adds the entered values to the current R, G, B values of ' +
+                            'left/right/both LEDs, respectively.',
+                        hamsterslite_set_led_to_rgb:
+                            'Sets the R, G, B values of left/right/both LEDs to the ' +
+                            'entered values.',
+                        hamsterslite_clear_led: 'Turns off the left/right/both LEDs.',
+                        hamsterslite_play_sound_times:
+                            'Plays the selected sound as many times as entered.',
+                        hamsterslite_play_sound_times_until_done:
+                            'Plays the selected sound as many times as entered, and waits ' +
+                            'for completion.',
+                        hamsterslite_change_buzzer_by:
+                            'Adds the entered value to the current pitch (Hz) of the ' +
+                            'buzzer sound. You can enter up to two decimal places.',
+                        hamsterslite_set_buzzer_to:
+                            'Sets the pitch of the buzzer sound to the entered value ' +
+                            '(Hz). You can enter up to two decimal places. Entering the ' +
+                            'number 0 turns off the buzzer sound.',
+                        hamsterslite_clear_sound: 'Turns off sound.',
+                        hamsterslite_play_note: 'It sounds the selected tone and octave.',
+                        hamsterslite_play_note_for:
+                            'It sounds the selected tone and octave as much as the beat ' +
+                            'you entered.',
+                        hamsterslite_rest_for: 'Rests as much as the beat you entered.',
+                        hamsterslite_change_tempo_by:
+                            'Adds the entered value to the current BPM (beats per minute) ' +
+                            'of the playing or resting speed.',
+                        hamsterslite_set_tempo_to:
+                            'Sets the playing or resting speed to the entered BPM (beats ' +
+                            'per minute).',
+                        hamsterslite_set_port_to:
+                            'Sets the io mode of the selected external port to the selected mode.',
+                        hamsterslite_change_output_by:
+                            'Adds the entered value to the current output value of the ' +
+                            'selected external port. The result will be in the following ' +
+                            'range depending on the mode of the external port.<br/>Servo ' +
+                            'output: valid range from 1 to 180 degrees; if 0, output 0 ' +
+                            'without PWM pulse<br/>PWM output: 0 to 100%, duty ratio (%) ' +
+                            'of ON state in PWM waveform<br/>Digital output: LOW when 0, ' +
+                            'otherwise HIGH',
+                        hamsterslite_set_output_to:
+                            'Sets the output value of the selected external port to the ' +
+                            'entered value. The value has the following range according ' +
+                            'to the mode of external port.<br/>Servo output: valid range ' +
+                            'from 1 to 180 degrees; if 0, output 0 without PWM ' +
+                            'pulse<br/>PWM output: 0 to 100%, duty ratio (%) of ON state ' +
+                            'in PWM waveform<br/>Digital output: LOW when 0, otherwise HIGH',
+                        hamsterslite_gripper: 'Opens or closes the gripper.',
+                        hamsterslite_release_gripper:
+                            'Turns off the gripper so that it can be moved freely.',
+                        hamsterslite_write_serial: 'Sends strings via serial communication.',
+                        hamsterslite_read_serial_until:
+                            'Read the strings received by serial communication.',
+                        hamsterslite_set_serial_rate_to: 'Sets the speed of serial communication.',
+                    },
+                },
+                vn: {
+                    template: {
+                        hamsterslite_hand_found: 'hand found?',
+                        hamsterslite_boolean: '%1?',
+                        hamsterslite_value: '%1',
+                        hamsterslite_move_forward_once: 'move forward once on board %1',
+                        hamsterslite_turn_once: 'turn %1 once on board %2',
+                        hamsterslite_move_forward_unit: 'move forward %1 %2 %3',
+                        hamsterslite_move_backward_unit: 'move backward %1 %2 %3',
+                        hamsterslite_turn_unit_in_place: 'turn %1 %2 %3 in place %4',
+                        hamsterslite_pivot_around_unit_in_direction:
+                            'pivot around %1 %2 %3 in %4 direction %5',
+                        hamsterslite_turn_unit_with_radius_in_direction:
+                            '%1 turn %2 %3 %4 with radius %5 cm in %6 direction %7',
+                        hamsterslite_change_both_wheels_by:
+                            'change wheels by left: %1 right: %2 %3',
+                        hamsterslite_set_both_wheels_to: 'set wheels to left: %1 right: %2 %3',
+                        hamsterslite_change_wheel_by: 'change %1 wheel by %2 %3',
+                        hamsterslite_set_wheel_to: 'set %1 wheel to %2 %3',
+                        hamsterslite_follow_line_using: 'follow %1 line using %2 floor sensor %3',
+                        hamsterslite_follow_line_until: 'follow %1 line until %2 intersection %3',
+                        hamsterslite_set_following_speed_to: 'set following speed to %1 %2',
+                        hamsterslite_set_following_gain_to:
+                            'set following directional variation to %1 %2',
+                        hamsterslite_stop: 'stop %1',
+                        hamsterslite_set_led_to: 'set %1 led to %2 %3',
+                        hamsterslite_pick_led: 'set %1 led to %2 %3',
+                        hamsterslite_change_led_by_rgb: 'change %1 led by r: %2 g: %3 b: %4 %5',
+                        hamsterslite_set_led_to_rgb: 'set %1 led to r: %2 g: %3 b: %4 %5',
+                        hamsterslite_clear_led: 'clear %1 led %2',
+                        hamsterslite_play_sound_times: 'play sound %1 %2 times %3',
+                        hamsterslite_play_sound_times_until_done:
+                            'play sound %1 %2 times until done %3',
+                        hamsterslite_change_buzzer_by: 'change buzzer by %1 %2',
+                        hamsterslite_set_buzzer_to: 'set buzzer to %1 %2',
+                        hamsterslite_clear_sound: 'clear sound %1',
+                        hamsterslite_play_note: 'play note %1 %2 %3',
+                        hamsterslite_play_note_for: 'play note %1 %2 for %3 beats %4',
+                        hamsterslite_rest_for: 'rest for %1 beats %2',
+                        hamsterslite_change_tempo_by: 'change tempo by %1 %2',
+                        hamsterslite_set_tempo_to: 'set tempo to %1 bpm %2',
+                        hamsterslite_set_port_to: 'set port %1 to %2 %3',
+                        hamsterslite_change_output_by: 'change output %1 by %2 %3',
+                        hamsterslite_set_output_to: 'set output %1 to %2 %3',
+                        hamsterslite_gripper: '%1 gripper %2',
+                        hamsterslite_release_gripper: 'release gripper %1',
+                        hamsterslite_write_serial: 'write %1 %2 to serial %3',
+                        hamsterslite_read_serial_until: 'read serial %1 %2',
+                        hamsterslite_set_serial_rate_to: 'set serial rate to %1 Bd %2',
+                    },
+                    Blocks: {
+                        hamsterslite_tilt_forward: 'tilt forward',
+                        hamsterslite_tilt_backward: 'tilt backward',
+                        hamsterslite_tilt_left: 'tilt left',
+                        hamsterslite_tilt_right: 'tilt right',
+                        hamsterslite_tilt_flip: 'tilt flip',
+                        hamsterslite_tilt_not: 'not tilt',
+                        hamsterslite_tap: 'tap',
+                        hamsterslite_free_fall: 'free fall',
+                        hamsterslite_battery_normal: 'battery normal',
+                        hamsterslite_battery_low: 'battery low',
+                        hamsterslite_battery_empty: 'battery empty',
+                        hamsterslite_sensor_left_proximity: 'left proximity',
+                        hamsterslite_sensor_right_proximity: 'right proximity',
+                        hamsterslite_sensor_left_floor: 'left floor',
+                        hamsterslite_sensor_right_floor: 'right floor',
+                        hamsterslite_sensor_acceleration_x: 'x acceleration',
+                        hamsterslite_sensor_acceleration_y: 'y acceleration',
+                        hamsterslite_sensor_acceleration_z: 'z acceleration',
+                        hamsterslite_sensor_light: 'light',
+                        hamsterslite_sensor_temperature: 'temperature',
+                        hamsterslite_sensor_signal_strength: 'signal strength',
+                        hamsterslite_sensor_input_a: 'input A',
+                        hamsterslite_sensor_input_b: 'input B',
+                        hamsterslite_serial_input: 'serial input',
+                        hamsterslite_left: 'left',
+                        hamsterslite_right: 'right',
+                        hamsterslite_unit_cm: 'cm',
+                        hamsterslite_unit_sec: 'seconds',
+                        hamsterslite_unit_pulse: 'pulses',
+                        hamsterslite_unit_deg: 'degrees',
+                        hamsterslite_left_pen: 'left pen',
+                        hamsterslite_right_pen: 'right pen',
+                        hamsterslite_left_wheel: 'left wheel',
+                        hamsterslite_right_wheel: 'right wheel',
+                        hamsterslite_forward: 'forward',
+                        hamsterslite_backward: 'backward',
+                        hamsterslite_robot: 'robot',
+                        hamsterslite_both: 'both',
+                        hamsterslite_color_black: 'black',
+                        hamsterslite_color_white: 'white',
+                        hamsterslite_front: 'front',
+                        hamsterslite_rear: 'rear',
+                        hamsterslite_gain_default: 'default',
+                        hamsterslite_color_red: 'red',
+                        hamsterslite_color_orange: 'orange',
+                        hamsterslite_color_yellow: 'yellow',
+                        hamsterslite_color_green: 'green',
+                        hamsterslite_color_sky_blue: 'sky blue',
+                        hamsterslite_color_blue: 'blue',
+                        hamsterslite_color_violet: 'violet',
+                        hamsterslite_color_purple: 'purple',
+                        hamsterslite_sound_beep: 'beep',
+                        hamsterslite_sound_random_beep: 'random beep',
+                        hamsterslite_sound_noise: 'noise',
+                        hamsterslite_sound_siren: 'siren',
+                        hamsterslite_sound_engine: 'engine',
+                        hamsterslite_sound_chop: 'chop',
+                        hamsterslite_sound_robot: 'robot',
+                        hamsterslite_sound_dibidibidip: 'dibidibidip',
+                        hamsterslite_sound_good_job: 'good job',
+                        hamsterslite_sound_happy: 'happy',
+                        hamsterslite_sound_angry: 'angry',
+                        hamsterslite_sound_sad: 'sad',
+                        hamsterslite_sound_sleep: 'sleep',
+                        hamsterslite_sound_march: 'march',
+                        hamsterslite_sound_birthday: 'birthday',
+                        hamsterslite_note_c: 'C',
+                        hamsterslite_note_c_sharp: 'C♯(D♭)',
+                        hamsterslite_note_d: 'D',
+                        hamsterslite_note_d_sharp: 'D♯(E♭)',
+                        hamsterslite_note_e: 'E',
+                        hamsterslite_note_f: 'F',
+                        hamsterslite_note_f_sharp: 'F♯(G♭)',
+                        hamsterslite_note_g: 'G',
+                        hamsterslite_note_g_sharp: 'G♯(A♭)',
+                        hamsterslite_note_a: 'A',
+                        hamsterslite_note_a_sharp: 'A♯(B♭)',
+                        hamsterslite_note_b: 'B',
+                        hamsterslite_port_a: 'A',
+                        hamsterslite_port_b: 'B',
+                        hamsterslite_port_ab: 'A and B',
+                        hamsterslite_analog_input: 'analog input',
+                        hamsterslite_digital_input: 'digital input',
+                        hamsterslite_digital_input_pull_up: 'digital input (pull up)',
+                        hamsterslite_digital_input_pull_down: 'digital input (pull down)',
+                        hamsterslite_voltage_input: 'voltage input',
+                        hamsterslite_servo_output: 'servo output',
+                        hamsterslite_pwm_output: 'pwm output',
+                        hamsterslite_digital_output: 'digital output',
+                        hamsterslite_open_gripper: 'open',
+                        hamsterslite_close_gripper: 'close',
+                        hamsterslite_serial_string: 'string',
+                        hamsterslite_serial_string_line: 'string line',
+                        hamsterslite_serial_all: 'all',
+                        hamsterslite_serial_until_comma: 'until ,(comma)',
+                        hamsterslite_serial_until_colon: 'until :(colon)',
+                        hamsterslite_serial_until_dollar: 'until $',
+                        hamsterslite_serial_until_sharp: 'until #',
+                        hamsterslite_serial_until_new_line: 'until new line',
+                    },
+                    Helper: {
+                        hamsterslite_hand_found:
+                            'If there is a hand or object in front of the proximity ' +
+                            'sensor, true, otherwise false',
+                        hamsterslite_boolean:
+                            'tilt forward: If tilted forward, true, otherwise ' +
+                            'false<br/>tilt backward: If tilted backward, true, otherwise ' +
+                            'false<br/>tilt left: If tilted to the left, true, otherwise ' +
+                            'false<br/>tilt right: If tilted to the right, true, ' +
+                            'otherwise false<br/>tilt flip: If upside-down, true, ' +
+                            'otherwise false<br/>not tilt: If not tilted, true, otherwise ' +
+                            'false<br/>battery normal: If the battery is enough, true, ' +
+                            'otherwise false<br/>battery low: If the battery is low, ' +
+                            'true, otherwise false<br/>battery empty: If the battery is ' +
+                            'empty, true, otherwise false',
+                        hamsterslite_value:
+                            'left proximity: value of left proximity sensor (range: 0 to ' +
+                            '255, initial value: 0)<br/>right proximity: value of right ' +
+                            'proximity sensor (range: 0 to 255, initial value: ' +
+                            '0)<br/>left floor: value of left floor sensor (range: 0 to ' +
+                            '100, initial value: 0)<br/>right floor: value of right floor ' +
+                            'sensor (range: 0 to 100, initial value: 0)<br/>x ' +
+                            'acceleration: x-axis value of acceleration sensor (range: ' +
+                            '-32768 to 32767, initial value: 0) The direction in which ' +
+                            'the robot moves forward is the positive direction of the x ' +
+                            'axis.<br/>y acceleration: y-axis value of acceleration ' +
+                            'sensor (range: -32768 to 32767, initial value: 0) The left ' +
+                            'direction of the robot is the positive direction of the y ' +
+                            'axis.<br/>z acceleration: z-axis value of acceleration ' +
+                            'sensor (range: -32768 to 32767, initial value: 0) The upward ' +
+                            'direction of the robot is the positive direction of the z ' +
+                            'axis.<br/>light: value of light sensor (range: 0 to 65535, ' +
+                            'initial value: 0) The brighter, the larger the ' +
+                            'value.<br/>temperature: temperature value inside the robot ' +
+                            '(range: -40 to 88 degrees Celsius, initial value: ' +
+                            '0)<br/>signal strength: signal strength of Bluetooth ' +
+                            'communication (range: -128 to 0 dBm, initial value: 0) As ' +
+                            'the signal strength increases, the value ' +
+                            'increases.<br/>input A: value of signal input to external ' +
+                            'port A (range: analog input 0 to 255, digital input 0 or 1, ' +
+                            'initial value: 0)<br/>input B: value of signal input to ' +
+                            'external port B (range: analog input 0 to 255, digital input ' +
+                            '0 or 1, initial value: 0)',
+                        hamsterslite_move_forward_once: 'Moves one space forward on the board.',
+                        hamsterslite_turn_once: 'Turns left/right 90 degrees on the board.',
+                        hamsterslite_move_forward_unit:
+                            'Moves forward for the number of cm/seconds/pulses entered.',
+                        hamsterslite_move_backward_unit:
+                            'Moves backward for the number of cm/seconds/pulses entered.',
+                        hamsterslite_turn_unit_in_place:
+                            'Turns left/right in place for the number of ' +
+                            'degrees/seconds/pulses entered.',
+                        hamsterslite_pivot_around_unit_in_direction:
+                            'Pivots around the left/right pen/wheel in the ' +
+                            'forward/backward direction for the number of ' +
+                            'degrees/seconds/pulses entered.',
+                        hamsterslite_turn_unit_with_radius_in_direction:
+                            'Turns left/right so that the left/right pen draws the circle ' +
+                            'of the entered radius in the forward/backward direction for ' +
+                            'the number of degrees/seconds/pulses entered.',
+                        hamsterslite_change_both_wheels_by:
+                            'Adds the entered values to the current speed values (%) of ' +
+                            'the left and right wheels respectively. If the result is ' +
+                            'positive, the wheel rotates forward; if negative, the wheel ' +
+                            'rotates backward.',
+                        hamsterslite_set_both_wheels_to:
+                            'Sets the speed of the left and right wheels to the entered ' +
+                            'values (-100 to 100%), respectively. If you enter a positive ' +
+                            'value, the wheel rotates forward. If you enter a negative ' +
+                            'value, the wheel rotates backward. Entering the number 0 ' +
+                            'stops it.',
+                        hamsterslite_change_wheel_by:
+                            'Adds the entered value to the current speed value (%) of the ' +
+                            'left/right/both wheels. If the result is positive, the wheel ' +
+                            'rotates forward; if negative, the wheel rotates backward.',
+                        hamsterslite_set_wheel_to:
+                            'Sets the speed of the left/right/both wheels to the entered ' +
+                            'value (-100 to 100%). If you enter a positive value, the ' +
+                            'wheel rotates forward. If you enter a negative value, the ' +
+                            'wheel rotates backward. Entering the number 0 stops it.',
+                        hamsterslite_follow_line_using:
+                            'Moves along the black/white line by using the ' +
+                            'left/right/both floor sensors.',
+                        hamsterslite_follow_line_until:
+                            'Moves along the black/white line on the ' +
+                            'left/right/front/back, then stops when the robot meets the ' +
+                            'intersection.',
+                        hamsterslite_set_following_speed_to:
+                            'Sets the speed (1 to 8) to move along the line. The larger ' +
+                            'the number, the faster the movement.',
+                        hamsterslite_set_following_gain_to:
+                            'Sets the directional variation (1 to 8) 선을 따라 이동하는 방향 변화량(1 ' +
+                            '~ 8)을 설정합니다. 숫자가 클수록 급커브를 잘 따라가지만 직선에서 좌우로 더 흔들립니다.',
+                        hamsterslite_stop: 'Stops both wheels.',
+                        hamsterslite_set_led_to:
+                            'Turns left/right/both LEDs to the selected color.',
+                        hamsterslite_pick_led: 'Turns left/right/both LEDs to the selected color.',
+                        hamsterslite_change_led_by_rgb:
+                            'Adds the entered values to the current R, G, B values of ' +
+                            'left/right/both LEDs, respectively.',
+                        hamsterslite_set_led_to_rgb:
+                            'Sets the R, G, B values of left/right/both LEDs to the ' +
+                            'entered values.',
+                        hamsterslite_clear_led: 'Turns off the left/right/both LEDs.',
+                        hamsterslite_play_sound_times:
+                            'Plays the selected sound as many times as entered.',
+                        hamsterslite_play_sound_times_until_done:
+                            'Plays the selected sound as many times as entered, and waits ' +
+                            'for completion.',
+                        hamsterslite_change_buzzer_by:
+                            'Adds the entered value to the current pitch (Hz) of the ' +
+                            'buzzer sound. You can enter up to two decimal places.',
+                        hamsterslite_set_buzzer_to:
+                            'Sets the pitch of the buzzer sound to the entered value ' +
+                            '(Hz). You can enter up to two decimal places. Entering the ' +
+                            'number 0 turns off the buzzer sound.',
+                        hamsterslite_clear_sound: 'Turns off sound.',
+                        hamsterslite_play_note: 'It sounds the selected tone and octave.',
+                        hamsterslite_play_note_for:
+                            'It sounds the selected tone and octave as much as the beat ' +
+                            'you entered.',
+                        hamsterslite_rest_for: 'Rests as much as the beat you entered.',
+                        hamsterslite_change_tempo_by:
+                            'Adds the entered value to the current BPM (beats per minute) ' +
+                            'of the playing or resting speed.',
+                        hamsterslite_set_tempo_to:
+                            'Sets the playing or resting speed to the entered BPM (beats ' +
+                            'per minute).',
+                        hamsterslite_set_port_to:
+                            'Sets the io mode of the selected external port to the selected mode.',
+                        hamsterslite_change_output_by:
+                            'Adds the entered value to the current output value of the ' +
+                            'selected external port. The result will be in the following ' +
+                            'range depending on the mode of the external port.<br/>Servo ' +
+                            'output: valid range from 1 to 180 degrees; if 0, output 0 ' +
+                            'without PWM pulse<br/>PWM output: 0 to 100%, duty ratio (%) ' +
+                            'of ON state in PWM waveform<br/>Digital output: LOW when 0, ' +
+                            'otherwise HIGH',
+                        hamsterslite_set_output_to:
+                            'Sets the output value of the selected external port to the ' +
+                            'entered value. The value has the following range according ' +
+                            'to the mode of external port.<br/>Servo output: valid range ' +
+                            'from 1 to 180 degrees; if 0, output 0 without PWM ' +
+                            'pulse<br/>PWM output: 0 to 100%, duty ratio (%) of ON state ' +
+                            'in PWM waveform<br/>Digital output: LOW when 0, otherwise HIGH',
+                        hamsterslite_gripper: 'Opens or closes the gripper.',
+                        hamsterslite_release_gripper:
+                            'Turns off the gripper so that it can be moved freely.',
+                        hamsterslite_write_serial: 'Sends strings via serial communication.',
+                        hamsterslite_read_serial_until:
+                            'Read the strings received by serial communication.',
+                        hamsterslite_set_serial_rate_to: 'Sets the speed of serial communication.',
+                    },
+                },
+            };
+            Object.keys(add).forEach((locale) => {
+                if (!base[locale]) {
+                    base[locale] = {};
+                }
+                Object.keys(add[locale]).forEach((section) => {
+                    base[locale][section] = Object.assign(
+                        {},
+                        base[locale][section],
+                        add[locale][section]
+                    );
+                });
+            });
+            return base;
+        }
+
+        // ── 블록 정의 (햄스터S 전용) ──
+        // 상위 정의에 얹는다. 타입 이름이 hamsterslite_ 로 갈라지므로 전역 블록 표에서
+        // 구형 것과 충돌하지 않는다.
+        // 정의는 설치형 block_hamster_s.js 를 옮긴 것이다. 달라진 곳은 두 가지뿐이다:
+        //   - func 는 activeHamster() 로 위임한다(설치형은 Entry.HamsterS.getRobot())
+        //   - syntax 는 비운다. 설치형 py 문자열(HamsterS.*)을 복제하면 한 번들 안에서
+        //     같은 문자열이 두 타입에 걸려 설치형의 python -> 블록 변환을 가로챌 수 있다
+        getBlocks() {
+            return Object.assign({}, super.getBlocks(), {
+                hamsterslite_hand_found: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    fontColor: '#fff',
+                    skeleton: 'basic_boolean_field',
+                    statements: [],
+                    params: [],
+                    events: {},
+                    def: {
+                        params: [],
+                        type: 'hamsterslite_hand_found',
+                    },
+                    class: 'hamsterslite_sensor',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().checkHandFound(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_boolean: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    fontColor: '#fff',
+                    skeleton: 'basic_boolean_field',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.hamsterslite_tilt_forward, 'TILT_FORWARD'],
+                                [Lang.Blocks.hamsterslite_tilt_backward, 'TILT_BACKWARD'],
+                                [Lang.Blocks.hamsterslite_tilt_left, 'TILT_LEFT'],
+                                [Lang.Blocks.hamsterslite_tilt_right, 'TILT_RIGHT'],
+                                [Lang.Blocks.hamsterslite_tilt_flip, 'TILT_FLIP'],
+                                [Lang.Blocks.hamsterslite_tilt_not, 'TILT_NOT'],
+                                [Lang.Blocks.hamsterslite_tap, 'TAP'],
+                                [Lang.Blocks.hamsterslite_free_fall, 'FREE_FALL'],
+                                [Lang.Blocks.hamsterslite_battery_normal, 'BATTERY_NORMAL'],
+                                [Lang.Blocks.hamsterslite_battery_low, 'BATTERY_LOW'],
+                                [Lang.Blocks.hamsterslite_battery_empty, 'BATTERY_EMPTY'],
+                            ],
+                            value: 'TILT_FORWARD',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [null],
+                        type: 'hamsterslite_boolean',
+                    },
+                    paramsKeyMap: {
+                        DEVICE: 0,
+                    },
+                    class: 'hamsterslite_sensor',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().checkBoolean(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_value: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    fontColor: '#fff',
+                    skeleton: 'basic_string_field',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.hamsterslite_sensor_left_proximity, 'LEFT_PROXIMITY'],
+                                [
+                                    Lang.Blocks.hamsterslite_sensor_right_proximity,
+                                    'RIGHT_PROXIMITY',
+                                ],
+                                [Lang.Blocks.hamsterslite_sensor_left_floor, 'LEFT_FLOOR'],
+                                [Lang.Blocks.hamsterslite_sensor_right_floor, 'RIGHT_FLOOR'],
+                                [Lang.Blocks.hamsterslite_sensor_acceleration_x, 'ACCELERATION_X'],
+                                [Lang.Blocks.hamsterslite_sensor_acceleration_y, 'ACCELERATION_Y'],
+                                [Lang.Blocks.hamsterslite_sensor_acceleration_z, 'ACCELERATION_Z'],
+                                [Lang.Blocks.hamsterslite_sensor_light, 'LIGHT'],
+                                [Lang.Blocks.hamsterslite_sensor_temperature, 'TEMPERATURE'],
+                                [
+                                    Lang.Blocks.hamsterslite_sensor_signal_strength,
+                                    'SIGNAL_STRENGTH',
+                                ],
+                                [Lang.Blocks.hamsterslite_sensor_input_a, 'INPUT_A'],
+                                [Lang.Blocks.hamsterslite_sensor_input_b, 'INPUT_B'],
+                                [Lang.Blocks.hamsterslite_serial_input, 'SERIAL_INPUT'],
+                            ],
+                            value: 'LEFT_PROXIMITY',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [null],
+                        type: 'hamsterslite_value',
+                    },
+                    paramsKeyMap: {
+                        DEVICE: 0,
+                    },
+                    class: 'hamsterslite_sensor',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().getValue(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_move_forward_once: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [null],
+                        type: 'hamsterslite_move_forward_once',
+                    },
+                    class: 'hamsterslite_board',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().boardForward(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_turn_once: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.hamsterslite_left, 'LEFT'],
+                                [Lang.Blocks.hamsterslite_right, 'RIGHT'],
+                            ],
+                            value: 'LEFT',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [null, null],
+                        type: 'hamsterslite_turn_once',
+                    },
+                    paramsKeyMap: {
+                        DIRECTION: 0,
+                    },
+                    class: 'hamsterslite_board',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().boardTurn(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_move_forward_unit: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.hamsterslite_unit_cm, 'CM'],
+                                [Lang.Blocks.hamsterslite_unit_sec, 'SEC'],
+                                [Lang.Blocks.hamsterslite_unit_pulse, 'PULSE'],
+                            ],
+                            value: 'CM',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [
+                            {
+                                type: 'text',
+                                params: ['5'],
+                            },
+                            null,
+                            null,
+                        ],
+                        type: 'hamsterslite_move_forward_unit',
+                    },
+                    paramsKeyMap: {
+                        VALUE: 0,
+                        UNIT: 1,
+                    },
+                    class: 'hamsterslite_wheel',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().moveForwardUnit(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_move_backward_unit: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.hamsterslite_unit_cm, 'CM'],
+                                [Lang.Blocks.hamsterslite_unit_sec, 'SEC'],
+                                [Lang.Blocks.hamsterslite_unit_pulse, 'PULSE'],
+                            ],
+                            value: 'CM',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [
+                            {
+                                type: 'text',
+                                params: ['5'],
+                            },
+                            null,
+                            null,
+                        ],
+                        type: 'hamsterslite_move_backward_unit',
+                    },
+                    paramsKeyMap: {
+                        VALUE: 0,
+                        UNIT: 1,
+                    },
+                    class: 'hamsterslite_wheel',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().moveBackwardUnit(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_turn_unit_in_place: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.hamsterslite_left, 'LEFT'],
+                                [Lang.Blocks.hamsterslite_right, 'RIGHT'],
+                            ],
+                            value: 'LEFT',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.hamsterslite_unit_deg, 'DEG'],
+                                [Lang.Blocks.hamsterslite_unit_sec, 'SEC'],
+                                [Lang.Blocks.hamsterslite_unit_pulse, 'PULSE'],
+                            ],
+                            value: 'DEG',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [
+                            null,
+                            {
+                                type: 'text',
+                                params: ['90'],
+                            },
+                            null,
+                            null,
+                        ],
+                        type: 'hamsterslite_turn_unit_in_place',
+                    },
+                    paramsKeyMap: {
+                        DIRECTION: 0,
+                        VALUE: 1,
+                        UNIT: 2,
+                    },
+                    class: 'hamsterslite_wheel',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().turnUnit(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_pivot_around_unit_in_direction: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.hamsterslite_left_pen, 'LEFT_PEN'],
+                                [Lang.Blocks.hamsterslite_right_pen, 'RIGHT_PEN'],
+                                [Lang.Blocks.hamsterslite_left_wheel, 'LEFT_WHEEL'],
+                                [Lang.Blocks.hamsterslite_right_wheel, 'RIGHT_WHEEL'],
+                            ],
+                            value: 'LEFT_PEN',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.hamsterslite_unit_deg, 'DEG'],
+                                [Lang.Blocks.hamsterslite_unit_sec, 'SEC'],
+                                [Lang.Blocks.hamsterslite_unit_pulse, 'PULSE'],
+                            ],
+                            value: 'DEG',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.hamsterslite_forward, 'FORWARD'],
+                                [Lang.Blocks.hamsterslite_backward, 'BACKWARD'],
+                            ],
+                            value: 'FORWARD',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [
+                            null,
+                            {
+                                type: 'text',
+                                params: ['90'],
+                            },
+                            null,
+                            null,
+                            null,
+                        ],
+                        type: 'hamsterslite_pivot_around_unit_in_direction',
+                    },
+                    paramsKeyMap: {
+                        PART: 0,
+                        VALUE: 1,
+                        UNIT: 2,
+                        TOWARD: 3,
+                    },
+                    class: 'hamsterslite_wheel',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().pivotUnit(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_turn_unit_with_radius_in_direction: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.hamsterslite_left_pen, 'LEFT_PEN'],
+                                [Lang.Blocks.hamsterslite_right_pen, 'RIGHT_PEN'],
+                                [Lang.Blocks.hamsterslite_robot, 'ROBOT'],
+                            ],
+                            value: 'LEFT_PEN',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.hamsterslite_left, 'LEFT'],
+                                [Lang.Blocks.hamsterslite_right, 'RIGHT'],
+                            ],
+                            value: 'LEFT',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.hamsterslite_unit_deg, 'DEG'],
+                                [Lang.Blocks.hamsterslite_unit_sec, 'SEC'],
+                                [Lang.Blocks.hamsterslite_unit_pulse, 'PULSE'],
+                            ],
+                            value: 'DEG',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.hamsterslite_forward, 'FORWARD'],
+                                [Lang.Blocks.hamsterslite_backward, 'BACKWARD'],
+                            ],
+                            value: 'FORWARD',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [
+                            null,
+                            null,
+                            {
+                                type: 'text',
+                                params: ['90'],
+                            },
+                            null,
+                            {
+                                type: 'text',
+                                params: ['5'],
+                            },
+                            null,
+                            null,
+                        ],
+                        type: 'hamsterslite_turn_unit_with_radius_in_direction',
+                    },
+                    paramsKeyMap: {
+                        PART: 0,
+                        DIRECTION: 1,
+                        VALUE: 2,
+                        UNIT: 3,
+                        RADIUS: 4,
+                        TOWARD: 5,
+                    },
+                    class: 'hamsterslite_wheel',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().swingUnit(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_change_both_wheels_by: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [
+                            {
+                                type: 'text',
+                                params: ['10'],
+                            },
+                            {
+                                type: 'text',
+                                params: ['10'],
+                            },
+                            null,
+                        ],
+                        type: 'hamsterslite_change_both_wheels_by',
+                    },
+                    paramsKeyMap: {
+                        LEFT: 0,
+                        RIGHT: 1,
+                    },
+                    class: 'hamsterslite_wheel',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().changeWheels(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_set_both_wheels_to: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [
+                            {
+                                type: 'text',
+                                params: ['30'],
+                            },
+                            {
+                                type: 'text',
+                                params: ['30'],
+                            },
+                            null,
+                        ],
+                        type: 'hamsterslite_set_both_wheels_to',
+                    },
+                    paramsKeyMap: {
+                        LEFT: 0,
+                        RIGHT: 1,
+                    },
+                    class: 'hamsterslite_wheel',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().setWheels(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_change_wheel_by: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.hamsterslite_left, 'LEFT'],
+                                [Lang.Blocks.hamsterslite_right, 'RIGHT'],
+                                [Lang.Blocks.hamsterslite_both, 'BOTH'],
+                            ],
+                            value: 'LEFT',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [
+                            null,
+                            {
+                                type: 'text',
+                                params: ['10'],
+                            },
+                            null,
+                        ],
+                        type: 'hamsterslite_change_wheel_by',
+                    },
+                    paramsKeyMap: {
+                        WHEEL: 0,
+                        VELOCITY: 1,
+                    },
+                    class: 'hamsterslite_wheel',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().changeWheel(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_set_wheel_to: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.hamsterslite_left, 'LEFT'],
+                                [Lang.Blocks.hamsterslite_right, 'RIGHT'],
+                                [Lang.Blocks.hamsterslite_both, 'BOTH'],
+                            ],
+                            value: 'LEFT',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [
+                            null,
+                            {
+                                type: 'text',
+                                params: ['30'],
+                            },
+                            null,
+                        ],
+                        type: 'hamsterslite_set_wheel_to',
+                    },
+                    paramsKeyMap: {
+                        WHEEL: 0,
+                        VELOCITY: 1,
+                    },
+                    class: 'hamsterslite_wheel',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().setWheel(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_follow_line_using: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.hamsterslite_color_black, 'BLACK'],
+                                [Lang.Blocks.hamsterslite_color_white, 'WHITE'],
+                            ],
+                            value: 'BLACK',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.hamsterslite_left, 'LEFT'],
+                                [Lang.Blocks.hamsterslite_right, 'RIGHT'],
+                                [Lang.Blocks.hamsterslite_both, 'BOTH'],
+                            ],
+                            value: 'LEFT',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [null, null, null],
+                        type: 'hamsterslite_follow_line_using',
+                    },
+                    paramsKeyMap: {
+                        COLOR: 0,
+                        SENSOR: 1,
+                    },
+                    class: 'hamsterslite_wheel',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().followLine(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_follow_line_until: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.hamsterslite_color_black, 'BLACK'],
+                                [Lang.Blocks.hamsterslite_color_white, 'WHITE'],
+                            ],
+                            value: 'BLACK',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.hamsterslite_left, 'LEFT'],
+                                [Lang.Blocks.hamsterslite_right, 'RIGHT'],
+                                [Lang.Blocks.hamsterslite_front, 'FRONT'],
+                                [Lang.Blocks.hamsterslite_rear, 'REAR'],
+                            ],
+                            value: 'FRONT',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [null, null, null],
+                        type: 'hamsterslite_follow_line_until',
+                    },
+                    paramsKeyMap: {
+                        COLOR: 0,
+                        DIRECTION: 1,
+                    },
+                    class: 'hamsterslite_wheel',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().followLineUntil(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_set_following_speed_to: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                ['1', '1'],
+                                ['2', '2'],
+                                ['3', '3'],
+                                ['4', '4'],
+                                ['5', '5'],
+                                ['6', '6'],
+                                ['7', '7'],
+                                ['8', '8'],
+                            ],
+                            value: '1',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: ['5', null],
+                        type: 'hamsterslite_set_following_speed_to',
+                    },
+                    paramsKeyMap: {
+                        SPEED: 0,
+                    },
+                    class: 'hamsterslite_wheel',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().setLineTracerSpeed(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_set_following_gain_to: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.hamsterslite_gain_default, 'DEFAULT'],
+                                ['1', '1'],
+                                ['2', '2'],
+                                ['3', '3'],
+                                ['4', '4'],
+                                ['5', '5'],
+                                ['6', '6'],
+                                ['7', '7'],
+                                ['8', '8'],
+                            ],
+                            value: 'DEFAULT',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [null, null],
+                        type: 'hamsterslite_set_following_gain_to',
+                    },
+                    paramsKeyMap: {
+                        GAIN: 0,
+                    },
+                    class: 'hamsterslite_wheel',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().setLineTracerGain(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_stop: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [null],
+                        type: 'hamsterslite_stop',
+                    },
+                    class: 'hamsterslite_wheel',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().stop(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_set_led_to: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.hamsterslite_left, 'LEFT'],
+                                [Lang.Blocks.hamsterslite_right, 'RIGHT'],
+                                [Lang.Blocks.hamsterslite_both, 'BOTH'],
+                            ],
+                            value: 'LEFT',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.hamsterslite_color_red, 'RED'],
+                                [Lang.Blocks.hamsterslite_color_orange, 'ORANGE'],
+                                [Lang.Blocks.hamsterslite_color_yellow, 'YELLOW'],
+                                [Lang.Blocks.hamsterslite_color_green, 'GREEN'],
+                                [Lang.Blocks.hamsterslite_color_sky_blue, 'SKY_BLUE'],
+                                [Lang.Blocks.hamsterslite_color_blue, 'BLUE'],
+                                [Lang.Blocks.hamsterslite_color_violet, 'VIOLET'],
+                                [Lang.Blocks.hamsterslite_color_purple, 'PURPLE'],
+                                [Lang.Blocks.hamsterslite_color_white, 'WHITE'],
+                            ],
+                            value: 'RED',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [null, null, null],
+                        type: 'hamsterslite_set_led_to',
+                    },
+                    paramsKeyMap: {
+                        LED: 0,
+                        COLOR: 1,
+                    },
+                    class: 'hamsterslite_led',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().setLed(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_pick_led: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.hamsterslite_left, 'LEFT'],
+                                [Lang.Blocks.hamsterslite_right, 'RIGHT'],
+                                [Lang.Blocks.hamsterslite_both, 'BOTH'],
+                            ],
+                            value: 'LEFT',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Color',
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [null, null, null],
+                        type: 'hamsterslite_pick_led',
+                    },
+                    paramsKeyMap: {
+                        LED: 0,
+                        COLOR: 1,
+                    },
+                    class: 'hamsterslite_led',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().pickLed(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_change_led_by_rgb: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.hamsterslite_left, 'LEFT'],
+                                [Lang.Blocks.hamsterslite_right, 'RIGHT'],
+                                [Lang.Blocks.hamsterslite_both, 'BOTH'],
+                            ],
+                            value: 'LEFT',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [
+                            null,
+                            {
+                                type: 'text',
+                                params: ['10'],
+                            },
+                            {
+                                type: 'text',
+                                params: ['0'],
+                            },
+                            {
+                                type: 'text',
+                                params: ['0'],
+                            },
+                            null,
+                        ],
+                        type: 'hamsterslite_change_led_by_rgb',
+                    },
+                    paramsKeyMap: {
+                        LED: 0,
+                        RED: 1,
+                        GREEN: 2,
+                        BLUE: 3,
+                    },
+                    class: 'hamsterslite_led',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().changeRgb(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_set_led_to_rgb: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.hamsterslite_left, 'LEFT'],
+                                [Lang.Blocks.hamsterslite_right, 'RIGHT'],
+                                [Lang.Blocks.hamsterslite_both, 'BOTH'],
+                            ],
+                            value: 'LEFT',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [
+                            null,
+                            {
+                                type: 'text',
+                                params: ['255'],
+                            },
+                            {
+                                type: 'text',
+                                params: ['0'],
+                            },
+                            {
+                                type: 'text',
+                                params: ['0'],
+                            },
+                            null,
+                        ],
+                        type: 'hamsterslite_set_led_to_rgb',
+                    },
+                    paramsKeyMap: {
+                        LED: 0,
+                        RED: 1,
+                        GREEN: 2,
+                        BLUE: 3,
+                    },
+                    class: 'hamsterslite_led',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().setRgb(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_clear_led: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.hamsterslite_left, 'LEFT'],
+                                [Lang.Blocks.hamsterslite_right, 'RIGHT'],
+                                [Lang.Blocks.hamsterslite_both, 'BOTH'],
+                            ],
+                            value: 'LEFT',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [null, null],
+                        type: 'hamsterslite_clear_led',
+                    },
+                    paramsKeyMap: {
+                        LED: 0,
+                    },
+                    class: 'hamsterslite_led',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().clearLed(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_play_sound_times: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.hamsterslite_sound_beep, 'BEEP'],
+                                [Lang.Blocks.hamsterslite_sound_random_beep, 'RANDOM_BEEP'],
+                                [Lang.Blocks.hamsterslite_sound_noise, 'NOISE'],
+                                [Lang.Blocks.hamsterslite_sound_siren, 'SIREN'],
+                                [Lang.Blocks.hamsterslite_sound_engine, 'ENGINE'],
+                                [Lang.Blocks.hamsterslite_sound_chop, 'CHOP'],
+                                [Lang.Blocks.hamsterslite_sound_robot, 'ROBOT'],
+                                [Lang.Blocks.hamsterslite_sound_dibidibidip, 'DIBIDIBIDIP'],
+                                [Lang.Blocks.hamsterslite_sound_good_job, 'GOOD_JOB'],
+                                [Lang.Blocks.hamsterslite_sound_happy, 'HAPPY'],
+                                [Lang.Blocks.hamsterslite_sound_angry, 'ANGRY'],
+                                [Lang.Blocks.hamsterslite_sound_sad, 'SAD'],
+                                [Lang.Blocks.hamsterslite_sound_sleep, 'SLEEP'],
+                                [Lang.Blocks.hamsterslite_sound_march, 'MARCH'],
+                                [Lang.Blocks.hamsterslite_sound_birthday, 'BIRTHDAY'],
+                            ],
+                            value: 'BEEP',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [
+                            null,
+                            {
+                                type: 'text',
+                                params: ['1'],
+                            },
+                            null,
+                        ],
+                        type: 'hamsterslite_play_sound_times',
+                    },
+                    paramsKeyMap: {
+                        SOUND: 0,
+                        COUNT: 1,
+                    },
+                    class: 'hamsterslite_sound',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().playSound(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_play_sound_times_until_done: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.hamsterslite_sound_beep, 'BEEP'],
+                                [Lang.Blocks.hamsterslite_sound_random_beep, 'RANDOM_BEEP'],
+                                [Lang.Blocks.hamsterslite_sound_noise, 'NOISE'],
+                                [Lang.Blocks.hamsterslite_sound_siren, 'SIREN'],
+                                [Lang.Blocks.hamsterslite_sound_engine, 'ENGINE'],
+                                [Lang.Blocks.hamsterslite_sound_chop, 'CHOP'],
+                                [Lang.Blocks.hamsterslite_sound_robot, 'ROBOT'],
+                                [Lang.Blocks.hamsterslite_sound_dibidibidip, 'DIBIDIBIDIP'],
+                                [Lang.Blocks.hamsterslite_sound_good_job, 'GOOD_JOB'],
+                                [Lang.Blocks.hamsterslite_sound_happy, 'HAPPY'],
+                                [Lang.Blocks.hamsterslite_sound_angry, 'ANGRY'],
+                                [Lang.Blocks.hamsterslite_sound_sad, 'SAD'],
+                                [Lang.Blocks.hamsterslite_sound_sleep, 'SLEEP'],
+                                [Lang.Blocks.hamsterslite_sound_march, 'MARCH'],
+                                [Lang.Blocks.hamsterslite_sound_birthday, 'BIRTHDAY'],
+                            ],
+                            value: 'BEEP',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [
+                            null,
+                            {
+                                type: 'text',
+                                params: ['1'],
+                            },
+                            null,
+                        ],
+                        type: 'hamsterslite_play_sound_times_until_done',
+                    },
+                    paramsKeyMap: {
+                        SOUND: 0,
+                        COUNT: 1,
+                    },
+                    class: 'hamsterslite_sound',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().playSoundUntil(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_change_buzzer_by: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [
+                            {
+                                type: 'text',
+                                params: ['10'],
+                            },
+                            null,
+                        ],
+                        type: 'hamsterslite_change_buzzer_by',
+                    },
+                    paramsKeyMap: {
+                        HZ: 0,
+                    },
+                    class: 'hamsterslite_sound',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().changeBuzzer(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_set_buzzer_to: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [
+                            {
+                                type: 'text',
+                                params: ['1000'],
+                            },
+                            null,
+                        ],
+                        type: 'hamsterslite_set_buzzer_to',
+                    },
+                    paramsKeyMap: {
+                        HZ: 0,
+                    },
+                    class: 'hamsterslite_sound',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().setBuzzer(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_clear_sound: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [null],
+                        type: 'hamsterslite_clear_sound',
+                    },
+                    class: 'hamsterslite_sound',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().clearSound(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_play_note: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.hamsterslite_note_c, 'C'],
+                                [Lang.Blocks.hamsterslite_note_c_sharp, 'C#'],
+                                [Lang.Blocks.hamsterslite_note_d, 'D'],
+                                [Lang.Blocks.hamsterslite_note_d_sharp, 'D#'],
+                                [Lang.Blocks.hamsterslite_note_e, 'E'],
+                                [Lang.Blocks.hamsterslite_note_f, 'F'],
+                                [Lang.Blocks.hamsterslite_note_f_sharp, 'F#'],
+                                [Lang.Blocks.hamsterslite_note_g, 'G'],
+                                [Lang.Blocks.hamsterslite_note_g_sharp, 'G#'],
+                                [Lang.Blocks.hamsterslite_note_a, 'A'],
+                                [Lang.Blocks.hamsterslite_note_a_sharp, 'A#'],
+                                [Lang.Blocks.hamsterslite_note_b, 'B'],
+                            ],
+                            value: 'C',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                ['1', '1'],
+                                ['2', '2'],
+                                ['3', '3'],
+                                ['4', '4'],
+                                ['5', '5'],
+                                ['6', '6'],
+                                ['7', '7'],
+                            ],
+                            value: '1',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [null, '4', null],
+                        type: 'hamsterslite_play_note',
+                    },
+                    paramsKeyMap: {
+                        NOTE: 0,
+                        OCTAVE: 1,
+                    },
+                    class: 'hamsterslite_sound',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().playNote(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_play_note_for: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.hamsterslite_note_c, 'C'],
+                                [Lang.Blocks.hamsterslite_note_c_sharp, 'C#'],
+                                [Lang.Blocks.hamsterslite_note_d, 'D'],
+                                [Lang.Blocks.hamsterslite_note_d_sharp, 'D#'],
+                                [Lang.Blocks.hamsterslite_note_e, 'E'],
+                                [Lang.Blocks.hamsterslite_note_f, 'F'],
+                                [Lang.Blocks.hamsterslite_note_f_sharp, 'F#'],
+                                [Lang.Blocks.hamsterslite_note_g, 'G'],
+                                [Lang.Blocks.hamsterslite_note_g_sharp, 'G#'],
+                                [Lang.Blocks.hamsterslite_note_a, 'A'],
+                                [Lang.Blocks.hamsterslite_note_a_sharp, 'A#'],
+                                [Lang.Blocks.hamsterslite_note_b, 'B'],
+                            ],
+                            value: 'C',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                ['1', '1'],
+                                ['2', '2'],
+                                ['3', '3'],
+                                ['4', '4'],
+                                ['5', '5'],
+                                ['6', '6'],
+                                ['7', '7'],
+                            ],
+                            value: '1',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [
+                            null,
+                            '4',
+                            {
+                                type: 'text',
+                                params: ['0.5'],
+                            },
+                            null,
+                        ],
+                        type: 'hamsterslite_play_note_for',
+                    },
+                    paramsKeyMap: {
+                        NOTE: 0,
+                        OCTAVE: 1,
+                        BEAT: 2,
+                    },
+                    class: 'hamsterslite_sound',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().playNoteBeat(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_rest_for: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [
+                            {
+                                type: 'text',
+                                params: ['0.25'],
+                            },
+                            null,
+                        ],
+                        type: 'hamsterslite_rest_for',
+                    },
+                    paramsKeyMap: {
+                        BEAT: 0,
+                    },
+                    class: 'hamsterslite_sound',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().restBeat(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_change_tempo_by: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [
+                            {
+                                type: 'text',
+                                params: ['20'],
+                            },
+                            null,
+                        ],
+                        type: 'hamsterslite_change_tempo_by',
+                    },
+                    paramsKeyMap: {
+                        BPM: 0,
+                    },
+                    class: 'hamsterslite_sound',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().changeTempo(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_set_tempo_to: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [
+                            {
+                                type: 'text',
+                                params: ['60'],
+                            },
+                            null,
+                        ],
+                        type: 'hamsterslite_set_tempo_to',
+                    },
+                    paramsKeyMap: {
+                        BPM: 0,
+                    },
+                    class: 'hamsterslite_sound',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().setTempo(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_set_port_to: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.hamsterslite_port_a, 'A'],
+                                [Lang.Blocks.hamsterslite_port_b, 'B'],
+                                [Lang.Blocks.hamsterslite_port_ab, 'AB'],
+                            ],
+                            value: 'A',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.hamsterslite_analog_input, 'ANALOG_INPUT'],
+                                [Lang.Blocks.hamsterslite_digital_input, 'DIGITAL_INPUT'],
+                                [
+                                    Lang.Blocks.hamsterslite_digital_input_pull_up,
+                                    'DIGITAL_INPUT_PULL_UP',
+                                ],
+                                [
+                                    Lang.Blocks.hamsterslite_digital_input_pull_down,
+                                    'DIGITAL_INPUT_PULL_DOWN',
+                                ],
+                                [Lang.Blocks.hamsterslite_voltage_input, 'VOLTAGE_INPUT'],
+                                [Lang.Blocks.hamsterslite_servo_output, 'SERVO_OUTPUT'],
+                                [Lang.Blocks.hamsterslite_pwm_output, 'PWM_OUTPUT'],
+                                [Lang.Blocks.hamsterslite_digital_output, 'DIGITAL_OUTPUT'],
+                            ],
+                            value: 'ANALOG_INPUT',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [null, null, null],
+                        type: 'hamsterslite_set_port_to',
+                    },
+                    paramsKeyMap: {
+                        PORT: 0,
+                        MODE: 1,
+                    },
+                    class: 'hamsterslite_port',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().setIoMode(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_change_output_by: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.hamsterslite_port_a, 'A'],
+                                [Lang.Blocks.hamsterslite_port_b, 'B'],
+                                [Lang.Blocks.hamsterslite_port_ab, 'AB'],
+                            ],
+                            value: 'A',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [
+                            null,
+                            {
+                                type: 'text',
+                                params: ['10'],
+                            },
+                            null,
+                        ],
+                        type: 'hamsterslite_change_output_by',
+                    },
+                    paramsKeyMap: {
+                        PORT: 0,
+                        VALUE: 1,
+                    },
+                    class: 'hamsterslite_port',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().changeOutput(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_set_output_to: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.hamsterslite_port_a, 'A'],
+                                [Lang.Blocks.hamsterslite_port_b, 'B'],
+                                [Lang.Blocks.hamsterslite_port_ab, 'AB'],
+                            ],
+                            value: 'A',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [
+                            null,
+                            {
+                                type: 'text',
+                                params: ['100'],
+                            },
+                            null,
+                        ],
+                        type: 'hamsterslite_set_output_to',
+                    },
+                    paramsKeyMap: {
+                        PORT: 0,
+                        VALUE: 1,
+                    },
+                    class: 'hamsterslite_port',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().setOutput(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_gripper: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.hamsterslite_open_gripper, 'OPEN'],
+                                [Lang.Blocks.hamsterslite_close_gripper, 'CLOSE'],
+                            ],
+                            value: 'OPEN',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [null, null],
+                        type: 'hamsterslite_gripper',
+                    },
+                    paramsKeyMap: {
+                        ACTION: 0,
+                    },
+                    class: 'hamsterslite_port',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().gripper(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_release_gripper: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [null],
+                        type: 'hamsterslite_release_gripper',
+                    },
+                    class: 'hamsterslite_port',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().releaseGripper(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_write_serial: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.hamsterslite_serial_string, 'STRING'],
+                                [Lang.Blocks.hamsterslite_serial_string_line, 'STRING_LINE'],
+                            ],
+                            value: 'STRING',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [
+                            null,
+                            {
+                                type: 'text',
+                                params: ['abc123'],
+                            },
+                            null,
+                        ],
+                        type: 'hamsterslite_write_serial',
+                    },
+                    paramsKeyMap: {
+                        MODE: 0,
+                        STRING: 1,
+                    },
+                    class: 'hamsterslite_port',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().writeSerial(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_read_serial_until: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.hamsterslite_serial_all, 'ALL'],
+                                [Lang.Blocks.hamsterslite_serial_until_comma, 'COMMA'],
+                                [Lang.Blocks.hamsterslite_serial_until_colon, 'COLON'],
+                                [Lang.Blocks.hamsterslite_serial_until_dollar, 'DOLLAR'],
+                                [Lang.Blocks.hamsterslite_serial_until_sharp, 'SHARP'],
+                                [Lang.Blocks.hamsterslite_serial_until_new_line, 'NEW_LINE'],
+                            ],
+                            value: 'ALL',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [null, null],
+                        type: 'hamsterslite_read_serial_until',
+                    },
+                    paramsKeyMap: {
+                        DELIMITER: 0,
+                    },
+                    class: 'hamsterslite_port',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().readSerialUntil(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+                hamsterslite_set_serial_rate_to: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                ['9600', '9600'],
+                                ['14400', '14400'],
+                                ['19200', '19200'],
+                                ['28800', '28800'],
+                                ['38400', '38400'],
+                                ['57600', '57600'],
+                                ['76800', '76800'],
+                                ['115200', '115200'],
+                            ],
+                            value: '9600',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [null, null],
+                        type: 'hamsterslite_set_serial_rate_to',
+                    },
+                    paramsKeyMap: {
+                        BAUD: 0,
+                    },
+                    class: 'hamsterslite_port',
+                    isNotFor: ['HamsterSLite'],
+                    func(sprite, script) {
+                        return activeHamster().setSerialRate(script);
+                    },
+                    syntax: { js: [], py: [] },
+                },
+            });
+        }
+
+        // ── 선 따라가기 속도와 방향 변화량 ──
+        // 설치형 HamsterSRobot 의 setLineTracerSpeed / setLineTracerGain 을 옮겼다.
+        // gain 을 "기본 값"으로 두면(-1) 속도가 바뀔 때마다 속도별 표에서 다시 고른다.
+        // 숫자로 정하면 그 뒤로는 속도를 바꿔도 유지된다.
+        __resetState() {
+            // 시리얼 대기는 정지가 푼다(lite 에서는 취소와 정지가 대기를 푼다). 정지 패킷이 나가기
+            // 전에 블록 쪽 상태를 비운다.
+            this.__resetSerialBlocks();
+            super.__resetState();
+            this.lineTracerUserSpeed = 5;
+            this.lineTracerUserGain = -1;
+        }
+
+        // ── 시리얼 (쓰기, 읽기, 통신 속도, 값 블록의 시리얼 입력) ──
+        // 설치형은 상태가 두 곳에 있다. entry-hw hamster_s.js(프로토콜: 프레임 id, 포트 모드 확인, 송신 순서)와
+        // 설치형 HamsterSRobot(블록: 큐, 콜백, 구분자, 받은 글자). 정지는 블록 쪽만, 연결은 프로토콜 쪽만
+        // 초기화한다. 둘을 합치지 않고 그대로 나눠 둔다.
+        __resetSerialProtocol() {
+            this.serialHw = {
+                eventSerialId: -1, // 받은 시리얼 프레임 id 기준. 연결 후 첫 프레임은 기준만 잡는다
+                commandSerialId: 0, // 보낸 시리얼 프레임 id (4비트)
+                serialWritten: false, // 보낼 조각이 있다
+                writeSerial: undefined, // 보낼 조각 [길이, 바이트 x18]
+                portAckId: -1, // 포트 모드 변경 확인 비트의 기준
+                portSerial: false, // 로봇이 시리얼 모드로 바뀌었다고 확인했다
+                sendId: 0,
+                sendPrevId: 0,
+                packetSent: 0, // 1 = 모터 패킷, 3 = 시리얼 패킷. 시리얼을 연달아 보내지 않는다
+                readSerial: new Array(19), // 받은 조각 [길이, 바이트 x18]
+                readSerialId: 0,
+                serialState: 0, // 1 = 직전 시리얼 조각을 보냈다(다음 조각을 보내도 된다)
+                serialStateId: 0,
+            };
+        }
+
+        __resetSerialBlocks() {
+            if (this.writeSerialCallbacks) {
+                this.__fireSerialCallbacks('writeSerialCallbacks');
+                this.__fireSerialCallbacks('readSerialCallbacks');
+            }
+            this.serialReadId = -1; // entry-hw 쪽 readSerialId 를 마지막으로 본 값
+            this.serialStateSeenId = -1;
+            this.serialDelimiter = 0;
+            this.serialRate = 176; // 9600
+            this.writeSerialCallbacks = [];
+            this.readSerialCallbacks = [];
+            this.serialInput = '';
+            if (!this.writeQueue) {
+                this.writeQueue = new SerialWriteQueue(64);
+                this.readQueue = new SerialReadQueue(64);
+            }
+            this.writeQueue.reset();
+            this.readQueue.reset();
+            if (!this.serialHw) {
+                this.__resetSerialProtocol();
+            }
+        }
+
+        __fireSerialCallbacks(key) {
+            const callbacks = this[key];
+            this[key] = [];
+            callbacks.forEach((cb) => cb());
+        }
+
+        async initialHandshake() {
+            this.__resetSerialProtocol(); // entry-hw reset() 과 같다
+            return super.initialHandshake();
+        }
+
+        // 조각 하나를 보낼 준비. 설치형은 writeSerialId 로 entry-hw 에 "새 조각"을 알리는데, 정지 뒤 id 가
+        // 1 로 돌아가 직전 id 와 겹치면 entry-hw 가 새 조각으로 보지 않아 쓰기 블록이 영원히 기다린다.
+        // lite 는 조각마다 바로 보낼 것으로 표시한다.
+        __setSerial(arr) {
+            this.serialHw.writeSerial = arr.slice(0, 19);
+            this.serialHw.serialWritten = true;
+        }
+
+        // 받은 시리얼 프레임: [0] 2, [1] id, [2,4) 길이, 그 뒤 바이트. entry-hw hamster_s.js 와 같다.
+        __handleSerialFrame(data) {
+            const hw = this.serialHw;
+            const id = parseInt(data.slice(1, 2), 16);
+            if (id != hw.eventSerialId) {
+                if (hw.eventSerialId != -1) {
+                    let len = parseInt(data.slice(2, 4), 16);
+                    if (len > 18) {
+                        len = 18;
+                    }
+                    const readSerial = hw.readSerial;
+                    readSerial[0] = len;
+                    for (let i = 1, j = 4; i <= len; ++i, j += 2) {
+                        readSerial[i] = parseInt(data.slice(j, j + 2), 16);
+                    }
+                    for (let i = len + 1; i <= 18; ++i) {
+                        readSerial[i] = 0;
+                    }
+                    hw.readSerialId = (hw.readSerialId % 255) + 1;
+                }
+                hw.eventSerialId = id;
+            }
+            return true;
+        }
+
+        // 일반 프레임의 포트 모드 확인 비트(value2 >> 5). 바뀌면 로봇이 모드를 바꾼 것이다.
+        __handlePortAck(value2) {
+            const hw = this.serialHw;
+            const id = (value2 >> 5) & 0x01;
+            if (id != hw.portAckId) {
+                if (hw.portAckId != -1) {
+                    hw.portSerial = this.motoring.ioModeA > 10;
+                }
+                hw.portAckId = id;
+            }
+        }
+
+        __serialPacket() {
+            const hw = this.serialHw;
+            if (!(hw.portSerial && hw.serialWritten && hw.packetSent != 3)) {
+                return null;
+            }
+            hw.serialWritten = false;
+            hw.packetSent = 3;
+            hw.sendId = (hw.sendId % 255) + 1;
+            const writeSerial = hw.writeSerial;
+            if (writeSerial) {
+                let len = writeSerial[0];
+                if (len > 0) {
+                    if (len > 18) {
+                        len = 18;
+                    }
+                    hw.commandSerialId = (hw.commandSerialId % 15) + 1;
+                    let str = this.toHex(0x20 | (hw.commandSerialId & 0x0f));
+                    str += this.toHex(len);
+                    for (let i = 1; i <= len; ++i) {
+                        str += this.toHex(writeSerial[i]);
+                    }
+                    for (let i = len + 1; i <= 18; ++i) {
+                        str += '00';
+                    }
+                    return `${str}-${this.address}\r`;
+                }
+            }
+            // entry-hw 도 여기서 모터 패킷으로 넘어간다(보낼 바이트가 없는 조각)
+            return null;
+        }
+
+        __onMotorPacketSent() {
+            this.serialHw.packetSent = 1;
+        }
+
+        handleSensory() {
+            super.handleSensory();
+            const hw = this.serialHw;
+            // entry-hw handleLocalData 끝: 직전 송신이 시리얼 조각이었으면 "보냈다"를 알린다
+            if (hw.sendId != hw.sendPrevId) {
+                hw.sendPrevId = hw.sendId;
+                hw.serialState = 1;
+                hw.serialStateId = (hw.serialStateId % 255) + 1;
+            }
+            // 설치형 HamsterSRobot.handleSensory 의 시리얼 부분
+            if (hw.readSerialId != this.serialReadId) {
+                if (this.serialReadId >= 0) {
+                    this.readQueue.push(hw.readSerial, 0);
+                }
+                this.serialReadId = hw.readSerialId;
+            }
+            if (hw.serialStateId != this.serialStateSeenId) {
+                this.serialStateSeenId = hw.serialStateId;
+                if (hw.serialState == 1) {
+                    const next = this.writeQueue.pop();
+                    if (next) {
+                        this.__setSerial(next);
+                    } else {
+                        this.__fireSerialCallbacks('writeSerialCallbacks');
+                    }
+                }
+            }
+            if (this.readSerialCallbacks.length > 0) {
+                const text = this.readQueue.pop(this.serialDelimiter);
+                if (text) {
+                    this.serialInput = text;
+                    this.__fireSerialCallbacks('readSerialCallbacks');
+                }
+            }
+            hw.serialState = 0; // entry-hw requestRemoteData 가 보낸 뒤 되돌린다
+        }
+
+        writeSerial(script) {
+            if (!script.isStart) {
+                script.isStart = true;
+                script.isWriting = true;
+                this.__cancelIo();
+                const mode = script.getField('MODE');
+                const text = script.getValue('STRING');
+                this.motoring.ioModeA = this.serialRate;
+                this.motoring.ioModeB = this.serialRate;
+                const queue = this.writeQueue;
+                queue.push(text, mode != 'STRING');
+                const data = queue.pop();
+                if (data) {
+                    this.writeSerialCallbacks.push(() => {
+                        script.isWriting = false;
+                    });
+                    this.__setSerial(data);
+                }
+                return script;
+            } else if (script.isWriting) {
+                return script;
+            }
+            delete script.isStart;
+            delete script.isWriting;
+            Entry.engine.isContinue = false;
+            return script.callReturn();
+        }
+
+        readSerialUntil(script) {
+            if (!script.isStart) {
+                script.isStart = true;
+                script.isReading = true;
+                this.__cancelIo();
+                const delimiter = SERIAL_DELIMITERS[script.getField('DELIMITER')];
+                this.motoring.ioModeA = this.serialRate;
+                this.motoring.ioModeB = this.serialRate;
+                if (typeof delimiter == 'number') {
+                    this.serialDelimiter = delimiter;
+                    this.readSerialCallbacks.push(() => {
+                        script.isReading = false;
+                    });
+                }
+                return script;
+            } else if (script.isReading) {
+                return script;
+            }
+            delete script.isStart;
+            delete script.isReading;
+            Entry.engine.isContinue = false;
+            return script.callReturn();
+        }
+
+        setSerialRate(script) {
+            this.__cancelIo();
+            const baud = SERIAL_BAUDS[script.getField('BAUD')];
+            if (baud && baud > 0) {
+                this.serialRate = baud;
+                this.motoring.ioModeA = baud;
+                this.motoring.ioModeB = baud;
+            }
+            return script.callReturn();
+        }
+
+        getValue(script) {
+            if (script.getField('DEVICE') == 'SERIAL_INPUT') {
+                return this.serialInput;
+            }
+            return super.getValue(script);
+        }
+
+        __lineTracerGain(m) {
+            return m.lineTracerGain;
+        }
+
+        __wheelScale() {
+            return 1;
+        }
+
+        __defaultConfigBandWidth() {
+            return 0;
+        }
+
+        __clampedMotoring() {
+            return clampFields(this.motoring, S_CLAMPS);
+        }
+
+        // 손 찾음 판정 경계. 설치형 HamsterSRobot 은 50, 구형 HamsterRobot 은 40 이다.
+        // 상위(구형 항목)는 햄스터S 로봇을 받아도 설치형 "햄스터" 항목과 같게 40 을 유지해야 한다.
+        checkHandFound() {
+            const sensory = this.sensory;
+            return sensory.handFound === undefined
+                ? sensory.leftProximity > 50 || sensory.rightProximity > 50
+                : sensory.handFound;
+        }
+
+        setLineTracerSpeed(script) {
+            const speed = parseInt(script.getField('SPEED'), 10);
+            let gain = this.lineTracerUserGain;
+            if (gain < 0) {
+                gain = LINE_TRACER_GAINS[speed];
+            }
+            // 표에 없는 속도(1..8 밖)는 설치형처럼 받지 않는다.
+            if (speed && gain && speed > 0 && gain > 0) {
+                this.lineTracerUserSpeed = speed;
+                this.motoring.lineTracerSpeed = speed;
+                this.motoring.lineTracerGain = gain;
+            }
+            return script.callReturn();
+        }
+
+        setLineTracerGain(script) {
+            const gain = parseInt(script.getField('GAIN'), 10);
+            if (gain && gain > 0) {
+                this.lineTracerUserGain = gain;
+                this.motoring.lineTracerGain = gain;
+            } else {
+                // DEFAULT
+                this.lineTracerUserGain = -1;
+                const auto = LINE_TRACER_GAINS[this.lineTracerUserSpeed];
+                if (auto && auto > 0) {
+                    this.motoring.lineTracerGain = auto;
+                }
+            }
+            return script.callReturn();
+        }
+
+        // 상위는 기울기와 배터리만 안다. 두드림과 자유낙하는 여기서 답한다.
+        checkBoolean(script) {
+            const dev = script.getField('DEVICE');
+            if (dev === 'TAP') {
+                return this.tap;
+            }
+            if (dev === 'FREE_FALL') {
+                return this.freeFall;
+            }
+            return super.checkBoolean(script);
+        }
+
+        // ── 단위 이동 (cm / 도 / 초 / 펄스) ──
+        // 완료 대기는 새 키를 만들지 않고 기존 wheelDone 을 그대로 쓴다. 바퀴를 건드리는
+        // 메서드가 모두 이미 __cancelWheel() 을 부르므로 선점이 따로 배선 없이 처리된다.
+        // 새 키를 만들면 그 메서드들을 전부 다시 배선해야 하고, 빠뜨린 한 곳이 영구 대기가 된다.
+        __cancelWheel() {
+            // 상위가 __resolvePending 을 부르기 전에 모션 상태를 먼저 비운다.
+            // 순서를 뒤집으면 콜백 안에서 새 이동을 거는 경우 방금 비운 값이 다시 지워진다.
+            this.__removeMotionTimeout();
+            this.motion.type = 0;
+            this.motion.written = false;
+            this.wheel.event = 0;
+            this.wheel.count = 0;
+            this.motoring.motionType = 0;
+            this.motoring.motionValue = 0;
+            this.__setPulse(0);
+            return super.__cancelWheel();
+        }
+
+        __setMotion(type, unit, speed, value, radius) {
+            const m = this.motoring;
+            m.motionType = type;
+            m.motionUnit = unit;
+            m.motionSpeed = speed;
+            m.motionValue = value;
+            m.motionRadius = radius;
+            this.motion.written = true;
+        }
+
+        __setPulse(pulse) {
+            this.motoring.pulse = pulse;
+            this.wheel.written = true;
+        }
+
+        __motionUnit(type, unit, value, callback) {
+            this.__cancelBoard();
+            this.__cancelWheel();
+            this.__cancelLineTracer();
+
+            this.motoring.leftWheel = 0;
+            this.motoring.rightWheel = 0;
+            this.__setPulse(0);
+
+            const v = parseFloat(value);
+            if (v && v > 0) {
+                this.__setMotion(type, unit, 0, v, 0);
+                this.wheelDone = callback; // 취소되면 __cancelWheel 이 대신 알린다
+                this.__setLineTracerMode(0);
+            } else {
+                this.__setMotion(0, 0, 0, 0, 0);
+                this.__setLineTracerMode(0);
+                callback();
+            }
+        }
+
+        // 선회용. 반지름이 숫자가 아니거나 음수면 걸지 않고 바로 끝낸다(설치형 __motionUnitRadius).
+        __motionUnitRadius(type, unit, value, radius, callback) {
+            this.__cancelBoard();
+            this.__cancelWheel();
+            this.__cancelLineTracer();
+
+            this.motoring.leftWheel = 0;
+            this.motoring.rightWheel = 0;
+            this.__setPulse(0);
+
+            const v = parseFloat(value);
+            const r = parseFloat(radius);
+            if (v && v > 0 && typeof r == 'number' && r >= 0) {
+                this.__setMotion(type, unit, 0, v, r);
+                this.wheelDone = callback;
+                this.__setLineTracerMode(0);
+            } else {
+                this.__setMotion(0, 0, 0, 0, 0);
+                this.__setLineTracerMode(0);
+                callback();
+            }
+        }
+
+        // 다섯 블록이 같은 폴링 골격을 쓴다. 첫 호출에서 이동을 걸고, 끝날 때까지 script 를
+        // 돌려주다가, 완료되면 다음 블록으로 넘긴다. withRadius 면 RADIUS 를 함께 넘긴다.
+        __unitMoveBlock(script, pickType, withRadius) {
+            if (!script.isStart) {
+                script.isStart = true;
+                script.isMoving = true;
+                const value = script.getNumberValue('VALUE');
+                const unit = MOTION_UNITS[script.getField('UNIT')];
+                // 음수는 방향을 뒤집고 크기만 넘긴다.
+                const type = pickType(script, value < 0);
+                const size = value < 0 ? -value : value;
+                const done = () => {
+                    script.isMoving = false;
+                };
+                if (withRadius) {
+                    const radius = script.getNumberValue('RADIUS');
+                    this.__motionUnitRadius(type, unit, size, radius, done);
+                } else {
+                    this.__motionUnit(type, unit, size, done);
+                }
+                return script;
+            } else if (script.isMoving) {
+                return script;
+            }
+            delete script.isStart;
+            delete script.isMoving;
+            Entry.engine.isContinue = false;
+            return script.callReturn();
+        }
+
+        moveForwardUnit(script) {
+            return this.__unitMoveBlock(script, (_s, neg) => (neg ? 2 : 1));
+        }
+
+        moveBackwardUnit(script) {
+            return this.__unitMoveBlock(script, (_s, neg) => (neg ? 1 : 2));
+        }
+
+        turnUnit(script) {
+            return this.__unitMoveBlock(script, (s, neg) => {
+                const left = s.getField('DIRECTION') == 'LEFT';
+                // 왼쪽=3, 오른쪽=4. 음수면 반대로 돈다.
+                return left === !neg ? 3 : 4;
+            });
+        }
+
+        // 한 점을 중심으로 돌기. 타입 번호는 설치형 pivotUnit 과 같다.
+        // 각 쌍의 앞 번호가 "앞쪽 방향", 뒤 번호가 "뒤쪽 방향"이고 음수면 서로 바뀐다.
+        pivotUnit(script) {
+            return this.__unitMoveBlock(script, (s, neg) => {
+                const pair = { LEFT_PEN: 13, RIGHT_PEN: 15, LEFT_WHEEL: 5 }[s.getField('PART')];
+                const base = pair || 7; // 그 밖(RIGHT_WHEEL)은 7
+                const forward = s.getField('TOWARD') == 'FORWARD';
+                return forward === !neg ? base : base + 1;
+            });
+        }
+
+        // 반지름을 두고 돌기. 타입 번호는 설치형 swingUnit 과 같다.
+        //   왼쪽 펜: 왼쪽 17, 오른쪽 19 / 오른쪽 펜: 왼쪽 21, 오른쪽 23 / 로봇: 왼쪽 9, 오른쪽 11
+        swingUnit(script) {
+            return this.__unitMoveBlock(
+                script,
+                (s, neg) => {
+                    const left = s.getField('DIRECTION') == 'LEFT';
+                    const part = s.getField('PART');
+                    let base;
+                    if (part == 'LEFT_PEN') {
+                        base = left ? 17 : 19;
+                    } else if (part == 'RIGHT_PEN') {
+                        base = left ? 21 : 23;
+                    } else {
+                        base = left ? 9 : 11;
+                    }
+                    const forward = s.getField('TOWARD') == 'FORWARD';
+                    return forward === !neg ? base : base + 1;
+                },
+                true
+            );
+        }
+
+        // ── 사운드 ──
+        // 이름 -> 사운드 번호. 설치형 HamsterSRobot.__SOUNDS 와 같은 표다.
+        get __SOUNDS() {
+            return {
+                BEEP: 1,
+                RANDOM_BEEP: 2,
+                NOISE: 10,
+                SIREN: 3,
+                ENGINE: 4,
+                CHOP: 11,
+                ROBOT: 5,
+                DIBIDIBIDIP: 8,
+                GOOD_JOB: 9,
+                HAPPY: 12,
+                ANGRY: 13,
+                SAD: 14,
+                SLEEP: 15,
+                MARCH: 6,
+                BIRTHDAY: 7,
+            };
+        }
+
+        // 버저와 음을 세우기 전에 사운드를 끈다. 패킷에서 사운드가 그 둘을 조용히 밀어내므로,
+        // 끄지 않으면 사운드 재생 중에 건 버저와 음이 아무 소리도 내지 않는다(오류도 없다).
+        __silenceSound() {
+            this.__cancelSound();
+            this.sound.written = true; // 정지(sndid 0)를 실제로 한 번 내보낸다
+        }
+
+        playSound(script) {
+            this.__cancelNote();
+            this.__cancelSound();
+            const sound = this.__SOUNDS[script.getField('SOUND')];
+            const count = parseInt(script.getNumberValue('COUNT'), 10);
+            this.motoring.buzzer = 0;
+            this.motoring.note = 0;
+            if (sound && count) {
+                this.__runSound(sound, count);
+            } else {
+                this.__runSound(0);
+            }
+            return script.callReturn();
+        }
+
+        playSoundUntil(script) {
+            if (!script.isStart) {
+                script.isStart = true;
+                script.isPlaying = true;
+                this.__cancelNote();
+                this.__cancelSound();
+                const sound = this.__SOUNDS[script.getField('SOUND')];
+                const count = parseInt(script.getNumberValue('COUNT'), 10);
+                this.motoring.buzzer = 0;
+                this.motoring.note = 0;
+                if (sound && count) {
+                    this.__runSound(sound, count);
+                    // 완료는 __handleSoundState 가, 취소는 __cancelSound 가 푼다. 정확히 한 번만.
+                    this.soundDone = () => {
+                        script.isPlaying = false;
+                    };
+                } else {
+                    this.__runSound(0);
+                    script.isPlaying = false;
+                }
+                return script;
+            } else if (script.isPlaying) {
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.isPlaying;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        }
+
+        // 상위는 버저만 끈다. 햄스터S 에서는 사운드와 버저가 다른 필드라 사운드도 여기서 끈다.
+        clearSound(script) {
+            this.__cancelNote();
+            this.__cancelSound();
+            this.motoring.buzzer = 0;
+            this.motoring.note = 0;
+            this.__runSound(0);
+            return script.callReturn();
+        }
+
+        // ── 버저와 음 선점 ──
+        // 아래 여섯은 상위 구현이 사운드를 모른다. 패킷 우선순위 때문에 사운드를 먼저 꺼야 한다.
+        setBuzzer(script) {
+            this.__silenceSound();
+            return super.setBuzzer(script);
+        }
+        changeBuzzer(script) {
+            this.__silenceSound();
+            return super.changeBuzzer(script);
+        }
+        clearBuzzer(script) {
+            this.__silenceSound();
+            return super.clearBuzzer(script);
+        }
+        playNote(script) {
+            this.__silenceSound();
+            return super.playNote(script);
+        }
+        // 아래 둘은 완료까지 매 프레임 재호출되는 폴링 블록이다. 시작 분기에서만 꺼야 한다.
+        // 매번 끄면 재진입 틱이 그 사이 시작된 남의 사운드를 끄고 그 대기까지 풀어 버린다
+        // (다른 스크립트의 play_sound_times_until_done 이 쉼표 한 틱에 끊긴다).
+        // 설치형도 !script.isStart 안에서만 취소한다(block_robomation.js 의 playNoteBeat, restBeat).
+        playNoteBeat(script) {
+            if (!script.isStart) {
+                this.__silenceSound();
+            }
+            return super.playNoteBeat(script);
+        }
+        restBeat(script) {
+            if (!script.isStart) {
+                this.__silenceSound();
+            }
+            return super.restBeat(script);
+        }
+        // 햄스터S 항목의 삐 소리는 설치형 HamsterSRobot.beep 과 같이 버저가 아니라 사운드 1(BEEP)을
+        // 한 번 재생한다. 햄스터S 팔레트에는 이 블록이 없고, 020E01 로 저장된 기존 작품의
+        // hamsterlite_beep 만 여기로 온다. 취소는 시작 분기에서만 한다. 폴링 틱마다 끄면 그 사이
+        // 다른 스크립트가 시작한 소리와 그 대기까지 끊는다.
+        beep(script) {
+            if (!script.isStart) {
+                script.isStart = true;
+                script.isPlaying = true;
+                this.__cancelNote();
+                this.__cancelSound();
+                this.motoring.buzzer = 0;
+                this.motoring.note = 0;
+                this.__runSound(1, 1);
+                this.soundDone = () => {
+                    script.isPlaying = false;
+                };
+                return script;
+            } else if (script.isPlaying) {
+                return script;
+            }
+            delete script.isStart;
+            delete script.isPlaying;
+            Entry.engine.isContinue = false;
+            return script.callReturn();
+        }
+
+        setLed(script) {
+            const rgb = this.__RGB_COLORS[script.getField('COLOR')];
+            if (rgb) {
+                this.__applyRgb(script.getField('LED'), rgb[0], rgb[1], rgb[2]);
+            }
+            return script.callReturn();
+        }
+
+        clearLed(script) {
+            this.__applyRgb(script.getField('LED'), 0, 0, 0);
+            return script.callReturn();
+        }
+
+        pickLed(script) {
+            const color = String(script.getField('COLOR'));
+            const r = parseInt(color.slice(1, 3), 16);
+            const g = parseInt(color.slice(3, 5), 16);
+            const b = parseInt(color.slice(5, 7), 16);
+            this.__applyRgb(script.getField('LED'), r, g, b);
+            return script.callReturn();
+        }
+
+        setRgb(script) {
+            this.__applyRgb(
+                script.getField('LED'),
+                parseInt(script.getNumberValue('RED'), 10),
+                parseInt(script.getNumberValue('GREEN'), 10),
+                parseInt(script.getNumberValue('BLUE'), 10)
+            );
+            return script.callReturn();
+        }
+
+        // 누적은 원값 위에 그대로 더한다. 자르는 일은 송신 때만 한다(설치형 block_robomation.js 의 changeRgb
+        // 와 같은 모델). 더하기 전에 자르면 200 -> +100 -> -50 이 250 이 아니라 205 가 되어
+        // 설치형과 어긋난다.
+        changeRgb(script) {
+            const led = script.getField('LED');
+            const m = this.motoring;
+            const dr = parseInt(script.getNumberValue('RED'), 10) || 0;
+            const dg = parseInt(script.getNumberValue('GREEN'), 10) || 0;
+            const db = parseInt(script.getNumberValue('BLUE'), 10) || 0;
+            if (led !== 'RIGHT') {
+                m.leftRed += dr;
+                m.leftGreen += dg;
+                m.leftBlue += db;
+            }
+            if (led !== 'LEFT') {
+                m.rightRed += dr;
+                m.rightGreen += dg;
+                m.rightBlue += db;
+            }
+            return script.callReturn();
         }
 
         // 햄스터S 사진은 구형과 좌우가 반대다(바퀴가 왼쪽). 상위 좌표를 그대로 물려받으면

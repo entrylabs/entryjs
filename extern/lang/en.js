@@ -5604,6 +5604,10 @@ Lang.Workspace = {
     list_create_normal: 'Use for list\n(Stored in Project)',
     list_create_cloud: 'Use for shared list \n(Stored in Server)',
     list_create_real_time: 'Use for real-time list\n(Stored in Server)',
+    real_time_blocked:
+        'This project cannot connect to the real-time variable server.\nValues of real-time variables and lists will not be stored in the server.',
+    real_time_blocked_by_size:
+        'The real-time variables and lists of this project hold too much data to connect to the server.\nTheir values will not be stored in the server.',
     confirm_quit: "You didn't saved your changes.",
     confirm_load_temporary: 'You have unsaved project. Do you want to open it?',
     login_to_save: 'Try to save after login.',
