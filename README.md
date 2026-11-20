@@ -161,7 +161,7 @@ Workspace 타입과 폰트정보를 제외한 모든 옵션은 선택사항이�
         },
     ];
     ```
-    무료 한글 웹폰트는 https://www.google.com/fonts/earlyaccess 에서 다운로드 하실 수 있습니다.
+    무료 한글 웹폰트는 https://fonts.google.com 에서 다운로드 하실 수 있습니다.
 
 ### Entry.playground.setBlockMenu();
 
