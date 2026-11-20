@@ -1,0 +1,9 @@
+{
+    "name": "TurtleLite",
+    "version": "1.0.0",
+    "type": "hardware",
+    "title": "거북이",
+    "description": "로보메이션",
+    "imageName": "turtlelite",
+    "moduleId": "020901"
+}

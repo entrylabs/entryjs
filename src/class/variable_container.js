@@ -12,6 +12,7 @@ import _find from 'lodash/find';
 import _includes from 'lodash/includes';
 import _some from 'lodash/some';
 import _memoize from 'lodash/memoize';
+import { resolveImportConflicts } from '../util/importConflict';
 
 /**
  * Block variable constructor
@@ -1267,6 +1268,49 @@ Entry.VariableContainer = class VariableContainer {
             parseFunc.generateBlock();
             this.functions_[parseFunc.id] = parseFunc;
         }
+    }
+
+    /**
+     * 보관함·오브젝트 파일에서 가져오는 함수·변수·신호의 id 가 작품에 이미 있을 때,
+     * 내용이 같으면 그대로 두고 다르면 새 id 로 바꾼다. item 을 직접 고친다.
+     * append* 를 부르기 전에 불러야 한다.
+     * @param {{ script?: string, objects?: object[], functions?: object[], variables?: object[], messages?: object[] }} item
+     */
+    resolveImportConflicts(item) {
+        const functions = Object.keys(this.functions_).reduce((acc, id) => {
+            const func = this.functions_[id];
+            acc[id] = {
+                type: func.type,
+                content: func.content.toJSON(),
+                localVariables: func.localVariables,
+                useLocalVariables: func.useLocalVariables,
+            };
+            return acc;
+        }, {});
+        const variables = [...this.variables_, ...this.lists_].reduce((acc, variable) => {
+            acc[variable.id_] = variable.toJSON();
+            return acc;
+        }, {});
+        const messages = this.messages_.reduce((acc, message) => {
+            acc[message.id] = message;
+            return acc;
+        }, {});
+        // 지운 함수의 블록 모양 정보(Entry.block['func_<id>'])는 되돌리기 때문에 남아 있다.
+        // 같은 id 로 다른 함수를 들여오면 옛 모양이 쓰이므로, 그 id 는 피한다.
+        const reservedFunctionIds = Object.keys(Entry.block)
+            .filter((type) => type.indexOf('func_') === 0)
+            .map((type) => type.substr(5))
+            .filter((id) => !functions[id]);
+
+        return resolveImportConflicts(item, {
+            functions,
+            variables,
+            messages,
+            reservedFunctionIds,
+            variableBlocks: EntryStatic.variableBlockList || [],
+            messageBlocks: EntryStatic.messageBlockList || [],
+            generateId: () => Entry.generateHash(),
+        });
     }
 
     changeFunctionName(func) {

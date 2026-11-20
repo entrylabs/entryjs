@@ -8,10 +8,13 @@ packages:
 # 설치가 ERR_PNPM_IGNORED_BUILDS 로 exit 1 한다 (CI 가 여기서 죽는다).
 # pnpm 11 은 이 판단을 allowBuilds 맵으로 받는다.
 #   core-js  : postinstall 이 후원 안내 메시지 출력뿐 -> 실행 불필요
-#   fsevents : jest 24 의 chokidar 2 가 끌고 오는 1.2.13 레거시 네이티브 모듈.
-#              NAN 구 API 를 써서 Node 22+ 에서는 빌드 자체가 실패하고,
-#              없으면 폴링 감시로 폴백된다. webpack 5 는 별개의 fsevents 2 를 쓴다.
+#   fsevents : webpack 5 가 쓰는 fsevents 2 는 빌드된 바이너리를 포함해 실행 불필요.
+#              (jest 24 가 끌고 오던 1.2.13 레거시 모듈은 jest 30 으로 올리며 빠졌다)
+#   @parcel/watcher : jest 30 의 jest-haste-map 이 쓴다. 플랫폼별 빌드된 바이너리를
+#              optionalDependencies 로 받고, install 스크립트는 바이너리가 없을 때 소스 빌드용
+#              -> 실행 불필요
 allowBuilds:
+  '@parcel/watcher': false
   core-js: false
   fsevents: false
 
@@ -25,15 +28,15 @@ overrides:
   'websocket-driver@^0.7': '^0.7.5'
   'minimist@<1': '^0.2.4'
   'minimist@^1': '^1.2.6'
-  'fast-uri@^3': '^3.1.6'
+  'fast-uri@^3': '^3.1.9'
   'browserslist@^4': '^4.28.7'
   'js-yaml@^3': '^3.15.2'
   'js-yaml@^4': '^4.3.2'
   'minimatch@^3': '^3.1.4'
   'minimatch@^9': '^9.0.7'
-  'brace-expansion@^1': '^1.1.18'
+  'brace-expansion@^1': '^1.1.21'
   'brace-expansion@^2': '^2.1.2'
-  'node-forge@^1': '^1.4.0'
+  'node-forge@^1': '^1.4.3'
   'picomatch@^2': '^2.3.2'
   'path-to-regexp@^0.1': '^0.1.13'
   'flatted@^3': '^3.4.2'
@@ -46,7 +49,8 @@ overrides:
   'ajv@^8': '^8.18.0'
   'qs@^6': '^6.16.0'
   'body-parser@^1': '^1.20.6'
-  'follow-redirects@^1': '^1.16.0'
+  'follow-redirects@^1': '^1.16.2'
   'http-proxy-middleware@^2': '^2.0.10'
-  'launch-editor@^2': '^2.14.1'
-  'postcss-selector-parser@^6': '^6.1.3'
+  'launch-editor@^2': '^2.14.2'
+  'postcss-selector-parser@^6': '^6.1.5'
+  'brace-expansion@^5': '^5.0.12'
