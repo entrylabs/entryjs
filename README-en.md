@@ -143,7 +143,7 @@ Once you have loaded the necessary libraries and entryjs, you can inject the ent
       url: '/css/nanumpenscript.css'
     }]
     ```
-   Free Korean web fonts can be downloaded from https://www.google.com/fonts/earlyaccess.
+   Free Korean web fonts can be downloaded from https://fonts.google.com.
 
 ### Entry.playground.setBlockMenu();
  Block menu reset
