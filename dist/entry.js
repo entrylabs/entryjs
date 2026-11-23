@@ -91092,6 +91092,10 @@ Entry.getKeyCodeMap = function () {
   };
 };
 Entry.checkCollisionRect = function (rectA, rectB) {
+  // 내용이 빈 글상자처럼 bounds를 구할 수 없는(null) 대상은 충돌하지 않은 것으로 처리한다.
+  if (!rectA || !rectB) {
+    return false;
+  }
   return !(rectA.y + rectA.height < rectB.y || rectA.y > rectB.y + rectB.height || rectA.x + rectA.width < rectB.x || rectA.x > rectB.x + rectB.width);
 };
 Entry.bindAnimationCallback = function (element, func) {
@@ -163348,9 +163352,11 @@ Entry.Container = /*#__PURE__*/function () {
       var objects = this.objects_;
       var object = this.getObject(id);
       var index = objects.indexOf(object);
+      var removedObjectId = object.id;
       object.destroy();
       objects.splice(index, 1);
-      Entry.variableContainer.removeLocalVariables(object.id);
+      Entry.variableContainer.removeLocalVariables(removedObjectId);
+      Entry.variableContainer.removeRefs(removedObjectId);
       Entry.engine.hideProjectTimer();
       if (isPass === true) {
         return;
@@ -369125,6 +369131,7 @@ var CATEGORY = exports.CATEGORY = 'dynamic';
 
 var _interopRequireDefault = __webpack_require__(51235);
 var _slicedToArray2 = _interopRequireDefault(__webpack_require__(89562));
+var _GEHelper = __webpack_require__(59134);
 module.exports = {
   getBlocks: function getBlocks() {
     function moveInToBound(object, wall) {
@@ -369211,6 +369218,12 @@ module.exports = {
         "class": 'walk',
         isNotFor: [],
         func: function func(sprite, script) {
+          // 내용이 빈 글상자는 캔버스 렌더러에서 bounds가 null이라
+          // 벽 충돌을 계산할 수 없으므로 튕기지 않고 넘어간다.
+          if (sprite.type === 'textBox' && !_GEHelper.GEHelper.getTransformedBounds(sprite.object)) {
+            sprite.collision = Entry.Utils.COLLISION.NONE;
+            return script.callReturn();
+          }
           var threshold = 0;
           var method = sprite.parent.getRotateMethod();
           var angle;
@@ -756615,6 +756628,11 @@ module.exports = {
           var reg = /wall/;
           var ath = 0.2;
           var object = sprite.object;
+          // 내용이 빈 글상자는 캔버스 렌더러에서 bounds가 null이라
+          // 충돌을 판정할 수 없으므로 닿지 않은 것으로 처리한다.
+          if (sprite.type === 'textBox' && !_GEHelper.GEHelper.getTransformedBounds(object)) {
+            return false;
+          }
           var isWall = reg.test(targetSpriteId);
           var collision = ndgmr.checkPixelCollision;
           if (isWall) {
@@ -901364,6 +901382,20 @@ Entry.VariableContainer = (_VariableContainer_brand = /*#__PURE__*/new WeakSet()
       });
     }
   }, {
+    key: "removeRefs",
+    value: function removeRefs(objectId) {
+      var _this24 = this;
+      if (!objectId) {
+        return;
+      }
+      ['_variableRefs', '_messageRefs', '_functionRefs'].forEach(function (type) {
+        _this24[type] = _this24[type].filter(function (ref) {
+          return !ref.object || ref.object.id !== objectId;
+        });
+      });
+      this.view_ && Entry.playground.viewMode_ !== 'default' && this.updateList();
+    }
+  }, {
     key: "addRef",
     value: function addRef(type, blockData) {
       var wsMode = _.result(Entry.getMainWS(), 'getMode');
@@ -901409,7 +901441,7 @@ Entry.VariableContainer = (_VariableContainer_brand = /*#__PURE__*/new WeakSet()
   }, {
     key: "getObjectVariables",
     value: function getObjectVariables(blockList, keys) {
-      var _this24 = this;
+      var _this25 = this;
       var findFuncKeys = keys || {};
       var functions = [];
       var jsonData = this.getVariableJSONByBlockList(blockList);
@@ -901420,7 +901452,7 @@ Entry.VariableContainer = (_VariableContainer_brand = /*#__PURE__*/new WeakSet()
         if (type && type.indexOf('func_') === 0) {
           var id = type.substr(5);
           if (!findFuncKeys[id]) {
-            var func = _this24.functions_[id];
+            var func = _this25.functions_[id];
             findFuncKeys[id] = true;
             functions.push({
               id: id,
@@ -901430,7 +901462,7 @@ Entry.VariableContainer = (_VariableContainer_brand = /*#__PURE__*/new WeakSet()
               useLocalVariables: func.useLocalVariables
             });
             var contentBlockList = func.content.getBlockList();
-            var _jsonData = _this24.getObjectVariables(contentBlockList, findFuncKeys);
+            var _jsonData = _this25.getObjectVariables(contentBlockList, findFuncKeys);
             functions = _.unionBy(functions, _jsonData.functions, 'id');
             variables = _.unionBy(variables, _jsonData.variables, 'id');
             messages = _.unionBy(messages, _jsonData.messages, 'id');
