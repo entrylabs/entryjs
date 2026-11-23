@@ -3260,9 +3260,7 @@ Entry.VariableContainer = class VariableContainer {
             return;
         }
         ['_variableRefs', '_messageRefs', '_functionRefs'].forEach((type) => {
-            this[type] = this[type].filter(
-                (ref) => !ref.object || ref.object.id !== objectId
-            );
+            this[type] = this[type].filter((ref) => !ref.object || ref.object.id !== objectId);
         });
         this.view_ && Entry.playground.viewMode_ !== 'default' && this.updateList();
     }
